@@ -1,0 +1,5 @@
+* text=auto eol=lf
+original/** -text
+recovered/** -text
+*.png binary
+*.sppkg binary

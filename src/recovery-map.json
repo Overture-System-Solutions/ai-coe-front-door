@@ -1,0 +1,487 @@
+{
+  "sourceId": "S181",
+  "packageSha256": "97e5e1e3ff5e6c68188ae9d395ac5763dd8e8342a2b514416e51581d714f6500",
+  "packageVersion": "1.0.0.7",
+  "bundle": "ClientSideAssets/ai-coe-front-door-web-part_450ba2c9cd6b51118afa.js",
+  "originalBundleSha256": "881dfdeb84307ccddbdb966b6ff474b407e7382e8c73c7d6e226162f3cea9987",
+  "offsets": "UTF-16 code units in the packaged JavaScript; ends are exclusive",
+  "originalSourcesRecovered": false,
+  "applicationStatementCount": 103,
+  "originalSourceMapFiles": [],
+  "dependencies": [
+    "react",
+    "react-dom",
+    "@microsoft/sp-core-library",
+    "@microsoft/sp-webpart-base",
+    "@microsoft/sp-page-context",
+    "@microsoft/sp-http"
+  ],
+  "template": "runtime/bundle.template.js",
+  "fragments": [
+    {
+      "file": "runtime/transpiler-helpers.js",
+      "marker": "/* @recovery:runtime/transpiler-helpers.js */",
+      "symbols": [
+        "e",
+        "t",
+        "n",
+        "a",
+        "i",
+        "r"
+      ],
+      "originalStart": 38623,
+      "originalEnd": 40903,
+      "statementRange": [
+        0,
+        9
+      ],
+      "baselineSha256": "219d85b3c96c7c32da5273c4cfb0e93d788d4b8b7d11c30ef16036e36eb7a0b4"
+    },
+    {
+      "file": "runtime/imports-and-style-loader.js",
+      "marker": "/* @recovery:runtime/imports-and-style-loader.js */",
+      "symbols": [
+        "o",
+        "s",
+        "l",
+        "u",
+        "f",
+        "p",
+        "m",
+        "_",
+        "h",
+        "b",
+        "g",
+        "v",
+        "y",
+        "S",
+        "D",
+        "I",
+        "x",
+        "C"
+      ],
+      "originalStart": 40903,
+      "originalEnd": 43384,
+      "statementRange": [
+        9,
+        14
+      ],
+      "baselineSha256": "b4e0ee17206a57b5b3e2f18657d58192f65cb8eca24a110e2f52af03495db7d2"
+    },
+    {
+      "file": "vendor/lucide-icons.js",
+      "marker": "/* @recovery:vendor/lucide-icons.js */",
+      "symbols": [
+        "O",
+        "w",
+        "E",
+        "A",
+        "L",
+        "k",
+        "M",
+        "P",
+        "T",
+        "U",
+        "F",
+        "H",
+        "R",
+        "N",
+        "B",
+        "j",
+        "V",
+        "z",
+        "G",
+        "K",
+        "W",
+        "q",
+        "Q",
+        "Y",
+        "J",
+        "X",
+        "Z",
+        "$",
+        "ee",
+        "te",
+        "ne",
+        "ae",
+        "ie"
+      ],
+      "originalStart": 43384,
+      "originalEnd": 49555,
+      "statementRange": [
+        14,
+        17
+      ],
+      "baselineSha256": "de97a1f175452f5750bd04c8b3c4f200fcad9a72bd2edb2a00e0d80bb14187aa"
+    },
+    {
+      "file": "workflows/definitions-and-theme.js",
+      "marker": "/* @recovery:workflows/definitions-and-theme.js */",
+      "symbols": [
+        "re",
+        "oe",
+        "se",
+        "ce",
+        "de",
+        "le",
+        "ue",
+        "fe",
+        "pe"
+      ],
+      "originalStart": 49555,
+      "originalEnd": 75314,
+      "statementRange": [
+        17,
+        20
+      ],
+      "baselineSha256": "671b6426a38b3d14b806527830bba09d8cd3265756fe879708a32f87281d77f0"
+    },
+    {
+      "file": "workflows/form-engine.js",
+      "marker": "/* @recovery:workflows/form-engine.js */",
+      "symbols": [
+        "me",
+        "_e",
+        "he",
+        "be",
+        "ge",
+        "ve",
+        "ye"
+      ],
+      "originalStart": 75314,
+      "originalEnd": 77902,
+      "statementRange": [
+        20,
+        27
+      ],
+      "baselineSha256": "72b8fdab5d6b3384f1bcacbd4034c12509318805938460f399d123093b04730f"
+    },
+    {
+      "file": "services/draft-storage-and-adapters.js",
+      "marker": "/* @recovery:services/draft-storage-and-adapters.js */",
+      "symbols": [
+        "Se",
+        "De",
+        "Ie",
+        "xe",
+        "Ce",
+        "Oe",
+        "we",
+        "Ee",
+        "Ae"
+      ],
+      "originalStart": 77902,
+      "originalEnd": 78946,
+      "statementRange": [
+        27,
+        33
+      ],
+      "baselineSha256": "7b032db59d518fb312c90a5614caa33a95a253afce3dfb5159741392092a6ddf"
+    },
+    {
+      "file": "services/idea-summary.js",
+      "marker": "/* @recovery:services/idea-summary.js */",
+      "symbols": [
+        "Le",
+        "ke",
+        "Me",
+        "Pe",
+        "Te",
+        "Ue",
+        "Fe",
+        "He",
+        "Re"
+      ],
+      "originalStart": 78946,
+      "originalEnd": 85681,
+      "statementRange": [
+        33,
+        41
+      ],
+      "baselineSha256": "374c47af5f1dac687dc2599c77a39aceda4c1b14a6a28cbb21445623996894d8"
+    },
+    {
+      "file": "services/tool-policy-evaluator.js",
+      "marker": "/* @recovery:services/tool-policy-evaluator.js */",
+      "symbols": [
+        "Ne",
+        "Be",
+        "je",
+        "Ve",
+        "ze",
+        "Ge"
+      ],
+      "originalStart": 85681,
+      "originalEnd": 91538,
+      "statementRange": [
+        41,
+        47
+      ],
+      "baselineSha256": "e0abcd49db8a9efbd72e6d52dbd9a02c918436eca4872dba56348d2b0db23bdc"
+    },
+    {
+      "file": "services/team-usage-summary.js",
+      "marker": "/* @recovery:services/team-usage-summary.js */",
+      "symbols": [
+        "Ke",
+        "We",
+        "qe",
+        "Qe",
+        "Ye",
+        "Je"
+      ],
+      "originalStart": 91538,
+      "originalEnd": 97053,
+      "statementRange": [
+        47,
+        52
+      ],
+      "baselineSha256": "fde1e831bcea6fa0da7b90136611ca080c8cec6cdfdb49cd366c0f4879759329"
+    },
+    {
+      "file": "services/feedback-summary.js",
+      "marker": "/* @recovery:services/feedback-summary.js */",
+      "symbols": [
+        "Xe",
+        "Ze",
+        "$e",
+        "et",
+        "tt"
+      ],
+      "originalStart": 97053,
+      "originalEnd": 100744,
+      "statementRange": [
+        52,
+        57
+      ],
+      "baselineSha256": "324b0e15dc6a4be5ff71b983f73e6063509050d42a7555436a58901c796b2286"
+    },
+    {
+      "file": "components/shared-controls.js",
+      "marker": "/* @recovery:components/shared-controls.js */",
+      "symbols": [
+        "nt",
+        "at",
+        "it",
+        "rt",
+        "ot",
+        "st",
+        "ct",
+        "dt",
+        "lt",
+        "ut",
+        "ft",
+        "pt"
+      ],
+      "originalStart": 100744,
+      "originalEnd": 114551,
+      "statementRange": [
+        57,
+        69
+      ],
+      "baselineSha256": "258a5e47615f40e047eca2ceeedb9c929691f92c1fd86c05b6726d8b369a452f"
+    },
+    {
+      "file": "components/usage-dashboard.js",
+      "marker": "/* @recovery:components/usage-dashboard.js */",
+      "symbols": [
+        "mt",
+        "_t",
+        "ht",
+        "bt"
+      ],
+      "originalStart": 114551,
+      "originalEnd": 120341,
+      "statementRange": [
+        69,
+        72
+      ],
+      "baselineSha256": "55e523a5a2ab42466cc92b3abd683fcfee342d550af120d143b6ca81ca53bbef"
+    },
+    {
+      "file": "components/governance-dashboard.js",
+      "marker": "/* @recovery:components/governance-dashboard.js */",
+      "symbols": [
+        "gt",
+        "vt",
+        "yt"
+      ],
+      "originalStart": 120341,
+      "originalEnd": 131741,
+      "statementRange": [
+        72,
+        75
+      ],
+      "baselineSha256": "da6c15d2da9c84e8ee9e35c931d99be8a171410d4a77275523a39a9993874d36"
+    },
+    {
+      "file": "components/landing-page.js",
+      "marker": "/* @recovery:components/landing-page.js */",
+      "symbols": [
+        "St"
+      ],
+      "originalStart": 131741,
+      "originalEnd": 134567,
+      "statementRange": [
+        75,
+        76
+      ],
+      "baselineSha256": "69f5117cc83efc164c83bc9090c32b81826760f5006bb1b876016400e6e44955"
+    },
+    {
+      "file": "components/generic-workflow.js",
+      "marker": "/* @recovery:components/generic-workflow.js */",
+      "symbols": [
+        "Dt",
+        "It",
+        "xt"
+      ],
+      "originalStart": 134567,
+      "originalEnd": 139131,
+      "statementRange": [
+        76,
+        79
+      ],
+      "baselineSha256": "e3b97db6a1bf663ccb8795e31d1598c97a02d061dcd017931a78c101960b1ce5"
+    },
+    {
+      "file": "components/idea-workflow.js",
+      "marker": "/* @recovery:components/idea-workflow.js */",
+      "symbols": [
+        "Ct",
+        "Ot",
+        "wt",
+        "Et",
+        "At"
+      ],
+      "originalStart": 139131,
+      "originalEnd": 150736,
+      "statementRange": [
+        79,
+        84
+      ],
+      "baselineSha256": "4942ae416b3a87d403e264401b6c431452c097e71360897077130ba0ef8eab7f"
+    },
+    {
+      "file": "components/tool-check-workflow.js",
+      "marker": "/* @recovery:components/tool-check-workflow.js */",
+      "symbols": [
+        "Lt",
+        "kt",
+        "Mt",
+        "Pt",
+        "Tt"
+      ],
+      "originalStart": 150736,
+      "originalEnd": 165907,
+      "statementRange": [
+        84,
+        89
+      ],
+      "baselineSha256": "e6fa8d1721f453f3214ef04a2043fa2f323bf561bb7d39bcc3240d19ed931486"
+    },
+    {
+      "file": "components/team-usage-workflow.js",
+      "marker": "/* @recovery:components/team-usage-workflow.js */",
+      "symbols": [
+        "Ut",
+        "Ft",
+        "Ht",
+        "Rt"
+      ],
+      "originalStart": 165907,
+      "originalEnd": 175918,
+      "statementRange": [
+        89,
+        93
+      ],
+      "baselineSha256": "977b65f409d1a16df1135483dd064a5af1415a109c3504e9c5058197c1dc5068"
+    },
+    {
+      "file": "components/feedback-workflow.js",
+      "marker": "/* @recovery:components/feedback-workflow.js */",
+      "symbols": [
+        "Nt",
+        "Bt",
+        "jt",
+        "Vt"
+      ],
+      "originalStart": 175918,
+      "originalEnd": 184128,
+      "statementRange": [
+        93,
+        97
+      ],
+      "baselineSha256": "0d26fcd40461b033b3ad61e86d4dab927d16d9308dafd033c973c7ca47b1d2fe"
+    },
+    {
+      "file": "components/front-door-root.js",
+      "marker": "/* @recovery:components/front-door-root.js */",
+      "symbols": [
+        "zt",
+        "Gt"
+      ],
+      "originalStart": 184128,
+      "originalEnd": 187005,
+      "statementRange": [
+        97,
+        99
+      ],
+      "baselineSha256": "8e40a101d672aa517811521cd05bf4841229b59917611bea36ebd53818e26e95"
+    },
+    {
+      "file": "services/governance-service.js",
+      "marker": "/* @recovery:services/governance-service.js */",
+      "symbols": [
+        "Kt",
+        "Wt",
+        "qt"
+      ],
+      "originalStart": 187005,
+      "originalEnd": 195012,
+      "statementRange": [
+        99,
+        101
+      ],
+      "baselineSha256": "ded451112aaa8c9341c9df2e93c4e278f1bca3a8983eed3a89b79676c3df35f1"
+    },
+    {
+      "file": "services/usage-metrics-service.js",
+      "marker": "/* @recovery:services/usage-metrics-service.js */",
+      "symbols": [
+        "Qt"
+      ],
+      "originalStart": 195012,
+      "originalEnd": 200447,
+      "statementRange": [
+        101,
+        102
+      ],
+      "baselineSha256": "9e65cf8358d3555b6371324d40e10c2566161585523e6494882c97564b9ea04e"
+    },
+    {
+      "file": "webpart/AiCoeFrontDoorWebPart.js",
+      "marker": "/* @recovery:webpart/AiCoeFrontDoorWebPart.js */",
+      "symbols": [
+        "Yt",
+        "Jt"
+      ],
+      "originalStart": 200447,
+      "originalEnd": 201682,
+      "statementRange": [
+        102,
+        103
+      ],
+      "baselineSha256": "593607acd4c23af19556c541d547bce1bea45cf331079e0d6d84f8374cb8a0e0"
+    }
+  ],
+  "styles": [
+    {
+      "file": "styles/AiCoeFrontDoor.global.css",
+      "marker": "__RECOVERED_CSS_0__",
+      "originalStart": 332,
+      "originalEnd": 37719,
+      "baselineSha256": "54b78730b260b1f4fac203575b52cc57225d57f59e25e05971a74db3da5dd387"
+    }
+  ]
+}

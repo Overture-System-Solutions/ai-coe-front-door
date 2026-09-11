@@ -1,0 +1,59 @@
+
+> overture-ai-coe-front-door-recovered@1.0.0-recovery.1 pretest
+> npm run build
+
+
+> overture-ai-coe-front-door-recovered@1.0.0-recovery.1 build
+> node scripts/build.mjs
+
+{"status":"LOCAL_AMD_BUILD_PASS","packageVersion":"1.0.0.7","bundle":"ai-coe-front-door-web-part_450ba2c9cd6b51118afa.js","sha256":"a8180a930180d49615f1f23ad96e538c2f0c9915c6dc2d2469079e535a8e8354","equivalentToPackagedBaseline":true,"evidence":"AST equality ignores formatting/comments and literal spellings, not executable structure","deployment":"Not packaged, imported, or tenant-tested; dist is not an .sppkg"}
+
+> overture-ai-coe-front-door-recovered@1.0.0-recovery.1 test
+> node --test tests/*.test.mjs
+
+TAP version 13
+# Subtest: actual recovered React UI mounts and opens the idea workflow offline
+ok 1 - actual recovered React UI mounts and opens the idea workflow offline
+  ---
+  duration_ms: 264.711478
+  type: 'test'
+  ...
+# Subtest: real recovered submission service preserves all five workflow routes in simulated transport
+ok 2 - real recovered submission service preserves all five workflow routes in simulated transport
+  ---
+  duration_ms: 180.733289
+  type: 'test'
+  ...
+# Subtest: all recovered editable fragments reassemble the original JavaScript AST
+ok 3 - all recovered editable fragments reassemble the original JavaScript AST
+  ---
+  duration_ms: 1650.736332
+  type: 'test'
+  ...
+# Subtest: editing recovered JavaScript and CSS changes the built bundle without touching originals
+ok 4 - editing recovered JavaScript and CSS changes the built bundle without touching originals
+  ---
+  duration_ms: 901.021334
+  type: 'test'
+  ...
+# Subtest: recovery refuses to overwrite an existing editable tree
+ok 5 - recovery refuses to overwrite an existing editable tree
+  ---
+  duration_ms: 253.242643
+  type: 'test'
+  ...
+# Subtest: loopback preview serves only allowlisted assets with an offline warning and CSP
+ok 6 - loopback preview serves only allowlisted assets with an offline warning and CSP
+  ---
+  duration_ms: 184.188138
+  type: 'test'
+  ...
+1..6
+# tests 6
+# suites 0
+# pass 6
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 54778.768471

@@ -1,0 +1,1 @@
+<?xml version="1.0" encoding="utf-8"?><Feature xmlns="http://schemas.microsoft.com/sharepoint/" Title="Overture AI CoE Front Door" Description="Installs the AI CoE front door, governed submission integration, administrator dashboard, and live telemetry." Id="69ab84b7-608c-47ee-9623-af8ebaf2cb10" Version="1.0.0.2" Scope="Web" Hidden="FALSE"></Feature>

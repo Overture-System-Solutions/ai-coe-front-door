@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<List xmlns:ows="Microsoft SharePoint"
+  Title="AI CoE Pilot Intakes"
+  FolderCreation="FALSE"
+  Direction="$Resources:Direction;"
+  Url="Lists/AICoEPilotIntakes"
+  BaseType="0"
+  xmlns="http://schemas.microsoft.com/sharepoint/">
+  <MetaData>
+    <ContentTypes>
+      <ContentTypeRef ID="0x01">
+        <Folder TargetName="Item" />
+      </ContentTypeRef>
+      <ContentTypeRef ID="0x0120" />
+    </ContentTypes>
+    <Fields>
+      <Field ID="{34002f2d-7803-4fbd-9025-37eb363dc410}" Name="IntakeId" StaticName="IntakeId" DisplayName="Intake ID" Type="Text" Required="TRUE" Indexed="TRUE" EnforceUniqueValues="TRUE" MaxLength="80" Group="Overture AI CoE Pilot" />
+      <Field ID="{f899f760-7f59-4620-b8e1-0f63a5c5ba92}" Name="WorkflowType" StaticName="WorkflowType" DisplayName="Workflow type" Type="Text" Required="TRUE" MaxLength="80" Group="Overture AI CoE Pilot" />
+      <Field ID="{a314995c-a09e-429e-ac05-b20c69a77aac}" Name="PilotWorkflowVersion" StaticName="PilotWorkflowVersion" DisplayName="Workflow version" Type="Text" Required="FALSE" MaxLength="20" Group="Overture AI CoE Pilot" />
+      <Field ID="{3932122e-aaa0-4235-ab67-bcae5800c8d1}" Name="Status" StaticName="Status" DisplayName="Pilot status" Type="Choice" Required="TRUE" Format="Dropdown" Group="Overture AI CoE Pilot">
+        <Default>Submitted - Pilot</Default>
+        <CHOICES>
+          <CHOICE>Submitted - Pilot</CHOICE>
+          <CHOICE>In Review - Pilot</CHOICE>
+          <CHOICE>Closed - Pilot</CHOICE>
+          <CHOICE>Test Failed</CHOICE>
+        </CHOICES>
+      </Field>
+      <Field ID="{99d47420-732b-4003-b435-0aa279bfd68d}" Name="Priority" StaticName="Priority" DisplayName="Priority" Type="Choice" Required="TRUE" Format="Dropdown" Group="Overture AI CoE Pilot">
+        <Default>Normal</Default>
+        <CHOICES>
+          <CHOICE>Normal</CHOICE>
+          <CHOICE>High</CHOICE>
+        </CHOICES>
+      </Field>
+      <Field ID="{0bcfe6e1-e8c5-4263-acce-b42df1e0bc00}" Name="RequestorName" StaticName="RequestorName" DisplayName="Requestor name" Type="Text" Required="TRUE" MaxLength="255" Group="Overture AI CoE Pilot" />
+      <Field ID="{a874095e-31f8-45ae-9917-099b6dc51aca}" Name="RequestorEmail" StaticName="RequestorEmail" DisplayName="Requestor email" Type="Text" Required="FALSE" MaxLength="255" Group="Overture AI CoE Pilot" />
+      <Field ID="{c8f3a8ec-3dfe-41fc-9b59-1e81b8484df9}" Name="SubmittedAt" StaticName="SubmittedAt" DisplayName="Submitted at" Type="DateTime" Required="TRUE" Format="DateTime" StorageTZ="TRUE" Group="Overture AI CoE Pilot" />
+      <Field ID="{6b73877f-1579-4715-b476-bfae9045d3e7}" Name="CompanyDataOrWorkflow" StaticName="CompanyDataOrWorkflow" DisplayName="Company data or workflow indicated" Type="Boolean" Required="FALSE" Group="Overture AI CoE Pilot"><Default>0</Default></Field>
+      <Field ID="{5b46eb01-198f-48d9-ade4-dea6ee5ef835}" Name="SensitiveOrRegulated" StaticName="SensitiveOrRegulated" DisplayName="Sensitive or regulated indicated" Type="Boolean" Required="FALSE" Group="Overture AI CoE Pilot"><Default>0</Default></Field>
+      <Field ID="{b2a9fc59-ad2d-44b0-a3f0-1acfc58bdd7b}" Name="HumanReview" StaticName="HumanReview" DisplayName="Human review" Type="Text" Required="FALSE" MaxLength="80" Group="Overture AI CoE Pilot" />
+      <Field ID="{1023ecc5-0f52-4ae5-92a2-6e98e627b736}" Name="ToolName" StaticName="ToolName" DisplayName="Tool name" Type="Text" Required="FALSE" MaxLength="255" Group="Overture AI CoE Pilot" />
+      <Field ID="{1273d2b9-ff33-4424-aff5-8b6ecdef366b}" Name="RoutingOutcome" StaticName="RoutingOutcome" DisplayName="Routing outcome" Type="Note" Required="FALSE" NumLines="4" RichText="FALSE" Group="Overture AI CoE Pilot" />
+      <Field ID="{b546e5ef-624b-4916-9fa9-3ee13dd87a23}" Name="PayloadJson" StaticName="PayloadJson" DisplayName="Submission payload JSON" Type="Note" Required="TRUE" NumLines="12" RichText="FALSE" Group="Overture AI CoE Pilot" />
+      <Field ID="{00c6e194-abe7-4d72-99d4-c545583818ac}" Name="PilotOnly" StaticName="PilotOnly" DisplayName="Pilot only" Type="Boolean" Required="TRUE" Group="Overture AI CoE Pilot"><Default>1</Default></Field>
+      <Field ID="{5857a60e-60fa-429e-897f-3526e39e4108}" Name="AssignedToPilot" StaticName="AssignedToPilot" DisplayName="Assigned to" Type="User" List="UserInfo" ShowField="ImnName" UserSelectionMode="PeopleOnly" UserSelectionScope="0" Required="FALSE" Group="Overture AI CoE Pilot" />
+    </Fields>
+    <Views>
+      <View BaseViewID="1" Type="HTML" WebPartZoneID="Main" DisplayName="All pilot intakes" DefaultView="TRUE" MobileView="TRUE" MobileDefaultView="TRUE" SetupPath="pages\viewpage.aspx" ImageUrl="/_layouts/15/images/generic.png?rev=47" Url="AllItems.aspx">
+        <Toolbar Type="Standard" />
+        <XslLink Default="TRUE">main.xsl</XslLink>
+        <JSLink>clienttemplates.js</JSLink>
+        <RowLimit Paged="TRUE">30</RowLimit>
+        <ViewFields>
+          <FieldRef Name="LinkTitle" />
+          <FieldRef Name="IntakeId" />
+          <FieldRef Name="WorkflowType" />
+          <FieldRef Name="Status" />
+          <FieldRef Name="Priority" />
+          <FieldRef Name="RequestorName" />
+          <FieldRef Name="SubmittedAt" />
+          <FieldRef Name="AssignedToPilot" />
+        </ViewFields>
+        <Query>
+          <OrderBy><FieldRef Name="SubmittedAt" Ascending="FALSE" /></OrderBy>
+        </Query>
+      </View>
+    </Views>
+    <Forms>
+      <Form Type="DisplayForm" Url="DispForm.aspx" SetupPath="pages\form.aspx" WebPartZoneID="Main" />
+      <Form Type="EditForm" Url="EditForm.aspx" SetupPath="pages\form.aspx" WebPartZoneID="Main" />
+      <Form Type="NewForm" Url="NewForm.aspx" SetupPath="pages\form.aspx" WebPartZoneID="Main" />
+    </Forms>
+  </MetaData>
+</List>

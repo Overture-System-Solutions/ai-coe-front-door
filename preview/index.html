@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Overture AI CoE — OFFLINE RECOVERY PREVIEW</title>
+<style>
+body { margin: 0; font-family: "Segoe UI", system-ui, sans-serif; }
+#recovery-notice { position: sticky; top: 0; z-index: 9999; background: #fff0b3; color: #392600; border-bottom: 3px solid #9b6800; padding: 14px 20px; }
+#recovery-notice p { margin: 4px 0; }
+#preview-error { color: #a00; white-space: pre-wrap; }
+</style>
+</head>
+<body>
+<aside id="recovery-notice" role="note">
+<strong>OFFLINE RECOVERY PREVIEW — NOT THE LIVE OSS SITE</strong>
+<p>The UI below is recovered code; all SharePoint responses and permissions are simulated, and external API calls are blocked.</p>
+<p>“Connected,” “live,” and submission-success labels below refer only to this simulation; no approvals run and no AI is connected.</p>
+<p>Use fictional data only. Drafts may remain in this browser’s local storage; submitted records disappear on refresh.</p>
+</aside>
+<div id="preview-error" role="alert"></div>
+<div id="app"></div>
+<script src="/react.js"></script>
+<script src="/react-dom.js"></script>
+<script src="/host.js"></script>
+<script src="/bundle.js"></script>
+<script src="/mount.js"></script>
+</body>
+</html>

@@ -1,0 +1,6 @@
+test_every_archive_member_is_preserved_byte_for_byte (test_extract.ExtractionTests.test_every_archive_member_is_preserved_byte_for_byte) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 0.156s
+
+OK
