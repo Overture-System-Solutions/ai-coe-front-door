@@ -1,0 +1,69 @@
+import { render } from '@testing-library/react';
+import type { RenderResult } from '@testing-library/react';
+import * as React from 'react';
+import { createBranding } from '../webparts/aiCoeFrontDoor/branding/branding';
+import type { IBranding } from '../webparts/aiCoeFrontDoor/branding/branding';
+import { createWorkflowCatalog } from '../webparts/aiCoeFrontDoor/content/workflows/catalog';
+import { FrontDoorProvider } from '../webparts/aiCoeFrontDoor/context/FrontDoorContext';
+import type { IFrontDoorContextValue, IFrontDoorUser } from '../webparts/aiCoeFrontDoor/context/FrontDoorContext';
+import { SubmissionProvider } from '../webparts/aiCoeFrontDoor/context/SubmissionContext';
+import type { IToolPolicyEvaluator } from '../webparts/aiCoeFrontDoor/services/toolPolicyEvaluator';
+import type { IUsageMetricsService } from '../webparts/aiCoeFrontDoor/services/types';
+import { createFakeGovernanceService, createImmediateEvaluator, createPendingUsageService, InMemoryDraftStore } from './fakeServices';
+import type { IFakeGovernanceService } from './fakeServices';
+
+export const TEST_SITE_URL: string = 'https://contoso.sharepoint.com/sites/ai';
+export const TEST_USER: IFrontDoorUser = { displayName: 'Pat Example', email: 'pat@contoso.com' };
+
+export interface ITestFrontDoorOptions {
+  /** Defaults to "Overture" so the rendered copy matches the shipped 1.0.0.7 strings. */
+  organizationName?: string;
+  siteUrl?: string;
+  isAdmin?: boolean;
+  user?: IFrontDoorUser;
+  governance?: IFakeGovernanceService;
+  /** Defaults to a service that never answers; pass a fake to exercise the telemetry strip. */
+  usage?: IUsageMetricsService;
+  draftStore?: InMemoryDraftStore;
+  toolPolicyEvaluator?: IToolPolicyEvaluator;
+}
+
+export interface ITestFrontDoor {
+  value: IFrontDoorContextValue;
+  branding: IBranding;
+  governance: IFakeGovernanceService;
+  draftStore: InMemoryDraftStore;
+}
+
+export function createTestFrontDoor(options: ITestFrontDoorOptions = {}): ITestFrontDoor {
+  const branding: IBranding = createBranding(options.organizationName ?? 'Overture');
+  const governance: IFakeGovernanceService = options.governance ?? createFakeGovernanceService();
+  const draftStore: InMemoryDraftStore = options.draftStore ?? new InMemoryDraftStore();
+  const value: IFrontDoorContextValue = {
+    branding,
+    catalog: createWorkflowCatalog(branding),
+    siteUrl: options.siteUrl ?? TEST_SITE_URL,
+    user: options.user ?? TEST_USER,
+    isAdmin: options.isAdmin ?? false,
+    services: {
+      governance,
+      usage: options.usage ?? createPendingUsageService(),
+      draftStore,
+      toolPolicyEvaluator: options.toolPolicyEvaluator ?? createImmediateEvaluator(branding)
+    }
+  };
+  return { value, branding, governance, draftStore };
+}
+
+export type FrontDoorRenderResult = RenderResult & ITestFrontDoor;
+
+/** Renders `ui` inside the front-door and submission providers backed by fakes. */
+export function renderWithFrontDoor(ui: React.ReactElement, options: ITestFrontDoorOptions = {}): FrontDoorRenderResult {
+  const testFrontDoor: ITestFrontDoor = createTestFrontDoor(options);
+  const result: RenderResult = render(
+    <FrontDoorProvider value={testFrontDoor.value}>
+      <SubmissionProvider governanceService={testFrontDoor.governance}>{ui}</SubmissionProvider>
+    </FrontDoorProvider>
+  );
+  return { ...result, ...testFrontDoor };
+}
