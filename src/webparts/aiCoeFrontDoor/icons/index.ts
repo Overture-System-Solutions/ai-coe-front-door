@@ -1,5 +1,5 @@
 /**
- * The twenty-five lucide-react icons the shipped bundle inlined (lucide-react 1.30.0, pinned).
+ * The twenty-six lucide-react icons the shipped bundle inlined (lucide-react 1.30.0, pinned).
  * Named imports let webpack tree-shake the rest of the library into a single chunk.
  */
 export {
@@ -9,6 +9,7 @@ export {
   Check,
   ChevronLeft,
   ChevronRight,
+  Clock3,
   CircleCheck,
   CircleQuestionMark,
   Copy,
