@@ -48,8 +48,9 @@ describe('GenericWorkflow', () => {
   });
 
   it('walks to the review page, allows edits, and submits the answers', async () => {
-    const { governance, draftStore, onDraftsChanged, onExit } = renderWorkflow();
+    const draftStore: InMemoryDraftStore = new InMemoryDraftStore();
     await draftStore.save('helpTraining', { answers: {} });
+    const { governance, onDraftsChanged, onExit } = renderWorkflow(false, { draftStore });
     await firstStep();
     playJourney(HELP_TRAINING_JOURNEY, helpTraining);
 

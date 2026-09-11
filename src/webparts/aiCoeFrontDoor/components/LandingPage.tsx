@@ -20,7 +20,7 @@ export interface ILandingPageProps {
 
 const PATHS_HEADING_ID: string = 'ai-coe-paths';
 
-/** Absolute link to the policy library on the current site, or a relative one when the site is unknown. */
+/** Absolute link to the policy library on the current site, or a page-relative path when the site is unknown. */
 export function policyLibraryUrl(siteUrl: string): string {
   return siteUrl ? `${siteUrl.replace(/\/$/, '')}/${POLICY_LIBRARY_SEGMENT}` : `../${POLICY_LIBRARY_SEGMENT}`;
 }

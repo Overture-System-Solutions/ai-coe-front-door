@@ -59,13 +59,14 @@ describe('FrontDoorShell', () => {
     expect(within(card('Get help or training')).getByText('Resume draft')).toBeInTheDocument();
     expect(screen.getAllByText('Resume draft')).toHaveLength(1);
 
-    for (const [title, workflowTitle] of [
-      ['Check a tool or task', catalog.toolCheck.title],
-      ['Register team AI use', catalog.teamUsage.title],
-      ['Share feedback', catalog.feedback.title]
-    ]) {
+    for (const [title, workflow] of [
+      ['Check a tool or task', catalog.toolCheck],
+      ['Register team AI use', catalog.teamUsage],
+      ['Share feedback', catalog.feedback]
+    ] as const) {
       fireEvent.click(card(title));
-      expect(screen.getByRole('heading', { level: 1, name: workflowTitle })).toBeInTheDocument();
+      expect(screen.getByRole('heading', { level: 1, name: workflow.title })).toBeInTheDocument();
+      await screen.findByRole('heading', { level: 2, name: workflow.steps[0].title });
       fireEvent.click(screen.getByRole('button', { name: 'All topics' }));
     }
   });
@@ -80,9 +81,10 @@ describe('FrontDoorShell', () => {
     expect(screen.getByRole('heading', { level: 1, name: 'AI, safely put to work.' })).toBeInTheDocument();
   });
 
-  it('drops the organization prefix from the header when unbranded', () => {
+  it('drops the organization prefix from the header when unbranded', async () => {
     renderWithFrontDoor(<FrontDoorShell />, { organizationName: '' });
     fireEvent.click(card('Share feedback'));
     expect((screen.getByText('AI CoE Lab').closest('p') as HTMLElement).textContent).toBe('AI CoE Lab');
+    await screen.findByRole('heading', { level: 2, name: catalog.feedback.steps[0].title });
   });
 });

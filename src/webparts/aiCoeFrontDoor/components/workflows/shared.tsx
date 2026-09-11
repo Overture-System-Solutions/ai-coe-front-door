@@ -122,7 +122,7 @@ export interface IWorkflowCardProps {
   children?: React.ReactNode;
 }
 
-/** The rounded card that frames every workflow phase. */
+/** The card (2xl corner radius) that frames every workflow phase. */
 export function WorkflowCard({ children }: IWorkflowCardProps): React.ReactElement {
   return <div className="overture-card rounded-2xl p-6 sm:p-8">{children}</div>;
 }
