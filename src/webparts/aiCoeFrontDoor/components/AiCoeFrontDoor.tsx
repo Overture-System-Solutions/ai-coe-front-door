@@ -1,44 +1,39 @@
 import * as React from 'react';
-import styles from './AiCoeFrontDoor.module.scss';
-import type { IAiCoeFrontDoorProps } from './IAiCoeFrontDoorProps';
-import { escape } from '@microsoft/sp-lodash-subset';
-import welcomeDark from '../assets/welcome-dark.png';
-import welcomeLight from '../assets/welcome-light.png';
+import styles from '../AiCoeFrontDoor.module.scss';
+import type { IBranding } from '../branding/branding';
+import { createWorkflowCatalog } from '../content/workflows/catalog';
+import { FrontDoorProvider } from '../context/FrontDoorContext';
+import type { IFrontDoorContextValue, IFrontDoorServices, IFrontDoorUser } from '../context/FrontDoorContext';
+import { SubmissionProvider } from '../context/SubmissionContext';
+import { FrontDoorShell } from './FrontDoorShell';
 
-export default class AiCoeFrontDoor extends React.Component<IAiCoeFrontDoorProps> {
-  public render(): React.ReactElement<IAiCoeFrontDoorProps> {
-    const {
-      description,
-      isDarkTheme,
-      environmentMessage,
-      userDisplayName
-    } = this.props;
+export interface IAiCoeFrontDoorProps {
+  isDarkTheme: boolean;
+  branding: IBranding;
+  siteUrl: string;
+  user: IFrontDoorUser;
+  isAdmin: boolean;
+  /** Created once by the web part so effects keyed on the services do not re-run on every render. */
+  services: IFrontDoorServices;
+}
 
-    return (
-      <section className={`${styles.aiCoeFrontDoor}`}>
-        <div className={styles.welcome}>
-          <img alt="" src={isDarkTheme ? welcomeDark : welcomeLight} className={styles.welcomeImage} />
-          <h2>Well done, {escape(userDisplayName)}!</h2>
-          <div>{environmentMessage}</div>
-          <div>Web part property value: <strong>{escape(description)}</strong></div>
-        </div>
-        <div>
-          <h3>Welcome to SharePoint Framework!</h3>
-          <p>
-            The SharePoint Framework (SPFx) is a extensibility model for Microsoft Viva, Microsoft Teams and SharePoint. It&#39;s the easiest way to extend Microsoft 365 with automatic Single Sign On, automatic hosting and industry standard tooling.
-          </p>
-          <h4>Learn more about SPFx development:</h4>
-          <ul className={styles.links}>
-            <li><a href="https://aka.ms/spfx" target="_blank" rel="noreferrer">SharePoint Framework Overview</a></li>
-            <li><a href="https://aka.ms/spfx-yeoman-graph" target="_blank" rel="noreferrer">Use Microsoft Graph in your solution</a></li>
-            <li><a href="https://aka.ms/spfx-yeoman-teams" target="_blank" rel="noreferrer">Build for Microsoft Teams using SharePoint Framework</a></li>
-            <li><a href="https://aka.ms/spfx-yeoman-viva" target="_blank" rel="noreferrer">Build for Microsoft Viva Connections using SharePoint Framework</a></li>
-            <li><a href="https://aka.ms/spfx-yeoman-store" target="_blank" rel="noreferrer">Publish SharePoint Framework applications to the marketplace</a></li>
-            <li><a href="https://aka.ms/spfx-yeoman-api" target="_blank" rel="noreferrer">SharePoint Framework API reference</a></li>
-            <li><a href="https://aka.ms/m365pnp" target="_blank" rel="noreferrer">Microsoft 365 Developer Community</a></li>
-          </ul>
-        </div>
-      </section>
-    );
-  }
+/**
+ * Root of the React tree: the scoped section every stylesheet targets, the screen-reader-only
+ * signed-in line, and the providers the pages read from.
+ */
+export function AiCoeFrontDoor({ isDarkTheme, branding, siteUrl, user, isAdmin, services }: IAiCoeFrontDoorProps): React.ReactElement {
+  const value: IFrontDoorContextValue = React.useMemo(
+    (): IFrontDoorContextValue => ({ branding, catalog: createWorkflowCatalog(branding), siteUrl, user, isAdmin, services }),
+    [branding, siteUrl, user, isAdmin, services]
+  );
+  return (
+    <section id="overture-ai-coe-pilot" className={styles.aiCoeFrontDoor} data-theme={isDarkTheme ? 'dark' : 'light'}>
+      <span className={styles.signedInUser}>{`Signed in as ${user.displayName}`}</span>
+      <FrontDoorProvider value={value}>
+        <SubmissionProvider governanceService={services.governance}>
+          <FrontDoorShell />
+        </SubmissionProvider>
+      </FrontDoorProvider>
+    </section>
+  );
 }

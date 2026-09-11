@@ -1,16 +1,8 @@
 declare interface IAiCoeFrontDoorWebPartStrings {
   PropertyPaneDescription: string;
-  BasicGroupName: string;
-  DescriptionFieldLabel: string;
-  AppLocalEnvironmentSharePoint: string;
-  AppLocalEnvironmentTeams: string;
-  AppLocalEnvironmentOffice: string;
-  AppLocalEnvironmentOutlook: string;
-  AppSharePointEnvironment: string;
-  AppTeamsTabEnvironment: string;
-  AppOfficeEnvironment: string;
-  AppOutlookEnvironment: string;
-  UnknownEnvironment: string;
+  BrandingGroupName: string;
+  OrganizationNameFieldLabel: string;
+  OrganizationNameFieldDescription: string;
 }
 
 declare module 'AiCoeFrontDoorWebPartStrings' {
