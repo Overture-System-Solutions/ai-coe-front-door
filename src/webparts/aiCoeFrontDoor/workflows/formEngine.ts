@@ -1,0 +1,182 @@
+import type { IBranding } from '../branding/branding';
+import type { ISubmissionResult } from '../services/types';
+import { isChoiceStep } from './types';
+import type { AnswerValue, IAnswers, IStep, IWorkflowDefinition } from './types';
+
+/** Steps whose `showIf` predicate (if any) holds for the current answers, in definition order. */
+export function visibleSteps(definition: IWorkflowDefinition, answers: IAnswers): IStep[] {
+  return definition.steps.filter((step: IStep): boolean => step.showIf === undefined || step.showIf(answers));
+}
+
+/** The closing sentence of a summary; the shipped build appended nothing else for the step types in use. */
+export function whatHappensNextText(definition: IWorkflowDefinition, _answers: IAnswers): string | undefined {
+  return definition.whatHappensNext;
+}
+
+/** Validation message for a required step without a usable answer; undefined when the step is fine. */
+export function validateStep(step: IStep | undefined, answers: IAnswers): string | undefined {
+  if (step === undefined || step.type === 'notice' || !step.required) {
+    return undefined;
+  }
+  const value: AnswerValue = answers[step.id];
+  switch (step.type) {
+    case 'select':
+      return value ? undefined : 'Please pick one option so we can keep going.';
+    case 'multiselect':
+      return Array.isArray(value) && value.length !== 0 ? undefined : 'Please pick at least one option so we can keep going.';
+    case 'text':
+      return value && String(value).trim() ? undefined : 'Please fill in this box before continuing.';
+    case 'textarea':
+      return value && String(value).trim() ? undefined : 'Please add a few words before continuing. Even a short sentence is fine.';
+    default:
+      return undefined;
+  }
+}
+
+/** Display text for an answer: option labels for choices (joined with ", "), the text itself otherwise. */
+export function formatAnswer(step: IStep, value: AnswerValue): string {
+  if (value === undefined || value === '') {
+    return '';
+  }
+  if (!isChoiceStep(step)) {
+    return String(value);
+  }
+  if (step.type === 'select') {
+    const option = step.options.filter((candidate) => candidate.value === value)[0];
+    return option ? option.label : String(value);
+  }
+  if (!Array.isArray(value) || value.length === 0) {
+    return '';
+  }
+  return value
+    .map((item: string): string => {
+      const option = step.options.filter((candidate) => candidate.value === item)[0];
+      return option ? option.label : item;
+    })
+    .join(', ');
+}
+
+/** Plain-text summary offered for download by the generic workflows. */
+export function buildGenericExportText(
+  definition: IWorkflowDefinition,
+  answers: IAnswers,
+  steps: IStep[],
+  branding: IBranding,
+  now: Date = new Date()
+): string {
+  const lines: string[] = [];
+  lines.push(branding.exportHeader(definition.title));
+  lines.push('AI CoE submission summary');
+  lines.push(`Created: ${now.toLocaleString()}`);
+  lines.push('');
+  for (const step of steps) {
+    if (step.type !== 'notice') {
+      const value: string = formatAnswer(step, answers[step.id]);
+      if (value) {
+        lines.push(step.title);
+        lines.push(value);
+        lines.push('');
+      }
+    }
+  }
+  lines.push(whatHappensNextText(definition, answers) ?? '');
+  return lines.join('\n');
+}
+
+export type GenericPhase = 'form' | 'review' | 'submitting' | 'result';
+
+export interface ISessionBase<TPhase extends string, TReturn extends string> {
+  answers: IAnswers;
+  currentStepId: string | undefined;
+  phase: TPhase;
+  editReturnTarget: TReturn | undefined;
+  errors: { [stepId: string]: string | undefined };
+  notice: string | undefined;
+}
+
+export interface IGenericSession extends ISessionBase<GenericPhase, 'review'> {
+  result: ISubmissionResult | undefined;
+}
+
+/** Shape persisted to localStorage by the generic workflows. */
+export interface IGenericDraft {
+  answers?: IAnswers;
+  currentStepId?: string;
+  phase?: string;
+}
+
+export function createGenericSession(definition: IWorkflowDefinition, draft: IGenericDraft | undefined): IGenericSession {
+  const answers: IAnswers = draft?.answers ?? {};
+  const steps: IStep[] = visibleSteps(definition, answers);
+  let currentStepId: string | undefined = draft?.currentStepId;
+  if (currentStepId === undefined || !steps.some((step: IStep): boolean => step.id === currentStepId)) {
+    currentStepId = steps[0]?.id;
+  }
+  return {
+    answers,
+    currentStepId,
+    phase: draft?.phase === 'review' ? 'review' : 'form',
+    editReturnTarget: undefined,
+    errors: {},
+    result: undefined,
+    notice: draft ? 'Picking up where you left off.' : undefined
+  };
+}
+
+export type BaseSessionAction<TPhase extends string, TReturn extends string> =
+  | { type: 'ANSWER'; stepId: string; value: AnswerValue }
+  | { type: 'SET_ERROR'; stepId: string; message: string }
+  | { type: 'GOTO'; stepId: string | undefined; phase?: TPhase; editReturnTarget?: TReturn }
+  | { type: 'SET_PHASE'; phase: TPhase }
+  | { type: 'SET_NOTICE'; text: string | undefined };
+
+/**
+ * Handles the five actions every workflow shares. Returns undefined for other actions so each
+ * workflow reducer can extend it.
+ */
+export function reduceBaseAction<TPhase extends string, TReturn extends string, TState extends ISessionBase<TPhase, TReturn>>(
+  state: TState,
+  action: BaseSessionAction<TPhase, TReturn>
+): TState | undefined {
+  switch (action.type) {
+    case 'ANSWER':
+      return {
+        ...state,
+        answers: { ...state.answers, [action.stepId]: action.value },
+        errors: { ...state.errors, [action.stepId]: undefined },
+        notice: undefined
+      };
+    case 'SET_ERROR':
+      return { ...state, errors: { ...state.errors, [action.stepId]: action.message } };
+    case 'GOTO':
+      return {
+        ...state,
+        currentStepId: action.stepId,
+        phase: action.phase ?? state.phase,
+        editReturnTarget: action.editReturnTarget,
+        notice: undefined
+      };
+    case 'SET_PHASE':
+      return { ...state, phase: action.phase };
+    case 'SET_NOTICE':
+      return { ...state, notice: action.text };
+    default:
+      return undefined;
+  }
+}
+
+export type GenericSessionAction =
+  | BaseSessionAction<GenericPhase, 'review'>
+  | { type: 'SET_RESULT'; result: ISubmissionResult }
+  | { type: 'RESET'; session: IGenericSession };
+
+export function genericReducer(state: IGenericSession, action: GenericSessionAction): IGenericSession {
+  switch (action.type) {
+    case 'SET_RESULT':
+      return { ...state, result: action.result, phase: 'result' };
+    case 'RESET':
+      return action.session;
+    default:
+      return reduceBaseAction<GenericPhase, 'review', IGenericSession>(state, action) ?? state;
+  }
+}
