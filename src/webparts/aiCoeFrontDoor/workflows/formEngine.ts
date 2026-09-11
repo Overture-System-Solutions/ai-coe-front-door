@@ -98,28 +98,36 @@ export interface IGenericSession extends ISessionBase<GenericPhase, 'review'> {
   result: ISubmissionResult | undefined;
 }
 
-/** Shape persisted to localStorage by the generic workflows. */
-export interface IGenericDraft {
+/** Fields every draft persisted to localStorage carries; the generic workflows store nothing else. */
+export interface IStoredDraftBase {
   answers?: IAnswers;
   currentStepId?: string;
   phase?: string;
 }
 
+export type IGenericDraft = IStoredDraftBase;
+
+export const RESUME_NOTICE: string = 'Picking up where you left off.';
+
+/** The saved step when it is still visible for the answers, otherwise the first visible step. */
+export function resumeStepId(definition: IWorkflowDefinition, answers: IAnswers, requested: string | undefined): string | undefined {
+  const steps: IStep[] = visibleSteps(definition, answers);
+  if (requested !== undefined && steps.some((step: IStep): boolean => step.id === requested)) {
+    return requested;
+  }
+  return steps[0]?.id;
+}
+
 export function createGenericSession(definition: IWorkflowDefinition, draft: IGenericDraft | undefined): IGenericSession {
   const answers: IAnswers = draft?.answers ?? {};
-  const steps: IStep[] = visibleSteps(definition, answers);
-  let currentStepId: string | undefined = draft?.currentStepId;
-  if (currentStepId === undefined || !steps.some((step: IStep): boolean => step.id === currentStepId)) {
-    currentStepId = steps[0]?.id;
-  }
   return {
     answers,
-    currentStepId,
+    currentStepId: resumeStepId(definition, answers, draft?.currentStepId),
     phase: draft?.phase === 'review' ? 'review' : 'form',
     editReturnTarget: undefined,
     errors: {},
     result: undefined,
-    notice: draft ? 'Picking up where you left off.' : undefined
+    notice: draft ? RESUME_NOTICE : undefined
   };
 }
 

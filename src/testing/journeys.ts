@@ -67,6 +67,25 @@ export const TOOL_CHECK_JOURNEY: IJourney = {
   ]
 };
 
+/** Same shape as the tool check journey, but the tool is unknown, which routes to the "guidance gap" outcome. */
+export const TOOL_CHECK_GAP_JOURNEY: IJourney = {
+  workflowId: 'toolCheck',
+  answers: [
+    { stepId: 'helpWith', value: 'Cleaning up survey responses.' },
+    { stepId: 'toolKnown', value: 'no' },
+    { stepId: 'toolApprovalStatus', value: 'unknown' },
+    { stepId: 'informationType', value: 'Anonymous survey text' },
+    { stepId: 'companyDataOrWorkflow', value: 'no' },
+    { stepId: 'sensitiveCategories', value: ['none'] },
+    { stepId: 'filesUploaded', value: 'no' },
+    { stepId: 'outputSharedExternally', value: 'no' },
+    { stepId: 'aiDecisionImportance', value: 'no' },
+    { stepId: 'aiTakesAction', value: 'no' },
+    { stepId: 'humanReview', value: 'always' },
+    { stepId: 'usagePattern', value: 'experimental' }
+  ]
+};
+
 export const TEAM_USAGE_JOURNEY: IJourney = {
   workflowId: 'teamUsage',
   answers: [
