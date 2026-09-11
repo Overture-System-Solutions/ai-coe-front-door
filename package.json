@@ -13,7 +13,8 @@
     "start": "heft start --clean",
     "test": "heft test",
     "tailwind": "node scripts/tailwind-task.js",
-    "preview": "node scripts/preview.mjs"
+    "preview": "node scripts/preview.mjs",
+    "verify": "node scripts/verify-package.mjs"
   },
   "dependencies": {
     "@microsoft/sp-component-base": "1.23.2",

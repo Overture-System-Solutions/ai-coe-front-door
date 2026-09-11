@@ -1,54 +1,121 @@
-# Overture AI CoE Front Door — recovered working repository
+# AI CoE Front Door — SharePoint Framework web part
 
-This is the editable recovery of the **1.0.0.7 SharePoint package**, not the missing original TypeScript/React source project. Start here, then open `src/` in your editor.
+A SharePoint Framework (SPFx 1.23.2, React 17, TypeScript) web part that gives an AI Center of Excellence a governed
+front door: five guided intake workflows (idea, tool or task check, team AI-use disclosure, help or training,
+feedback), a telemetry snapshot and an administrator dashboard, all writing to SharePoint lists.
+
+This project is the maintainable source for the web part that shipped as package **1.0.0.7** (`original/`). The
+shipped package was reverse-engineered (see `docs/RECOVERY.md`) and then ported to idiomatic TypeScript with a
+test-first approach. It builds the next in-place upgrade, **1.0.0.8**, with the same solution, feature and web part
+identities, and it is tenant neutral: the organization name is a web part property.
 
 ## Work with it
 
-Use Node.js 22 or newer and npm. From this folder:
+Use Node.js 22.14 or newer (below 23) and npm.
 
-    npm ci --ignore-scripts
+    npm ci
     npm test
+    npm run build
     npm run preview
 
-Open http://127.0.0.1:4173 in your browser. If that port is occupied, use `npm run preview -- --port 4174`. The preview runs the actual recovered React UI with a newly written, explicitly simulated SPFx/SharePoint host. No live SharePoint or model calls are made. Use fictional data only. “Connected,” “live,” and submission-success labels inside the original UI are simulated; the yellow banner explains this.
+- `npm test` runs `heft test`: the Tailwind step, Sass, TypeScript, ESLint, webpack and Jest.
+- `npm run build` runs the production build and writes `sharepoint/solution/overture-ai-coe-front-door.sppkg`.
+- `npm run preview` serves an offline preview of the last build at http://127.0.0.1:4173 against a simulated
+  SharePoint host (fictional user, in-memory lists, external network blocked). Add `?organization=Contoso` or use the
+  banner's field to try the branding property. `npm run preview -- --port 4174` changes the port;
+  `npm run preview -- --bundle <path>` previews another bundle, for example the shipped one under
+  `recovered/package/ClientSideAssets/`.
+- `npm start` runs `heft start` for the SharePoint hosted workbench (requires a tenant; not needed for local work).
 
-Edit files under `src/`, run `npm run build`, then refresh the preview. There is no automatic watch/rebuild. The JavaScript and CSS edit-propagation test proves source edits reach the rebuilt bundle. `npm test` rebuilds first and exercises the recovery, UI, all five submission routes against local fixtures, and preview-server boundaries.
+## Deploy 1.0.0.8
 
-The Python extraction test is separate: `python3 -m unittest discover -s tests -p 'test_*.py' -v` in WSL, or `py -3 -m unittest discover -s tests -p test_*.py -v` in Windows if the Python launcher is installed. Normal editing and preview use only Node/npm.
+Upload `sharepoint/solution/overture-ai-coe-front-door.sppkg` to the app catalog as an update of the existing app.
+The solution id (`f125ebdf-4a9d-4e6e-8479-3a18874e7752`), feature id (`69ab84b7-608c-47ee-9623-af8ebaf2cb10`,
+version 1.0.0.2) and web part id (`cf2e5904-0703-4fe4-ae5a-ec012d6fa689`) are unchanged, so the three provisioned
+lists (AI CoE Pilot Intakes and its two schemas under `sharepoint/assets/`) are left untouched. The other four lists
+the web part reads (AI CoE Use Cases, AI CoE Decisions, AI Usage Daily, AI CoE Incidents) are provisioned by the
+companion Power Automate demo solution, exactly as before.
 
-## Where to start editing
+After deployment, open the web part's property pane and set **Organization name**.
 
-- `src/services/governance-service.js`: actual intake and core Use Cases writes, dashboard queries, shared IDs and field mappings (`Wt`, alias `qt`).
-- `src/components/idea-workflow.js`: idea UI; the current early return skips the AI request (`At`, inner function `C`).
-- `src/services/idea-summary.js`: deterministic draft builder (`Ue`) and dormant provider request (`Fe`).
-- `src/services/feedback-summary.js`: dormant feedback-provider request (`Ze`).
-- `src/workflows/definitions-and-theme.js`: question definitions, labels and theme strings (`fe` holds the workflow definitions).
-- `src/components/landing-page.js`: home-page composition (`St`); home-card labels also live in `src/components/usage-dashboard.js` (`mt`).
-- `src/components/governance-dashboard.js`: admin interface (`yt`).
-- `src/services/usage-metrics-service.js`: reads usage/incident lists (`Qt`); this is not an OpenAI API connection.
-- `src/styles/AiCoeFrontDoor.global.css`: extracted, editable global CSS. Additional styles remain in the recovered theme/style-loader JavaScript.
-- `src/webpart/AiCoeFrontDoorWebPart.js`: SPFx lifecycle and wiring (`Jt`).
+## Branding
 
-These are descriptive recovery filenames, not recovered original filenames. Minified identifiers are retained intentionally. The fragments share one lexical scope and are assembled in order; they are not independent ES modules. Do not import or reorder them as standalone modules. `src/recovery-map.json` maps each fragment and symbol back to exact offsets in the packaged JavaScript.
+Everything organization-specific is derived from the `organizationName` property (`branding/branding.ts`). With the
+value `Overture` the web part reproduces the 1.0.0.7 wording verbatim; blank keeps the wording neutral.
 
-## What is preserved
+| Where | Value set (`Contoso`) | Blank |
+|---|---|---|
+| Workflow header | Contoso AI CoE Lab | AI CoE Lab |
+| Hero badge | CONTOSO AI COE | AI COE |
+| Downloaded summaries, first line | Contoso AI CoE — *workflow title* | AI CoE — *workflow title* |
+| Policy reference on review requests | Contoso AI CoE governance controls, version 1.1, August 26, 2026 | AI CoE governance controls, … |
+| Company-information help text | …includes Contoso, client, partner, and internal work information… | …includes company, client, partner, and internal work information… |
+| External-sharing question | Would the output be shared outside Contoso? | Would the output be shared outside the organization? |
+| Team AI-use disclosure | …helps Contoso provide better guidance… / …real AI use at Contoso. | …helps the organization… / …real AI use at the organization. |
 
-- `original/overture-ai-coe-front-door.sppkg`: unchanged source artifact S181.
-- `recovered/package/`: all 20 non-directory ZIP entries, byte-for-byte, including JavaScript, license notice, XML manifests, list schemas and four PNG assets.
-- `recovered/inventory.json`: every entry's length and SHA-256; the archive also contains three directory entries.
-- `src/`: 23 formatted JavaScript sections, the runtime template, extracted CSS and reconstruction map.
-- `scripts/`, `preview/`, `tests/`, `package.json`, `package-lock.json`: newly authored recovery/development tooling, not original project files.
-- `docs/RECOVERY.md`: provenance, dependency versions and limitations.
-- `evidence/`: actual verification logs/report from this recovery session.
+Data contracts never change: intake ids (`OVT-AICOE-…`), list titles and field names, the localStorage draft keys
+(`overture-ai-coe-front-door:draft:*`), download file names (`overture-ai-coe-*.txt`) and the DOM scope id
+(`overture-ai-coe-pilot`). The word "Overture" does not appear in the built bundle (a test enforces this).
 
-## Important limits
+## Layout
 
-The package contains no `.ts`, `.tsx`, `.scss`, `.map`, original `package.json`, build configuration or Git history. Original interfaces, JSX, comments and unminified names cannot be recovered exactly. The CSS references a missing source map; that reference is preserved, not evidence that the map exists. This repository does not pretend to reconstruct the author's original project structure.
+    src/webparts/aiCoeFrontDoor/
+      AiCoeFrontDoorWebPart.ts        SPFx lifecycle, property pane, service creation (once, in onInit)
+      branding/                       organization wording derived from the property
+      content/                        workflow definitions, home cards, telemetry tiles, constants
+      workflows/                      form engine, per-workflow session reducers, types
+      services/                       SharePoint governance and telemetry services, drafts, policy evaluator
+      summaries/                      deterministic summary drafts, review indicators, export texts
+      controls/, components/          React controls and pages (React Testing Library tests alongside)
+      context/                        providers for branding, catalog, services and the last submission
+      styles/                         Tailwind input, hand-written rules, theme block, stylesheet parity test
+    src/testing/                      fakes: SharePoint list store, services, AMD bundle host, journeys
+    src/parity/                       journey parity suite against the shipped bundle
+    src/preview/                      offline preview host and its server test
+    parity/                           stylesheet fixtures extracted from 1.0.0.7
+    original/, recovered/, docs/RECOVERY.md, evidence/   provenance of the shipped package
 
-`npm run build` produces an AMD JavaScript bundle in `dist/`, with the original SPFx dependency contract and accompanying assets. This is a working local rebuild/preview path, **not a native SPFx toolchain or an importable replacement `.sppkg`**. The old hash-looking filename is retained for reference in `dist/`; do not upload it over the deployed asset. Before deployment, reconstruct/review native SPFx packaging, update version/cache references, and validate the package and live tenant separately.
+## Styling
 
-The baseline rebuild has the same parsed JavaScript structure as the original (formatting, comments and literal spelling aside). Intentional source edits should change `equivalentToPackagedBaseline` to `false` in `dist/build-report.json`; that flag is informational, not a reason to discard edits. `npm run recover` refuses to overwrite an existing `src/`; do not delete your edits to rerun recovery. For an independent recovery use `node scripts/recover.mjs --out <new-empty-path>`.
+The shipped stylesheet is reproduced exactly (`styles/cssParity.test.ts` proves it rule for rule):
 
-No AI behavior was added or “fixed” during recovery. The dormant calls are to Anthropic, not OpenAI, and must not be enabled by adding a browser-side key. The proposed OpenAI/Power Automate connection remains a separate, unimplemented change subject to OSS policy/licensing and human-review requirements.
+- `styles/tailwind.css` (`@tailwind utilities`) is compiled by a Heft phase (`config/heft.json`,
+  `scripts/tailwind-task.js`) into `styles/tailwind.generated.global.scss` before Sass runs, from the class names in
+  the web part sources. The output is git-ignored; `tailwind.config.js` keeps the shipped `important` prefix.
+- `styles/frontDoor.global.scss` holds the hand-written rules verbatim; `styles/theme.global.scss` holds the theme
+  block the shipped bundle injected at runtime, scoped to the web part root without changing the cascade.
+- The stylesheets must keep the `.global.scss` suffix: the SharePoint Framework loader hashes every selector of any
+  other stylesheet name as a CSS module (`AiCoeFrontDoorWebPart.test.ts` asserts the injected selectors).
+- `AiCoeFrontDoor.module.scss` is the one CSS module (two classes), as shipped.
 
-Git is local-only, initialized on `main`. Files are staged as the initial baseline; no commit or remote was created, and nothing was pushed or deployed. Keep this repository internal; application rights are not reassigned by recovery. The packaged third-party license notice is preserved.
+## Tests
+
+`npm test` runs 196 tests in six layers: pure modules (branding, definitions, form engine, services, summaries),
+React Testing Library component and journey tests with fake services, bundle-level lifecycle tests that load the
+built AMD bundle in a simulated SPFx host, a journey parity suite that plays every workflow through the shipped
+1.0.0.7 bundle and the port side by side (screens, drafts, downloads and posted list items must match), the
+stylesheet parity test, and a preview-server test. Any React `act()` warning fails the suite.
+
+## Behaviour notes
+
+The port preserves the shipped behaviour, including these traits inherited from 1.0.0.7:
+
+- The tool check never creates its own SharePoint record; the guidance page's "Guidance record created" line reflects
+  the last submission of the session, otherwise it reports that no record was created.
+- "Answers that shaped this result" on the guidance page is always empty (the shipped build lost the list to an ES5
+  `Set` spread); the parity suite pins this.
+- The idea and disclosure summary drafts are deterministic. The shipped code contained dormant calls to a model
+  provider that were never reached; they and their loading states were removed, not enabled.
+- Drafts live in the browser's localStorage; two web parts on one page share the `overture-ai-coe-pilot` scope id.
+- `data-theme` is set from the SharePoint theme but no rule consumes it.
+
+Two internal defects were fixed: the telemetry service is created once (the shipped build refetched on every render;
+the parity suite documents the difference) and intake id suffixes use `crypto.getRandomValues` in the same format.
+
+## Provenance and rules
+
+`original/` keeps the shipped package unchanged, `recovered/` its byte-exact extraction and `docs/RECOVERY.md` the
+recovery method. The JavaScript reassembly tooling of the recovery was retired once this port reached parity;
+`scripts/extract.py` and `tests/test_extract.py` remain for the package extraction.
+
+Keep this repository internal. Git is local-only; nothing is pushed or deployed from here. No secrets are stored.

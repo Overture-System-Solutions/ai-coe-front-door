@@ -1,5 +1,11 @@
 # Recovery provenance and boundaries
 
+> **Superseded by the TypeScript port (2026-09-11).** The formatted JavaScript sections, the AMD reassembly scripts
+> and their tests described below were retired after the web part was ported to a native SharePoint Framework
+> project (see the repository README). `original/`, `recovered/` (including `recovered/recovery-map.json`),
+> `evidence/` and `scripts/extract.py` remain as provenance. The stylesheet fixtures under `parity/` and the journey
+> parity suite in `src/parity/` continue to check the port against the shipped bundle.
+
 ## Source
 
 Source ID: S181 in the internal OSS AI CoE catalog.
