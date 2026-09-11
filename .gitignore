@@ -1,10 +1,43 @@
+# Dependencies
 node_modules/
+
+# SharePoint Framework / Heft build output
 dist/
+lib/
+lib-dts/
+lib-commonjs/
+lib-esm/
+jest-output/
+release/
+temp/
+.heft/
+sharepoint/solution/
+*.sppkg
+!original/*.sppkg
+coverage/
+
+# Generated code (typings and the Tailwind utility stylesheet are rebuilt by `heft build`)
+*.resx.ts
+*.scss.ts
+src/webparts/aiCoeFrontDoor/styles/tailwind.generated.global.css
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# Python
 __pycache__/
 *.pyc
+
+# Secrets and local environment
 .env
 .env.*
 *.pem
 *.key
 *.pfx
+
+# OS / editor
 .DS_Store
+.vs/
+.ntvs_analysis.dat

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<List xmlns:ows="Microsoft SharePoint"
+  Title="AI CoE Pilot Decisions"
+  FolderCreation="FALSE"
+  Direction="$Resources:Direction;"
+  Url="Lists/AICoEPilotDecisions"
+  BaseType="0"
+  xmlns="http://schemas.microsoft.com/sharepoint/">
+  <MetaData>
+    <ContentTypes>
+      <ContentTypeRef ID="0x01">
+        <Folder TargetName="Item" />
+      </ContentTypeRef>
+      <ContentTypeRef ID="0x0120" />
+    </ContentTypes>
+    <Fields>
+      <Field ID="{3cf12c09-07ed-4c3c-8497-fdb11aa87e7a}" Name="RelatedIntakeId" StaticName="RelatedIntakeId" DisplayName="Related intake ID" Type="Text" Required="TRUE" Indexed="TRUE" MaxLength="80" Group="Overture AI CoE Pilot" />
+      <Field ID="{9a72f4c1-02ac-4bd2-bb5f-ac712c60220a}" Name="Decision" StaticName="Decision" DisplayName="Pilot routing decision" Type="Choice" Required="TRUE" Format="Dropdown" Group="Overture AI CoE Pilot">
+        <CHOICES>
+          <CHOICE>Continue synthetic test</CHOICE>
+          <CHOICE>Revise and retest</CHOICE>
+          <CHOICE>Escalate for policy review</CHOICE>
+          <CHOICE>Stop pilot scenario</CHOICE>
+        </CHOICES>
+      </Field>
+      <Field ID="{459ce053-4304-47dd-ab56-497a70d23dd4}" Name="DecisionStatus" StaticName="DecisionStatus" DisplayName="Decision status" Type="Choice" Required="TRUE" Format="Dropdown" Group="Overture AI CoE Pilot">
+        <Default>Draft</Default>
+        <CHOICES>
+          <CHOICE>Draft</CHOICE>
+          <CHOICE>Final - Pilot</CHOICE>
+          <CHOICE>Superseded</CHOICE>
+        </CHOICES>
+      </Field>
+      <Field ID="{fab6b59e-2e1d-49ed-aa55-66e870cb4dab}" Name="DecisionRationale" StaticName="DecisionRationale" DisplayName="Decision rationale" Type="Note" Required="TRUE" NumLines="8" RichText="FALSE" Group="Overture AI CoE Pilot" />
+      <Field ID="{c8eaf3da-68d5-4db2-bd23-bd039d393cc8}" Name="ReviewerName" StaticName="ReviewerName" DisplayName="Reviewer name" Type="Text" Required="TRUE" MaxLength="255" Group="Overture AI CoE Pilot" />
+      <Field ID="{5a7021c6-9706-42c5-9e03-65765c5690c9}" Name="ReviewedAt" StaticName="ReviewedAt" DisplayName="Reviewed at" Type="DateTime" Required="TRUE" Format="DateTime" StorageTZ="TRUE" Group="Overture AI CoE Pilot" />
+      <Field ID="{974b076d-e7fb-4070-9208-9a2f10b05732}" Name="ManagerEndorsement" StaticName="ManagerEndorsement" DisplayName="Simulated manager endorsement" Type="Choice" Required="TRUE" Format="Dropdown" Group="Overture AI CoE Pilot">
+        <Default>Not requested</Default>
+        <CHOICES>
+          <CHOICE>Not requested</CHOICE>
+          <CHOICE>Pending - simulated</CHOICE>
+          <CHOICE>Endorsed - simulated</CHOICE>
+          <CHOICE>Not endorsed - simulated</CHOICE>
+        </CHOICES>
+      </Field>
+      <Field ID="{29112d35-e11b-4aa1-be4a-6879a7588244}" Name="PolicyReference" StaticName="PolicyReference" DisplayName="Policy reference" Type="Text" Required="FALSE" MaxLength="255" Group="Overture AI CoE Pilot" />
+      <Field ID="{478c798e-9688-49b0-a90d-d4b52f199ef2}" Name="Conditions" StaticName="Conditions" DisplayName="Conditions or follow-up" Type="Note" Required="FALSE" NumLines="6" RichText="FALSE" Group="Overture AI CoE Pilot" />
+      <Field ID="{07b28f86-1c9f-47d8-b987-1150dab17ce9}" Name="ExpirationDate" StaticName="ExpirationDate" DisplayName="Pilot decision expires" Type="DateTime" Required="FALSE" Format="DateOnly" Group="Overture AI CoE Pilot" />
+    </Fields>
+    <Views>
+      <View BaseViewID="1" Type="HTML" WebPartZoneID="Main" DisplayName="All pilot decisions" DefaultView="TRUE" MobileView="TRUE" MobileDefaultView="TRUE" SetupPath="pages\viewpage.aspx" ImageUrl="/_layouts/15/images/generic.png?rev=47" Url="AllItems.aspx">
+        <Toolbar Type="Standard" />
+        <XslLink Default="TRUE">main.xsl</XslLink>
+        <JSLink>clienttemplates.js</JSLink>
+        <RowLimit Paged="TRUE">30</RowLimit>
+        <ViewFields>
+          <FieldRef Name="LinkTitle" />
+          <FieldRef Name="RelatedIntakeId" />
+          <FieldRef Name="Decision" />
+          <FieldRef Name="DecisionStatus" />
+          <FieldRef Name="ReviewerName" />
+          <FieldRef Name="ReviewedAt" />
+          <FieldRef Name="ManagerEndorsement" />
+        </ViewFields>
+        <Query>
+          <OrderBy><FieldRef Name="ReviewedAt" Ascending="FALSE" /></OrderBy>
+        </Query>
+      </View>
+    </Views>
+    <Forms>
+      <Form Type="DisplayForm" Url="DispForm.aspx" SetupPath="pages\form.aspx" WebPartZoneID="Main" />
+      <Form Type="EditForm" Url="EditForm.aspx" SetupPath="pages\form.aspx" WebPartZoneID="Main" />
+      <Form Type="NewForm" Url="NewForm.aspx" SetupPath="pages\form.aspx" WebPartZoneID="Main" />
+    </Forms>
+  </MetaData>
+</List>

@@ -1,0 +1,45 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/package-solution.schema.json",
+  "solution": {
+    "name": "overture-ai-coe-front-door-client-side-solution",
+    "id": "f125ebdf-4a9d-4e6e-8479-3a18874e7752",
+    "version": "1.0.0.8",
+    "includeClientSideAssets": true,
+    "skipFeatureDeployment": false,
+    "isDomainIsolated": false,
+    "developer": {
+      "name": "Overture System Solutions, LLC",
+      "websiteUrl": "https://overture.systems/",
+      "privacyUrl": "https://overture.systems/",
+      "termsOfUseUrl": "https://overture.systems/",
+      "mpnId": "Undefined-1.23.2"
+    },
+    "metadata": {
+      "shortDescription": {
+        "default": "AI CoE front door: governed intake, administrator dashboard, and telemetry"
+      },
+      "longDescription": {
+        "default": "A site-scoped AI CoE front door with governed intake, an administrator dashboard, API usage telemetry, and overage alerts sourced from SharePoint lists."
+      },
+      "screenshotPaths": [],
+      "videoUrl": "",
+      "categories": ["Collaboration"]
+    },
+    "features": [
+      {
+        "title": "AI CoE Front Door",
+        "description": "Installs the AI CoE front door, governed submission integration, administrator dashboard, and live telemetry.",
+        "id": "69ab84b7-608c-47ee-9623-af8ebaf2cb10",
+        "version": "1.0.0.2",
+        "componentIds": ["cf2e5904-0703-4fe4-ae5a-ec012d6fa689"],
+        "assets": {
+          "elementManifests": ["elements.xml"],
+          "elementFiles": ["intake-schema.xml", "decision-schema.xml"]
+        }
+      }
+    ]
+  },
+  "paths": {
+    "zippedPackage": "solution/overture-ai-coe-front-door.sppkg"
+  }
+}

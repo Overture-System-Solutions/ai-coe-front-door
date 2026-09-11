@@ -1,0 +1,18 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/config.2.0.schema.json",
+  "version": "2.0",
+  "bundles": {
+    "ai-coe-front-door-web-part": {
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/aiCoeFrontDoor/AiCoeFrontDoorWebPart.js",
+          "manifest": "./src/webparts/aiCoeFrontDoor/AiCoeFrontDoorWebPart.manifest.json"
+        }
+      ]
+    }
+  },
+  "externals": {},
+  "localizedResources": {
+    "AiCoeFrontDoorWebPartStrings": "lib/webparts/aiCoeFrontDoor/loc/{locale}.js"
+  }
+}

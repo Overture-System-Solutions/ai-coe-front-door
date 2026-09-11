@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Elements xmlns="http://schemas.microsoft.com/sharepoint/">
+  <ListInstance
+    FeatureId="00bfea71-de22-43b2-a848-c05709900100"
+    Title="AI CoE Pilot Intakes"
+    Description="Synthetic-only front-door submissions for the Overture AI CoE lab. This list is not an approval record."
+    TemplateType="100"
+    Url="Lists/AICoEPilotIntakes"
+    CustomSchema="intake-schema.xml"
+    OnQuickLaunch="TRUE" />
+  <ListInstance
+    FeatureId="00bfea71-de22-43b2-a848-c05709900100"
+    Title="AI CoE Pilot Decisions"
+    Description="Human-reviewed pilot routing decisions linked to AI CoE pilot intake IDs."
+    TemplateType="100"
+    Url="Lists/AICoEPilotDecisions"
+    CustomSchema="decision-schema.xml"
+    OnQuickLaunch="TRUE" />
+  <ListInstance
+    FeatureId="00bfea71-e717-4e80-aa17-d0c71b360101"
+    Title="AI CoE Pilot Policies"
+    Description="Pilot-only policy references, test scripts, and evidence. Do not store client data."
+    TemplateType="101"
+    Url="AICoEPilotPolicies"
+    OnQuickLaunch="TRUE" />
+</Elements>

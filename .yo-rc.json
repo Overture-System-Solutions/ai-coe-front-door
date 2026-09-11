@@ -1,0 +1,23 @@
+{
+  "@microsoft/generator-sharepoint": {
+    "whichFolder": "subdir",
+    "solutionName": "overture-ai-coe-front-door",
+    "environment": "spo",
+    "useGulp": false,
+    "componentType": "webpart",
+    "template": "react",
+    "componentName": "AiCoeFrontDoor",
+    "componentDescription": "AI CoE front door: governed intake, administrator dashboard, and telemetry",
+    "plusBeta": false,
+    "isCreatingSolution": true,
+    "nodeVersion": "22.16.0",
+    "sdksVersions": {},
+    "version": "1.23.2",
+    "libraryName": "overture-ai-coe-front-door",
+    "libraryId": "f125ebdf-4a9d-4e6e-8479-3a18874e7752",
+    "packageManager": "npm",
+    "solutionShortDescription": "AI CoE front door: governed intake, administrator dashboard, and telemetry",
+    "skipFeatureDeployment": false,
+    "isDomainIsolated": false
+  }
+}
