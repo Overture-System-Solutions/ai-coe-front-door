@@ -10,9 +10,10 @@ import { BaseClientSideWebPart } from '@microsoft/sp-webpart-base';
 import * as strings from 'AiCoeFrontDoorWebPartStrings';
 
 // Order matters: utilities first, then the hand-written rules, then the theme variables.
-import './styles/tailwind.generated.global.css';
-import './styles/frontDoor.global.css';
-import './styles/theme.global.css';
+// They must stay *.global.scss: the framework hashes the selectors of every other stylesheet name.
+import './styles/tailwind.generated.global.scss';
+import './styles/frontDoor.global.scss';
+import './styles/theme.global.scss';
 
 import { createBranding } from './branding/branding';
 import type { IBranding } from './branding/branding';

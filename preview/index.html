@@ -3,27 +3,34 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Overture AI CoE — OFFLINE RECOVERY PREVIEW</title>
+<title>AI CoE Front Door — OFFLINE PREVIEW</title>
 <style>
 body { margin: 0; font-family: "Segoe UI", system-ui, sans-serif; }
-#recovery-notice { position: sticky; top: 0; z-index: 9999; background: #fff0b3; color: #392600; border-bottom: 3px solid #9b6800; padding: 14px 20px; }
-#recovery-notice p { margin: 4px 0; }
+#preview-notice { position: sticky; top: 0; z-index: 9999; background: #fff0b3; color: #392600; border-bottom: 3px solid #9b6800; padding: 14px 20px; }
+#preview-notice p { margin: 4px 0; }
+#organization-form { display: flex; gap: 8px; align-items: center; margin-top: 8px; }
+#organization-form input { padding: 4px 8px; font: inherit; }
 #preview-error { color: #a00; white-space: pre-wrap; }
 </style>
 </head>
 <body>
-<aside id="recovery-notice" role="note">
-<strong>OFFLINE RECOVERY PREVIEW — NOT THE LIVE OSS SITE</strong>
-<p>The UI below is recovered code; all SharePoint responses and permissions are simulated, and external API calls are blocked.</p>
-<p>“Connected,” “live,” and submission-success labels below refer only to this simulation; no approvals run and no AI is connected.</p>
-<p>Use fictional data only. Drafts may remain in this browser’s local storage; submitted records disappear on refresh.</p>
+<aside id="preview-notice" role="note">
+<strong>OFFLINE PREVIEW — NOT A SHAREPOINT SITE</strong>
+<p>This page runs the web part bundle from the last build against a simulated SharePoint host. Lists, permissions and the signed-in user are fictional, submissions stay in this tab, and all external network access is blocked.</p>
+<p>“Connected” and “received” labels below refer only to the simulation; no approvals run and no AI service is connected. Drafts may remain in this browser’s local storage.</p>
+<form id="organization-form">
+<label for="organization-name">Organization name (web part property):</label>
+<input id="organization-name" type="text" placeholder="Leave blank for neutral wording">
+<button type="submit">Apply</button>
+</form>
 </aside>
 <div id="preview-error" role="alert"></div>
 <div id="app"></div>
 <script src="/react.js"></script>
 <script src="/react-dom.js"></script>
-<script src="/host.js"></script>
-<script src="/bundle.js"></script>
-<script src="/mount.js"></script>
+<script type="module" src="/host.js"></script>
+<script type="module" src="/strings.js"></script>
+<script type="module" src="/bundle.js"></script>
+<script type="module" src="/mount.js"></script>
 </body>
 </html>

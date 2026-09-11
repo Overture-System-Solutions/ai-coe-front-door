@@ -1,6 +1,6 @@
 /**
  * Heft run-script task (and stand-alone CLI) that generates the Tailwind utility stylesheet
- * `src/webparts/aiCoeFrontDoor/styles/tailwind.generated.global.css` from `tailwind.css` and the
+ * `src/webparts/aiCoeFrontDoor/styles/tailwind.generated.global.scss` from `tailwind.css` and the
  * class names found in the TypeScript sources. Registered in config/heft.json as the `tailwind`
  * phase, which the rig's `build` phase depends on, so the file exists before Sass and webpack run.
  *
@@ -15,7 +15,10 @@ const { spawn } = require('child_process');
 const ROOT = path.resolve(__dirname, '..');
 const STYLES = path.join(ROOT, 'src', 'webparts', 'aiCoeFrontDoor', 'styles');
 const INPUT = path.join(STYLES, 'tailwind.css');
-const OUTPUT = path.join(STYLES, 'tailwind.generated.global.css');
+// The .global.scss suffix matters: the SharePoint Framework webpack loader only leaves selectors of
+// *.global.scss stylesheets unhashed (plain *.global.css compiles to .global.css.css, which it treats
+// as a CSS module and rewrites every selector).
+const OUTPUT = path.join(STYLES, 'tailwind.generated.global.scss');
 const CONFIG = path.join(ROOT, 'tailwind.config.js');
 
 /** Set once per process so watch mode spawns a single Tailwind watcher. */

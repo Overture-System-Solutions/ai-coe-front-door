@@ -19,7 +19,7 @@ coverage/
 # Generated code (typings and the Tailwind utility stylesheet are rebuilt by `heft build`)
 *.resx.ts
 *.scss.ts
-src/webparts/aiCoeFrontDoor/styles/tailwind.generated.global.css
+src/webparts/aiCoeFrontDoor/styles/tailwind.generated.global.scss
 
 # Logs
 logs/

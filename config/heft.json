@@ -4,7 +4,7 @@
 
   "phasesByName": {
     /**
-     * Generates src/webparts/aiCoeFrontDoor/styles/tailwind.generated.global.css from the class names
+     * Generates src/webparts/aiCoeFrontDoor/styles/tailwind.generated.global.scss from the class names
      * used in the TypeScript sources. The rig's "build" phase depends on it, so the file exists before
      * the Sass and webpack tasks run; "heft clean" removes it again.
      */
@@ -13,7 +13,7 @@
       "cleanFiles": [
         {
           "sourcePath": "src/webparts/aiCoeFrontDoor/styles",
-          "includeGlobs": ["tailwind.generated.global.css"]
+          "includeGlobs": ["tailwind.generated.global.scss"]
         }
       ],
       "tasksByName": {

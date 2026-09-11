@@ -4,7 +4,7 @@
  * The shipped web part carried one stylesheet (Tailwind utilities followed by hand-written rules,
  * kept verbatim in parity/AiCoeFrontDoor.global.1.0.0.7.css) plus a theme block injected at runtime
  * (parity/theme.1.0.0.7.css). The port regenerates the utilities from the TSX class names, keeps the
- * hand-written rules in frontDoor.global.css and scopes the theme block in theme.global.css.
+ * hand-written rules in frontDoor.global.scss and scopes the theme block in theme.global.scss.
  *
  * Both sides are pushed through the same autoprefixer + cssnano pipeline that SharePoint Framework
  * applies when packaging, so formatting differences disappear and only real rule or declaration
@@ -98,7 +98,7 @@ function declarationMismatches(expected: RuleTable, actual: RuleTable): string[]
 }
 
 /**
- * Undoes the two scoping changes of theme.global.css before minification, so cssnano sees the same
+ * Undoes the two scoping changes of theme.global.scss before minification, so cssnano sees the same
  * selectors on both sides (it refuses to merge rules whose selectors contain `:where()`).
  */
 function unscopeTheme(css: string): string {
@@ -115,10 +115,10 @@ describe('Stylesheet parity with package 1.0.0.7', () => {
   beforeAll(async (): Promise<void> => {
     const read = (file: string): string => fs.readFileSync(file, 'utf8');
     shipped = tabulate(await shippedForm(read(SHIPPED_STYLESHEET)));
-    utilities = tabulate(await shippedForm(read(path.join(COMPILED, 'tailwind.generated.global.css.css'))));
-    handWritten = tabulate(await shippedForm(read(path.join(COMPILED, 'frontDoor.global.css.css'))));
+    utilities = tabulate(await shippedForm(read(path.join(COMPILED, 'tailwind.generated.global.scss.css'))));
+    handWritten = tabulate(await shippedForm(read(path.join(COMPILED, 'frontDoor.global.scss.css'))));
     shippedTheme = tabulate(await shippedForm(read(SHIPPED_THEME)));
-    portedTheme = tabulate(await shippedForm(unscopeTheme(read(path.join(COMPILED, 'theme.global.css.css')))));
+    portedTheme = tabulate(await shippedForm(unscopeTheme(read(path.join(COMPILED, 'theme.global.scss.css')))));
   });
 
   it('keeps the generated utilities and the hand-written rules disjoint', () => {

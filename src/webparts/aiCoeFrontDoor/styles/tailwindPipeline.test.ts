@@ -7,11 +7,11 @@ import * as path from 'path';
  */
 const generatedSource: string = path.resolve(
   process.cwd(),
-  'src/webparts/aiCoeFrontDoor/styles/tailwind.generated.global.css'
+  'src/webparts/aiCoeFrontDoor/styles/tailwind.generated.global.scss'
 );
 const compiledOutput: string = path.resolve(
   process.cwd(),
-  'lib-commonjs/webparts/aiCoeFrontDoor/styles/tailwind.generated.global.css.css'
+  'lib-commonjs/webparts/aiCoeFrontDoor/styles/tailwind.generated.global.scss.css'
 );
 
 describe('Tailwind build step', () => {
