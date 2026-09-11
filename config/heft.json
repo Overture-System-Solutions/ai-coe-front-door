@@ -1,0 +1,35 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/heft/v0/heft.schema.json",
+  "extends": "@microsoft/spfx-web-build-rig/profiles/default/config/heft.json",
+
+  "phasesByName": {
+    /**
+     * Generates src/webparts/aiCoeFrontDoor/styles/tailwind.generated.global.css from the class names
+     * used in the TypeScript sources. The rig's "build" phase depends on it, so the file exists before
+     * the Sass and webpack tasks run; "heft clean" removes it again.
+     */
+    "tailwind": {
+      "phaseDescription": "Generate the Tailwind utility stylesheet consumed by the build phase.",
+      "cleanFiles": [
+        {
+          "sourcePath": "src/webparts/aiCoeFrontDoor/styles",
+          "includeGlobs": ["tailwind.generated.global.css"]
+        }
+      ],
+      "tasksByName": {
+        "tailwind": {
+          "taskPlugin": {
+            "pluginPackage": "@rushstack/heft",
+            "pluginName": "run-script-plugin",
+            "options": {
+              "scriptPath": "./scripts/tailwind-task.js"
+            }
+          }
+        }
+      }
+    },
+    "build": {
+      "phaseDependencies": ["tailwind"]
+    }
+  }
+}

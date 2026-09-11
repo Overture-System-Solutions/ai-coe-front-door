@@ -1,0 +1,20 @@
+/*
+ * The two CSS-module classes of the shipped web part (hash suffix differs per build; only the names matter).
+ * Everything else is styled by the generated Tailwind utilities and the global stylesheets in ./styles.
+ */
+.aiCoeFrontDoor {
+  color: var(--bodyText);
+  min-height: 100%;
+}
+
+.signedInUser {
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  white-space: nowrap;
+  width: 1px;
+}
