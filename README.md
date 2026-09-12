@@ -38,6 +38,28 @@ companion Power Automate demo solution, exactly as before.
 
 After deployment, open the web part's property pane and set **Organization name**.
 
+### Enable Claude drafting of idea summaries
+
+The idea workflow can ask the "OSS Demo - Claude Intake Draft" Power Automate flow (the organization's Claude
+custom connector) for the summary draft. The browser never holds a model key: the web part calls the flow's HTTP
+trigger with a Microsoft Entra token for the Power Automate service, issued by the framework for the signed-in user.
+Three one-time steps, all outside this repository:
+
+1. In the flow, set the trigger's **Who can trigger the flow** to **Any user in my tenant** (it ships restricted to
+   one user). Copy the trigger URL after saving.
+2. In the SharePoint admin center, **API access** page, approve the pending request from this package:
+   **Microsoft Flow Service / User**. If the page reports that scope as unavailable on your tenant, change the
+   `scope` in `config/package-solution.json` to a delegated permission the tenant exposes (for example
+   `Flows.Read.All`), rebuild and re-upload; the flow only checks the token's audience and the caller's identity.
+3. In the web part's property pane, **AI drafting → Claude draft flow URL**, paste the trigger URL.
+
+Leave the URL blank to keep the deterministic summaries; the behaviour is then identical to 1.0.0.7. When the flow
+cannot answer (not configured yet, permission not approved, flow off, invalid input, or the model call failing), the
+visitor sees the shipped choice: "Try again" or "Continue without AI help", which uses the plain summary. AI-drafted
+submissions carry a `draftSource` object in `PayloadJson` (provider, model, responseId, requestId, draftOnly,
+humanReviewRequired); records built without the flow are unchanged. `npm run preview` can simulate the flow with the
+banner's checkbox (it only echoes the answers; no model is called).
+
 ## Branding
 
 Everything organization-specific is derived from the `organizationName` property (`branding/branding.ts`). With the
@@ -64,7 +86,8 @@ Data contracts never change: intake ids (`OVT-AICOE-…`), list titles and field
       branding/                       organization wording derived from the property
       content/                        workflow definitions, home cards, telemetry tiles, constants
       workflows/                      form engine, per-workflow session reducers, types
-      services/                       SharePoint governance and telemetry services, drafts, policy evaluator
+      services/                       SharePoint governance and telemetry services, drafts, policy evaluator,
+                                      Claude draft flow client (Entra token through AadHttpClient)
       summaries/                      deterministic summary drafts, review indicators, export texts
       controls/, components/          React controls and pages (React Testing Library tests alongside)
       context/                        providers for branding, catalog, services and the last submission
@@ -90,7 +113,7 @@ The shipped stylesheet is reproduced exactly (`styles/cssParity.test.ts` proves 
 
 ## Tests
 
-`npm test` runs 196 tests in six layers: pure modules (branding, definitions, form engine, services, summaries),
+`npm test` runs 212 tests in six layers: pure modules (branding, definitions, form engine, services, summaries),
 React Testing Library component and journey tests with fake services, bundle-level lifecycle tests that load the
 built AMD bundle in a simulated SPFx host, a journey parity suite that plays every workflow through the shipped
 1.0.0.7 bundle and the port side by side (screens, drafts, downloads and posted list items must match), the
@@ -104,8 +127,9 @@ The port preserves the shipped behaviour, including these traits inherited from 
   the last submission of the session, otherwise it reports that no record was created.
 - "Answers that shaped this result" on the guidance page is always empty (the shipped build lost the list to an ES5
   `Set` spread); the parity suite pins this.
-- The idea and disclosure summary drafts are deterministic. The shipped code contained dormant calls to a model
-  provider that were never reached; they and their loading states were removed, not enabled.
+- The disclosure summary draft is deterministic, and so is the idea draft until a Claude draft flow URL is configured.
+  The shipped code contained dormant calls to a model provider that were never reached; the idea path now goes through
+  the governed flow instead, the feedback-theme path stays deterministic.
 - Drafts live in the browser's localStorage; two web parts on one page share the `overture-ai-coe-pilot` scope id.
 - `data-theme` is set from the SharePoint theme but no rule consumes it.
 

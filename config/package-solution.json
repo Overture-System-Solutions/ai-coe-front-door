@@ -7,6 +7,12 @@
     "includeClientSideAssets": true,
     "skipFeatureDeployment": false,
     "isDomainIsolated": false,
+    "webApiPermissionRequests": [
+      {
+        "resource": "Microsoft Flow Service",
+        "scope": "User"
+      }
+    ],
     "developer": {
       "name": "Overture System Solutions, LLC",
       "websiteUrl": "https://overture.systems/",

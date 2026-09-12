@@ -20,7 +20,10 @@ import type { IBranding } from './branding/branding';
 import { AiCoeFrontDoor } from './components/AiCoeFrontDoor';
 import type { IAiCoeFrontDoorProps } from './components/AiCoeFrontDoor';
 import type { IFrontDoorServices, IFrontDoorUser } from './context/FrontDoorContext';
+import { createIdeaDraftService } from './services/draftService';
+import type { IDraftHttpClient } from './services/draftService';
 import { browserLocalStorage, LocalStorageDraftStore } from './services/draftStorage';
+import { createFlowClientFactory } from './services/flowClient';
 import { GovernanceService } from './services/GovernanceService';
 import { createToolPolicyEvaluator } from './services/toolPolicyEvaluator';
 import type { IServiceContext } from './services/types';
@@ -29,12 +32,15 @@ import { UsageMetricsService } from './services/UsageMetricsService';
 export interface IAiCoeFrontDoorWebPartProps {
   /** Organization name shown in the header, hero badge and summaries; blank keeps the wording neutral. */
   organizationName: string;
+  /** HTTP trigger URL of the Claude draft flow; blank keeps the deterministic summaries. */
+  draftServiceUrl: string;
 }
 
 interface ICoreServices {
   governance: GovernanceService;
   usage: UsageMetricsService;
   draftStore: LocalStorageDraftStore;
+  flowClient: () => Promise<IDraftHttpClient>;
   user: IFrontDoorUser;
 }
 
@@ -42,7 +48,7 @@ export default class AiCoeFrontDoorWebPart extends BaseClientSideWebPart<IAiCoeF
   private _isDarkTheme: boolean = false;
   private _core: ICoreServices | undefined;
   private _services: IFrontDoorServices | undefined;
-  private _servicesOrganization: string | undefined;
+  private _servicesKey: string | undefined;
 
   protected async onInit(): Promise<void> {
     await super.onInit();
@@ -57,6 +63,7 @@ export default class AiCoeFrontDoorWebPart extends BaseClientSideWebPart<IAiCoeF
       governance: new GovernanceService(serviceContext),
       usage: new UsageMetricsService(serviceContext),
       draftStore: new LocalStorageDraftStore(browserLocalStorage()),
+      flowClient: createFlowClientFactory(this.context.aadHttpClientFactory),
       user: serviceContext.user
     };
   }
@@ -111,6 +118,16 @@ export default class AiCoeFrontDoorWebPart extends BaseClientSideWebPart<IAiCoeF
                   placeholder: 'Contoso'
                 })
               ]
+            },
+            {
+              groupName: strings.DraftingGroupName,
+              groupFields: [
+                PropertyPaneTextField('draftServiceUrl', {
+                  label: strings.DraftServiceUrlFieldLabel,
+                  description: strings.DraftServiceUrlFieldDescription,
+                  placeholder: 'https://…/triggers/manual/paths/invoke?api-version=1'
+                })
+              ]
             }
           ]
         }
@@ -125,16 +142,19 @@ export default class AiCoeFrontDoorWebPart extends BaseClientSideWebPart<IAiCoeF
     return this._core;
   }
 
-  /** The service bundle handed to React; only the policy evaluator depends on the organization name. */
+  /** The service bundle handed to React; rebuilt only when a property it depends on changes. */
   private _servicesFor(core: ICoreServices, branding: IBranding): IFrontDoorServices {
-    if (this._services === undefined || this._servicesOrganization !== branding.organizationName) {
+    const draftServiceUrl: string = this.properties.draftServiceUrl ?? '';
+    const key: string = JSON.stringify([branding.organizationName, draftServiceUrl]);
+    if (this._services === undefined || this._servicesKey !== key) {
       this._services = {
         governance: core.governance,
         usage: core.usage,
         draftStore: core.draftStore,
-        toolPolicyEvaluator: createToolPolicyEvaluator(branding)
+        toolPolicyEvaluator: createToolPolicyEvaluator(branding),
+        ideaDrafts: createIdeaDraftService(draftServiceUrl, core.flowClient)
       };
-      this._servicesOrganization = branding.organizationName;
+      this._servicesKey = key;
     }
     return this._services;
   }

@@ -31,6 +31,8 @@ export interface ISummaryReviewProps<TKey extends string> {
   onUpdateField: (key: TKey, value: string) => void;
   /** Rebuilds the draft from the current answers. */
   onRebuild: () => void;
+  /** True while an AI draft is being regenerated; the rebuild button waits. */
+  regenerating?: boolean;
   onEditAnswer: (stepId: string) => void;
   onConfirm: () => void;
 }
@@ -45,6 +47,7 @@ export function SummaryReview<TKey extends string>({
   whatHappensNext,
   onUpdateField,
   onRebuild,
+  regenerating = false,
   onEditAnswer,
   onConfirm
 }: ISummaryReviewProps<TKey>): React.ReactElement {
@@ -63,10 +66,11 @@ export function SummaryReview<TKey extends string>({
         <button
           type="button"
           onClick={onRebuild}
+          disabled={regenerating}
           className="overture-btn-secondary inline-flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold"
         >
           <RotateCcw className="h-4 w-4" aria-hidden="true" />
-          {copy.rebuildLabel}
+          {regenerating ? 'Regenerating…' : copy.rebuildLabel}
         </button>
         {answersChanged && (
           <p className="mt-2 text-sm" style={{ color: 'var(--color-info-text)' }}>

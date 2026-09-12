@@ -6,11 +6,26 @@ import { act, fireEvent, waitFor, within } from '@testing-library/react';
 import * as fs from 'fs';
 import { loadWebPartBundle, MANAGE_WEB_PERMISSION, newestDistBundle, newestStringsChunk } from '../../testing/amdHost';
 import type { IAmdHostOptions, IHostedInstance, IWebPartBundle } from '../../testing/amdHost';
+import { IDEA_JOURNEY, journeyAnswers, playJourney } from '../../testing/journeys';
 import type { IRecordedRequest } from '../../testing/listStore';
+import { createBranding } from './branding/branding';
+import { createWorkflowCatalog } from './content/workflows/catalog';
+import { IDEA_SUMMARY_FIELDS } from './summaries/ideaSummary';
+import type { IWorkflowCatalog } from './workflows/types';
 
 const bundlePath: string = newestDistBundle();
 const bundle: IWebPartBundle = loadWebPartBundle(bundlePath, newestStringsChunk());
 const instances: IHostedInstance[] = [];
+const catalog: IWorkflowCatalog = createWorkflowCatalog(createBranding(''));
+const FLOW_URL: string = 'https://default0000.01.environment.api.powerplatform.com/powerautomate/automations/direct/cu/25/workflows/abc/triggers/manual/paths/invoke?api-version=1';
+
+function flowSuccess(): { [key: string]: unknown } {
+  const draft: { [key: string]: string } = {};
+  for (const field of IDEA_SUMMARY_FIELDS) {
+    draft[field.key] = `AI ${field.key}`;
+  }
+  return { ok: true, schemaVersion: '1.0', requestId: 'draft-unknown', draftOnly: true, humanReviewRequired: true, provider: 'anthropic', model: 'claude-sonnet-5', responseId: 'msg_01ABC', draft };
+}
 
 async function mount(options: IAmdHostOptions = {}): Promise<IHostedInstance> {
   const instance: IHostedInstance = bundle.create(options);
@@ -125,13 +140,12 @@ describe('AiCoeFrontDoorWebPart bundle', () => {
     expect(instance.webPart.domElement.childElementCount).toBe(0);
   });
 
-  it('offers a single organization-name field in the property pane', async () => {
+  it('offers the organization-name and draft-flow fields in the property pane', async () => {
     const { webPart } = await mount();
     const configuration = webPart.getPropertyPaneConfiguration();
     expect(configuration.pages).toHaveLength(1);
     expect(configuration.pages[0].header.description).toBe('Configure how the AI CoE Front Door presents your organization.');
-    expect(configuration.pages[0].groups).toHaveLength(1);
-    expect(configuration.pages[0].groups[0].groupName).toBe('Branding');
+    expect(configuration.pages[0].groups.map((group): string => group.groupName)).toEqual(['Branding', 'AI drafting']);
     expect(configuration.pages[0].groups[0].groupFields).toEqual([
       {
         targetProperty: 'organizationName',
@@ -142,5 +156,71 @@ describe('AiCoeFrontDoorWebPart bundle', () => {
         }
       }
     ]);
+    expect(configuration.pages[0].groups[1].groupFields).toEqual([
+      {
+        targetProperty: 'draftServiceUrl',
+        properties: {
+          label: 'Claude draft flow URL',
+          description:
+            'HTTP trigger URL of the "OSS Demo - Claude Intake Draft" flow. The flow must allow any user in the tenant, and the Microsoft Flow Service API permission must be approved. Leave blank to keep plain summaries.',
+          placeholder: 'https://…/triggers/manual/paths/invoke?api-version=1'
+        }
+      }
+    ]);
+  });
+
+  it('does not touch the flow service while no draft flow is configured', async () => {
+    const instance: IHostedInstance = await mount({ properties: { organizationName: '' } });
+    fireEvent.click(within(instance.webPart.domElement).getByText('Explore an AI idea').closest('button') as HTMLElement);
+    await waitFor((): void => expect(within(instance.webPart.domElement).getByRole('button', { name: 'Continue' })).toBeInTheDocument());
+    playJourney(IDEA_JOURNEY, catalog.idea, instance.webPart.domElement);
+    expect(within(instance.webPart.domElement).getByRole('heading', { name: 'Here is a draft summary' })).toBeInTheDocument();
+    expect(instance.flowResources).toEqual([]);
+    expect(instance.flowRequests).toEqual([]);
+  });
+
+  it('drafts the idea summary through the configured flow with an Entra token client', async () => {
+    const instance: IHostedInstance = await mount({
+      properties: { organizationName: '', draftServiceUrl: FLOW_URL },
+      draftFlow: (request: unknown): { status: number; body: string } => ({
+        status: 200,
+        body: JSON.stringify({ ...flowSuccess(), requestId: (request as { requestId: string }).requestId })
+      })
+    });
+    fireEvent.click(within(instance.webPart.domElement).getByText('Explore an AI idea').closest('button') as HTMLElement);
+    await waitFor((): void => expect(within(instance.webPart.domElement).getByRole('button', { name: 'Continue' })).toBeInTheDocument());
+    playJourney(IDEA_JOURNEY, catalog.idea, instance.webPart.domElement);
+    await waitFor((): void => expect(within(instance.webPart.domElement).getByRole('heading', { name: 'Here is a draft summary' })).toBeInTheDocument());
+    expect(instance.flowResources).toEqual(['https://service.flow.microsoft.com/']);
+    expect(instance.flowRequests).toHaveLength(1);
+    expect(instance.flowRequests[0].url).toBe(FLOW_URL);
+    expect(instance.flowRequests[0].headers['Content-Type']).toBe('application/json');
+    expect(instance.flowRequests[0].body).toMatchObject({
+      schemaVersion: '1.0',
+      workflowId: 'idea',
+      demoDataOnly: true,
+      answers: { workToImprove: journeyAnswers(IDEA_JOURNEY).workToImprove, informationCategories: ['internal'] }
+    });
+    expect(within(instance.webPart.domElement).getByLabelText('Suggested use-case title')).toHaveValue('AI title');
+
+    fireEvent.click(within(instance.webPart.domElement).getByRole('button', { name: 'Confirm this reflects my idea' }));
+    await waitFor((): void => expect(within(instance.webPart.domElement).getByRole('heading', { name: 'Thanks for sharing your idea.' })).toBeInTheDocument());
+    const intake: IRecordedRequest = instance.store.requests.filter((request: IRecordedRequest): boolean => request.method === 'POST' && request.list === 'AI CoE Pilot Intakes')[0];
+    const payload: { draftSource?: unknown } = JSON.parse(String((intake.body as { PayloadJson: string }).PayloadJson));
+    expect(payload.draftSource).toEqual({ provider: 'anthropic', model: 'claude-sonnet-5', responseId: 'msg_01ABC', requestId: expect.stringMatching(/^draft-/), draftOnly: true, humanReviewRequired: true });
+  });
+
+  it('falls back to the plain summary when the flow rejects the request', async () => {
+    const instance: IHostedInstance = await mount({
+      properties: { organizationName: '', draftServiceUrl: FLOW_URL },
+      draftFlow: (): { status: number; body: string } => ({ status: 502, body: JSON.stringify({ ok: false, code: 'AI_DRAFT_UNAVAILABLE' }) })
+    });
+    fireEvent.click(within(instance.webPart.domElement).getByText('Explore an AI idea').closest('button') as HTMLElement);
+    await waitFor((): void => expect(within(instance.webPart.domElement).getByRole('button', { name: 'Continue' })).toBeInTheDocument());
+    playJourney(IDEA_JOURNEY, catalog.idea, instance.webPart.domElement);
+    await waitFor((): void => expect(within(instance.webPart.domElement).getByRole('button', { name: 'Continue without AI help' })).toBeInTheDocument());
+    fireEvent.click(within(instance.webPart.domElement).getByRole('button', { name: 'Continue without AI help' }));
+    expect(within(instance.webPart.domElement).getByRole('heading', { name: 'Here is a draft summary' })).toBeInTheDocument();
+    expect(instance.flowRequests).toHaveLength(1);
   });
 });

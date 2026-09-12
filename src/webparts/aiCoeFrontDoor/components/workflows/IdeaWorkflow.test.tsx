@@ -1,8 +1,10 @@
-import { fireEvent, screen, within } from '@testing-library/react';
+import { act, fireEvent, screen, within } from '@testing-library/react';
 import * as React from 'react';
 import { spyOnDownloads } from '../../../../testing/dom';
 import type { IDownloadSpy } from '../../../../testing/dom';
-import { InMemoryDraftStore } from '../../../../testing/fakeServices';
+import { createFakeIdeaDraftService, InMemoryDraftStore } from '../../../../testing/fakeServices';
+import type { IFakeIdeaDraftService } from '../../../../testing/fakeServices';
+import type { IDraftProvenance, IIdeaDraftResult } from '../../services/draftService';
 import { enterAnswer, IDEA_JOURNEY, journeyAnswers, playJourney } from '../../../../testing/journeys';
 import { firstStepOf, ISO_TIMESTAMP, renderWorkflowPage } from '../../../../testing/workflowHarness';
 import type { IWorkflowHarness, IWorkflowPageOptions } from '../../../../testing/workflowHarness';
@@ -138,5 +140,118 @@ describe('IdeaWorkflow', () => {
     expect(screen.getByText('A few quick questions. You can save your progress and come back any time.')).toBeInTheDocument();
     expect(draftStore.keys()).toEqual([]);
     expect(onDraftsChanged).toHaveBeenLastCalledWith('idea', false);
+  });
+});
+
+describe('IdeaWorkflow with a Claude draft service', () => {
+  const aiDraft: IIdeaSummaryDraft = IDEA_SUMMARY_FIELDS.reduce(
+    (draft: IIdeaSummaryDraft, field): IIdeaSummaryDraft => ({ ...draft, [field.key]: `AI ${field.key}` }),
+    {} as IIdeaSummaryDraft
+  );
+  const provenance: IDraftProvenance = { provider: 'anthropic', model: 'claude-sonnet-5', responseId: 'msg_01ABC', requestId: 'draft-1', draftOnly: true, humanReviewRequired: true };
+  const aiResult: IIdeaDraftResult = { draft: aiDraft, provenance };
+  const ERROR_TEXT: string = 'We could not create an AI-drafted summary right now. You can try again, or continue with a plain summary built directly from your answers.';
+
+  async function reachAiSummary(ideaDrafts: IFakeIdeaDraftService, options: IWorkflowPageOptions = {}): Promise<IWorkflowHarness> {
+    const harness: IWorkflowHarness = renderIdea({ ...options, ideaDrafts });
+    await firstStepOf(idea);
+    playJourney(IDEA_JOURNEY, idea);
+    // The draft request starts on the last click; let an automatically settled call land inside act().
+    await act(async (): Promise<void> => {
+      await Promise.resolve();
+    });
+    return harness;
+  }
+
+  it('asks the service for the draft after the last question and shows it', async () => {
+    const ideaDrafts: IFakeIdeaDraftService = createFakeIdeaDraftService();
+    await reachAiSummary(ideaDrafts);
+    expect(screen.getByRole('status')).toHaveTextContent('Creating your summary…');
+    expect(screen.queryByRole('progressbar')).not.toBeInTheDocument();
+    expect(ideaDrafts.calls).toHaveLength(1);
+    expect(ideaDrafts.calls[0].definitionId).toBe('idea');
+    expect(ideaDrafts.calls[0].answers).toEqual(answers);
+    await act(async (): Promise<void> => ideaDrafts.calls[0].resolve(aiResult));
+    expect(screen.getByRole('heading', { name: 'Here is a draft summary' })).toBeInTheDocument();
+    for (const field of IDEA_SUMMARY_FIELDS) {
+      expect(screen.getByLabelText(field.label)).toHaveValue(`AI ${field.key}`);
+    }
+    expect(screen.getByRole('progressbar')).toHaveAttribute('aria-label', 'Progress: Review your draft summary');
+  });
+
+  it('offers to retry or continue without AI when the service fails', async () => {
+    const ideaDrafts: IFakeIdeaDraftService = createFakeIdeaDraftService();
+    ideaDrafts.failWith(new Error('flow unavailable'));
+    const { governance } = await reachAiSummary(ideaDrafts);
+    await screen.findByText(ERROR_TEXT);
+    expect(screen.queryByRole('progressbar')).not.toBeInTheDocument();
+
+    ideaDrafts.respondWith(aiResult);
+    fireEvent.click(screen.getByRole('button', { name: 'Try again' }));
+    await screen.findByRole('heading', { name: 'Here is a draft summary' });
+    expect(ideaDrafts.calls).toHaveLength(2);
+    expect(screen.getByLabelText('Suggested use-case title')).toHaveValue('AI title');
+
+    fireEvent.click(screen.getByRole('button', { name: 'Confirm this reflects my idea' }));
+    await screen.findByRole('heading', { name: 'Thanks for sharing your idea.' });
+    expect(governance.submissions[0].payload).toMatchObject({ confirmedSummary: aiDraft, draftSource: provenance });
+  });
+
+  it('falls back to the plain summary without provenance when asked', async () => {
+    const ideaDrafts: IFakeIdeaDraftService = createFakeIdeaDraftService();
+    ideaDrafts.failWith(new Error('flow unavailable'));
+    const { governance } = await reachAiSummary(ideaDrafts);
+    await screen.findByText(ERROR_TEXT);
+    fireEvent.click(screen.getByRole('button', { name: 'Continue without AI help' }));
+    expect(screen.getByRole('heading', { name: 'Here is a draft summary' })).toBeInTheDocument();
+    expect(screen.getByLabelText('Suggested use-case title')).toHaveValue(draft.title);
+    fireEvent.click(screen.getByRole('button', { name: 'Confirm this reflects my idea' }));
+    await screen.findByRole('heading', { name: 'Thanks for sharing your idea.' });
+    expect(governance.submissions[0].payload).toMatchObject({ confirmedSummary: draft });
+    expect(governance.submissions[0].payload as object).not.toHaveProperty('draftSource');
+    expect(ideaDrafts.calls).toHaveLength(1);
+  });
+
+  it('regenerates through the service and keeps the current draft when that fails', async () => {
+    const ideaDrafts: IFakeIdeaDraftService = createFakeIdeaDraftService();
+    ideaDrafts.respondWith(aiResult);
+    await reachAiSummary(ideaDrafts);
+    await screen.findByRole('heading', { name: 'Here is a draft summary' });
+    fireEvent.change(screen.getByLabelText('Suggested use-case title'), { target: { value: 'Edited by hand' } });
+
+    ideaDrafts.respondManually();
+    fireEvent.click(screen.getByRole('button', { name: 'Regenerate summary' }));
+    expect(screen.getByRole('button', { name: 'Regenerating…' })).toBeDisabled();
+    expect(ideaDrafts.calls).toHaveLength(2);
+    await act(async (): Promise<void> =>
+      ideaDrafts.calls[1].resolve({ draft: { ...aiDraft, title: 'Second AI title' }, provenance: { ...provenance, responseId: 'msg_02' } })
+    );
+    expect(screen.getByRole('button', { name: 'Regenerate summary' })).toBeEnabled();
+    expect(screen.getByLabelText('Suggested use-case title')).toHaveValue('Second AI title');
+
+    fireEvent.click(screen.getByRole('button', { name: 'Regenerate summary' }));
+    await act(async (): Promise<void> => ideaDrafts.calls[2].reject(new Error('flow unavailable')));
+    expect(screen.getByRole('status')).toHaveTextContent('We could not regenerate the summary right now. Your current draft is unchanged.');
+    expect(screen.getByLabelText('Suggested use-case title')).toHaveValue('Second AI title');
+    expect(screen.getByRole('button', { name: 'Regenerate summary' })).toBeEnabled();
+  });
+
+  it('keeps the provenance in saved drafts and resumed sessions', async () => {
+    const ideaDrafts: IFakeIdeaDraftService = createFakeIdeaDraftService();
+    ideaDrafts.respondWith(aiResult);
+    const draftStore: InMemoryDraftStore = new InMemoryDraftStore();
+    const first: IWorkflowHarness = await reachAiSummary(ideaDrafts, { draftStore });
+    await screen.findByRole('heading', { name: 'Here is a draft summary' });
+    fireEvent.click(screen.getByRole('button', { name: 'Save draft' }));
+    await screen.findByText('Draft saved on this device.');
+    expect(JSON.parse(draftStore.drafts.idea)).toMatchObject({ phase: 'summary', summaryDraft: aiDraft, draftProvenance: provenance });
+    first.unmount();
+
+    const resumed: IWorkflowHarness = renderIdea({ draftStore, resumeDraft: true, ideaDrafts });
+    await screen.findByText('Picking up where you left off.');
+    fireEvent.click(screen.getByRole('button', { name: 'Confirm this reflects my idea' }));
+    await screen.findByRole('heading', { name: 'Thanks for sharing your idea.' });
+    expect(resumed.governance.submissions[0].payload).toMatchObject({ draftSource: provenance });
+    expect(ideaDrafts.calls).toHaveLength(1);
   });
 });

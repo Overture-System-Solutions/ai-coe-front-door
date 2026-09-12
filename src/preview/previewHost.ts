@@ -42,6 +42,8 @@ interface IPreviewApi {
   lists: { [title: string]: IPreviewItem[] };
   mount(properties: { [name: string]: unknown }): Promise<IPreviewWebPart>;
   setOrganizationName(name: string): void;
+  /** Points the web part at the simulated draft flow (any non-empty URL) or back to plain summaries. */
+  setDraftServiceUrl(url: string): void;
 }
 
 type AmdFactory = (...modules: unknown[]) => { default: new () => IPreviewWebPart };
@@ -110,6 +112,45 @@ function request(method: 'GET' | 'POST', url: string, options: { body?: string }
   });
 }
 
+/** Stands in for the Claude draft flow: echoes the answers into the twelve draft fields, no model involved. */
+function simulatedDraft(url: string, options: { body?: string } | undefined): Promise<IPreviewResponse> {
+  const draftRequest: { requestId?: string; answers?: { [key: string]: unknown } } = options !== undefined && options.body ? JSON.parse(options.body) : {};
+  const answers: { [key: string]: unknown } = draftRequest.answers ?? {};
+  const text = (key: string): string => (typeof answers[key] === 'string' && answers[key] ? String(answers[key]) : 'Not specified');
+  const categories: unknown = answers.informationCategories;
+  requests.push({ method: 'POST', list: `simulated draft flow (${url})`, body: draftRequest, simulated: true });
+  const envelope: unknown = {
+    ok: true,
+    schemaVersion: '1.0',
+    requestId: draftRequest.requestId,
+    draftOnly: true,
+    humanReviewRequired: true,
+    provider: 'offline-preview-simulation',
+    model: 'none',
+    responseId: `preview-${Date.now()}`,
+    draft: {
+      title: `[Simulated] ${text('workToImprove').slice(0, 60)}`,
+      problemToSolve: text('painPoints'),
+      currentProcess: text('workToImprove'),
+      peopleAffected: text('peopleInvolved'),
+      frequencyAndEffort: `${text('frequency')}; ${text('timeSpent')}`,
+      systemsInvolved: text('systemsInvolved'),
+      informationCategories: Array.isArray(categories) ? categories.join(', ') : 'Not specified',
+      currentAiActivity: text('aiAlreadyUsed'),
+      desiredOutcome: text('desiredOutcome'),
+      possibleMeasuresOfSuccess: text('successMeasure'),
+      openQuestions: 'This draft was produced by the offline preview simulation; no model was called.',
+      suggestedNextStep: 'An AI CoE team member will review this idea.'
+    }
+  };
+  return Promise.resolve({
+    ok: true,
+    status: 200,
+    json: (): Promise<unknown> => Promise.resolve(envelope),
+    text: (): Promise<string> => Promise.resolve(JSON.stringify(envelope))
+  });
+}
+
 const context: unknown = {
   pageContext: {
     user: { displayName: 'Local Preview (fictional)', email: 'preview@example.invalid' },
@@ -118,6 +159,12 @@ const context: unknown = {
   spHttpClient: {
     get: (url: string, _configuration: unknown, options?: { body?: string }): Promise<IPreviewResponse> => request('GET', url, options),
     post: (url: string, _configuration: unknown, options?: { body?: string }): Promise<IPreviewResponse> => request('POST', url, options)
+  },
+  aadHttpClientFactory: {
+    getClient: (): Promise<unknown> =>
+      Promise.resolve({
+        post: (url: string, _configuration: unknown, options?: { body?: string }): Promise<IPreviewResponse> => simulatedDraft(url, options)
+      })
   }
 };
 
@@ -138,7 +185,7 @@ const externals: { [name: string]: unknown } = {
   '@microsoft/sp-core-library': { Version: { parse: (value: string): { toString(): string } => ({ toString: (): string => value }) } },
   '@microsoft/sp-webpart-base': { BaseClientSideWebPart },
   '@microsoft/sp-page-context': { SPPermission: { manageWeb: 'simulated:manageWeb' } },
-  '@microsoft/sp-http': { SPHttpClient: { configurations: { v1: { name: 'v1' } } } },
+  '@microsoft/sp-http': { SPHttpClient: { configurations: { v1: { name: 'v1' } } }, AadHttpClient: { configurations: { v1: { name: 'aad-v1' } } } },
   '@microsoft/sp-property-pane': {
     PropertyPaneTextField: (targetProperty: string, properties: unknown): unknown => ({ targetProperty, properties })
   }
@@ -192,6 +239,13 @@ previewWindow.FrontDoorPreview = {
       throw new Error('Mount the web part first.');
     }
     mounted.properties.organizationName = name;
+    mounted.render();
+  },
+  setDraftServiceUrl: (url: string): void => {
+    if (mounted === undefined) {
+      throw new Error('Mount the web part first.');
+    }
+    mounted.properties.draftServiceUrl = url;
     mounted.render();
   }
 };

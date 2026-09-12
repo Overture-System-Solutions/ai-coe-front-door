@@ -3,6 +3,7 @@
  * return whatever the test configured, so journeys can be asserted without SharePoint.
  */
 import type { IBranding } from '../webparts/aiCoeFrontDoor/branding/branding';
+import type { IIdeaDraftResult, IIdeaDraftService } from '../webparts/aiCoeFrontDoor/services/draftService';
 import type { IDraftStore } from '../webparts/aiCoeFrontDoor/services/draftStorage';
 import { createToolPolicyEvaluator } from '../webparts/aiCoeFrontDoor/services/toolPolicyEvaluator';
 import type { IToolPolicyEvaluator } from '../webparts/aiCoeFrontDoor/services/toolPolicyEvaluator';
@@ -13,7 +14,7 @@ import type {
   IUsageMetricsResult,
   IUsageMetricsService
 } from '../webparts/aiCoeFrontDoor/services/types';
-import type { SubmissionWorkflowType } from '../webparts/aiCoeFrontDoor/workflows/types';
+import type { IAnswers, IWorkflowDefinition, SubmissionWorkflowType } from '../webparts/aiCoeFrontDoor/workflows/types';
 
 export interface IDeferred<T> {
   promise: Promise<T>;
@@ -114,6 +115,56 @@ export class InMemoryDraftStore implements IDraftStore {
   public keys(): string[] {
     return Object.keys(this.drafts);
   }
+}
+
+export interface IFakeDraftCall {
+  definitionId: string;
+  answers: IAnswers;
+  resolve: (result: IIdeaDraftResult) => void;
+  reject: (error: Error) => void;
+}
+
+export interface IFakeIdeaDraftService extends IIdeaDraftService {
+  /** Every request, oldest first; pending ones can be settled by the test. */
+  calls: IFakeDraftCall[];
+  /** Settle every new call immediately with this draft. */
+  respondWith(result: IIdeaDraftResult): void;
+  /** Reject every new call immediately with this error. */
+  failWith(error: Error): void;
+  /** Leave new calls pending until the test settles them through `calls`. */
+  respondManually(): void;
+}
+
+/** Records draft requests; settles them automatically or leaves them to the test. */
+export function createFakeIdeaDraftService(): IFakeIdeaDraftService {
+  let autoResult: IIdeaDraftResult | undefined;
+  let autoError: Error | undefined;
+  const service: IFakeIdeaDraftService = {
+    calls: [],
+    respondWith: (result: IIdeaDraftResult): void => {
+      autoResult = result;
+      autoError = undefined;
+    },
+    failWith: (error: Error): void => {
+      autoError = error;
+      autoResult = undefined;
+    },
+    respondManually: (): void => {
+      autoResult = undefined;
+      autoError = undefined;
+    },
+    draftIdea: (definition: IWorkflowDefinition, answers: IAnswers): Promise<IIdeaDraftResult> => {
+      const deferred: IDeferred<IIdeaDraftResult> = createDeferred<IIdeaDraftResult>();
+      service.calls.push({ definitionId: definition.id, answers: { ...answers }, resolve: deferred.resolve, reject: deferred.reject });
+      if (autoError !== undefined) {
+        deferred.reject(autoError);
+      } else if (autoResult !== undefined) {
+        deferred.resolve(autoResult);
+      }
+      return deferred.promise;
+    }
+  };
+  return service;
 }
 
 /** The real evaluator without its 400 ms pause. */

@@ -2,16 +2,21 @@
  * Session state of the two workflows that end in an editable summary (idea and team usage).
  * `TDraft` is the summary draft shape: one string per summary field.
  */
+import type { IDraftProvenance } from '../services/draftService';
 import { reduceBaseAction, RESUME_NOTICE, resumeStepId } from './formEngine';
 import type { BaseSessionAction, ISessionBase, IStoredDraftBase } from './formEngine';
 import type { IAnswers, IWorkflowDefinition } from './types';
 
-export type SummaryPhase = 'form' | 'summary' | 'submitting' | 'result';
+export type SummaryPhase = 'form' | 'generating' | 'summary' | 'summaryError' | 'submitting' | 'result';
 
 export interface ISummarySession<TDraft> extends ISessionBase<SummaryPhase, 'summary'> {
   summaryDraft: TDraft | undefined;
   /** JSON of the answers the draft was built from; a mismatch shows the "answers changed" hint. */
   summarySourceSnapshot: string | undefined;
+  /** Set when the draft came from the AI draft service; absent for deterministic drafts. */
+  draftProvenance: IDraftProvenance | undefined;
+  /** Why the AI draft could not be created; shown with the retry and fallback choices. */
+  summaryError: string | undefined;
 }
 
 /** Shape persisted to localStorage; the nulls are part of the stored contract of package 1.0.0.7. */
@@ -20,6 +25,7 @@ export interface ISummaryWorkflowDraft<TDraft> extends IStoredDraftBase {
   summaryDraft?: TDraft | null;
   // eslint-disable-next-line @rushstack/no-new-null
   summarySourceSnapshot?: string | null;
+  draftProvenance?: IDraftProvenance;
 }
 
 export function createSummarySession<TDraft>(definition: IWorkflowDefinition, draft: ISummaryWorkflowDraft<TDraft> | undefined): ISummarySession<TDraft> {
@@ -33,23 +39,30 @@ export function createSummarySession<TDraft>(definition: IWorkflowDefinition, dr
     errors: {},
     notice: draft ? RESUME_NOTICE : undefined,
     summaryDraft,
-    summarySourceSnapshot: draft?.summarySourceSnapshot ?? undefined
+    summarySourceSnapshot: draft?.summarySourceSnapshot ?? undefined,
+    draftProvenance: summaryDraft === undefined ? undefined : draft?.draftProvenance,
+    summaryError: undefined
   };
 }
 
 export function toStoredSummaryDraft<TDraft>(session: ISummarySession<TDraft>): ISummaryWorkflowDraft<TDraft> {
-  return {
+  const stored: ISummaryWorkflowDraft<TDraft> = {
     answers: session.answers,
     currentStepId: session.currentStepId,
     phase: session.phase === 'summary' ? 'summary' : 'form',
     summaryDraft: session.summaryDraft ?? null,
     summarySourceSnapshot: session.summarySourceSnapshot ?? null
   };
+  if (session.draftProvenance !== undefined) {
+    stored.draftProvenance = session.draftProvenance;
+  }
+  return stored;
 }
 
 export type SummarySessionAction<TDraft> =
   | BaseSessionAction<SummaryPhase, 'summary'>
-  | { type: 'SET_SUMMARY_DRAFT'; draft: TDraft }
+  | { type: 'SET_SUMMARY_DRAFT'; draft: TDraft; provenance?: IDraftProvenance }
+  | { type: 'SET_SUMMARY_ERROR'; message: string }
   | { type: 'UPDATE_SUMMARY_FIELD'; key: keyof TDraft & string; value: string }
   | { type: 'RESET'; session: ISummarySession<TDraft> };
 
@@ -59,7 +72,16 @@ export function summaryReducer<TDraft extends { [key: string]: string }>(
 ): ISummarySession<TDraft> {
   switch (action.type) {
     case 'SET_SUMMARY_DRAFT':
-      return { ...state, summaryDraft: action.draft, summarySourceSnapshot: JSON.stringify(state.answers), phase: 'summary' };
+      return {
+        ...state,
+        summaryDraft: action.draft,
+        summarySourceSnapshot: JSON.stringify(state.answers),
+        draftProvenance: action.provenance,
+        summaryError: undefined,
+        phase: 'summary'
+      };
+    case 'SET_SUMMARY_ERROR':
+      return { ...state, summaryError: action.message, phase: 'summaryError' };
     case 'UPDATE_SUMMARY_FIELD':
       if (state.summaryDraft === undefined) {
         return state;

@@ -20,7 +20,8 @@
     "description": { "default": "Governed AI CoE intake, routing, telemetry, and administrator dashboard" },
     "officeFabricIconFontName": "EntryView",
     "properties": {
-      "organizationName": ""
+      "organizationName": "",
+      "draftServiceUrl": ""
     }
   }]
 }

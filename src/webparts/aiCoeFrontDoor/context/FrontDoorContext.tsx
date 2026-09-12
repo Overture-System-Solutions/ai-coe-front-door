@@ -1,5 +1,6 @@
 import * as React from 'react';
 import type { IBranding } from '../branding/branding';
+import type { IIdeaDraftService } from '../services/draftService';
 import type { IDraftStore } from '../services/draftStorage';
 import type { IToolPolicyEvaluator } from '../services/toolPolicyEvaluator';
 import type { IGovernanceService, IUsageMetricsService } from '../services/types';
@@ -15,6 +16,8 @@ export interface IFrontDoorServices {
   usage: IUsageMetricsService;
   draftStore: IDraftStore;
   toolPolicyEvaluator: IToolPolicyEvaluator;
+  /** Present only when the web part has a Claude draft flow configured; otherwise summaries stay deterministic. */
+  ideaDrafts?: IIdeaDraftService;
 }
 
 /** Everything the pages need from the host: who is looking, where they are, and the services to talk to. */

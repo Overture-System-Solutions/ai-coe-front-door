@@ -7,6 +7,7 @@ import { createWorkflowCatalog } from '../webparts/aiCoeFrontDoor/content/workfl
 import { FrontDoorProvider } from '../webparts/aiCoeFrontDoor/context/FrontDoorContext';
 import type { IFrontDoorContextValue, IFrontDoorUser } from '../webparts/aiCoeFrontDoor/context/FrontDoorContext';
 import { SubmissionProvider } from '../webparts/aiCoeFrontDoor/context/SubmissionContext';
+import type { IIdeaDraftService } from '../webparts/aiCoeFrontDoor/services/draftService';
 import type { IToolPolicyEvaluator } from '../webparts/aiCoeFrontDoor/services/toolPolicyEvaluator';
 import type { IUsageMetricsService } from '../webparts/aiCoeFrontDoor/services/types';
 import { createFakeGovernanceService, createImmediateEvaluator, createPendingUsageService, InMemoryDraftStore } from './fakeServices';
@@ -26,6 +27,8 @@ export interface ITestFrontDoorOptions {
   usage?: IUsageMetricsService;
   draftStore?: InMemoryDraftStore;
   toolPolicyEvaluator?: IToolPolicyEvaluator;
+  /** Absent by default, like a web part without a configured draft flow. */
+  ideaDrafts?: IIdeaDraftService;
 }
 
 export interface ITestFrontDoor {
@@ -49,7 +52,8 @@ export function createTestFrontDoor(options: ITestFrontDoorOptions = {}): ITestF
       governance,
       usage: options.usage ?? createPendingUsageService(),
       draftStore,
-      toolPolicyEvaluator: options.toolPolicyEvaluator ?? createImmediateEvaluator(branding)
+      toolPolicyEvaluator: options.toolPolicyEvaluator ?? createImmediateEvaluator(branding),
+      ideaDrafts: options.ideaDrafts
     }
   };
   return { value, branding, governance, draftStore };

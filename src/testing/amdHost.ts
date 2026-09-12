@@ -18,6 +18,17 @@ export interface IHostUser {
   email: string;
 }
 
+export interface IFlowReply {
+  status: number;
+  body: string;
+}
+
+export interface IFlowRequest {
+  url: string;
+  headers: { [name: string]: string };
+  body: unknown;
+}
+
 export interface IAmdHostOptions {
   siteUrl?: string;
   user?: IHostUser;
@@ -25,6 +36,8 @@ export interface IAmdHostOptions {
   /** Web part property bag (`this.properties`). */
   properties?: { [name: string]: unknown };
   store?: InMemoryListStore;
+  /** Simulated Claude draft flow behind the Entra-authenticated client; answers 404 when absent. */
+  draftFlow?: (request: unknown) => IFlowReply;
 }
 
 export interface IThemeLike {
@@ -58,6 +71,10 @@ export interface IHostedInstance {
   store: InMemoryListStore;
   /** Permissions the web part asked about, in order. */
   permissionChecks: unknown[];
+  /** Resource endpoints for which the web part requested an Entra-authenticated client. */
+  flowResources: string[];
+  /** Requests posted through that client, oldest first. */
+  flowRequests: IFlowRequest[];
   /** Unmounts the web part and removes its element from the document. */
   dispose(): void;
 }
@@ -143,8 +160,23 @@ export function loadWebPartBundle(bundlePath: string, stringsPath?: string): IWe
     create: (options: IAmdHostOptions = {}): IHostedInstance => {
       const store: InMemoryListStore = options.store ?? new InMemoryListStore(LIST_TITLES.slice());
       const permissionChecks: unknown[] = [];
+      const flowResources: string[] = [];
+      const flowRequests: IFlowRequest[] = [];
       const domElement: HTMLElement = document.createElement('div');
       document.body.appendChild(domElement);
+      const aadHttpClient: unknown = {
+        post: (url: string, _configuration: unknown, requestOptions: { headers?: { [name: string]: string }; body?: string }): Promise<unknown> => {
+          const body: unknown = requestOptions.body === undefined ? undefined : JSON.parse(requestOptions.body);
+          flowRequests.push({ url, headers: requestOptions.headers ?? {}, body });
+          const reply: IFlowReply = options.draftFlow === undefined ? { status: 404, body: '' } : options.draftFlow(body);
+          return Promise.resolve({
+            ok: reply.status >= 200 && reply.status < 300,
+            status: reply.status,
+            text: (): Promise<string> => Promise.resolve(reply.body),
+            json: (): Promise<unknown> => Promise.resolve(JSON.parse(reply.body))
+          });
+        }
+      };
       const context: unknown = {
         pageContext: {
           user: options.user ?? DEFAULT_USER,
@@ -158,7 +190,13 @@ export function loadWebPartBundle(bundlePath: string, stringsPath?: string): IWe
             }
           }
         },
-        spHttpClient: createFakeListClient(store)
+        spHttpClient: createFakeListClient(store),
+        aadHttpClientFactory: {
+          getClient: (resource: string): Promise<unknown> => {
+            flowResources.push(resource);
+            return Promise.resolve(aadHttpClient);
+          }
+        }
       };
       const externals: { [name: string]: unknown } = {
         react: React,
@@ -166,7 +204,7 @@ export function loadWebPartBundle(bundlePath: string, stringsPath?: string): IWe
         '@microsoft/sp-core-library': { Version: { parse: (value: string): { toString(): string } => ({ toString: (): string => value }) } },
         '@microsoft/sp-webpart-base': { BaseClientSideWebPart: createBaseClass({ context, domElement, properties: { ...options.properties } }) },
         '@microsoft/sp-page-context': { SPPermission: { manageWeb: MANAGE_WEB_PERMISSION } },
-        '@microsoft/sp-http': { SPHttpClient: { configurations: { v1: { name: 'v1' } } } },
+        '@microsoft/sp-http': { SPHttpClient: { configurations: { v1: { name: 'v1' } } }, AadHttpClient: { configurations: { v1: { name: 'aad-v1' } } } },
         '@microsoft/sp-property-pane': {
           PropertyPaneTextField: (targetProperty: string, properties: IPropertyPaneFieldLike['properties']): IPropertyPaneFieldLike => ({ targetProperty, properties })
         },
@@ -184,6 +222,8 @@ export function loadWebPartBundle(bundlePath: string, stringsPath?: string): IWe
         webPart,
         store,
         permissionChecks,
+        flowResources,
+        flowRequests,
         dispose: (): void => {
           webPart.onDispose();
           domElement.remove();

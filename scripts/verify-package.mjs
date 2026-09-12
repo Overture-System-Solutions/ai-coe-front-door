@@ -104,6 +104,13 @@ const domainIsolated = /\sIsDomainIsolated="([^"]+)"/i.exec(appManifest)?.[1];
 check(version === EXPECTED.version, `AppManifest Version is ${version}, expected ${EXPECTED.version}`);
 check(productId?.toLowerCase() === EXPECTED.productId, `AppManifest ProductID is ${productId}, expected ${EXPECTED.productId}`);
 check(domainIsolated === 'false', `AppManifest IsDomainIsolated is ${domainIsolated}, expected false`);
+// The Claude draft flow is reached with a framework-issued Entra token; the package must ask for that API permission.
+// The packager writes the request as <WebApiPermissionRequest ResourceId="…" Scope="…">.
+const permissionRequest = /<WebApiPermissionRequest [^>]*ResourceId="([^"]+)"[^>]*Scope="([^"]+)"/i.exec(appManifest);
+check(
+  permissionRequest !== null && permissionRequest[1] === 'Microsoft Flow Service' && permissionRequest[2] === 'User',
+  `AppManifest lacks the "Microsoft Flow Service / User" web API permission request (found: ${permissionRequest === null ? 'none' : `${permissionRequest[1]} / ${permissionRequest[2]}`})`
+);
 
 const inventory = JSON.parse(fs.readFileSync(path.join(root, 'recovered/inventory.json'), 'utf8'));
 const shippedHashes = new Map();
@@ -146,6 +153,7 @@ const record = {
     version,
     productId,
     isDomainIsolated: domainIsolated,
+    webApiPermissionRequest: permissionRequest === null ? undefined : { resource: permissionRequest[1], scope: permissionRequest[2] },
     entries: entries.map((entry) => entry.name).sort()
   },
   provisioning,

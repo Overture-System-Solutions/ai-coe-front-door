@@ -3,6 +3,9 @@ declare interface IAiCoeFrontDoorWebPartStrings {
   BrandingGroupName: string;
   OrganizationNameFieldLabel: string;
   OrganizationNameFieldDescription: string;
+  DraftingGroupName: string;
+  DraftServiceUrlFieldLabel: string;
+  DraftServiceUrlFieldDescription: string;
 }
 
 declare module 'AiCoeFrontDoorWebPartStrings' {
