@@ -1,10 +1,10 @@
 {
-  "verifiedAt": "2026-09-12T02:44:45.825Z",
+  "verifiedAt": "2026-09-12T04:23:31.910Z",
   "package": {
     "path": "sharepoint/solution/overture-ai-coe-front-door.sppkg",
-    "sha256": "de2f5ec89b09b1193b1cfad5b38871d67f1bb02b749add001c8e9ccc44746077",
-    "bytes": 65681,
-    "version": "1.0.0.8",
+    "sha256": "662cc98f8924248672d0b506a28ec6dc135b049006f7856266469b06372bac30",
+    "bytes": 66290,
+    "version": "1.0.0.9",
     "productId": "f125ebdf-4a9d-4e6e-8479-3a18874e7752",
     "isDomainIsolated": "false",
     "webApiPermissionRequest": {
@@ -17,9 +17,9 @@
       "AppManifest.xml",
       "ClientSideAssets.xml",
       "ClientSideAssets.xml.config.xml",
-      "ClientSideAssets/AiCoeFrontDoorWebPartStrings_en-us_365697906263fbb9ab470271099e6ec4.js",
-      "ClientSideAssets/ai-coe-front-door-web-part_7452bd56723913e3d356.js",
-      "ClientSideAssets/ai-coe-front-door-web-part_7452bd56723913e3d356.js.LICENSE.txt",
+      "ClientSideAssets/AiCoeFrontDoorWebPartStrings_en-us_74b70309436703492fd04a3ee66f9322.js",
+      "ClientSideAssets/ai-coe-front-door-web-part_797f8b01c1c83b1d9812.js",
+      "ClientSideAssets/ai-coe-front-door-web-part_797f8b01c1c83b1d9812.js.LICENSE.txt",
       "ClientSideAssets/cf2e5904-0703-4fe4-ae5a-ec012d6fa689_color.png",
       "ClientSideAssets/cf2e5904-0703-4fe4-ae5a-ec012d6fa689_outline.png",
       "[Content_Types].xml",
@@ -53,14 +53,14 @@
   "bundle": {
     "files": [
       {
-        "name": "ClientSideAssets/ai-coe-front-door-web-part_7452bd56723913e3d356.js",
-        "sha256": "51b0850cb0bb60bbcd714702f6643bd72113c03680535d3215aaf355d6c5a0e8",
-        "bytes": 180813
+        "name": "ClientSideAssets/ai-coe-front-door-web-part_797f8b01c1c83b1d9812.js",
+        "sha256": "fe4ce867bad72036c0d080c63df05703c243872a7d641184df37f1db49538964",
+        "bytes": 183097
       },
       {
-        "name": "ClientSideAssets/AiCoeFrontDoorWebPartStrings_en-us_365697906263fbb9ab470271099e6ec4.js",
-        "sha256": "ff528ccb29cdf1c85ad9895511299a698fbd4f56cacd341817343e6ca917959a",
-        "bytes": 734
+        "name": "ClientSideAssets/AiCoeFrontDoorWebPartStrings_en-us_74b70309436703492fd04a3ee66f9322.js",
+        "sha256": "10f61b5a480e8eef4417715be03ebd7d53f57269957ac90b58a7e45f1aae889d",
+        "bytes": 1024
       }
     ],
     "forbiddenWordCounts": {
@@ -73,7 +73,7 @@
       "AI CoE Pilot Intakes"
     ]
   },
-  "tests": "npx heft test: 212 passed, 0 failed; npm run build (heft test --clean --production): 212 passed, 0 failed",
+  "tests": "223 passed (heft test --clean and npm run build on 2026-09-12)",
   "scope": "Local build verification only: no tenant upload, deployment, SharePoint change or model call.",
   "failures": []
 }

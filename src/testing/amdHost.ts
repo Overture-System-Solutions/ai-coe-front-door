@@ -47,7 +47,7 @@ export interface IThemeLike {
 
 export interface IPropertyPaneFieldLike {
   targetProperty: string;
-  properties: { label?: string; description?: string; placeholder?: string };
+  properties: { label?: string; description?: string; placeholder?: string; options?: { key: string; text: string }[]; selectedKey?: string };
 }
 
 export interface IPropertyPaneConfigurationLike {
@@ -206,7 +206,8 @@ export function loadWebPartBundle(bundlePath: string, stringsPath?: string): IWe
         '@microsoft/sp-page-context': { SPPermission: { manageWeb: MANAGE_WEB_PERMISSION } },
         '@microsoft/sp-http': { SPHttpClient: { configurations: { v1: { name: 'v1' } } }, AadHttpClient: { configurations: { v1: { name: 'aad-v1' } } } },
         '@microsoft/sp-property-pane': {
-          PropertyPaneTextField: (targetProperty: string, properties: IPropertyPaneFieldLike['properties']): IPropertyPaneFieldLike => ({ targetProperty, properties })
+          PropertyPaneTextField: (targetProperty: string, properties: IPropertyPaneFieldLike['properties']): IPropertyPaneFieldLike => ({ targetProperty, properties }),
+          PropertyPaneDropdown: (targetProperty: string, properties: IPropertyPaneFieldLike['properties']): IPropertyPaneFieldLike => ({ targetProperty, properties })
         },
         AiCoeFrontDoorWebPartStrings: strings
       };

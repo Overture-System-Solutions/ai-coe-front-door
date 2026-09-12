@@ -7,7 +7,15 @@ import { AiCoeFrontDoor } from './AiCoeFrontDoor';
 function renderRoot(isDarkTheme: boolean): HTMLElement {
   const { value }: ITestFrontDoor = createTestFrontDoor();
   const { container } = render(
-    <AiCoeFrontDoor isDarkTheme={isDarkTheme} branding={value.branding} siteUrl={value.siteUrl} user={value.user} isAdmin={value.isAdmin} services={value.services} />
+    <AiCoeFrontDoor
+      isDarkTheme={isDarkTheme}
+      branding={value.branding}
+      siteUrl={value.siteUrl}
+      user={value.user}
+      isAdmin={value.isAdmin}
+      telemetryProvider={value.telemetryProvider}
+      services={value.services}
+    />
   );
   return container.firstChild as HTMLElement;
 }

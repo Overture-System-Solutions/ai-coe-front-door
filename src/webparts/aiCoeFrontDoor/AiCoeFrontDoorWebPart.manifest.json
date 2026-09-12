@@ -21,7 +21,8 @@
     "officeFabricIconFontName": "EntryView",
     "properties": {
       "organizationName": "",
-      "draftServiceUrl": ""
+      "draftServiceUrl": "",
+      "telemetryProvider": "claude"
     }
   }]
 }

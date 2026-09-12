@@ -44,6 +44,8 @@ interface IPreviewApi {
   setOrganizationName(name: string): void;
   /** Points the web part at the simulated draft flow (any non-empty URL) or back to plain summaries. */
   setDraftServiceUrl(url: string): void;
+  /** Switches the telemetry strip between the Claude, OpenAI and combined tile sets. */
+  setTelemetryProvider(mode: string): void;
 }
 
 type AmdFactory = (...modules: unknown[]) => { default: new () => IPreviewWebPart };
@@ -68,6 +70,62 @@ let pendingProperties: { [name: string]: unknown } = {};
 for (let index: number = 0; index < LIST_TITLES.length; index++) {
   lists[LIST_TITLES[index]] = [];
 }
+
+/**
+ * Fictional usage rows for both feeds (previous month and month to date, cost plus per-model
+ * completions, the shape the Claude telemetry flow writes) and one open incident, so the
+ * telemetry strip shows totals, deltas and an alert offline.
+ */
+function seedTelemetry(): void {
+  const now: Date = new Date();
+  const year: number = now.getUTCFullYear();
+  const month: number = now.getUTCMonth();
+  const usage: IPreviewItem[] = lists['AI Usage Daily'];
+  const months: { offset: number; days: number }[] = [
+    { offset: -1, days: 10 },
+    { offset: 0, days: Math.min(now.getUTCDate(), 10) }
+  ];
+  const row = (provider: string, metricType: string, bucket: Date, model: string | undefined, fields: { [name: string]: unknown }): IPreviewItem => {
+    const start: string = bucket.toISOString();
+    const epoch: number = Math.floor(bucket.getTime() / 1000);
+    const key: string = `${provider}|${metricType}|${start.slice(0, 10)}${model === undefined ? '' : `|${model}`}`;
+    const item: IPreviewItem = {
+      Id: nextId++,
+      Title: key,
+      Provider: provider,
+      MetricType: metricType,
+      BucketStart: start,
+      BucketStartEpoch: epoch,
+      BucketEndEpoch: epoch + 86400,
+      CompositeKey: key
+    };
+    if (model !== undefined) {
+      item.Model = model;
+    }
+    return Object.assign(item, fields);
+  };
+  for (let index: number = 0; index < months.length; index++) {
+    for (let day: number = 1; day <= months[index].days; day++) {
+      const bucket: Date = new Date(Date.UTC(year, month + months[index].offset, day));
+      usage.push(row('anthropic', 'cost', bucket, undefined, { Amount: 3.25 + day * 0.5, Currency: 'USD' }));
+      usage.push(row('anthropic', 'completions', bucket, 'claude-sonnet-5', { InputTokens: 12000 + day * 400, OutputTokens: 1800 + day * 60 }));
+      usage.push(row('anthropic', 'completions', bucket, 'claude-opus-5', { InputTokens: 3000 + day * 100, OutputTokens: 700 + day * 20 }));
+      usage.push(row('openai', 'cost', bucket, undefined, { Amount: 1.1 + day * 0.3, Currency: 'USD' }));
+      usage.push(row('openai', 'completions', bucket, 'openai-default', { Requests: 40 + day, InputTokens: 5000 + day * 100, OutputTokens: 900 + day * 10 }));
+    }
+  }
+  lists['AI CoE Incidents'].push({
+    Id: nextId++,
+    Title: 'Claude API spend exceeded the monthly budget',
+    Category: 'Cost',
+    Severity: 'High',
+    Status: 'Open',
+    Provider: 'anthropic',
+    DetectedAt: now.toISOString(),
+    Details: 'Simulated preview data: month-to-date Claude API spend exceeds the ClaudeMonthlyBudgetUsd setting in AI CoE Configuration. No tenant or provider was contacted.'
+  });
+}
+seedTelemetry();
 
 function blocked(): never {
   throw new Error('External network access is blocked in the offline preview.');
@@ -187,7 +245,8 @@ const externals: { [name: string]: unknown } = {
   '@microsoft/sp-page-context': { SPPermission: { manageWeb: 'simulated:manageWeb' } },
   '@microsoft/sp-http': { SPHttpClient: { configurations: { v1: { name: 'v1' } } }, AadHttpClient: { configurations: { v1: { name: 'aad-v1' } } } },
   '@microsoft/sp-property-pane': {
-    PropertyPaneTextField: (targetProperty: string, properties: unknown): unknown => ({ targetProperty, properties })
+    PropertyPaneTextField: (targetProperty: string, properties: unknown): unknown => ({ targetProperty, properties }),
+    PropertyPaneDropdown: (targetProperty: string, properties: unknown): unknown => ({ targetProperty, properties })
   }
 };
 
@@ -246,6 +305,13 @@ previewWindow.FrontDoorPreview = {
       throw new Error('Mount the web part first.');
     }
     mounted.properties.draftServiceUrl = url;
+    mounted.render();
+  },
+  setTelemetryProvider: (mode: string): void => {
+    if (mounted === undefined) {
+      throw new Error('Mount the web part first.');
+    }
+    mounted.properties.telemetryProvider = mode;
     mounted.render();
   }
 };

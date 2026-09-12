@@ -1,5 +1,6 @@
 import * as React from 'react';
 import type { IBranding } from '../branding/branding';
+import type { TelemetryProvider } from '../content/telemetryTiles';
 import type { IIdeaDraftService } from '../services/draftService';
 import type { IDraftStore } from '../services/draftStorage';
 import type { IToolPolicyEvaluator } from '../services/toolPolicyEvaluator';
@@ -27,6 +28,8 @@ export interface IFrontDoorContextValue {
   siteUrl: string;
   user: IFrontDoorUser;
   isAdmin: boolean;
+  /** Which usage feed the telemetry strip shows; a presentation choice, so changing it never refetches. */
+  telemetryProvider: TelemetryProvider;
   services: IFrontDoorServices;
 }
 

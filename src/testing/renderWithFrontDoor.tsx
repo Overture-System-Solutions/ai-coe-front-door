@@ -3,6 +3,7 @@ import type { RenderResult } from '@testing-library/react';
 import * as React from 'react';
 import { createBranding } from '../webparts/aiCoeFrontDoor/branding/branding';
 import type { IBranding } from '../webparts/aiCoeFrontDoor/branding/branding';
+import type { TelemetryProvider } from '../webparts/aiCoeFrontDoor/content/telemetryTiles';
 import { createWorkflowCatalog } from '../webparts/aiCoeFrontDoor/content/workflows/catalog';
 import { FrontDoorProvider } from '../webparts/aiCoeFrontDoor/context/FrontDoorContext';
 import type { IFrontDoorContextValue, IFrontDoorUser } from '../webparts/aiCoeFrontDoor/context/FrontDoorContext';
@@ -22,6 +23,8 @@ export interface ITestFrontDoorOptions {
   siteUrl?: string;
   isAdmin?: boolean;
   user?: IFrontDoorUser;
+  /** Defaults to the OpenAI tiles the shipped build rendered; the web part itself defaults to Claude. */
+  telemetryProvider?: TelemetryProvider;
   governance?: IFakeGovernanceService;
   /** Defaults to a service that never answers; pass a fake to exercise the telemetry strip. */
   usage?: IUsageMetricsService;
@@ -48,6 +51,7 @@ export function createTestFrontDoor(options: ITestFrontDoorOptions = {}): ITestF
     siteUrl: options.siteUrl ?? TEST_SITE_URL,
     user: options.user ?? TEST_USER,
     isAdmin: options.isAdmin ?? false,
+    telemetryProvider: options.telemetryProvider ?? 'openai',
     services: {
       governance,
       usage: options.usage ?? createPendingUsageService(),

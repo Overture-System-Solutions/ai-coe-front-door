@@ -152,6 +152,84 @@ describe('UsageTelemetryStrip', () => {
     expect(screen.getByText(/^SharePoint telemetry is unavailable: AI Usage Daily could not be read\. Aggregate/)).toBeInTheDocument();
   });
 
+  it('shows the Claude tiles and provider-neutral alert wording in Claude mode', async () => {
+    const result: IUsageMetricsResult = {
+      connected: true,
+      message: 'Usage and incident data loaded from SharePoint.',
+      alerts: [],
+      metrics: [
+        metric({ metricKey: 'anthropic_api_spend_mtd', metricLabel: 'Claude API spend this month', provider: 'anthropic', unit: 'USD', currentValue: 42.5, previousValue: 40 }),
+        metric({ metricKey: 'anthropic_api_tokens_mtd', metricLabel: 'Claude API tokens this month', provider: 'anthropic', currentValue: 1800, previousValue: 150 }),
+        metric({ metricKey: 'anthropic_api_output_tokens_mtd', metricLabel: 'Claude output tokens this month', provider: 'anthropic', currentValue: 300, previousValue: 50 }),
+        metric({ metricKey: 'openai_api_spend_mtd', metricLabel: 'OpenAI API spend this month', provider: 'openai', unit: 'USD', currentValue: 3 }),
+        metric({ metricKey: 'open_coe_alerts', metricLabel: 'Open CoE alerts', source: 'AI CoE Incidents', currentValue: 0 })
+      ]
+    };
+    renderWithFrontDoor(<UsageTelemetryStrip />, { usage: createFakeUsageService(result), telemetryProvider: 'claude' });
+    await flush();
+    const tiles: HTMLElement[] = screen.getAllByRole('article');
+    expect(tiles).toHaveLength(4);
+    expect(tiles.map((tile: HTMLElement): string => tile.className)).toEqual([
+      'ai-metric-card ai-metric-card--teal',
+      'ai-metric-card ai-metric-card--blue',
+      'ai-metric-card ai-metric-card--violet',
+      'ai-metric-card ai-metric-card--gold'
+    ]);
+    expect(within(tiles[0]).getByText('Claude API spend this month')).toHaveClass('ai-metric-label');
+    expect(within(tiles[0]).getByText(usd.format(42.5))).toHaveClass('ai-metric-value');
+    expect(within(tiles[0]).getByText('+6.3% vs prior period')).toBeInTheDocument();
+    expect(within(tiles[1]).getByText(count.format(1800))).toBeInTheDocument();
+    expect(within(tiles[2]).getByText('Claude output tokens this month')).toBeInTheDocument();
+    expect(within(tiles[2]).getByText(count.format(300))).toBeInTheDocument();
+    expect(within(tiles[3]).getByText('No open incidents')).toBeInTheDocument();
+    expect(screen.queryByText('OpenAI API spend this month')).not.toBeInTheDocument();
+    expect(screen.getByText('AI CoE alerts and usage overages')).toBeInTheDocument();
+    expect(screen.getByText('No open API or usage overage alerts.')).toBeInTheDocument();
+    expect(screen.queryByText(/ChatGPT/)).not.toBeInTheDocument();
+  });
+
+  it('shows both tile sets, Claude first, when both providers are selected', async () => {
+    const result: IUsageMetricsResult = {
+      connected: true,
+      message: 'ok',
+      alerts: [],
+      metrics: [
+        metric({ metricKey: 'anthropic_api_spend_mtd', metricLabel: 'Claude API spend this month', provider: 'anthropic', unit: 'USD', currentValue: 42.5 }),
+        metric({ metricKey: 'openai_api_spend_mtd', metricLabel: 'OpenAI API spend this month', provider: 'openai', unit: 'USD', currentValue: 3 })
+      ]
+    };
+    renderWithFrontDoor(<UsageTelemetryStrip />, { usage: createFakeUsageService(result), telemetryProvider: 'both' });
+    await flush();
+    const labels: string[] = screen.getAllByRole('article').map((tile: HTMLElement): string => (within(tile).getByText(/month|alerts/) as HTMLElement).textContent ?? '');
+    expect(labels).toEqual([
+      'Claude API spend this month',
+      'Claude API tokens this month',
+      'Claude output tokens this month',
+      'OpenAI API spend this month',
+      'OpenAI API requests this month',
+      'OpenAI API tokens this month',
+      'Open CoE alerts'
+    ]);
+    expect(screen.getAllByText('Awaiting data')).toHaveLength(5);
+    expect(screen.getByText('AI CoE alerts and usage overages')).toBeInTheDocument();
+  });
+
+  it('keeps the shipped OpenAI tiles and wording in OpenAI mode while Claude rows are present', async () => {
+    const result: IUsageMetricsResult = {
+      connected: true,
+      message: 'ok',
+      alerts: [],
+      metrics: [metric({ metricKey: 'anthropic_api_spend_mtd', metricLabel: 'Claude API spend this month', provider: 'anthropic', unit: 'USD', currentValue: 42.5 })]
+    };
+    renderWithFrontDoor(<UsageTelemetryStrip />, { usage: createFakeUsageService(result), telemetryProvider: 'openai' });
+    await flush();
+    expect(screen.getAllByRole('article')).toHaveLength(4);
+    expect(screen.queryByText('Claude API spend this month')).not.toBeInTheDocument();
+    expect(screen.getByText('OpenAI API spend this month')).toBeInTheDocument();
+    expect(screen.getByText('AI CoE alerts and ChatGPT / Work overages')).toBeInTheDocument();
+    expect(screen.getByText('No open API, ChatGPT, or Work overage alerts.')).toBeInTheDocument();
+  });
+
   it('uses the singular for one alert', async () => {
     renderWithFrontDoor(<UsageTelemetryStrip />, { usage: createFakeUsageService({ connected: true, metrics: [], alerts: [alert({})], message: 'ok' }) });
     await flush();

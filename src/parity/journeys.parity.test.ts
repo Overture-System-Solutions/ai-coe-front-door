@@ -113,7 +113,7 @@ function localDrafts(): { [key: string]: unknown } {
 async function runJourney(bundle: IWebPartBundle, script: IJourneyScript): Promise<ITrace> {
   const definition: IWorkflowDefinition = catalog[script.journey.workflowId];
   const downloads: IDownloadSpy = spyOnDownloads();
-  const instance: IHostedInstance = bundle.create({ properties: { organizationName: ORGANIZATION } });
+  const instance: IHostedInstance = bundle.create({ properties: { organizationName: ORGANIZATION, telemetryProvider: 'openai' } });
   const root: HTMLElement = instance.webPart.domElement;
   const screens: string[] = [];
   let draft: { [key: string]: unknown } = {};
@@ -222,7 +222,7 @@ describe('Documented differences from package 1.0.0.7', () => {
       [original, 2],
       [ported, 1]
     ] as const) {
-      const instance: IHostedInstance = bundle.create({ properties: { organizationName: ORGANIZATION } });
+      const instance: IHostedInstance = bundle.create({ properties: { organizationName: ORGANIZATION, telemetryProvider: 'openai' } });
       try {
         await act(async (): Promise<void> => {
           await instance.webPart.onInit();
@@ -234,6 +234,28 @@ describe('Documented differences from package 1.0.0.7', () => {
         });
         await waitFor((): void => expect(within(instance.webPart.domElement).getByText('SharePoint connected')).toBeInTheDocument());
         expect(usageReads(instance)).toBe(expectedReads);
+      } finally {
+        instance.dispose();
+      }
+    }
+  });
+
+  it('the shipped bundle shows only the OpenAI tiles; the port defaults to Claude and offers OpenAI as a property', async () => {
+    for (const [bundle, shownLabel, absentLabel, alertsHeading] of [
+      [original, 'OpenAI API spend this month', 'Claude API spend this month', 'AI CoE alerts and ChatGPT / Work overages'],
+      [ported, 'Claude API spend this month', 'OpenAI API spend this month', 'AI CoE alerts and usage overages']
+    ] as const) {
+      const instance: IHostedInstance = bundle.create({ properties: { organizationName: ORGANIZATION } });
+      try {
+        await act(async (): Promise<void> => {
+          await instance.webPart.onInit();
+          instance.webPart.render();
+        });
+        const root: HTMLElement = instance.webPart.domElement;
+        await waitFor((): void => expect(within(root).getByText('SharePoint connected')).toBeInTheDocument());
+        expect(within(root).getByText(shownLabel)).toBeInTheDocument();
+        expect(within(root).queryByText(absentLabel)).not.toBeInTheDocument();
+        expect(within(root).getByText(alertsHeading)).toBeInTheDocument();
       } finally {
         instance.dispose();
       }

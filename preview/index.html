@@ -9,7 +9,8 @@ body { margin: 0; font-family: "Segoe UI", system-ui, sans-serif; }
 #preview-notice { position: sticky; top: 0; z-index: 9999; background: #fff0b3; color: #392600; border-bottom: 3px solid #9b6800; padding: 14px 20px; }
 #preview-notice p { margin: 4px 0; }
 #organization-form { display: flex; gap: 8px; align-items: center; margin-top: 8px; }
-#organization-form input { padding: 4px 8px; font: inherit; }
+#organization-form { flex-wrap: wrap; }
+#organization-form input, #organization-form select { padding: 4px 8px; font: inherit; }
 #preview-error { color: #a00; white-space: pre-wrap; }
 </style>
 </head>
@@ -23,7 +24,14 @@ body { margin: 0; font-family: "Segoe UI", system-ui, sans-serif; }
 <input id="organization-name" type="text" placeholder="Leave blank for neutral wording">
 <button type="submit">Apply</button>
 <label for="simulate-draft"><input id="simulate-draft" type="checkbox"> Simulate the Claude draft flow (echoes your answers; no model is called)</label>
+<label for="telemetry-provider">Usage metrics provider (web part property):</label>
+<select id="telemetry-provider">
+<option value="claude">Claude (Anthropic API)</option>
+<option value="openai">OpenAI (as shipped in 1.0.0.7)</option>
+<option value="both">Claude and OpenAI</option>
+</select>
 </form>
+<p>Usage rows and the open incident shown in the telemetry strip are fictional sample data seeded by the simulation.</p>
 </aside>
 <div id="preview-error" role="alert"></div>
 <div id="app"></div>

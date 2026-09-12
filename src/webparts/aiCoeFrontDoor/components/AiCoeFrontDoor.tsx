@@ -1,6 +1,7 @@
 import * as React from 'react';
 import styles from '../AiCoeFrontDoor.module.scss';
 import type { IBranding } from '../branding/branding';
+import type { TelemetryProvider } from '../content/telemetryTiles';
 import { createWorkflowCatalog } from '../content/workflows/catalog';
 import { FrontDoorProvider } from '../context/FrontDoorContext';
 import type { IFrontDoorContextValue, IFrontDoorServices, IFrontDoorUser } from '../context/FrontDoorContext';
@@ -13,6 +14,7 @@ export interface IAiCoeFrontDoorProps {
   siteUrl: string;
   user: IFrontDoorUser;
   isAdmin: boolean;
+  telemetryProvider: TelemetryProvider;
   /** Created once by the web part so effects keyed on the services do not re-run on every render. */
   services: IFrontDoorServices;
 }
@@ -21,10 +23,10 @@ export interface IAiCoeFrontDoorProps {
  * Root of the React tree: the scoped section every stylesheet targets, the screen-reader-only
  * signed-in line, and the providers the pages read from.
  */
-export function AiCoeFrontDoor({ isDarkTheme, branding, siteUrl, user, isAdmin, services }: IAiCoeFrontDoorProps): React.ReactElement {
+export function AiCoeFrontDoor({ isDarkTheme, branding, siteUrl, user, isAdmin, telemetryProvider, services }: IAiCoeFrontDoorProps): React.ReactElement {
   const value: IFrontDoorContextValue = React.useMemo(
-    (): IFrontDoorContextValue => ({ branding, catalog: createWorkflowCatalog(branding), siteUrl, user, isAdmin, services }),
-    [branding, siteUrl, user, isAdmin, services]
+    (): IFrontDoorContextValue => ({ branding, catalog: createWorkflowCatalog(branding), siteUrl, user, isAdmin, telemetryProvider, services }),
+    [branding, siteUrl, user, isAdmin, telemetryProvider, services]
   );
   return (
     <section id="overture-ai-coe-pilot" className={styles.aiCoeFrontDoor} data-theme={isDarkTheme ? 'dark' : 'light'}>

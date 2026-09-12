@@ -6,6 +6,11 @@ declare interface IAiCoeFrontDoorWebPartStrings {
   DraftingGroupName: string;
   DraftServiceUrlFieldLabel: string;
   DraftServiceUrlFieldDescription: string;
+  TelemetryGroupName: string;
+  TelemetryProviderFieldLabel: string;
+  TelemetryProviderOptionClaude: string;
+  TelemetryProviderOptionOpenAi: string;
+  TelemetryProviderOptionBoth: string;
 }
 
 declare module 'AiCoeFrontDoorWebPartStrings' {

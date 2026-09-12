@@ -31,10 +31,15 @@ export interface IGovernanceService {
 
 export type MetricDataStatus = 'Current' | 'Attention' | 'Clear';
 
+/** The usage feeds the AI Usage Daily list can carry, as written in its `Provider` column. */
+export type UsageProvider = 'anthropic' | 'openai';
+
 export interface IUsageMetric {
   metricKey: string;
   metricLabel: string;
   source: string;
+  /** The feed a usage metric was summed from; absent for the incidents metric. */
+  provider?: UsageProvider;
   currentValue: number;
   previousValue?: number;
   unit: 'USD' | 'count';

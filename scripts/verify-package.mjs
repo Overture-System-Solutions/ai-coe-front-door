@@ -24,7 +24,7 @@ const testSummary = argument('--tests', undefined);
 
 const EXPECTED = {
   productId: 'f125ebdf-4a9d-4e6e-8479-3a18874e7752',
-  version: '1.0.0.8',
+  version: '1.0.0.9',
   featureId: '69ab84b7-608c-47ee-9623-af8ebaf2cb10',
   webPartId: 'cf2e5904-0703-4fe4-ae5a-ec012d6fa689',
   provisioningFiles: ['elements.xml', 'intake-schema.xml', 'decision-schema.xml'],

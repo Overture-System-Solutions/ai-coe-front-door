@@ -4,7 +4,7 @@ import type { IReadonlyTheme } from '@microsoft/sp-component-base';
 import { Version } from '@microsoft/sp-core-library';
 import { SPHttpClient } from '@microsoft/sp-http';
 import { SPPermission } from '@microsoft/sp-page-context';
-import { PropertyPaneTextField } from '@microsoft/sp-property-pane';
+import { PropertyPaneDropdown, PropertyPaneTextField } from '@microsoft/sp-property-pane';
 import type { IPropertyPaneConfiguration } from '@microsoft/sp-property-pane';
 import { BaseClientSideWebPart } from '@microsoft/sp-webpart-base';
 import * as strings from 'AiCoeFrontDoorWebPartStrings';
@@ -19,6 +19,7 @@ import { createBranding } from './branding/branding';
 import type { IBranding } from './branding/branding';
 import { AiCoeFrontDoor } from './components/AiCoeFrontDoor';
 import type { IAiCoeFrontDoorProps } from './components/AiCoeFrontDoor';
+import { parseTelemetryProvider } from './content/telemetryTiles';
 import type { IFrontDoorServices, IFrontDoorUser } from './context/FrontDoorContext';
 import { createIdeaDraftService } from './services/draftService';
 import type { IDraftHttpClient } from './services/draftService';
@@ -34,6 +35,8 @@ export interface IAiCoeFrontDoorWebPartProps {
   organizationName: string;
   /** HTTP trigger URL of the Claude draft flow; blank keeps the deterministic summaries. */
   draftServiceUrl: string;
+  /** Usage feed shown by the telemetry strip: "claude" (default), "openai" (as shipped in 1.0.0.7) or "both". */
+  telemetryProvider: string;
 }
 
 interface ICoreServices {
@@ -77,6 +80,8 @@ export default class AiCoeFrontDoorWebPart extends BaseClientSideWebPart<IAiCoeF
       siteUrl: this.context.pageContext.web.absoluteUrl,
       user: core.user,
       isAdmin: this.context.pageContext.web.permissions.hasPermission(SPPermission.manageWeb),
+      // A presentation choice only: it is not part of the services key, so switching never refetches.
+      telemetryProvider: parseTelemetryProvider(this.properties.telemetryProvider),
       services: this._servicesFor(core, branding)
     };
     ReactDom.render(React.createElement(AiCoeFrontDoor, props), this.domElement);
@@ -126,6 +131,20 @@ export default class AiCoeFrontDoorWebPart extends BaseClientSideWebPart<IAiCoeF
                   label: strings.DraftServiceUrlFieldLabel,
                   description: strings.DraftServiceUrlFieldDescription,
                   placeholder: 'https://…/triggers/manual/paths/invoke?api-version=1'
+                })
+              ]
+            },
+            {
+              groupName: strings.TelemetryGroupName,
+              groupFields: [
+                PropertyPaneDropdown('telemetryProvider', {
+                  label: strings.TelemetryProviderFieldLabel,
+                  options: [
+                    { key: 'claude', text: strings.TelemetryProviderOptionClaude },
+                    { key: 'openai', text: strings.TelemetryProviderOptionOpenAi },
+                    { key: 'both', text: strings.TelemetryProviderOptionBoth }
+                  ],
+                  selectedKey: parseTelemetryProvider(this.properties.telemetryProvider)
                 })
               ]
             }

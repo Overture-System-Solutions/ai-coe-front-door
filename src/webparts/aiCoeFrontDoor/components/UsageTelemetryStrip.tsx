@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { TELEMETRY_TILES } from '../content/telemetryTiles';
-import type { ITelemetryTile } from '../content/telemetryTiles';
+import { TELEMETRY_ALERTS_COPY, telemetryTilesFor } from '../content/telemetryTiles';
+import type { ITelemetryAlertsCopy, ITelemetryTile } from '../content/telemetryTiles';
 import { useFrontDoor } from '../context/FrontDoorContext';
 import { CircleCheck } from '../icons';
 import type { IUsageAlert, IUsageMetric, IUsageMetricsResult } from '../services/types';
@@ -80,9 +80,16 @@ function connectionLabel(state: ITelemetryState): string {
   return state.connected ? 'SharePoint connected' : 'Connection issue';
 }
 
-/** The "AI operations snapshot" section of the landing page: four metric tiles and open alerts. */
+/**
+ * The "AI operations snapshot" section of the landing page: the metric tiles of the selected usage
+ * feed (four for one provider, seven for both) and open alerts. The service always returns every
+ * feed it finds; the mode only decides which tiles are shown.
+ */
 export function UsageTelemetryStrip(): React.ReactElement {
-  const { usage } = useFrontDoor().services;
+  const { services, telemetryProvider } = useFrontDoor();
+  const { usage } = services;
+  const tiles: ITelemetryTile[] = telemetryTilesFor(telemetryProvider);
+  const alertsCopy: ITelemetryAlertsCopy = TELEMETRY_ALERTS_COPY[telemetryProvider];
   const [state, setState] = React.useState<ITelemetryState>(INITIAL_STATE);
 
   React.useEffect((): (() => void) => {
@@ -118,7 +125,7 @@ export function UsageTelemetryStrip(): React.ReactElement {
         <span className={`ai-usage-connection ${state.connected ? 'is-connected' : ''}`}>{connectionLabel(state)}</span>
       </div>
       <div className="ai-usage-grid" aria-live="polite">
-        {TELEMETRY_TILES.map((tile: ITelemetryTile): React.ReactElement => {
+        {tiles.map((tile: ITelemetryTile): React.ReactElement => {
           const item: IUsageMetric | undefined = byKey[tile.key];
           const pending: boolean = state.loading || item === undefined || typeof item.currentValue !== 'number';
           return (
@@ -139,7 +146,7 @@ export function UsageTelemetryStrip(): React.ReactElement {
       </div>
       <div className="ai-alerts-panel" aria-live="polite">
         <div className="ai-alerts-heading">
-          <strong>AI CoE alerts and ChatGPT / Work overages</strong>
+          <strong>{alertsCopy.heading}</strong>
           <span>
             {state.alerts.length} open organization alert{state.alerts.length === 1 ? '' : 's'}
           </span>
@@ -149,7 +156,7 @@ export function UsageTelemetryStrip(): React.ReactElement {
         ) : state.alerts.length === 0 ? (
           <div className="ai-alerts-clear">
             <CircleCheck aria-hidden="true" />
-            <span>No open API, ChatGPT, or Work overage alerts.</span>
+            <span>{alertsCopy.empty}</span>
           </div>
         ) : (
           <div className="ai-alert-list">

@@ -58,6 +58,8 @@ describe('offline preview server', () => {
     expect(page.status).toBe(200);
     expect(page.body).toContain('OFFLINE PREVIEW');
     expect(page.body).toContain('id="app"');
+    expect(page.body).toContain('id="telemetry-provider"');
+    expect(page.body).toContain('option value="both"');
     expect(page.headers['content-security-policy']).toContain("connect-src 'none'");
     expect(page.headers['x-content-type-options']).toBe('nosniff');
     expect(page.headers['cache-control']).toBe('no-store');
@@ -80,6 +82,9 @@ describe('offline preview server', () => {
     const host: IResponse = await get(`${base}/host.js`);
     expect(host.body).toContain('OFFLINE_SIMULATION');
     expect(host.body).toContain('External network access is blocked');
+    expect(host.body).toContain('setTelemetryProvider');
+    expect(host.body).toContain('claude-sonnet-5');
+    expect(host.body).toContain('Simulated preview data');
     // Browsers cannot resolve bare specifiers such as "tslib"; the host must compile helper-free.
     expect(host.body).not.toMatch(/^import\b/m);
   });

@@ -4,9 +4,10 @@
  */
 import { act, fireEvent, waitFor, within } from '@testing-library/react';
 import * as fs from 'fs';
-import { loadWebPartBundle, MANAGE_WEB_PERMISSION, newestDistBundle, newestStringsChunk } from '../../testing/amdHost';
-import type { IAmdHostOptions, IHostedInstance, IWebPartBundle } from '../../testing/amdHost';
+import { LIST_TITLES, loadWebPartBundle, MANAGE_WEB_PERMISSION, newestDistBundle, newestStringsChunk } from '../../testing/amdHost';
+import type { IAmdHostOptions, IHostedInstance, IHostedWebPart, IWebPartBundle } from '../../testing/amdHost';
 import { IDEA_JOURNEY, journeyAnswers, playJourney } from '../../testing/journeys';
+import { InMemoryListStore } from '../../testing/listStore';
 import type { IRecordedRequest } from '../../testing/listStore';
 import { createBranding } from './branding/branding';
 import { createWorkflowCatalog } from './content/workflows/catalog';
@@ -35,6 +36,11 @@ async function mount(options: IAmdHostOptions = {}): Promise<IHostedInstance> {
     instance.webPart.render();
   });
   return instance;
+}
+
+/** What the property pane does when an author changes a value: a synchronous write to the property bag. */
+function setProperty(webPart: IHostedWebPart, name: string, value: unknown): void {
+  webPart.properties[name] = value;
 }
 
 function usageReads(instance: IHostedInstance): IRecordedRequest[] {
@@ -105,6 +111,40 @@ describe('AiCoeFrontDoorWebPart bundle', () => {
     expect(usageReads(instance)).toHaveLength(1);
   });
 
+  it('shows the Claude tiles by default and switches feeds from the property bag without refetching', async () => {
+    const store: InMemoryListStore = new InMemoryListStore(LIST_TITLES.slice());
+    const today: string = new Date().toISOString();
+    store.seed('AI Usage Daily', [
+      { Provider: 'anthropic', MetricType: 'cost', BucketStart: today, Amount: 42.5, Currency: 'USD' },
+      { Provider: 'openai', MetricType: 'cost', BucketStart: today, Amount: 3, Currency: 'USD' }
+    ]);
+    const instance: IHostedInstance = await mount({ store });
+    const root: HTMLElement = instance.webPart.domElement;
+    await waitFor((): void => expect(within(root).getByText('SharePoint connected')).toBeInTheDocument());
+    expect(within(root).getByText('Claude API spend this month')).toBeInTheDocument();
+    expect(within(root).getByText('AI CoE alerts and usage overages')).toBeInTheDocument();
+    expect(within(root).queryByText('OpenAI API spend this month')).not.toBeInTheDocument();
+    expect(root.querySelectorAll('.ai-metric-card')).toHaveLength(4);
+    expect(usageReads(instance)).toHaveLength(1);
+
+    setProperty(instance.webPart, 'telemetryProvider', 'both');
+    await act(async (): Promise<void> => {
+      instance.webPart.render();
+    });
+    expect(within(root).getByText('Claude API spend this month')).toBeInTheDocument();
+    expect(within(root).getByText('OpenAI API spend this month')).toBeInTheDocument();
+    expect(root.querySelectorAll('.ai-metric-card')).toHaveLength(7);
+
+    setProperty(instance.webPart, 'telemetryProvider', 'openai');
+    await act(async (): Promise<void> => {
+      instance.webPart.render();
+    });
+    expect(within(root).queryByText('Claude API spend this month')).not.toBeInTheDocument();
+    expect(within(root).getByText('AI CoE alerts and ChatGPT / Work overages')).toBeInTheDocument();
+    expect(root.querySelectorAll('.ai-metric-card')).toHaveLength(4);
+    expect(usageReads(instance)).toHaveLength(1);
+  });
+
   it('shows the administration bar to site administrators', async () => {
     const { webPart } = await mount({ isAdmin: true });
     expect(within(webPart.domElement).getByRole('button', { name: 'Open admin dashboard' })).toBeInTheDocument();
@@ -140,12 +180,28 @@ describe('AiCoeFrontDoorWebPart bundle', () => {
     expect(instance.webPart.domElement.childElementCount).toBe(0);
   });
 
-  it('offers the organization-name and draft-flow fields in the property pane', async () => {
-    const { webPart } = await mount();
+  it('offers the organization-name, draft-flow and telemetry-provider fields in the property pane', async () => {
+    const { webPart } = await mount({ properties: { telemetryProvider: 'both' } });
     const configuration = webPart.getPropertyPaneConfiguration();
     expect(configuration.pages).toHaveLength(1);
     expect(configuration.pages[0].header.description).toBe('Configure how the AI CoE Front Door presents your organization.');
-    expect(configuration.pages[0].groups.map((group): string => group.groupName)).toEqual(['Branding', 'AI drafting']);
+    expect(configuration.pages[0].groups.map((group): string => group.groupName)).toEqual(['Branding', 'AI drafting', 'Telemetry']);
+    expect(configuration.pages[0].groups[2].groupFields).toEqual([
+      {
+        targetProperty: 'telemetryProvider',
+        properties: {
+          label: 'Usage metrics provider',
+          options: [
+            { key: 'claude', text: 'Claude (Anthropic API)' },
+            { key: 'openai', text: 'OpenAI (as shipped in 1.0.0.7)' },
+            { key: 'both', text: 'Claude and OpenAI' }
+          ],
+          selectedKey: 'both'
+        }
+      }
+    ]);
+    setProperty(webPart, 'telemetryProvider', 'not a mode');
+    expect(webPart.getPropertyPaneConfiguration().pages[0].groups[2].groupFields[0].properties.selectedKey).toBe('claude');
     expect(configuration.pages[0].groups[0].groupFields).toEqual([
       {
         targetProperty: 'organizationName',
