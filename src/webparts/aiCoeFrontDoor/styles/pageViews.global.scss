@@ -47,6 +47,11 @@
   margin: 16px 0 0;
 }
 
+/* With the operations snapshot link mapped the strip carries four entries; the narrow rules below still stack it. */
+#overture-ai-coe-pilot .ai-view--home .ai-resource-strip--four {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
 /* Telemetry strip on its own page: no home-page inset. */
 #overture-ai-coe-pilot .ai-view--telemetry .ai-usage-section {
   margin: 0;

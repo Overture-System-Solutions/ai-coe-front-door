@@ -1,10 +1,12 @@
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import * as React from 'react';
+import { InMemoryDraftStore } from '../../../testing/fakeServices';
 import { createTestFrontDoor } from '../../../testing/renderWithFrontDoor';
 import type { ITestFrontDoor } from '../../../testing/renderWithFrontDoor';
 import { firstStepOf } from '../../../testing/workflowHarness';
-import type { IPageViewSettings } from '../content/pageViews';
+import type { FrontDoorView, IPageViewSettings } from '../content/pageViews';
 import { AiCoeFrontDoor } from './AiCoeFrontDoor';
+import type { IAiCoeFrontDoorProps } from './AiCoeFrontDoor';
 
 interface IRootExtras {
   pageView?: IPageViewSettings;
@@ -40,6 +42,30 @@ describe('AiCoeFrontDoor', () => {
     const section: HTMLElement = renderRoot(false, { pageView: { view: 'telemetry', layout: 'wide', pages: {} } });
     expect(section.querySelector('.ai-view--telemetry')).not.toBeNull();
     expect(screen.queryByText('AI, safely put to work.')).not.toBeInTheDocument();
+  });
+
+  it('remounts the piece when the view changes, so draft badges are rediscovered', async () => {
+    const draftStore: InMemoryDraftStore = new InMemoryDraftStore();
+    await draftStore.save('idea', { answers: { workToImprove: 'Reports' }, currentStepId: 'painPoints', phase: 'form' });
+    const { value }: ITestFrontDoor = createTestFrontDoor({ draftStore });
+    const propsFor = (view: FrontDoorView): IAiCoeFrontDoorProps => ({
+      isDarkTheme: false,
+      branding: value.branding,
+      siteUrl: value.siteUrl,
+      user: value.user,
+      isAdmin: value.isAdmin,
+      telemetryProvider: value.telemetryProvider,
+      services: value.services,
+      pageView: { view, layout: 'wide', pages: { idea: `${value.siteUrl}/SitePages/Explore-an-AI-idea.aspx` } },
+      navigate: jest.fn()
+    });
+    const { rerender } = render(<AiCoeFrontDoor {...propsFor('home')} />);
+    await screen.findByText('Resume draft');
+    rerender(<AiCoeFrontDoor {...propsFor('telemetry')} />);
+    await draftStore.clear('idea');
+    rerender(<AiCoeFrontDoor {...propsFor('home')} />);
+    expect(screen.getByText('Explore an AI idea').closest('a')).not.toBeNull();
+    await waitFor((): void => expect(screen.queryByText('Resume draft')).not.toBeInTheDocument());
   });
 
   it('hands navigate to the page views', async () => {

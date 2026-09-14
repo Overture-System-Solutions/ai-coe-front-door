@@ -123,7 +123,7 @@ downloads are unchanged; only where the pieces sit and how they link to each oth
 | `view` | `legacy` (default), `home`, `idea`, `toolCheck`, `teamUsage`, `helpTraining`, `feedback`, `telemetry`, `admin` | The piece this instance renders. `legacy` is the whole front door as shipped; an instance whose property bag predates 1.0.0.10 parses to it. |
 | `layout` | `wide` (default), `narrow` | `narrow` stacks cards, strip and tiles for a half or one-third column. |
 | `returnUrl` | site path (`SitePages/Requests.aspx`), root path or full URL | Where "All topics", "Back" on the first question and the dashboard's "Front Door" lead; blank returns to the site home. |
-| `pageIdea` … `pageFeedback`, `pageTelemetry`, `pageAdmin`, `pagePolicy` | same forms | Home tiles only: where each card, the resource strip and the admin bar link. A blank workflow page hides its card; a blank `pagePolicy` keeps the policy library link. |
+| `pageIdea` … `pageFeedback`, `pageTelemetry`, `pageAdmin`, `pagePolicy` | same forms | Home tiles only: where each card, the resource strip and the admin bar link. A blank workflow page hides its card; `pageTelemetry` adds an "AI operations snapshot" entry to the resource strip; a blank `pagePolicy` keeps the policy library link. |
 
 The toolbox offers one entry per piece (**AI CoE: Home tiles**, **AI CoE: Explore an AI idea**, …) on the same
 component, each presetting `view`; the original **AI CoE Front Door** entry stays the single-page version. Exits from
@@ -142,16 +142,17 @@ Requests, one owners-only admin page):
 | Use AI | none | prompt cards by audience with their data boundaries |
 | Requests | `home` (the five path cards and resource strip; return page for every form) | the three lanes, what is not asked of you, registering AI already in use |
 | Prompts | none | three starter prompts, what is in the library, what Draft means |
-| Status | `telemetry` | what is running and what is not, how to check a request, what to do when something is wrong |
-| Explore an AI idea, Check a tool or task, Register team AI use, Get help or training, Share feedback | one wizard each, `returnUrl` Requests | nothing |
+| Status | `telemetry`, with `telemetryProvider` (the only instance that uses it) | what is running and what is not, how to check a request, what to do when something is wrong |
+| Explore an AI idea, Check a tool or task, Register team AI use, Get help or training, Share feedback | one wizard each, `returnUrl` Requests; the idea page alone carries `draftServiceUrl` | nothing |
 | AI CoE admin dashboard (site owners only, not in the nav) | `admin`, `returnUrl` Requests | nothing |
 
 The text is the front door's own copy of a short pilot site and carries tokens: `{OrganizationName}` and the other
 `parameters` declared at the top of `pages.json` (people, dates, counts, record ids), `{Page:key}` for links between the
 pages, and `{Url:Name}` for links to things outside the package (the Concierge agent, Teams, Copilot Chat, the prompt
-library). Text parameters are required; URL parameters may be blank, which keeps the sentence and drops the link.
-`src/provisioning/pagesDefinition.test.ts` checks the structure, the tokens and that no client or tenant name is in
-the file; the wording is the page authors' to edit in the browser afterwards.
+library). Text parameters are required; URL parameters may be blank, which keeps the sentence and drops the link;
+links made from URL parameters open in a new tab. `src/provisioning/pagesDefinition.test.ts` checks the structure,
+the tokens and that no client or tenant name is in the file; the wording is the page authors' to edit in the browser
+afterwards.
 
 **Applying it** (site owner, outside this repository; the build and tests never touch a tenant):
 
@@ -159,24 +160,37 @@ the file; the wording is the page authors' to edit in the browser afterwards.
 2. Copy `sharepoint/pages/parameters.sample.json` to `sharepoint/pages/parameters.json` (ignored by git), fill in the values.
 3. Optionally capture the two native web part templates: on a scratch page add a Quick Links web part in *Button*
    layout with exactly one link and a Button web part with one link, both titled `{Title}` and pointing at
-   `https://example.invalid/{Url}`; run `Get-PnPPageComponent -Page <scratch> -InstanceId <id>` for each, save the
-   `PropertiesJson` (with its `serverProcessedContent`) as `sharepoint/pages/quicklinks.template.json` and
-   `button.template.json`, replace the captured title and URL with the literal `{Title}` and `{Url}` if the editor
-   changed them, then delete the scratch page. Without the templates the script creates everything else and warns.
-4. Run, with PowerShell 7.4 and the pinned PnP.PowerShell version from the script header (interactive login needs an
-   Entra app registration once; see `Register-PnPEntraIDAppForInteractiveLogin`):
+   `https://example.invalid/{Url}`, publish it, then compose each template from the web part's two JSON parts (the
+   `PropertiesJson` holds the item, `ServerProcessedContent` holds its title and link):
 
-       pwsh ./sharepoint/pages/New-FrontDoorPages.ps1 -SiteUrl https://<tenant>.sharepoint.com/sites/<site> -ParameterFile ./sharepoint/pages/parameters.json [-DraftServiceUrl <flow trigger URL>] [-TelemetryProvider claude] [-Overwrite]
+       $c = Get-PnPPageComponent -Page <scratch> -InstanceId <id>
+       @{ properties = ($c.PropertiesJson | ConvertFrom-Json -AsHashtable); serverProcessedContent = ($c.ServerProcessedContent.ToString() | ConvertFrom-Json -AsHashtable) } | ConvertTo-Json -Depth 30 | Set-Content sharepoint/pages/quicklinks.template.json
 
-   Existing pages are skipped unless `-Overwrite` is given. The navigation is rebuilt every run; it replaces every
-   QuickLaunch node, including the three list links the package feature adds and the template defaults. The admin
-   page gets owners-only item permissions. This needs a communication site: its horizontal top navigation is the
-   QuickLaunch.
+   and the same into `button.template.json`. Then edit both files so every title value is exactly `{Title}` and every
+   link value is exactly `{Url}`: drop the `https://example.invalid/` prefix and decode any `%7B`/`%7D` the editor
+   introduced (the script normalises that prefix and encoding itself, but refuses a template without the two
+   placeholders or without the `properties` and `serverProcessedContent` keys). Delete the scratch page. Without the
+   templates the script creates everything else and warns.
+4. Run, with PowerShell 7.4 and the pinned PnP.PowerShell version from the script header. Interactive login needs
+   your own Entra app registration once (`Register-PnPEntraIDAppForInteractiveLogin`); pass its id with `-ClientId`,
+   or set the `ENTRAID_CLIENT_ID` environment variable and omit the parameter:
+
+       pwsh ./sharepoint/pages/New-FrontDoorPages.ps1 -SiteUrl https://<tenant>.sharepoint.com/sites/<site> -ParameterFile ./sharepoint/pages/parameters.json -ClientId <app id> [-DraftServiceUrl <flow trigger URL>] [-TelemetryProvider claude] [-Overwrite]
+
+   The script first checks that the front-door component is available on the site and that the templates, when
+   present, have the expected shape; only then does it create pages. Existing pages are skipped unless `-Overwrite`
+   is given, which sends them to the site recycle bin and rebuilds them from `pages.json`: edits made in the browser
+   are recoverable from the recycle bin, not carried over. A page whose build fails part-way is recycled so the next
+   run recreates it. The navigation is rebuilt every run; it replaces every QuickLaunch node, including the three
+   list links the package feature adds and the template defaults. The admin page gets owners-only item permissions.
+   This needs a communication site, whose horizontal top navigation is the QuickLaunch; on any other site the
+   script stops unless `-AllowNonCommunicationSite` is given, because there the QuickLaunch is the left navigation.
 5. Open each page once: check the narrow layout where a piece sits in a column, and add the prose where a URL
    parameter was blank.
 
 Manual fallback: create the twelve pages by hand with the same section layouts, add the matching toolbox entry per
-piece, type the page links and return page into the property pane, and edit the navigation in the site header.
+piece, type the page links and return page into the property pane, paste the Claude draft flow URL on the Explore an
+AI idea page, pick the usage metrics provider on Status, and edit the navigation in the site header.
 
 ## Layout
 
@@ -215,7 +229,7 @@ The shipped stylesheet is reproduced exactly (`styles/cssParity.test.ts` proves 
 
 ## Tests
 
-`npm test` runs 287 tests in seven layers: pure modules (branding, definitions, page views, form engine, services,
+`npm test` runs 290 tests in seven layers: pure modules (branding, definitions, page views, form engine, services,
 summaries), React Testing Library component and journey tests with fake services, bundle-level lifecycle tests that
 load the built AMD bundle in a simulated SPFx host, a journey parity suite that plays every workflow through the
 shipped 1.0.0.7 bundle and the port side by side (screens, drafts, downloads and posted list items must match), the

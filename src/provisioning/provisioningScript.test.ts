@@ -61,6 +61,18 @@ describe('page provisioning script', () => {
     expect(script).toContain('button.template.json');
     expect(script).toContain('DefaultWebPartType');
   });
+
+  it('protects the site: checks the component and templates first, recycles on overwrite, refuses other site types', () => {
+    expect(script).toContain('Get-PnPPageComponent');
+    expect(script).toContain('-Recycle');
+    expect(script).toContain('AllowNonCommunicationSite');
+    expect(script).toMatch(/example\\\.invalid/);
+    expect(script).toContain('%7BUrl%7D');
+    expect(script).toContain("'serverProcessedContent'");
+    expect(script).toContain('target="_blank"');
+    expect(script).toContain('Get-OptionalProperty $control');
+    expect(script).toContain("PSObject.Properties[$name]");
+  });
 });
 
 describe('README', () => {
@@ -71,5 +83,9 @@ describe('README', () => {
     expect(readme).toContain('New-FrontDoorPages.ps1');
     expect(readme).toContain('parameters.sample.json');
     expect(readme).toContain('one instance per page');
+    expect(readme).toContain('-ClientId');
+    expect(readme).toContain('recycle bin');
+    expect(readme).toContain('serverProcessedContent');
+    expect(readme).toContain('AllowNonCommunicationSite');
   });
 });

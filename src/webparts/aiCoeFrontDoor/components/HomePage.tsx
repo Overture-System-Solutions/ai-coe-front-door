@@ -29,6 +29,8 @@ const PATHS_HEADING_ID: string = 'ai-coe-paths';
 export function HomePage({ drafts, pages }: IHomePageProps): React.ReactElement {
   const { siteUrl, isAdmin } = useFrontDoor();
   const linked: WorkflowId[] = WORKFLOW_ORDER.filter((id: WorkflowId): boolean => pages[id] !== undefined);
+  const stripLinks: number = [pages.toolCheck, pages.helpTraining, pages.telemetry].filter((url: string | undefined): boolean => url !== undefined).length + 1;
+  const stripClass: string = stripLinks === 4 ? 'ai-resource-strip ai-resource-strip--four' : 'ai-resource-strip';
 
   return (
     <div className="ai-home">
@@ -64,7 +66,7 @@ export function HomePage({ drafts, pages }: IHomePageProps): React.ReactElement 
           </div>
         )}
       </section>
-      <nav className="ai-resource-strip" aria-label="Popular AI CoE resources">
+      <nav className={stripClass} aria-label="Popular AI CoE resources">
         <a href={pages.policy ?? policyLibraryUrl(siteUrl)} className="ai-resource-link">
           <ShieldCheck aria-hidden="true" />
           <span>AI policy</span>
@@ -81,6 +83,13 @@ export function HomePage({ drafts, pages }: IHomePageProps): React.ReactElement 
           <a href={pages.helpTraining} className="ai-resource-link">
             <CalendarDays aria-hidden="true" />
             <span>Upcoming training</span>
+            <ChevronRight aria-hidden="true" />
+          </a>
+        )}
+        {pages.telemetry !== undefined && (
+          <a href={pages.telemetry} className="ai-resource-link">
+            <LayoutDashboard aria-hidden="true" />
+            <span>AI operations snapshot</span>
             <ChevronRight aria-hidden="true" />
           </a>
         )}

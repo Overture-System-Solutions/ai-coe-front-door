@@ -7,18 +7,24 @@ front-door web part instance per piece page, the top navigation and the home pag
 Operator tool for a site owner; the build and the tests never run it. It reads pages.json next to this script,
 resolves the tokens from a parameter file (copy parameters.sample.json, fill it in, keep it out of git) and the named
 parameters, then creates each page. Pages that already exist are skipped unless -Overwrite is given, in which case
-they are removed and rebuilt. The navigation is rebuilt every time.
+they are sent to the site recycle bin and rebuilt from pages.json; edits made in the browser are recoverable from the
+recycle bin but are not carried over. The navigation is rebuilt every time. A page whose build fails part-way is
+recycled again so the next run recreates it.
 
 Tokens in pages.json: {Name} is a parameter value; {Page:key} is the server-relative URL of a defined page;
 {Url:Name} is a URL parameter. Text parameters must have a value. URL parameters may be blank: a blank one drops the
-link and keeps the sentence, and a tile or button pointing at it is skipped with a warning.
+link and keeps the sentence, and a tile or button pointing at it is skipped with a warning. Links made from URL
+parameters open in a new tab, because they lead away from the site.
 
 The Quick Links and Button web parts need their property JSON captured once from a page authored in the browser
-(see README, "Lay out the front door across pages"). Without quicklinks.template.json and button.template.json next
-to this script those parts are skipped with a warning; everything else is created.
+(see README, "Lay out the front door across pages"). Each template file is an object with two keys, 'properties'
+(the web part's PropertiesJson, holding exactly one item) and 'serverProcessedContent' (where SharePoint keeps the
+titles and links), with the item's title written as {Title} and its link as {Url}. Without
+quicklinks.template.json and button.template.json next to this script those parts are skipped with a warning;
+everything else is created. Both templates are checked before any page is touched.
 
-The package must already be installed on the site (upload as an update to the app catalog, then "Get it" on the site)
-so that the front-door component is available to Add-PnPPageWebPart.
+The package must already be installed on the site (upload as an update to the app catalog, then "Get it" on the site);
+the script checks that the front-door component is available before creating anything.
 
 .PARAMETER SiteUrl
 Full URL of the communication site, for example https://<tenant>.sharepoint.com/sites/<site>.
@@ -37,13 +43,19 @@ HTTP trigger URL of the Claude draft flow for the idea page; blank keeps plain s
 Usage feed for the Status page: claude (default), openai or both.
 
 .PARAMETER Overwrite
-Remove and rebuild pages that already exist.
+Send pages that already exist to the recycle bin and rebuild them.
+
+.PARAMETER AllowNonCommunicationSite
+Proceed on a site that is not a communication site. There the QuickLaunch is the left navigation, and every existing
+node in it is replaced by the six front-door entries.
 
 .PARAMETER ClientId
-Entra application (client) id registered for PnP PowerShell interactive login; omit to use the module's default.
+Entra application (client) id registered for PnP PowerShell interactive login (Register-PnPEntraIDAppForInteractiveLogin).
+Required unless the ENTRAID_CLIENT_ID or ENTRAID_APP_ID environment variable (or Set-PnPManagedAppId) supplies it;
+the module ships no default id.
 
 .EXAMPLE
-pwsh ./New-FrontDoorPages.ps1 -SiteUrl https://<tenant>.sharepoint.com/sites/<site> -ParameterFile ./parameters.json -OrganizationName Contoso
+pwsh ./New-FrontDoorPages.ps1 -SiteUrl https://<tenant>.sharepoint.com/sites/<site> -ParameterFile ./parameters.json -ClientId <app id> -OrganizationName Contoso
 #>
 #Requires -Version 7.4
 #Requires -Modules @{ ModuleName = 'PnP.PowerShell'; RequiredVersion = '3.1.0' }
@@ -55,6 +67,7 @@ param(
   [string]$DraftServiceUrl,
   [ValidateSet('', 'claude', 'openai', 'both')][string]$TelemetryProvider = '',
   [switch]$Overwrite,
+  [switch]$AllowNonCommunicationSite,
   [string]$ClientId
 )
 
@@ -93,8 +106,39 @@ foreach ($parameter in $definition.parameters.PSObject.Properties) {
 if ($missing.Count -gt 0) {
   throw "These text parameters have no value (set them in $ParameterFile or by name): $($missing -join ', ')"
 }
-foreach ($name in $values.Keys) {
+foreach ($name in @($values.Keys)) {
   if (-not $kinds.ContainsKey($name)) { Write-Warning "Parameter '$name' is not declared in pages.json and is ignored." }
+}
+
+# ---------------------------------------------------------------------------------------------------------------
+# Native web part templates: read, normalised and checked before anything is created
+# ---------------------------------------------------------------------------------------------------------------
+function Read-Template([string]$kind, [string]$templateFile) {
+  $templatePath = Join-Path $PSScriptRoot $templateFile
+  if (-not (Test-Path $templatePath)) {
+    Write-Warning "$templateFile is missing next to this script, so every $kind web part is skipped. Capture it as described in the README."
+    return $null
+  }
+  $text = Get-Content -Raw -Encoding UTF8 $templatePath
+  # A capture made by following the README leaves the scratch link in place; normalise it to the bare placeholders.
+  $text = [regex]::Replace($text, 'https?://example\.invalid/(?:\{Url\}|%7BUrl%7D)', '{Url}')
+  $text = $text.Replace('%7BUrl%7D', '{Url}').Replace('%7BTitle%7D', '{Title}')
+  if ($text -notmatch '\{Url\}' -or $text -notmatch '\{Title\}') {
+    throw "$templateFile does not contain the {Title} and {Url} placeholders; recapture it as described in the README."
+  }
+  $object = $text | ConvertFrom-Json -AsHashtable
+  if (-not ($object -is [hashtable]) -or -not $object.ContainsKey('properties') -or -not $object.ContainsKey('serverProcessedContent')) {
+    throw "$templateFile must be an object with 'properties' and 'serverProcessedContent' keys (see README, template capture)."
+  }
+  if ($kind -eq 'QuickLinks' -and (-not ($object['properties'] -is [hashtable]) -or -not $object['properties'].ContainsKey('items') -or @($object['properties']['items']).Count -lt 1)) {
+    throw "$templateFile must hold exactly one item under properties.items (see README, template capture)."
+  }
+  return $text
+}
+
+$templates = @{
+  QuickLinks = Read-Template 'QuickLinks' 'quicklinks.template.json'
+  Button = Read-Template 'Button' 'button.template.json'
 }
 
 # ---------------------------------------------------------------------------------------------------------------
@@ -106,10 +150,16 @@ if ($ClientId) {
   Connect-PnPOnline -Url $SiteUrl -Interactive
 }
 $web = Get-PnPWeb -Includes ServerRelativeUrl, WebTemplate
-if ($web.WebTemplate -ne 'SITEPAGEPUBLISHING') {
-  Write-Warning "This is not a communication site ($($web.WebTemplate)); the horizontal top navigation is only the QuickLaunch on communication sites."
+if ($web.WebTemplate -ne 'SITEPAGEPUBLISHING' -and -not $AllowNonCommunicationSite) {
+  throw "This is not a communication site ($($web.WebTemplate)). The script rebuilds the QuickLaunch, which is the horizontal top navigation only on communication sites; here it is the left navigation and every existing node would be removed. Pass -AllowNonCommunicationSite to proceed anyway."
 }
 $webRoot = $web.ServerRelativeUrl.TrimEnd('/')
+
+$homePageFile = (Get-PnPHomePage) -replace '^SitePages/', ''
+$available = @(Get-PnPPageComponent -Page $homePageFile -ListAvailable | Where-Object { [string]$_.Id -eq [string]$definition.componentId })
+if ($available.Count -eq 0) {
+  throw "The front-door component ($($definition.componentId)) is not available on this site. Deploy the package to the app catalog and 'Get it' on the site, then rerun."
+}
 
 function Get-PageFile([string]$key) {
   $page = $definition.pages | Where-Object { $_.key -eq $key } | Select-Object -First 1
@@ -126,13 +176,14 @@ function Find-PageItem([string]$file) {
   return Get-PnPListItem -List 'Site Pages' -Query $query | Select-Object -First 1
 }
 
-# Links first ({Url:...} anchors drop to plain text when the parameter is blank), then page links, then plain tokens.
+# Links first ({Url:...} anchors drop to plain text when the parameter is blank and open in a new tab otherwise),
+# then page links, then plain tokens.
 function Resolve-Text([string]$text) {
   $urlAnchor = [System.Text.RegularExpressions.MatchEvaluator] {
     param($match)
     $url = $values[$match.Groups[1].Value]
     if ([string]::IsNullOrWhiteSpace($url)) { return $match.Groups[2].Value }
-    return '<a href="' + $url + '">' + $match.Groups[2].Value + '</a>'
+    return '<a href="' + $url + '" target="_blank" data-interception="off" rel="noopener">' + $match.Groups[2].Value + '</a>'
   }
   $pageLink = [System.Text.RegularExpressions.MatchEvaluator] { param($match) Get-PageUrl $match.Groups[1].Value }
   $urlToken = [System.Text.RegularExpressions.MatchEvaluator] { param($match) [string]$values[$match.Groups[1].Value] }
@@ -142,22 +193,29 @@ function Resolve-Text([string]$text) {
     if (-not $values.ContainsKey($name)) { throw "Unknown token {$name} in pages.json." }
     return [string]$values[$name]
   }
-  $text = [regex]::Replace($text, '<a href="\{Url:([A-Za-z]+)\}">(.*?)</a>', $urlAnchor)
+  $text = [regex]::Replace($text, '<a href="\{Url:([A-Za-z]+)\}"[^>]*>(.*?)</a>', $urlAnchor)
   $text = [regex]::Replace($text, '\{Page:([A-Za-z]+)\}', $pageLink)
   $text = [regex]::Replace($text, '\{Url:([A-Za-z]+)\}', $urlToken)
   $text = [regex]::Replace($text, '\{([A-Za-z]+)\}', $plainToken)
   return $text
 }
 
+function Get-OptionalProperty($object, [string]$name) {
+  if ($object.PSObject.Properties[$name]) { return $object.$name }
+  return $null
+}
+
 function Resolve-LinkTarget($item) {
-  if ($item.PSObject.Properties['page'] -and $item.page) { return Get-PageUrl $item.page }
-  if ($item.PSObject.Properties['url'] -and $item.url) { return Resolve-Text ([string]$item.url) }
+  $page = Get-OptionalProperty $item 'page'
+  if ($page) { return Get-PageUrl ([string]$page) }
+  $url = Get-OptionalProperty $item 'url'
+  if ($url) { return Resolve-Text ([string]$url) }
   return ''
 }
 
-# The captured template holds exactly one item whose title is {Title} and whose link is {Url}. Quick Links keep
-# their items both under properties.items and under serverProcessedContent (keys such as "items[0].title"), so the
-# single item is cloned per link on both sides; the Button holds one link and is filled by plain replacement.
+# The template holds exactly one item whose title is {Title} and whose link is {Url}. Quick Links keep their items
+# both under properties.items and under serverProcessedContent (keys such as "items[0].title"), so the single item
+# is cloned per link on both sides; the Button holds one link and is filled by plain replacement.
 function Expand-Template([string]$template, [string]$kind, $links) {
   if ($kind -eq 'Button') {
     return $template.Replace('{Title}', $links[0].title).Replace('{Url}', $links[0].url)
@@ -172,32 +230,28 @@ function Expand-Template([string]$template, [string]$kind, $links) {
     $items += , $clone
   }
   $properties['items'] = $items
-  if ($object.ContainsKey('serverProcessedContent')) {
-    foreach ($bucketName in @($object['serverProcessedContent'].Keys)) {
-      $bucket = $object['serverProcessedContent'][$bucketName]
-      $expanded = @{}
-      foreach ($key in $bucket.Keys) {
-        if ($key -match '^items\[0\]') {
-          for ($index = 0; $index -lt $links.Count; $index++) {
-            $value = [string]$bucket[$key]
-            $expanded[($key -replace '^items\[0\]', "items[$index]")] = $value.Replace('{Title}', $links[$index].title).Replace('{Url}', $links[$index].url)
-          }
-        } else {
-          $expanded[$key] = $bucket[$key]
+  foreach ($bucketName in @($object['serverProcessedContent'].Keys)) {
+    $bucket = $object['serverProcessedContent'][$bucketName]
+    if (-not ($bucket -is [hashtable])) { continue }
+    $expanded = @{}
+    foreach ($key in @($bucket.Keys)) {
+      if ($key -match '^items\[0\]') {
+        for ($index = 0; $index -lt $links.Count; $index++) {
+          $value = [string]$bucket[$key]
+          $expanded[($key -replace '^items\[0\]', "items[$index]")] = $value.Replace('{Title}', $links[$index].title).Replace('{Url}', $links[$index].url)
         }
+      } else {
+        $expanded[$key] = $bucket[$key]
       }
-      $object['serverProcessedContent'][$bucketName] = $expanded
     }
+    $object['serverProcessedContent'][$bucketName] = $expanded
   }
   return ($object | ConvertTo-Json -Depth 30 -Compress).Replace('{Title}', $links[0].title).Replace('{Url}', $links[0].url)
 }
 
-function Add-NativePart([string]$pageName, [string]$kind, [string]$templateFile, $items, [int]$section, [int]$column, [int]$order) {
-  $templatePath = Join-Path $PSScriptRoot $templateFile
-  if (-not (Test-Path $templatePath)) {
-    Write-Warning "$templateFile is missing next to this script, so the $kind web part on $pageName is skipped. Capture it as described in the README."
-    return
-  }
+function Add-NativePart([string]$pageName, [string]$kind, $items, [int]$section, [int]$column, [int]$order) {
+  $template = $templates[$kind]
+  if ($null -eq $template) { return }
   $links = @()
   foreach ($item in $items) {
     $url = Resolve-LinkTarget $item
@@ -208,7 +262,7 @@ function Add-NativePart([string]$pageName, [string]$kind, [string]$templateFile,
     $links += , @{ title = [string]$item.title; url = $url }
   }
   if ($links.Count -eq 0) { return }
-  $json = Expand-Template (Get-Content -Raw -Encoding UTF8 $templatePath) $kind $links
+  $json = Expand-Template $template $kind $links
   Add-PnPPageWebPart -Page $pageName -DefaultWebPartType $kind -Section $section -Column $column -Order $order -WebPartProperties $json | Out-Null
 }
 
@@ -222,59 +276,69 @@ foreach ($page in $definition.pages) {
   $pageName = $file -replace '\.aspx$', ''
   $existing = Find-PageItem $file
   if ($null -ne $existing -and -not $Overwrite) {
-    Write-Host "Skipping $file (exists; use -Overwrite to rebuild)."
+    Write-Host "Skipping $file (exists; use -Overwrite to recycle and rebuild it)."
     $skipped += $file
     continue
   }
   if ($null -ne $existing) {
-    Remove-PnPPage -Identity $pageName -Force
+    Remove-PnPPage -Identity $pageName -Force -Recycle | Out-Null
   }
   Write-Host "Creating $file ..."
-  Add-PnPPage -Name $pageName -Title ([string]$page.title) -LayoutType Article -HeaderLayoutType NoImage -CommentsEnabled:([bool]$page.commentsEnabled) | Out-Null
+  try {
+    Add-PnPPage -Name $pageName -Title ([string]$page.title) -LayoutType Article -HeaderLayoutType NoImage -CommentsEnabled:([bool]$page.commentsEnabled) | Out-Null
 
-  $sectionOrder = 1
-  foreach ($section in $page.sections) {
-    Add-PnPPageSection -Page $pageName -SectionTemplate ([string]$section.template) -Order $sectionOrder | Out-Null
-    $columnIndex = 1
-    foreach ($column in $section.columns) {
-      $controlOrder = 1
-      foreach ($control in $column.controls) {
-        switch ([string]$control.type) {
-          'text' {
-            Add-PnPPageTextPart -Page $pageName -Section $sectionOrder -Column $columnIndex -Order $controlOrder -Text (Resolve-Text ([string]$control.html)) | Out-Null
-          }
-          'frontDoor' {
-            # A hashtable merges over the component's manifest defaults, so "view" overrides the legacy default.
-            $properties = @{}
-            foreach ($property in $control.properties.PSObject.Properties) {
-              $properties[$property.Name] = Resolve-Text ([string]$property.Value)
+    $sectionOrder = 1
+    foreach ($section in $page.sections) {
+      Add-PnPPageSection -Page $pageName -SectionTemplate ([string]$section.template) -Order $sectionOrder | Out-Null
+      $columnIndex = 1
+      foreach ($column in $section.columns) {
+        $controlOrder = 1
+        foreach ($control in $column.controls) {
+          switch ([string]$control.type) {
+            'text' {
+              Add-PnPPageTextPart -Page $pageName -Section $sectionOrder -Column $columnIndex -Order $controlOrder -Text (Resolve-Text ([string]$control.html)) | Out-Null
             }
-            Add-PnPPageWebPart -Page $pageName -Component ([string]$definition.componentId) -Section $sectionOrder -Column $columnIndex -Order $controlOrder -WebPartProperties $properties | Out-Null
+            'frontDoor' {
+              # A hashtable merges over the component's manifest defaults, so "view" overrides the legacy default.
+              $properties = @{}
+              foreach ($property in $control.properties.PSObject.Properties) {
+                $properties[$property.Name] = Resolve-Text ([string]$property.Value)
+              }
+              Add-PnPPageWebPart -Page $pageName -Component ([string]$definition.componentId) -Section $sectionOrder -Column $columnIndex -Order $controlOrder -WebPartProperties $properties | Out-Null
+            }
+            'quickLinks' {
+              Add-NativePart $pageName 'QuickLinks' $control.items $sectionOrder $columnIndex $controlOrder
+            }
+            'button' {
+              $buttonItem = [pscustomobject]@{
+                title = [string]$control.label
+                page = Get-OptionalProperty $control 'page'
+                url = Get-OptionalProperty $control 'url'
+              }
+              Add-NativePart $pageName 'Button' @($buttonItem) $sectionOrder $columnIndex $controlOrder
+            }
+            default { throw "Unknown control type '$($control.type)' on $file." }
           }
-          'quickLinks' {
-            Add-NativePart $pageName 'QuickLinks' 'quicklinks.template.json' $control.items $sectionOrder $columnIndex $controlOrder
-          }
-          'button' {
-            $buttonItem = [pscustomobject]@{ title = [string]$control.label; page = $control.page; url = $control.url }
-            Add-NativePart $pageName 'Button' 'button.template.json' @($buttonItem) $sectionOrder $columnIndex $controlOrder
-          }
-          default { throw "Unknown control type '$($control.type)' on $file." }
+          $controlOrder++
         }
-        $controlOrder++
+        $columnIndex++
       }
-      $columnIndex++
+      $sectionOrder++
     }
-    $sectionOrder++
-  }
-  Set-PnPPage -Identity $pageName -Publish | Out-Null
+    Set-PnPPage -Identity $pageName -Publish | Out-Null
 
-  if ([string]$page.permissions -eq 'owners') {
-    $item = Find-PageItem $file
-    $owners = Get-PnPGroup -AssociatedOwnerGroup
-    $adminRole = (Get-PnPRoleDefinition | Where-Object { $_.RoleTypeKind -eq 'Administrator' } | Select-Object -First 1).Name
-    # Reset first: breaking inheritance on an item that is already unique keeps stray grants from an earlier run.
-    Set-PnPListItemPermission -List 'Site Pages' -Identity $item.Id -InheritPermissions
-    Set-PnPListItemPermission -List 'Site Pages' -Identity $item.Id -Group $owners -AddRole $adminRole -ClearExisting
+    if ([string]$page.permissions -eq 'owners') {
+      $item = Find-PageItem $file
+      $owners = Get-PnPGroup -AssociatedOwnerGroup
+      $adminRole = (Get-PnPRoleDefinition | Where-Object { $_.RoleTypeKind -eq 'Administrator' } | Select-Object -First 1).Name
+      # Reset first: breaking inheritance on an item that is already unique keeps stray grants from an earlier run.
+      Set-PnPListItemPermission -List 'Site Pages' -Identity $item.Id -InheritPermissions
+      Set-PnPListItemPermission -List 'Site Pages' -Identity $item.Id -Group $owners -AddRole $adminRole -ClearExisting
+    }
+  } catch {
+    Write-Warning "Building $file failed; the partial page is recycled so the next run recreates it."
+    Remove-PnPPage -Identity $pageName -Force -Recycle -ErrorAction SilentlyContinue | Out-Null
+    throw
   }
   $created += $file
 }
@@ -285,8 +349,9 @@ foreach ($page in $definition.pages) {
 Get-PnPNavigationNode -Location QuickLaunch | ForEach-Object { Remove-PnPNavigationNode -Identity $_.Id -Force }
 foreach ($entry in $definition.navigation) {
   $node = Add-PnPNavigationNode -Location QuickLaunch -Title ([string]$entry.title) -Url (Get-PageUrl ([string]$entry.page))
-  if ($entry.PSObject.Properties['children']) {
-    foreach ($child in $entry.children) {
+  $children = Get-OptionalProperty $entry 'children'
+  if ($null -ne $children) {
+    foreach ($child in $children) {
       Add-PnPNavigationNode -Location QuickLaunch -Parent $node.Id -Title ([string]$child.title) -Url (Get-PageUrl ([string]$child.page)) | Out-Null
     }
   }

@@ -16,6 +16,7 @@ const PAGES: PageLinks = {
   helpTraining: `${SITE}/SitePages/Get-help-or-training.aspx`,
   feedback: `${SITE}/SitePages/Share-feedback.aspx`,
   admin: `${SITE}/SitePages/AI-CoE-admin-dashboard.aspx`,
+  telemetry: `${SITE}/SitePages/Status.aspx`,
   policy: `${SITE}/SitePages/Policy.aspx`
 };
 
@@ -76,7 +77,28 @@ describe('HomePage', () => {
     expect(within(strip).getByRole('link', { name: 'AI policy' })).toHaveClass('ai-resource-link');
     expect(within(strip).getByRole('link', { name: 'Approved tools' })).toHaveClass('ai-resource-link');
     expect(within(strip).queryByText('Upcoming training')).not.toBeInTheDocument();
+    expect(within(strip).queryByText('AI operations snapshot')).not.toBeInTheDocument();
+    expect(strip).not.toHaveClass('ai-resource-strip--four');
     expect(within(strip).queryAllByRole('button')).toHaveLength(0);
+  });
+
+  it('links the operations snapshot page from the resource strip and widens the strip to four entries', () => {
+    const { unmount } = renderHome({ telemetry: PAGES.telemetry });
+    const strip: HTMLElement = screen.getByRole('navigation', { name: 'Popular AI CoE resources' });
+    expect(within(strip).getAllByRole('link')).toHaveLength(2);
+    expect(within(strip).getByRole('link', { name: 'AI operations snapshot' })).toHaveAttribute('href', PAGES.telemetry);
+    expect(within(strip).getByRole('link', { name: 'AI operations snapshot' })).toHaveClass('ai-resource-link');
+    expect(strip).not.toHaveClass('ai-resource-strip--four');
+    unmount();
+    renderHome(PAGES);
+    const full: HTMLElement = screen.getByRole('navigation', { name: 'Popular AI CoE resources' });
+    expect(within(full).getAllByRole('link').map((link: HTMLElement): string => link.textContent ?? '')).toEqual([
+      'AI policy',
+      'Approved tools',
+      'Upcoming training',
+      'AI operations snapshot'
+    ]);
+    expect(full).toHaveClass('ai-resource-strip', 'ai-resource-strip--four');
   });
 
   it('falls back to the policy library of the site when no policy page is mapped', () => {
