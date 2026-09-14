@@ -1,0 +1,115 @@
+/*
+ * Page view modifiers: additive rules that let one piece of the front door sit inside a native page
+ * section. The legacy single-page view never carries `.ai-view`, so nothing here touches it, and this
+ * file stays outside the 1.0.0.7 parity comparison. Every selector is scoped under the web part root
+ * and a `.ai-view` class, at a higher specificity than the shipped rule it adjusts, so the shipped
+ * stylesheets are never edited. Keep this file ASCII: a non-ASCII character makes Sass emit @charset.
+ *
+ * Must keep the .global.scss suffix: the framework hashes the selectors of any other stylesheet name.
+ */
+
+/* A piece is a card on the page: no page tint and no shell insets (16px keeps card shadows off the next web part). */
+#overture-ai-coe-pilot .overture-app.ai-view {
+  background: transparent;
+}
+
+#overture-ai-coe-pilot .ai-view .ai-home-shell,
+#overture-ai-coe-pilot .ai-view .ai-workflow-shell {
+  padding: 0 0 16px;
+}
+
+/* Home tiles: cards and strip sit flush with the section; the tiles are links, styled like the shipped buttons. */
+#overture-ai-coe-pilot .ai-view--home .ai-home-adminbar {
+  margin: 0 0 14px;
+}
+
+#overture-ai-coe-pilot .ai-view--home .ai-home-adminbar .ai-admin-back {
+  background: #087f83;
+  border-color: #087f83;
+  color: #fff;
+  text-decoration: none;
+}
+
+#overture-ai-coe-pilot .ai-view--home .ai-home-adminbar .ai-admin-back:hover {
+  background: #055d66;
+  color: #fff;
+}
+
+#overture-ai-coe-pilot .ai-view--home .ai-path-section {
+  padding: 0;
+}
+
+#overture-ai-coe-pilot .ai-view--home a.ai-service-card {
+  text-decoration: none;
+}
+
+#overture-ai-coe-pilot .ai-view--home .ai-resource-strip {
+  margin: 16px 0 0;
+}
+
+/* Telemetry strip on its own page: no home-page inset. */
+#overture-ai-coe-pilot .ai-view--telemetry .ai-usage-section {
+  margin: 0;
+}
+
+/* Narrow layout (a half or one-third column): the shipped phone breakpoints, keyed on the piece instead of the viewport. */
+#overture-ai-coe-pilot .ai-view--narrow .ai-workflow-shell {
+  max-width: none;
+}
+
+#overture-ai-coe-pilot .ai-view--narrow .ai-home-grid .ai-service-card {
+  grid-column: span 6;
+}
+
+#overture-ai-coe-pilot .ai-view--narrow .ai-service-card {
+  grid-template-columns: 52px minmax(0, 1fr) 20px;
+  padding: 17px 16px;
+}
+
+#overture-ai-coe-pilot .ai-view--narrow .ai-service-icon {
+  height: 38px;
+  width: 38px;
+}
+
+#overture-ai-coe-pilot .ai-view--narrow .ai-resource-strip {
+  grid-template-columns: 1fr;
+}
+
+#overture-ai-coe-pilot .ai-view--narrow .ai-resource-link + .ai-resource-link {
+  border-left: 0;
+  border-top: 1px solid #d7e0e8;
+}
+
+#overture-ai-coe-pilot .ai-view--narrow .ai-usage-heading-row {
+  display: block;
+}
+
+#overture-ai-coe-pilot .ai-view--narrow .ai-usage-connection {
+  display: inline-block;
+  margin-top: 8px;
+}
+
+#overture-ai-coe-pilot .ai-view--narrow .ai-usage-grid {
+  grid-template-columns: 1fr;
+}
+
+#overture-ai-coe-pilot .ai-view--narrow .ai-admin-metrics {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+#overture-ai-coe-pilot .ai-view--narrow .ai-admin-workspace {
+  grid-template-columns: 1fr;
+}
+
+#overture-ai-coe-pilot .ai-view--narrow .ai-admin-record {
+  grid-template-columns: minmax(160px, 1fr) 78px 18px;
+}
+
+#overture-ai-coe-pilot .ai-view--narrow .ai-admin-record-date,
+#overture-ai-coe-pilot .ai-view--narrow .ai-admin-status {
+  display: none;
+}
+
+#overture-ai-coe-pilot .ai-view--narrow .ai-admin-decisions {
+  grid-template-columns: 1fr;
+}

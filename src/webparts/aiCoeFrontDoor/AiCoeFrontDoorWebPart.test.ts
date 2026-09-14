@@ -96,6 +96,8 @@ describe('AiCoeFrontDoorWebPart bundle', () => {
     expect(injected).toContain('#overture-ai-coe-pilot .ai-home-shell{');
     expect(injected).toContain('#overture-ai-coe-pilot .sr-only{');
     expect(injected).toContain('.overture-app{');
+    // The page view modifiers ship as a fourth unhashed stylesheet.
+    expect(injected).toContain('#overture-ai-coe-pilot .ai-view--narrow .ai-home-grid .ai-service-card{');
     expect(injected).not.toMatch(/overture-ai-coe-pilot_[0-9a-f]{8}/);
     expect(injected).toMatch(/\.aiCoeFrontDoor_[0-9a-f]{8}\{/);
   });
