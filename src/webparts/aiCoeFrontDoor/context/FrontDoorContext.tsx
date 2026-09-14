@@ -3,6 +3,7 @@ import type { IBranding } from '../branding/branding';
 import type { TelemetryProvider } from '../content/telemetryTiles';
 import type { IIdeaDraftService } from '../services/draftService';
 import type { IDraftStore } from '../services/draftStorage';
+import type { Navigate } from '../services/navigation';
 import type { IToolPolicyEvaluator } from '../services/toolPolicyEvaluator';
 import type { IGovernanceService, IUsageMetricsService } from '../services/types';
 import type { IWorkflowCatalog } from '../workflows/types';
@@ -31,6 +32,8 @@ export interface IFrontDoorContextValue {
   /** Which usage feed the telemetry strip shows; a presentation choice, so changing it never refetches. */
   telemetryProvider: TelemetryProvider;
   services: IFrontDoorServices;
+  /** Leaves the page for another URL. Absent in the legacy shell, which never navigates; page views fall back to the browser. */
+  navigate?: Navigate;
 }
 
 const FrontDoorContext: React.Context<IFrontDoorContextValue | undefined> = React.createContext<IFrontDoorContextValue | undefined>(undefined);

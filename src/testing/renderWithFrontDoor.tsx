@@ -32,6 +32,8 @@ export interface ITestFrontDoorOptions {
   toolPolicyEvaluator?: IToolPolicyEvaluator;
   /** Absent by default, like a web part without a configured draft flow. */
   ideaDrafts?: IIdeaDraftService;
+  /** Records where page views navigate to; a fresh mock unless given. */
+  navigate?: jest.Mock;
 }
 
 export interface ITestFrontDoor {
@@ -39,12 +41,14 @@ export interface ITestFrontDoor {
   branding: IBranding;
   governance: IFakeGovernanceService;
   draftStore: InMemoryDraftStore;
+  navigate: jest.Mock;
 }
 
 export function createTestFrontDoor(options: ITestFrontDoorOptions = {}): ITestFrontDoor {
   const branding: IBranding = createBranding(options.organizationName ?? 'Overture');
   const governance: IFakeGovernanceService = options.governance ?? createFakeGovernanceService();
   const draftStore: InMemoryDraftStore = options.draftStore ?? new InMemoryDraftStore();
+  const navigate: jest.Mock = options.navigate ?? jest.fn();
   const value: IFrontDoorContextValue = {
     branding,
     catalog: createWorkflowCatalog(branding),
@@ -58,9 +62,10 @@ export function createTestFrontDoor(options: ITestFrontDoorOptions = {}): ITestF
       draftStore,
       toolPolicyEvaluator: options.toolPolicyEvaluator ?? createImmediateEvaluator(branding),
       ideaDrafts: options.ideaDrafts
-    }
+    },
+    navigate
   };
-  return { value, branding, governance, draftStore };
+  return { value, branding, governance, draftStore, navigate };
 }
 
 export type FrontDoorRenderResult = RenderResult & ITestFrontDoor;
