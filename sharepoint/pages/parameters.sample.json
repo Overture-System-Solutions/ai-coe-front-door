@@ -1,0 +1,23 @@
+{
+  "OrganizationName": "",
+  "DraftServiceUrl": "",
+  "TelemetryProvider": "",
+  "ConciergeUrl": "",
+  "TeamsUrl": "",
+  "PromptLibraryUrl": "",
+  "CopilotChatUrl": "",
+  "PilotMembers": "",
+  "StatusDate": "",
+  "VerifiedDate": "",
+  "ConciergeSourceCount": "",
+  "ConciergeNewestSourceDate": "",
+  "PromptCount": "",
+  "PromptsAddedCount": "",
+  "PromptsAddedDate": "",
+  "PromptTestRecordCount": "",
+  "PromptStatusCounts": "",
+  "PromptIdAdminQueue": "",
+  "PromptIdMorningBrief": "",
+  "PromptIdRepeatableWork": "",
+  "LeadTeamContinuation": ""
+}
