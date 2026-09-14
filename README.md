@@ -79,7 +79,7 @@ and a `MetricType` of `cost` (daily `Amount` in USD) or `completions` (daily `Re
 Anthropic's usage report has no request counts, so the Claude set shows output tokens where the OpenAI set shows
 requests. A provider without rows keeps showing "Awaiting data". Nothing in the web part calls a model provider: the
 rows are written by the companion Power Automate solution
-`development/power-automate/OSS_CloudWave_Claude_Telemetry_1.0.0.0` (Anthropic Admin API usage and cost reports,
+`development/power-automate/OSS_AI_CoE_Claude_Telemetry_1.0.0.0` (Anthropic Admin API usage and cost reports,
 every six hours), which also opens a `Cost` incident with `Provider` `anthropic` when month-to-date spend exceeds the
 `ClaudeMonthlyBudgetUsd` row of the **AI CoE Configuration** list and resolves it when spend is back under budget.
 That incident appears in the alerts panel like any other open incident. Switching the property never refetches; the
