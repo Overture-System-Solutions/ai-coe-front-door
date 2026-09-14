@@ -1,11 +1,14 @@
 import * as React from 'react';
 import { isWorkflowView } from '../content/pageViews';
 import type { IPageViewSettings } from '../content/pageViews';
+import { WORKFLOW_ORDER } from '../content/workflows/catalog';
 import { useFrontDoor } from '../context/FrontDoorContext';
 import { NoticeBanner } from '../controls/NoticeBanner';
 import { browserNavigate } from '../services/navigation';
 import type { Navigate } from '../services/navigation';
 import { GovernanceAdminDashboard } from './GovernanceAdminDashboard';
+import { HomePage } from './HomePage';
+import type { DraftFlags } from './LandingPage';
 import { UsageTelemetryStrip } from './UsageTelemetryStrip';
 import { FeedbackWorkflow } from './workflows/FeedbackWorkflow';
 import { GenericWorkflow } from './workflows/GenericWorkflow';
@@ -29,10 +32,35 @@ const NO_DRAFT_TRACKING: IWorkflowProps['onDraftsChanged'] = (): void => undefin
  * pieces can live on separate native pages. Exits leave the page for the configured return URL.
  */
 export function PageViewShell({ settings }: IPageViewShellProps): React.ReactElement {
-  const { branding, isAdmin, siteUrl, navigate: contextNavigate } = useFrontDoor();
+  const { branding, isAdmin, siteUrl, services, navigate: contextNavigate } = useFrontDoor();
+  const draftStore: typeof services.draftStore = services.draftStore;
   const navigate: Navigate = contextNavigate ?? browserNavigate;
   const view: IPageViewSettings['view'] = settings.view;
   const returnUrl: string | undefined = settings.returnUrl;
+  const [drafts, setDrafts] = React.useState<DraftFlags>({});
+
+  // The home piece discovers saved drafts on load, exactly as the legacy shell does; other pieces have no badges.
+  React.useEffect((): (() => void) => {
+    if (view !== 'home') {
+      return (): void => undefined;
+    }
+    let cancelled: boolean = false;
+    const discover = async (): Promise<void> => {
+      for (const workflowId of WORKFLOW_ORDER) {
+        const draft: unknown = await draftStore.load<unknown>(workflowId);
+        if (cancelled) {
+          return;
+        }
+        if (draft !== undefined) {
+          setDrafts((current: DraftFlags): DraftFlags => ({ ...current, [workflowId]: true }));
+        }
+      }
+    };
+    discover().catch((): void => undefined);
+    return (): void => {
+      cancelled = true;
+    };
+  }, [draftStore, view]);
 
   const exit = React.useCallback((): void => navigate(returnUrl ?? siteUrl), [navigate, returnUrl, siteUrl]);
   const workflowProps: IWorkflowProps = { resumeDraft: true, onExit: exit, onDraftsChanged: NO_DRAFT_TRACKING };
@@ -54,6 +82,9 @@ export function PageViewShell({ settings }: IPageViewShellProps): React.ReactEle
       break;
     case 'helpTraining':
       content = <GenericWorkflow workflowId={view} {...workflowProps} />;
+      break;
+    case 'home':
+      content = <HomePage drafts={drafts} pages={settings.pages} />;
       break;
     case 'telemetry':
       content = (

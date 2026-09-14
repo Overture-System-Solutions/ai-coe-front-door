@@ -1,4 +1,4 @@
-import { fireEvent, screen } from '@testing-library/react';
+import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import * as React from 'react';
 import { createFakeUsageService, InMemoryDraftStore } from '../../../testing/fakeServices';
 import { renderWithFrontDoor, TEST_SITE_URL } from '../../../testing/renderWithFrontDoor';
@@ -100,6 +100,25 @@ describe('PageViewShell', () => {
   it('adds the narrow modifier for the narrow layout', () => {
     const { container } = renderView(settingsFor('telemetry', { layout: 'narrow' }));
     expect(container.firstChild).toHaveClass('ai-view--telemetry', 'ai-view--narrow');
+  });
+
+  it('renders the home tiles and discovers saved drafts', async () => {
+    const draftStore: InMemoryDraftStore = new InMemoryDraftStore();
+    await draftStore.save('idea', { answers: { workToImprove: 'Reports' }, currentStepId: 'painPoints', phase: 'form' });
+    await draftStore.save('feedback', { answers: {}, phase: 'form' });
+    const pages: IPageViewSettings['pages'] = {
+      idea: `${TEST_SITE_URL}/SitePages/Explore-an-AI-idea.aspx`,
+      toolCheck: `${TEST_SITE_URL}/SitePages/Check-a-tool-or-task.aspx`,
+      feedback: `${TEST_SITE_URL}/SitePages/Share-feedback.aspx`
+    };
+    const { container } = renderView(settingsFor('home', { pages }), { draftStore });
+    await waitFor((): void => expect(screen.getAllByText('Resume draft')).toHaveLength(2));
+    expect(within(screen.getByText('Explore an AI idea').closest('a') as HTMLElement).getByText('Resume draft')).toBeInTheDocument();
+    expect(within(screen.getByText('Check a tool or task').closest('a') as HTMLElement).queryByText('Resume draft')).not.toBeInTheDocument();
+    expect(container.firstChild).toHaveClass('ai-view--home');
+    expect(container.querySelector('.ai-home-shell')).not.toBeNull();
+    expect(screen.queryByText('AI CoE Lab')).not.toBeInTheDocument();
+    expect(screen.queryByRole('heading', { level: 1 })).not.toBeInTheDocument();
   });
 
   it('shows a configuration notice for the legacy view instead of the landing page', () => {
