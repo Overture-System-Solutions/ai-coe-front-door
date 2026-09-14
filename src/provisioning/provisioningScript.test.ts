@@ -106,6 +106,14 @@ describe('page provisioning script', () => {
   it('refuses positional arguments, so stray text cannot become a parameter value', () => {
     expect(script).toMatch(/\[CmdletBinding\(PositionalBinding = \$false\)\]/);
   });
+
+  it('skips a page it cannot recycle (locked by an open editor) and reports it at the end', () => {
+    expect(script).toMatch(/try\s*\{\s*Remove-PnPPage -Identity \$pageName -Force -Recycle/);
+    expect(script).toContain('could not be recycled');
+    expect(script).toContain('$locked += $file');
+    expect(script).toMatch(/Locked:/);
+    expect(script).toMatch(/if \(\$locked\.Count -gt 0\) \{\s*throw/);
+  });
 });
 
 describe('README', () => {
