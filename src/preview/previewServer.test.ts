@@ -5,8 +5,11 @@ import { spawn } from 'child_process';
 import type { ChildProcess } from 'child_process';
 import * as http from 'http';
 import * as path from 'path';
+import { FRONT_DOOR_VIEWS } from '../webparts/aiCoeFrontDoor/content/pageViews';
 
 jest.setTimeout(30000);
+
+const PAGE_PROPERTY_NAMES: string[] = ['pageIdea', 'pageToolCheck', 'pageTeamUsage', 'pageHelpTraining', 'pageFeedback', 'pageTelemetry', 'pageAdmin'];
 
 interface IResponse {
   status: number;
@@ -65,6 +68,34 @@ describe('offline preview server', () => {
     expect(page.headers['cache-control']).toBe('no-store');
   });
 
+  it('offers a chooser for every page view and the layout, with no inline script allowed', async () => {
+    const page: IResponse = await get(`${base}/`);
+    const viewSelect: RegExpExecArray | null = /<select id="view">([\s\S]*?)<\/select>/.exec(page.body);
+    expect(viewSelect).not.toBeNull();
+    const options: string = (viewSelect as RegExpExecArray)[1];
+    expect((options.match(/<option /g) ?? []).length).toBe(FRONT_DOOR_VIEWS.length);
+    for (const view of FRONT_DOOR_VIEWS) {
+      expect(options).toContain(`option value="${view}"`);
+    }
+    expect(page.body).toContain('id="layout"');
+    expect(page.body).toContain('option value="narrow"');
+    const directives: string[] = String(page.headers['content-security-policy'])
+      .split(';')
+      .map((directive: string): string => directive.trim());
+    expect(directives).toContain("script-src 'self'");
+  });
+
+  it('builds the page map and return page from view query strings in the mount script', async () => {
+    const mount: IResponse = await get(`${base}/mount.js`);
+    expect(mount.body).toContain("searchParams.set('view'");
+    for (const name of PAGE_PROPERTY_NAMES) {
+      expect(mount.body).toContain(name);
+    }
+    expect(mount.body).toContain('returnUrl');
+    expect(mount.body).toContain('maxWidth');
+    expect(mount.body).toContain("get('layout')");
+  });
+
   it('serves only the allowlisted assets', async () => {
     for (const route of ['/react.js', '/react-dom.js', '/host.js', '/strings.js', '/bundle.js', '/mount.js']) {
       const asset: IResponse = await get(`${base}${route}`);
@@ -83,6 +114,8 @@ describe('offline preview server', () => {
     expect(host.body).toContain('OFFLINE_SIMULATION');
     expect(host.body).toContain('External network access is blocked');
     expect(host.body).toContain('setTelemetryProvider');
+    expect(host.body).toContain('setView');
+    expect(host.body).toContain('setLayout');
     expect(host.body).toContain('claude-sonnet-5');
     expect(host.body).toContain('Simulated preview data');
     // Browsers cannot resolve bare specifiers such as "tslib"; the host must compile helper-free.

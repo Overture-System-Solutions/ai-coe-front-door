@@ -46,6 +46,10 @@ interface IPreviewApi {
   setDraftServiceUrl(url: string): void;
   /** Switches the telemetry strip between the Claude, OpenAI and combined tile sets. */
   setTelemetryProvider(mode: string): void;
+  /** Switches the piece this instance renders (the view property) without reloading. */
+  setView(view: string): void;
+  /** Switches between the wide and narrow layouts. */
+  setLayout(layout: string): void;
 }
 
 type AmdFactory = (...modules: unknown[]) => { default: new () => IPreviewWebPart };
@@ -141,9 +145,14 @@ window.open = blocked;
 document.addEventListener('click', (event: MouseEvent): void => {
   const target: Element | null = event.target as Element | null;
   const link: HTMLAnchorElement | null = target === null ? null : target.closest('a[href]');
-  if (link !== null && link.href.indexOf('blob:') !== 0 && (link.getAttribute('href') ?? '').indexOf('#') !== 0) {
-    event.preventDefault();
+  if (link === null || link.href.indexOf('blob:') === 0 || (link.getAttribute('href') ?? '').indexOf('#') === 0) {
+    return;
   }
+  // The preview's own page-map links ("/?view=idea") reload this page showing another piece; everything else stays blocked.
+  if (link.origin === location.origin && link.search.indexOf('view=') >= 0) {
+    return;
+  }
+  event.preventDefault();
 });
 
 function request(method: 'GET' | 'POST', url: string, options: { body?: string } | undefined): Promise<IPreviewResponse> {
@@ -312,6 +321,20 @@ previewWindow.FrontDoorPreview = {
       throw new Error('Mount the web part first.');
     }
     mounted.properties.telemetryProvider = mode;
+    mounted.render();
+  },
+  setView: (view: string): void => {
+    if (mounted === undefined) {
+      throw new Error('Mount the web part first.');
+    }
+    mounted.properties.view = view;
+    mounted.render();
+  },
+  setLayout: (layout: string): void => {
+    if (mounted === undefined) {
+      throw new Error('Mount the web part first.');
+    }
+    mounted.properties.layout = layout;
     mounted.render();
   }
 };
