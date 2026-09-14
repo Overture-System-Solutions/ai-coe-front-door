@@ -201,14 +201,18 @@ that no client or tenant name is in the file.
 2. Copy `sharepoint/pages/parameters.sample.json` to `sharepoint/pages/parameters.json` (ignored by git), fill in the values.
 3. Run, with PowerShell 7.4 and the pinned PnP.PowerShell version from the script header. Interactive login needs
    your own Entra app registration once (`Register-PnPEntraIDAppForInteractiveLogin`); pass its id with `-ClientId`,
-   or set the `ENTRAID_CLIENT_ID` environment variable and omit the parameter (the square brackets below mark
-   optional parameters; do not type them):
+   or set the `ENTRAID_CLIENT_ID` environment variable and omit the parameter:
 
-       pwsh ./sharepoint/pages/New-FrontDoorPages.ps1 -SiteUrl https://<tenant>.sharepoint.com/sites/<site> -ParameterFile ./sharepoint/pages/parameters.json -ClientId <app id> [-DraftServiceUrl <flow trigger URL>] [-TelemetryProvider claude] [-Overwrite]
+       pwsh ./sharepoint/pages/New-FrontDoorPages.ps1 -SiteUrl https://<tenant>.sharepoint.com/sites/<site> -ParameterFile ./sharepoint/pages/parameters.json -ClientId <app id>
 
-   The script first checks that the front-door component is available on the site, then resolves the tokens and
-   uploads the content document to Site Assets (creating the library if the site has none, and reading the file back
-   to make sure), then creates the pages. Existing pages are skipped unless `-Overwrite` is given, which sends them
+   Optional, appended to that line: `-DraftServiceUrl <flow trigger URL>` for the Claude draft flow,
+   `-TelemetryProvider openai` or `both` (the default is `claude`), and `-Overwrite` to rebuild pages that already
+   exist. Every parameter is named; anything else on the line is rejected.
+
+   The script first checks that the front-door component is available on the site (and stops if it is not), then
+   resolves the tokens and uploads the content document to Site Assets (creating the library if the site has none,
+   and reading the file back to make sure), then creates the pages, verifying after each one that SharePoint bound
+   the component to the instance. Existing pages are skipped unless `-Overwrite` is given, which sends them
    to the site recycle bin and rebuilds them from `pages.json`: edits made in the browser are recoverable from the
    recycle bin, not carried over. A page whose build fails part-way is recycled so the next run recreates it. The
    navigation is rebuilt every run; it replaces every QuickLaunch node, including the three list links the package

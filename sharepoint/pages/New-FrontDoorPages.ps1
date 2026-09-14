@@ -19,7 +19,11 @@ in-text link "[label]({Url:Name})" into its label, and a tile or call to action 
 warning. The web part opens links to other origins in a new tab.
 
 The package must already be installed on the site (upload as an update to the app catalog, then "Get it" on the site);
-the script checks that the front-door component is available before creating anything.
+the script stops before creating anything when the front-door component is not available, and verifies after each
+placement that SharePoint bound the component to the instance.
+
+Every parameter must be given by name; a stray token on the command line (for example a bracket copied from an
+example) is rejected instead of becoming a value.
 
 .PARAMETER SiteUrl
 Full URL of the communication site, for example https://<tenant>.sharepoint.com/sites/<site>.
@@ -54,7 +58,8 @@ pwsh ./New-FrontDoorPages.ps1 -SiteUrl https://<tenant>.sharepoint.com/sites/<si
 #>
 #Requires -Version 7.4
 #Requires -Modules @{ ModuleName = 'PnP.PowerShell'; RequiredVersion = '3.1.0' }
-[CmdletBinding()]
+# Named parameters only: a stray token on the command line is an error, not the next parameter's value.
+[CmdletBinding(PositionalBinding = $false)]
 param(
   [Parameter(Mandatory = $true)][string]$SiteUrl,
   [string]$ParameterFile = (Join-Path $PSScriptRoot 'parameters.json'),
@@ -122,19 +127,21 @@ if ($web.WebTemplate -ne 'SITEPAGEPUBLISHING' -and -not $AllowNonCommunicationSi
 }
 $webRoot = $web.ServerRelativeUrl.TrimEnd('/')
 
-# Advisory check that the package is installed: the component list can carry ids with braces or upper case, so
-# compare normalised ids and the web part's manifest name, and warn rather than stop when nothing matches.
+# The component must be resolved to an object and passed as such: given the id as text, PnP.PowerShell 3.1.0 placed a
+# web part with a null component ("webPartId":null in the canvas), which SharePoint neither renders nor lets anyone
+# edit. The listed ids carry braces and upper case, so compare normalised ids.
 function ConvertTo-GuidText([string]$value) {
   return ($value -replace '[{}]', '').Trim().ToLowerInvariant()
 }
 $homePageFile = (Get-PnPHomePage) -replace '^SitePages/', ''
 $wantedId = ConvertTo-GuidText ([string]$definition['componentId'])
 $components = @(Get-PnPPageComponent -Page $homePageFile -ListAvailable)
-$available = @($components | Where-Object { (ConvertTo-GuidText ([string]$_.Id)) -eq $wantedId -or [string]$_.Name -eq 'AiCoeFrontDoorWebPart' })
-if ($available.Count -eq 0) {
+$component = $components | Where-Object { (ConvertTo-GuidText ([string]$_.Id)) -eq $wantedId } | Select-Object -First 1
+if ($null -eq $component) {
   $listed = ($components | ForEach-Object { "$($_.Name) ($($_.Id))" }) -join '; '
-  Write-Warning "The front-door component ($($definition['componentId'])) was not found among the $($components.Count) components listed for $homePageFile. If the package is not installed on this site (app catalog upload, then 'Get it'), the front-door instances will be empty. Listed: $listed"
+  throw "The front-door component ($($definition['componentId'])) is not available on this site: install the package (app catalog upload, then 'Get it' on the site) and rerun. Components listed for ${homePageFile}: $listed"
 }
+Write-Host "Front-door component: $($component.Name) ($($component.Id))"
 
 function Get-Page([string]$key) {
   $page = @($definition['pages'] | Where-Object { $_['key'] -eq $key })
@@ -272,7 +279,12 @@ foreach ($page in $definition['pages']) {
     foreach ($name in @($page['instance'].Keys)) {
       $properties[$name] = Resolve-Text ([string]$page['instance'][$name])
     }
-    Add-PnPPageWebPart -Page $pageName -Component ([string]$definition['componentId']) -Section 1 -Column 1 -Order 1 -WebPartProperties $properties | Out-Null
+    Add-PnPPageWebPart -Page $pageName -Component $component -Section 1 -Column 1 -Order 1 -WebPartProperties $properties | Out-Null
+    # Read the control back: a web part without its component id would be saved silently and never render.
+    $placed = @(Get-PnPPageComponent -Page $pageName | Where-Object { $_.PSObject.Properties['WebPartId'] -and (ConvertTo-GuidText ([string]$_.WebPartId)) -eq $wantedId })
+    if ($placed.Count -ne 1) {
+      throw "SharePoint did not bind the front-door component on $file (expected one control with WebPartId $wantedId)."
+    }
     Set-PnPPage -Identity $pageName -Publish | Out-Null
 
     if ([string]$page['permissions'] -eq 'owners') {

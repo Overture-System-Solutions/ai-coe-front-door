@@ -92,6 +92,20 @@ describe('page provisioning script', () => {
     expect(script).toContain('Skipping');
     expect(script).toContain('$Overwrite');
   });
+
+  it('binds the component as an object, verifies every placement and stops when the component is missing', () => {
+    // Passing the id as text left PnP with a null component: controls with "webPartId":null that neither render nor edit.
+    expect(script).toContain('-Component $component');
+    expect(script).not.toMatch(/-Component \(\[string\]/);
+    expect(script).toMatch(/throw "The front-door component/);
+    expect(script).not.toContain('was not found among');
+    expect(script).toContain('WebPartId');
+    expect(script).toMatch(/throw "SharePoint did not bind/);
+  });
+
+  it('refuses positional arguments, so stray text cannot become a parameter value', () => {
+    expect(script).toMatch(/\[CmdletBinding\(PositionalBinding = \$false\)\]/);
+  });
 });
 
 describe('README', () => {
@@ -106,6 +120,8 @@ describe('README', () => {
     expect(readme).toContain('recycle bin');
     expect(readme).toContain('AllowNonCommunicationSite');
     expect(readme).not.toContain('quicklinks.template.json');
+    // The command line is shown without bracketed placeholders, which were pasted literally once.
+    expect(readme).not.toMatch(/\[-(DraftServiceUrl|TelemetryProvider|Overwrite)/);
   });
 
   it('documents the content document and its blocks', () => {
