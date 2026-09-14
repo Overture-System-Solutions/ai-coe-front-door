@@ -4,6 +4,7 @@
  */
 import * as fs from 'fs';
 import * as path from 'path';
+import { FRONT_DOOR_VIEWS } from './content/pageViews';
 
 interface IManifestEntry {
   groupId: string;
@@ -66,6 +67,30 @@ describe('AiCoeFrontDoorWebPart manifest', () => {
     expect(entry.title.default).toBe('AI CoE Front Door');
     expect(entry.groupId).toBe('5c03119e-3074-46fd-976b-c60198311f70');
     expect(entry.properties).toEqual(LEGACY_PROPERTIES);
+  });
+
+  it('offers one toolbox entry per piece on the same component and group', () => {
+    const entries: IManifestEntry[] = source.preconfiguredEntries;
+    expect(entries.map((entry: IManifestEntry): unknown => entry.properties.view)).toEqual(FRONT_DOOR_VIEWS);
+    expect(entries.map((entry: IManifestEntry): string => entry.title.default)).toEqual([
+      'AI CoE Front Door',
+      'AI CoE: Home tiles',
+      'AI CoE: Explore an AI idea',
+      'AI CoE: Check a tool or task',
+      'AI CoE: Register team AI use',
+      'AI CoE: Get help or training',
+      'AI CoE: Share feedback',
+      'AI CoE: AI operations snapshot',
+      'AI CoE: Administrator dashboard'
+    ]);
+    for (const entry of entries) {
+      expect(entry.groupId).toBe('5c03119e-3074-46fd-976b-c60198311f70');
+      expect(entry.group.default).toBe('AI Center of Excellence');
+      expect(entry.officeFabricIconFontName).toBe('EntryView');
+      expect(entry.description.default.length).toBeGreaterThan(0);
+      expect(entry.properties).toEqual({ ...LEGACY_PROPERTIES, view: entry.properties.view });
+      expect(JSON.stringify(entry).indexOf('Overture')).toBe(-1);
+    }
   });
 
   it('matches the manifest the build wrote to dist', () => {

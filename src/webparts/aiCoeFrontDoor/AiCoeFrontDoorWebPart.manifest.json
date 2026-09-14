@@ -35,5 +35,181 @@
       "pageAdmin": "",
       "pagePolicy": ""
     }
+  }, {
+    "groupId": "5c03119e-3074-46fd-976b-c60198311f70",
+    "group": { "default": "AI Center of Excellence" },
+    "title": { "default": "AI CoE: Home tiles" },
+    "description": { "default": "The five AI CoE paths and resource links, each opening its own page" },
+    "officeFabricIconFontName": "EntryView",
+    "properties": {
+      "organizationName": "",
+      "draftServiceUrl": "",
+      "telemetryProvider": "claude",
+      "view": "home",
+      "layout": "wide",
+      "returnUrl": "",
+      "pageIdea": "",
+      "pageToolCheck": "",
+      "pageTeamUsage": "",
+      "pageHelpTraining": "",
+      "pageFeedback": "",
+      "pageTelemetry": "",
+      "pageAdmin": "",
+      "pagePolicy": ""
+    }
+  }, {
+    "groupId": "5c03119e-3074-46fd-976b-c60198311f70",
+    "group": { "default": "AI Center of Excellence" },
+    "title": { "default": "AI CoE: Explore an AI idea" },
+    "description": { "default": "The guided AI idea intake on its own page" },
+    "officeFabricIconFontName": "EntryView",
+    "properties": {
+      "organizationName": "",
+      "draftServiceUrl": "",
+      "telemetryProvider": "claude",
+      "view": "idea",
+      "layout": "wide",
+      "returnUrl": "",
+      "pageIdea": "",
+      "pageToolCheck": "",
+      "pageTeamUsage": "",
+      "pageHelpTraining": "",
+      "pageFeedback": "",
+      "pageTelemetry": "",
+      "pageAdmin": "",
+      "pagePolicy": ""
+    }
+  }, {
+    "groupId": "5c03119e-3074-46fd-976b-c60198311f70",
+    "group": { "default": "AI Center of Excellence" },
+    "title": { "default": "AI CoE: Check a tool or task" },
+    "description": { "default": "The tool or task guidance check on its own page" },
+    "officeFabricIconFontName": "EntryView",
+    "properties": {
+      "organizationName": "",
+      "draftServiceUrl": "",
+      "telemetryProvider": "claude",
+      "view": "toolCheck",
+      "layout": "wide",
+      "returnUrl": "",
+      "pageIdea": "",
+      "pageToolCheck": "",
+      "pageTeamUsage": "",
+      "pageHelpTraining": "",
+      "pageFeedback": "",
+      "pageTelemetry": "",
+      "pageAdmin": "",
+      "pagePolicy": ""
+    }
+  }, {
+    "groupId": "5c03119e-3074-46fd-976b-c60198311f70",
+    "group": { "default": "AI Center of Excellence" },
+    "title": { "default": "AI CoE: Register team AI use" },
+    "description": { "default": "The team AI-use disclosure on its own page" },
+    "officeFabricIconFontName": "EntryView",
+    "properties": {
+      "organizationName": "",
+      "draftServiceUrl": "",
+      "telemetryProvider": "claude",
+      "view": "teamUsage",
+      "layout": "wide",
+      "returnUrl": "",
+      "pageIdea": "",
+      "pageToolCheck": "",
+      "pageTeamUsage": "",
+      "pageHelpTraining": "",
+      "pageFeedback": "",
+      "pageTelemetry": "",
+      "pageAdmin": "",
+      "pagePolicy": ""
+    }
+  }, {
+    "groupId": "5c03119e-3074-46fd-976b-c60198311f70",
+    "group": { "default": "AI Center of Excellence" },
+    "title": { "default": "AI CoE: Get help or training" },
+    "description": { "default": "The help or training request on its own page" },
+    "officeFabricIconFontName": "EntryView",
+    "properties": {
+      "organizationName": "",
+      "draftServiceUrl": "",
+      "telemetryProvider": "claude",
+      "view": "helpTraining",
+      "layout": "wide",
+      "returnUrl": "",
+      "pageIdea": "",
+      "pageToolCheck": "",
+      "pageTeamUsage": "",
+      "pageHelpTraining": "",
+      "pageFeedback": "",
+      "pageTelemetry": "",
+      "pageAdmin": "",
+      "pagePolicy": ""
+    }
+  }, {
+    "groupId": "5c03119e-3074-46fd-976b-c60198311f70",
+    "group": { "default": "AI Center of Excellence" },
+    "title": { "default": "AI CoE: Share feedback" },
+    "description": { "default": "The AI CoE feedback form on its own page" },
+    "officeFabricIconFontName": "EntryView",
+    "properties": {
+      "organizationName": "",
+      "draftServiceUrl": "",
+      "telemetryProvider": "claude",
+      "view": "feedback",
+      "layout": "wide",
+      "returnUrl": "",
+      "pageIdea": "",
+      "pageToolCheck": "",
+      "pageTeamUsage": "",
+      "pageHelpTraining": "",
+      "pageFeedback": "",
+      "pageTelemetry": "",
+      "pageAdmin": "",
+      "pagePolicy": ""
+    }
+  }, {
+    "groupId": "5c03119e-3074-46fd-976b-c60198311f70",
+    "group": { "default": "AI Center of Excellence" },
+    "title": { "default": "AI CoE: AI operations snapshot" },
+    "description": { "default": "Usage telemetry tiles and open alerts on their own page" },
+    "officeFabricIconFontName": "EntryView",
+    "properties": {
+      "organizationName": "",
+      "draftServiceUrl": "",
+      "telemetryProvider": "claude",
+      "view": "telemetry",
+      "layout": "wide",
+      "returnUrl": "",
+      "pageIdea": "",
+      "pageToolCheck": "",
+      "pageTeamUsage": "",
+      "pageHelpTraining": "",
+      "pageFeedback": "",
+      "pageTelemetry": "",
+      "pageAdmin": "",
+      "pagePolicy": ""
+    }
+  }, {
+    "groupId": "5c03119e-3074-46fd-976b-c60198311f70",
+    "group": { "default": "AI Center of Excellence" },
+    "title": { "default": "AI CoE: Administrator dashboard" },
+    "description": { "default": "The governance queue, metrics and decisions for site administrators" },
+    "officeFabricIconFontName": "EntryView",
+    "properties": {
+      "organizationName": "",
+      "draftServiceUrl": "",
+      "telemetryProvider": "claude",
+      "view": "admin",
+      "layout": "wide",
+      "returnUrl": "",
+      "pageIdea": "",
+      "pageToolCheck": "",
+      "pageTeamUsage": "",
+      "pageHelpTraining": "",
+      "pageFeedback": "",
+      "pageTelemetry": "",
+      "pageAdmin": "",
+      "pagePolicy": ""
+    }
   }]
 }

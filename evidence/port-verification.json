@@ -1,9 +1,9 @@
 {
-  "verifiedAt": "2026-09-14T04:50:17.517Z",
+  "verifiedAt": "2026-09-14T04:54:09.308Z",
   "package": {
     "path": "sharepoint/solution/overture-ai-coe-front-door.sppkg",
-    "sha256": "1669023e792d8f5918cb7babf0af9e6247034925642276a03dfdde063c7f6a1c",
-    "bytes": 68810,
+    "sha256": "c99ff3917273fe19f66efc77145414ccc54fe4aad850b175cb00ffafe5c747e0",
+    "bytes": 69189,
     "version": "1.0.0.10",
     "productId": "f125ebdf-4a9d-4e6e-8479-3a18874e7752",
     "isDomainIsolated": "false",
@@ -73,7 +73,15 @@
       "AI CoE Pilot Intakes"
     ],
     "preconfiguredViews": [
-      "legacy"
+      "legacy",
+      "home",
+      "idea",
+      "toolCheck",
+      "teamUsage",
+      "helpTraining",
+      "feedback",
+      "telemetry",
+      "admin"
     ]
   },
   "scope": "Local build verification only: no tenant upload, deployment, SharePoint change or model call.",
