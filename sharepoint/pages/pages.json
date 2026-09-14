@@ -1,5 +1,6 @@
 {
   "componentId": "cf2e5904-0703-4fe4-ae5a-ec012d6fa689",
+  "contentFile": "ai-coe-pages.json",
   "parameters": {
     "OrganizationName": { "kind": "text", "description": "Organization name used in the page text and on every front-door instance." },
     "DraftServiceUrl": { "kind": "url", "description": "HTTP trigger URL of the Claude draft flow for the idea page; blank keeps plain summaries." },
@@ -48,117 +49,62 @@
       "file": "Start-here.aspx",
       "commentsEnabled": true,
       "permissions": "inherit",
-      "sections": [
+      "instance": { "view": "page", "pageKey": "startHere", "contentUrl": "SiteAssets/ai-coe-pages.json", "layout": "wide", "organizationName": "{OrganizationName}" },
+      "blocks": [
         {
-          "template": "OneColumn",
-          "columns": [
+          "type": "hero",
+          "title": "What do you need done?",
+          "text": "Copy a prompt below into Copilot · [ask the Concierge]({Url:ConciergeUrl}) · [message us on Teams]({Url:TeamsUrl}) · [start a request]({Page:requests})",
+          "cta": { "label": "Start a request", "href": "{Page:requests}" }
+        },
+        { "type": "heading", "level": 2, "text": "What do you want to do?" },
+        {
+          "type": "tiles",
+          "items": [
+            { "title": "Ask the AI CoE", "href": "{Url:ConciergeUrl}", "icon": "MessageSquare", "tone": "teal" },
+            { "title": "Use AI for my work", "href": "{Page:useAi}", "icon": "BriefcaseBusiness", "tone": "blue" },
+            { "title": "Start a request", "href": "{Page:requests}", "icon": "Inbox", "tone": "violet" },
+            { "title": "Check status", "href": "{Page:status}", "icon": "LayoutDashboard", "tone": "gold" }
+          ]
+        },
+        {
+          "type": "cards",
+          "columns": 3,
+          "items": [
             {
-              "controls": [
-                {
-                  "type": "text",
-                  "html": "<h2>What do you need done?</h2><p>Copy a prompt below into Copilot · <a href=\"{Url:ConciergeUrl}\">ask the Concierge</a> · <a href=\"{Url:TeamsUrl}\">message us on Teams</a> · <a href=\"{Page:requests}\">start a request</a></p>"
-                }
-              ]
+              "title": "Clear my admin queue",
+              "body": ["Go through my unread mail from the last three days. Group it into: needs a reply from me, needs a decision, FYI only. For each one give me the sender, one line of context, and what you think I should do."],
+              "meta": "Copilot Chat · 2 min",
+              "tone": "teal"
+            },
+            {
+              "title": "Create my morning brief",
+              "body": ["Look at my calendar and mail for today. Tell me what I need to prepare for, what I owe someone, and where my two free blocks are. Keep it under 150 words."],
+              "meta": "Copilot Chat · 2 min",
+              "tone": "blue"
+            },
+            {
+              "title": "Teach my repeatable work",
+              "body": ["I do this task about once a week: [describe it]. Ask me whatever you need to know, then write me a prompt I can reuse every time. Tell me what information you will need each time and what you will not be able to see."],
+              "meta": "Copilot Chat · 5 min",
+              "tone": "violet"
             }
           ]
         },
         {
-          "template": "OneColumn",
-          "columns": [
-            {
-              "controls": [
-                { "type": "text", "html": "<h2>What do you want to do?</h2>" },
-                {
-                  "type": "quickLinks",
-                  "layout": "button",
-                  "items": [
-                    { "title": "Ask the AI CoE", "url": "{Url:ConciergeUrl}" },
-                    { "title": "Use AI for my work", "page": "useAi" },
-                    { "title": "Start a request", "page": "requests" },
-                    { "title": "Check status", "page": "status" }
-                  ]
-                }
-              ]
-            }
+          "type": "cards",
+          "columns": 3,
+          "items": [
+            { "title": "New hire", "body": ["*I am new at {OrganizationName}. What can I use AI for, what must I never put in, and where do I go when I am unsure?*"], "tone": "teal" },
+            { "title": "Employee", "body": ["*Here is something I do every week: [describe it]. Can I use AI for it, and what must I check before the output counts?*"], "tone": "gold" },
+            { "title": "Manager", "body": ["*My team wants to use AI for [describe it]. What has to be true before I say yes, and what goes to the AI CoE first?*"], "tone": "cyan" }
           ]
         },
         {
-          "template": "ThreeColumn",
-          "columns": [
-            {
-              "controls": [
-                {
-                  "type": "text",
-                  "html": "<h3>Clear my admin queue</h3><p>Go through my unread mail from the last three days. Group it into: needs a reply from me, needs a decision, FYI only. For each one give me the sender, one line of context, and what you think I should do.</p><p><em>Copilot Chat · 2 min</em></p>"
-                }
-              ]
-            },
-            {
-              "controls": [
-                {
-                  "type": "text",
-                  "html": "<h3>Create my morning brief</h3><p>Look at my calendar and mail for today. Tell me what I need to prepare for, what I owe someone, and where my two free blocks are. Keep it under 150 words.</p><p><em>Copilot Chat · 2 min</em></p>"
-                }
-              ]
-            },
-            {
-              "controls": [
-                {
-                  "type": "text",
-                  "html": "<h3>Teach my repeatable work</h3><p>I do this task about once a week: [describe it]. Ask me whatever you need to know, then write me a prompt I can reuse every time. Tell me what information you will need each time and what you will not be able to see.</p><p><em>Copilot Chat · 5 min</em></p>"
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "template": "ThreeColumn",
-          "columns": [
-            {
-              "controls": [
-                {
-                  "type": "text",
-                  "html": "<h3>New hire</h3><p><em>I am new at {OrganizationName}. What can I use AI for, what must I never put in, and where do I go when I am unsure?</em></p>"
-                }
-              ]
-            },
-            {
-              "controls": [
-                {
-                  "type": "text",
-                  "html": "<h3>Employee</h3><p><em>Here is something I do every week: [describe it]. Can I use AI for it, and what must I check before the output counts?</em></p>"
-                }
-              ]
-            },
-            {
-              "controls": [
-                {
-                  "type": "text",
-                  "html": "<h3>Manager</h3><p><em>My team wants to use AI for [describe it]. What has to be true before I say yes, and what goes to the AI CoE first?</em></p>"
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "template": "TwoColumn",
-          "columns": [
-            {
-              "controls": [
-                {
-                  "type": "text",
-                  "html": "<p><strong>Status</strong> — Concierge answering, {ConciergeSourceCount} sources, newest {ConciergeNewestSourceDate} so nothing more recent. Prompts: {PromptCount}, all draft. Teams pilot, leadership reporting and automated runs: none. Verified {VerifiedDate}.</p>"
-                }
-              ]
-            },
-            {
-              "controls": [
-                {
-                  "type": "text",
-                  "html": "<p><strong>Support</strong> — something wrong or contradictory? Tell the AI CoE. No PHI, customer data, credentials or regulated information unless the approved environment is confirmed. Private pilot: {PilotMembers}.</p>"
-                }
-              ]
-            }
+          "type": "statusRow",
+          "items": [
+            { "label": "Status", "text": "Concierge answering, {ConciergeSourceCount} sources, newest {ConciergeNewestSourceDate} so nothing more recent. Prompts: {PromptCount}, all draft. Teams pilot, leadership reporting and automated runs: none. Verified {VerifiedDate}." },
+            { "label": "Support", "text": "something wrong or contradictory? Tell the AI CoE. No PHI, customer data, credentials or regulated information unless the approved environment is confirmed. Private pilot: {PilotMembers}." }
           ]
         }
       ]
@@ -169,88 +115,66 @@
       "file": "Learn.aspx",
       "commentsEnabled": true,
       "permissions": "inherit",
-      "sections": [
+      "instance": { "view": "page", "pageKey": "learn", "contentUrl": "SiteAssets/ai-coe-pages.json", "layout": "wide", "organizationName": "{OrganizationName}" },
+      "blocks": [
+        { "type": "paragraph", "text": "Four short things. None of them is reading. Each one is something you do with AI, and doing it is how you learn it." },
+        { "type": "paragraph", "text": "[Ask the AI CoE]({Url:ConciergeUrl}) — opens in a new tab, takes a few seconds to load." },
+        { "type": "paragraph", "text": "Every rule shown here as a pilot rule is PROPOSED pending policy-owner confirmation." },
         {
-          "template": "OneColumn",
-          "columns": [
+          "type": "cards",
+          "columns": 2,
+          "items": [
             {
-              "controls": [
-                {
-                  "type": "text",
-                  "html": "<p>Four short things. None of them is reading. Each one is something you do with AI, and doing it is how you learn it.</p><p><a href=\"{Url:ConciergeUrl}\">Ask the AI CoE</a> — opens in a new tab, takes a few seconds to load.</p><p>Every rule shown here as a pilot rule is PROPOSED pending policy-owner confirmation.</p>"
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "template": "TwoColumn",
-          "columns": [
-            {
-              "controls": [
-                {
-                  "type": "text",
-                  "html": "<h2>1. Ask it something real</h2><p><em>2 minutes</em></p><p>The AI CoE helps you use AI safely at {OrganizationName}. It does not approve tools, approve spending, or make legal, HR, security or compliance decisions.</p><p><strong>Do this</strong>: ask the Concierge one real question from your own work this week. If it cannot answer from approved sources it will say so and tell you who owns the answer. That is the behaviour to expect, not a failure.</p>"
-                }
-              ]
+              "title": "1. Ask it something real",
+              "kicker": "2 minutes",
+              "body": [
+                "The AI CoE helps you use AI safely at {OrganizationName}. It does not approve tools, approve spending, or make legal, HR, security or compliance decisions.",
+                "**Do this**: ask the Concierge one real question from your own work this week. If it cannot answer from approved sources it will say so and tell you who owns the answer. That is the behaviour to expect, not a failure."
+              ],
+              "tone": "teal"
             },
             {
-              "controls": [
-                {
-                  "type": "text",
-                  "html": "<h2>2. Check before you paste</h2><p><em>3 minutes</em></p><p>Never put PHI, customer data, credentials or regulated information into an unapproved workflow. Your own drafts, approved internal documents, published policy and public research are generally fine.</p><p><strong>Do this</strong>: before pasting anything you are unsure about, ask Copilot: <em>Is there anything in this document I should not put into an AI tool? List anything that looks like personal health information, customer identifiers, credentials, or regulated data, and tell me where in the document it is.</em></p>"
-                }
-              ]
+              "title": "2. Check before you paste",
+              "kicker": "3 minutes",
+              "body": [
+                "Never put PHI, customer data, credentials or regulated information into an unapproved workflow. Your own drafts, approved internal documents, published policy and public research are generally fine.",
+                "**Do this**: before pasting anything you are unsure about, ask Copilot: *Is there anything in this document I should not put into an AI tool? List anything that looks like personal health information, customer identifiers, credentials, or regulated data, and tell me where in the document it is.*"
+              ],
+              "tone": "blue"
             }
           ]
         },
         {
-          "template": "TwoColumn",
-          "columns": [
+          "type": "cards",
+          "columns": 2,
+          "items": [
             {
-              "controls": [
-                {
-                  "type": "text",
-                  "html": "<h2>3. Make a prompt better</h2><p><em>5 minutes</em></p><p>Three habits: say what you want back, say what it may use, and ask it to show its uncertainty.</p><p><strong>Do this</strong>: take a prompt you already use and add this line to it: <em>After your answer, list anything you were unsure about and what you would need in order to be sure.</em> Compare the two answers. That comparison is the lesson.</p>"
-                }
-              ]
+              "title": "3. Make a prompt better",
+              "kicker": "5 minutes",
+              "body": [
+                "Three habits: say what you want back, say what it may use, and ask it to show its uncertainty.",
+                "**Do this**: take a prompt you already use and add this line to it: *After your answer, list anything you were unsure about and what you would need in order to be sure.* Compare the two answers. That comparison is the lesson."
+              ],
+              "tone": "violet"
             },
             {
-              "controls": [
-                {
-                  "type": "text",
-                  "html": "<h2>4. Ask for something</h2><p><em>2 minutes</em></p><p>Three routes: submit an idea, check a tool or task, or register AI you already use. Each returns a record id, an owner and a next step.</p><p><strong>Do this</strong>: send one real request from the <a href=\"{Page:requests}\">Requests page</a>. Not a test one.</p>"
-                }
-              ]
+              "title": "4. Ask for something",
+              "kicker": "2 minutes",
+              "body": [
+                "Three routes: submit an idea, check a tool or task, or register AI you already use. Each returns a record id, an owner and a next step.",
+                "**Do this**: send one real request from the [Requests page]({Page:requests}). Not a test one."
+              ],
+              "tone": "gold"
             }
           ]
         },
-        {
-          "template": "OneColumn",
-          "columns": [
-            {
-              "controls": [
-                {
-                  "type": "text",
-                  "html": "<h2>How we know you have done it</h2><p>There is no form and no checkbox. Filling in a form is not evidence that anyone learned anything, and nobody does it.</p><p>If you want to check your own understanding, ask the Concierge:</p><p><em>Quiz me on safe AI use at {OrganizationName}. Ask me four questions one at a time, wait for my answer, then tell me what I got wrong and why. Use only approved {OrganizationName} AI CoE sources.</em></p><p>That takes about three minutes and it is worth more than a completion record. If you would rather just start using it, do that instead.</p>"
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "template": "OneColumn",
-          "columns": [
-            {
-              "controls": [
-                {
-                  "type": "text",
-                  "html": "<h2>If you lead a team</h2><p>You do not need the four above. What you need is the operating picture: decisions waiting on you, adoption, and outcomes. Ask the AI CoE for the {LeadTeamContinuation}</p>"
-                }
-              ]
-            }
-          ]
-        }
+        { "type": "heading", "level": 2, "text": "How we know you have done it" },
+        { "type": "paragraph", "text": "There is no form and no checkbox. Filling in a form is not evidence that anyone learned anything, and nobody does it." },
+        { "type": "paragraph", "text": "If you want to check your own understanding, ask the Concierge:" },
+        { "type": "paragraph", "text": "*Quiz me on safe AI use at {OrganizationName}. Ask me four questions one at a time, wait for my answer, then tell me what I got wrong and why. Use only approved {OrganizationName} AI CoE sources.*" },
+        { "type": "paragraph", "text": "That takes about three minutes and it is worth more than a completion record. If you would rather just start using it, do that instead." },
+        { "type": "heading", "level": 2, "text": "If you lead a team" },
+        { "type": "paragraph", "text": "You do not need the four above. What you need is the operating picture: decisions waiting on you, adoption, and outcomes. Ask the AI CoE for the {LeadTeamContinuation}" }
       ]
     },
     {
@@ -259,141 +183,95 @@
       "file": "Use-AI.aspx",
       "commentsEnabled": true,
       "permissions": "inherit",
-      "sections": [
+      "instance": { "view": "page", "pageKey": "useAi", "contentUrl": "SiteAssets/ai-coe-pages.json", "layout": "wide", "organizationName": "{OrganizationName}" },
+      "blocks": [
+        { "type": "paragraph", "text": "Approved ways to use AI at {OrganizationName}. Every one is a prompt you can copy right now. All of them run in [Copilot Chat]({Url:CopilotChatUrl}) — no new tool, no licence, no approval." },
+        { "type": "paragraph", "text": "Not sure your material is safe to paste? Run this first: *Is there anything in this document I should not put into an AI tool? List anything that looks like personal health information, customer identifiers, credentials, or regulated data, and tell me where in the document it is.* If it finds something, stop and use [Requests]({Page:requests})." },
+        { "type": "heading", "level": 2, "text": "Everyday knowledge work" },
         {
-          "template": "OneColumn",
-          "columns": [
+          "type": "cards",
+          "columns": 3,
+          "items": [
             {
-              "controls": [
-                {
-                  "type": "text",
-                  "html": "<p>Approved ways to use AI at {OrganizationName}. Every one is a prompt you can copy right now. All of them run in <a href=\"{Url:CopilotChatUrl}\">Copilot Chat</a> — no new tool, no licence, no approval.</p><p>Not sure your material is safe to paste? Run this first: <em>Is there anything in this document I should not put into an AI tool? List anything that looks like personal health information, customer identifiers, credentials, or regulated data, and tell me where in the document it is.</em> If it finds something, stop and use <a href=\"{Page:requests}\">Requests</a>.</p>"
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "template": "OneColumn",
-          "columns": [{ "controls": [{ "type": "text", "html": "<h2>Everyday knowledge work</h2>" }] }]
-        },
-        {
-          "template": "ThreeColumn",
-          "columns": [
-            {
-              "controls": [
-                {
-                  "type": "text",
-                  "html": "<h3>Summarise to decisions</h3><p>Summarise this document in five bullets. Each bullet should be a decision or an action, not a topic. If there are no decisions in it, say so instead of padding.</p><p><em>Approved internal documents. Verify each decision against the source.</em></p>"
-                }
-              ]
+              "title": "Summarise to decisions",
+              "body": ["Summarise this document in five bullets. Each bullet should be a decision or an action, not a topic. If there are no decisions in it, say so instead of padding."],
+              "meta": "Approved internal documents. Verify each decision against the source.",
+              "tone": "teal"
             },
             {
-              "controls": [
-                {
-                  "type": "text",
-                  "html": "<h3>Answer only from this source</h3><p>Answer only from the document I have attached. If the answer is not in it, say not in this document rather than filling the gap from general knowledge.</p><p><em>Approved internal documents. Confirm the answer appears in the source.</em></p>"
-                }
-              ]
+              "title": "Answer only from this source",
+              "body": ["Answer only from the document I have attached. If the answer is not in it, say not in this document rather than filling the gap from general knowledge."],
+              "meta": "Approved internal documents. Confirm the answer appears in the source.",
+              "tone": "blue"
             },
             {
-              "controls": [
-                {
-                  "type": "text",
-                  "html": "<h3>Prepare me for this meeting</h3><p>Using the agenda and any prior decisions I have shared, give me a one-page brief: what this meeting must decide, what is already agreed, what is contested, and three questions I should ask.</p><p><em>Agendas and approved decisions. No transcripts or recordings.</em></p>"
-                }
-              ]
+              "title": "Prepare me for this meeting",
+              "body": ["Using the agenda and any prior decisions I have shared, give me a one-page brief: what this meeting must decide, what is already agreed, what is contested, and three questions I should ask."],
+              "meta": "Agendas and approved decisions. No transcripts or recordings.",
+              "tone": "violet"
             }
           ]
         },
+        { "type": "heading", "level": 2, "text": "Owners, leaders and initiative teams" },
         {
-          "template": "OneColumn",
-          "columns": [{ "controls": [{ "type": "text", "html": "<h2>Owners, leaders and initiative teams</h2>" }] }]
-        },
-        {
-          "template": "TwoColumn",
-          "columns": [
+          "type": "cards",
+          "columns": 2,
+          "items": [
             {
-              "controls": [
-                {
-                  "type": "text",
-                  "html": "<h3>Start a business case</h3><p>Help me build a business case for an AI idea. Ask me what you need in turn: problem, who it affects, current cost or time, proposed change, expected benefit, how we would measure it, who owns the benefit. Do not fill in any number I have not given you. Where I do not know something, mark it as pending baseline.</p><p><em>Every number must be labelled actual, estimated, target or pending baseline before this goes to anyone.</em></p>"
-                }
-              ]
+              "title": "Start a business case",
+              "body": ["Help me build a business case for an AI idea. Ask me what you need in turn: problem, who it affects, current cost or time, proposed change, expected benefit, how we would measure it, who owns the benefit. Do not fill in any number I have not given you. Where I do not know something, mark it as pending baseline."],
+              "meta": "Every number must be labelled actual, estimated, target or pending baseline before this goes to anyone.",
+              "tone": "gold"
             },
             {
-              "controls": [
-                {
-                  "type": "text",
-                  "html": "<h3>Weekly closeout</h3><p>Look at my last five working days across my mail, calendar and files. Give me five sections and nothing else: Done, Moved, Owed, Waiting on someone else, Didn't move. Use only what you can see. If you cannot tell whether something finished, put it in Moved and say why. Never guess at an outcome.</p><p><em>Your own mail and calendar. Correct anything wrong before treating it as a record.</em></p>"
-                }
-              ]
+              "title": "Weekly closeout",
+              "body": ["Look at my last five working days across my mail, calendar and files. Give me five sections and nothing else: Done, Moved, Owed, Waiting on someone else, Didn't move. Use only what you can see. If you cannot tell whether something finished, put it in Moved and say why. Never guess at an outcome."],
+              "meta": "Your own mail and calendar. Correct anything wrong before treating it as a record.",
+              "tone": "teal"
             }
           ]
         },
+        { "type": "heading", "level": 2, "text": "Policy, functional and content owners" },
         {
-          "template": "OneColumn",
-          "columns": [{ "controls": [{ "type": "text", "html": "<h2>Policy, functional and content owners</h2>" }] }]
-        },
-        {
-          "template": "TwoColumn",
-          "columns": [
+          "type": "cards",
+          "columns": 2,
+          "items": [
             {
-              "controls": [
-                {
-                  "type": "text",
-                  "html": "<h3>Synthesise research with sources</h3><p>Synthesise the sources I have given you into a short brief. For every claim, say which source it came from. Where sources disagree, say so rather than picking one. List what you could not find.</p><p><em>Check every citation resolves before circulating.</em></p>"
-                }
-              ]
+              "title": "Synthesise research with sources",
+              "body": ["Synthesise the sources I have given you into a short brief. For every claim, say which source it came from. Where sources disagree, say so rather than picking one. List what you could not find."],
+              "meta": "Check every citation resolves before circulating.",
+              "tone": "blue"
             },
             {
-              "controls": [
-                {
-                  "type": "text",
-                  "html": "<h3>Show me your uncertainty</h3><p>After your answer, list anything you were unsure about and what you would need in order to be sure.</p><p><em>Add this to any prompt whose output someone else will rely on.</em></p>"
-                }
-              ]
+              "title": "Show me your uncertainty",
+              "body": ["After your answer, list anything you were unsure about and what you would need in order to be sure."],
+              "meta": "Add this to any prompt whose output someone else will rely on.",
+              "tone": "violet"
             }
           ]
         },
+        { "type": "heading", "level": 2, "text": "Analysts and technical teams" },
         {
-          "template": "OneColumn",
-          "columns": [{ "controls": [{ "type": "text", "html": "<h2>Analysts and technical teams</h2>" }] }]
-        },
-        {
-          "template": "TwoColumn",
-          "columns": [
+          "type": "cards",
+          "columns": 2,
+          "items": [
             {
-              "controls": [
-                {
-                  "type": "text",
-                  "html": "<h3>Explain this spreadsheet</h3><p>Look at this spreadsheet and tell me: what it appears to measure, which columns look calculated, anything that looks like an error or an outlier, and three questions I should ask the owner.</p><p><em>Approved internal data only. No customer or patient records.</em></p>"
-                }
-              ]
+              "title": "Explain this spreadsheet",
+              "body": ["Look at this spreadsheet and tell me: what it appears to measure, which columns look calculated, anything that looks like an error or an outlier, and three questions I should ask the owner."],
+              "meta": "Approved internal data only. No customer or patient records.",
+              "tone": "cyan"
             },
             {
-              "controls": [
-                {
-                  "type": "text",
-                  "html": "<h3>Build your own</h3><p>I do this task about once a week: [describe it]. Ask me whatever you need to know, then write me a prompt I can reuse every time. Tell me what information you will need each time and what you will not be able to see.</p><p><em>If it works, contribute it to the <a href=\"{Page:prompts}\">Prompts library</a>.</em></p>"
-                }
-              ]
+              "title": "Build your own",
+              "body": ["I do this task about once a week: [describe it]. Ask me whatever you need to know, then write me a prompt I can reuse every time. Tell me what information you will need each time and what you will not be able to see."],
+              "meta": "If it works, contribute it to the [Prompts library]({Page:prompts}).",
+              "tone": "gold"
             }
           ]
         },
-        {
-          "template": "OneColumn",
-          "columns": [
-            {
-              "controls": [
-                {
-                  "type": "text",
-                  "html": "<h2>What this page does not do</h2><p>It does not approve a specific tool, dataset or workflow for you. It does not replace {OrganizationName} policy. It does not make the output correct — every prompt names a human check, and the check is the part that matters.</p><p>All prompts here are Draft — in review in the <a href=\"{Page:prompts}\">Prompts library</a>. Use them on your own work. Their output is not {OrganizationName} guidance. Read back {StatusDate}.</p>"
-                }
-              ]
-            }
-          ]
-        }
+        { "type": "heading", "level": 2, "text": "What this page does not do" },
+        { "type": "paragraph", "text": "It does not approve a specific tool, dataset or workflow for you. It does not replace {OrganizationName} policy. It does not make the output correct — every prompt names a human check, and the check is the part that matters." },
+        { "type": "paragraph", "text": "All prompts here are Draft — in review in the [Prompts library]({Page:prompts}). Use them on your own work. Their output is not {OrganizationName} guidance. Read back {StatusDate}." }
       ]
     },
     {
@@ -402,103 +280,78 @@
       "file": "Requests.aspx",
       "commentsEnabled": true,
       "permissions": "inherit",
-      "sections": [
+      "instance": { "view": "page", "pageKey": "requests", "contentUrl": "SiteAssets/ai-coe-pages.json", "layout": "wide", "organizationName": "{OrganizationName}" },
+      "blocks": [
+        { "type": "heading", "level": 2, "text": "Just ask. We will tell you which lane you are in." },
+        { "type": "paragraph", "text": "You do not need to know whether something needs approval. Describe what you want to do and you get an answer in the same conversation." },
+        { "type": "paragraph", "text": "[Ask the AI CoE]({Url:ConciergeUrl}) and choose **Can I just do this** | [Or message us on Teams]({Url:TeamsUrl})" },
+        { "type": "heading", "level": 2, "text": "The three lanes" },
         {
-          "template": "OneColumn",
-          "columns": [
+          "type": "lanes",
+          "items": [
             {
-              "controls": [
-                {
-                  "type": "text",
-                  "html": "<h2>Just ask. We will tell you which lane you are in.</h2><p>You do not need to know whether something needs approval. Describe what you want to do and you get an answer in the same conversation.</p><p><a href=\"{Url:ConciergeUrl}\">Ask the AI CoE</a> and choose <strong>Can I just do this</strong> | <a href=\"{Url:TeamsUrl}\">Or message us on Teams</a></p>"
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "template": "OneColumn",
-          "columns": [{ "controls": [{ "type": "text", "html": "<h2>The three lanes</h2>" }] }]
-        },
-        {
-          "template": "ThreeColumn",
-          "columns": [
-            {
-              "controls": [
-                {
-                  "type": "text",
-                  "html": "<h3>Green — just do it</h3><p>No approval needed. You get the prompt or the steps and you are done. <strong>Most requests are green</strong> and you will be told so plainly.</p><p><em>Nothing to submit. Nothing to wait for.</em></p>"
-                }
-              ]
+              "tone": "green",
+              "title": "Green — just do it",
+              "body": ["No approval needed. You get the prompt or the steps and you are done. **Most requests are green** and you will be told so plainly."],
+              "note": "Nothing to submit. Nothing to wait for."
             },
             {
-              "controls": [
-                {
-                  "type": "text",
-                  "html": "<h3>Amber — needs a person</h3><p>PHI, customer data, credentials, regulated information, spend, new tool access, or a policy question.</p><p>The Concierge names who it goes to and writes the request for you in one block you can send. <em>You do not fill anything in.</em></p>"
-                }
-              ]
+              "tone": "amber",
+              "title": "Amber — needs a person",
+              "body": [
+                "PHI, customer data, credentials, regulated information, spend, new tool access, or a policy question.",
+                "The Concierge names who it goes to and writes the request for you in one block you can send."
+              ],
+              "note": "You do not fill anything in."
             },
             {
-              "controls": [
-                {
-                  "type": "text",
-                  "html": "<h3>Red — needs a business case</h3><p>Worth doing, but it needs sizing before anyone commits.</p><p>The Concierge interviews you one question at a time and produces the case. It will not invent a number you have not given it. <em>Unknowns are marked pending baseline, not guessed.</em></p>"
-                }
-              ]
+              "tone": "red",
+              "title": "Red — needs a business case",
+              "body": [
+                "Worth doing, but it needs sizing before anyone commits.",
+                "The Concierge interviews you one question at a time and produces the case. It will not invent a number you have not given it."
+              ],
+              "note": "Unknowns are marked pending baseline, not guessed."
             }
           ]
         },
         {
-          "template": "TwoColumn",
-          "columns": [
+          "type": "cards",
+          "columns": 2,
+          "items": [
             {
-              "controls": [
-                {
-                  "type": "text",
-                  "html": "<h3>What we do not ask you to do</h3><p>Fill in fields we could have asked you about in conversation. Know the right category before you start. Write a business case unaided. Chase your own request. Keep a reference number to prove you asked.</p><p>If any of that happens, it is a fault in the service, not in you. Tell us.</p>"
-                }
-              ]
+              "title": "What we do not ask you to do",
+              "body": [
+                "Fill in fields we could have asked you about in conversation. Know the right category before you start. Write a business case unaided. Chase your own request. Keep a reference number to prove you asked.",
+                "If any of that happens, it is a fault in the service, not in you. Tell us."
+              ],
+              "tone": "teal"
             },
             {
-              "controls": [
-                {
-                  "type": "text",
-                  "html": "<h3>Register AI you already use</h3><p>No penalty, ever. Shadow use is a signal, not a discipline problem — it tells the CoE what people actually need.</p><p>Just say what you use and what for. That is the whole thing.</p>"
-                }
-              ]
+              "title": "Register AI you already use",
+              "body": [
+                "No penalty, ever. Shadow use is a signal, not a discipline problem — it tells the CoE what people actually need.",
+                "Just say what you use and what for. That is the whole thing."
+              ],
+              "tone": "blue"
             }
           ]
         },
+        { "type": "heading", "level": 2, "text": "If you would rather use a form" },
+        { "type": "paragraph", "text": "The private-pilot intake form is still here. It is the fallback, not the front door." },
         {
-          "template": "OneColumn",
-          "columns": [
-            {
-              "controls": [
-                {
-                  "type": "text",
-                  "html": "<h2>If you would rather use a form</h2><p>The private-pilot intake form is still here. It is the fallback, not the front door.</p>"
-                },
-                {
-                  "type": "frontDoor",
-                  "properties": {
-                    "view": "home",
-                    "layout": "wide",
-                    "returnUrl": "",
-                    "organizationName": "{OrganizationName}",
-                    "pageIdea": "SitePages/Explore-an-AI-idea.aspx",
-                    "pageToolCheck": "SitePages/Check-a-tool-or-task.aspx",
-                    "pageTeamUsage": "SitePages/Register-team-AI-use.aspx",
-                    "pageHelpTraining": "SitePages/Get-help-or-training.aspx",
-                    "pageFeedback": "SitePages/Share-feedback.aspx",
-                    "pageTelemetry": "SitePages/Status.aspx",
-                    "pageAdmin": "SitePages/AI-CoE-admin-dashboard.aspx",
-                    "pagePolicy": ""
-                  }
-                }
-              ]
-            }
-          ]
+          "type": "piece",
+          "piece": "home",
+          "pages": {
+            "idea": "{Page:idea}",
+            "toolCheck": "{Page:toolCheck}",
+            "teamUsage": "{Page:teamUsage}",
+            "helpTraining": "{Page:helpTraining}",
+            "feedback": "{Page:feedback}",
+            "telemetry": "{Page:status}",
+            "admin": "{Page:admin}",
+            "policy": ""
+          }
         }
       ]
     },
@@ -508,71 +361,56 @@
       "file": "Prompts.aspx",
       "commentsEnabled": true,
       "permissions": "inherit",
-      "sections": [
+      "instance": { "view": "page", "pageKey": "prompts", "contentUrl": "SiteAssets/ai-coe-pages.json", "layout": "wide", "organizationName": "{OrganizationName}" },
+      "blocks": [
+        { "type": "paragraph", "text": "Reusable starting points. A prompt here saves you writing one from scratch. It does not make the output approved — you still do the human check named on the record." },
+        { "type": "paragraph", "text": "[Open the full library]({Url:PromptLibraryUrl}) — every record with its body, data boundary, human check and status." },
+        { "type": "heading", "level": 2, "text": "Start with these three" },
         {
-          "template": "OneColumn",
-          "columns": [
+          "type": "cards",
+          "columns": 3,
+          "items": [
             {
-              "controls": [
-                {
-                  "type": "text",
-                  "html": "<p>Reusable starting points. A prompt here saves you writing one from scratch. It does not make the output approved — you still do the human check named on the record.</p><p><a href=\"{Url:PromptLibraryUrl}\">Open the full library</a> — every record with its body, data boundary, human check and status.</p>"
-                }
-              ]
+              "title": "Clear my admin queue",
+              "body": ["Go through my unread mail from the last three days. Group it into: needs a reply from me, needs a decision, FYI only. For each one give me the sender, one line of context, and what you think I should do."],
+              "meta": "{PromptIdAdminQueue} · Copilot Chat · about 2 minutes",
+              "tone": "teal"
+            },
+            {
+              "title": "Create my morning brief",
+              "body": ["Look at my calendar and mail for today. Tell me what I need to prepare for, what I owe someone, and where my two free blocks are. Keep it under 150 words."],
+              "meta": "{PromptIdMorningBrief} · Copilot Chat · about 2 minutes",
+              "tone": "blue"
+            },
+            {
+              "title": "Teach my repeatable work",
+              "body": ["I do this task about once a week: [describe it]. Ask me whatever you need to know, then write me a prompt I can reuse every time. Tell me what information you will need each time and what you will not be able to see."],
+              "meta": "{PromptIdRepeatableWork} · Copilot Chat · about 5 minutes",
+              "tone": "violet"
             }
           ]
         },
         {
-          "template": "OneColumn",
-          "columns": [{ "controls": [{ "type": "text", "html": "<h2>Start with these three</h2>" }] }]
-        },
-        {
-          "template": "ThreeColumn",
-          "columns": [
+          "type": "cards",
+          "columns": 2,
+          "items": [
             {
-              "controls": [
-                {
-                  "type": "text",
-                  "html": "<h3>Clear my admin queue</h3><p>Go through my unread mail from the last three days. Group it into: needs a reply from me, needs a decision, FYI only. For each one give me the sender, one line of context, and what you think I should do.</p><p><em>{PromptIdAdminQueue} · Copilot Chat · about 2 minutes</em></p>"
-                }
-              ]
+              "title": "What is in the library",
+              "body": [
+                "**{PromptCount} records**, read back live on {StatusDate}. {PromptsAddedCount} added {PromptsAddedDate} and verified to run in Copilot Chat with Work IQ. {PromptTestRecordCount} are earlier test records, marked as such.",
+                "Status: {PromptStatusCounts}.",
+                "Also in there: check before you paste · summarise to decisions · answer only from this source · show me your uncertainty · prepare me for this meeting · start a business case · synthesise research with sources · explain this spreadsheet · weekly closeout."
+              ],
+              "tone": "teal"
             },
             {
-              "controls": [
-                {
-                  "type": "text",
-                  "html": "<h3>Create my morning brief</h3><p>Look at my calendar and mail for today. Tell me what I need to prepare for, what I owe someone, and where my two free blocks are. Keep it under 150 words.</p><p><em>{PromptIdMorningBrief} · Copilot Chat · about 2 minutes</em></p>"
-                }
-              ]
-            },
-            {
-              "controls": [
-                {
-                  "type": "text",
-                  "html": "<h3>Teach my repeatable work</h3><p>I do this task about once a week: [describe it]. Ask me whatever you need to know, then write me a prompt I can reuse every time. Tell me what information you will need each time and what you will not be able to see.</p><p><em>{PromptIdRepeatableWork} · Copilot Chat · about 5 minutes</em></p>"
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "template": "TwoColumn",
-          "columns": [
-            {
-              "controls": [
-                {
-                  "type": "text",
-                  "html": "<h2>What is in the library</h2><p><strong>{PromptCount} records</strong>, read back live on {StatusDate}. {PromptsAddedCount} added {PromptsAddedDate} and verified to run in Copilot Chat with Work IQ. {PromptTestRecordCount} are earlier test records, marked as such.</p><p>Status: {PromptStatusCounts}.</p><p>Also in there: check before you paste · summarise to decisions · answer only from this source · show me your uncertainty · prepare me for this meeting · start a business case · synthesise research with sources · explain this spreadsheet · weekly closeout.</p>"
-                }
-              ]
-            },
-            {
-              "controls": [
-                {
-                  "type": "text",
-                  "html": "<h2>What Draft means</h2><p><strong>Nothing here is approved yet, and no record has a reviewer.</strong></p><p>Draft means you may use it on your own work and judge the result yourself. It does not mean the output can be handed to someone else as {OrganizationName} guidance.</p><p>Approval needs a named reviewer and a decision. That has not happened, and saying otherwise would be inventing a status.</p>"
-                }
-              ]
+              "title": "What Draft means",
+              "body": [
+                "**Nothing here is approved yet, and no record has a reviewer.**",
+                "Draft means you may use it on your own work and judge the result yourself. It does not mean the output can be handed to someone else as {OrganizationName} guidance.",
+                "Approval needs a named reviewer and a decision. That has not happened, and saying otherwise would be inventing a status."
+              ],
+              "tone": "gold"
             }
           ]
         }
@@ -584,75 +422,51 @@
       "file": "Status.aspx",
       "commentsEnabled": true,
       "permissions": "inherit",
-      "sections": [
+      "instance": { "view": "page", "pageKey": "status", "contentUrl": "SiteAssets/ai-coe-pages.json", "layout": "wide", "organizationName": "{OrganizationName}", "telemetryProvider": "{TelemetryProvider}" },
+      "blocks": [
+        { "type": "paragraph", "text": "Everything on this page is what is actually true on {StatusDate}, not what is planned." },
         {
-          "template": "OneColumn",
-          "columns": [
+          "type": "cards",
+          "columns": 2,
+          "items": [
             {
-              "controls": [
-                { "type": "text", "html": "<p>Everything on this page is what is actually true on {StatusDate}, not what is planned.</p>" }
-              ]
-            }
-          ]
-        },
-        {
-          "template": "TwoColumn",
-          "columns": [
-            {
-              "controls": [
-                {
-                  "type": "text",
-                  "html": "<h2>What is running</h2><p><strong>Concierge</strong> — answering, grounded in {ConciergeSourceCount} approved sources. Newest source dated {ConciergeNewestSourceDate}, so it cannot answer on anything more recent. It says when something is not established rather than guessing.</p><p><strong>Prompts library</strong> — {PromptCount} records, all Draft — in review. Usable on your own work; not {OrganizationName} guidance.</p><p><strong>Learn</strong> — four short exercises. No completion form.</p>"
-                }
-              ]
+              "title": "What is running",
+              "body": [
+                "**Concierge** — answering, grounded in {ConciergeSourceCount} approved sources. Newest source dated {ConciergeNewestSourceDate}, so it cannot answer on anything more recent. It says when something is not established rather than guessing.",
+                "**Prompts library** — {PromptCount} records, all Draft — in review. Usable on your own work; not {OrganizationName} guidance.",
+                "**Learn** — four short exercises. No completion form."
+              ],
+              "tone": "teal"
             },
             {
-              "controls": [
-                {
-                  "type": "text",
-                  "html": "<h2>What is not running</h2><p><strong>Teams pilot</strong> — not active. Separate approval required.</p><p><strong>Leadership reporting</strong> — not established. No governed reporting view exists.</p><p><strong>Scheduled or automated runs</strong> — none. Everything here is something a person runs by hand.</p><p><strong>Self-service status lookup</strong> — not built.</p>"
-                }
-              ]
+              "title": "What is not running",
+              "body": [
+                "**Teams pilot** — not active. Separate approval required.",
+                "**Leadership reporting** — not established. No governed reporting view exists.",
+                "**Scheduled or automated runs** — none. Everything here is something a person runs by hand.",
+                "**Self-service status lookup** — not built."
+              ],
+              "tone": "gold"
             }
           ]
         },
+        { "type": "piece", "piece": "telemetry" },
         {
-          "template": "OneColumn",
-          "columns": [
+          "type": "cards",
+          "columns": 2,
+          "items": [
             {
-              "controls": [
-                {
-                  "type": "frontDoor",
-                  "properties": {
-                    "view": "telemetry",
-                    "layout": "wide",
-                    "returnUrl": "",
-                    "organizationName": "{OrganizationName}",
-                    "telemetryProvider": "{TelemetryProvider}"
-                  }
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "template": "TwoColumn",
-          "columns": [
-            {
-              "controls": [
-                {
-                  "type": "text",
-                  "html": "<h2>Checking a request you sent</h2><p>Keep the acknowledgement you received — it carries your record id. To find out where it stands, ask the AI CoE with that id, or use <a href=\"{Page:requests}\">Requests</a> and say you are following up. A person answers. There is no automated reply and no agreed response time.</p>"
-                }
-              ]
+              "title": "Checking a request you sent",
+              "body": ["Keep the acknowledgement you received — it carries your record id. To find out where it stands, ask the AI CoE with that id, or use [Requests]({Page:requests}) and say you are following up. A person answers. There is no automated reply and no agreed response time."],
+              "tone": "blue"
             },
             {
-              "controls": [
-                {
-                  "type": "text",
-                  "html": "<h2>If something is wrong</h2><p>Tell the AI CoE. Wrong answers, broken links, a page that contradicts another page — all useful, none of it a complaint. This is a private pilot and finding faults is the point.</p><p><strong>What this page will never show:</strong> an adoption number, a time-saved figure or a benefit claim without a measured baseline behind it. If you see one unlabelled, that is a fault worth reporting.</p>"
-                }
-              ]
+              "title": "If something is wrong",
+              "body": [
+                "Tell the AI CoE. Wrong answers, broken links, a page that contradicts another page — all useful, none of it a complaint. This is a private pilot and finding faults is the point.",
+                "**What this page will never show:** an adoption number, a time-saved figure or a benefit claim without a measured baseline behind it. If you see one unlabelled, that is a fault worth reporting."
+              ],
+              "tone": "violet"
             }
           ]
         }
@@ -664,27 +478,7 @@
       "file": "Explore-an-AI-idea.aspx",
       "commentsEnabled": false,
       "permissions": "inherit",
-      "sections": [
-        {
-          "template": "OneColumn",
-          "columns": [
-            {
-              "controls": [
-                {
-                  "type": "frontDoor",
-                  "properties": {
-                    "view": "idea",
-                    "layout": "wide",
-                    "returnUrl": "SitePages/Requests.aspx",
-                    "organizationName": "{OrganizationName}",
-                    "draftServiceUrl": "{DraftServiceUrl}"
-                  }
-                }
-              ]
-            }
-          ]
-        }
-      ]
+      "instance": { "view": "idea", "layout": "wide", "returnUrl": "SitePages/Requests.aspx", "organizationName": "{OrganizationName}", "draftServiceUrl": "{DraftServiceUrl}" }
     },
     {
       "key": "toolCheck",
@@ -692,21 +486,7 @@
       "file": "Check-a-tool-or-task.aspx",
       "commentsEnabled": false,
       "permissions": "inherit",
-      "sections": [
-        {
-          "template": "OneColumn",
-          "columns": [
-            {
-              "controls": [
-                {
-                  "type": "frontDoor",
-                  "properties": { "view": "toolCheck", "layout": "wide", "returnUrl": "SitePages/Requests.aspx", "organizationName": "{OrganizationName}" }
-                }
-              ]
-            }
-          ]
-        }
-      ]
+      "instance": { "view": "toolCheck", "layout": "wide", "returnUrl": "SitePages/Requests.aspx", "organizationName": "{OrganizationName}" }
     },
     {
       "key": "teamUsage",
@@ -714,21 +494,7 @@
       "file": "Register-team-AI-use.aspx",
       "commentsEnabled": false,
       "permissions": "inherit",
-      "sections": [
-        {
-          "template": "OneColumn",
-          "columns": [
-            {
-              "controls": [
-                {
-                  "type": "frontDoor",
-                  "properties": { "view": "teamUsage", "layout": "wide", "returnUrl": "SitePages/Requests.aspx", "organizationName": "{OrganizationName}" }
-                }
-              ]
-            }
-          ]
-        }
-      ]
+      "instance": { "view": "teamUsage", "layout": "wide", "returnUrl": "SitePages/Requests.aspx", "organizationName": "{OrganizationName}" }
     },
     {
       "key": "helpTraining",
@@ -736,21 +502,7 @@
       "file": "Get-help-or-training.aspx",
       "commentsEnabled": false,
       "permissions": "inherit",
-      "sections": [
-        {
-          "template": "OneColumn",
-          "columns": [
-            {
-              "controls": [
-                {
-                  "type": "frontDoor",
-                  "properties": { "view": "helpTraining", "layout": "wide", "returnUrl": "SitePages/Requests.aspx", "organizationName": "{OrganizationName}" }
-                }
-              ]
-            }
-          ]
-        }
-      ]
+      "instance": { "view": "helpTraining", "layout": "wide", "returnUrl": "SitePages/Requests.aspx", "organizationName": "{OrganizationName}" }
     },
     {
       "key": "feedback",
@@ -758,21 +510,7 @@
       "file": "Share-feedback.aspx",
       "commentsEnabled": false,
       "permissions": "inherit",
-      "sections": [
-        {
-          "template": "OneColumn",
-          "columns": [
-            {
-              "controls": [
-                {
-                  "type": "frontDoor",
-                  "properties": { "view": "feedback", "layout": "wide", "returnUrl": "SitePages/Requests.aspx", "organizationName": "{OrganizationName}" }
-                }
-              ]
-            }
-          ]
-        }
-      ]
+      "instance": { "view": "feedback", "layout": "wide", "returnUrl": "SitePages/Requests.aspx", "organizationName": "{OrganizationName}" }
     },
     {
       "key": "admin",
@@ -780,21 +518,7 @@
       "file": "AI-CoE-admin-dashboard.aspx",
       "commentsEnabled": false,
       "permissions": "owners",
-      "sections": [
-        {
-          "template": "OneColumn",
-          "columns": [
-            {
-              "controls": [
-                {
-                  "type": "frontDoor",
-                  "properties": { "view": "admin", "layout": "wide", "returnUrl": "SitePages/Requests.aspx", "organizationName": "{OrganizationName}" }
-                }
-              ]
-            }
-          ]
-        }
-      ]
+      "instance": { "view": "admin", "layout": "wide", "returnUrl": "SitePages/Requests.aspx", "organizationName": "{OrganizationName}" }
     }
   ]
 }

@@ -44,3 +44,6 @@ __pycache__/
 
 # Operator-filled page provisioning parameters (site-specific; copy parameters.sample.json)
 sharepoint/pages/parameters.json
+
+# Local editor and preview tooling
+.claude/

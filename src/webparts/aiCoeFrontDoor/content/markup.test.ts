@@ -28,6 +28,18 @@ describe('in-text markup', () => {
     expect(parseMarkup('*unfinished')).toEqual([{ kind: 'text', text: '*unfinished' }]);
   });
 
+  it('starts a link at the innermost bracket', () => {
+    expect(parseMarkup('[describe it]. Then [Requests](SitePages/R.aspx).')).toEqual([
+      { kind: 'text', text: '[describe it]. Then ' },
+      { kind: 'link', label: 'Requests', href: 'SitePages/R.aspx' },
+      { kind: 'text', text: '.' }
+    ]);
+    expect(parseMarkup('[a [b](x)')).toEqual([
+      { kind: 'text', text: '[a ' },
+      { kind: 'link', label: 'b', href: 'x' }
+    ]);
+  });
+
   it('renders a link without a target as its label', () => {
     expect(parseMarkup('See [label]() now')).toEqual([{ kind: 'text', text: 'See label now' }]);
   });

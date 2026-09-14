@@ -1,13 +1,17 @@
 /**
- * Guards the page definition a site owner applies with the PnP script: six navigation pages plus the
- * form and admin pages, one front-door piece per page, links that resolve, tokens that are declared,
- * and no client or tenant names. Structure only; the wording belongs to the page authors.
+ * Guards the page definition a site owner applies with the PnP script: six navigation pages whose
+ * content the web part renders from typed blocks, the form and admin pages, one front-door instance
+ * per page, links that resolve, tokens that are declared, blocks the web part's parser accepts, and no
+ * client or tenant names. Structure only; the wording belongs to the page authors.
  */
 import * as fs from 'fs';
 import * as path from 'path';
 import { HOME_CARDS } from '../webparts/aiCoeFrontDoor/content/homeCards';
-import { FRONT_DOOR_VIEWS } from '../webparts/aiCoeFrontDoor/content/pageViews';
+import { CARD_TONES, DEFAULT_CONTENT_URL, LANE_TONES, parsePageDocument } from '../webparts/aiCoeFrontDoor/content/pageContent';
+import type { IPageDocument } from '../webparts/aiCoeFrontDoor/content/pageContent';
+import { FRONT_DOOR_VIEWS, PAGE_TARGETS } from '../webparts/aiCoeFrontDoor/content/pageViews';
 import { WORKFLOW_ORDER } from '../webparts/aiCoeFrontDoor/content/workflows/catalog';
+import * as icons from '../webparts/aiCoeFrontDoor/icons';
 import type { WorkflowId } from '../webparts/aiCoeFrontDoor/workflows/types';
 
 interface IParameter {
@@ -21,41 +25,13 @@ interface INavigationEntry {
   children?: INavigationEntry[];
 }
 
-interface ITextControl {
-  type: 'text';
-  html: string;
+interface IRawBlock {
+  type: string;
+  [field: string]: unknown;
 }
 
-interface IFrontDoorControl {
-  type: 'frontDoor';
-  properties: { [name: string]: string };
-}
-
-interface ILinkTarget {
-  page?: string;
-  url?: string;
-}
-
-interface IQuickLinkItem extends ILinkTarget {
-  title: string;
-}
-
-interface IQuickLinksControl {
-  type: 'quickLinks';
-  layout: string;
-  items: IQuickLinkItem[];
-}
-
-interface IButtonControl extends ILinkTarget {
-  type: 'button';
-  label: string;
-}
-
-type Control = ITextControl | IFrontDoorControl | IQuickLinksControl | IButtonControl;
-
-interface ISection {
-  template: string;
-  columns: { controls: Control[] }[];
+interface IRawItem {
+  [field: string]: unknown;
 }
 
 interface IPage {
@@ -64,11 +40,13 @@ interface IPage {
   file: string;
   commentsEnabled: boolean;
   permissions: string;
-  sections: ISection[];
+  instance: { [name: string]: string };
+  blocks?: IRawBlock[];
 }
 
 interface IPagesDefinition {
   componentId: string;
+  contentFile: string;
   parameters: { [name: string]: IParameter };
   navigation: INavigationEntry[];
   pages: IPage[];
@@ -76,10 +54,19 @@ interface IPagesDefinition {
 
 const ROOT: string = process.cwd();
 const PAGES_DIR: string = path.join(ROOT, 'sharepoint/pages');
-const PIECE_PAGES: string[] = ['requests', 'status', 'idea', 'toolCheck', 'teamUsage', 'helpTraining', 'feedback', 'admin'];
-const CONTENT_PAGES: string[] = ['startHere', 'learn', 'useAi', 'prompts'];
-const COLUMNS: { [template: string]: number } = { OneColumn: 1, TwoColumn: 2, ThreeColumn: 3 };
+const NAVIGATION_PAGES: string[] = ['startHere', 'learn', 'useAi', 'requests', 'prompts', 'status'];
+const PIECE_PAGES: string[] = ['idea', 'toolCheck', 'teamUsage', 'helpTraining', 'feedback', 'admin'];
+const BLOCK_TYPES: string[] = ['hero', 'heading', 'paragraph', 'tiles', 'cards', 'lanes', 'statusRow', 'piece'];
+const EXPECTED_BLOCKS: { [key: string]: string[] } = {
+  startHere: ['hero', 'heading', 'tiles', 'cards', 'cards', 'statusRow'],
+  learn: ['paragraph', 'paragraph', 'paragraph', 'cards', 'cards', 'heading', 'paragraph', 'paragraph', 'paragraph', 'paragraph', 'heading', 'paragraph'],
+  useAi: ['paragraph', 'paragraph', 'heading', 'cards', 'heading', 'cards', 'heading', 'cards', 'heading', 'cards', 'heading', 'paragraph', 'paragraph'],
+  requests: ['heading', 'paragraph', 'paragraph', 'heading', 'lanes', 'cards', 'heading', 'paragraph', 'piece'],
+  prompts: ['paragraph', 'paragraph', 'heading', 'cards', 'cards'],
+  status: ['paragraph', 'cards', 'piece', 'cards']
+};
 const TOKEN: RegExp = /\{([A-Za-z]+)(?::([A-Za-z]+))?\}/g;
+const LINK_TARGET: RegExp = /\]\(([^)\s]*)\)/g;
 
 function readJson<T>(file: string): T {
   return JSON.parse(fs.readFileSync(file, 'utf8').replace(/^\s*\/\/.*$/gm, '')) as T;
@@ -93,6 +80,7 @@ const manifest: { id: string; preconfiguredEntries: { properties: { [name: strin
 const manifestKeys: string[] = Object.keys(manifest.preconfiguredEntries[0].properties);
 const pageKeys: string[] = definition.pages.map((page: IPage): string => page.key);
 const pageFiles: string[] = definition.pages.map((page: IPage): string => page.file);
+const iconNames: string[] = Object.keys(icons);
 
 function page(key: string): IPage {
   const found: IPage | undefined = definition.pages.filter((candidate: IPage): boolean => candidate.key === key)[0];
@@ -102,54 +90,107 @@ function page(key: string): IPage {
   return found;
 }
 
-function controlsOf(target: IPage): Control[] {
-  const controls: Control[] = [];
-  for (const section of target.sections) {
-    for (const column of section.columns) {
-      controls.push(...column.controls);
+function blocksOf(key: string): IRawBlock[] {
+  return page(key).blocks ?? [];
+}
+
+function itemsOf(block: IRawBlock): IRawItem[] {
+  return (block.items ?? []) as IRawItem[];
+}
+
+/** Every string anywhere in a value, depth first. */
+function stringsIn(value: unknown, into: string[] = []): string[] {
+  if (typeof value === 'string') {
+    into.push(value);
+  } else if (Array.isArray(value)) {
+    for (const entry of value) {
+      stringsIn(entry, into);
+    }
+  } else if (value !== null && typeof value === 'object') {
+    for (const key of Object.keys(value as object)) {
+      stringsIn((value as { [key: string]: unknown })[key], into);
     }
   }
-  return controls;
+  return into;
 }
 
-function frontDoorsOf(target: IPage): IFrontDoorControl[] {
-  return controlsOf(target).filter((control: Control): control is IFrontDoorControl => control.type === 'frontDoor');
-}
-
-function linkTargets(): ILinkTarget[] {
-  const targets: ILinkTarget[] = [];
-  for (const target of definition.pages) {
-    for (const control of controlsOf(target)) {
-      if (control.type === 'quickLinks') {
-        targets.push(...control.items);
-      } else if (control.type === 'button') {
-        targets.push(control);
+/** Every link target in the blocks: tile hrefs, calls to action, the home piece's pages and in-text links. */
+function linkTargets(): string[] {
+  const targets: string[] = [];
+  for (const key of NAVIGATION_PAGES) {
+    for (const block of blocksOf(key)) {
+      if (block.type === 'tiles') {
+        targets.push(...itemsOf(block).map((item: IRawItem): string => String(item.href)));
+      }
+      if (block.type === 'hero' && block.cta !== undefined) {
+        targets.push(String((block.cta as { href: unknown }).href));
+      }
+      if (block.type === 'piece' && block.pages !== undefined) {
+        targets.push(...stringsIn(block.pages).filter((value: string): boolean => value !== ''));
+      }
+      for (const text of stringsIn(block)) {
+        let match: RegExpExecArray | null = LINK_TARGET.exec(text);
+        while (match !== null) {
+          targets.push(match[1]);
+          match = LINK_TARGET.exec(text);
+        }
       }
     }
   }
   return targets;
 }
 
-function expectLinkTarget(target: ILinkTarget): void {
-  if (target.page !== undefined) {
-    expect(pageKeys).toContain(target.page);
-    expect(target.url).toBeUndefined();
+function expectLinkTarget(target: string): void {
+  const match: RegExpExecArray | null = /^\{(Page|Url):([A-Za-z]+)\}$/.exec(target);
+  expect(match).not.toBeNull();
+  const [, kind, name] = match as RegExpExecArray;
+  if (kind === 'Page') {
+    expect(pageKeys).toContain(name);
+    expect(name).not.toBe('admin');
   } else {
-    expect(target.url).toMatch(/^\{Url:[A-Za-z]+\}$/);
-    const name: string = (target.url as string).slice(5, -1);
     expect(definition.parameters[name]?.kind).toBe('url');
   }
 }
 
+/**
+ * What the script does to the definition before uploading it: page links become URLs, URL parameters
+ * are filled or, when blank, dropped from in-text links and from tiles. Text tokens become values.
+ */
+function resolveDocument(urlValues: { [name: string]: string }): string {
+  const pages: { [key: string]: unknown } = {};
+  for (const key of NAVIGATION_PAGES) {
+    const resolved: string = JSON.stringify({ title: page(key).title, blocks: blocksOf(key) })
+      .replace(/\[([^[\]]+)\]\(\{Url:([A-Za-z]+)\}\)/g, (whole: string, label: string, name: string): string => (urlValues[name] ? whole : label))
+      .replace(/\{Page:([A-Za-z]+)\}/g, (whole: string, name: string): string => `https://example.invalid/sites/ai/SitePages/${page(name).file}`)
+      .replace(/\{Url:([A-Za-z]+)\}/g, (whole: string, name: string): string => urlValues[name] ?? '')
+      .replace(/\{([A-Za-z]+)\}/g, 'value');
+    const parsedPage: { title: string; blocks: IRawBlock[] } = JSON.parse(resolved) as { title: string; blocks: IRawBlock[] };
+    parsedPage.blocks = parsedPage.blocks.map((block: IRawBlock): IRawBlock => {
+      if (block.type === 'tiles') {
+        return { ...block, items: itemsOf(block).filter((item: IRawItem): boolean => item.href !== '') };
+      }
+      if (block.type === 'hero' && block.cta !== undefined && (block.cta as { href: string }).href === '') {
+        const withoutCta: IRawBlock = { ...block };
+        delete withoutCta.cta;
+        return withoutCta;
+      }
+      return block;
+    });
+    pages[key] = parsedPage;
+  }
+  return JSON.stringify({ version: 1, pages });
+}
+
 describe('front door page definition', () => {
-  it('targets the web part of this package', () => {
+  it('targets the web part of this package and names the content document', () => {
     expect(definition.componentId).toBe(manifest.id);
     expect(definition.componentId).toBe('cf2e5904-0703-4fe4-ae5a-ec012d6fa689');
+    expect(`SiteAssets/${definition.contentFile}`).toBe(DEFAULT_CONTENT_URL);
   });
 
   it('mirrors the six navigation pages in order', () => {
     expect(definition.navigation.map((entry: INavigationEntry): string => entry.title)).toEqual(['Start here', 'Learn', 'Use AI', 'Requests', 'Prompts', 'Status']);
-    expect(definition.navigation.map((entry: INavigationEntry): string => entry.page)).toEqual(['startHere', 'learn', 'useAi', 'requests', 'prompts', 'status']);
+    expect(definition.navigation.map((entry: INavigationEntry): string => entry.page)).toEqual(NAVIGATION_PAGES);
     for (const entry of definition.navigation) {
       expect(pageKeys).toContain(entry.page);
     }
@@ -163,62 +204,107 @@ describe('front door page definition', () => {
     expect(children.map((child: INavigationEntry): string => child.title)).toEqual(WORKFLOW_ORDER.map((id: WorkflowId): string => HOME_CARDS[id].title));
   });
 
-  it('defines twelve pages with unique keys and files', () => {
+  it('defines twelve pages with unique keys and files, one instance each', () => {
     expect(definition.pages).toHaveLength(12);
     expect(new Set(pageKeys).size).toBe(12);
     expect(new Set(pageFiles).size).toBe(12);
-    expect(pageKeys.slice().sort()).toEqual([...PIECE_PAGES, ...CONTENT_PAGES].sort());
+    expect(pageKeys.slice().sort()).toEqual([...NAVIGATION_PAGES, ...PIECE_PAGES].sort());
     for (const target of definition.pages) {
       expect(target.file).toMatch(/^[A-Za-z0-9-]+\.aspx$/);
       expect(target.title.length).toBeGreaterThan(0);
       expect(typeof target.commentsEnabled).toBe('boolean');
       expect(['inherit', 'owners']).toContain(target.permissions);
+      expect(typeof target.instance).toBe('object');
+      expect((target as { sections?: unknown }).sections).toBeUndefined();
     }
     for (const id of WORKFLOW_ORDER) {
       expect(page(id).title).toBe(HOME_CARDS[id].title);
     }
   });
 
-  it('places exactly one front-door piece on the eight piece pages and none on the four content pages', () => {
-    for (const key of PIECE_PAGES) {
-      expect(frontDoorsOf(page(key))).toHaveLength(1);
+  it('renders the six navigation pages as content pages of the shared document', () => {
+    for (const key of NAVIGATION_PAGES) {
+      const instance: { [name: string]: string } = page(key).instance;
+      expect(instance.view).toBe('page');
+      expect(instance.pageKey).toBe(key);
+      expect(instance.contentUrl).toBe(DEFAULT_CONTENT_URL);
+      expect(instance.layout).toBe('wide');
+      expect(instance.organizationName).toBe('{OrganizationName}');
+      expect(instance.telemetryProvider).toBe(key === 'status' ? '{TelemetryProvider}' : undefined);
+      expect(blocksOf(key).length).toBeGreaterThan(0);
     }
-    for (const key of CONTENT_PAGES) {
-      expect(frontDoorsOf(page(key))).toHaveLength(0);
+    for (const key of PIECE_PAGES) {
+      expect(page(key).blocks).toBeUndefined();
     }
   });
 
-  it('gives every piece a known non-legacy view, manifest property keys and links to defined pages', () => {
-    const expectedViews: { [key: string]: string } = { requests: 'home', status: 'telemetry', admin: 'admin' };
-    for (const id of WORKFLOW_ORDER) {
-      expectedViews[id] = id;
-    }
+  it('gives every piece page its workflow or dashboard, returning to Requests', () => {
     for (const key of PIECE_PAGES) {
-      const properties: { [name: string]: string } = frontDoorsOf(page(key))[0].properties;
-      expect(FRONT_DOOR_VIEWS).toContain(properties.view);
-      expect(properties.view).toBe(expectedViews[key]);
-      expect(['wide', 'narrow']).toContain(properties.layout);
-      expect(properties.organizationName).toBe('{OrganizationName}');
-      for (const name of Object.keys(properties)) {
+      const instance: { [name: string]: string } = page(key).instance;
+      expect(FRONT_DOOR_VIEWS).toContain(instance.view);
+      expect(instance.view).toBe(key);
+      expect(instance.layout).toBe('wide');
+      expect(instance.returnUrl).toBe('SitePages/Requests.aspx');
+      expect(instance.organizationName).toBe('{OrganizationName}');
+      expect(instance.draftServiceUrl).toBe(key === 'idea' ? '{DraftServiceUrl}' : undefined);
+    }
+    for (const target of definition.pages) {
+      for (const name of Object.keys(target.instance)) {
         expect(manifestKeys).toContain(name);
-        if (name === 'returnUrl' || name.indexOf('page') === 0) {
-          const value: string = properties[name];
-          if (value !== '') {
-            expect(value.indexOf('SitePages/')).toBe(0);
-            expect(pageFiles).toContain(value.slice('SitePages/'.length));
+      }
+    }
+  });
+
+  it('lays out each navigation page as the reference site does', () => {
+    for (const key of NAVIGATION_PAGES) {
+      expect(blocksOf(key).map((block: IRawBlock): string => block.type)).toEqual(EXPECTED_BLOCKS[key]);
+      for (const block of blocksOf(key)) {
+        expect(BLOCK_TYPES).toContain(block.type);
+        if (block.type === 'heading') {
+          expect([2, 3]).toContain(block.level);
+        }
+        if (block.type === 'cards') {
+          expect([2, 3]).toContain(block.columns);
+          expect(itemsOf(block)).toHaveLength(block.columns as number);
+          for (const item of itemsOf(block)) {
+            expect(CARD_TONES).toContain(item.tone);
+            expect(Array.isArray(item.body)).toBe(true);
+          }
+        }
+        if (block.type === 'lanes') {
+          expect(itemsOf(block).map((item: IRawItem): unknown => item.tone)).toEqual(LANE_TONES);
+        }
+        if (block.type === 'tiles') {
+          expect(itemsOf(block)).toHaveLength(4);
+          for (const item of itemsOf(block)) {
+            expect(iconNames).toContain(item.icon);
+            expect(CARD_TONES).toContain(item.tone);
           }
         }
       }
-      expect(properties.draftServiceUrl).toBe(key === 'idea' ? '{DraftServiceUrl}' : undefined);
-      expect(properties.telemetryProvider).toBe(key === 'status' ? '{TelemetryProvider}' : undefined);
     }
-    const home: { [name: string]: string } = frontDoorsOf(page('requests'))[0].properties;
-    for (const name of ['pageIdea', 'pageToolCheck', 'pageTeamUsage', 'pageHelpTraining', 'pageFeedback', 'pageTelemetry', 'pageAdmin']) {
-      expect(home[name]).not.toBe('');
+    const hero: IRawBlock = blocksOf('startHere')[0];
+    expect(hero.cta).toEqual({ label: 'Start a request', href: '{Page:requests}' });
+  });
+
+  it('embeds the home tiles once on Requests and the telemetry strip once on Status', () => {
+    const pieces: { key: string; block: IRawBlock }[] = [];
+    for (const key of NAVIGATION_PAGES) {
+      for (const block of blocksOf(key)) {
+        if (block.type === 'piece') {
+          pieces.push({ key, block });
+        }
+      }
     }
-    for (const id of [...WORKFLOW_ORDER, 'admin']) {
-      expect(frontDoorsOf(page(id))[0].properties.returnUrl).not.toBe('');
+    expect(pieces.map((piece: { key: string; block: IRawBlock }): string => `${piece.key}:${String(piece.block.piece)}`)).toEqual(['requests:home', 'status:telemetry']);
+    const pages: { [target: string]: string } = pieces[0].block.pages as { [target: string]: string };
+    expect(Object.keys(pages).sort()).toEqual(PAGE_TARGETS.slice().sort());
+    for (const id of WORKFLOW_ORDER) {
+      expect(pages[id]).toBe(`{Page:${id}}`);
     }
+    expect(pages.telemetry).toBe('{Page:status}');
+    expect(pages.admin).toBe('{Page:admin}');
+    expect(pages.policy).toBe('');
   });
 
   it('keeps the admin page owners-only and out of navigation and links', () => {
@@ -233,49 +319,20 @@ describe('front door page definition', () => {
       navigated.push(entry.page, ...(entry.children ?? []).map((child: INavigationEntry): string => child.page));
     }
     expect(navigated).not.toContain('admin');
-    expect(linkTargets().map((target: ILinkTarget): string | undefined => target.page)).not.toContain('admin');
   });
 
-  it('resolves every quick-link and button target', () => {
-    const targets: ILinkTarget[] = linkTargets();
-    expect(targets.length).toBeGreaterThan(0);
+  it('resolves every link target to a page or a URL parameter, and carries no HTML', () => {
+    const targets: string[] = linkTargets();
+    expect(targets.length).toBeGreaterThan(10);
     for (const target of targets) {
+      if (target === '{Page:admin}') {
+        continue;
+      }
       expectLinkTarget(target);
     }
-    for (const control of definition.pages.flatMap(controlsOf)) {
-      if (control.type === 'quickLinks') {
-        expect(control.layout).toBe('button');
-        expect(control.items.length).toBeGreaterThan(0);
-        expect(control.items.length).toBeLessThanOrEqual(8);
-        for (const item of control.items) {
-          expect(item.title.length).toBeGreaterThan(0);
-        }
-      }
-      if (control.type === 'button') {
-        expect(control.label.length).toBeGreaterThan(0);
-      }
-    }
-  });
-
-  it('keeps section templates, columns and text controls consistent', () => {
-    for (const target of definition.pages) {
-      expect(target.sections.length).toBeGreaterThan(0);
-      for (const section of target.sections) {
-        expect(Object.keys(COLUMNS)).toContain(section.template);
-        expect(section.columns).toHaveLength(COLUMNS[section.template]);
-        for (const column of section.columns) {
-          for (const control of column.controls) {
-            expect(['text', 'frontDoor', 'quickLinks', 'button']).toContain(control.type);
-            if (control.type === 'text') {
-              expect(control.html.indexOf('<')).toBe(0);
-              expect(control.html).not.toMatch(/<script|<h1/i);
-              const hrefs: string[] = (control.html.match(/href="([^"]*)"/g) ?? []).map((match: string): string => match.slice(6, -1));
-              for (const href of hrefs) {
-                expect(href).toMatch(/^\{(Page|Url):[A-Za-z]+\}$/);
-              }
-            }
-          }
-        }
+    for (const key of NAVIGATION_PAGES) {
+      for (const text of stringsIn(blocksOf(key))) {
+        expect(text).not.toMatch(/<[a-z]+[\s>]|&[a-z]+;/i);
       }
     }
   });
@@ -310,6 +367,37 @@ describe('front door page definition', () => {
     for (const name of Object.keys(sample)) {
       expect(sample[name]).toBe('');
     }
+  });
+
+  it('produces a document the web part parses in full, with every URL parameter filled or blank', () => {
+    const filled: { [name: string]: string } = {};
+    for (const name of Object.keys(definition.parameters)) {
+      if (definition.parameters[name].kind === 'url') {
+        filled[name] = `https://example.invalid/${name}`;
+      }
+    }
+    for (const urlValues of [filled, {}]) {
+      const document: IPageDocument | undefined = parsePageDocument(resolveDocument(urlValues));
+      expect(document).toBeDefined();
+      expect(Object.keys((document as IPageDocument).pages)).toEqual(NAVIGATION_PAGES);
+      for (const key of NAVIGATION_PAGES) {
+        const parsed: IPageDocument['pages'][string] = (document as IPageDocument).pages[key];
+        expect(parsed.title).toBe(page(key).title);
+        expect(parsed.blocks.map((block): string => block.type)).toEqual(EXPECTED_BLOCKS[key]);
+        for (let index: number = 0; index < parsed.blocks.length; index++) {
+          const source: IRawBlock = blocksOf(key)[index];
+          const block: { items?: unknown[] } = parsed.blocks[index] as { items?: unknown[] };
+          if (source.type !== 'tiles' && block.items !== undefined) {
+            expect(block.items).toHaveLength(itemsOf(source).length);
+          }
+        }
+      }
+      const tiles: { items: unknown[] } = (document as IPageDocument).pages.startHere.blocks[2] as { items: unknown[] };
+      expect(tiles.items).toHaveLength(urlValues === filled ? 4 : 3);
+    }
+    expect(JSON.stringify(parsePageDocument(resolveDocument(filled)))).not.toMatch(/\{(Page|Url):|\{[A-Za-z]+\}/);
+    const damaged: IPageDocument | undefined = parsePageDocument(resolveDocument(filled).replace('"type":"lanes"', '"type":"bogus"'));
+    expect((damaged as IPageDocument).pages.requests.blocks.map((block): string => block.type)).toEqual(EXPECTED_BLOCKS.requests.filter((type: string): boolean => type !== 'lanes'));
   });
 
   it('contains no client names, tenant hosts or the reference roster', () => {

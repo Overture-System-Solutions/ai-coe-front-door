@@ -8,7 +8,7 @@
 
 export type MarkupNode = { kind: 'text'; text: string } | { kind: 'strong'; text: string } | { kind: 'em'; text: string } | { kind: 'link'; label: string; href: string };
 
-const RUN: RegExp = /\[([^\]\n]+)\]\(([^)\s]*)\)|\*\*(\S(?:[^*\n]*?\S)?)\*\*|\*(\S(?:[^*\n]*?\S)?)\*/g;
+const RUN: RegExp = /\[([^[\]\n]+)\]\(([^)\s]*)\)|\*\*(\S(?:[^*\n]*?\S)?)\*\*|\*(\S(?:[^*\n]*?\S)?)\*/g;
 
 function pushText(nodes: MarkupNode[], text: string): void {
   if (text === '') {
