@@ -48,7 +48,8 @@ describe('page provisioning script', () => {
   });
 
   it('ships tenant-neutral', () => {
-    for (const file of fs.readdirSync(PAGES_DIR)) {
+    // Only the committed files: an operator's filled-in parameters.json or captured templates may name the tenant.
+    for (const file of ['New-FrontDoorPages.ps1', 'pages.json', 'parameters.sample.json']) {
       const text: string = fs.readFileSync(path.join(PAGES_DIR, file), 'utf8');
       expect(text).not.toMatch(/overture|tegria|cloudwave/i);
       expect(text).not.toMatch(/[a-z0-9-]+\.sharepoint\.com/i);

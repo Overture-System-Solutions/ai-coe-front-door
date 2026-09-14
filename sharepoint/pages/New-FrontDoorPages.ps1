@@ -155,10 +155,18 @@ if ($web.WebTemplate -ne 'SITEPAGEPUBLISHING' -and -not $AllowNonCommunicationSi
 }
 $webRoot = $web.ServerRelativeUrl.TrimEnd('/')
 
+# Advisory check that the package is installed: the component list can carry ids with braces or upper case, so
+# compare normalised ids and the web part's manifest name, and warn rather than stop when nothing matches.
+function ConvertTo-GuidText([string]$value) {
+  return ($value -replace '[{}]', '').Trim().ToLowerInvariant()
+}
 $homePageFile = (Get-PnPHomePage) -replace '^SitePages/', ''
-$available = @(Get-PnPPageComponent -Page $homePageFile -ListAvailable | Where-Object { [string]$_.Id -eq [string]$definition.componentId })
+$wantedId = ConvertTo-GuidText ([string]$definition.componentId)
+$components = @(Get-PnPPageComponent -Page $homePageFile -ListAvailable)
+$available = @($components | Where-Object { (ConvertTo-GuidText ([string]$_.Id)) -eq $wantedId -or [string]$_.Name -eq 'AiCoeFrontDoorWebPart' })
 if ($available.Count -eq 0) {
-  throw "The front-door component ($($definition.componentId)) is not available on this site. Deploy the package to the app catalog and 'Get it' on the site, then rerun."
+  $listed = ($components | ForEach-Object { "$($_.Name) ($($_.Id))" }) -join '; '
+  Write-Warning "The front-door component ($($definition.componentId)) was not found among the $($components.Count) components listed for $homePageFile. If the package is not installed on this site (app catalog upload, then 'Get it'), the front-door instances will be empty. Listed: $listed"
 }
 
 function Get-PageFile([string]$key) {
