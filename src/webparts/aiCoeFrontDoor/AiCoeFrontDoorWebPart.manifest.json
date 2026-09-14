@@ -22,7 +22,18 @@
     "properties": {
       "organizationName": "",
       "draftServiceUrl": "",
-      "telemetryProvider": "claude"
+      "telemetryProvider": "claude",
+      "view": "legacy",
+      "layout": "wide",
+      "returnUrl": "",
+      "pageIdea": "",
+      "pageToolCheck": "",
+      "pageTeamUsage": "",
+      "pageHelpTraining": "",
+      "pageFeedback": "",
+      "pageTelemetry": "",
+      "pageAdmin": "",
+      "pagePolicy": ""
     }
   }]
 }

@@ -38,6 +38,8 @@ export interface IAmdHostOptions {
   store?: InMemoryListStore;
   /** Simulated Claude draft flow behind the Entra-authenticated client; answers 404 when absent. */
   draftFlow?: (request: unknown) => IFlowReply;
+  /** The context's property pane accessor; absent by default, like a page whose pane is closed. */
+  propertyPane?: { refresh(): void };
 }
 
 export interface IThemeLike {
@@ -61,6 +63,7 @@ export interface IHostedWebPart {
   onDispose(): void;
   onThemeChanged(theme: IThemeLike | undefined): void;
   getPropertyPaneConfiguration(): IPropertyPaneConfigurationLike;
+  onPropertyPaneFieldChanged(propertyPath: string, oldValue: unknown, newValue: unknown): void;
   readonly dataVersion: { toString(): string };
   domElement: HTMLElement;
   properties: { [name: string]: unknown };
@@ -190,6 +193,7 @@ export function loadWebPartBundle(bundlePath: string, stringsPath?: string): IWe
             }
           }
         },
+        propertyPane: options.propertyPane,
         spHttpClient: createFakeListClient(store),
         aadHttpClientFactory: {
           getClient: (resource: string): Promise<unknown> => {

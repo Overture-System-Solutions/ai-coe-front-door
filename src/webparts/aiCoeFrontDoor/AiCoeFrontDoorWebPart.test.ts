@@ -5,14 +5,19 @@
 import { act, fireEvent, waitFor, within } from '@testing-library/react';
 import * as fs from 'fs';
 import { LIST_TITLES, loadWebPartBundle, MANAGE_WEB_PERMISSION, newestDistBundle, newestStringsChunk } from '../../testing/amdHost';
-import type { IAmdHostOptions, IHostedInstance, IHostedWebPart, IWebPartBundle } from '../../testing/amdHost';
+import type { IAmdHostOptions, IHostedInstance, IHostedWebPart, IPropertyPaneConfigurationLike, IWebPartBundle } from '../../testing/amdHost';
 import { IDEA_JOURNEY, journeyAnswers, playJourney } from '../../testing/journeys';
 import { InMemoryListStore } from '../../testing/listStore';
 import type { IRecordedRequest } from '../../testing/listStore';
 import { createBranding } from './branding/branding';
+import { ADMIN_ONLY_TEXT } from './components/PageViewShell';
 import { createWorkflowCatalog } from './content/workflows/catalog';
 import { IDEA_SUMMARY_FIELDS } from './summaries/ideaSummary';
 import type { IWorkflowCatalog } from './workflows/types';
+
+// Every mount re-evaluates the built bundle, and coverage tracking slows each evaluation; the journeys near the end of
+// this file otherwise drift past Jest's five-second default, and a test abandoned mid-act() crashes the worker at teardown.
+jest.setTimeout(30000);
 
 const bundlePath: string = newestDistBundle();
 const bundle: IWebPartBundle = loadWebPartBundle(bundlePath, newestStringsChunk());
@@ -182,12 +187,12 @@ describe('AiCoeFrontDoorWebPart bundle', () => {
     expect(instance.webPart.domElement.childElementCount).toBe(0);
   });
 
-  it('offers the organization-name, draft-flow and telemetry-provider fields in the property pane', async () => {
+  it('offers the branding, draft-flow, telemetry and page layout groups in the property pane', async () => {
     const { webPart } = await mount({ properties: { telemetryProvider: 'both' } });
     const configuration = webPart.getPropertyPaneConfiguration();
     expect(configuration.pages).toHaveLength(1);
     expect(configuration.pages[0].header.description).toBe('Configure how the AI CoE Front Door presents your organization.');
-    expect(configuration.pages[0].groups.map((group): string => group.groupName)).toEqual(['Branding', 'AI drafting', 'Telemetry']);
+    expect(configuration.pages[0].groups.map((group): string => group.groupName)).toEqual(['Branding', 'AI drafting', 'Telemetry', 'Page layout']);
     expect(configuration.pages[0].groups[2].groupFields).toEqual([
       {
         targetProperty: 'telemetryProvider',
@@ -225,6 +230,114 @@ describe('AiCoeFrontDoorWebPart bundle', () => {
         }
       }
     ]);
+  });
+
+  it('offers the view dropdown and reveals layout, return page and page links as the view changes', async () => {
+    const { webPart } = await mount();
+    const groups = (): IPropertyPaneConfigurationLike['pages'][0]['groups'] => webPart.getPropertyPaneConfiguration().pages[0].groups;
+    const targets = (index: number): string[] => groups()[index].groupFields.map((field): string => field.targetProperty);
+    expect(groups()[3].groupFields).toEqual([
+      {
+        targetProperty: 'view',
+        properties: {
+          label: 'Piece shown on this page',
+          options: [
+            { key: 'legacy', text: 'Whole front door on one page (default)' },
+            { key: 'home', text: 'Home tiles' },
+            { key: 'idea', text: 'Explore an AI idea' },
+            { key: 'toolCheck', text: 'Check a tool or task' },
+            { key: 'teamUsage', text: 'Register team AI use' },
+            { key: 'helpTraining', text: 'Get help or training' },
+            { key: 'feedback', text: 'Share feedback' },
+            { key: 'telemetry', text: 'AI operations snapshot' },
+            { key: 'admin', text: 'Administrator dashboard' }
+          ],
+          selectedKey: 'legacy'
+        }
+      }
+    ]);
+    setProperty(webPart, 'view', 'idea');
+    expect(groups().map((group): string => group.groupName)).toEqual(['Branding', 'AI drafting', 'Telemetry', 'Page layout']);
+    expect(targets(3)).toEqual(['view', 'layout', 'returnUrl']);
+    setProperty(webPart, 'view', 'telemetry');
+    expect(targets(3)).toEqual(['view', 'layout']);
+    setProperty(webPart, 'view', 'ADMIN');
+    expect(groups()[3].groupFields[0].properties.selectedKey).toBe('admin');
+    expect(targets(3)).toEqual(['view', 'layout', 'returnUrl']);
+    setProperty(webPart, 'view', 'home');
+    expect(groups().map((group): string => group.groupName)).toEqual(['Branding', 'AI drafting', 'Telemetry', 'Page layout', 'Page links']);
+    expect(targets(3)).toEqual(['view', 'layout']);
+    expect(targets(4)).toEqual(['pageIdea', 'pageToolCheck', 'pageTeamUsage', 'pageHelpTraining', 'pageFeedback', 'pageTelemetry', 'pageAdmin', 'pagePolicy']);
+    expect(groups()[3].groupFields[1].properties.options).toEqual([
+      { key: 'wide', text: 'Wide (full page width)' },
+      { key: 'narrow', text: 'Narrow (one column)' }
+    ]);
+    expect(groups()[3].groupFields[1].properties.selectedKey).toBe('wide');
+    expect(groups()[4].groupFields[0].properties.label).toBe('Explore an AI idea page');
+  });
+
+  it('refreshes the property pane only when the view changes', async () => {
+    const refresh: jest.Mock = jest.fn();
+    const { webPart } = await mount({ propertyPane: { refresh } });
+    webPart.onPropertyPaneFieldChanged('view', 'legacy', 'home');
+    expect(refresh).toHaveBeenCalledTimes(1);
+    webPart.onPropertyPaneFieldChanged('organizationName', '', 'Contoso');
+    expect(refresh).toHaveBeenCalledTimes(1);
+    webPart.onPropertyPaneFieldChanged('view', 'home', 'home');
+    expect(refresh).toHaveBeenCalledTimes(1);
+    const withoutPane: IHostedInstance = await mount();
+    expect((): void => withoutPane.webPart.onPropertyPaneFieldChanged('view', 'legacy', 'idea')).not.toThrow();
+  });
+
+  it('renders the whole front door for an unconfigured or unknown view', async () => {
+    const { webPart } = await mount({ properties: { view: 'not a view' } });
+    expect(within(webPart.domElement).getByRole('heading', { level: 1, name: 'AI, safely put to work.' })).toBeInTheDocument();
+    expect(webPart.domElement.querySelector('.ai-view')).toBeNull();
+  });
+
+  it('renders only the home tiles for the home view, linking the configured pages', async () => {
+    const { webPart } = await mount({
+      isAdmin: true,
+      properties: { view: 'home', pageIdea: 'SitePages/AI-Idea.aspx', pagePolicy: 'https://contoso.sharepoint.com/sites/ai/SitePages/Policy.aspx' }
+    });
+    const root: HTMLElement = webPart.domElement;
+    expect(root.querySelector('.ai-view--home')).not.toBeNull();
+    expect(within(root).queryByRole('heading', { level: 1 })).not.toBeInTheDocument();
+    expect(within(root).getByText('Explore an AI idea').closest('a')).toHaveAttribute('href', 'https://contoso.sharepoint.com/sites/ai/SitePages/AI-Idea.aspx');
+    expect(within(root).getByRole('link', { name: 'AI policy' })).toHaveAttribute('href', 'https://contoso.sharepoint.com/sites/ai/SitePages/Policy.aspx');
+    expect(within(root).queryByText('Check a tool or task')).not.toBeInTheDocument();
+    expect(within(root).queryByText('AI CoE administration')).not.toBeInTheDocument();
+    expect(within(root).queryByRole('heading', { name: 'AI operations snapshot' })).not.toBeInTheDocument();
+  });
+
+  it('renders one workflow for a workflow view in the narrow layout', async () => {
+    const { webPart } = await mount({ properties: { view: 'toolCheck', returnUrl: 'SitePages/AI-CoE.aspx', layout: 'narrow' } });
+    const root: HTMLElement = webPart.domElement;
+    expect(root.querySelector('.ai-view--toolCheck.ai-view--narrow')).not.toBeNull();
+    expect(root.querySelector('.min-h-screen')).toBeNull();
+    expect(within(root).getByRole('heading', { level: 1, name: catalog.toolCheck.title })).toBeInTheDocument();
+    expect(within(root).getByText('AI CoE Lab')).toBeInTheDocument();
+    await waitFor((): void => expect(within(root).getByRole('button', { name: 'Continue' })).toBeInTheDocument());
+  });
+
+  it('renders the telemetry snapshot alone', async () => {
+    const { webPart } = await mount({ properties: { view: 'telemetry' } });
+    const root: HTMLElement = webPart.domElement;
+    await waitFor((): void => expect(within(root).getByText('SharePoint connected')).toBeInTheDocument());
+    expect(root.querySelectorAll('.ai-metric-card')).toHaveLength(4);
+    expect(within(root).queryByRole('heading', { level: 1 })).not.toBeInTheDocument();
+    expect(root.querySelector('.ai-home-grid')).toBeNull();
+  });
+
+  it('gates the administrator dashboard by permission for the admin view', async () => {
+    const visitor: IHostedInstance = await mount({ properties: { view: 'admin' } });
+    expect(within(visitor.webPart.domElement).getByText(ADMIN_ONLY_TEXT)).toBeInTheDocument();
+    expect(visitor.permissionChecks).toEqual([MANAGE_WEB_PERMISSION]);
+    visitor.dispose();
+    instances.pop();
+    const { webPart } = await mount({ isAdmin: true, properties: { view: 'admin' } });
+    expect(within(webPart.domElement).getByRole('heading', { level: 1, name: 'AI CoE Admin Dashboard' })).toBeInTheDocument();
+    await waitFor((): void => expect(within(webPart.domElement).getByText('0 of 0 records shown')).toBeInTheDocument());
   });
 
   it('does not touch the flow service while no draft flow is configured', async () => {
