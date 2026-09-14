@@ -1,9 +1,9 @@
 {
-  "verifiedAt": "2026-09-14T04:54:09.308Z",
+  "verifiedAt": "2026-09-14T05:11:25.767Z",
   "package": {
     "path": "sharepoint/solution/overture-ai-coe-front-door.sppkg",
-    "sha256": "c99ff3917273fe19f66efc77145414ccc54fe4aad850b175cb00ffafe5c747e0",
-    "bytes": 69189,
+    "sha256": "0acac6b495bbd0ca2b7e54ece1073f136ba5d1284c9ad2f300672327d72cde13",
+    "bytes": 69190,
     "version": "1.0.0.10",
     "productId": "f125ebdf-4a9d-4e6e-8479-3a18874e7752",
     "isDomainIsolated": "false",

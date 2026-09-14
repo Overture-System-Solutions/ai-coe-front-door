@@ -2,7 +2,7 @@
   "componentId": "cf2e5904-0703-4fe4-ae5a-ec012d6fa689",
   "parameters": {
     "OrganizationName": { "kind": "text", "description": "Organization name used in the page text and on every front-door instance." },
-    "DraftServiceUrl": { "kind": "text", "description": "HTTP trigger URL of the Claude draft flow for the idea page; blank keeps plain summaries." },
+    "DraftServiceUrl": { "kind": "url", "description": "HTTP trigger URL of the Claude draft flow for the idea page; blank keeps plain summaries." },
     "TelemetryProvider": { "kind": "text", "description": "Usage feed for the Status page: claude, openai or both." },
     "ConciergeUrl": { "kind": "url", "description": "Where 'Ask the AI CoE' and 'the Concierge' open; blank keeps the sentence and drops the link." },
     "TeamsUrl": { "kind": "url", "description": "Deep link to the AI CoE Teams channel or chat; blank keeps the sentence and drops the link." },
