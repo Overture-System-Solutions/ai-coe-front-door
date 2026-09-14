@@ -16,8 +16,8 @@ import type { IPageViewSettings } from './pageViews';
 const SITE: string = 'https://contoso.sharepoint.com/sites/ai';
 
 describe('front door views', () => {
-  it('defaults to legacy and accepts the nine views case-insensitively', () => {
-    expect(FRONT_DOOR_VIEWS).toEqual(['legacy', 'home', 'idea', 'toolCheck', 'teamUsage', 'helpTraining', 'feedback', 'telemetry', 'admin']);
+  it('defaults to legacy and accepts the ten views case-insensitively', () => {
+    expect(FRONT_DOOR_VIEWS).toEqual(['legacy', 'home', 'idea', 'toolCheck', 'teamUsage', 'helpTraining', 'feedback', 'telemetry', 'admin', 'page']);
     expect(DEFAULT_FRONT_DOOR_VIEW).toBe('legacy');
     expect(parseFrontDoorView(undefined)).toBe('legacy');
     expect(parseFrontDoorView('')).toBe('legacy');
@@ -27,6 +27,7 @@ describe('front door views', () => {
     expect(parseFrontDoorView('TOOLCHECK')).toBe('toolCheck');
     expect(parseFrontDoorView('helptraining')).toBe('helpTraining');
     expect(parseFrontDoorView('admin')).toBe('admin');
+    expect(parseFrontDoorView('PAGE')).toBe('page');
   });
 
   it('identifies the five workflow views', () => {
@@ -35,6 +36,7 @@ describe('front door views', () => {
     expect(isWorkflowView('home')).toBe(false);
     expect(isWorkflowView('telemetry')).toBe(false);
     expect(isWorkflowView('admin')).toBe(false);
+    expect(isWorkflowView('page')).toBe(false);
   });
 });
 
@@ -78,6 +80,14 @@ describe('page view settings', () => {
       pages: { idea: `${SITE}/SitePages/Idea.aspx`, policy: '/sites/ai/AICoEPilotPolicies' }
     });
     expect(Object.keys(settings.pages)).toEqual(['idea', 'policy']);
+    expect(settings.pageKey).toBeUndefined();
+  });
+
+  it('carries the trimmed page key of a content page; the document path is not a setting', () => {
+    const settings: IPageViewSettings = createPageViewSettings({ view: 'page', pageKey: ' startHere ', contentUrl: 'SiteAssets/x.json' }, SITE);
+    expect(settings).toEqual({ view: 'page', layout: 'wide', returnUrl: undefined, pages: {}, pageKey: 'startHere' });
+    expect(Object.keys(settings)).not.toContain('contentUrl');
+    expect(createPageViewSettings({ view: 'page', pageKey: '  ' }, SITE).pageKey).toBeUndefined();
   });
 
   it('falls back to the legacy view with no pages for an empty property bag', () => {

@@ -46,7 +46,9 @@ const LEGACY_PROPERTIES: { [name: string]: unknown } = {
   pageFeedback: '',
   pageTelemetry: '',
   pageAdmin: '',
-  pagePolicy: ''
+  pagePolicy: '',
+  pageKey: '',
+  contentUrl: 'SiteAssets/ai-coe-pages.json'
 };
 
 describe('AiCoeFrontDoorWebPart manifest', () => {
@@ -81,7 +83,8 @@ describe('AiCoeFrontDoorWebPart manifest', () => {
       'AI CoE: Get help or training',
       'AI CoE: Share feedback',
       'AI CoE: AI operations snapshot',
-      'AI CoE: Administrator dashboard'
+      'AI CoE: Administrator dashboard',
+      'AI CoE: Content page'
     ]);
     for (const entry of entries) {
       expect(entry.groupId).toBe('5c03119e-3074-46fd-976b-c60198311f70');

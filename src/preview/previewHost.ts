@@ -50,6 +50,8 @@ interface IPreviewApi {
   setView(view: string): void;
   /** Switches between the wide and narrow layouts. */
   setLayout(layout: string): void;
+  /** Switches the page of the simulated content document a content page shows. */
+  setPageKey(pageKey: string): void;
 }
 
 type AmdFactory = (...modules: unknown[]) => { default: new () => IPreviewWebPart };
@@ -131,6 +133,162 @@ function seedTelemetry(): void {
 }
 seedTelemetry();
 
+/** A page of this preview showing another piece or content page. */
+function previewLink(query: string): string {
+  return `/?${query}`;
+}
+
+// Simulated preview data: the content document a site would keep in Site Assets, with Contoso wording and links
+// back into this preview. Every block type appears at least once.
+const SAMPLE_PAGE_DOCUMENT: { [key: string]: unknown } = {
+  version: 1,
+  pages: {
+    startHere: {
+      title: 'Start here',
+      blocks: [
+        {
+          type: 'hero',
+          title: 'What do you need done?',
+          text: 'Ask the AI CoE in [Teams](https://teams.microsoft.com/l/channel/contoso), [learn the basics](/?page=learn) or [start a request](/?page=requests).',
+          cta: { label: 'Start a request', href: previewLink('page=requests') }
+        },
+        { type: 'heading', level: 2, text: 'What do you want to do?' },
+        {
+          type: 'tiles',
+          items: [
+            { title: 'Ask the AI CoE', href: 'https://teams.microsoft.com/l/channel/contoso', description: 'Questions, ideas, worries. A person answers.', icon: 'MessageSquare' },
+            { title: 'Use AI for my work', href: previewLink('page=useAi'), description: 'What is allowed and how to do it well.', icon: 'BriefcaseBusiness' },
+            { title: 'Start a request', href: previewLink('page=requests'), description: 'Ideas, tools, team use, training, feedback.', icon: 'Inbox', tone: 'blue' },
+            { title: 'Check status', href: previewLink('page=status'), description: 'What is running, what is not, what is next.', icon: 'LayoutDashboard', tone: 'gold' }
+          ]
+        },
+        { type: 'heading', level: 2, text: 'Three prompts to try today' },
+        {
+          type: 'cards',
+          columns: 3,
+          items: [
+            { title: 'Summarise a long thread', kicker: 'Prompt', body: '**Do this**: paste the thread and ask for the three decisions and the open questions.', meta: 'Copilot Chat . 2 min', tone: 'teal' },
+            { title: 'Draft a reply', kicker: 'Prompt', body: ['Paste the message you received.', 'Ask for a *short* reply in your own voice, then edit it.'], meta: 'Copilot Chat . 2 min', tone: 'violet' },
+            { title: 'Prepare for a meeting', kicker: 'Prompt', body: 'Paste the agenda and ask what to read first and which questions to bring.', meta: 'Copilot Chat . 5 min', tone: 'gold' }
+          ]
+        },
+        {
+          type: 'statusRow',
+          items: [
+            { label: 'Status', text: 'Green. Nothing is blocked this week; see [Status](/?page=status).' },
+            { label: 'Support', text: 'Ask in [Teams](https://teams.microsoft.com/l/channel/contoso) or reply to any AI CoE mail.' }
+          ]
+        }
+      ]
+    },
+    learn: {
+      title: 'Learn',
+      blocks: [
+        { type: 'paragraph', text: 'Four exercises, about ten minutes in total. Do them in Copilot Chat with your own work; nothing is graded.' },
+        {
+          type: 'cards',
+          columns: 2,
+          items: [
+            { title: '1. Summarise something you already know', kicker: '2 minutes', body: ['Paste a document you have read and ask for a summary.', 'Check it against what you remember. Where is it wrong?'] },
+            { title: '2. Ask for a first draft', kicker: '3 minutes', body: ['Describe a message you need to send and ask for a draft.', 'Edit it until it sounds like you.'], tone: 'violet' }
+          ]
+        },
+        { type: 'heading', level: 2, text: 'How we know you have done it' },
+        { type: 'paragraph', text: 'We do not track it. Tell your manager, or post one thing you learned in [Teams](https://teams.microsoft.com/l/channel/contoso).' }
+      ]
+    },
+    useAi: {
+      title: 'Use AI',
+      blocks: [
+        { type: 'paragraph', text: 'Copilot Chat is approved for everyday work with public information and your own notes. Anything else: [check the tool or task](/?view=toolCheck) first.' },
+        { type: 'heading', level: 2, text: 'Everyday tasks' },
+        {
+          type: 'cards',
+          columns: 3,
+          items: [
+            { title: 'Writing', body: 'Drafts, rewrites, summaries.', meta: 'Boundary: never paste customer data.' },
+            { title: 'Reading', body: 'Long documents, threads, transcripts.', meta: 'Boundary: check every number against the source.', tone: 'blue' },
+            { title: 'Planning', body: 'Agendas, checklists, first versions of plans.', meta: 'Boundary: decisions stay with people.', tone: 'cyan' }
+          ]
+        },
+        { type: 'heading', level: 2, text: 'What this page does not do' },
+        { type: 'paragraph', text: 'It does not approve new tools. That is a [request](/?page=requests).' }
+      ]
+    },
+    requests: {
+      title: 'Requests',
+      blocks: [
+        { type: 'heading', level: 2, text: 'Not sure which form? Start with the lane.' },
+        { type: 'paragraph', text: 'Most things people want to do with AI fall into one of three lanes. The lane tells you whether you need to ask at all.' },
+        {
+          type: 'lanes',
+          items: [
+            { tone: 'green', title: 'Green: just do it', body: 'Public information, your own notes, drafts you will edit.', note: 'No form needed.' },
+            { tone: 'amber', title: 'Amber: ask first', body: ['Internal documents, team data, anything you would not post publicly.', 'Use *Check a tool or task* below.'], badge: 'Ask' },
+            { tone: 'red', title: 'Red: not yet', body: 'Personal data, contracts, anything regulated.', note: 'The AI CoE will tell you when this changes.' }
+          ]
+        },
+        { type: 'heading', level: 2, text: 'If you would rather use a form' },
+        { type: 'paragraph', text: 'Each path below opens a short guided form. Your answers are saved as a draft on this device until you send them.' },
+        {
+          type: 'piece',
+          piece: 'home',
+          pages: {
+            idea: previewLink('view=idea'),
+            toolCheck: previewLink('view=toolCheck'),
+            teamUsage: previewLink('view=teamUsage'),
+            helpTraining: previewLink('view=helpTraining'),
+            feedback: previewLink('view=feedback'),
+            telemetry: previewLink('page=status'),
+            admin: previewLink('view=admin')
+          }
+        }
+      ]
+    },
+    prompts: {
+      title: 'Prompts',
+      blocks: [
+        { type: 'paragraph', text: 'Tested prompts from the pilot. Copy one, change the words in brackets, and keep what works.' },
+        { type: 'heading', level: 2, text: 'Start with these three' },
+        {
+          type: 'cards',
+          columns: 3,
+          items: [
+            { title: 'Admin queue', body: 'Paste your inbox subjects and ask: **which three need me today**, and why?', meta: 'P-001 . Copilot Chat . about 2 minutes' },
+            { title: 'Morning brief', body: 'Paste yesterday\'s notes and ask for the three things to carry forward.', meta: 'P-002 . Copilot Chat . about 2 minutes', tone: 'blue' },
+            { title: 'Repeatable work', body: 'Describe a task you do weekly and ask for a checklist you can reuse.', meta: 'P-003 . Copilot Chat . about 5 minutes', tone: 'gold' }
+          ]
+        }
+      ]
+    },
+    status: {
+      title: 'Status',
+      blocks: [
+        { type: 'paragraph', text: 'Updated every Friday by the AI CoE. Numbers below come from the simulated telemetry lists of this preview.' },
+        {
+          type: 'cards',
+          columns: 2,
+          items: [
+            { title: 'What is running', body: ['**Copilot Chat** for everyone in the pilot.', '**Prompt library** with tested prompts.'] },
+            { title: 'What is not running', body: ['**Agents** are still in review.', '**Connectors to line-of-business systems** are not enabled.'], tone: 'cyan' }
+          ]
+        },
+        { type: 'piece', piece: 'telemetry', pages: {} },
+        {
+          type: 'cards',
+          columns: 2,
+          items: [
+            { title: 'Checking a request you sent', body: 'Reply to the confirmation mail you received; it carries the request id.' },
+            { title: 'If something is wrong', body: 'Say so in [Teams](https://teams.microsoft.com/l/channel/contoso) or use [Share feedback](/?view=feedback).', tone: 'gold' }
+          ]
+        }
+      ]
+    }
+  }
+};
+
+const files: { [sitePath: string]: string } = { 'SiteAssets/ai-coe-pages.json': JSON.stringify(SAMPLE_PAGE_DOCUMENT) };
+
 function blocked(): never {
   throw new Error('External network access is blocked in the offline preview.');
 }
@@ -148,14 +306,33 @@ document.addEventListener('click', (event: MouseEvent): void => {
   if (link === null || link.href.indexOf('blob:') === 0 || (link.getAttribute('href') ?? '').indexOf('#') === 0) {
     return;
   }
-  // The preview's own page-map links ("/?view=idea") reload this page showing another piece; everything else stays blocked.
-  if (link.origin === location.origin && link.search.indexOf('view=') >= 0) {
+  // The preview's own page-map links ("/?view=idea", "/?page=learn") reload this page showing another piece; everything else stays blocked.
+  if (link.origin === location.origin && (link.search.indexOf('view=') >= 0 || link.search.indexOf('page=') >= 0)) {
     return;
   }
   event.preventDefault();
 });
 
+/** The simulated file behind `GetFileByServerRelativeUrl('<path>')/$value`: matched on the trailing site path, 404 otherwise. */
+function fileResponse(method: 'GET' | 'POST', path: string): Promise<IPreviewResponse> {
+  const name: string | undefined = Object.keys(files).filter(
+    (candidate: string): boolean => path.length >= candidate.length && path.slice(path.length - candidate.length) === candidate
+  )[0];
+  requests.push({ method, list: `file ${path}`, body: undefined, simulated: true });
+  const body: string = name === undefined ? 'File not found' : files[name];
+  return Promise.resolve({
+    ok: name !== undefined,
+    status: name === undefined ? 404 : 200,
+    json: (): Promise<unknown> => Promise.resolve(body),
+    text: (): Promise<string> => Promise.resolve(body)
+  });
+}
+
 function request(method: 'GET' | 'POST', url: string, options: { body?: string } | undefined): Promise<IPreviewResponse> {
+  const fileMatch: RegExpMatchArray | null = String(url).match(/GetFileByServerRelativeUrl\('((?:[^']|'')+)'\)\/\$value/i);
+  if (fileMatch !== null) {
+    return fileResponse(method, fileMatch[1].replace(/''/g, "'"));
+  }
   const match: RegExpMatchArray | null = String(url).match(/getbytitle\('((?:[^']|'')+)'\)\/items/);
   const list: string | undefined = match === null ? undefined : match[1].replace(/''/g, "'");
   if (list === undefined || lists[list] === undefined) {
@@ -335,6 +512,13 @@ previewWindow.FrontDoorPreview = {
       throw new Error('Mount the web part first.');
     }
     mounted.properties.layout = layout;
+    mounted.render();
+  },
+  setPageKey: (pageKey: string): void => {
+    if (mounted === undefined) {
+      throw new Error('Mount the web part first.');
+    }
+    mounted.properties.pageKey = pageKey;
     mounted.render();
   }
 };

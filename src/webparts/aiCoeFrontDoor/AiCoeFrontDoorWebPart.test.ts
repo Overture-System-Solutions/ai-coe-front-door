@@ -9,7 +9,9 @@ import type { IAmdHostOptions, IHostedInstance, IHostedWebPart, IPropertyPaneCon
 import { IDEA_JOURNEY, journeyAnswers, playJourney } from '../../testing/journeys';
 import { InMemoryListStore } from '../../testing/listStore';
 import type { IRecordedRequest } from '../../testing/listStore';
+import { SAMPLE_PAGE_DOCUMENT } from '../../testing/pageDocument';
 import { createBranding } from './branding/branding';
+import { CONTENT_UNAVAILABLE_TEXT, NO_PAGE_KEY_TEXT } from './components/pages/ContentPage';
 import { ADMIN_ONLY_TEXT } from './components/PageViewShell';
 import { createWorkflowCatalog } from './content/workflows/catalog';
 import { IDEA_SUMMARY_FIELDS } from './summaries/ideaSummary';
@@ -50,6 +52,10 @@ function setProperty(webPart: IHostedWebPart, name: string, value: unknown): voi
 
 function usageReads(instance: IHostedInstance): IRecordedRequest[] {
   return instance.store.requests.filter((request: IRecordedRequest): boolean => request.method === 'GET' && request.list === 'AI Usage Daily');
+}
+
+function fileReads(instance: IHostedInstance): IRecordedRequest[] {
+  return instance.store.requests.filter((request: IRecordedRequest): boolean => request.file !== undefined);
 }
 
 afterEach((): void => {
@@ -103,6 +109,7 @@ describe('AiCoeFrontDoorWebPart bundle', () => {
     expect(injected).toContain('.overture-app{');
     // The page view modifiers ship as a fourth unhashed stylesheet.
     expect(injected).toContain('#overture-ai-coe-pilot .ai-view--narrow .ai-home-grid .ai-service-card{');
+    expect(injected).toContain('#overture-ai-coe-pilot .ai-view--page .ai-page-tiles{');
     expect(injected).not.toMatch(/overture-ai-coe-pilot_[0-9a-f]{8}/);
     expect(injected).toMatch(/\.aiCoeFrontDoor_[0-9a-f]{8}\{/);
   });
@@ -250,7 +257,8 @@ describe('AiCoeFrontDoorWebPart bundle', () => {
             { key: 'helpTraining', text: 'Get help or training' },
             { key: 'feedback', text: 'Share feedback' },
             { key: 'telemetry', text: 'AI operations snapshot' },
-            { key: 'admin', text: 'Administrator dashboard' }
+            { key: 'admin', text: 'Administrator dashboard' },
+            { key: 'page', text: 'Content page' }
           ],
           selectedKey: 'legacy'
         }
@@ -274,6 +282,14 @@ describe('AiCoeFrontDoorWebPart bundle', () => {
     ]);
     expect(groups()[3].groupFields[1].properties.selectedKey).toBe('wide');
     expect(groups()[4].groupFields[0].properties.label).toBe('Explore an AI idea page');
+    setProperty(webPart, 'view', 'page');
+    expect(groups().map((group): string => group.groupName)).toEqual(['Branding', 'AI drafting', 'Telemetry', 'Page layout', 'Page content']);
+    expect(targets(3)).toEqual(['view', 'layout']);
+    expect(targets(4)).toEqual(['pageKey', 'contentUrl']);
+    expect(groups()[4].groupFields[0].properties.label).toBe('Page key');
+    expect(groups()[4].groupFields[0].properties.placeholder).toBe('startHere');
+    expect(groups()[4].groupFields[1].properties.label).toBe('Page document');
+    expect(groups()[4].groupFields[1].properties.placeholder).toBe('SiteAssets/ai-coe-pages.json');
   });
 
   it('refreshes the property pane only when the view changes', async () => {
@@ -327,6 +343,51 @@ describe('AiCoeFrontDoorWebPart bundle', () => {
     expect(root.querySelectorAll('.ai-metric-card')).toHaveLength(4);
     expect(within(root).queryByRole('heading', { level: 1 })).not.toBeInTheDocument();
     expect(root.querySelector('.ai-home-grid')).toBeNull();
+  });
+
+  it('renders a content page from the document in Site Assets and reads it once per document path', async () => {
+    const instance: IHostedInstance = await mount({
+      properties: { view: 'page', pageKey: 'startHere' },
+      files: { '/sites/ai/SiteAssets/ai-coe-pages.json': JSON.stringify(SAMPLE_PAGE_DOCUMENT) }
+    });
+    const root: HTMLElement = instance.webPart.domElement;
+    expect(root.querySelector('.ai-view--page')).not.toBeNull();
+    await waitFor((): void => expect(within(root).getByRole('heading', { level: 1, name: 'What do you need done?' })).toBeInTheDocument());
+    const tile: HTMLElement = within(root).getByText('Use AI for my work').closest('a') as HTMLElement;
+    expect(tile).toHaveClass('ai-service-card');
+    expect(tile).toHaveAttribute('href', 'https://contoso.sharepoint.com/sites/ai/SitePages/Use-AI.aspx');
+    expect(root.querySelectorAll('.ai-page-card')).toHaveLength(3);
+    expect(fileReads(instance)).toHaveLength(1);
+    expect(fileReads(instance)[0].file).toBe('/sites/ai/SiteAssets/ai-coe-pages.json');
+    expect(fileReads(instance)[0].headers).toEqual({ Accept: 'application/json;odata=nometadata', 'odata-version': '' });
+
+    // Another page of the same document: no second read; the status page embeds the telemetry strip.
+    setProperty(instance.webPart, 'pageKey', 'status');
+    await act(async (): Promise<void> => {
+      instance.webPart.render();
+    });
+    await waitFor((): void => expect(within(root).getByText('SharePoint connected')).toBeInTheDocument());
+    expect(root.querySelectorAll('.ai-metric-card')).toHaveLength(4);
+    expect(within(root).queryByRole('heading', { level: 1 })).not.toBeInTheDocument();
+    expect(fileReads(instance)).toHaveLength(1);
+
+    // Another document path is a new read.
+    setProperty(instance.webPart, 'contentUrl', 'SiteAssets/other.json');
+    await act(async (): Promise<void> => {
+      instance.webPart.render();
+    });
+    await waitFor((): void => expect(within(root).getByText(CONTENT_UNAVAILABLE_TEXT, { exact: false })).toBeInTheDocument());
+    expect(fileReads(instance)).toHaveLength(2);
+    expect(fileReads(instance)[1].file).toBe('/sites/ai/SiteAssets/other.json');
+  });
+
+  it('explains a missing document and asks for a page key without reading anything', async () => {
+    const missing: IHostedInstance = await mount({ properties: { view: 'page', pageKey: 'startHere' } });
+    await waitFor((): void => expect(within(missing.webPart.domElement).getByText(CONTENT_UNAVAILABLE_TEXT, { exact: false })).toBeInTheDocument());
+    expect(within(missing.webPart.domElement).getByText(/answered 404/)).toBeInTheDocument();
+    const unkeyed: IHostedInstance = await mount({ properties: { view: 'page' } });
+    expect(within(unkeyed.webPart.domElement).getByText(NO_PAGE_KEY_TEXT)).toBeInTheDocument();
+    expect(fileReads(unkeyed)).toHaveLength(0);
   });
 
   it('gates the administrator dashboard by permission for the admin view', async () => {

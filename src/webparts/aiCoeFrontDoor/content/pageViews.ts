@@ -11,9 +11,10 @@
 import type { WorkflowId } from '../workflows/types';
 import { WORKFLOW_ORDER } from './workflows/catalog';
 
-export type FrontDoorView = 'legacy' | 'home' | WorkflowId | 'telemetry' | 'admin';
+/** `page` renders one page of the content document (see pageContent.ts) chosen by `pageKey`. */
+export type FrontDoorView = 'legacy' | 'home' | WorkflowId | 'telemetry' | 'admin' | 'page';
 
-export const FRONT_DOOR_VIEWS: readonly FrontDoorView[] = ['legacy', 'home', 'idea', 'toolCheck', 'teamUsage', 'helpTraining', 'feedback', 'telemetry', 'admin'];
+export const FRONT_DOOR_VIEWS: readonly FrontDoorView[] = ['legacy', 'home', 'idea', 'toolCheck', 'teamUsage', 'helpTraining', 'feedback', 'telemetry', 'admin', 'page'];
 export const DEFAULT_FRONT_DOOR_VIEW: FrontDoorView = 'legacy';
 
 function matchIgnoringCase<T extends string>(candidates: readonly T[], value: unknown): T | undefined {
@@ -61,6 +62,10 @@ export interface IPageViewProperties {
   pageTelemetry?: string;
   pageAdmin?: string;
   pagePolicy?: string;
+  /** Which page of the content document a `page` view renders. */
+  pageKey?: string;
+  /** Site path or URL of the content document; blank means the default in pageContent.ts. */
+  contentUrl?: string;
 }
 
 export const PAGE_TARGET_PROPERTIES: { [target in PageTarget]: keyof IPageViewProperties } = {
@@ -75,6 +80,17 @@ export const PAGE_TARGET_PROPERTIES: { [target in PageTarget]: keyof IPageViewPr
 };
 
 const FULL_URL: RegExp = /^https?:\/\//i;
+
+/** True for an http or https URL, which page content opens in a new tab. */
+export function isFullUrl(value: string): boolean {
+  return FULL_URL.test(value.trim());
+}
+
+/** The page key as typed, trimmed; undefined when blank. */
+export function parsePageKey(value: unknown): string | undefined {
+  const text: string = typeof value === 'string' ? value.trim() : '';
+  return text === '' ? undefined : text;
+}
 
 /**
  * Turns a property value into a link: a full URL (http or https) or a root-based path (leading "/")
@@ -99,6 +115,8 @@ export interface IPageViewSettings {
   returnUrl?: string;
   /** Resolved links for the home tiles; only mapped targets are present. */
   pages: PageLinks;
+  /** The content page a `page` view renders; the document itself is read by a service the web part creates. */
+  pageKey?: string;
 }
 
 /** Reads the page view properties of one instance into resolved settings. */
@@ -110,10 +128,15 @@ export function createPageViewSettings(props: IPageViewProperties, siteUrl: stri
       pages[target] = url;
     }
   }
-  return {
+  const settings: IPageViewSettings = {
     view: parseFrontDoorView(props.view),
     layout: parsePieceLayout(props.layout),
     returnUrl: resolvePageUrl(siteUrl, props.returnUrl),
     pages
   };
+  const pageKey: string | undefined = parsePageKey(props.pageKey);
+  if (pageKey !== undefined) {
+    settings.pageKey = pageKey;
+  }
+  return settings;
 }

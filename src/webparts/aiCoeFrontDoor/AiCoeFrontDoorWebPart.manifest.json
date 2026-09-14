@@ -33,7 +33,9 @@
       "pageFeedback": "",
       "pageTelemetry": "",
       "pageAdmin": "",
-      "pagePolicy": ""
+      "pagePolicy": "",
+      "pageKey": "",
+      "contentUrl": "SiteAssets/ai-coe-pages.json"
     }
   }, {
     "groupId": "5c03119e-3074-46fd-976b-c60198311f70",
@@ -55,7 +57,9 @@
       "pageFeedback": "",
       "pageTelemetry": "",
       "pageAdmin": "",
-      "pagePolicy": ""
+      "pagePolicy": "",
+      "pageKey": "",
+      "contentUrl": "SiteAssets/ai-coe-pages.json"
     }
   }, {
     "groupId": "5c03119e-3074-46fd-976b-c60198311f70",
@@ -77,7 +81,9 @@
       "pageFeedback": "",
       "pageTelemetry": "",
       "pageAdmin": "",
-      "pagePolicy": ""
+      "pagePolicy": "",
+      "pageKey": "",
+      "contentUrl": "SiteAssets/ai-coe-pages.json"
     }
   }, {
     "groupId": "5c03119e-3074-46fd-976b-c60198311f70",
@@ -99,7 +105,9 @@
       "pageFeedback": "",
       "pageTelemetry": "",
       "pageAdmin": "",
-      "pagePolicy": ""
+      "pagePolicy": "",
+      "pageKey": "",
+      "contentUrl": "SiteAssets/ai-coe-pages.json"
     }
   }, {
     "groupId": "5c03119e-3074-46fd-976b-c60198311f70",
@@ -121,7 +129,9 @@
       "pageFeedback": "",
       "pageTelemetry": "",
       "pageAdmin": "",
-      "pagePolicy": ""
+      "pagePolicy": "",
+      "pageKey": "",
+      "contentUrl": "SiteAssets/ai-coe-pages.json"
     }
   }, {
     "groupId": "5c03119e-3074-46fd-976b-c60198311f70",
@@ -143,7 +153,9 @@
       "pageFeedback": "",
       "pageTelemetry": "",
       "pageAdmin": "",
-      "pagePolicy": ""
+      "pagePolicy": "",
+      "pageKey": "",
+      "contentUrl": "SiteAssets/ai-coe-pages.json"
     }
   }, {
     "groupId": "5c03119e-3074-46fd-976b-c60198311f70",
@@ -165,7 +177,9 @@
       "pageFeedback": "",
       "pageTelemetry": "",
       "pageAdmin": "",
-      "pagePolicy": ""
+      "pagePolicy": "",
+      "pageKey": "",
+      "contentUrl": "SiteAssets/ai-coe-pages.json"
     }
   }, {
     "groupId": "5c03119e-3074-46fd-976b-c60198311f70",
@@ -187,7 +201,9 @@
       "pageFeedback": "",
       "pageTelemetry": "",
       "pageAdmin": "",
-      "pagePolicy": ""
+      "pagePolicy": "",
+      "pageKey": "",
+      "contentUrl": "SiteAssets/ai-coe-pages.json"
     }
   }, {
     "groupId": "5c03119e-3074-46fd-976b-c60198311f70",
@@ -209,7 +225,33 @@
       "pageFeedback": "",
       "pageTelemetry": "",
       "pageAdmin": "",
-      "pagePolicy": ""
+      "pagePolicy": "",
+      "pageKey": "",
+      "contentUrl": "SiteAssets/ai-coe-pages.json"
+    }
+  }, {
+    "groupId": "5c03119e-3074-46fd-976b-c60198311f70",
+    "group": { "default": "AI Center of Excellence" },
+    "title": { "default": "AI CoE: Content page" },
+    "description": { "default": "One page of the AI CoE content document (Site Assets), rendered in the front door's style" },
+    "officeFabricIconFontName": "EntryView",
+    "properties": {
+      "organizationName": "",
+      "draftServiceUrl": "",
+      "telemetryProvider": "claude",
+      "view": "page",
+      "layout": "wide",
+      "returnUrl": "",
+      "pageIdea": "",
+      "pageToolCheck": "",
+      "pageTeamUsage": "",
+      "pageHelpTraining": "",
+      "pageFeedback": "",
+      "pageTelemetry": "",
+      "pageAdmin": "",
+      "pagePolicy": "",
+      "pageKey": "",
+      "contentUrl": "SiteAssets/ai-coe-pages.json"
     }
   }]
 }

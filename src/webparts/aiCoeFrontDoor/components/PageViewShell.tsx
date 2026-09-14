@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { isWorkflowView } from '../content/pageViews';
 import type { IPageViewSettings } from '../content/pageViews';
-import { WORKFLOW_ORDER } from '../content/workflows/catalog';
 import { useFrontDoor } from '../context/FrontDoorContext';
 import { NoticeBanner } from '../controls/NoticeBanner';
 import { browserNavigate } from '../services/navigation';
@@ -9,7 +8,9 @@ import type { Navigate } from '../services/navigation';
 import { GovernanceAdminDashboard } from './GovernanceAdminDashboard';
 import { HomePage } from './HomePage';
 import type { DraftFlags } from './LandingPage';
+import { ContentPage } from './pages/ContentPage';
 import { UsageTelemetryStrip } from './UsageTelemetryStrip';
+import { useDraftFlags } from './useDraftFlags';
 import { FeedbackWorkflow } from './workflows/FeedbackWorkflow';
 import { GenericWorkflow } from './workflows/GenericWorkflow';
 import { IdeaWorkflow } from './workflows/IdeaWorkflow';
@@ -37,30 +38,9 @@ export function PageViewShell({ settings }: IPageViewShellProps): React.ReactEle
   const navigate: Navigate = contextNavigate ?? browserNavigate;
   const view: IPageViewSettings['view'] = settings.view;
   const returnUrl: string | undefined = settings.returnUrl;
-  const [drafts, setDrafts] = React.useState<DraftFlags>({});
-
-  // The home piece discovers saved drafts on load, exactly as the legacy shell does; other pieces have no badges.
-  React.useEffect((): (() => void) => {
-    if (view !== 'home') {
-      return (): void => undefined;
-    }
-    let cancelled: boolean = false;
-    const discover = async (): Promise<void> => {
-      for (const workflowId of WORKFLOW_ORDER) {
-        const draft: unknown = await draftStore.load<unknown>(workflowId);
-        if (cancelled) {
-          return;
-        }
-        if (draft !== undefined) {
-          setDrafts((current: DraftFlags): DraftFlags => ({ ...current, [workflowId]: true }));
-        }
-      }
-    };
-    discover().catch((): void => undefined);
-    return (): void => {
-      cancelled = true;
-    };
-  }, [draftStore, view]);
+  // The home piece discovers saved drafts on load, exactly as the legacy shell does; other pieces have no badges
+  // (a content page runs its own discovery when it embeds the home tiles).
+  const drafts: DraftFlags = useDraftFlags(draftStore, view === 'home');
 
   const exit = React.useCallback((): void => navigate(returnUrl ?? siteUrl), [navigate, returnUrl, siteUrl]);
   const workflowProps: IWorkflowProps = { resumeDraft: true, onExit: exit, onDraftsChanged: NO_DRAFT_TRACKING };
@@ -95,6 +75,9 @@ export function PageViewShell({ settings }: IPageViewShellProps): React.ReactEle
       break;
     case 'admin':
       content = isAdmin ? <GovernanceAdminDashboard onExit={exit} /> : <NoticeBanner>{ADMIN_ONLY_TEXT}</NoticeBanner>;
+      break;
+    case 'page':
+      content = <ContentPage pageKey={settings.pageKey} />;
       break;
     default:
       content = <NoticeBanner>{UNCONFIGURED_VIEW_TEXT}</NoticeBanner>;

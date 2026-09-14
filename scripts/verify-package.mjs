@@ -24,7 +24,7 @@ const testSummary = argument('--tests', undefined);
 
 const EXPECTED = {
   productId: 'f125ebdf-4a9d-4e6e-8479-3a18874e7752',
-  version: '1.0.0.10',
+  version: '1.0.0.11',
   featureId: '69ab84b7-608c-47ee-9623-af8ebaf2cb10',
   webPartId: 'cf2e5904-0703-4fe4-ae5a-ec012d6fa689',
   provisioningFiles: ['elements.xml', 'intake-schema.xml', 'decision-schema.xml'],
@@ -151,7 +151,12 @@ check(componentXml !== undefined, `No WebPart_${EXPECTED.webPartId}.xml element 
 const componentText = componentXml === undefined ? '' : componentXml.bytes.toString('utf8');
 const preconfiguredViews = (componentText.match(/&quot;view&quot;:&quot;([A-Za-z]+)&quot;/g) ?? []).map((match) => match.replace(/&quot;/g, '').split(':')[1]);
 check(preconfiguredViews[0] === 'legacy', `The first toolbox entry presets view "${preconfiguredViews[0]}", expected "legacy"`);
-check(preconfiguredViews.length === 9, `Expected nine toolbox entries (one per piece), found ${preconfiguredViews.length}`);
+check(preconfiguredViews.length === 10, `Expected ten toolbox entries (one per piece plus the content page), found ${preconfiguredViews.length}`);
+check(preconfiguredViews[preconfiguredViews.length - 1] === 'page', `The last toolbox entry presets view "${preconfiguredViews[preconfiguredViews.length - 1]}", expected "page"`);
+check(
+  componentText.includes('&quot;contentUrl&quot;:&quot;SiteAssets/ai-coe-pages.json&quot;'),
+  'The toolbox entries do not preset the content document path SiteAssets/ai-coe-pages.json'
+);
 check(componentText.includes('ClientSideComponent Name="AI CoE Front Door"'), 'The component manifest lost the shipped web part name');
 
 const record = {

@@ -22,6 +22,7 @@ import { AiCoeFrontDoor } from './components/AiCoeFrontDoor';
 import type { IAiCoeFrontDoorProps } from './components/AiCoeFrontDoor';
 import { createPageViewSettings, FRONT_DOOR_VIEWS, isWorkflowView, PAGE_TARGET_PROPERTIES, PAGE_TARGETS, parseFrontDoorView, parsePieceLayout, PIECE_LAYOUTS } from './content/pageViews';
 import type { FrontDoorView, IPageViewProperties, PageTarget, PieceLayout } from './content/pageViews';
+import { parseContentUrl } from './content/pageContent';
 import { parseTelemetryProvider } from './content/telemetryTiles';
 import type { IFrontDoorServices, IFrontDoorUser } from './context/FrontDoorContext';
 import { createIdeaDraftService } from './services/draftService';
@@ -30,6 +31,7 @@ import { browserLocalStorage, LocalStorageDraftStore } from './services/draftSto
 import { createFlowClientFactory } from './services/flowClient';
 import { GovernanceService } from './services/GovernanceService';
 import { browserNavigate } from './services/navigation';
+import { PageContentService } from './services/pageContentService';
 import { createToolPolicyEvaluator } from './services/toolPolicyEvaluator';
 import type { IServiceContext } from './services/types';
 import { UsageMetricsService } from './services/UsageMetricsService';
@@ -49,6 +51,8 @@ interface ICoreServices {
   draftStore: LocalStorageDraftStore;
   flowClient: () => Promise<IDraftHttpClient>;
   user: IFrontDoorUser;
+  /** Kept for the services that depend on a property, such as the page content reader. */
+  serviceContext: IServiceContext;
 }
 
 export default class AiCoeFrontDoorWebPart extends BaseClientSideWebPart<IAiCoeFrontDoorWebPartProps> {
@@ -71,7 +75,8 @@ export default class AiCoeFrontDoorWebPart extends BaseClientSideWebPart<IAiCoeF
       usage: new UsageMetricsService(serviceContext),
       draftStore: new LocalStorageDraftStore(browserLocalStorage()),
       flowClient: createFlowClientFactory(this.context.aadHttpClientFactory),
-      user: serviceContext.user
+      user: serviceContext.user,
+      serviceContext
     };
   }
 
@@ -134,7 +139,8 @@ export default class AiCoeFrontDoorWebPart extends BaseClientSideWebPart<IAiCoeF
       helpTraining: strings.ViewOptionHelpTraining,
       feedback: strings.ViewOptionFeedback,
       telemetry: strings.ViewOptionTelemetry,
-      admin: strings.ViewOptionAdmin
+      admin: strings.ViewOptionAdmin,
+      page: strings.ViewOptionPage
     };
     const layoutLabels: { [id in PieceLayout]: string } = { wide: strings.LayoutOptionWide, narrow: strings.LayoutOptionNarrow };
     const pageLabels: { [target in PageTarget]: string } = {
@@ -211,6 +217,23 @@ export default class AiCoeFrontDoorWebPart extends BaseClientSideWebPart<IAiCoeF
       },
       { groupName: strings.PageLayoutGroupName, groupFields: layoutFields }
     ];
+    if (view === 'page') {
+      groups.push({
+        groupName: strings.PageContentGroupName,
+        groupFields: [
+          PropertyPaneTextField('pageKey', {
+            label: strings.PageKeyFieldLabel,
+            description: strings.PageKeyFieldDescription,
+            placeholder: 'startHere'
+          }),
+          PropertyPaneTextField('contentUrl', {
+            label: strings.ContentUrlFieldLabel,
+            description: strings.ContentUrlFieldDescription,
+            placeholder: 'SiteAssets/ai-coe-pages.json'
+          })
+        ]
+      });
+    }
     if (view === 'home') {
       groups.push({
         groupName: strings.PageLinksGroupName,
@@ -238,14 +261,17 @@ export default class AiCoeFrontDoorWebPart extends BaseClientSideWebPart<IAiCoeF
   /** The service bundle handed to React; rebuilt only when a property it depends on changes. */
   private _servicesFor(core: ICoreServices, branding: IBranding): IFrontDoorServices {
     const draftServiceUrl: string = this.properties.draftServiceUrl ?? '';
-    const key: string = JSON.stringify([branding.organizationName, draftServiceUrl]);
+    const contentUrl: string = parseContentUrl(this.properties.contentUrl);
+    const key: string = JSON.stringify([branding.organizationName, draftServiceUrl, contentUrl]);
     if (this._services === undefined || this._servicesKey !== key) {
       this._services = {
         governance: core.governance,
         usage: core.usage,
         draftStore: core.draftStore,
         toolPolicyEvaluator: createToolPolicyEvaluator(branding),
-        ideaDrafts: createIdeaDraftService(draftServiceUrl, core.flowClient)
+        ideaDrafts: createIdeaDraftService(draftServiceUrl, core.flowClient),
+        // Reads the document once per instance and document path; the page key alone never refetches.
+        pageContent: new PageContentService(core.serviceContext, contentUrl)
       };
       this._servicesKey = key;
     }

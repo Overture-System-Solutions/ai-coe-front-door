@@ -22,11 +22,17 @@ declare interface IAiCoeFrontDoorWebPartStrings {
   ViewOptionFeedback: string;
   ViewOptionTelemetry: string;
   ViewOptionAdmin: string;
+  ViewOptionPage: string;
   LayoutFieldLabel: string;
   LayoutOptionWide: string;
   LayoutOptionNarrow: string;
   ReturnUrlFieldLabel: string;
   ReturnUrlFieldDescription: string;
+  PageContentGroupName: string;
+  PageKeyFieldLabel: string;
+  PageKeyFieldDescription: string;
+  ContentUrlFieldLabel: string;
+  ContentUrlFieldDescription: string;
   PageLinksGroupName: string;
   PageLinkFieldDescription: string;
   PageIdeaFieldLabel: string;

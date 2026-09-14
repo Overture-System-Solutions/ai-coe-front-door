@@ -5,6 +5,7 @@
 import type { IBranding } from '../webparts/aiCoeFrontDoor/branding/branding';
 import type { IIdeaDraftResult, IIdeaDraftService } from '../webparts/aiCoeFrontDoor/services/draftService';
 import type { IDraftStore } from '../webparts/aiCoeFrontDoor/services/draftStorage';
+import type { IPageContentResult, IPageContentService } from '../webparts/aiCoeFrontDoor/services/pageContentService';
 import { createToolPolicyEvaluator } from '../webparts/aiCoeFrontDoor/services/toolPolicyEvaluator';
 import type { IToolPolicyEvaluator } from '../webparts/aiCoeFrontDoor/services/toolPolicyEvaluator';
 import type {
@@ -15,6 +16,7 @@ import type {
   IUsageMetricsService
 } from '../webparts/aiCoeFrontDoor/services/types';
 import type { IAnswers, IWorkflowDefinition, SubmissionWorkflowType } from '../webparts/aiCoeFrontDoor/workflows/types';
+import { SAMPLE_PAGE_DOCUMENT } from './pageDocument';
 
 export interface IDeferred<T> {
   promise: Promise<T>;
@@ -92,6 +94,29 @@ export function createFakeUsageService(result: IUsageMetricsResult | Promise<IUs
 /** Never answers: for pages under test that render the telemetry strip but do not exercise it. */
 export function createPendingUsageService(): IFakeUsageMetricsService {
   return createFakeUsageService(new Promise<IUsageMetricsResult>((): void => undefined));
+}
+
+export interface IFakePageContentService extends IPageContentService {
+  calls: number;
+}
+
+export const SAMPLE_PAGE_CONTENT_RESULT: IPageContentResult = { connected: true, document: SAMPLE_PAGE_DOCUMENT, message: 'Page content loaded.' };
+
+/** Resolves with `result` (a value or a promise the test controls) on every call; the sample document by default. */
+export function createFakePageContentService(result: IPageContentResult | Promise<IPageContentResult> = SAMPLE_PAGE_CONTENT_RESULT): IFakePageContentService {
+  const service: IFakePageContentService = {
+    calls: 0,
+    getDocument: async (): Promise<IPageContentResult> => {
+      service.calls += 1;
+      return result;
+    }
+  };
+  return service;
+}
+
+/** Never answers: for asserting the loading state of a content page. */
+export function createPendingPageContentService(): IFakePageContentService {
+  return createFakePageContentService(new Promise<IPageContentResult>((): void => undefined));
 }
 
 /** Draft store that keeps JSON copies in memory, so tests see exactly what localStorage would. */

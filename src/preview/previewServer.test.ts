@@ -79,6 +79,11 @@ describe('offline preview server', () => {
     }
     expect(page.body).toContain('id="layout"');
     expect(page.body).toContain('option value="narrow"');
+    const pageSelect: RegExpExecArray | null = /<select id="page-key">([\s\S]*?)<\/select>/.exec(page.body);
+    expect(pageSelect).not.toBeNull();
+    for (const key of ['startHere', 'learn', 'useAi', 'requests', 'prompts', 'status']) {
+      expect((pageSelect as RegExpExecArray)[1]).toContain(`option value="${key}"`);
+    }
     const directives: string[] = String(page.headers['content-security-policy'])
       .split(';')
       .map((directive: string): string => directive.trim());
@@ -94,6 +99,10 @@ describe('offline preview server', () => {
     expect(mount.body).toContain('returnUrl');
     expect(mount.body).toContain('maxWidth');
     expect(mount.body).toContain("get('layout')");
+    expect(mount.body).toContain("get('page')");
+    expect(mount.body).toContain('pageKey');
+    expect(mount.body).toContain('contentUrl');
+    expect(mount.body).toContain('setPageKey');
   });
 
   it('serves only the allowlisted assets', async () => {
@@ -116,6 +125,9 @@ describe('offline preview server', () => {
     expect(host.body).toContain('setTelemetryProvider');
     expect(host.body).toContain('setView');
     expect(host.body).toContain('setLayout');
+    expect(host.body).toContain('setPageKey');
+    expect(host.body).toContain('GetFileByServerRelativeUrl');
+    expect(host.body).toContain('ai-coe-pages.json');
     expect(host.body).toContain('claude-sonnet-5');
     expect(host.body).toContain('Simulated preview data');
     // Browsers cannot resolve bare specifiers such as "tslib"; the host must compile helper-free.

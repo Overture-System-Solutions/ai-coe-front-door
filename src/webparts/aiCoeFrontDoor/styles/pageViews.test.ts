@@ -12,7 +12,7 @@ const ROOT: string = process.cwd();
 const COMPILED: string = path.join(ROOT, 'lib-commonjs/webparts/aiCoeFrontDoor/styles/pageViews.global.scss.css');
 const SHIPPED_STYLESHEET: string = path.join(ROOT, 'parity/AiCoeFrontDoor.global.1.0.0.7.css');
 const SHIPPED_THEME: string = path.join(ROOT, 'parity/theme.1.0.0.7.css');
-const SCOPED_SELECTOR: RegExp = /^#overture-ai-coe-pilot (\.overture-app)?\.ai-view(--(home|telemetry|narrow))?( |$)/;
+const SCOPED_SELECTOR: RegExp = /^#overture-ai-coe-pilot (\.overture-app)?\.ai-view(--(home|telemetry|narrow|page))?( |$)/;
 
 type DeclarationTable = { [selector: string]: string[] };
 
@@ -87,6 +87,51 @@ describe('Page view stylesheet', () => {
     expect(rule(table, '.ai-view--home .ai-home-adminbar .ai-admin-back')).toEqual(['background:#087f83', 'border-color:#087f83', 'color:#fff', 'text-decoration:none']);
     expect(rule(table, '.ai-view--home .ai-home-adminbar .ai-admin-back:hover')).toEqual(['background:#055d66', 'color:#fff']);
     expect(rule(table, '.ai-view--telemetry .ai-usage-section')).toEqual(['margin:0']);
+  });
+
+  it('lays out the content page blocks with the shipped card vocabulary', () => {
+    expect(rule(table, '.ai-view--page .ai-page-block + .ai-page-block')).toEqual(['margin-top:24px']);
+    expect(rule(table, '.ai-view--page .ai-page-block--heading + .ai-page-block')).toEqual(['margin-top:0']);
+    expect(rule(table, '.ai-view--page .ai-page-heading')).toEqual(['color:#17283b', 'font-size:24px', 'font-weight:700', 'line-height:1.3', 'margin:0 0 12px']);
+    expect(rule(table, '.ai-view--page .ai-page-paragraph')).toContain('font-size:17px');
+    expect(rule(table, '.ai-view--page .ai-hero-copy p a')).toEqual(['color:#fff', 'text-decoration:underline']);
+    expect(rule(table, '.ai-view--page a.ai-hero-cta')).toEqual(['text-decoration:none']);
+    expect(rule(table, '.ai-view--page a.ai-service-card')).toEqual(['text-decoration:none']);
+    expect(rule(table, '.ai-view--page .ai-page-tiles')).toEqual(['display:grid', 'gap:16px', 'grid-template-columns:repeat(auto-fit, minmax(220px, 1fr))']);
+    expect(rule(table, '.ai-view--page .ai-page-tiles .ai-service-card')).toEqual(['grid-column:auto', 'min-height:92px']);
+    expect(rule(table, '.ai-view--page .ai-page-cards')).toEqual(['display:grid', 'gap:16px', 'grid-template-columns:repeat(2, minmax(0, 1fr))']);
+    expect(rule(table, '.ai-view--page .ai-page-cards--3')).toEqual(['grid-template-columns:repeat(3, minmax(0, 1fr))']);
+    expect(rule(table, '.ai-view--page .ai-page-card')).toEqual(['background:#fff', 'border-radius:13px', 'border:1px solid #dbe5ec', 'min-width:0', 'padding:17px 18px 15px']);
+    expect(rule(table, '.ai-view--page .ai-page-lane')).toEqual(rule(table, '.ai-view--page .ai-page-card'));
+    expect(rule(table, '.ai-view--page .ai-page-card--teal')).toEqual(['background:linear-gradient(112deg, #f7fffd, #f0faf9)', 'border-left:5px solid #07878a']);
+    expect(rule(table, '.ai-view--page .ai-page-card--cyan')).toEqual(['background:linear-gradient(112deg, #f7fdff, #ecf8fc)', 'border-left:5px solid #0e8fa3']);
+    for (const tone of ['blue', 'violet', 'gold']) {
+      expect(rule(table, `.ai-view--page .ai-page-card--${tone}`)).toHaveLength(2);
+    }
+    expect(rule(table, '.ai-view--page .ai-page-card-kicker')).toContain('text-transform:uppercase');
+    expect(rule(table, '.ai-view--page .ai-page-card-meta')).toContain('font-style:italic');
+    expect(rule(table, '.ai-view--page .ai-page-lanes')).toEqual(['display:grid', 'gap:16px', 'grid-template-columns:repeat(3, minmax(0, 1fr))']);
+    expect(rule(table, '.ai-view--page .ai-page-lane--green')).toEqual(['background:linear-gradient(112deg, #f4fdf9, #ddf6f0)', 'border-top:5px solid #076b67']);
+    expect(rule(table, '.ai-view--page .ai-page-lane--amber')).toEqual(['background:linear-gradient(112deg, #fffcf2, #fff4cf)', 'border-top:5px solid #725600']);
+    expect(rule(table, '.ai-view--page .ai-page-lane--red')).toEqual(['background:linear-gradient(112deg, #fff6f6, #fde8e8)', 'border-top:5px solid #9b1c1c']);
+    expect(rule(table, '.ai-view--page .ai-page-lane--green .ai-page-lane-badge')).toEqual(['background:#ddf6f0', 'color:#076b67']);
+    expect(rule(table, '.ai-view--page .ai-page-lane--amber .ai-page-lane-badge')).toEqual(['background:#fff4cf', 'color:#725600']);
+    expect(rule(table, '.ai-view--page .ai-page-lane--red .ai-page-lane-badge')).toEqual(['background:#fde8e8', 'color:#9b1c1c']);
+    expect(rule(table, '.ai-view--page .ai-page-status')).toEqual(['display:grid', 'gap:12px 24px', 'grid-template-columns:repeat(2, minmax(0, 1fr))']);
+    expect(rule(table, '.ai-view--page .ai-usage-section')).toEqual(['margin:0']);
+    expect(rule(table, '.ai-view--page .ai-path-section')).toEqual(['padding:0']);
+    expect(rule(table, '.ai-view--page .ai-resource-strip')).toEqual(['margin:16px 0 0']);
+    expect(rule(table, '.ai-view--page .ai-resource-strip--four')).toEqual(['grid-template-columns:repeat(4, minmax(0, 1fr))']);
+    expect(rule(table, '.ai-view--page .ai-home-adminbar .ai-admin-back')).toEqual(['background:#087f83', 'border-color:#087f83', 'color:#fff', 'text-decoration:none']);
+  });
+
+  it('stacks the content page blocks in the narrow layout', () => {
+    for (const grid of ['.ai-page-tiles', '.ai-page-cards', '.ai-page-cards--3', '.ai-page-lanes', '.ai-page-status']) {
+      expect(rule(table, `.ai-view--narrow ${grid}`)).toEqual(['grid-template-columns:1fr']);
+    }
+    expect(rule(table, '.ai-view--narrow .ai-hero')).toEqual(['display:block', 'min-height:0']);
+    expect(rule(table, '.ai-view--narrow .ai-hero-copy')).toEqual(['max-width:none', 'padding:26px 22px']);
+    expect(rule(table, '.ai-view--narrow .ai-hero-network')).toEqual(['display:none']);
   });
 
   it('stacks the pieces in the narrow layout like the shipped phone breakpoints', () => {

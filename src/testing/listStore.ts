@@ -15,6 +15,8 @@ export interface IRecordedRequest {
   method: 'GET' | 'POST';
   url: string;
   list: string | undefined;
+  /** Server-relative path when the request read a file instead of a list. */
+  file?: string;
   query: { [name: string]: string };
   headers: { [name: string]: string };
   body: unknown;
@@ -26,6 +28,7 @@ interface IListFailure {
 }
 
 const ITEMS_URL: RegExp = /getbytitle\('((?:[^']|'')*)'\)\/items(?:\?(.*))?$/;
+const FILE_URL: RegExp = /GetFileByServerRelativeUrl\('((?:[^']|'')*)'\)\/\$value$/i;
 
 function parseQuery(raw: string | undefined): { [name: string]: string } {
   const query: { [name: string]: string } = {};
@@ -67,6 +70,7 @@ export class InMemoryListStore {
   public readonly requests: IRecordedRequest[] = [];
   private readonly _lists: { [title: string]: IStoredItem[] } = {};
   private readonly _failures: { [title: string]: IListFailure } = {};
+  private readonly _files: { [serverRelativePath: string]: string } = {};
   private readonly _pageSize: number | undefined;
   private _nextId: number = 1;
 
@@ -88,12 +92,23 @@ export class InMemoryListStore {
     return this._lists[title].slice();
   }
 
+  /** Makes a file readable through `GetFileByServerRelativeUrl('<path>')/$value`. */
+  public seedFile(serverRelativePath: string, body: string): void {
+    this._files[serverRelativePath] = body;
+  }
+
   /** Makes every request to the list fail with the given status and body. */
   public fail(title: string, status: number = 500, body: string = 'boom'): void {
     this._failures[title] = { status, body };
   }
 
   public async request(method: 'GET' | 'POST', url: string, options: IListRequestOptions): Promise<IListResponse> {
+    const fileMatch: RegExpExecArray | null = FILE_URL.exec(url);
+    if (fileMatch) {
+      const file: string = fileMatch[1].replace(/''/g, "'");
+      this.requests.push({ method, url, list: undefined, file, query: {}, headers: options.headers, body: undefined });
+      return Object.prototype.hasOwnProperty.call(this._files, file) ? respond(200, this._files[file]) : respond(404, 'File not found');
+    }
     const match: RegExpExecArray | null = ITEMS_URL.exec(url);
     const list: string | undefined = match ? match[1].replace(/''/g, "'") : undefined;
     const query: { [name: string]: string } = parseQuery(match ? match[2] : undefined);

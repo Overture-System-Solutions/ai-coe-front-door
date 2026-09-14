@@ -1,8 +1,10 @@
 // Offline preview entry point; never shipped to SharePoint.
 const SIMULATED_FLOW_URL = 'https://offline-preview.invalid/claude-draft';
 const TELEMETRY_PROVIDERS = ['claude', 'openai', 'both'];
-const VIEWS = ['legacy', 'home', 'idea', 'toolCheck', 'teamUsage', 'helpTraining', 'feedback', 'telemetry', 'admin'];
+const VIEWS = ['legacy', 'home', 'idea', 'toolCheck', 'teamUsage', 'helpTraining', 'feedback', 'telemetry', 'admin', 'page'];
 const LAYOUTS = ['wide', 'narrow'];
+// Pages of the simulated content document the host serves as SiteAssets/ai-coe-pages.json.
+const PAGE_KEYS = ['startHere', 'learn', 'useAi', 'requests', 'prompts', 'status'];
 // The home tiles link to other pages; offline, every other page is this page showing another piece.
 const PAGE_PROPERTIES = {
   pageIdea: 'idea',
@@ -18,8 +20,11 @@ const organization = params.get('organization') ?? '';
 const simulateDraft = params.get('draft') === 'simulated';
 const requestedProvider = (params.get('provider') ?? '').toLowerCase();
 const provider = TELEMETRY_PROVIDERS.includes(requestedProvider) ? requestedProvider : 'claude';
+const requestedPage = params.get('page') ?? '';
+const pageKey = PAGE_KEYS.includes(requestedPage) ? requestedPage : 'startHere';
 const requestedView = params.get('view') ?? '';
-const view = VIEWS.includes(requestedView) ? requestedView : 'legacy';
+// "?page=learn" alone implies the content page view.
+const view = VIEWS.includes(requestedView) ? requestedView : requestedPage ? 'page' : 'legacy';
 const requestedLayout = params.get('layout') ?? '';
 const layout = LAYOUTS.includes(requestedLayout) ? requestedLayout : 'wide';
 const width = Number(params.get('width') ?? 0);
@@ -28,11 +33,13 @@ const draftToggle = document.getElementById('simulate-draft');
 const providerSelect = document.getElementById('telemetry-provider');
 const viewSelect = document.getElementById('view');
 const layoutSelect = document.getElementById('layout');
+const pageSelect = document.getElementById('page-key');
 input.value = organization;
 draftToggle.checked = simulateDraft;
 providerSelect.value = provider;
 viewSelect.value = view;
 layoutSelect.value = layout;
+pageSelect.value = pageKey;
 if (width > 0) {
   // Approximates a section column so the narrow layout can be eyeballed.
   document.getElementById('app').style.maxWidth = `${width}px`;
@@ -51,6 +58,8 @@ const properties = {
   telemetryProvider: provider,
   view,
   layout,
+  pageKey,
+  contentUrl: 'SiteAssets/ai-coe-pages.json',
   returnUrl: viewLink('home'),
   // Blank keeps the policy library link of the simulated site, which the preview leaves inert.
   pagePolicy: ''
@@ -92,6 +101,11 @@ function syncUrl() {
   } else {
     url.searchParams.set('layout', layoutSelect.value);
   }
+  if (viewSelect.value === 'page') {
+    url.searchParams.set('page', pageSelect.value);
+  } else {
+    url.searchParams.delete('page');
+  }
   history.replaceState(null, '', url);
 }
 
@@ -119,4 +133,13 @@ viewSelect.addEventListener('change', () => {
 layoutSelect.addEventListener('change', () => {
   syncUrl();
   window.FrontDoorPreview.setLayout(layoutSelect.value);
+});
+
+pageSelect.addEventListener('change', () => {
+  if (viewSelect.value !== 'page') {
+    viewSelect.value = 'page';
+    window.FrontDoorPreview.setView('page');
+  }
+  syncUrl();
+  window.FrontDoorPreview.setPageKey(pageSelect.value);
 });

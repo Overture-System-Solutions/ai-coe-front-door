@@ -1,6 +1,6 @@
 import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import * as React from 'react';
-import { createFakeUsageService, InMemoryDraftStore } from '../../../testing/fakeServices';
+import { createFakePageContentService, createFakeUsageService, InMemoryDraftStore } from '../../../testing/fakeServices';
 import { renderWithFrontDoor, TEST_SITE_URL } from '../../../testing/renderWithFrontDoor';
 import type { FrontDoorRenderResult, ITestFrontDoorOptions } from '../../../testing/renderWithFrontDoor';
 import { firstStepOf } from '../../../testing/workflowHarness';
@@ -8,6 +8,7 @@ import { createBranding } from '../branding/branding';
 import type { FrontDoorView, IPageViewSettings } from '../content/pageViews';
 import { createWorkflowCatalog } from '../content/workflows/catalog';
 import type { IWorkflowCatalog } from '../workflows/types';
+import { NO_PAGE_KEY_TEXT } from './pages/ContentPage';
 import { ADMIN_ONLY_TEXT, PageViewShell, UNCONFIGURED_VIEW_TEXT } from './PageViewShell';
 
 const catalog: IWorkflowCatalog = createWorkflowCatalog(createBranding('Overture'));
@@ -125,5 +126,20 @@ describe('PageViewShell', () => {
     renderView(settingsFor('legacy'));
     expect(screen.getByText(UNCONFIGURED_VIEW_TEXT).closest('.overture-notice')).not.toBeNull();
     expect(screen.queryByText('AI, safely put to work.')).not.toBeInTheDocument();
+  });
+
+  it('renders a content page inside the home shell', async () => {
+    const { container } = renderView(settingsFor('page', { pageKey: 'startHere' }), { pageContent: createFakePageContentService() });
+    expect(container.firstChild).toHaveClass('overture-app', 'ai-view', 'ai-view--page');
+    await screen.findByRole('heading', { level: 1, name: 'What do you need done?' });
+    expect(container.querySelector('.ai-home-shell > main > .ai-home.ai-page > .ai-page-block--hero')).not.toBeNull();
+    expect(container.querySelector('.ai-workflow-shell')).toBeNull();
+    expect(screen.queryByText('AI CoE Lab')).not.toBeInTheDocument();
+    expect(screen.queryByText('AI, safely put to work.')).not.toBeInTheDocument();
+  });
+
+  it('asks for a page key on a content page without one', () => {
+    renderView(settingsFor('page'), { pageContent: createFakePageContentService() });
+    expect(screen.getByText(NO_PAGE_KEY_TEXT).closest('.overture-notice')).not.toBeNull();
   });
 });

@@ -36,6 +36,8 @@ export interface IAmdHostOptions {
   /** Web part property bag (`this.properties`). */
   properties?: { [name: string]: unknown };
   store?: InMemoryListStore;
+  /** Files readable through the REST API, keyed by server-relative path (for example the page content document). */
+  files?: { [serverRelativePath: string]: string };
   /** Simulated Claude draft flow behind the Entra-authenticated client; answers 404 when absent. */
   draftFlow?: (request: unknown) => IFlowReply;
   /** The context's property pane accessor; absent by default, like a page whose pane is closed. */
@@ -162,6 +164,10 @@ export function loadWebPartBundle(bundlePath: string, stringsPath?: string): IWe
     dependencies: definition.dependencies.slice(),
     create: (options: IAmdHostOptions = {}): IHostedInstance => {
       const store: InMemoryListStore = options.store ?? new InMemoryListStore(LIST_TITLES.slice());
+      const files: { [serverRelativePath: string]: string } = options.files ?? {};
+      for (const serverRelativePath of Object.keys(files)) {
+        store.seedFile(serverRelativePath, files[serverRelativePath]);
+      }
       const permissionChecks: unknown[] = [];
       const flowResources: string[] = [];
       const flowRequests: IFlowRequest[] = [];

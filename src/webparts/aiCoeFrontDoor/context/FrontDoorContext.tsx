@@ -4,6 +4,7 @@ import type { TelemetryProvider } from '../content/telemetryTiles';
 import type { IIdeaDraftService } from '../services/draftService';
 import type { IDraftStore } from '../services/draftStorage';
 import type { Navigate } from '../services/navigation';
+import type { IPageContentService } from '../services/pageContentService';
 import type { IToolPolicyEvaluator } from '../services/toolPolicyEvaluator';
 import type { IGovernanceService, IUsageMetricsService } from '../services/types';
 import type { IWorkflowCatalog } from '../workflows/types';
@@ -20,6 +21,8 @@ export interface IFrontDoorServices {
   toolPolicyEvaluator: IToolPolicyEvaluator;
   /** Present only when the web part has a Claude draft flow configured; otherwise summaries stay deterministic. */
   ideaDrafts?: IIdeaDraftService;
+  /** Reads the page content document; present for web parts, absent in the legacy-only test setups. */
+  pageContent?: IPageContentService;
 }
 
 /** Everything the pages need from the host: who is looking, where they are, and the services to talk to. */
