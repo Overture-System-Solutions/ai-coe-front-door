@@ -179,6 +179,44 @@ is no role selector anywhere in the bundle and no role is read out of the addres
 (`?role=`) behind its own banner. Roles decide what a page offers, never what the server hands out: list and page
 permissions remain the control.
 
+### Palette override
+
+A fourth Branding property (since 1.0.0.14), `paletteOverrides`, carries the colours of the organization as
+`key=#hex` pairs separated by semicolons, for example `accent=#008B83;ink=#102B3D`. The script writes it on every
+instance from the `Palette` parameter, so a tenant's colours are a parameter and never code. Teal stays the default:
+blank sets nothing and the shipped colours stand. Only a plain three- or six-digit hex colour is taken; a pair with
+an unknown key or any other kind of value is dropped on its own, and nothing but a colour ever reaches the element.
+
+The web part sets each pair as a custom property on its own element, exactly as it sets the theme colours
+(`--bodyText` and the rest). The page-view rules read them with `var(--fd-x, <literal>)`, where the literal is the
+colour the front door draws without a tenant value; **no stylesheet declares a `--fd-` value of its own**, because a
+declaration inside the web part would win over the value set on the element above it and every override would be
+dead (`styles/palette.test.ts` reads every compiled stylesheet and fails on one).
+
+| Key | Custom property | Default | Where it is read |
+|---|---|---|---|
+| `accent` | `--fd-accent` | `#087f83` | the button back to the front door on the administration bar of a page view |
+| `ink` | `--fd-ink` | `#10243e` | the question of the work command, the title of a notice |
+| `muted` | `--fd-muted` | `#5b6878` | the note under the work command, the evidence line and the note under the measure tiles |
+| `bg` | `--fd-bg` | `#f7fafc` | the quiet surface of a hand-off card whose route is closed |
+| `paper` | `--fd-paper` | `#fff` | the surface of a notice |
+| `focus` | `--fd-focus` | `#0b66d4` | the left edge of an information notice |
+| `stateGreen` | `--fd-state-green` | `#ddf6f0` | the background of a green status pill and case tag |
+| `stateBlue` | `--fd-state-blue` | `#e7f0fb` | the background of a blue (draft) status pill |
+| `stateAmber` | `--fd-state-amber` | `#fff4cf` | the background of an amber status pill and case tag |
+| `stateRed` | `--fd-state-red` | `#fde8e8` | the background of a red status pill and case tag |
+
+Everything else keeps the shipped colours, including the legacy single-page view, which carries no `.ai-view` class
+and reads no token. A state colour sets the background a pill is read against and never its ink, so check the
+contrast of a value you set (WCAG 2.2 AA, 4.5:1 for the pill's text) before you publish it.
+
+The nine colours of the reference palette (`08_FRONT-DOOR-AND-ENGINEERING-COCKPIT-SPEC-v3.3.md`, "Visual system")
+are an example of such an override and are in no stylesheet: Navy `#062A46`, Deep blue `#0B4267`, Blue `#0878D1`,
+Cyan `#21B5D8`, Teal `#008B83`, Ink `#102B3D`, Muted `#5B7180`, Background `#EDF5F9`, Paper `#FFFFFF`. As a
+`Palette` value, five of them land on keys directly and the rest are a choice the page owner makes:
+
+    accent=#008B83;ink=#102B3D;muted=#5B7180;bg=#EDF5F9;paper=#FFFFFF;focus=#0878D1
+
 Data contracts never change: intake ids (`OVT-AICOE-…`), list titles and field names, the localStorage draft keys
 (`overture-ai-coe-front-door:draft:*`), download file names (`overture-ai-coe-*.txt`), the DOM scope id
 (`overture-ai-coe-pilot`), the confirm dialog heading id (`overture-confirm-title`) and the `.overture-*` classes of
@@ -648,6 +686,7 @@ the identity line, the site's owners group on the admin page). Bindings, the pro
 | `governanceReference` | web part property (Branding), written by the script from `GovernanceReference` | property | the shipped literal in the legacy view, "reference not yet set" in page views |
 | `reviewSystemName` | web part property (Branding), written by the script from `ReviewSystemName` | property | the shipped literal in the legacy view, "the review system" in page views |
 | `roleGroups` | web part property (Branding), written by the script from the group parameters (1.0.0.14) | property | no site group is bound: everyone holds the employee role, a site owner also the operator role, and a page that asks for another role is not offered |
+| `paletteOverrides` | web part property (Branding), written by the script from `Palette` (1.0.0.14) | property | no palette token is set and the shipped colours stand |
 | `draftServiceUrl` | web part property (AI drafting) on the idea page, written by the script from `DraftServiceUrl` | property | plain summaries |
 | `telemetryProvider` | web part property (Telemetry) on Operations, written by the script from `TelemetryProvider` | property | `claude` |
 | AI CoE Pilot Intakes | the package feature (`sharepoint/assets/intake-schema.xml`), untouched on upgrade | list | absent: a submission fails and the visitor sees the shipped failure screen |
@@ -745,6 +784,10 @@ The shipped stylesheet is reproduced exactly (`styles/cssParity.test.ts` proves 
   shipped 3px ring); the second holds only media queries (one column below 800px, no hero illustration below 480px,
   no transitions or hover lifts under `prefers-reduced-motion`). `styles/pageViews.test.ts` and
   `styles/pageResponsive.test.ts` guard the scope, the at-rule split and the rules.
+- A few of those additive rules read a tenant colour as `var(--fd-x, <literal>)` (see "Palette override"). No
+  stylesheet declares a `--fd-` value: the web part sets them on its own element and a declaration inside would win
+  over it. `styles/palette.test.ts` reads every compiled stylesheet and holds that line, the fallback literals and
+  the rules each token is read in.
 - The stylesheets must keep the `.global.scss` suffix: the SharePoint Framework loader hashes every selector of any
   other stylesheet name as a CSS module (`AiCoeFrontDoorWebPart.test.ts` asserts the injected selectors).
 - `AiCoeFrontDoor.module.scss` is the one CSS module (two classes), as shipped.

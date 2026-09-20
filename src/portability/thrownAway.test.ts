@@ -91,7 +91,15 @@ describe('what would be thrown away', () => {
   it('documents every tenant-bound web part property and every list title the services read', () => {
     const rows: string[][] = tableRows(rebind());
     const properties: string[] = readManifestProperties().filter((name: string): boolean => !PAGE_VIEW_PROPERTIES.test(name));
-    expect(properties.slice().sort()).toEqual(['draftServiceUrl', 'governanceReference', 'organizationName', 'reviewSystemName', 'roleGroups', 'telemetryProvider']);
+    expect(properties.slice().sort()).toEqual([
+      'draftServiceUrl',
+      'governanceReference',
+      'organizationName',
+      'paletteOverrides',
+      'reviewSystemName',
+      'roleGroups',
+      'telemetryProvider'
+    ]);
     for (const name of properties) {
       const row: string[] | undefined = rows.filter((cells: string[]): boolean => cells[0] === `\`${name}\``)[0];
       expect({ name, row }).toEqual({ name, row: [`\`${name}\``, expect.stringContaining('property'), 'property', expect.stringMatching(/\S/)] });

@@ -88,7 +88,7 @@ describe('Page view stylesheet', () => {
     expect(rule(table, '.ai-view--home .ai-resource-strip')).toEqual(['margin:16px 0 0']);
     expect(rule(table, '.ai-view--home .ai-resource-strip--four')).toEqual(['grid-template-columns:repeat(4, minmax(0, 1fr))']);
     expect(rule(table, '.ai-view--home .ai-home-adminbar')).toEqual(['margin:0 0 14px']);
-    expect(rule(table, '.ai-view--home .ai-home-adminbar .ai-admin-back')).toEqual(['background:#087f83', 'border-color:#087f83', 'color:#fff', 'text-decoration:none']);
+    expect(rule(table, '.ai-view--home .ai-home-adminbar .ai-admin-back')).toEqual(['background:var(--fd-accent, #087f83)', 'border-color:var(--fd-accent, #087f83)', 'color:#fff', 'text-decoration:none']);
     expect(rule(table, '.ai-view--home .ai-home-adminbar .ai-admin-back:hover')).toEqual(['background:#055d66', 'color:#fff']);
     expect(rule(table, '.ai-view--telemetry .ai-usage-section')).toEqual(['margin:0']);
   });
@@ -134,7 +134,7 @@ describe('Page view stylesheet', () => {
     expect(rule(table, '.ai-view--page .ai-path-section')).toEqual(['padding:0']);
     expect(rule(table, '.ai-view--page .ai-resource-strip')).toEqual(['margin:16px 0 0']);
     expect(rule(table, '.ai-view--page .ai-resource-strip--four')).toEqual(['grid-template-columns:repeat(4, minmax(0, 1fr))']);
-    expect(rule(table, '.ai-view--page .ai-home-adminbar .ai-admin-back')).toEqual(['background:#087f83', 'border-color:#087f83', 'color:#fff', 'text-decoration:none']);
+    expect(rule(table, '.ai-view--page .ai-home-adminbar .ai-admin-back')).toEqual(['background:var(--fd-accent, #087f83)', 'border-color:var(--fd-accent, #087f83)', 'color:#fff', 'text-decoration:none']);
   });
 
   it('lays out prominent tiles, closed cards and the action states', () => {
@@ -160,14 +160,22 @@ describe('Page view stylesheet', () => {
 
   it('lays out the work command as a grid whose controls are 44px targets', () => {
     expect(rule(table, '.ai-view--page .ai-page-command')).toEqual(['align-items:center', 'display:grid', 'gap:10px 12px', 'grid-template-columns:minmax(0, 1fr) auto']);
-    expect(rule(table, '.ai-view--page .ai-page-command-label')).toEqual(['color:#10243e', 'font-size:19px', 'font-weight:700', 'grid-column:1/-1', 'line-height:1.3']);
+    // The command reads the ink and the muted ink as palette tokens: a tenant colour arrives on the element above
+    // through `paletteOverrides`, and the fallback is the colour the front door draws with no tenant value (decision 11).
+    expect(rule(table, '.ai-view--page .ai-page-command-label')).toEqual([
+      'color:var(--fd-ink, #10243e)',
+      'font-size:19px',
+      'font-weight:700',
+      'grid-column:1/-1',
+      'line-height:1.3'
+    ]);
     expect(rule(table, '.ai-view--page .ai-page-command-input')).toEqual(['border-radius:12px', 'font-size:17px', 'line-height:1.4', 'min-height:44px', 'min-width:0', 'padding:10px 14px', 'width:100%']);
     expect(rule(table, '.ai-view--page .ai-page-command-submit')).toEqual(['border-radius:12px', 'cursor:pointer', 'font-size:16px', 'font-weight:700', 'min-height:44px', 'padding:10px 22px', 'white-space:nowrap']);
     for (const line of ['.ai-page-command-note', '.ai-page-command-alert', '.ai-page-command-status']) {
       expect(rule(table, `.ai-view--page ${line}`)).toContain('grid-column:1/-1');
       expect(rule(table, `.ai-view--page ${line}`)).toContain('font-size:14px');
     }
-    expect(rule(table, '.ai-view--page .ai-page-command-note')).toContain('color:#5b6878');
+    expect(rule(table, '.ai-view--page .ai-page-command-note')).toContain('color:var(--fd-muted, #5b6878)');
     expect(rule(table, '.ai-view--page .ai-page-command-note a')).toEqual(['color:#076874', 'font-weight:600', 'text-decoration:underline']);
     expect(rule(table, '.ai-view--page .ai-page-command-alert')).toContain('color:#9b1c1c');
     expect(rule(table, '.ai-view--page .ai-page-command-status')).toContain('color:#076b67');
@@ -176,7 +184,7 @@ describe('Page view stylesheet', () => {
 
   it('draws a notice with a toned left edge and spaces the rules list', () => {
     expect(rule(table, '.ai-view--page .ai-page-notice')).toEqual([
-      'background:#fff',
+      'background:var(--fd-paper, #fff)',
       'border-radius:13px',
       'border:1px solid #dbe5ec',
       'color:#2b3d52',
@@ -186,12 +194,12 @@ describe('Page view stylesheet', () => {
       'padding:14px 18px'
     ]);
     // The tone is carried by the left edge and the title, never by colour alone: info in the shipped link blue, caution in the amber lane ink.
-    expect(rule(table, '.ai-view--page .ai-page-notice--info')).toEqual(['border-left:5px solid #0b66d4']);
+    expect(rule(table, '.ai-view--page .ai-page-notice--info')).toEqual(['border-left:5px solid var(--fd-focus, #0b66d4)']);
     expect(rule(table, '.ai-view--page .ai-page-notice--caution')).toEqual(['border-left:5px solid #725600']);
     for (const colour of ['#0b66d4', '#725600']) {
       expect(shipped.indexOf(colour)).toBeGreaterThan(-1);
     }
-    expect(rule(table, '.ai-view--page .ai-page-notice-title')).toEqual(['color:#10243e', 'display:block', 'font-size:16px', 'margin:0 0 4px']);
+    expect(rule(table, '.ai-view--page .ai-page-notice-title')).toEqual(['color:var(--fd-ink, #10243e)', 'display:block', 'font-size:16px', 'margin:0 0 4px']);
     expect(rule(table, '.ai-view--page .ai-page-notice-text')).toEqual(['margin:0']);
     expect(rule(table, '.ai-view--page .ai-page-notice a')).toEqual(['color:#076874', 'font-weight:600', 'text-decoration:underline']);
     expect(rule(table, '.ai-view--page .ai-page-rules-title')).toEqual(['color:#10243e', 'font-size:18px', 'font-weight:700', 'line-height:1.3', 'margin:0 0 10px']);
@@ -311,8 +319,14 @@ describe('Page view stylesheet', () => {
     expect(rule(table, '.ai-view--page .ai-metric-card')).toBeUndefined();
     expect(rule(table, '.ai-view--page .ai-metric-value')).toBeUndefined();
     // The evidence a placeholder waits for reads as the quiet caption it is; the note under the tiles matches it.
-    expect(rule(table, '.ai-view--page .ai-metric-evidence')).toEqual(['color:#5b6878', 'font-size:13px', 'font-style:italic', 'line-height:1.45', 'margin:8px 0 0']);
-    expect(rule(table, '.ai-view--page .ai-page-kpi-note')).toEqual(['color:#5b6878', 'font-size:13px', 'line-height:1.45', 'margin:8px 0 0']);
+    expect(rule(table, '.ai-view--page .ai-metric-evidence')).toEqual([
+      'color:var(--fd-muted, #5b6878)',
+      'font-size:13px',
+      'font-style:italic',
+      'line-height:1.45',
+      'margin:8px 0 0'
+    ]);
+    expect(rule(table, '.ai-view--page .ai-page-kpi-note')).toEqual(['color:var(--fd-muted, #5b6878)', 'font-size:13px', 'line-height:1.45', 'margin:8px 0 0']);
     // The operator codes are chips in the same code style the reference and the case id use.
     expect(rule(table, '.ai-view--page .ai-metric-codes')).toEqual(['display:flex', 'flex-wrap:wrap', 'gap:6px 10px', 'margin:10px 0 0']);
     expect(rule(table, '.ai-view--page .ai-metric-codes code')).toEqual(rule(table, '.ai-view--page .ai-mywork-row code'));
@@ -349,14 +363,16 @@ describe('Page view stylesheet', () => {
     expect(rule(table, '.ai-view .ai-pill svg')).toEqual(['height:12px', 'width:12px']);
     expect(rule(table, '.ai-view .ai-pill code')).toEqual(['font-family:inherit', 'font-size:inherit', 'font-weight:600']);
     // The traffic-light tones reuse the lane pairs the shipped stylesheet already draws.
-    expect(rule(table, '.ai-view .ai-pill--green')).toEqual(['background:#ddf6f0', 'color:#076b67']);
-    expect(rule(table, '.ai-view .ai-pill--amber')).toEqual(['background:#fff4cf', 'color:#725600']);
-    expect(rule(table, '.ai-view .ai-pill--red')).toEqual(['background:#fde8e8', 'color:#9b1c1c']);
+    // Each tone's background is a palette token with the lane colour as its fallback; the ink stays the shipped one,
+    // so a tenant that sets a state colour is setting the background it reads against (README, "Palette override").
+    expect(rule(table, '.ai-view .ai-pill--green')).toEqual(['background:var(--fd-state-green, #ddf6f0)', 'color:#076b67']);
+    expect(rule(table, '.ai-view .ai-pill--amber')).toEqual(['background:var(--fd-state-amber, #fff4cf)', 'color:#725600']);
+    expect(rule(table, '.ai-view .ai-pill--red')).toEqual(['background:var(--fd-state-red, #fde8e8)', 'color:#9b1c1c']);
     for (const colour of ['#ddf6f0', '#076b67', '#fff4cf', '#725600', '#fde8e8', '#9b1c1c']) {
       expect(shipped.indexOf(colour)).toBeGreaterThan(-1);
     }
     // The blue draft tone is a new pair: no shipped stylesheet or theme block carries it.
-    expect(rule(table, '.ai-view .ai-pill--blue')).toEqual(['background:#e7f0fb', 'color:#0b4a9b']);
+    expect(rule(table, '.ai-view .ai-pill--blue')).toEqual(['background:var(--fd-state-blue, #e7f0fb)', 'color:#0b4a9b']);
     for (const colour of ['#e7f0fb', '#0b4a9b']) {
       expect(shipped.indexOf(colour)).toBe(-1);
       expect(shippedTheme.indexOf(colour)).toBe(-1);

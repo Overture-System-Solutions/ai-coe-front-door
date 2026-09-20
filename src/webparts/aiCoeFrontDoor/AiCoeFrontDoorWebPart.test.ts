@@ -228,6 +228,25 @@ describe('AiCoeFrontDoorWebPart bundle', () => {
     expect(webPart.domElement.style.getPropertyValue('--bodyText')).toBe('#111111');
   });
 
+  it('sets the palette on its own element and declares no token in the stylesheets it injects', async () => {
+    // Decision 11: the tenant's colours arrive as custom properties on the web part's element, exactly as the theme
+    // colours do; a blank property clears them and the shipped colours stand. A malformed pair is dropped on its own.
+    const { webPart } = await mount({ properties: { paletteOverrides: 'accent=#008B83;ink=#102B3D;muted=grey;bogus=#000000' } });
+    expect(webPart.domElement.style.getPropertyValue('--fd-accent')).toBe('#008B83');
+    expect(webPart.domElement.style.getPropertyValue('--fd-ink')).toBe('#102B3D');
+    expect(webPart.domElement.style.getPropertyValue('--fd-muted')).toBe('');
+    expect(webPart.domElement.style.getPropertyValue('--fd-bogus')).toBe('');
+    setProperty(webPart, 'paletteOverrides', '');
+    await act(async (): Promise<void> => {
+      webPart.render();
+    });
+    for (const name of ['--fd-accent', '--fd-ink']) {
+      expect({ name, value: webPart.domElement.style.getPropertyValue(name) }).toEqual({ name, value: '' });
+    }
+    // Nothing the bundle injects declares a token: an own declaration on the section would beat the value above it.
+    expect(fs.readFileSync(bundlePath, 'utf8')).not.toMatch(/--fd-[a-z-]*\s*:/);
+  });
+
   it('unmounts on dispose and reports data version 1.0', async () => {
     const instance: IHostedInstance = await mount();
     expect(instance.webPart.dataVersion.toString()).toBe('1.0');
@@ -290,6 +309,16 @@ describe('AiCoeFrontDoorWebPart bundle', () => {
           description:
             'Site groups that map to roles, as role=Group title pairs separated by semicolons: leader=…; operator=…; designAuthority=…. Site owners always count as operators.',
           placeholder: 'leader=AI CoE Leaders;operator=AI CoE Operators'
+        }
+      },
+      // The palette is a tenant's colours, so it is a property the script writes from a parameter, never code (decision 11).
+      {
+        targetProperty: 'paletteOverrides',
+        properties: {
+          label: 'Palette overrides',
+          description:
+            'Colours of this organization as key=#hex pairs separated by semicolons, for example accent=#008B83;ink=#102B3D. Keys: accent, ink, muted, bg, paper, focus, stateGreen, stateBlue, stateAmber, stateRed. Leave blank to keep the shipped colours.',
+          placeholder: 'accent=#008B83;ink=#102B3D'
         }
       }
     ]);

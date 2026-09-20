@@ -24,6 +24,8 @@ import type { IAiCoeFrontDoorProps } from './components/AiCoeFrontDoor';
 import { createPageViewSettings, FRONT_DOOR_VIEWS, isWorkflowView, PAGE_TARGET_PROPERTIES, PAGE_TARGETS, parseFrontDoorView, parsePieceLayout, PIECE_LAYOUTS } from './content/pageViews';
 import type { FrontDoorView, IPageViewProperties, PageTarget, PieceLayout } from './content/pageViews';
 import { parseContentUrl, parseOptionalContentUrl } from './content/pageContent';
+import { PALETTE_KEYS, paletteCustomProperty, parsePaletteOverrides } from './content/palette';
+import type { PaletteOverrides } from './content/palette';
 import { parseRoleGroups } from './content/roles';
 import { parseTelemetryProvider } from './content/telemetryTiles';
 import type { IFrontDoorServices, IFrontDoorUser } from './context/FrontDoorContext';
@@ -50,6 +52,8 @@ export interface IAiCoeFrontDoorWebPartProps extends IPageViewProperties {
   reviewSystemName: string;
   /** Site group titles bound to the leader, operator and design-authority roles; blank binds none of them. */
   roleGroups: string;
+  /** Colours of this organization as `key=#hex` pairs; blank sets no token and the shipped colours stand. */
+  paletteOverrides: string;
   /** HTTP trigger URL of the AI draft flow; blank keeps the deterministic summaries. */
   draftServiceUrl: string;
   /** Usage feed shown by the telemetry strip: "claude" (default), "openai" (as shipped in 1.0.0.7) or "both". */
@@ -97,6 +101,7 @@ export default class AiCoeFrontDoorWebPart extends BaseClientSideWebPart<IAiCoeF
 
   public render(): void {
     const core: ICoreServices = this._requireCore();
+    this._applyPalette();
     const siteUrl: string = this.context.pageContext.web.absoluteUrl;
     // Every piece on its own page is a page view; only the whole-page legacy view keeps the shipped wording for
     // the blank governance reference and review system name (decision 21), so the parity suites hold.
@@ -224,6 +229,11 @@ export default class AiCoeFrontDoorWebPart extends BaseClientSideWebPart<IAiCoeF
             label: strings.RoleGroupsFieldLabel,
             description: strings.RoleGroupsFieldDescription,
             placeholder: 'leader=AI CoE Leaders;operator=AI CoE Operators'
+          }),
+          PropertyPaneTextField('paletteOverrides', {
+            label: strings.PaletteOverridesFieldLabel,
+            description: strings.PaletteOverridesFieldDescription,
+            placeholder: 'accent=#008B83;ink=#102B3D'
           })
         ]
       },
@@ -285,6 +295,24 @@ export default class AiCoeFrontDoorWebPart extends BaseClientSideWebPart<IAiCoeF
     }
 
     return { pages: [{ header: { description: strings.PropertyPaneDescription }, groups }] };
+  }
+
+  /**
+   * Sets the colours of this organization on this element as `--fd-*` custom properties, the way `onThemeChanged`
+   * sets the theme colours. The rules inside read them with `var(--fd-x, <literal>)` and declare none of their own,
+   * so a value set here reaches every rule; a key nobody set is removed and the fallback literal stands (decision 11).
+   */
+  private _applyPalette(): void {
+    const palette: PaletteOverrides = parsePaletteOverrides(this.properties.paletteOverrides);
+    for (const key of PALETTE_KEYS) {
+      const name: string = paletteCustomProperty(key);
+      const colour: string | undefined = palette[key];
+      if (colour === undefined) {
+        this.domElement.style.removeProperty(name);
+      } else {
+        this.domElement.style.setProperty(name, colour);
+      }
+    }
   }
 
   private _requireCore(): ICoreServices {

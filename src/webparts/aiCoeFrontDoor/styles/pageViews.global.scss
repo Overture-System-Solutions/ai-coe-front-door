@@ -6,6 +6,11 @@
  * stylesheets are never edited. Keep this file ASCII: a non-ASCII character makes Sass emit @charset.
  *
  * Must keep the .global.scss suffix: the framework hashes the selectors of any other stylesheet name.
+ *
+ * Palette tokens (1.0.0.14): a few declarations read a tenant colour as `var(--fd-x, <literal>)`, where the literal
+ * is the colour the front door draws with no tenant value. The web part sets the `--fd-*` properties on its own
+ * element from the `paletteOverrides` property; no rule here declares one, because a declaration inside the web part
+ * would win over the value set on the element above it and every override would be dead (`styles/palette.test.ts`).
  */
 
 /* A piece is a card on the page: no page tint and no shell insets (16px keeps card shadows off the next web part). */
@@ -26,8 +31,8 @@
 
 #overture-ai-coe-pilot .ai-view--home .ai-home-adminbar .ai-admin-back,
 #overture-ai-coe-pilot .ai-view--page .ai-home-adminbar .ai-admin-back {
-  background: #087f83;
-  border-color: #087f83;
+  background: var(--fd-accent, #087f83);
+  border-color: var(--fd-accent, #087f83);
   color: #fff;
   text-decoration: none;
 }
@@ -412,22 +417,22 @@
 }
 
 #overture-ai-coe-pilot .ai-view .ai-pill--green {
-  background: #ddf6f0;
+  background: var(--fd-state-green, #ddf6f0);
   color: #076b67;
 }
 
 #overture-ai-coe-pilot .ai-view .ai-pill--blue {
-  background: #e7f0fb;
+  background: var(--fd-state-blue, #e7f0fb);
   color: #0b4a9b;
 }
 
 #overture-ai-coe-pilot .ai-view .ai-pill--amber {
-  background: #fff4cf;
+  background: var(--fd-state-amber, #fff4cf);
   color: #725600;
 }
 
 #overture-ai-coe-pilot .ai-view .ai-pill--red {
-  background: #fde8e8;
+  background: var(--fd-state-red, #fde8e8);
   color: #9b1c1c;
 }
 
@@ -559,17 +564,17 @@
 }
 
 #overture-ai-coe-pilot .ai-view--page .ai-case-tag--green {
-  background: #ddf6f0;
+  background: var(--fd-state-green, #ddf6f0);
   color: #076b67;
 }
 
 #overture-ai-coe-pilot .ai-view--page .ai-case-tag--amber {
-  background: #fff4cf;
+  background: var(--fd-state-amber, #fff4cf);
   color: #725600;
 }
 
 #overture-ai-coe-pilot .ai-view--page .ai-case-tag--red {
-  background: #fde8e8;
+  background: var(--fd-state-red, #fde8e8);
   color: #9b1c1c;
 }
 
@@ -601,7 +606,7 @@
 }
 
 #overture-ai-coe-pilot .ai-view--page .ai-metric-evidence {
-  color: #5b6878;
+  color: var(--fd-muted, #5b6878);
   font-size: 13px;
   font-style: italic;
   line-height: 1.45;
@@ -625,7 +630,7 @@
 }
 
 #overture-ai-coe-pilot .ai-view--page .ai-page-kpi-note {
-  color: #5b6878;
+  color: var(--fd-muted, #5b6878);
   font-size: 13px;
   line-height: 1.45;
   margin: 8px 0 0;
@@ -713,7 +718,7 @@
 }
 
 #overture-ai-coe-pilot .ai-view--page .ai-page-command-label {
-  color: #10243e;
+  color: var(--fd-ink, #10243e);
   font-size: 19px;
   font-weight: 700;
   grid-column: 1 / -1;
@@ -750,7 +755,7 @@
 }
 
 #overture-ai-coe-pilot .ai-view--page .ai-page-command-note {
-  color: #5b6878;
+  color: var(--fd-muted, #5b6878);
 }
 
 #overture-ai-coe-pilot .ai-view--page .ai-page-command-note a {
@@ -774,7 +779,7 @@
  * the title, never by colour alone. Info takes the shipped link blue, caution the amber lane ink.
  */
 #overture-ai-coe-pilot .ai-view--page .ai-page-notice {
-  background: #fff;
+  background: var(--fd-paper, #fff);
   border: 1px solid #dbe5ec;
   border-radius: 13px;
   color: #2b3d52;
@@ -785,7 +790,7 @@
 }
 
 #overture-ai-coe-pilot .ai-view--page .ai-page-notice--info {
-  border-left: 5px solid #0b66d4;
+  border-left: 5px solid var(--fd-focus, #0b66d4);
 }
 
 #overture-ai-coe-pilot .ai-view--page .ai-page-notice--caution {
@@ -793,7 +798,7 @@
 }
 
 #overture-ai-coe-pilot .ai-view--page .ai-page-notice-title {
-  color: #10243e;
+  color: var(--fd-ink, #10243e);
   display: block;
   font-size: 16px;
   margin: 0 0 4px;
@@ -1134,7 +1139,7 @@
 }
 
 #overture-ai-coe-pilot .ai-view .ai-route-card--closed {
-  background: #f7fafc;
+  background: var(--fd-bg, #f7fafc);
 }
 
 #overture-ai-coe-pilot .ai-view .ai-route-card-title {

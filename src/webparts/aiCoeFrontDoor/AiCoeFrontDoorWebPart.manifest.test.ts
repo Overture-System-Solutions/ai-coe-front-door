@@ -39,6 +39,8 @@ const LEGACY_PROPERTIES: { [name: string]: unknown } = {
   reviewSystemName: '',
   // Blank binds no site group, so every person keeps the employee role and a site owner the operator role (decision 8).
   roleGroups: '',
+  // Blank sets no palette token, so the shipped colours stand; a tenant's colours are a parameter, never code (decision 11).
+  paletteOverrides: '',
   draftServiceUrl: '',
   telemetryProvider: 'claude',
   view: 'legacy',
