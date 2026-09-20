@@ -9,9 +9,31 @@ import {
   USE_CASES_LIST_TITLE,
   workflowLabel
 } from './GovernanceService';
-import type { IAdminDashboardData, IServiceContext, ISubmissionResult } from './types';
+import { submissionState } from './types';
+import type { IAdminDashboardData, IListClient, IListRequestOptions, IListResponse, IServiceContext, ISubmissionResult } from './types';
 
 const FIXED_NOW: Date = new Date(Date.UTC(2026, 8, 11, 14, 30, 0));
+const FIXED_ID: string = 'OVT-AICOE-20260911-FIXEDSUF';
+const INTAKES_URL: string = "https://example.sharepoint.com/sites/demo/_api/web/lists/getbytitle('AI CoE Pilot Intakes')/items";
+const USE_CASES_URL: string = "https://example.sharepoint.com/sites/demo/_api/web/lists/getbytitle('AI CoE Use Cases')/items";
+
+function filterUrl(itemsUrl: string, field: string, value: string): string {
+  return `${itemsUrl}?$select=Id,${field},Modified&$filter=${encodeURIComponent(`${field} eq '${value}'`)}&$top=1`;
+}
+
+function gets(store: InMemoryListStore): IRecordedRequest[] {
+  return store.requests.filter((request: IRecordedRequest): boolean => request.method === 'GET');
+}
+
+/** Runs `run` with `console.error` silenced (the service logs every failure and every unconfirmed readback). */
+async function silenced<T>(run: (errorSpy: jest.SpyInstance) => Promise<T>): Promise<T> {
+  const errorSpy: jest.SpyInstance = jest.spyOn(console, 'error').mockImplementation((): void => undefined);
+  try {
+    return await run(errorSpy);
+  } finally {
+    errorSpy.mockRestore();
+  }
+}
 
 function createHarness(): { store: InMemoryListStore; service: GovernanceService } {
   const store: InMemoryListStore = new InMemoryListStore([INTAKES_LIST_TITLE, USE_CASES_LIST_TITLE, DECISIONS_LIST_TITLE]);
@@ -82,11 +104,14 @@ describe('GovernanceService.submitWorkflow', () => {
     });
     expect(result).toEqual({
       connected: true,
+      state: 'saved',
       intakeId: 'OVT-AICOE-20260911-FIXEDSUF',
       itemId: 1,
       itemUrl: 'https://example.sharepoint.com/sites/demo/Lists/AICoEPilotIntakes/DispForm.aspx?ID=1',
       governanceItemId: undefined,
       governanceItemUrl: undefined,
+      savedAt: '2026-09-11T14:30:00.000Z',
+      version: '2.1',
       message: 'Submission received and added to the AI CoE service queue.'
     });
   });
@@ -189,6 +214,7 @@ describe('GovernanceService.submitWorkflow', () => {
       const result: ISubmissionResult = await service.submitWorkflow('idea', { originalAnswers: {} });
       expect(result).toEqual({
         connected: false,
+        state: 'failed',
         intakeId: 'OVT-AICOE-20260911-FIXEDSUF',
         message: 'SharePoint could not create the AI CoE record. AI CoE Pilot Intakes returned 500: boom',
         failureClass: 'TRANSIENT',
@@ -260,6 +286,249 @@ describe('GovernanceService.submitWorkflow', () => {
     expect(result.connected).toBe(true);
     expect(result.failureClass).toBeUndefined();
     expect(result.userMessage).toBeUndefined();
+  });
+});
+
+describe('GovernanceService.submitWorkflow readback and retry', () => {
+  it('reads the intake row back after the POST and reports it saved with the time and version', async () => {
+    const { store, service } = createHarness();
+    const result: ISubmissionResult = await service.submitWorkflow('helpTraining', { originalAnswers: { helpCategory: 'new' } });
+
+    expect(store.requests.map((request: IRecordedRequest): string => `${request.method} ${request.url}`)).toEqual([
+      `POST ${INTAKES_URL}`,
+      `GET ${INTAKES_URL}(1)?$select=Id,IntakeId,Modified`
+    ]);
+    expect(gets(store)[0].headers).toEqual({ Accept: 'application/json;odata=nometadata' });
+    expect(result.state).toBe('saved');
+    expect(result.connected).toBe(true);
+    expect(result.savedAt).toBe('2026-09-11T14:30:00.000Z');
+    expect(result.version).toBe('2.1');
+    expect(result.failureClass).toBeUndefined();
+    expect(submissionState(result)).toBe('saved');
+  });
+
+  it('takes the saved time from the row when the readback carries a Modified stamp', async () => {
+    const { store, service } = createHarness();
+    store.afterPost(INTAKES_LIST_TITLE, (item): void => {
+      item.Modified = '2026-09-11T14:30:02.000Z';
+    });
+    const result: ISubmissionResult = await service.submitWorkflow('feedback', {});
+    expect(result.state).toBe('saved');
+    expect(result.savedAt).toBe('2026-09-11T14:30:02.000Z');
+  });
+
+  it('reports pending, not failed, when the POST was accepted but the readback fails', async () => {
+    const { store, service } = createHarness();
+    store.afterPost(INTAKES_LIST_TITLE, (): void => store.fail(INTAKES_LIST_TITLE, 500, 'gateway timeout secret=xyz'));
+    const result: ISubmissionResult = await silenced(async (errorSpy: jest.SpyInstance): Promise<ISubmissionResult> => {
+      const pending: ISubmissionResult = await service.submitWorkflow('helpTraining', { originalAnswers: {} });
+      expect(errorSpy).toHaveBeenCalledWith('AI CoE submission not confirmed', 'AI CoE Pilot Intakes returned 500 (TRANSIENT)');
+      return pending;
+    });
+
+    expect(result).toEqual({
+      connected: false,
+      state: 'pending',
+      intakeId: FIXED_ID,
+      itemId: 1,
+      itemUrl: 'https://example.sharepoint.com/sites/demo/Lists/AICoEPilotIntakes/DispForm.aspx?ID=1',
+      governanceItemId: undefined,
+      governanceItemUrl: undefined,
+      version: '2.1',
+      message: `SharePoint accepted the AI CoE record ${FIXED_ID} but did not confirm it back.`,
+      failureClass: 'INCONCLUSIVE',
+      userMessage: 'Saved, not yet confirmed.'
+    });
+    expect(result.message).not.toContain('secret');
+    expect(submissionState(result)).toBe('pending');
+    expect(posts(store)).toHaveLength(1);
+    expect(store.items(INTAKES_LIST_TITLE)).toHaveLength(1);
+  });
+
+  it('reports pending when the row read back does not carry the identifier that was written', async () => {
+    const { store, service } = createHarness();
+    store.afterPost(INTAKES_LIST_TITLE, (item): void => {
+      item.IntakeId = 'OVT-AICOE-20260911-SOMEBODY';
+    });
+    const result: ISubmissionResult = await silenced(async (errorSpy: jest.SpyInstance): Promise<ISubmissionResult> => {
+      const pending: ISubmissionResult = await service.submitWorkflow('feedback', {});
+      expect(errorSpy).toHaveBeenCalledWith('AI CoE submission not confirmed', 'AI CoE Pilot Intakes readback mismatch (INCONCLUSIVE)');
+      return pending;
+    });
+    expect(result.state).toBe('pending');
+    expect(result.failureClass).toBe('INCONCLUSIVE');
+    expect(result.connected).toBe(false);
+  });
+
+  it('reuses the identifier on a retry, finds the row by IntakeId and posts nothing twice', async () => {
+    const { store, service } = createHarness();
+    store.afterPost(INTAKES_LIST_TITLE, (): void => store.fail(INTAKES_LIST_TITLE, 503, 'busy'));
+    const pending: ISubmissionResult = await silenced((): Promise<ISubmissionResult> => service.submitWorkflow('helpTraining', { originalAnswers: {} }));
+    expect(pending.state).toBe('pending');
+    store.requests.splice(0);
+    // The list answers again.
+    store.recover(INTAKES_LIST_TITLE);
+
+    const retried: ISubmissionResult = await service.submitWorkflow('helpTraining', { originalAnswers: {} }, { intakeId: pending.intakeId });
+
+    expect(store.requests.map((request: IRecordedRequest): string => `${request.method} ${request.url}`)).toEqual([`GET ${filterUrl(INTAKES_URL, 'IntakeId', FIXED_ID)}`]);
+    expect(posts(store)).toHaveLength(0);
+    expect(store.items(INTAKES_LIST_TITLE)).toHaveLength(1);
+    expect(retried.state).toBe('saved');
+    expect(retried.connected).toBe(true);
+    expect(retried.intakeId).toBe(FIXED_ID);
+    expect(retried.itemId).toBe(1);
+    expect(retried.itemUrl).toBe('https://example.sharepoint.com/sites/demo/Lists/AICoEPilotIntakes/DispForm.aspx?ID=1');
+    expect(retried.savedAt).toBe('2026-09-11T14:30:00.000Z');
+    expect(retried.message).toBe('Submission received and added to the AI CoE service queue.');
+  });
+
+  it('posts the same body under the same identifier when the retry finds no row', async () => {
+    const { store, service } = createHarness();
+    store.fail(INTAKES_LIST_TITLE, 503, 'busy');
+    const payload: object = { originalAnswers: { helpCategory: 'new', name: 'Sam', email: 'sam@example.com' } };
+    const failed: ISubmissionResult = await silenced((): Promise<ISubmissionResult> => service.submitWorkflow('helpTraining', payload));
+    expect(failed.state).toBe('failed');
+    const firstBody: unknown = posts(store)[0].body;
+    store.recover(INTAKES_LIST_TITLE);
+    store.requests.splice(0);
+
+    const retried: ISubmissionResult = await service.submitWorkflow('helpTraining', payload, { intakeId: failed.intakeId });
+
+    expect(store.requests.map((request: IRecordedRequest): string => `${request.method} ${request.url}`)).toEqual([
+      `GET ${filterUrl(INTAKES_URL, 'IntakeId', FIXED_ID)}`,
+      `POST ${INTAKES_URL}`,
+      `GET ${INTAKES_URL}(1)?$select=Id,IntakeId,Modified`
+    ]);
+    expect(posts(store)[0].body).toEqual(firstBody);
+    expect(retried.state).toBe('saved');
+    expect(store.items(INTAKES_LIST_TITLE)).toHaveLength(1);
+  });
+
+  it('never pre-reads on a first attempt, so the shipped request sequence gains only the readback', async () => {
+    const { store, service } = createHarness();
+    await service.submitWorkflow('idea', { originalAnswers: {} });
+    expect(store.requests.map((request: IRecordedRequest): string => `${request.method} ${request.list}`)).toEqual([
+      'POST AI CoE Pilot Intakes',
+      'POST AI CoE Use Cases',
+      'GET AI CoE Pilot Intakes'
+    ]);
+  });
+
+  it('completes a governance submission on retry: the intake row is found, only the missing use case is written', async () => {
+    const { store, service } = createHarness();
+    store.fail(USE_CASES_LIST_TITLE, 500, 'boom');
+    const payload: object = { originalAnswers: { workToImprove: 'Reviewing forms' } };
+    const failed: ISubmissionResult = await silenced((): Promise<ISubmissionResult> => service.submitWorkflow('idea', payload));
+    expect(failed.state).toBe('failed');
+    expect(failed.failureClass).toBe('TRANSIENT');
+    expect(failed.intakeId).toBe(FIXED_ID);
+    expect(store.items(INTAKES_LIST_TITLE)).toHaveLength(1);
+    expect(store.items(USE_CASES_LIST_TITLE)).toHaveLength(0);
+    store.recover(USE_CASES_LIST_TITLE);
+    store.requests.splice(0);
+
+    const retried: ISubmissionResult = await service.submitWorkflow('idea', payload, { intakeId: failed.intakeId });
+
+    expect(store.requests.map((request: IRecordedRequest): string => `${request.method} ${request.url}`)).toEqual([
+      `GET ${filterUrl(INTAKES_URL, 'IntakeId', FIXED_ID)}`,
+      `GET ${filterUrl(USE_CASES_URL, 'CoEID', FIXED_ID)}`,
+      `POST ${USE_CASES_URL}`
+    ]);
+    expect(posts(store)).toHaveLength(1);
+    expect(posts(store)[0].list).toBe(USE_CASES_LIST_TITLE);
+    expect((posts(store)[0].body as { CoEID: string }).CoEID).toBe(FIXED_ID);
+    expect(store.items(INTAKES_LIST_TITLE)).toHaveLength(1);
+    expect(store.items(USE_CASES_LIST_TITLE)).toHaveLength(1);
+    expect(retried.state).toBe('saved');
+    expect(retried.itemId).toBe(1);
+    expect(retried.governanceItemId).toBe(2);
+    expect(retried.governanceItemUrl).toBe('https://example.sharepoint.com/sites/demo/Lists/AI%20CoE%20Use%20Cases/DispForm.aspx?ID=2');
+    expect(retried.message).toBe('Submission received and queued for AI CoE intake and triage.');
+  });
+
+  it('skips both writes when a retry finds both rows', async () => {
+    const { store, service } = createHarness();
+    await service.submitWorkflow('idea', { originalAnswers: {} });
+    store.requests.splice(0);
+    const retried: ISubmissionResult = await service.submitWorkflow('idea', { originalAnswers: {} }, { intakeId: FIXED_ID });
+    expect(posts(store)).toHaveLength(0);
+    expect(retried.state).toBe('saved');
+    expect(retried.governanceItemId).toBe(2);
+    expect(store.items(INTAKES_LIST_TITLE)).toHaveLength(1);
+    expect(store.items(USE_CASES_LIST_TITLE)).toHaveLength(1);
+  });
+
+  it('classifies a refused write as failed with PERMISSION and a missing list as SOURCE, carrying the state', async () => {
+    const { store, service } = createHarness();
+    store.deny(INTAKES_LIST_TITLE, 403);
+    const refused: ISubmissionResult = await silenced((): Promise<ISubmissionResult> => service.submitWorkflow('feedback', {}));
+    expect(refused).toEqual({
+      connected: false,
+      state: 'failed',
+      intakeId: FIXED_ID,
+      message: 'SharePoint could not create the AI CoE record. AI CoE Pilot Intakes returned 403: Access denied',
+      failureClass: 'PERMISSION',
+      userMessage: 'Needs access.'
+    });
+    expect(submissionState(refused)).toBe('failed');
+
+    const empty: InMemoryListStore = new InMemoryListStore([]);
+    const missing: GovernanceService = new GovernanceService(
+      { siteUrl: 'https://example.sharepoint.com', user: { displayName: 'Pat', email: 'pat@example.com' }, client: createFakeListClient(empty), configuration: undefined },
+      (): Date => FIXED_NOW,
+      (): string => FIXED_ID
+    );
+    const notFound: ISubmissionResult = await silenced((): Promise<ISubmissionResult> => missing.submitWorkflow('feedback', {}));
+    expect(notFound.state).toBe('failed');
+    expect(notFound.failureClass).toBe('SOURCE');
+  });
+
+  it('reports a failed pre-read as failed rather than writing blind', async () => {
+    const { store, service } = createHarness();
+    await service.submitWorkflow('feedback', {});
+    store.deny(INTAKES_LIST_TITLE, 403);
+    store.requests.splice(0);
+    const retried: ISubmissionResult = await silenced((): Promise<ISubmissionResult> => service.submitWorkflow('feedback', {}, { intakeId: FIXED_ID }));
+    expect(retried.state).toBe('failed');
+    expect(retried.failureClass).toBe('PERMISSION');
+    expect(posts(store)).toHaveLength(0);
+    expect(store.items(INTAKES_LIST_TITLE)).toHaveLength(1);
+  });
+
+  it('confirms through the identifier when the POST answer carries no Id', async () => {
+    const store: InMemoryListStore = new InMemoryListStore([INTAKES_LIST_TITLE]);
+    const inner: IListClient = createFakeListClient(store);
+    const service: GovernanceService = new GovernanceService(
+      {
+        siteUrl: 'https://example.sharepoint.com/sites/demo',
+        user: { displayName: 'Pat', email: 'pat@example.com' },
+        client: {
+          get: inner.get,
+          post: async (url: string, configuration: unknown, options: IListRequestOptions): Promise<IListResponse> => {
+            await inner.post(url, configuration, options);
+            return { ok: true, status: 201, text: async (): Promise<string> => '', json: async (): Promise<unknown> => ({}) };
+          }
+        },
+        configuration: undefined
+      },
+      (): Date => FIXED_NOW,
+      (): string => FIXED_ID
+    );
+    const result: ISubmissionResult = await service.submitWorkflow('feedback', {});
+    expect(gets(store).map((request: IRecordedRequest): string => request.url)).toEqual([filterUrl("https://example.sharepoint.com/sites/demo/_api/web/lists/getbytitle('AI CoE Pilot Intakes')/items", 'IntakeId', FIXED_ID)]);
+    expect(result.state).toBe('saved');
+    expect(result.itemId).toBe(1);
+    expect(result.itemUrl).toBe('https://example.sharepoint.com/sites/demo/Lists/AICoEPilotIntakes/DispForm.aspx?ID=1');
+  });
+});
+
+describe('submissionState', () => {
+  it('keeps the meaning of every shipped result: connected means saved, anything else failed', () => {
+    expect(submissionState({ connected: true, message: 'ok' })).toBe('saved');
+    expect(submissionState({ connected: false, message: 'no' })).toBe('failed');
+    expect(submissionState({ connected: false, state: 'pending', message: 'later' })).toBe('pending');
+    expect(submissionState({ connected: true, state: 'saved', message: 'ok' })).toBe('saved');
   });
 });
 

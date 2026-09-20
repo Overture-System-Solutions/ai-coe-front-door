@@ -2,8 +2,8 @@
  * In-memory stand-in for the SharePoint REST list endpoints the web part uses. Supports the OData
  * options the services send (`$select`, `$orderby`, `$top`, a one-field `$filter ... eq '...'`),
  * `items(<Id>)` reads, optional paging through `@odata.nextLink`, injected failures (`fail`,
- * `deny`), a hook that runs after a POST is committed (`afterPost`), item-level read trimming
- * (`trimTo`), and records every request for assertions.
+ * `deny`, lifted again by `recover`), a hook that runs after a POST is committed (`afterPost`),
+ * item-level read trimming (`trimTo`), and records every request for assertions.
  * Test support only: never bundled into the web part.
  */
 import type { IListClient, IListRequestOptions, IListResponse } from '../webparts/aiCoeFrontDoor/services/types';
@@ -144,6 +144,11 @@ export class InMemoryListStore {
   /** Refuses every GET and POST to the list, as a list the reader holds no permission on does (403 by default). */
   public deny(title: string, status: number = 403): void {
     this.fail(title, status, 'Access denied');
+  }
+
+  /** Lets a failed or denied list answer again; its rows and hooks stay (for a retry after an outage). */
+  public recover(title: string): void {
+    delete this._failures[title];
   }
 
   /** Registers a hook that runs after each POST to the list is committed (for example to fail the readback that follows). */

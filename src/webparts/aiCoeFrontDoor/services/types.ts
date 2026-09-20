@@ -10,15 +10,44 @@ export interface IFailureFields {
   userMessage?: string;
 }
 
-/** Outcome of writing a submission to SharePoint. `connected` is false when the write failed. */
+/**
+ * What a submission came to: `saved` once the row was written and read back, `pending` when the
+ * write was accepted but the readback did not confirm it (the row may exist; a retry under the same
+ * identifier finds it and never writes twice), `failed` when nothing was accepted.
+ */
+export type SubmissionState = 'saved' | 'pending' | 'failed';
+
+export interface ISubmitOptions {
+  /**
+   * The identifier of an earlier attempt. The service looks for the rows that attempt may have left
+   * before writing anything, so a retry completes the record instead of duplicating it.
+   */
+  intakeId?: string;
+}
+
+/**
+ * Outcome of writing a submission to SharePoint. `connected` is true only for a saved submission;
+ * `state` says which of the three outcomes it was (absent on a result from before the readback,
+ * which `submissionState` reads through `connected`).
+ */
 export interface ISubmissionResult extends IFailureFields {
   connected: boolean;
+  state?: SubmissionState;
   intakeId?: string;
   itemId?: number;
   itemUrl?: string;
   governanceItemId?: number;
   governanceItemUrl?: string;
+  /** When the row was confirmed: its `Modified` stamp as read back, else the moment of the submission. */
+  savedAt?: string;
+  /** The workflow version written with the row. */
+  version?: string;
   message: string;
+}
+
+/** The state of any result, including one that predates `state`: connected means saved, anything else failed. */
+export function submissionState(result: ISubmissionResult): SubmissionState {
+  return result.state ?? (result.connected ? 'saved' : 'failed');
 }
 
 /** A SharePoint list item as returned by the REST API with `odata=nometadata`. */
@@ -35,7 +64,7 @@ export interface IAdminDashboardData extends IFailureFields {
 }
 
 export interface IGovernanceService {
-  submitWorkflow(workflowType: SubmissionWorkflowType, payload: unknown): Promise<ISubmissionResult>;
+  submitWorkflow(workflowType: SubmissionWorkflowType, payload: unknown, options?: ISubmitOptions): Promise<ISubmissionResult>;
   getAdminDashboardData(): Promise<IAdminDashboardData>;
 }
 

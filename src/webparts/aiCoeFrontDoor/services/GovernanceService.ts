@@ -5,11 +5,14 @@ import type { FailureClass } from './failureClass';
 import { evaluateFlags } from './flags';
 import type { IRecord, ISubmissionFlags } from './flags';
 import { createIntakeId } from './intakeId';
-import type { IAdminDashboardData, IGovernanceService, IListItem, IListResponse, IServiceContext, ISubmissionResult } from './types';
+import type { IAdminDashboardData, IGovernanceService, IListItem, IListResponse, IServiceContext, ISubmissionResult, ISubmitOptions } from './types';
 
 export const INTAKES_LIST_TITLE: string = 'AI CoE Pilot Intakes';
 export const USE_CASES_LIST_TITLE: string = 'AI CoE Use Cases';
 export const DECISIONS_LIST_TITLE: string = 'AI CoE Decisions';
+
+/** What the readback of an intake row asks for: enough to match the identifier and date the receipt. */
+const READBACK_SELECT: string = 'Id,IntakeId,Modified';
 
 const ACCEPT_HEADER: { [name: string]: string } = { Accept: 'application/json;odata=nometadata' };
 const WRITE_HEADERS: { [name: string]: string } = {
@@ -81,8 +84,15 @@ export class GovernanceService implements IGovernanceService {
     this._createIntakeId = intakeId;
   }
 
-  public async submitWorkflow(workflowType: SubmissionWorkflowType, payload: unknown): Promise<ISubmissionResult> {
-    const intakeId: string = this._createIntakeId();
+  /**
+   * Writes the submission and reads the intake row back before reporting it saved. With
+   * `options.intakeId` (a retry of an earlier attempt) the rows that attempt may have left are looked
+   * up first and only the missing ones are written, so nothing is duplicated; a first attempt never
+   * pre-reads, so the shipped request sequence gains only the readback. The POST bodies are unchanged.
+   */
+  public async submitWorkflow(workflowType: SubmissionWorkflowType, payload: unknown, options?: ISubmitOptions): Promise<ISubmissionResult> {
+    const retryId: string | undefined = options !== undefined && typeof options.intakeId === 'string' && options.intakeId.trim() ? options.intakeId : undefined;
+    const intakeId: string = retryId === undefined ? this._createIntakeId() : retryId;
     const record: IRecord = asRecord(payload);
     const answers: IRecord = asRecord(record.originalAnswers || payload);
     const contact: IRecord = asRecord(record.requestedBy || record.contact);
@@ -94,59 +104,93 @@ export class GovernanceService implements IGovernanceService {
     const payloadJson: string = JSON.stringify(payload);
     const site: string = siteRoot(this._context.siteUrl);
     const governance: boolean = isGovernanceWorkflow(workflowType);
+    const version: string = String(record.workflowVersion || '2.1');
 
     try {
-      const intake: IListItem = await this._createListItem(INTAKES_LIST_TITLE, {
-        Title: title,
-        IntakeId: intakeId,
-        WorkflowType: workflowType,
-        PilotWorkflowVersion: String(record.workflowVersion || '2.1'),
-        Status: 'Submitted - Pilot',
-        Priority: flags.requiresReview ? 'High' : 'Normal',
-        RequestorName: requestorName,
-        RequestorEmail: requestorEmail,
-        SubmittedAt: submittedAt,
-        CompanyDataOrWorkflow: flags.companyDataOrWorkflow,
-        SensitiveOrRegulated: flags.sensitiveOrRegulated,
-        HumanReview: String(answers.humanReview || 'Not specified'),
-        ToolName: String(answers.toolName || answers.aiToolName || record.workflowOrService || ''),
-        RoutingOutcome: String(record.outcome || (flags.requiresReview ? 'AI CoE governance review' : 'AI CoE service queue')),
-        PayloadJson: payloadJson.length > PAYLOAD_LIMIT ? `${payloadJson.slice(0, PAYLOAD_KEEP)}...[truncated]` : payloadJson,
-        PilotOnly: !governance
-      });
+      // A retry looks for the row first; finding it is itself a native readback of that row.
+      const existing: IListItem | undefined = retryId === undefined ? undefined : await this._findByField(INTAKES_LIST_TITLE, 'IntakeId', intakeId);
+      const intake: IListItem =
+        existing !== undefined
+          ? existing
+          : await this._createListItem(INTAKES_LIST_TITLE, {
+              Title: title,
+              IntakeId: intakeId,
+              WorkflowType: workflowType,
+              PilotWorkflowVersion: version,
+              Status: 'Submitted - Pilot',
+              Priority: flags.requiresReview ? 'High' : 'Normal',
+              RequestorName: requestorName,
+              RequestorEmail: requestorEmail,
+              SubmittedAt: submittedAt,
+              CompanyDataOrWorkflow: flags.companyDataOrWorkflow,
+              SensitiveOrRegulated: flags.sensitiveOrRegulated,
+              HumanReview: String(answers.humanReview || 'Not specified'),
+              ToolName: String(answers.toolName || answers.aiToolName || record.workflowOrService || ''),
+              RoutingOutcome: String(record.outcome || (flags.requiresReview ? 'AI CoE governance review' : 'AI CoE service queue')),
+              PayloadJson: payloadJson.length > PAYLOAD_LIMIT ? `${payloadJson.slice(0, PAYLOAD_KEEP)}...[truncated]` : payloadJson,
+              PilotOnly: !governance
+            });
 
       let governanceItemId: number | undefined;
       let governanceItemUrl: string | undefined;
       if (governance) {
-        const useCase: IListItem = await this._createListItem(USE_CASES_LIST_TITLE, {
-          Title: title,
-          CoEID: intakeId,
-          SubmitterEmail: requestorEmail,
-          BusinessProblem: this._businessProblem(workflowType, record, answers),
-          BusinessOwnerEmail: requestorEmail,
-          DataSensitivity: flags.dataSensitivity,
-          ExternalUsers: flags.externalUsers,
-          AutonomousActions: flags.autonomousActions,
-          EstimatedMonthlyCost: this._estimatedMonthlyCost(answers),
-          Status: 'Submitted',
-          IntakeProcessed: false,
-          TriageComplete: false,
-          ApprovalRequested: false,
-          LastStatusChanged: submittedAt,
-          PilotMeasure: this._pilotMeasure(record, answers)
-        });
+        const existingUseCase: IListItem | undefined = retryId === undefined ? undefined : await this._findByField(USE_CASES_LIST_TITLE, 'CoEID', intakeId);
+        const useCase: IListItem =
+          existingUseCase !== undefined
+            ? existingUseCase
+            : await this._createListItem(USE_CASES_LIST_TITLE, {
+                Title: title,
+                CoEID: intakeId,
+                SubmitterEmail: requestorEmail,
+                BusinessProblem: this._businessProblem(workflowType, record, answers),
+                BusinessOwnerEmail: requestorEmail,
+                DataSensitivity: flags.dataSensitivity,
+                ExternalUsers: flags.externalUsers,
+                AutonomousActions: flags.autonomousActions,
+                EstimatedMonthlyCost: this._estimatedMonthlyCost(answers),
+                Status: 'Submitted',
+                IntakeProcessed: false,
+                TriageComplete: false,
+                ApprovalRequested: false,
+                LastStatusChanged: submittedAt,
+                PilotMeasure: this._pilotMeasure(record, answers)
+              });
         governanceItemId = itemId(useCase);
         governanceItemUrl = governanceItemId ? `${site}/Lists/AI%20CoE%20Use%20Cases/DispForm.aspx?ID=${governanceItemId}` : undefined;
       }
 
-      const intakeItemId: number | undefined = itemId(intake);
+      // Native readback: the row is read again before the page may say it was saved (a found row was just read).
+      let intakeItemId: number | undefined = itemId(intake);
+      const confirmed: IListItem | undefined = existing !== undefined ? existing : await this._readBack(intakeItemId, intakeId);
+      if (confirmed !== undefined && intakeItemId === undefined) {
+        intakeItemId = itemId(confirmed);
+      }
+      const itemUrl: string | undefined = intakeItemId ? `${site}/Lists/AICoEPilotIntakes/DispForm.aspx?ID=${intakeItemId}` : undefined;
+      if (confirmed === undefined) {
+        return {
+          connected: false,
+          state: 'pending',
+          intakeId,
+          itemId: intakeItemId,
+          itemUrl,
+          governanceItemId,
+          governanceItemUrl,
+          version,
+          message: `SharePoint accepted the AI CoE record ${intakeId} but did not confirm it back.`,
+          failureClass: 'INCONCLUSIVE',
+          userMessage: failureUserMessage('INCONCLUSIVE')
+        };
+      }
       return {
         connected: true,
+        state: 'saved',
         intakeId,
         itemId: intakeItemId,
-        itemUrl: intakeItemId ? `${site}/Lists/AICoEPilotIntakes/DispForm.aspx?ID=${intakeItemId}` : undefined,
+        itemUrl,
         governanceItemId,
         governanceItemUrl,
+        savedAt: typeof confirmed.Modified === 'string' && confirmed.Modified ? confirmed.Modified : submittedAt,
+        version,
         message: governance
           ? 'Submission received and queued for AI CoE intake and triage.'
           : 'Submission received and added to the AI CoE service queue.'
@@ -157,6 +201,7 @@ export class GovernanceService implements IGovernanceService {
       const failureClass: FailureClass = classifyError(error);
       return {
         connected: false,
+        state: 'failed',
         intakeId,
         message: `SharePoint could not create the AI CoE record. ${errorMessage(error)}`,
         failureClass,
@@ -217,6 +262,48 @@ export class GovernanceService implements IGovernanceService {
     }
     const data: { value?: unknown } = (await response.json()) as { value?: unknown };
     return Array.isArray(data.value) ? (data.value as IListItem[]) : [];
+  }
+
+  /** The one row whose `field` equals `value` (`Id`, the field and `Modified`), or undefined; a refused read throws. */
+  private async _findByField(listTitle: string, field: string, value: string): Promise<IListItem | undefined> {
+    const filter: string = encodeURIComponent(`${field} eq '${value.replace(/'/g, "''")}'`);
+    const url: string = `${listItemsUrl(this._context.siteUrl, listTitle)}?$select=Id,${field},Modified&$filter=${filter}&$top=1`;
+    const response: IListResponse = await this._context.client.get(url, this._context.configuration, { headers: ACCEPT_HEADER });
+    if (!response.ok) {
+      throw await failureError(listTitle, response);
+    }
+    const data: { value?: unknown } = (await response.json()) as { value?: unknown };
+    return Array.isArray(data.value) && data.value.length > 0 ? (data.value[0] as IListItem) : undefined;
+  }
+
+  /** One row by id, projected to `select`; a refused or missing row throws. */
+  private async _getItem(listTitle: string, id: number, select: string): Promise<IListItem> {
+    const url: string = `${listItemsUrl(this._context.siteUrl, listTitle)}(${id})?$select=${select}`;
+    const response: IListResponse = await this._context.client.get(url, this._context.configuration, { headers: ACCEPT_HEADER });
+    if (!response.ok) {
+      throw await failureError(listTitle, response);
+    }
+    return (await response.json()) as IListItem;
+  }
+
+  /**
+   * Reads the intake row back by id (by identifier when the POST answer carried none) and returns it
+   * when it carries the identifier that was written; anything else is inconclusive and yields undefined
+   * (the console gets the status or the mismatch, never a body).
+   */
+  private async _readBack(id: number | undefined, intakeId: string): Promise<IListItem | undefined> {
+    try {
+      const item: IListItem | undefined =
+        id === undefined ? await this._findByField(INTAKES_LIST_TITLE, 'IntakeId', intakeId) : await this._getItem(INTAKES_LIST_TITLE, id, READBACK_SELECT);
+      if (item !== undefined && item.IntakeId === intakeId) {
+        return item;
+      }
+      console.error('AI CoE submission not confirmed', `${INTAKES_LIST_TITLE} readback mismatch (INCONCLUSIVE)`);
+      return undefined;
+    } catch (error) {
+      console.error('AI CoE submission not confirmed', failureLogDetail(error));
+      return undefined;
+    }
   }
 
   private _businessProblem(workflowType: SubmissionWorkflowType, record: IRecord, answers: IRecord): string {

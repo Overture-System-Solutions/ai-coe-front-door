@@ -120,6 +120,27 @@ describe('InMemoryListStore deny', () => {
     const read: IListResponse = await client.get(itemsUrl(USAGE), 'v1', { headers: HEADERS });
     expect(read.status).toBe(401);
   });
+
+  it('recover() lets the list answer again, keeping its rows and its hooks', async () => {
+    const { store, client } = createStore();
+    store.seed(INTAKES, [{ IntakeId: 'A' }]);
+    let hooks: number = 0;
+    store.afterPost(INTAKES, (): void => {
+      hooks += 1;
+    });
+    store.deny(INTAKES);
+    expect((await client.get(itemsUrl(INTAKES), 'v1', { headers: HEADERS })).status).toBe(403);
+    store.recover(INTAKES);
+    const read: { status: number; value: IStoredItem[] } = await getValue(client, itemsUrl(INTAKES));
+    expect(read.status).toBe(200);
+    expect(read.value).toHaveLength(1);
+    const write: IListResponse = await client.post(itemsUrl(INTAKES), 'v1', { headers: HEADERS, body: JSON.stringify({ IntakeId: 'B' }) });
+    expect(write.status).toBe(201);
+    expect(hooks).toBe(1);
+    // Recovering a list that was never failed is harmless.
+    store.recover(USE_CASES);
+    expect((await getValue(client, itemsUrl(USE_CASES))).status).toBe(200);
+  });
 });
 
 describe('InMemoryListStore afterPost', () => {

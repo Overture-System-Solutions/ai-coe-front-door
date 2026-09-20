@@ -421,18 +421,34 @@ function request(method: 'GET' | 'POST', url: string, options: { body?: string }
   const body: unknown = options !== undefined && options.body ? JSON.parse(options.body) : undefined;
   requests.push({ method, list, body, simulated: true });
   let result: unknown;
+  let status: number = 200;
+  const itemMatch: RegExpMatchArray | null = String(url).match(/\/items\((\d+)\)/);
+  const filterMatch: RegExpMatchArray | null = String(url).match(/[?&]\$filter=([^&]*)/);
   if (method === 'POST') {
     const item: IPreviewItem = Object.assign({}, body as object, { Id: nextId++ }) as IPreviewItem;
     lists[list].push(item);
     result = item;
+    status = 201;
+  } else if (itemMatch !== null) {
+    // The readback that follows a write: one row by id, 404 when the list holds no such row.
+    const id: number = Number(itemMatch[1]);
+    const found: IPreviewItem | undefined = lists[list].filter((item: IPreviewItem): boolean => item.Id === id)[0];
+    result = found === undefined ? 'Item does not exist' : found;
+    status = found === undefined ? 404 : 200;
+  } else if (filterMatch !== null) {
+    // The pre-read of a retry: a one-field `<Field> eq '<value>'` filter; any other shape matches nothing.
+    const clause: RegExpExecArray | null = /^\s*([A-Za-z_][A-Za-z0-9_]*)\s+eq\s+'((?:[^']|'')*)'\s*$/.exec(decodeURIComponent(filterMatch[1]));
+    const rows: IPreviewItem[] =
+      clause === null ? [] : lists[list].filter((item: IPreviewItem): boolean => item[clause[1]] !== undefined && String(item[clause[1]]) === clause[2].replace(/''/g, "'"));
+    result = { value: rows };
   } else {
     result = { value: lists[list].slice() };
   }
   return Promise.resolve({
-    ok: true,
-    status: method === 'POST' ? 201 : 200,
+    ok: status < 300,
+    status,
     json: (): Promise<unknown> => Promise.resolve(result),
-    text: (): Promise<string> => Promise.resolve(JSON.stringify(result))
+    text: (): Promise<string> => Promise.resolve(typeof result === 'string' ? result : JSON.stringify(result))
   });
 }
 

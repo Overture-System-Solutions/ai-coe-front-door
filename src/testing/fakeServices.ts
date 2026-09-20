@@ -12,6 +12,7 @@ import type {
   IAdminDashboardData,
   IGovernanceService,
   ISubmissionResult,
+  ISubmitOptions,
   IUsageMetricsResult,
   IUsageMetricsService
 } from '../webparts/aiCoeFrontDoor/services/types';
@@ -37,6 +38,8 @@ export function createDeferred<T>(): IDeferred<T> {
 export interface IRecordedSubmission {
   workflowType: SubmissionWorkflowType;
   payload: unknown;
+  /** The identifier of the attempt being retried; absent on a first attempt. */
+  intakeId?: string;
 }
 
 export interface IFakeGovernanceService extends IGovernanceService {
@@ -61,8 +64,8 @@ export function createFakeGovernanceService(): IFakeGovernanceService {
     },
     dashboard: { connected: true, intakes: [], useCases: [], decisions: [], message: 'Loaded.' },
     dashboardCalls: 0,
-    submitWorkflow: async (workflowType: SubmissionWorkflowType, payload: unknown): Promise<ISubmissionResult> => {
-      service.submissions.push({ workflowType, payload });
+    submitWorkflow: async (workflowType: SubmissionWorkflowType, payload: unknown, options?: ISubmitOptions): Promise<ISubmissionResult> => {
+      service.submissions.push({ workflowType, payload, intakeId: options === undefined ? undefined : options.intakeId });
       return service.result;
     },
     getAdminDashboardData: async (): Promise<IAdminDashboardData> => {

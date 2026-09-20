@@ -18,7 +18,7 @@ function renderResultPanel(lastResult: ISubmissionResult | undefined, overrides:
 } {
   const onStartOver: jest.Mock = jest.fn();
   const onDone: jest.Mock = jest.fn();
-  const value: ISubmissionContextValue = { lastResult, submit: jest.fn() };
+  const value: ISubmissionContextValue = { lastResult, lastAttempt: undefined, submit: jest.fn(), retryLast: jest.fn() };
   render(
     <SubmissionContext.Provider value={value}>
       <ResultPanel
