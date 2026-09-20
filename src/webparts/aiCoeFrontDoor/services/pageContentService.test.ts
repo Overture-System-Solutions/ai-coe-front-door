@@ -1,7 +1,7 @@
 import { createFakeListClient, InMemoryListStore } from '../../../testing/listStore';
 import type { IRecordedRequest } from '../../../testing/listStore';
 import { SAMPLE_PAGE_DOCUMENT } from '../../../testing/pageDocument';
-import { fileContentUrl, PageContentService } from './pageContentService';
+import { fileContentUrl, MAX_DOCUMENT_CHARS, PageContentService } from './pageContentService';
 import type { IPageContentResult } from './pageContentService';
 import type { IListClient, IServiceContext } from './types';
 
@@ -61,6 +61,28 @@ describe('PageContentService', () => {
     store.seedFile(FILE, '{ "version": 3 }');
     const service: PageContentService = new PageContentService(contextFor(createFakeListClient(store)), CONTENT_URL);
     expect(await service.getDocument()).toEqual({ connected: true, message: `${CONTENT_URL} is not a version 1 page document.` });
+  });
+
+  it('refuses a body over 512 kB before parsing it, as connected but without pages', async () => {
+    const store: InMemoryListStore = new InMemoryListStore([]);
+    const filler: string = new Array(512 * 1024 + 2).join('a');
+    store.seedFile(FILE, `{ "version": 1, "pages": {}, "filler": "${filler}" }`);
+    const service: PageContentService = new PageContentService(contextFor(createFakeListClient(store)), CONTENT_URL);
+    expect(await service.getDocument()).toEqual({ connected: true, document: undefined, message: 'The page document is too large (limit 512 kB).' });
+    expect(MAX_DOCUMENT_CHARS).toBe(512 * 1024);
+  });
+
+  it('accepts a body of exactly the limit', async () => {
+    const store: InMemoryListStore = new InMemoryListStore([]);
+    const head: string = '{ "version": 1, "pages": {}, "filler": "';
+    const tail: string = '" }';
+    const body: string = head + new Array(MAX_DOCUMENT_CHARS - head.length - tail.length + 1).join('a') + tail;
+    expect(body).toHaveLength(MAX_DOCUMENT_CHARS);
+    store.seedFile(FILE, body);
+    const service: PageContentService = new PageContentService(contextFor(createFakeListClient(store)), CONTENT_URL);
+    const result: IPageContentResult = await service.getDocument();
+    expect(result.connected).toBe(true);
+    expect(result.document?.pages).toEqual({});
   });
 
   it('never throws when the client fails', async () => {

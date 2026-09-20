@@ -1,3 +1,4 @@
+/* eslint-disable no-script-url -- the script URL is the hostile input the href guard is tested against */
 import { screen, within } from '@testing-library/react';
 import * as React from 'react';
 import { renderWithFrontDoor, TEST_SITE_URL } from '../../../../../testing/renderWithFrontDoor';
@@ -32,6 +33,27 @@ describe('TilesBlock', () => {
     expect(tiles[1].querySelector('svg.ai-service-icon')).not.toBeNull();
     expect(container.querySelector('.ai-page-tiles--prominent')).toBeNull();
     expect(container.querySelector('.ai-pill')).toBeNull();
+  });
+
+  it('renders a tile whose href carries a scheme outside the allow-list as a dead anchor in the same tab', () => {
+    const hostile: ITilesBlock = {
+      type: 'tiles',
+      items: [
+        { title: 'Run me', href: 'javascript:alert(1)', tone: 'teal' },
+        { title: 'Open me', href: 'data:text/html,<script>alert(1)</script>', tone: 'blue' },
+        { title: 'Call me', href: 'tel:+15551234567', tone: 'gold' }
+      ]
+    };
+    const { container } = renderWithFrontDoor(<TilesBlock block={hostile} />);
+    const tiles: NodeListOf<HTMLAnchorElement> = container.querySelectorAll('.ai-page-tiles > a.ai-service-card');
+    expect(tiles).toHaveLength(3);
+    tiles.forEach((tile: HTMLAnchorElement): void => {
+      expect(tile).toHaveAttribute('href', '#');
+      expect(tile).not.toHaveAttribute('target');
+      expect(tile).not.toHaveAttribute('rel');
+    });
+    expect(container.innerHTML).not.toContain('javascript:');
+    expect(container.innerHTML).not.toContain('data:');
   });
 });
 

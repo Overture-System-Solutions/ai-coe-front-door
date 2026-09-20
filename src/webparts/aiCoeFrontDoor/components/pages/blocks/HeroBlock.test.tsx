@@ -1,3 +1,4 @@
+/* eslint-disable no-script-url -- the script URL is the hostile input the href guard is tested against */
 import { screen, within } from '@testing-library/react';
 import * as React from 'react';
 import { renderWithFrontDoor, TEST_SITE_URL } from '../../../../../testing/renderWithFrontDoor';
@@ -81,6 +82,25 @@ describe('HeroBlock', () => {
     expect(cta).toHaveAttribute('rel', 'noopener noreferrer');
     expect(cta.querySelector('.ai-pill')).toBeNull();
     expect(container.querySelector('.ai-hero-state .ai-pill--green')?.textContent).toBe('Available now');
+  });
+
+  it('renders a call to action and a text link whose href carries a scheme outside the allow-list as dead anchors in the same tab', () => {
+    const hostile: IHeroBlock = {
+      type: 'hero',
+      title: 'Welcome',
+      text: 'Never [run this](javascript:alert(1)).',
+      cta: { label: 'Run me', href: 'javascript:alert(1)' }
+    };
+    const { container } = renderWithFrontDoor(<HeroBlock block={hostile} />);
+    const cta: HTMLElement = screen.getByRole('link', { name: 'Run me' });
+    expect(cta).toHaveClass('ai-hero-cta');
+    expect(cta).toHaveAttribute('href', '#');
+    expect(cta).not.toHaveAttribute('target');
+    expect(cta).not.toHaveAttribute('rel');
+    const textLink: HTMLElement = screen.getByRole('link', { name: 'run this' });
+    expect(textLink).toHaveAttribute('href', '#');
+    expect(textLink).not.toHaveAttribute('target');
+    expect(container.innerHTML).not.toContain('javascript:');
   });
 
   it('closes a call to action the script marked as needing access, with no link at all', () => {

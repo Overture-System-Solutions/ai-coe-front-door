@@ -180,11 +180,17 @@ copy in its version history). It is UTF-8 JSON:
 `tone` on tiles and cards is `teal` (default), `blue`, `violet`, `gold` or `cyan`. Every `text`, `body`, `note` and
 `meta` string may carry in-text markup: `[label](href)`, `**bold**` and `*italic*` (flat, no nesting; anything
 incomplete stays literal, so `[describe it]` is just text). Links are site paths (`SitePages/Requests.aspx`, resolved
-against the site), root paths, full URLs, `#anchors` or `mailto:` addresses. The envelope is strict (`"version": 1`
-and a `pages` object, or the instance reports the document as unavailable); inside a page it is lenient: a block or
-item the web part does not understand is left out and the rest of the page still renders, so a typo hides one card,
-not the page. The script rewrites the document on every run, so lasting wording changes belong in `pages.json`; a
-quick correction can be made in Site Assets and shows on the next page load.
+against the site), root paths, `http(s)` URLs, `#anchors` or `mailto:` addresses. Since 1.0.0.12 every other
+scheme (`javascript:`, `data:`, `vbscript:`, `tel:`, …) and a protocol-less `//host` target render as a dead `#`
+anchor and are never appended to the site URL; only a URL on another origin opens in a new tab. The envelope is
+strict (`"version": 1` and a `pages` object, or the instance reports the document as unavailable; a file over 512 kB
+is refused before it is parsed and reported as too large); inside a page it is lenient: a block or item the web part
+does not understand is left out and the rest of the page still renders, so a typo hides one card, not the page, and a
+key named `__proto__` is skipped wherever the document is a map. Text is always rendered as text: a `<script>` tag or
+an `<img onerror>` written into a title shows as those characters, never as markup (the lint configuration makes
+`react/no-danger` an error, so nothing under the web part can write raw HTML). The script rewrites the document on
+every run, so lasting wording changes belong in `pages.json`; a quick correction can be made in Site Assets and shows
+on the next page load.
 
 **Action states.** A tile, the hero call to action and a status item may carry `state` (one of the five truth-state
 keys `availableNow`, `draftOnly`, `needsApproval`, `needsAccess`, `notSupported`, or an activation code `DESIGNED`,
@@ -322,8 +328,10 @@ parser and markup, form engine, services, summaries), React Testing Library comp
 services (including every content block), bundle-level lifecycle tests that
 load the built AMD bundle in a simulated SPFx host, a journey parity suite that plays every workflow through the
 shipped 1.0.0.7 bundle and the port side by side (screens, drafts, downloads and posted list items must match), the
-stylesheet parity test plus the page view stylesheet guard, a preview-server test, and static checks on the page
-definition and the provisioning script. Any React `act()` warning fails the suite.
+stylesheet parity test plus the page view stylesheet guard, a preview-server test, a hostile-document test (script
+tags, executable link schemes, a 200 kB string, arrays nested fifty deep and `__proto__` keys render as text and dead
+anchors), and static checks on the page definition, the provisioning script and the lint configuration (`react/no-danger`
+is an error and no source under the web part uses `dangerouslySetInnerHTML`). Any React `act()` warning fails the suite.
 
 ## Behaviour notes
 

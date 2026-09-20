@@ -24,6 +24,14 @@ export interface IPageContentService {
 const FILE_HEADERS: { [name: string]: string } = { Accept: 'application/json;odata=nometadata', 'odata-version': '' };
 const FULL_URL: RegExp = /^https?:\/\/[^/]*(\/.*)?$/i;
 
+/**
+ * The most text the service parses: 512 kB of document text (characters, so a byte for the ASCII a
+ * page document is written in). A site file anyone with edit rights can change must not be able to
+ * hold the page in a parse of unbounded length; a real document is a few tens of kilobytes.
+ */
+export const MAX_DOCUMENT_CHARS: number = 512 * 1024;
+export const DOCUMENT_TOO_LARGE_TEXT: string = 'The page document is too large (limit 512 kB).';
+
 function serverRelativePath(siteUrl: string, contentUrl: string): string {
   const text: string = contentUrl.trim();
   const full: RegExpExecArray | null = FULL_URL.exec(text);
@@ -73,7 +81,11 @@ export class PageContentService implements IPageContentService {
       if (!response.ok) {
         return { connected: false, message: `The page document could not be read: ${this._contentUrl} answered ${response.status}.` };
       }
-      const document: IPageDocument | undefined = parsePageDocument(await response.text());
+      const text: string = await response.text();
+      if (text.length > MAX_DOCUMENT_CHARS) {
+        return { connected: true, message: DOCUMENT_TOO_LARGE_TEXT };
+      }
+      const document: IPageDocument | undefined = parsePageDocument(text);
       if (document === undefined) {
         return { connected: true, message: `${this._contentUrl} is not a version 1 page document.` };
       }

@@ -1,3 +1,4 @@
+/* eslint-disable no-script-url -- the script URL is the hostile input the href guard is tested against */
 import { screen } from '@testing-library/react';
 import * as React from 'react';
 import { renderWithFrontDoor, TEST_SITE_URL } from '../../../../testing/renderWithFrontDoor';
@@ -31,6 +32,29 @@ describe('Markup', () => {
       </p>
     );
     expect(container.querySelector('p')?.innerHTML).toBe('Nothing [special] here * at all.');
+  });
+
+  it('renders a link with a scheme outside the allow-list as a dead anchor in the same tab', () => {
+    const { container } = renderWithFrontDoor(
+      <p>
+        <Markup text="Do not [run this](javascript:alert(1)) or [this](data:text/html,x) or [call](tel:+15551234567); [mail](mailto:coe@contoso.com) is fine." />
+      </p>
+    );
+    const links: NodeListOf<HTMLAnchorElement> = container.querySelectorAll('a');
+    expect(links).toHaveLength(4);
+    ['run this', 'this', 'call'].forEach((name: string): void => {
+      const link: HTMLElement = screen.getByRole('link', { name });
+      expect(link).toHaveAttribute('href', '#');
+      expect(link).not.toHaveAttribute('target');
+      expect(link).not.toHaveAttribute('rel');
+    });
+    expect(screen.getByRole('link', { name: 'mail' })).toHaveAttribute('href', 'mailto:coe@contoso.com');
+    expect(container.innerHTML).not.toContain('javascript:');
+  });
+
+  it('keeps only the new-tab decision: the target it is given is the target it renders', () => {
+    expect(anchorProps(TEST_SITE_URL, '#')).toEqual({ href: '#' });
+    expect(anchorProps(TEST_SITE_URL, 'mailto:coe@contoso.com')).toEqual({ href: 'mailto:coe@contoso.com' });
   });
 
   it('opens only urls on another origin in a new tab', () => {

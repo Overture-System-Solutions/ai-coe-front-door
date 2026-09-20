@@ -12,6 +12,15 @@ export function asObject(value: unknown): Raw | undefined {
   return value !== null && typeof value === 'object' && !Array.isArray(value) ? (value as Raw) : undefined;
 }
 
+/**
+ * The keys of a parsed object that are safe to copy into a fresh map: JSON.parse keeps a `__proto__`
+ * member as an own key, and writing it onto a plain object would swap that object's prototype
+ * instead of adding an entry, so that one key is left out.
+ */
+export function ownKeys(raw: Raw): string[] {
+  return Object.keys(raw).filter((key: string): boolean => key !== '__proto__');
+}
+
 /** A trimmed, non-empty string; undefined for anything else. */
 export function readText(value: unknown): string | undefined {
   const text: string = typeof value === 'string' ? value.trim() : '';

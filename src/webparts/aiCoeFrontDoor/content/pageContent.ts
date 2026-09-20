@@ -8,7 +8,7 @@
  */
 import { PAGE_TARGETS } from './pageViews';
 import type { PageLinks, PageTarget } from './pageViews';
-import { asObject, readFlag, readIsoDate, readItems, readStringList, readText, setOptional } from './rawJson';
+import { asObject, ownKeys, readFlag, readIsoDate, readItems, readStringList, readText, setOptional } from './rawJson';
 import type { Raw } from './rawJson';
 import { parseRoutes } from './routes';
 import type { RouteTable } from './routes';
@@ -618,7 +618,7 @@ function readStringMap(value: unknown): { [key: string]: string } {
   const raw: Raw | undefined = asObject(value);
   const map: { [key: string]: string } = {};
   if (raw !== undefined) {
-    for (const key of Object.keys(raw)) {
+    for (const key of ownKeys(raw)) {
       const text: string | undefined = readText(raw[key]);
       if (text !== undefined) {
         map[key] = text;
@@ -722,7 +722,7 @@ export function parsePageDocument(text: string): IPageDocument | undefined {
     return undefined;
   }
   const pages: { [key: string]: IContentPage } = {};
-  for (const key of Object.keys(rawPages)) {
+  for (const key of ownKeys(rawPages)) {
     const page: IContentPage | undefined = parsePage(rawPages[key]);
     if (page !== undefined) {
       pages[key] = page;

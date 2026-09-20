@@ -10,7 +10,7 @@
 import { includes } from '../utils/collections';
 import { isExternalHref, resolveContentHref } from './links';
 import type { IVocabulary } from './pageContent';
-import { asObject, readFlag, readIsoDate, readStringList, readText, setOptional } from './rawJson';
+import { asObject, ownKeys, readFlag, readIsoDate, readStringList, readText, setOptional } from './rawJson';
 import type { Raw } from './rawJson';
 import { activationLabel, chromeLabel, readState, truthStateLabel } from './truthStates';
 import type { ActivationCode, ChromePillKey, StateCode, TruthStateKey } from './truthStates';
@@ -133,7 +133,7 @@ export function parseRoutes(value: unknown): RouteTable {
   const raw: Raw | undefined = asObject(value);
   const routes: RouteTable = {};
   if (raw !== undefined) {
-    for (const rawKey of Object.keys(raw)) {
+    for (const rawKey of ownKeys(raw)) {
       const key: string | undefined = readText(rawKey);
       const entry: Raw | undefined = asObject(raw[rawKey]);
       const row: IRouteRow | undefined = key === undefined || entry === undefined ? undefined : readRow(key, entry);

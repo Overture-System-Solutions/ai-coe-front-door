@@ -10,7 +10,10 @@ export interface IMarkupProps {
   text: string;
 }
 
-/** Anchor attributes for a resolved target: URLs on another origin (Teams, other tenants) open in a new tab. */
+/**
+ * Anchor attributes for a target `resolveContentHref` has already guarded: only the new-tab decision
+ * is made here (URLs on another origin, such as Teams or another tenant, open in a new tab).
+ */
 export function anchorProps(siteUrl: string, href: string): React.AnchorHTMLAttributes<HTMLAnchorElement> {
   return isExternalHref(siteUrl, href) ? { href, target: '_blank', rel: 'noopener noreferrer' } : { href };
 }

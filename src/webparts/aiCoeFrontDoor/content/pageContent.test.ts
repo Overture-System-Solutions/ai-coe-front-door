@@ -1,3 +1,4 @@
+/* eslint-disable no-script-url -- the script URLs are the hostile inputs the href guard is tested against */
 import {
   DEFAULT_CONTENT_URL,
   DEFAULT_SETTINGS,
@@ -553,7 +554,25 @@ describe('content links', () => {
     expect(resolveContentHref(SITE, '#paths')).toBe('#paths');
     expect(resolveContentHref(SITE, '?view=page&page=learn')).toBe('?view=page&page=learn');
     expect(resolveContentHref(SITE, 'mailto:coe@contoso.com')).toBe('mailto:coe@contoso.com');
+    expect(resolveContentHref(SITE, 'MAILTO:coe@contoso.com')).toBe('MAILTO:coe@contoso.com');
+    expect(resolveContentHref(SITE, 'http://intranet.contoso.com/x')).toBe('http://intranet.contoso.com/x');
+    expect(resolveContentHref(SITE, 'HTTPS://CONTOSO.sharepoint.com/sites/ai/x')).toBe('HTTPS://CONTOSO.sharepoint.com/sites/ai/x');
     expect(resolveContentHref(SITE, '')).toBe('#');
+  });
+
+  it('renders any scheme outside the allow-list as a dead anchor, never appended to the site', () => {
+    expect(resolveContentHref(SITE, 'javascript:alert(1)')).toBe('#');
+    expect(resolveContentHref(SITE, 'JavaScript:alert(1)')).toBe('#');
+    expect(resolveContentHref(SITE, '  javascript:alert(1)')).toBe('#');
+    expect(resolveContentHref(SITE, 'data:text/html,<script>alert(1)</script>')).toBe('#');
+    expect(resolveContentHref(SITE, 'vbscript:MsgBox(1)')).toBe('#');
+    expect(resolveContentHref(SITE, 'tel:+15551234567')).toBe('#');
+    expect(resolveContentHref(SITE, 'ms-word:ofe|u|https://x')).toBe('#');
+    expect(resolveContentHref(SITE, 'file:///C:/x')).toBe('#');
+    expect(resolveContentHref(SITE, '//evil.example/x')).toBe('#');
+    expect(resolveContentHref(SITE, 'javascript:alert(1)')).not.toContain(SITE);
+    // A colon later in a path is not a scheme: the page path still resolves against the site.
+    expect(resolveContentHref(SITE, 'SitePages/Requests.aspx?u=javascript:alert(1)')).toBe(`${SITE}/SitePages/Requests.aspx?u=javascript:alert(1)`);
   });
 
   it('tells an off-site URL from a site path or a same-origin URL', () => {
