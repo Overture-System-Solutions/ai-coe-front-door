@@ -3,7 +3,7 @@ import type { RenderResult } from '@testing-library/react';
 import * as React from 'react';
 import { createBranding } from '../webparts/aiCoeFrontDoor/branding/branding';
 import type { IBranding } from '../webparts/aiCoeFrontDoor/branding/branding';
-import type { IDocumentSettings, ISharedSections, IVocabulary, PagePlane } from '../webparts/aiCoeFrontDoor/content/pageContent';
+import type { IBinding, IContentRelease, IDocumentSettings, ISharedSections, IVocabulary, PagePlane } from '../webparts/aiCoeFrontDoor/content/pageContent';
 import type { TelemetryProvider } from '../webparts/aiCoeFrontDoor/content/telemetryTiles';
 import type { RouteTable } from '../webparts/aiCoeFrontDoor/content/routes';
 import { createWorkflowCatalog } from '../webparts/aiCoeFrontDoor/content/workflows/catalog';
@@ -68,6 +68,10 @@ export interface ITestFrontDoorOptions {
   plane?: PagePlane;
   /** The document settings the blocks read (the freshness threshold, the cohort minimum); the defaults unless given. */
   settings?: IDocumentSettings;
+  /** What a provisioning run called the content; absent, as in a document no run has written yet. */
+  release?: IContentRelease;
+  /** The tenant inputs a run reported; none by default. */
+  bindings?: IBinding[];
 }
 
 export interface ITestFrontDoor {
@@ -124,7 +128,9 @@ export function renderWithFrontDoor(ui: React.ReactElement, options: ITestFrontD
             shared: options.shared,
             plane: options.plane,
             vocabulary: options.vocabulary,
-            settings: options.settings
+            settings: options.settings,
+            release: options.release,
+            bindings: options.bindings
           })}
         >
           {ui}

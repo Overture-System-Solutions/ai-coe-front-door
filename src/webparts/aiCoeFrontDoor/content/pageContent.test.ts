@@ -24,6 +24,7 @@ import {
 } from './pageContent';
 import { CANONICAL_STATUS } from './truthStates';
 import type {
+  IBindingsBlock,
   ICardsBlock,
   ICaseCardsBlock,
   IContentPage,
@@ -197,6 +198,45 @@ describe('document envelope', () => {
     });
     const damaged: IPageDocument | undefined = parsePageDocument(JSON.stringify({ version: 1, shared: ['x'], pages: { learn: { title: 'Learn', blocks: [] } } }));
     expect(damaged).toEqual({ version: 1, pages: { learn: { title: 'Learn', blocks: [] } } });
+  });
+
+  it('carries the release and the bindings the run wrote, and drops a malformed one, never the document', () => {
+    const document: IPageDocument | undefined = parsePageDocument(
+      JSON.stringify({
+        version: 1,
+        release: { id: ' 2026-09-14-a ', publishedAt: '2026-09-14', source: ' SiteAssets/ai-coe-pages.json ' },
+        bindings: [
+          { name: ' AssistantUrl ', kind: 'url', state: 'awaiting' },
+          { name: 'AssistantReceiptRef', kind: 'optional', state: 'bound', receiptRef: ' QR-0001 ' },
+          { name: 'LeadersGroup', kind: 'group', state: 'bound' },
+          // A row is only as good as its three fields; an unknown kind or state, or a value where none belongs, drops it.
+          { name: 'Unknown', kind: 'secret', state: 'bound' },
+          { name: 'Unstated', kind: 'url', state: 'maybe' },
+          { kind: 'url', state: 'bound' },
+          'text'
+        ],
+        pages: { operations: { title: 'Operations', blocks: [] } }
+      })
+    );
+    expect(document).toEqual({
+      version: 1,
+      pages: { operations: { title: 'Operations', blocks: [] } },
+      release: { id: '2026-09-14-a', publishedAt: '2026-09-14', source: 'SiteAssets/ai-coe-pages.json' },
+      bindings: [
+        { name: 'AssistantUrl', kind: 'url', state: 'awaiting' },
+        { name: 'AssistantReceiptRef', kind: 'optional', state: 'bound', receiptRef: 'QR-0001' },
+        { name: 'LeadersGroup', kind: 'group', state: 'bound' }
+      ]
+    });
+    // A release needs an id; the published date is a calendar date or nothing, so no date is invented.
+    const partial: IPageDocument | undefined = parsePageDocument(
+      JSON.stringify({ version: 1, release: { id: 'r1', publishedAt: 'last Tuesday' }, bindings: [], pages: { operations: { title: 'Operations', blocks: [] } } })
+    );
+    expect(partial).toEqual({ version: 1, pages: { operations: { title: 'Operations', blocks: [] } }, release: { id: 'r1' }, bindings: [] });
+    const damaged: IPageDocument | undefined = parsePageDocument(
+      JSON.stringify({ version: 1, release: { publishedAt: '2026-09-14' }, bindings: { AssistantUrl: 'url' }, pages: { operations: { title: 'Operations', blocks: [] } } })
+    );
+    expect(damaged).toEqual({ version: 1, pages: { operations: { title: 'Operations', blocks: [] } } });
   });
 
   it('accepts the operator plane on a page and treats everything else as the user plane', () => {
@@ -716,6 +756,15 @@ describe('blocks', () => {
     // The block may name the roles it is written for, like every other block, and may sit in the shared footer.
     expect((parseBlock({ type: 'kpi', items: [{ id: 'a' }], audience: ['leader'] }) as IKpiBlock).audience).toEqual(['leader']);
     expect(parseShared({ footer: [{ type: 'kpi', items: [{ id: 'a' }] }] }).footer.map((block): string => block.type)).toEqual(['kpi']);
+  });
+
+  it('reads the bindings block, with or without a title of its own', () => {
+    expect(parseBlock({ type: 'bindings' })).toEqual({ type: 'bindings' });
+    expect(parseBlock({ type: 'bindings', title: '  Tenant bindings  ' })).toEqual({ type: 'bindings', title: 'Tenant bindings' });
+    expect(parseBlock({ type: 'bindings', title: '   ' })).toEqual({ type: 'bindings' });
+    // The block renders what the run wrote on the document; it carries no binding of its own.
+    expect(parseBlock({ type: 'bindings', items: [{ name: 'AssistantUrl' }] })).toEqual({ type: 'bindings' });
+    expect((parseBlock({ type: 'bindings', audience: ['operator'] }) as IBindingsBlock).audience).toEqual(['operator']);
   });
 });
 

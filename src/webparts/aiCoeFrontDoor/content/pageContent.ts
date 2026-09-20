@@ -374,6 +374,17 @@ export interface IKpiBlock extends IBlockAudience {
 
 export const DEFAULT_KPI_UNAVAILABLE_TEXT: string = 'Measures unavailable: the measures list could not be read.';
 
+/**
+ * The bindings of the run, as the provisioning run wrote them on the document. The block carries no
+ * binding of its own: everything it shows comes from `release` and `bindings` below, so a page cannot
+ * claim a tenant input the run never had.
+ */
+export interface IBindingsBlock extends IBlockAudience {
+  type: 'bindings';
+  /** The wording above the rows; none when the page gives the section its own heading. */
+  title?: string;
+}
+
 export type PageBlock =
   | IHeroBlock
   | IHeadingBlock
@@ -389,7 +400,8 @@ export type PageBlock =
   | IRulesBlock
   | ISupportRouteBlock
   | ICaseCardsBlock
-  | IKpiBlock;
+  | IKpiBlock
+  | IBindingsBlock;
 
 export interface IContentPage {
   title: string;
@@ -414,9 +426,46 @@ export const EMPTY_SHARED: ISharedSections = { footer: [] };
 /** Block types that belong to one page only and are dropped from the shared sections. */
 export const SHARED_EXCLUDED_BLOCK_TYPES: readonly PageBlock['type'][] = ['hero', 'piece', 'workCommand'];
 
+/**
+ * What the provisioning run called the content it uploaded: the name the run was given (or the time
+ * of the run, when it was given none), the day it was published and the document it wrote. Written by
+ * the run, never by hand, so an operator can tell which content a page is showing.
+ */
+export interface IContentRelease {
+  id: string;
+  /** YYYY-MM-DD: the day the run uploaded the document. */
+  publishedAt?: string;
+  /** Where the run put it, such as the site-relative path of the content document. */
+  source?: string;
+}
+
+/** The kinds of parameter a run reports on: the three that may be blank and fail closed. */
+export type BindingKind = 'url' | 'optional' | 'group';
+export const BINDING_KINDS: readonly BindingKind[] = ['url', 'optional', 'group'];
+
+/** Whether the site holds the input behind a binding, or still owes it. */
+export type BindingState = 'bound' | 'awaiting';
+export const BINDING_STATES: readonly BindingState[] = ['bound', 'awaiting'];
+
+/**
+ * One tenant input the run reported: its name, its kind and whether the site holds it. A value never
+ * travels with it, except the reference of a qualification receipt, which names a record rather than
+ * holding a secret.
+ */
+export interface IBinding {
+  name: string;
+  kind: BindingKind;
+  state: BindingState;
+  receiptRef?: string;
+}
+
 export interface IPageDocument {
   version: number;
   pages: { [key: string]: IContentPage };
+  /** Present when the run named the content it uploaded. */
+  release?: IContentRelease;
+  /** Present when the run reported its bindings; an empty list is a run that had none to report. */
+  bindings?: IBinding[];
   /** Present when the document carries a vocabulary object; a malformed one is dropped. */
   vocabulary?: IVocabulary;
   /** Present when the document carries a settings object; a malformed one is dropped. */
@@ -782,6 +831,43 @@ export function parseKpi(raw: Raw): IKpiBlock | undefined {
   return { type: 'kpi', items, unavailableText: readText(raw.unavailableText) ?? DEFAULT_KPI_UNAVAILABLE_TEXT };
 }
 
+/** The bindings block: nothing of its own but the wording above the rows, which the run fills in. */
+export function parseBindings(raw: Raw): IBindingsBlock {
+  const block: IBindingsBlock = { type: 'bindings' };
+  setOptional(block, 'title', readText(raw.title));
+  return block;
+}
+
+/** The release the run named; undefined without an id, and no date is invented for a publication that gives none. */
+export function parseRelease(value: unknown): IContentRelease | undefined {
+  const raw: Raw | undefined = asObject(value);
+  const id: string | undefined = raw === undefined ? undefined : readText(raw.id);
+  if (raw === undefined || id === undefined) {
+    return undefined;
+  }
+  const release: IContentRelease = { id };
+  setOptional(release, 'publishedAt', readIsoDate(raw.publishedAt));
+  setOptional(release, 'source', readText(raw.source));
+  return release;
+}
+
+function readBinding(raw: Raw): IBinding | undefined {
+  const name: string | undefined = readText(raw.name);
+  const kind: BindingKind | undefined = readTone(BINDING_KINDS, raw.kind);
+  const state: BindingState | undefined = readTone(BINDING_STATES, raw.state);
+  if (name === undefined || kind === undefined || state === undefined) {
+    return undefined;
+  }
+  const binding: IBinding = { name, kind, state };
+  setOptional(binding, 'receiptRef', readText(raw.receiptRef));
+  return binding;
+}
+
+/** The bindings the run reported; a row missing a name, a known kind or a known state is left out. */
+export function parseBindingList(value: unknown): IBinding[] {
+  return readItems(value, readBinding);
+}
+
 /**
  * Reads one block; undefined for anything that is not a well-formed block of a known type. Any block
  * may name the roles it is written for; a malformed or empty audience is left out, so the block stays
@@ -832,6 +918,8 @@ function parseTypedBlock(raw: Raw): PageBlock | undefined {
       return parseCaseCards(raw);
     case 'kpi':
       return parseKpi(raw);
+    case 'bindings':
+      return parseBindings(raw);
     default:
       return undefined;
   }
@@ -969,7 +1057,9 @@ function parsePage(value: unknown): IContentPage | undefined {
 /**
  * Parses the document text; undefined unless it is a version 1 object with a pages object. The
  * optional `vocabulary`, `settings`, `routes` and `shared` sections are carried when they are objects
- * and dropped (never the document) when they are not.
+ * and dropped (never the document) when they are not, and the `release` and `bindings` a provisioning
+ * run writes the same way: a release without an id and a bindings section that is not a list are left
+ * out, and the document still renders.
  */
 export function parsePageDocument(text: string): IPageDocument | undefined {
   let parsed: unknown;
@@ -1002,6 +1092,13 @@ export function parsePageDocument(text: string): IPageDocument | undefined {
   }
   if (asObject(raw.shared) !== undefined) {
     document.shared = parseShared(raw.shared);
+  }
+  const release: IContentRelease | undefined = parseRelease(raw.release);
+  if (release !== undefined) {
+    document.release = release;
+  }
+  if (Array.isArray(raw.bindings)) {
+    document.bindings = parseBindingList(raw.bindings);
   }
   return document;
 }

@@ -13,6 +13,7 @@ import * as path from 'path';
 import { findTenantWords, readTenantWords } from '../provisioning/tenantWords';
 import type { ITenantWords } from '../provisioning/tenantWords';
 import { DECISIONS_LIST_TITLE, INTAKES_LIST_TITLE, USE_CASES_LIST_TITLE } from '../webparts/aiCoeFrontDoor/services/GovernanceService';
+import { PROGRAM_MEASURES_LIST_TITLE } from '../webparts/aiCoeFrontDoor/services/lists';
 import { INCIDENTS_LIST_TITLE, USAGE_LIST_TITLE } from '../webparts/aiCoeFrontDoor/services/UsageMetricsService';
 
 const ROOT: string = process.cwd();
@@ -104,7 +105,8 @@ describe('what would be thrown away', () => {
       const row: string[] | undefined = rows.filter((cells: string[]): boolean => cells[0] === `\`${name}\``)[0];
       expect({ name, row }).toEqual({ name, row: [`\`${name}\``, expect.stringContaining('property'), 'property', expect.stringMatching(/\S/)] });
     }
-    for (const title of [INTAKES_LIST_TITLE, USE_CASES_LIST_TITLE, DECISIONS_LIST_TITLE, USAGE_LIST_TITLE, INCIDENTS_LIST_TITLE]) {
+    // The measures list is the first the script itself creates (1.0.0.14); it is a tenant's own rows like the rest.
+    for (const title of [INTAKES_LIST_TITLE, USE_CASES_LIST_TITLE, DECISIONS_LIST_TITLE, USAGE_LIST_TITLE, INCIDENTS_LIST_TITLE, PROGRAM_MEASURES_LIST_TITLE]) {
       const row: string[] | undefined = rows.filter((cells: string[]): boolean => cells[0] === title)[0];
       expect({ title, row }).toEqual({ title, row: [title, expect.stringMatching(/\S/), 'list', expect.stringMatching(/\S/)] });
     }

@@ -196,8 +196,8 @@ dead (`styles/palette.test.ts` reads every compiled stylesheet and fails on one)
 | Key | Custom property | Default | Where it is read |
 |---|---|---|---|
 | `accent` | `--fd-accent` | `#087f83` | the button back to the front door on the administration bar of a page view |
-| `ink` | `--fd-ink` | `#10243e` | the question of the work command, the title of a notice |
-| `muted` | `--fd-muted` | `#5b6878` | the note under the work command, the evidence line and the note under the measure tiles |
+| `ink` | `--fd-ink` | `#10243e` | the question of the work command, the title of a notice, and on an operator page the release line, the heading, the name and the kind of a binding |
+| `muted` | `--fd-muted` | `#5b6878` | the note under the work command, the evidence line and the note under the measure tiles, and on an operator page the document line, the receipt reference and the empty line of the bindings |
 | `bg` | `--fd-bg` | `#f7fafc` | the quiet surface of a hand-off card whose route is closed |
 | `paper` | `--fd-paper` | `#fff` | the surface of a notice |
 | `focus` | `--fd-focus` | `#0b66d4` | the left edge of an information notice |
@@ -251,7 +251,7 @@ content page is decoration, hidden from assistive technology, where the landing 
 | `view` | `legacy` (default), `home`, `idea`, `toolCheck`, `teamUsage`, `helpTraining`, `feedback`, `telemetry`, `admin`, `page` | The piece this instance renders. `legacy` is the whole front door as shipped; an instance whose property bag predates 1.0.0.10 parses to it. `page` renders one page of the content document. |
 | `layout` | `wide` (default), `narrow` | `narrow` stacks cards, strip, tiles and content blocks for a half or one-third column. |
 | `returnUrl` | site path (`SitePages/Requests.aspx`), root path or full URL | Where "All topics", "Back" on the first question and the dashboard's "Front Door" lead; blank returns to the site home. |
-| `pageKey` | a key of the content document: `startHere`, `learn`, `useAi`, `requests`, `prompts`, `status` as provisioned | Content page only: which page of the document this instance shows. |
+| `pageKey` | a key of the content document: `startHere`, `learn`, `useAi`, `requests`, `prompts`, `status`, `operations`, `value` as provisioned | Content page only: which page of the document this instance shows. |
 | `contentUrl` | site path or URL; blank means `SiteAssets/ai-coe-pages.json` on a content page and no document on any other piece | The JSON document to read, once per instance and path. A content page always reads one; a wizard (or any other piece) reads one only when this is set, and then draws the document's shared footer (the support route) below its content, so the five form pages carry the same help in the same place as the content pages. An instance from before 1.0.0.12 has it blank and reads nothing. |
 | `pageIdea` … `pageFeedback`, `pageTelemetry`, `pageAdmin`, `pagePolicy` | same forms as `returnUrl` | Home tiles only: where each card, the resource strip and the admin bar link. A blank workflow page hides its card; `pageTelemetry` adds an "AI operations snapshot" entry to the resource strip; a blank `pagePolicy` keeps the policy library link. |
 
@@ -290,6 +290,8 @@ copy in its version history). It is UTF-8 JSON:
 | `notice` | `text` (in-text markup allowed); `tone` `info` (default) or `caution`; `title`. A short aside set apart from the prose (a data boundary, a pilot's limits, what the site records), rendered as a note with a toned left edge and its title, never colour alone |
 | `rules` | `items`, each `{ "title", "text" }` (a rule needs a title; `text` may carry in-text markup); `title`; `ordered` (default `true`: a numbered list; `false` for bullets). A block needs at least one titled item |
 | `supportRoute` | `label` (the route: the pilot channel, a mailbox); `href` (the label becomes a link; an off-site link opens in a new tab); `stopWhen` (a list of the situations in which to stop and ask); `reportFields` (a list of what a report should carry: the task type, the time, the status shown, what was expected); `routes`, each `{ "issue", "owner", "action", "kind" }` (a row needs an issue; a blank `owner` reads "not yet named"; `kind` is one of `identity`, `privacy`, `approval`, `claims`, `recovery`, `support` and lets the failure notice of a form page name the owner of an access failure (`identity`) or of anything else (`support`) without reading the row's wording; an unknown kind is dropped, the row stays). Rendered as a "Support" section with the two lists side by side and the routing rows as a description list, never a data grid element. Meant for the shared footer (below), so it is the same help in the same place on every page view (WCAG 2.2 3.2.6, Consistent Help) |
+| `kpi` (since 1.0.0.14) | `items`, each `{ "id", "label", "illustrative" }`; `unavailableText` (default "Measures unavailable: the measures list could not be read."). One tile per measure: `id` is the `MeasureId` of a row of the *AI CoE Program Measures* list, `label` the wording above the number (the row's own title when none is given). Everything else comes from the row and never from the document: a measured row shows its number in its unit with "As of …" and its evidence reference, and any other state shows its plain placeholder (*Not established*, *Pending baseline*, *Not available*, *Not shown: group too small*) with "Evidence required: …" under it. A blank value never becomes zero, a row covering fewer people than `settings.minimumCohort` is held back whatever it claims, and a list that cannot be read makes every tile read *Not available* and says so once. The measure id and the state code are shown on the operator plane alone; `illustrative` adds the *Example* pill |
+| `bindings` (since 1.0.0.14) | `title` (the wording above the rows; none when the page gives the section its own heading). The block carries nothing else: it renders the `release` and `bindings` the provisioning run wrote on the document — "Content release &lt;id&gt;, published &lt;date&gt;", then one row per `url`, `optional` and `group` parameter with its kind and a *Bound* or *Awaiting* pill. A value never appears, except the reference of a qualification receipt, which names a record. The block belongs to the operator plane and renders nothing at all on a page written for everyone |
 | `piece` | `piece`: `home` (the five path cards and the resource strip; `pages` maps `idea`, `toolCheck`, `teamUsage`, `helpTraining`, `feedback`, `telemetry`, `admin`, `policy` to site paths or URLs), `telemetry` (the operations snapshot; the instance's usage metrics provider applies; an optional `kicker` replaces the strip's shipped "LIVE GOVERNANCE TELEMETRY" line and, only then, the tiles take their labels from `vocabulary.telemetry` by metric key, so the page names the feed and never a provider) or `myWork` (the signed-in person's own requests; see *My work* below) |
 
 `tone` on tiles and cards is `teal` (default), `blue`, `violet`, `gold` or `cyan`. Every `text`, `body`, `note` and
@@ -463,8 +465,8 @@ reads it, so no two writers meet on one row and every reader's view can be named
 | A draft (`overture-ai-coe-front-door:draft:<workflow>` in the browser's localStorage) | the wizards as answers are given; the work command, as the first answer of the idea wizard | the wizards (kept after a failed or pending submission on a form page, cleared once the record is saved; the legacy view clears it on every submit) | the wizards and the home tiles ("Resume draft") on the same browser only; never sent anywhere |
 | A case card on Status | nobody at run time: committed content of `pages.json` (one illustrative card, `EXAMPLE-01`) | the page definition, by a commit | the Status page; a cases list is not part of this release |
 
-The envelope may also carry four optional sections and a page may name its plane; each is lenient and a malformed one
-is dropped, never the document:
+The envelope may also carry six optional sections, and a page may name its plane and the role it is written for; each
+is lenient and a malformed one is dropped, never the document:
 
 | Key | Shape |
 |---|---|
@@ -472,7 +474,10 @@ is dropped, never the document:
 | `routes` | `{ "<key>": { "label", "href", "state", "verifiedOn", "receiptRef", "fallback", "note", "roles", "carriesReference", "capabilityId" } }` — the named destinations tiles, the call to action, status items and the work command point at. A row needs a `label`; `state` is a truth-state key or activation code; `verifiedOn` (YYYY-MM-DD) and `receiptRef` (the tenant qualification receipt reference) are what an off-site `href` needs before it opens; `fallback` names the row people are sent to while this one is closed (`guidedIntake` by default); `roles` limits the row to role ids (everyone when absent); `carriesReference` lets the hand-off card after a saved request append the record reference to the row's own link as `?ref=<reference>` (see *Receipts*; the fallback link never carries it); `capabilityId` is reserved. Resolution fails closed, in this order: an unknown key goes to the `guidedIntake` row (no such row: "No fallback is configured", no link); roles named and none held, a blank `href`, or a state other than *Available now* keep the label and link to the fallback with their own pill; an *Available now* off-site `href` without a valid, not-future `verifiedOn` or without `receiptRef` shows "Awaiting source" and links to the fallback; a site path or same-origin URL needs neither. Off-site links never carry user text |
 | `settings` | `{ "freshnessDays": 30, "minimumCohort": 5 }` — whole numbers (1–3650 and 1–1000); anything else keeps the default |
 | `vocabulary` | string maps only, unknown keys ignored, a blank keeps the default: `truthStates` `{ "<key>": { "label", "definition" } }` for `availableNow`, `draftOnly`, `needsApproval`, `needsAccess`, `notSupported`; `requestStatuses` `{ "<code>": "plain wording" }`; `chrome` `{ "badge", "example", "needsRefresh", "awaitingSource", "protectedPage" }` (`badge` is the wizard-page header badge, default "Governed intake"); `roles` `{ "<roleId>": "name" }`; `telemetry` `{ "<feedId>": "name" }`. `{organization}` and `{role}` in the text are filled by the web part, not by the script |
+| `release` (since 1.0.0.14) | `{ "id", "publishedAt", "source" }` — what the provisioning run called the content it uploaded (`ContentRelease`, or the time of the run when that parameter is blank), the day it published it (YYYY-MM-DD) and where it wrote it. Written by the run, never by hand; a release without an `id` is dropped and no date is invented for one without `publishedAt` |
+| `bindings` (since 1.0.0.14) | `[ { "name", "kind", "state", "receiptRef" } ]` — one row per `url`, `optional` and `group` parameter, with `kind` one of those three and `state` `bound` or `awaiting`, exactly as the run's end-of-run summary prints them. Written by the run; a row missing a name, a known kind or a known state is dropped. No value travels with a row, except `receiptRef` on a bound qualification receipt, which names a record. Rendered by the `bindings` block on an operator page |
 | page `plane` | `user` (default) or `operator` |
+| page `requiredRole` (since 1.0.0.14) | a role id or a list of them, any one of which opens the page (`employee`, `leader`, `operator`, `designAuthority`). The site's own permissions are what actually keep a page shut — the script grants the same groups from the page's `permissions` — so this only tells someone who does reach the page whose page it is: they see the protected wording and no block, and no piece of the page asks a list for anything |
 
 The truth states are the five plain-language states of the activation playbook, with their definitions:
 Available now, Draft only, Needs approval, Needs access, Not supported. The web part also knows the six activation codes
@@ -480,19 +485,21 @@ Available now, Draft only, Needs approval, Needs access, Not supported. The web 
 and the 26 canonical status codes (anything else reads "Status unavailable"), and the placeholders a measure shows
 instead of a number (`src/webparts/aiCoeFrontDoor/content/truthStates.ts`).
 
-**The thirteen pages** described in `sharepoint/pages/pages.json` (five in the top navigation, the Prompts page linked
-from Learn and Use AI, the owners-only Operations page, five form pages under Requests, one owners-only admin page),
-each with one front-door instance and, for the seven content pages, the blocks of the content document:
+**The fourteen pages** described in `sharepoint/pages/pages.json` (five in the top navigation, the Prompts page linked
+from Learn and Use AI, the two operator pages behind their site groups — Operations and Enterprise value — five form
+pages under Requests, one owners-only admin page), each with one front-door instance and, for the eight content
+pages, the blocks of the content document:
 
 | Page | Instance | Blocks |
 |---|---|---|
-| Start here (site home) | `page`, key `startHere` | hero with the operating promise and no call to action, the `workCommand`, three `prominent` tiles on the `work`, `improve` and `value` routes, a `statusStrip` (the assistant with its verified date, Requests, and the person's own request count linked to Status), the three rules, the data-boundary `notice`, the private-pilot `notice` (dropped by the script when `PilotTeamName` is blank), three persona cards |
+| Start here (site home) | `page`, key `startHere` | hero with the operating promise and no call to action, the `workCommand`, three `prominent` tiles on the `work`, `improve` and `value` routes, a `statusStrip` (the assistant with its verified date, Requests, and the person's own request count linked to Status), the leader block (`cards` with `audience` `["leader"]`, two static links: enterprise AI value through the `value` route, and Status), the three rules, the data-boundary `notice`, the private-pilot `notice` (dropped by the script when `PilotTeamName` is blank), three persona cards |
 | Learn | `page`, key `learn` | intro, an unnumbered orientation `rules` list, four exercise cards with a duration kicker, how completion is checked, a note for team leads and the link to Prompts |
 | Use AI | `page`, key `useAi` | the one prompt pattern, prompt cards by audience with their data boundaries as meta lines, what the page does not do |
 | Requests | `page`, key `requests` | the three lanes (the governance bodies are parameters), what is not asked of you, registering AI already in use, the data-boundary `notice`, then the `home` piece (the five path cards and resource strip; return page for every form; no snapshot link, since the strip sits on the owners-only Operations page) |
 | Prompts (out of the navigation since 1.0.0.13; linked from Learn and Use AI) | `page`, key `prompts` | three starter prompts, what is in the library, what Draft means |
 | Status | `page`, key `status` | the `myWork` piece (the person's own requests, trimmed by the list's item-level security), the one illustrative `caseCards` example, what is running (the assistant through its route, dated by `AssistantVerifiedDate`) and what is not (closed as *Not supported*, dated by `StatusDate`), how to check a request, what to do when something is wrong |
-| Operations (site owners only, not in the nav, operator plane) | `page`, key `operations`, with `telemetryProvider` (the only instance that uses it) and `plane` `operator` | the heading "Operations diagnostics" and the `telemetry` piece under the kicker "Diagnostics: usage and cost, not a measure of value", its tiles named from `vocabulary.telemetry` (the feed, never a provider) |
+| Operations (site owners and the operators group, not in the nav, operator plane) | `page`, key `operations`, `permissions` `groups:OperatorsGroup`, `requiredRole` `["operator"]`, with `telemetryProvider` (the only instance that uses it) and `plane` `operator` | the heading "Operations diagnostics", the `telemetry` piece under the kicker "Diagnostics: usage and cost, not a measure of value", its tiles named from `vocabulary.telemetry` (the feed, never a provider), then the `bindings` block: what this content release is and which tenant inputs the site holds |
+| Enterprise value (site owners, the leaders group and the operators group, not in the nav, operator plane; since 1.0.0.14) | `page`, key `value`, `permissions` `groups:LeadersGroup,OperatorsGroup`, `requiredRole` `["leader","operator"]`, `plane` `operator` | the heading "Enterprise AI value", the "How to read this page" `notice`, the three measure tiles (`kpi`: `useful-safe-completion-rate`, `median-time-to-useful-outcome`, `repeat-use-useful-completion-rate`, each read from the *AI CoE Program Measures* list and shown as a placeholder with its evidence note until it is measured), then the three illustrative Hypothesis / Forecast / Realised cards, which carry no figure |
 | Explore an AI idea, Check a tool or task, Register team AI use, Get help or training, Share feedback | one wizard each, `returnUrl` Requests, `contentUrl` set so the shared footer (the support route) shows below the wizard; the idea page alone carries `draftServiceUrl` | none of their own; the document's `shared` footer |
 | AI CoE admin dashboard (site owners only, not in the nav) | `admin`, `returnUrl` Requests | none |
 
@@ -504,8 +511,10 @@ library, the support route). No product name is committed: the assistant and the
 reads "a named approver (not yet named)", the fast path "the AI CoE") and the support owners by the six `*OwnerLabel`
 and `BusinessApproverLabel` parameters (blank reads "not yet named"). The two off-site routes (`work`, `assistant`)
 take their `state`, `verifiedOn` and `receiptRef` from parameters and stay closed, falling back to the guided request,
-until all three are set after tenant proof; the three on-site routes (`guidedIntake`, `improve`, `value`) are
-available by content because the same script provisions their pages. A block that names a parameter in
+until all three are set after tenant proof; the on-site routes (`guidedIntake`, `improve`, `value`,
+`valueFallback`) are available by content because the same script provisions their pages. Since 1.0.0.14 a route row
+may name `roles`: `value` leads to the Enterprise value page for a leader or an operator and, for anyone else, to
+its `valueFallback` row (Status), exactly as a closed route falls back. A block that names a parameter in
 `skipWhenBlank` is dropped, with a warning, when that parameter is blank (the pilot notice, keyed by
 `PilotTeamName`). Every claim the pages make that rests on something outside the committed text (a verified date, a
 truth state, a route whose proof comes from the tenant, a default literal the bundle still carries) has a row in
@@ -610,7 +619,7 @@ state are printed: a value belongs to the tenant and never goes to the console.
    and calls to action the script reported as shown as closed once their URL parameters are known (rerun with
    `-Overwrite`, or edit the document in Site Assets).
 
-Manual fallback: upload a hand-written `ai-coe-pages.json` to Site Assets, create the thirteen pages by hand, add the
+Manual fallback: upload a hand-written `ai-coe-pages.json` to Site Assets, create the fourteen pages by hand, add the
 matching toolbox entry to each (**AI CoE: Content page** with the page key for the seven content pages), type the
 return page into the form pages' property pane, paste the AI draft flow URL on the Explore an AI idea page, pick
 the usage metrics provider on Operations, restrict Operations and the admin page to site owners, and edit the
@@ -696,7 +705,8 @@ the identity line, the site's owners group on the admin page). Bindings, the pro
 | AI CoE Incidents | the companion telemetry solution | list | absent: no alerts are shown |
 | AI CoE Program Measures | the script's "Lists" section, from the `lists` entries of `pages.json` (since 1.0.0.14) | list | absent: every measure reads "Not available" |
 | Item-level security on AI CoE Pilot Intakes and AI CoE Use Cases (since 1.0.0.13) | the script's "List security" section, from the `listSecurity` entries of `pages.json`, on every run | list security | script not run: the lists keep the site's inherited permissions, every site member reads every row, and the `myWork` piece shows whatever the server returns; run the script, then the two-account test under *List security* |
-| The Operations page (since 1.0.0.13) | created by the script, owners-only, with `telemetryProvider` from `TelemetryProvider`; its plane and blocks in `pages.json` | page | not created (the script not run): the strip is on no page; the legacy landing keeps its own |
+| The Operations page (since 1.0.0.13) | created by the script, behind `OperatorsGroup` from 1.0.0.14 (owners always), with `telemetryProvider` from `TelemetryProvider`; its plane and blocks in `pages.json` | page | not created (the script not run): the strip is on no page; the legacy landing keeps its own |
+| The Enterprise value page (since 1.0.0.14) | created by the script, behind `LeadersGroup` and `OperatorsGroup` (owners always); its plane, measures and blocks in `pages.json` | page | not created (the script not run): no page reads the measures list, and the `value` route falls back to Status for everyone |
 | `vocabulary.telemetry` (since 1.0.0.13) | the `vocabulary` section of `pages.json`, copied verbatim into the content document | document text | a missing feed label keeps the bundle's feed name for that tile (a portability exception below) |
 
 Rebinding in the contract's order: **export and package** with `npm ci`, `npm run build` and `npm run verify`

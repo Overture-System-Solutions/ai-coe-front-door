@@ -1,14 +1,15 @@
 import * as React from 'react';
 import { DEFAULT_SETTINGS, DEFAULT_VOCABULARY, EMPTY_SHARED, pagePlane } from '../../content/pageContent';
-import type { IContentPage, IDocumentSettings, IPageDocument, ISharedSections, IVocabulary, PagePlane } from '../../content/pageContent';
+import type { IBinding, IContentPage, IContentRelease, IDocumentSettings, IPageDocument, ISharedSections, IVocabulary, PagePlane } from '../../content/pageContent';
 import type { RouteTable } from '../../content/routes';
 
 export type { ISharedSections } from '../../content/pageContent';
 
 /**
  * What every block reads from the document it sits in, rather than from its props: the route list,
- * the wording overrides, the settings, the plane of the page, the shared sections, the clock the
- * freshness and verification checks use, and (once roles are resolved) the roles the person holds.
+ * the wording overrides, the settings, the plane of the page, the shared sections, what the
+ * provisioning run published and the tenant inputs it reported, the clock the freshness and
+ * verification checks use, and (once roles are resolved) the roles the person holds.
  */
 /**
  * How the roles in the context came to be: still on their way from the resolver, read from the site
@@ -26,6 +27,10 @@ export interface IPageDocumentContextValue {
   now: Date;
   roles?: string[];
   rolesState: RoleMembershipState;
+  /** What the provisioning run called the content, when it said so; the operator plane renders it. */
+  release?: IContentRelease;
+  /** The tenant inputs the run reported; empty until a run writes them. */
+  bindings: IBinding[];
 }
 
 /**
@@ -40,10 +45,14 @@ export function createPageDocumentContext(overrides: Partial<IPageDocumentContex
     plane: overrides.plane ?? 'user',
     shared: overrides.shared ?? EMPTY_SHARED,
     now: overrides.now ?? new Date(),
-    rolesState: overrides.rolesState ?? (overrides.roles === undefined ? 'unresolved' : 'resolved')
+    rolesState: overrides.rolesState ?? (overrides.roles === undefined ? 'unresolved' : 'resolved'),
+    bindings: overrides.bindings ?? []
   };
   if (overrides.roles !== undefined) {
     value.roles = overrides.roles;
+  }
+  if (overrides.release !== undefined) {
+    value.release = overrides.release;
   }
   return value;
 }
@@ -51,6 +60,8 @@ export function createPageDocumentContext(overrides: Partial<IPageDocumentContex
 /** The context for one page of a loaded document: its sections, the page's plane, and the host's clock and roles. */
 export function documentContext(document: IPageDocument, page: IContentPage | undefined, host: IPageDocumentContextValue): IPageDocumentContextValue {
   return createPageDocumentContext({
+    release: document.release,
+    bindings: document.bindings ?? [],
     routes: document.routes ?? {},
     vocabulary: document.vocabulary ?? DEFAULT_VOCABULARY,
     settings: document.settings ?? DEFAULT_SETTINGS,

@@ -164,6 +164,14 @@ describe('Palette tokens', () => {
       '.ai-view--page .ai-page-notice-title': ['--fd-ink'],
       '.ai-view--page .ai-metric-evidence': ['--fd-muted'],
       '.ai-view--page .ai-page-kpi-note': ['--fd-muted'],
+      // The bindings of the run (1.0.0.14): the operator page reads the same ink and muted tokens as the rest.
+      '.ai-view--page .ai-page-bindings-title': ['--fd-ink'],
+      '.ai-view--page .ai-page-bindings-release': ['--fd-ink'],
+      '.ai-view--page .ai-page-bindings-source': ['--fd-muted'],
+      '.ai-view--page .ai-page-binding-name': ['--fd-ink'],
+      '.ai-view--page .ai-page-binding-kind': ['--fd-ink'],
+      '.ai-view--page .ai-page-binding-receipt': ['--fd-muted'],
+      '.ai-view--page .ai-page-bindings-empty': ['--fd-muted'],
       '.ai-view .ai-route-card--closed': ['--fd-bg']
     });
   });

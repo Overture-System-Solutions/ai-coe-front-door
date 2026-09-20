@@ -415,13 +415,50 @@ describe('page provisioning script', () => {
     expect(bindings).toBeLessThan(script.search(/^if \(\$locked\.Count -gt 0\) \{\s*throw/m));
   });
 
-  it('carries the plane of a page into the document, so the owners-only Operations page parses as the operator plane', () => {
+  it('writes the release and the bindings onto the document, as names, kinds and states and never as values (1.0.0.14)', () => {
+    // The operator plane renders them, so a site owner reads what this content is and what the site still owes
+    // without opening the parameter file. The section runs before the upload, from the same three inputs the
+    // end-of-run summary prints: the declared kind, whether the run was given a value, and whether the site
+    // carries the named group.
+    const section: string = script.slice(script.indexOf('# Release and bindings'), script.indexOf('$documentJson ='));
+    expect(section.length).toBeGreaterThan(400);
+    expect(section).toMatch(/\$document\['release'\] = \[ordered\]@\{ id = \$releaseId/);
+    expect(section).toContain("publishedAt =");
+    expect(section).toMatch(/ToString\('yyyy-MM-dd'\)/);
+    expect(section).toContain('source = $contentPath');
+    expect(section).toMatch(/-notin @\('url', 'optional', 'group'\)/);
+    expect(section).toMatch(/\$siteGroups\.ContainsKey\(\$name\)/);
+    expect(section).toMatch(/\$supplied\[\$name\]/);
+    expect(section).toContain("'bound'");
+    expect(section).toContain("'awaiting'");
+    expect(section).toMatch(/\$document\['bindings'\] = @\(\$bindingRows\)/);
+    // The one value a binding row may carry is a qualification receipt reference, which names a record and is no secret.
+    expect(section).toMatch(/-like '\*ReceiptRef'/);
+    expect(section).toMatch(/\$row\['receiptRef'\] = \[string\]\$values\[\$name\]/);
+    // Nothing else of a parameter's value travels: no URL, no group title, no policy reference.
+    expect(section.replace(/\$row\['receiptRef'\] = \[string\]\$values\[\$name\]/, '')).not.toMatch(/\$values\[\$name\]/);
+    // Both sections are written before the document is serialised and uploaded.
+    const release: number = script.indexOf('# Release and bindings');
+    expect(release).toBeGreaterThan(script.indexOf("$document['shared']"));
+    expect(release).toBeLessThan(script.indexOf('Add-PnPFile'));
+    // The readback compares the envelope alone, so the sections the document gained ride along untouched.
+    expect(script).toMatch(/\$readBack\['version'\] -ne 1 -or @\(\$readBack\['pages'\]\.Keys\)\.Count -ne \$documentPages\.Count/);
+  });
+
+  it('carries the plane and the required role of a page into the document, so a protected page says whose it is', () => {
     // Decision 7: the telemetry strip moved to Operations, a page written for operators; the web part reads `plane` from the document.
+    // 1.0.0.14: the same page and the Enterprise value page sit behind site groups and name the role each is written for.
     expect(script).toContain("'plane'");
     expect(script).toMatch(/if \(\$page\.Contains\('plane'\)\) \{ \$documentPage\['plane'\] = \[string\]\$page\['plane'\] \}/);
-    const definition: { pages: { key: string; permissions: string; plane?: string }[] } = JSON.parse(fs.readFileSync(path.join(PAGES_DIR, 'pages.json'), 'utf8'));
+    expect(script).toContain("'requiredRole'");
+    expect(script).toMatch(/if \(\$page\.Contains\('requiredRole'\)\) \{ \$documentPage\['requiredRole'\] = @\(\$page\['requiredRole'\]\) \}/);
+    const definition: { pages: { key: string; permissions: string; plane?: string; requiredRole?: string[] }[] } = JSON.parse(fs.readFileSync(path.join(PAGES_DIR, 'pages.json'), 'utf8'));
     const planes: string[] = definition.pages.filter((page): boolean => page.plane !== undefined).map((page): string => `${page.key}:${String(page.plane)}:${page.permissions}`);
-    expect(planes).toEqual(['operations:operator:owners']);
+    expect(planes).toEqual(['operations:operator:groups:OperatorsGroup', 'value:operator:groups:LeadersGroup,OperatorsGroup']);
+    const roles: string[] = definition.pages
+      .filter((page): boolean => page.requiredRole !== undefined)
+      .map((page): string => `${page.key}:${(page.requiredRole as string[]).join(',')}`);
+    expect(roles).toEqual(['operations:operator', 'value:leader,operator']);
     // The navigation is five entries now (decision 1); the script's own words say so.
     expect(script).not.toMatch(/six navigation pages|six front-door entries/);
     expect(script).toMatch(/five front-door entries/);
@@ -581,10 +618,13 @@ describe('README', () => {
     expect(readme).toContain('New-FrontDoorPages.ps1');
     expect(readme).toContain('parameters.sample.json');
     expect(readme).toContain('one instance per page');
-    // 1.0.0.13: thirteen pages, Prompts out of the navigation, the strip on the owners-only Operations page, my work on Status.
-    expect(readme).toContain('The thirteen pages');
+    // 1.0.0.14: fourteen pages, Prompts out of the navigation, my work on Status, and the two operator pages
+    // (Operations with the strip and the bindings, Enterprise value with the measures) behind their site groups.
+    expect(readme).toContain('The fourteen pages');
+    expect(readme).not.toContain('The thirteen pages');
     expect(readme).not.toContain('The twelve pages');
     expect(readme).toContain('key `operations`');
+    expect(readme).toContain('key `value`');
     expect(readme).toContain('Diagnostics: usage and cost, not a measure of value');
     expect(readme).toContain('`myWork`');
     expect(readme).toContain('-ClientId');
@@ -602,7 +642,7 @@ describe('README', () => {
     expect(readme).toContain('Site Assets');
     expect(readme).toContain('version history');
     expect(readme).toContain('"version": 1');
-    for (const block of ['hero', 'heading', 'paragraph', 'tiles', 'cards', 'lanes', 'statusRow', 'piece', 'workCommand', 'notice', 'rules', 'supportRoute', 'caseCards']) {
+    for (const block of ['hero', 'heading', 'paragraph', 'tiles', 'cards', 'lanes', 'statusRow', 'piece', 'workCommand', 'notice', 'rules', 'supportRoute', 'caseCards', 'kpi', 'bindings']) {
       expect(readme).toContain(`\`${block}\``);
     }
     // The shared footer: the support route below every page view, the form pages included.

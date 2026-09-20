@@ -507,9 +507,13 @@ foreach ($page in $definition['pages']) {
     title = Resolve-Text ([string]$page['title'])
     blocks = Resolve-Node $kept ([string]$page['file'])
   }
-  # A page written for operators names its plane (the owners-only Operations page); the web part shows codes beside
-  # the plain wording there and keeps that page out of the user plane.
+  # A page written for operators names its plane (Operations, Enterprise value); the web part shows codes beside
+  # the plain wording there and keeps those pages out of the user plane. A page may also name the roles it is
+  # written for: the site's own permissions are what actually keep it shut (the group parameters below grant the
+  # same groups), and this only tells someone who does reach it whose page it is, instead of drawing blocks that
+  # would mislead them.
   if ($page.Contains('plane')) { $documentPage['plane'] = [string]$page['plane'] }
+  if ($page.Contains('requiredRole')) { $documentPage['requiredRole'] = @($page['requiredRole']) }
   $documentPages[[string]$page['key']] = $documentPage
 }
 $document = [ordered]@{ version = 1; pages = $documentPages }
@@ -521,6 +525,27 @@ if ($definition.Contains('shared')) { $document['shared'] = Resolve-Node $defini
 foreach ($section in @('vocabulary', 'settings')) {
   if ($definition.Contains($section)) { $document[$section] = $definition[$section] }
 }
+
+# ---------------------------------------------------------------------------------------------------------------
+# Release and bindings: what this run published, and which of the tenant's own inputs the site holds (1.0.0.14)
+# ---------------------------------------------------------------------------------------------------------------
+# The operator plane renders both, so a site owner reads which content a page is showing and what the site still
+# owes without opening the parameter file. A binding is answered from the same three things the end-of-run summary
+# prints: the kind the definition declares, whether this run was given a value, and whether the site carries the
+# group a title names. Only the name, the kind and the state travel to the document; a value never does, with the
+# one exception of a qualification receipt reference, which names a record rather than holding a secret.
+$document['release'] = [ordered]@{ id = $releaseId; publishedAt = [System.DateTime]::UtcNow.ToString('yyyy-MM-dd'); source = $contentPath }
+$bindingRows = @()
+foreach ($name in @($kinds.Keys | Sort-Object)) {
+  $kind = $kinds[$name]
+  if ($kind -notin @('url', 'optional', 'group')) { continue }
+  $isBound = if ($kind -eq 'group') { $siteGroups.ContainsKey($name) } else { [bool]$supplied[$name] }
+  $row = [ordered]@{ name = $name; kind = $kind; state = $(if ($isBound) { 'bound' } else { 'awaiting' }) }
+  if ($isBound -and $name -like '*ReceiptRef') { $row['receiptRef'] = [string]$values[$name] }
+  $bindingRows += $row
+}
+$document['bindings'] = @($bindingRows)
+
 $documentJson = $document | ConvertTo-Json -Depth 20
 
 Write-Host "Uploading $contentPath ($($documentPages.Count) pages) ..."
@@ -661,7 +686,8 @@ Write-Host "List security: $($securedLists.Count) list(s) under item-level secur
 # run was not given reads AWAITING, even where a declared default stands in for it, so the summary says what the site
 # still owes and not what a default is covering; a group title this site does not carry reads AWAITING too, because
 # the role behind it stays unbound. Only the name, the kind and the state are printed: a value belongs to the tenant
-# and never goes to the console or to a log.
+# and never goes to the console or to a log. The document carries the same answer in its 'bindings' section (see
+# "Release and bindings" above), read from the same three inputs, so the console and the Operations page agree.
 Write-Host "Content release: $releaseId$(if (-not $supplied['ContentRelease']) { ' (named by this run; set ContentRelease to name it yourself)' })"
 Write-Host 'Bindings (every url, optional and group parameter; a value is never printed):'
 foreach ($name in @($kinds.Keys | Sort-Object)) {

@@ -1,6 +1,7 @@
 import * as React from 'react';
 import type { PageBlock } from '../../content/pageContent';
 import type { DraftFlags } from '../LandingPage';
+import { BindingsBlock } from './blocks/BindingsBlock';
 import { CardsBlock } from './blocks/CardsBlock';
 import { CaseCardsBlock } from './blocks/CaseCardsBlock';
 import { HeroBlock } from './blocks/HeroBlock';
@@ -53,6 +54,8 @@ export function renderBlock(block: PageBlock, drafts: DraftFlags): React.ReactEl
       return <CaseCardsBlock block={block} />;
     case 'kpi':
       return <KpiTilesBlock block={block} />;
+    case 'bindings':
+      return <BindingsBlock block={block} />;
     default:
       return <PieceBlock block={block} drafts={drafts} />;
   }

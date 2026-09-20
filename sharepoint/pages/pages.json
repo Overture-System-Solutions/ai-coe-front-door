@@ -86,7 +86,19 @@
     },
     "guidedIntake": { "label": "Use the guided request instead", "href": "{Page:idea}", "state": "availableNow" },
     "improve": { "label": "Start a request", "href": "{Page:requests}", "state": "availableNow" },
-    "value": { "label": "See what has been measured", "href": "{Page:status}", "state": "availableNow" }
+    "value": {
+      "label": "See what has been measured",
+      "href": "{Page:value}",
+      "state": "availableNow",
+      "roles": ["leader", "operator"],
+      "fallback": "valueFallback"
+    },
+    "valueFallback": {
+      "label": "See what has been measured on Status",
+      "href": "{Page:status}",
+      "state": "availableNow",
+      "note": "Leaders and operators see the evidence-backed view; measured results also appear on Status."
+    }
   },
   "shared": {
     "footer": [
@@ -182,6 +194,26 @@
             { "label": "{AssistantName}", "text": "Answers from approved sources only and says when something is not established.", "route": "assistant", "asOf": "{AssistantVerifiedDate}", "source": "AI CoE check" },
             { "label": "Requests", "text": "A person reads every request. There is no automated reply and no agreed response time yet.", "state": "availableNow" },
             { "kind": "myRequests", "label": "My requests", "href": "{Page:status}" }
+          ]
+        },
+        {
+          "type": "cards",
+          "columns": 2,
+          "audience": ["leader"],
+          "items": [
+            {
+              "title": "Decisions waiting on you",
+              "body": ["Open [enterprise AI value]({Page:value}) for the measures the AI CoE keeps and the evidence behind each one."],
+              "route": "value",
+              "tone": "teal"
+            },
+            {
+              "title": "Material changes",
+              "body": ["[Status]({Page:status}) says what the AI CoE has checked, what it has not, and when each was last read back."],
+              "href": "{Page:status}",
+              "state": "availableNow",
+              "tone": "blue"
+            }
           ]
         },
         { "type": "heading", "level": 2, "text": "Three rules" },
@@ -629,12 +661,75 @@
       "title": "Operations",
       "file": "Operations.aspx",
       "commentsEnabled": false,
-      "permissions": "owners",
+      "permissions": "groups:OperatorsGroup",
+      "requiredRole": ["operator"],
       "plane": "operator",
       "instance": { "view": "page", "pageKey": "operations", "contentUrl": "SiteAssets/ai-coe-pages.json", "layout": "wide", "organizationName": "{OrganizationName}", "governanceReference": "{GovernanceReference}", "reviewSystemName": "{ReviewSystemName}", "roleGroups": "leader={LeadersGroup};operator={OperatorsGroup};designAuthority={DesignAuthorityGroup}", "telemetryProvider": "{TelemetryProvider}" },
       "blocks": [
         { "type": "heading", "level": 2, "text": "Operations diagnostics" },
-        { "type": "piece", "piece": "telemetry", "kicker": "Diagnostics: usage and cost, not a measure of value" }
+        { "type": "piece", "piece": "telemetry", "kicker": "Diagnostics: usage and cost, not a measure of value" },
+        { "type": "bindings", "title": "This content and what it is bound to" }
+      ]
+    },
+    {
+      "key": "value",
+      "title": "Enterprise value",
+      "file": "Enterprise-value.aspx",
+      "commentsEnabled": false,
+      "permissions": "groups:LeadersGroup,OperatorsGroup",
+      "requiredRole": ["leader", "operator"],
+      "plane": "operator",
+      "instance": { "view": "page", "pageKey": "value", "contentUrl": "SiteAssets/ai-coe-pages.json", "layout": "wide", "organizationName": "{OrganizationName}", "governanceReference": "{GovernanceReference}", "reviewSystemName": "{ReviewSystemName}", "roleGroups": "leader={LeadersGroup};operator={OperatorsGroup};designAuthority={DesignAuthorityGroup}" },
+      "blocks": [
+        { "type": "heading", "level": 2, "text": "Enterprise AI value" },
+        {
+          "type": "notice",
+          "tone": "info",
+          "title": "How to read this page",
+          "text": "A number appears only when it has been measured against a baseline. Pending baseline means the measure is defined but the first period is not complete. Not established means no baseline exists yet. Nothing here is estimated."
+        },
+        {
+          "type": "kpi",
+          "unavailableText": "Measures unavailable: the program measures list could not be read on this site. Nothing on this page is a measured result.",
+          "items": [
+            { "id": "useful-safe-completion-rate", "label": "Useful safe completion rate" },
+            { "id": "median-time-to-useful-outcome", "label": "Median time to a useful outcome" },
+            { "id": "repeat-use-useful-completion-rate", "label": "Repeat-use useful completion rate" }
+          ]
+        },
+        {
+          "type": "cards",
+          "columns": 3,
+          "items": [
+            {
+              "title": "Hypothesis",
+              "body": [
+                "What the AI CoE expects a measure to show, written before the period starts, with the baseline it will be read against.",
+                "*Example only: no hypothesis of this environment is shown here.*"
+              ],
+              "illustrative": true,
+              "tone": "teal"
+            },
+            {
+              "title": "Forecast",
+              "body": [
+                "What the hypothesis implies for the period, kept apart from the measures above so a forecast is never read as a result.",
+                "*Example only: a forecast is never converted into a claim.*"
+              ],
+              "illustrative": true,
+              "tone": "gold"
+            },
+            {
+              "title": "Realised",
+              "body": [
+                "What the period actually produced, once the measure has been recorded with its evidence and the group is large enough to show.",
+                "*Example only: realised value appears above, as a measure, or not at all.*"
+              ],
+              "illustrative": true,
+              "tone": "cyan"
+            }
+          ]
+        }
       ]
     },
     {
