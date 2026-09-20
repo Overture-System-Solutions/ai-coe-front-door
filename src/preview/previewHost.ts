@@ -374,7 +374,12 @@ window.XMLHttpRequest = function XMLHttpRequest(): void {
   blocked();
 } as unknown as typeof XMLHttpRequest;
 window.WebSocket = blocked as unknown as typeof WebSocket;
-window.open = blocked;
+// The work command opens an available route in a new tab after saving the draft (the sample document keeps that route
+// closed, so the guided request opens instead). A stub records the call and opens nothing: the preview stays offline.
+window.open = function open(url?: string | URL): undefined {
+  requests.push({ method: 'GET', list: `new tab (${String(url)})`, body: undefined, simulated: true });
+  return undefined;
+} as unknown as typeof window.open;
 document.addEventListener('click', (event: MouseEvent): void => {
   const target: Element | null = event.target as Element | null;
   const link: HTMLAnchorElement | null = target === null ? null : target.closest('a[href]');
@@ -431,7 +436,7 @@ function request(method: 'GET' | 'POST', url: string, options: { body?: string }
   });
 }
 
-/** Stands in for the Claude draft flow: echoes the answers into the twelve draft fields, no model involved. */
+/** Stands in for the AI draft flow: echoes the answers into the twelve draft fields, no model involved. */
 function simulatedDraft(url: string, options: { body?: string } | undefined): Promise<IPreviewResponse> {
   const draftRequest: { requestId?: string; answers?: { [key: string]: unknown } } = options !== undefined && options.body ? JSON.parse(options.body) : {};
   const answers: { [key: string]: unknown } = draftRequest.answers ?? {};

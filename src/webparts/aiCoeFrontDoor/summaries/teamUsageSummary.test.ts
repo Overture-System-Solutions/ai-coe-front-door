@@ -108,6 +108,18 @@ describe('teamUsageWhatHappensNext', () => {
     );
   });
 
+  // Decision 21: the review system is named by the branding; blank keeps the shipped literal in the legacy view only.
+  it('names the review system from the branding, and the neutral wording in a page view', () => {
+    const named = createBranding('Overture', { reviewSystemName: 'Contoso Review Desk' });
+    expect(teamUsageWhatHappensNext(answers, named)).toContain('Submit the use through Contoso Review Desk with manager endorsement so Overture can confirm an approved path.');
+    expect(teamUsageWhatHappensNext({ ...answers, sourceType: 'company' }, named)).toContain('Submit it through Contoso Review Desk with manager endorsement.');
+    const pageView = createBranding('Overture', { pageView: true });
+    expect(teamUsageWhatHappensNext(answers, pageView)).toContain('Submit the use through the review system with manager endorsement so Overture can confirm an approved path.');
+    expect(teamUsageWhatHappensNext({ ...answers, sourceType: 'company' }, pageView)).toContain('Submit it through the review system with manager endorsement.');
+    expect(teamUsageWhatHappensNext(answers, pageView)).not.toContain('TESS');
+    expect(teamUsageWhatHappensNext(answers, createBranding('Overture', { reviewSystemName: '', pageView: false }))).toBe(teamUsageWhatHappensNext(answers, createBranding('Overture')));
+  });
+
   it('thanks the employee when nothing needs a pause', () => {
     expect(teamUsageWhatHappensNext({ followUpPreference: 'alternative' }, createBranding(''))).toBe(
       "Thank you for helping the organization understand real AI use and improve support. Since you're interested in an approved alternative, someone from the AI CoE may follow up with options."

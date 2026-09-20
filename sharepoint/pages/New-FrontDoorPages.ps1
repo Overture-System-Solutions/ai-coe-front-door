@@ -373,6 +373,12 @@ Write-Host "Content document: $contentPath ($($documentPages.Count) pages; earli
 Write-Host "Created: $($created.Count) page(s)$(if ($created.Count -gt 0) { ' - ' + ($created -join ', ') })"
 Write-Host "Skipped: $($skipped.Count) page(s)$(if ($skipped.Count -gt 0) { ' - ' + ($skipped -join ', ') })"
 Write-Host "Locked: $($locked.Count) page(s)$(if ($locked.Count -gt 0) { ' - ' + ($locked -join ', ') })"
+# Bindings the pages carry from parameters rather than from committed content. A blank GovernanceReference leaves the
+# legacy view quoting the package's own default policy reference and every page view reading "reference not yet set",
+# so the summary names it as awaiting until the parameter is filled and the script is rerun with -Overwrite.
+$governanceBinding = if ([string]::IsNullOrWhiteSpace([string]$values['GovernanceReference'])) { 'AWAITING (blank: review requests quote the default wording until GovernanceReference is set)' } else { 'set' }
+$reviewSystemBinding = if ([string]::IsNullOrWhiteSpace([string]$values['ReviewSystemName'])) { 'default wording (blank: tool guidance names the review system generically until ReviewSystemName is set)' } else { 'set' }
+Write-Host "Bindings: GovernanceReference $governanceBinding; ReviewSystemName $reviewSystemBinding"
 Write-Host 'Navigation and home page set. Open each page once in the browser; a warning above names any tile or call to action shown as closed because its URL parameter was blank.'
 if ($locked.Count -gt 0) {
   throw "$($locked.Count) page(s) were left as they were because they are locked for editing: $($locked -join ', '). Close the browser tabs that have them open, wait a few minutes, and rerun with -Overwrite."

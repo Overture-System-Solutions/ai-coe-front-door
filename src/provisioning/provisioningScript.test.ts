@@ -158,6 +158,26 @@ describe('page provisioning script', () => {
     expect(definition.pages.filter((page): boolean => page.key === 'admin')[0]?.instance.contentUrl).toBeUndefined();
   });
 
+  it('writes the governance reference and the review system name on every instance and reports a blank reference as AWAITING', () => {
+    // Decision 21: both Branding properties come from optional parameters through the same token pass as every other
+    // instance property; a blank GovernanceReference leaves the legacy wording in place, so the run summary names it.
+    const definition: { pages: { key: string; instance: { [name: string]: string } }[]; parameters: { [name: string]: { kind: string } } } = JSON.parse(
+      fs.readFileSync(path.join(PAGES_DIR, 'pages.json'), 'utf8')
+    );
+    expect(definition.parameters.GovernanceReference.kind).toBe('optional');
+    expect(definition.parameters.ReviewSystemName.kind).toBe('optional');
+    for (const page of definition.pages) {
+      expect({ page: page.key, governanceReference: page.instance.governanceReference }).toEqual({ page: page.key, governanceReference: '{GovernanceReference}' });
+      expect({ page: page.key, reviewSystemName: page.instance.reviewSystemName }).toEqual({ page: page.key, reviewSystemName: '{ReviewSystemName}' });
+    }
+    expect(script).toMatch(/GovernanceReference[^\n]*AWAITING/);
+    expect(script).toMatch(/\$values\['GovernanceReference'\]/);
+    // The summary line comes after the pages are built and before the locked-page throw, so it is always printed.
+    const summary: number = script.search(/GovernanceReference[^\n]*AWAITING/);
+    expect(summary).toBeGreaterThan(script.indexOf('Set-PnPHomePage'));
+    expect(summary).toBeLessThan(script.search(/^if \(\$locked\.Count -gt 0\) \{\s*throw/m));
+  });
+
   it('no longer needs the native web part templates or HTML text parts', () => {
     for (const legacy of ['Add-PnPPageTextPart', 'DefaultWebPartType', 'quicklinks.template.json', 'button.template.json', 'serverProcessedContent', 'target="_blank"', 'example.invalid']) {
       expect(script).not.toContain(legacy);

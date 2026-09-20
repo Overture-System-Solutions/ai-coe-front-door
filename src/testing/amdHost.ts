@@ -38,7 +38,7 @@ export interface IAmdHostOptions {
   store?: InMemoryListStore;
   /** Files readable through the REST API, keyed by server-relative path (for example the page content document). */
   files?: { [serverRelativePath: string]: string };
-  /** Simulated Claude draft flow behind the Entra-authenticated client; answers 404 when absent. */
+  /** Simulated AI draft flow behind the Entra-authenticated client; answers 404 when absent. */
   draftFlow?: (request: unknown) => IFlowReply;
   /** The context's property pane accessor; absent by default, like a page whose pane is closed. */
   propertyPane?: { refresh(): void };

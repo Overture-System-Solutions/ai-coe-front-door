@@ -6,10 +6,12 @@ import { act, fireEvent, waitFor, within } from '@testing-library/react';
 import * as fs from 'fs';
 import { LIST_TITLES, loadWebPartBundle, MANAGE_WEB_PERMISSION, newestDistBundle, newestStringsChunk } from '../../testing/amdHost';
 import type { IAmdHostOptions, IHostedInstance, IHostedWebPart, IPropertyPaneConfigurationLike, IWebPartBundle } from '../../testing/amdHost';
-import { IDEA_JOURNEY, journeyAnswers, playJourney } from '../../testing/journeys';
+import { IDEA_JOURNEY, journeyAnswers, playJourney, TOOL_CHECK_GAP_JOURNEY } from '../../testing/journeys';
 import { InMemoryListStore } from '../../testing/listStore';
 import type { IRecordedRequest } from '../../testing/listStore';
 import { SAMPLE_PAGE_DOCUMENT } from '../../testing/pageDocument';
+import { BUNDLE_SCAN, findTenantWords, readTenantWords } from '../../provisioning/tenantWords';
+import type { ITenantWords } from '../../provisioning/tenantWords';
 import { createBranding } from './branding/branding';
 import { CONTENT_UNAVAILABLE_TEXT, NO_PAGE_KEY_TEXT } from './components/pages/ContentPage';
 import { ADMIN_ONLY_TEXT } from './components/PageViewShell';
@@ -25,6 +27,7 @@ const bundlePath: string = newestDistBundle();
 const bundle: IWebPartBundle = loadWebPartBundle(bundlePath, newestStringsChunk());
 const instances: IHostedInstance[] = [];
 const catalog: IWorkflowCatalog = createWorkflowCatalog(createBranding(''));
+const tenantWords: ITenantWords = readTenantWords();
 const FLOW_URL: string = 'https://default0000.01.environment.api.powerplatform.com/powerautomate/automations/direct/cu/25/workflows/abc/triggers/manual/paths/invoke?api-version=1';
 
 function flowSuccess(): { [key: string]: unknown } {
@@ -79,12 +82,21 @@ describe('AiCoeFrontDoorWebPart bundle', () => {
     ]);
   });
 
-  it('carries no organization branding but keeps the data contracts', () => {
-    const code: string = fs.readFileSync(bundlePath, 'utf8');
+  it('carries no word of the tenant list but keeps the data contracts', () => {
+    // The bundle scan reads the one tenant word list (src/provisioning/tenantWords.json): the phrases the bundle may not
+    // carry, tenant host shapes, the reference roster and the shapes a secret takes. It runs against whichever bundle the
+    // build wrote last: the dev bundle heft test produces keeps JSDoc on runtime declarations and inlines a source map
+    // (a base64 data URL, which is not a secret) under every stylesheet, so those data URLs are cut before the scan.
+    const code: string = fs.readFileSync(bundlePath, 'utf8').replace(/sourceMappingURL=data:[^\s*]*/g, 'sourceMappingURL=<cut>');
+    const chunk: string = fs.readFileSync(newestStringsChunk(), 'utf8');
+    for (const list of BUNDLE_SCAN) {
+      expect({ file: 'bundle', list, found: findTenantWords(code, tenantWords, [list]) }).toEqual({ file: 'bundle', list, found: [] });
+      expect({ file: 'strings', list, found: findTenantWords(chunk, tenantWords, [list]) }).toEqual({ file: 'strings', list, found: [] });
+    }
     expect(code.indexOf('Overture')).toBe(-1);
-    expect(code.indexOf('OVT-AICOE-')).toBeGreaterThan(-1);
-    expect(code.indexOf('overture-ai-coe-front-door:draft:')).toBeGreaterThan(-1);
-    expect(code.indexOf('overture-ai-coe-pilot')).toBeGreaterThan(-1);
+    for (const marker of ['OVT-AICOE-', 'overture-ai-coe-front-door:draft:', 'overture-ai-coe-pilot', 'AI CoE Pilot Intakes']) {
+      expect(code.indexOf(marker)).toBeGreaterThan(-1);
+    }
   });
 
   it('mounts the front door into its element after onInit', async () => {
@@ -230,19 +242,104 @@ describe('AiCoeFrontDoorWebPart bundle', () => {
           description: 'Shown in the header, the hero badge and the summaries, for example Contoso. Leave blank for neutral wording.',
           placeholder: 'Contoso'
         }
+      },
+      {
+        targetProperty: 'governanceReference',
+        properties: {
+          label: 'Governance reference',
+          description: 'Policy reference quoted on review requests, for example a policy name, version and date. Leave blank for the default wording.',
+          placeholder: 'Contoso AI policy, version 2.0, 1 March 2027'
+        }
+      },
+      {
+        targetProperty: 'reviewSystemName',
+        properties: {
+          label: 'Review system name',
+          description: 'Name of the performance-review system quoted in tool guidance. Leave blank for the default wording.',
+          placeholder: 'Contoso Review Desk'
+        }
       }
     ]);
+    // The drafting flow is named for what it does, never for a provider or a first tenant's flow name.
     expect(configuration.pages[0].groups[1].groupFields).toEqual([
       {
         targetProperty: 'draftServiceUrl',
         properties: {
-          label: 'Claude draft flow URL',
+          label: 'AI draft flow URL',
           description:
-            'HTTP trigger URL of the "OSS Demo - Claude Intake Draft" flow. The flow must allow any user in the tenant, and the Microsoft Flow Service API permission must be approved. Leave blank to keep plain summaries.',
+            'HTTP trigger URL of the drafting flow. The flow must allow any user in the tenant, and the Microsoft Flow Service API permission must be approved. Leave blank to keep plain summaries.',
           placeholder: 'https://…/triggers/manual/paths/invoke?api-version=1'
         }
       }
     ]);
+  });
+
+  it('rebuilds the services once when the governance reference or the review system name changes', async () => {
+    // The page content reader is part of the service bundle, so a rebuild shows as one more document read; a render
+    // with the same values reads nothing, and the core services (telemetry) are never recreated.
+    const instance: IHostedInstance = await mount({
+      properties: { view: 'page', pageKey: 'startHere' },
+      files: { '/sites/ai/SiteAssets/ai-coe-pages.json': JSON.stringify(SAMPLE_PAGE_DOCUMENT) }
+    });
+    const root: HTMLElement = instance.webPart.domElement;
+    await waitFor((): void => expect(within(root).getByRole('heading', { level: 1, name: 'What do you need done?' })).toBeInTheDocument());
+    expect(fileReads(instance)).toHaveLength(1);
+    for (const change of [
+      { name: 'governanceReference', value: 'Contoso AI policy, version 2.0, 1 March 2027' },
+      { name: 'reviewSystemName', value: 'Contoso Review Desk' }
+    ]) {
+      const before: number = fileReads(instance).length;
+      setProperty(instance.webPart, change.name, change.value);
+      await act(async (): Promise<void> => {
+        instance.webPart.render();
+        instance.webPart.render();
+      });
+      await waitFor((): void => expect(within(root).getByRole('heading', { level: 1, name: 'What do you need done?' })).toBeInTheDocument());
+      expect(fileReads(instance)).toHaveLength(before + 1);
+    }
+    await act(async (): Promise<void> => {
+      instance.webPart.render();
+    });
+    expect(fileReads(instance)).toHaveLength(3);
+    expect(usageReads(instance)).toHaveLength(0);
+  });
+
+  it('names the review system from the property: the shipped literal in the legacy view, neutral wording in a page view', async () => {
+    // The next step as listed on the result screen (the export text below it repeats the same line inside one block).
+    const gapStep = (root: HTMLElement): Promise<HTMLElement> =>
+      waitFor((): HTMLElement => {
+        const items: HTMLElement[] = Array.prototype.slice.call(root.querySelectorAll('li'));
+        const step: HTMLElement | undefined = items.filter((item: HTMLElement): boolean => /^Use .* or contact the AI CoE to confirm/.test(item.textContent ?? ''))[0];
+        if (step === undefined) {
+          throw new Error('The guidance-gap next step is not listed yet.');
+        }
+        return step;
+      });
+    // Legacy view, blank property: byte-identical to the shipped package. (The journey helper reads the step titles
+    // from the unbranded catalog, so every mount here is unbranded.)
+    const legacy: IHostedInstance = await mount({ properties: { organizationName: '' } });
+    fireEvent.click(within(legacy.webPart.domElement).getByText('Check a tool or task').closest('button') as HTMLElement);
+    await waitFor((): void => expect(within(legacy.webPart.domElement).getByRole('button', { name: 'Continue' })).toBeInTheDocument());
+    playJourney(TOOL_CHECK_GAP_JOURNEY, catalog.toolCheck, legacy.webPart.domElement);
+    expect((await gapStep(legacy.webPart.domElement)).textContent).toBe('Use TESS or contact the AI CoE to confirm the current approved-use guidance before proceeding.');
+    legacy.dispose();
+    instances.pop();
+
+    // Legacy view, filled property: the name replaces the literal.
+    const named: IHostedInstance = await mount({ properties: { organizationName: '', reviewSystemName: 'Contoso Review Desk' } });
+    fireEvent.click(within(named.webPart.domElement).getByText('Check a tool or task').closest('button') as HTMLElement);
+    await waitFor((): void => expect(within(named.webPart.domElement).getByRole('button', { name: 'Continue' })).toBeInTheDocument());
+    playJourney(TOOL_CHECK_GAP_JOURNEY, catalog.toolCheck, named.webPart.domElement);
+    expect((await gapStep(named.webPart.domElement)).textContent).toBe('Use Contoso Review Desk or contact the AI CoE to confirm the current approved-use guidance before proceeding.');
+    named.dispose();
+    instances.pop();
+
+    // A page view (a form page) with the property blank: neutral wording, never the first tenant's system.
+    const page: IHostedInstance = await mount({ properties: { organizationName: '', view: 'toolCheck' } });
+    await waitFor((): void => expect(within(page.webPart.domElement).getByRole('button', { name: 'Continue' })).toBeInTheDocument());
+    playJourney(TOOL_CHECK_GAP_JOURNEY, catalog.toolCheck, page.webPart.domElement);
+    expect((await gapStep(page.webPart.domElement)).textContent).toBe('Use the review system or contact the AI CoE to confirm the current approved-use guidance before proceeding.');
+    expect(page.webPart.domElement.textContent).not.toContain('TESS');
   });
 
   it('offers the view dropdown and reveals layout, return page and page links as the view changes', async () => {
@@ -406,6 +503,15 @@ describe('AiCoeFrontDoorWebPart bundle', () => {
     expect(tile).toHaveClass('ai-service-card');
     expect(tile).toHaveAttribute('href', 'https://contoso.sharepoint.com/sites/ai/SitePages/Use-AI.aspx');
     expect(root.querySelectorAll('.ai-page-card')).toHaveLength(3);
+    // The sample document carries a route table, the work command and one tile whose route is closed: the tile stays
+    // on the page as a labelled non-link and the command's sentence goes to the guided request, the fallback route.
+    expect(root.querySelector('form.ai-page-command')).not.toBeNull();
+    expect(within(root).getByRole('button', { name: 'Start' })).toBeInTheDocument();
+    const closed: HTMLElement = within(root).getByText('Get work done').closest('.ai-service-card') as HTMLElement;
+    expect(closed).toHaveClass('ai-service-card--closed');
+    expect(closed.tagName).toBe('DIV');
+    expect(within(closed).getByText('Needs access')).toBeInTheDocument();
+    expect(within(closed).getByRole('link', { name: /Start a guided request/ })).toHaveAttribute('href', 'https://contoso.sharepoint.com/sites/ai/SitePages/Explore-an-AI-idea.aspx');
     expect(fileReads(instance)).toHaveLength(1);
     expect(fileReads(instance)[0].file).toBe('/sites/ai/SiteAssets/ai-coe-pages.json');
     expect(fileReads(instance)[0].headers).toEqual({ Accept: 'application/json;odata=nometadata', 'odata-version': '' });

@@ -33,6 +33,9 @@ export const TENANT_WORD_LISTS: TenantWordList[] = ['clientWords', 'bundlePhrase
 /** The lists the committed provisioning files (pages.json, the sample parameters, the scripts) are scanned with. */
 export const PROVISIONING_SCAN: TenantWordList[] = ['clientWords', 'hosts', 'people', 'caseIds', 'secretPatterns'];
 
+/** The lists the built bundle, its strings chunk and the packaged manifest are scanned with (a bare product name stays legal). */
+export const BUNDLE_SCAN: TenantWordList[] = ['bundlePhrases', 'hosts', 'people', 'secretPatterns'];
+
 /** The lists that are matched in any case; the rest match as written. */
 const CASE_INSENSITIVE: TenantWordList[] = ['clientWords', 'hosts'];
 

@@ -1,6 +1,6 @@
 /**
- * Client for the "OSS Demo - Claude Intake Draft" Power Automate flow, which turns the idea answers
- * into a twelve-field draft summary through the organization's Claude connector. The browser never
+ * Client for the intake drafting Power Automate flow, which turns the idea answers into a
+ * twelve-field draft summary through the organization's own model connection. The browser never
  * holds a model key: the flow is reached through an HTTP trigger that requires a Microsoft Entra
  * token for the flow service, which the web part obtains from the framework.
  */

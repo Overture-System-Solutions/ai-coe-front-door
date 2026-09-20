@@ -21,6 +21,8 @@
     "officeFabricIconFontName": "EntryView",
     "properties": {
       "organizationName": "",
+      "governanceReference": "",
+      "reviewSystemName": "",
       "draftServiceUrl": "",
       "telemetryProvider": "claude",
       "view": "legacy",
@@ -45,6 +47,8 @@
     "officeFabricIconFontName": "EntryView",
     "properties": {
       "organizationName": "",
+      "governanceReference": "",
+      "reviewSystemName": "",
       "draftServiceUrl": "",
       "telemetryProvider": "claude",
       "view": "home",
@@ -69,6 +73,8 @@
     "officeFabricIconFontName": "EntryView",
     "properties": {
       "organizationName": "",
+      "governanceReference": "",
+      "reviewSystemName": "",
       "draftServiceUrl": "",
       "telemetryProvider": "claude",
       "view": "idea",
@@ -93,6 +99,8 @@
     "officeFabricIconFontName": "EntryView",
     "properties": {
       "organizationName": "",
+      "governanceReference": "",
+      "reviewSystemName": "",
       "draftServiceUrl": "",
       "telemetryProvider": "claude",
       "view": "toolCheck",
@@ -117,6 +125,8 @@
     "officeFabricIconFontName": "EntryView",
     "properties": {
       "organizationName": "",
+      "governanceReference": "",
+      "reviewSystemName": "",
       "draftServiceUrl": "",
       "telemetryProvider": "claude",
       "view": "teamUsage",
@@ -141,6 +151,8 @@
     "officeFabricIconFontName": "EntryView",
     "properties": {
       "organizationName": "",
+      "governanceReference": "",
+      "reviewSystemName": "",
       "draftServiceUrl": "",
       "telemetryProvider": "claude",
       "view": "helpTraining",
@@ -165,6 +177,8 @@
     "officeFabricIconFontName": "EntryView",
     "properties": {
       "organizationName": "",
+      "governanceReference": "",
+      "reviewSystemName": "",
       "draftServiceUrl": "",
       "telemetryProvider": "claude",
       "view": "feedback",
@@ -189,6 +203,8 @@
     "officeFabricIconFontName": "EntryView",
     "properties": {
       "organizationName": "",
+      "governanceReference": "",
+      "reviewSystemName": "",
       "draftServiceUrl": "",
       "telemetryProvider": "claude",
       "view": "telemetry",
@@ -213,6 +229,8 @@
     "officeFabricIconFontName": "EntryView",
     "properties": {
       "organizationName": "",
+      "governanceReference": "",
+      "reviewSystemName": "",
       "draftServiceUrl": "",
       "telemetryProvider": "claude",
       "view": "admin",
@@ -237,6 +255,8 @@
     "officeFabricIconFontName": "EntryView",
     "properties": {
       "organizationName": "",
+      "governanceReference": "",
+      "reviewSystemName": "",
       "draftServiceUrl": "",
       "telemetryProvider": "claude",
       "view": "page",

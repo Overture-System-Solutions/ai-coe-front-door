@@ -40,7 +40,11 @@ import { UsageMetricsService } from './services/UsageMetricsService';
 export interface IAiCoeFrontDoorWebPartProps extends IPageViewProperties {
   /** Organization name shown in the header, hero badge and summaries; blank keeps the wording neutral. */
   organizationName: string;
-  /** HTTP trigger URL of the Claude draft flow; blank keeps the deterministic summaries. */
+  /** Policy reference quoted on review requests; blank keeps the shipped wording in the legacy view and neutral wording in page views. */
+  governanceReference: string;
+  /** Name of the review system quoted in tool guidance; blank keeps the shipped name in the legacy view and neutral wording in page views. */
+  reviewSystemName: string;
+  /** HTTP trigger URL of the AI draft flow; blank keeps the deterministic summaries. */
   draftServiceUrl: string;
   /** Usage feed shown by the telemetry strip: "claude" (default), "openai" (as shipped in 1.0.0.7) or "both". */
   telemetryProvider: string;
@@ -83,8 +87,14 @@ export default class AiCoeFrontDoorWebPart extends BaseClientSideWebPart<IAiCoeF
 
   public render(): void {
     const core: ICoreServices = this._requireCore();
-    const branding: IBranding = createBranding(this.properties.organizationName);
     const siteUrl: string = this.context.pageContext.web.absoluteUrl;
+    // Every piece on its own page is a page view; only the whole-page legacy view keeps the shipped wording for
+    // the blank governance reference and review system name (decision 21), so the parity suites hold.
+    const branding: IBranding = createBranding(this.properties.organizationName, {
+      governanceReference: this.properties.governanceReference,
+      reviewSystemName: this.properties.reviewSystemName,
+      pageView: parseFrontDoorView(this.properties.view) !== 'legacy'
+    });
     const props: IAiCoeFrontDoorProps = {
       isDarkTheme: this._isDarkTheme,
       branding,
@@ -189,6 +199,16 @@ export default class AiCoeFrontDoorWebPart extends BaseClientSideWebPart<IAiCoeF
             label: strings.OrganizationNameFieldLabel,
             description: strings.OrganizationNameFieldDescription,
             placeholder: 'Contoso'
+          }),
+          PropertyPaneTextField('governanceReference', {
+            label: strings.GovernanceReferenceFieldLabel,
+            description: strings.GovernanceReferenceFieldDescription,
+            placeholder: 'Contoso AI policy, version 2.0, 1 March 2027'
+          }),
+          PropertyPaneTextField('reviewSystemName', {
+            label: strings.ReviewSystemNameFieldLabel,
+            description: strings.ReviewSystemNameFieldDescription,
+            placeholder: 'Contoso Review Desk'
           })
         ]
       },
@@ -266,7 +286,8 @@ export default class AiCoeFrontDoorWebPart extends BaseClientSideWebPart<IAiCoeF
     // property bag names it, so a form page shows the shared footer and an instance from before 1.0.0.12 reads nothing.
     const contentUrl: string | undefined =
       parseFrontDoorView(this.properties.view) === 'page' ? parseContentUrl(this.properties.contentUrl) : parseOptionalContentUrl(this.properties.contentUrl);
-    const key: string = JSON.stringify([branding.organizationName, draftServiceUrl, contentUrl ?? null]);
+    // The tool policy evaluator reads the branding, so every branding input joins the key.
+    const key: string = JSON.stringify([branding.organizationName, branding.governanceReference, branding.reviewSystemName, draftServiceUrl, contentUrl ?? null]);
     if (this._services === undefined || this._servicesKey !== key) {
       this._services = {
         governance: core.governance,

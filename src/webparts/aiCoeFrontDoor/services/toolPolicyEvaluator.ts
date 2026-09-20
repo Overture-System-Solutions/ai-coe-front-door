@@ -13,7 +13,11 @@ export interface IPolicyOutcome {
 
 export type PolicyOutcomes = { [key in PolicyOutcomeKey]: IPolicyOutcome };
 
-/** The four routing outcomes of the guidance prototype, with organization-specific wording. */
+/**
+ * The four routing outcomes of the guidance prototype, with organization-specific wording. The review system is
+ * named by the branding (`reviewSystemName`, a web part property): blank keeps the shipped name in the legacy view,
+ * so the parity suites hold, and neutral wording in page views.
+ */
 export function policyOutcomes(branding: IBranding): PolicyOutcomes {
   return {
     fits: {
@@ -21,21 +25,21 @@ export function policyOutcomes(branding: IBranding): PolicyOutcomes {
       defaultNextSteps: [
         `Confirm the tool and task still match ${branding.organizationPossessive} current approved-use guidance.`,
         'Keep a person reviewing the output before it is used or shared.',
-        'If company information, workflow integration, or the task changes, submit a TESS review with manager endorsement before proceeding.'
+        `If company information, workflow integration, or the task changes, submit ${branding.reviewRequestPhrase} with manager endorsement before proceeding.`
       ]
     },
     safeguards: {
       label: 'Additional safeguards and confirmation are needed',
       defaultNextSteps: [
         'Pause this use until the tool status, data boundary, and human checkpoint are confirmed.',
-        'If company information or a business workflow is involved, submit a TESS review with manager endorsement.'
+        `If company information or a business workflow is involved, submit ${branding.reviewRequestPhrase} with manager endorsement.`
       ]
     },
     reviewNeeded: {
       label: 'Please request a CoE review before proceeding',
       defaultNextSteps: [
         'Pause this AI use until the required review is complete.',
-        'Submit the request through TESS with manager endorsement.',
+        `Submit the request through ${branding.reviewSystemName} with manager endorsement.`,
         "You don't need to add any sensitive details — the answers you already gave are enough to start."
       ]
     },
@@ -43,7 +47,7 @@ export function policyOutcomes(branding: IBranding): PolicyOutcomes {
       label: 'Current guidance does not answer this yet',
       defaultNextSteps: [
         'This is a gap in current guidance, not a decision about your idea.',
-        'Use TESS or contact the AI CoE to confirm the current approved-use guidance before proceeding.',
+        `Use ${branding.reviewSystemName} or contact the AI CoE to confirm the current approved-use guidance before proceeding.`,
         'If you can, find out the exact name of the tool — that helps a lot.'
       ]
     }

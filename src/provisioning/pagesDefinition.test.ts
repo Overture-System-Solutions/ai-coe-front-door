@@ -100,8 +100,10 @@ const ON_SITE_ROUTES: string[] = ['guidedIntake', 'improve', 'value'];
 const EXPECTED_PARAMETERS: { [kind: string]: string[] } = {
   text: ['OrganizationName', 'TelemetryProvider', 'AssistantName', 'ChatName', 'PilotMembers', 'StatusDate', 'PromptCount', 'PromptsAddedCount', 'PromptsAddedDate', 'PromptTestRecordCount', 'PromptStatusCounts', 'PromptIdAdminQueue', 'PromptIdMorningBrief', 'PromptIdRepeatableWork', 'LeadTeamContinuation'],
   url: ['DraftServiceUrl', 'AssistantUrl', 'ChatUrl', 'WorkCommandUrl', 'SupportUrl', 'TeamsUrl', 'PromptLibraryUrl'],
-  optional: ['AssistantState', 'AssistantVerifiedDate', 'AssistantReceiptRef', 'WorkCommandState', 'WorkCommandVerifiedDate', 'WorkCommandReceiptRef', 'SupportOwnerLabel', 'IdentityOwnerLabel', 'PrivacyOwnerLabel', 'BusinessApproverLabel', 'ClaimsOwnerLabel', 'RecoveryOwnerLabel', 'GovernanceBodyFastPath', 'GovernanceBodyArchitecture', 'GovernanceBodyExecutive', 'PilotTeamName']
+  optional: ['AssistantState', 'AssistantVerifiedDate', 'AssistantReceiptRef', 'WorkCommandState', 'WorkCommandVerifiedDate', 'WorkCommandReceiptRef', 'SupportOwnerLabel', 'IdentityOwnerLabel', 'PrivacyOwnerLabel', 'BusinessApproverLabel', 'ClaimsOwnerLabel', 'RecoveryOwnerLabel', 'GovernanceBodyFastPath', 'GovernanceBodyArchitecture', 'GovernanceBodyExecutive', 'PilotTeamName', 'GovernanceReference', 'ReviewSystemName']
 };
+/** The Branding properties the script writes on every instance from a parameter (Contracts § Property pane; decision 21). */
+const INSTANCE_BRANDING_TOKENS: { [property: string]: string } = { organizationName: '{OrganizationName}', governanceReference: '{GovernanceReference}', reviewSystemName: '{ReviewSystemName}' };
 const REMOVED_PARAMETERS: string[] = ['ConciergeUrl', 'CopilotChatUrl', 'ConciergeSourceCount', 'ConciergeNewestSourceDate', 'VerifiedDate'];
 const LINK_TARGET: RegExp = /\]\(([^)\s]*)\)/g;
 
@@ -469,6 +471,10 @@ describe('front door page definition', () => {
     for (const target of definition.pages) {
       for (const name of Object.keys(target.instance)) {
         expect(manifestKeys).toContain(name);
+      }
+      // Every instance carries the Branding properties as tokens, so one parameter file brands every page the same way.
+      for (const property of Object.keys(INSTANCE_BRANDING_TOKENS)) {
+        expect({ page: target.key, property, token: target.instance[property] }).toEqual({ page: target.key, property, token: INSTANCE_BRANDING_TOKENS[property] });
       }
     }
   });

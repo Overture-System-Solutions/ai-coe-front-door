@@ -46,10 +46,19 @@ const COLUMNS: string[] = ['Key', 'Claim', 'Claim state', 'Class', 'Source', 'Ow
 const CLAIM_STATES: string[] = ['PROVED_NOW', 'ACCEPTED_DESIGN_NOT_LIVE', 'UNPROVED_OR_STALE', 'PROHIBITED'];
 const CLASSES: string[] = ['illustrative', 'design', 'binding'];
 const ISO_DATE: RegExp = /^20\d\d-\d\d-\d\d$/;
-/** The default literals the bundle carries until the step 11 properties replace them (decision 21). */
-const BUNDLE_LITERALS: { key: string; literal: string; files: string[] }[] = [
-  { key: 'bundle/governanceReference', literal: 'governance controls, version 1.1, August 26, 2026', files: ['src/webparts/aiCoeFrontDoor/branding/branding.ts'] },
-  { key: 'bundle/reviewSystemName', literal: 'TESS', files: ['src/webparts/aiCoeFrontDoor/services/toolPolicyEvaluator.ts', 'src/webparts/aiCoeFrontDoor/summaries/teamUsageSummary.ts'] }
+/**
+ * The default literals the bundle carries as the blank value of a Branding property (decision 21): both live in
+ * `createBranding`, which hands the legacy view the shipped wording and page views neutral wording; the tool guidance
+ * and the team-usage summary read the branding and never spell the review system themselves.
+ */
+const BUNDLE_LITERALS: { key: string; literal: string; files: string[]; readers: string[] }[] = [
+  { key: 'bundle/governanceReference', literal: 'governance controls, version 1.1, August 26, 2026', files: ['src/webparts/aiCoeFrontDoor/branding/branding.ts'], readers: [] },
+  {
+    key: 'bundle/reviewSystemName',
+    literal: 'TESS',
+    files: ['src/webparts/aiCoeFrontDoor/branding/branding.ts'],
+    readers: ['src/webparts/aiCoeFrontDoor/services/toolPolicyEvaluator.ts', 'src/webparts/aiCoeFrontDoor/summaries/teamUsageSummary.ts']
+  }
 ];
 /** The item fields that make a claim the ledger must carry: a freshness date, a truth state, an example. */
 const CLAIM_FIELDS: string[] = ['asOf', 'state', 'illustrative'];
@@ -249,10 +258,14 @@ describe('content claims ledger', () => {
     }
   });
 
-  it('lists the two bundle default literals as bindings that the step 11 properties replace', () => {
+  it('lists the two bundle default literals as bindings behind the step 11 properties', () => {
     for (const literal of BUNDLE_LITERALS) {
       for (const file of literal.files) {
         expect(fs.readFileSync(path.join(ROOT, file), 'utf8').indexOf(literal.literal)).toBeGreaterThanOrEqual(0);
+      }
+      for (const reader of literal.readers) {
+        expect({ reader, carriesLiteral: fs.readFileSync(path.join(ROOT, reader), 'utf8').indexOf(literal.literal) >= 0 }).toEqual({ reader, carriesLiteral: false });
+        expect(fs.readFileSync(path.join(ROOT, reader), 'utf8')).toContain(`branding.${literal.key.split('/')[1]}`);
       }
       const rows: ILedgerRow[] = rowsFor(literal.key);
       expect({ key: literal.key, rows: rows.length }).toEqual({ key: literal.key, rows: 1 });

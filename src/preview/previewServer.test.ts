@@ -130,6 +130,13 @@ describe('offline preview server', () => {
     expect(host.body).toContain('ai-coe-pages.json');
     expect(host.body).toContain('claude-sonnet-5');
     expect(host.body).toContain('Simulated preview data');
+    // The simulated document carries the 1.0.0.12 sections: the route table, the work command, notices and the shared support route.
+    for (const key of ['workCommand', 'supportRoute', 'notice', 'routes']) {
+      expect(host.body).toContain(key);
+    }
+    // Opening a new tab is stubbed, never blocked: the work command opens an available route after saving the draft.
+    expect(host.body).toContain('window.open = ');
+    expect(host.body).not.toContain('window.open = blocked');
     // Browsers cannot resolve bare specifiers such as "tslib"; the host must compile helper-free.
     expect(host.body).not.toMatch(/^import\b/m);
   });

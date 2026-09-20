@@ -28,6 +28,8 @@
     "GovernanceBodyExecutive": { "kind": "optional", "default": "a named approver (not yet named)", "description": "Who decides a red request on the executive side; blank reads 'a named approver (not yet named)'." },
     "PilotTeamName": { "kind": "optional", "description": "Name of the team trying the front door; blank drops the private-pilot notice from Start here." },
     "PilotMembers": { "kind": "text", "description": "Names of the private pilot members, comma separated, shown in the pilot notice on Start here." },
+    "GovernanceReference": { "kind": "optional", "description": "Policy reference quoted on review requests and exports, for example a policy name, version and date; blank keeps the default wording and is reported as AWAITING in the run summary." },
+    "ReviewSystemName": { "kind": "optional", "description": "Name of the performance-review system the tool guidance sends a review request through; blank keeps the default wording." },
     "TeamsUrl": { "kind": "url", "description": "Deep link to the AI CoE Teams channel or chat; blank keeps the sentence and drops the link." },
     "PromptLibraryUrl": { "kind": "url", "description": "Where 'Open the full library' opens; blank keeps the sentence and drops the link." },
     "StatusDate": { "kind": "text", "description": "Date the Status, Use AI and Prompts pages were last read back, for example 2026-09-09." },
@@ -114,7 +116,7 @@
       "file": "Start-here.aspx",
       "commentsEnabled": true,
       "permissions": "inherit",
-      "instance": { "view": "page", "pageKey": "startHere", "contentUrl": "SiteAssets/ai-coe-pages.json", "layout": "wide", "organizationName": "{OrganizationName}" },
+      "instance": { "view": "page", "pageKey": "startHere", "contentUrl": "SiteAssets/ai-coe-pages.json", "layout": "wide", "organizationName": "{OrganizationName}", "governanceReference": "{GovernanceReference}", "reviewSystemName": "{ReviewSystemName}" },
       "blocks": [
         {
           "type": "hero",
@@ -185,7 +187,7 @@
       "file": "Learn.aspx",
       "commentsEnabled": true,
       "permissions": "inherit",
-      "instance": { "view": "page", "pageKey": "learn", "contentUrl": "SiteAssets/ai-coe-pages.json", "layout": "wide", "organizationName": "{OrganizationName}" },
+      "instance": { "view": "page", "pageKey": "learn", "contentUrl": "SiteAssets/ai-coe-pages.json", "layout": "wide", "organizationName": "{OrganizationName}", "governanceReference": "{GovernanceReference}", "reviewSystemName": "{ReviewSystemName}" },
       "blocks": [
         { "type": "paragraph", "text": "Four short things. None of them is reading. Each one is something you do with AI, and doing it is how you learn it." },
         { "type": "paragraph", "text": "[Ask {AssistantName}]({Url:AssistantUrl}) opens in a new tab." },
@@ -265,7 +267,7 @@
       "file": "Use-AI.aspx",
       "commentsEnabled": true,
       "permissions": "inherit",
-      "instance": { "view": "page", "pageKey": "useAi", "contentUrl": "SiteAssets/ai-coe-pages.json", "layout": "wide", "organizationName": "{OrganizationName}" },
+      "instance": { "view": "page", "pageKey": "useAi", "contentUrl": "SiteAssets/ai-coe-pages.json", "layout": "wide", "organizationName": "{OrganizationName}", "governanceReference": "{GovernanceReference}", "reviewSystemName": "{ReviewSystemName}" },
       "blocks": [
         { "type": "paragraph", "text": "Approved ways to use AI at {OrganizationName}. Start from one pattern: *Help me [complete this task] for [audience]. Use only [permitted sources]. The result must include [required sections]. Mark missing facts and assumptions. Do not send, post, publish, assign work or change records.*" },
         { "type": "paragraph", "text": "Not sure your material is safe to paste? Run this first: *Is there anything in this document I should not put into an AI tool? List anything that looks like personal health information, customer identifiers, credentials, or regulated data, and tell me where in the document it is.* If it finds something, stop and use [Requests]({Page:requests})." },
@@ -362,7 +364,7 @@
       "file": "Requests.aspx",
       "commentsEnabled": true,
       "permissions": "inherit",
-      "instance": { "view": "page", "pageKey": "requests", "contentUrl": "SiteAssets/ai-coe-pages.json", "layout": "wide", "organizationName": "{OrganizationName}" },
+      "instance": { "view": "page", "pageKey": "requests", "contentUrl": "SiteAssets/ai-coe-pages.json", "layout": "wide", "organizationName": "{OrganizationName}", "governanceReference": "{GovernanceReference}", "reviewSystemName": "{ReviewSystemName}" },
       "blocks": [
         { "type": "heading", "level": 2, "text": "Just ask. We will tell you which lane you are in." },
         { "type": "paragraph", "text": "You do not need to know whether something needs approval. Describe what you want to do and you get an answer in the same conversation." },
@@ -452,7 +454,7 @@
       "file": "Prompts.aspx",
       "commentsEnabled": true,
       "permissions": "inherit",
-      "instance": { "view": "page", "pageKey": "prompts", "contentUrl": "SiteAssets/ai-coe-pages.json", "layout": "wide", "organizationName": "{OrganizationName}" },
+      "instance": { "view": "page", "pageKey": "prompts", "contentUrl": "SiteAssets/ai-coe-pages.json", "layout": "wide", "organizationName": "{OrganizationName}", "governanceReference": "{GovernanceReference}", "reviewSystemName": "{ReviewSystemName}" },
       "blocks": [
         { "type": "paragraph", "text": "Reusable starting points. A prompt here saves you writing one from scratch. It does not make the output approved — you still do the human check named on the record. Run them in [{ChatName}]({Url:ChatUrl})." },
         { "type": "paragraph", "text": "[Open the full library]({Url:PromptLibraryUrl}) — every record with its body, data boundary, human check and status." },
@@ -513,7 +515,7 @@
       "file": "Status.aspx",
       "commentsEnabled": true,
       "permissions": "inherit",
-      "instance": { "view": "page", "pageKey": "status", "contentUrl": "SiteAssets/ai-coe-pages.json", "layout": "wide", "organizationName": "{OrganizationName}", "telemetryProvider": "{TelemetryProvider}" },
+      "instance": { "view": "page", "pageKey": "status", "contentUrl": "SiteAssets/ai-coe-pages.json", "layout": "wide", "organizationName": "{OrganizationName}", "governanceReference": "{GovernanceReference}", "reviewSystemName": "{ReviewSystemName}", "telemetryProvider": "{TelemetryProvider}" },
       "blocks": [
         { "type": "paragraph", "text": "Everything on this page is what is actually true on {StatusDate}, not what is planned." },
         {
@@ -572,7 +574,7 @@
       "file": "Explore-an-AI-idea.aspx",
       "commentsEnabled": false,
       "permissions": "inherit",
-      "instance": { "view": "idea", "layout": "wide", "returnUrl": "SitePages/Requests.aspx", "contentUrl": "SiteAssets/ai-coe-pages.json", "organizationName": "{OrganizationName}", "draftServiceUrl": "{DraftServiceUrl}" }
+      "instance": { "view": "idea", "layout": "wide", "returnUrl": "SitePages/Requests.aspx", "contentUrl": "SiteAssets/ai-coe-pages.json", "organizationName": "{OrganizationName}", "governanceReference": "{GovernanceReference}", "reviewSystemName": "{ReviewSystemName}", "draftServiceUrl": "{DraftServiceUrl}" }
     },
     {
       "key": "toolCheck",
@@ -580,7 +582,7 @@
       "file": "Check-a-tool-or-task.aspx",
       "commentsEnabled": false,
       "permissions": "inherit",
-      "instance": { "view": "toolCheck", "layout": "wide", "returnUrl": "SitePages/Requests.aspx", "contentUrl": "SiteAssets/ai-coe-pages.json", "organizationName": "{OrganizationName}" }
+      "instance": { "view": "toolCheck", "layout": "wide", "returnUrl": "SitePages/Requests.aspx", "contentUrl": "SiteAssets/ai-coe-pages.json", "organizationName": "{OrganizationName}", "governanceReference": "{GovernanceReference}", "reviewSystemName": "{ReviewSystemName}" }
     },
     {
       "key": "teamUsage",
@@ -588,7 +590,7 @@
       "file": "Register-team-AI-use.aspx",
       "commentsEnabled": false,
       "permissions": "inherit",
-      "instance": { "view": "teamUsage", "layout": "wide", "returnUrl": "SitePages/Requests.aspx", "contentUrl": "SiteAssets/ai-coe-pages.json", "organizationName": "{OrganizationName}" }
+      "instance": { "view": "teamUsage", "layout": "wide", "returnUrl": "SitePages/Requests.aspx", "contentUrl": "SiteAssets/ai-coe-pages.json", "organizationName": "{OrganizationName}", "governanceReference": "{GovernanceReference}", "reviewSystemName": "{ReviewSystemName}" }
     },
     {
       "key": "helpTraining",
@@ -596,7 +598,7 @@
       "file": "Get-help-or-training.aspx",
       "commentsEnabled": false,
       "permissions": "inherit",
-      "instance": { "view": "helpTraining", "layout": "wide", "returnUrl": "SitePages/Requests.aspx", "contentUrl": "SiteAssets/ai-coe-pages.json", "organizationName": "{OrganizationName}" }
+      "instance": { "view": "helpTraining", "layout": "wide", "returnUrl": "SitePages/Requests.aspx", "contentUrl": "SiteAssets/ai-coe-pages.json", "organizationName": "{OrganizationName}", "governanceReference": "{GovernanceReference}", "reviewSystemName": "{ReviewSystemName}" }
     },
     {
       "key": "feedback",
@@ -604,7 +606,7 @@
       "file": "Share-feedback.aspx",
       "commentsEnabled": false,
       "permissions": "inherit",
-      "instance": { "view": "feedback", "layout": "wide", "returnUrl": "SitePages/Requests.aspx", "contentUrl": "SiteAssets/ai-coe-pages.json", "organizationName": "{OrganizationName}" }
+      "instance": { "view": "feedback", "layout": "wide", "returnUrl": "SitePages/Requests.aspx", "contentUrl": "SiteAssets/ai-coe-pages.json", "organizationName": "{OrganizationName}", "governanceReference": "{GovernanceReference}", "reviewSystemName": "{ReviewSystemName}" }
     },
     {
       "key": "admin",
@@ -612,7 +614,7 @@
       "file": "AI-CoE-admin-dashboard.aspx",
       "commentsEnabled": false,
       "permissions": "owners",
-      "instance": { "view": "admin", "layout": "wide", "returnUrl": "SitePages/Requests.aspx", "organizationName": "{OrganizationName}" }
+      "instance": { "view": "admin", "layout": "wide", "returnUrl": "SitePages/Requests.aspx", "organizationName": "{OrganizationName}", "governanceReference": "{GovernanceReference}", "reviewSystemName": "{ReviewSystemName}" }
     }
   ]
 }

@@ -145,11 +145,12 @@ export function teamUsageWhatHappensNext(answers: IAnswers, branding: IBranding)
   const sentences: string[] = [`Thank you for helping ${branding.organizationLabel} understand real AI use and improve support.`];
   if (companyData && personalOrFree) {
     sentences.push(
-      `Please pause entering company information into this personal or free tool. Submit the use through TESS with manager endorsement so ${branding.organizationLabel} can confirm an approved path.`
+      `Please pause entering company information into this personal or free tool. Submit the use through ${branding.reviewSystemName} with manager endorsement so ${branding.organizationLabel} can confirm an approved path.`
     );
   } else if (companyData || sensitive || takesAction) {
+    // The review system is named by the branding: the shipped name in the legacy view while the property is blank.
     sentences.push(
-      "Since company information, a business workflow, sensitive information, or an automated action may be involved, please pause that part of the process until the required review is complete. Submit it through TESS with manager endorsement. Everything else you've shared is still helpful."
+      `Since company information, a business workflow, sensitive information, or an automated action may be involved, please pause that part of the process until the required review is complete. Submit it through ${branding.reviewSystemName} with manager endorsement. Everything else you've shared is still helpful.`
     );
   }
   sentences.push(followUpSentence(answers));

@@ -1,6 +1,7 @@
 import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import * as React from 'react';
 import { createFakePageContentService, createFakeUsageService, createPendingPageContentService, InMemoryDraftStore } from '../../../../testing/fakeServices';
+import { SAMPLE_PAGE_DOCUMENT } from '../../../../testing/pageDocument';
 import { renderWithFrontDoor, TEST_SITE_URL } from '../../../../testing/renderWithFrontDoor';
 import type { FrontDoorRenderResult, ITestFrontDoorOptions } from '../../../../testing/renderWithFrontDoor';
 import type { IPageDocument } from '../../content/pageContent';
@@ -22,12 +23,17 @@ describe('ContentPage', () => {
   });
 
   it('renders the blocks of the requested page in order', async () => {
-    const { container } = renderPage('startHere');
+    // The page view shell provides the document's route list to the blocks; on its own the page reads the host's.
+    const { container } = renderPage('startHere', { routes: SAMPLE_PAGE_DOCUMENT.routes });
     await screen.findByRole('heading', { level: 1, name: 'What do you need done?' });
-    expect(blockTypes(container)).toEqual(['hero', 'heading', 'tiles', 'cards', 'statusRow']);
+    expect(blockTypes(container)).toEqual(['hero', 'workCommand', 'heading', 'tiles', 'cards', 'statusRow']);
     expect(screen.getByRole('heading', { level: 2, name: 'What do you want to do?' })).toBeInTheDocument();
     expect(container.querySelectorAll('.ai-page-tiles > a.ai-service-card')).toHaveLength(4);
     expect(screen.getByRole('link', { name: /Use AI for my work/ })).toHaveAttribute('href', `${TEST_SITE_URL}/SitePages/Use-AI.aspx`);
+    // The sample document's route table closes the work route, so its tile is a labelled non-link with the guided request as fallback.
+    expect(container.querySelectorAll('.ai-page-tiles > div.ai-service-card--closed')).toHaveLength(1);
+    expect(screen.getByRole('link', { name: /Start a guided request/ })).toHaveAttribute('href', `${TEST_SITE_URL}/SitePages/Explore-an-AI-idea.aspx`);
+    expect(container.querySelector('form.ai-page-command')).not.toBeNull();
     expect(container.querySelectorAll('.ai-page-cards--3 > .ai-page-card')).toHaveLength(3);
     expect(container.querySelectorAll('.ai-page-status-item')).toHaveLength(2);
     expect(screen.queryByText('AI CoE Lab')).not.toBeInTheDocument();

@@ -3,6 +3,10 @@ declare interface IAiCoeFrontDoorWebPartStrings {
   BrandingGroupName: string;
   OrganizationNameFieldLabel: string;
   OrganizationNameFieldDescription: string;
+  GovernanceReferenceFieldLabel: string;
+  GovernanceReferenceFieldDescription: string;
+  ReviewSystemNameFieldLabel: string;
+  ReviewSystemNameFieldDescription: string;
   DraftingGroupName: string;
   DraftServiceUrlFieldLabel: string;
   DraftServiceUrlFieldDescription: string;

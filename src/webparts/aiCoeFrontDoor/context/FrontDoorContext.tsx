@@ -19,7 +19,7 @@ export interface IFrontDoorServices {
   usage: IUsageMetricsService;
   draftStore: IDraftStore;
   toolPolicyEvaluator: IToolPolicyEvaluator;
-  /** Present only when the web part has a Claude draft flow configured; otherwise summaries stay deterministic. */
+  /** Present only when the web part has an AI draft flow configured; otherwise summaries stay deterministic. */
   ideaDrafts?: IIdeaDraftService;
   /** Reads the page content document; present for web parts, absent in the legacy-only test setups. */
   pageContent?: IPageContentService;
