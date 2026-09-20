@@ -1,12 +1,16 @@
 import * as React from 'react';
 import type { ICardItem, ICardsBlock } from '../../../content/pageContent';
+import { Freshness } from '../Freshness';
 import { Markup } from '../Markup';
 
 export interface ICardsBlockProps {
   block: ICardsBlock;
 }
 
-/** Two or three columns of toned cards: kicker, title, paragraphs and an emphasised closing line. */
+/**
+ * Two or three columns of toned cards: kicker, title, paragraphs, an emphasised closing line and,
+ * for a card that says when and where its fact was read, the freshness line last.
+ */
 export function CardsBlock({ block }: ICardsBlockProps): React.ReactElement {
   const gridClass: string = block.columns === 3 ? 'ai-page-cards ai-page-cards--3' : 'ai-page-cards';
   return (
@@ -29,6 +33,7 @@ export function CardsBlock({ block }: ICardsBlockProps): React.ReactElement {
               <Markup text={item.meta} />
             </p>
           )}
+          <Freshness asOf={item.asOf} source={item.source} illustrative={item.illustrative} />
         </article>
       ))}
     </div>

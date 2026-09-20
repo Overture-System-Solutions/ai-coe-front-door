@@ -255,6 +255,8 @@ describe('Page view stylesheet', () => {
     expect(rule(table, '.ai-view--page .ai-page-strip-item')).toEqual(['color:#2b3d52', 'font-size:15px', 'line-height:1.5', 'margin:0']);
     expect(rule(table, '.ai-view--page .ai-page-strip-item strong')).toEqual(['color:#10243e']);
     expect(rule(table, '.ai-view--page .ai-page-strip a')).toEqual(['color:#076874', 'font-weight:600', 'text-decoration:underline']);
+    // The freshness line under a card or a status item: small, muted, set off from the line above; its pills keep the shared pill rules.
+    expect(rule(table, '.ai-view--page .ai-page-freshness')).toEqual(['color:#5b6878', 'font-size:13px', 'line-height:1.45', 'margin:8px 0 0']);
     for (const colour of ['#07878a', '#dbe5ec', '#10243e', '#5b6878', '#076874', '#e5ebf0']) {
       expect(shipped.indexOf(colour)).toBeGreaterThan(-1);
     }

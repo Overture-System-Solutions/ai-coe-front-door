@@ -81,12 +81,14 @@ export interface IActionFields {
   route?: string;
 }
 
-/** What a fact may say about its age and origin. */
+/** What a fact may say about its age and origin, and whether it is an example rather than a fact. */
 export interface IFactFields {
   /** YYYY-MM-DD: when the fact was last read back. */
   asOf?: string;
   /** Where the fact was read from. */
   source?: string;
+  /** Present when the item is an illustration, not something read from this environment; it carries the example pill. */
+  illustrative?: true;
 }
 
 export interface IHeroCta extends IActionFields {
@@ -381,6 +383,9 @@ function readActionFields(item: IActionFields, raw: Raw): boolean {
 function readFactFields(item: IFactFields, raw: Raw): void {
   setOptional(item, 'asOf', readIsoDate(raw.asOf));
   setOptional(item, 'source', readText(raw.source));
+  if (readFlag(raw.illustrative) === true) {
+    item.illustrative = true;
+  }
 }
 
 function readHeroCta(value: unknown): IHeroCta | undefined {

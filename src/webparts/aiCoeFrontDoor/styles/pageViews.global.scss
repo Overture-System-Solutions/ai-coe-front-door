@@ -448,6 +448,14 @@
   text-decoration: underline;
 }
 
+/* Freshness: the as-of line under a card or a status item, with the needs-refresh, awaiting-source or example pill. */
+#overture-ai-coe-pilot .ai-view--page .ai-page-freshness {
+  color: #5b6878;
+  font-size: 13px;
+  line-height: 1.45;
+  margin: 8px 0 0;
+}
+
 /* My work: the person's own requests as rows on the card surface, each with the workflow, the status pill, the reference and the dates. */
 #overture-ai-coe-pilot .ai-view--page .ai-page-mywork-title {
   color: #10243e;

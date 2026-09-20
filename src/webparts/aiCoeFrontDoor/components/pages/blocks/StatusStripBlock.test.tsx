@@ -50,7 +50,7 @@ describe('StatusStripBlock', () => {
   it('renders the request counts as a link beside the labelled lines with their pills', async () => {
     const service: IFakeMyWorkService = createFakeMyWorkService(ok([item('a', 'Submitted - Pilot'), item('b', 'Submitted - Pilot'), item('c', 'In Review - Pilot')]));
     const { container } = renderWithFrontDoor(<StatusStripBlock block={BLOCK} />, { myWork: service, routes: ROUTES, now: new Date('2026-09-20T12:00:00Z'), pageView: true });
-    const items: NodeListOf<HTMLElement> = container.querySelectorAll('.ai-page-strip > p.ai-page-strip-item');
+    const items: NodeListOf<HTMLElement> = container.querySelectorAll('.ai-page-strip > div.ai-page-strip-item');
     expect(items).toHaveLength(3);
     expect(items[0].querySelector('strong')?.textContent).toBe('My requests');
     expect(items[0].textContent).toBe(`My requests — ${MY_REQUESTS_LOADING_TEXT}`);
@@ -58,10 +58,15 @@ describe('StatusStripBlock', () => {
     expect(link).toHaveAttribute('href', `${TEST_SITE_URL}/SitePages/Status.aspx`);
     expect(link).toHaveClass('ai-page-strip-link');
     expect(items[0].textContent).toBe('My requests — 2 received · 1 in review');
-    // The text items behave as status-row items: the off-site route without its receipt reads "Awaiting source", the state its pill.
-    expect(items[1].textContent).toBe('Assistant — Answering from approved sources. Awaiting source');
+    expect(items[0].querySelector('.ai-page-freshness')).toBeNull();
+    // The text items behave as status-row items: the off-site route without its receipt reads "Awaiting source", the state its pill;
+    // the dated item ends with its freshness line.
+    expect(items[1].textContent).toBe('Assistant — Answering from approved sources. Awaiting sourceAs of 1 Sep 2026');
     expect(items[1].querySelector('.ai-pill--amber')).not.toBeNull();
+    expect(items[1].querySelector('p.ai-page-freshness')?.textContent).toBe('As of 1 Sep 2026');
+    expect(items[1].lastElementChild).toHaveClass('ai-page-freshness');
     expect(items[2].querySelector('.ai-pill--blue')?.textContent).toBe('Draft only');
+    expect(items[2].querySelector('.ai-page-freshness')).toBeNull();
     expect(within(items[2]).getByRole('link', { name: 'draft' })).toHaveAttribute('href', `${TEST_SITE_URL}/SitePages/Prompts.aspx`);
     expect(service.calls).toBe(1);
   });
@@ -70,7 +75,7 @@ describe('StatusStripBlock', () => {
     renderWithFrontDoor(<StatusStripBlock block={BLOCK} />, { myWork: createFakeMyWorkService(ok([])), pageView: true });
     const link: HTMLElement = await screen.findByRole('link', { name: 'Nothing from you yet.' });
     expect(link).toHaveAttribute('href', `${TEST_SITE_URL}/SitePages/Status.aspx`);
-    const line: HTMLElement = link.closest('p') as HTMLElement;
+    const line: HTMLElement = link.closest('.ai-page-strip-item') as HTMLElement;
     expect(line.textContent).toBe('My requests — Nothing from you yet.');
     expect(line.querySelector('.ai-pill')).toBeNull();
   });
@@ -78,7 +83,7 @@ describe('StatusStripBlock', () => {
   it('never shows a number when the list cannot be read, and marks a refused read as needing access', async () => {
     const denied: IFakeMyWorkService = createFakeMyWorkService({ state: 'denied', items: [], message: 'refused', failureClass: 'PERMISSION', userMessage: 'Needs access.' });
     const first = renderWithFrontDoor(<StatusStripBlock block={{ ...BLOCK, items: [BLOCK.items[0]] }} />, { myWork: denied, pageView: true });
-    const refused: HTMLElement = (await first.findByText('The request list is not available.', { exact: false })).closest('p') as HTMLElement;
+    const refused: HTMLElement = (await first.findByText('The request list is not available.', { exact: false })).closest('.ai-page-strip-item') as HTMLElement;
     expect(refused.querySelector('.ai-pill--amber')?.textContent).toBe('Needs access');
     expect(refused.textContent).toBe('My requests — Needs access The request list is not available.');
     expect(within(refused).queryByRole('link')).not.toBeInTheDocument();
@@ -86,7 +91,7 @@ describe('StatusStripBlock', () => {
     first.unmount();
     const broken: IFakeMyWorkService = createFakeMyWorkService({ state: 'unavailable', items: [item('a', 'Submitted - Pilot')], message: 'AI CoE Pilot Intakes answered 500.', failureClass: 'TRANSIENT', userMessage: 'Not available right now; try again.' });
     const second = renderWithFrontDoor(<StatusStripBlock block={{ ...BLOCK, items: [BLOCK.items[0]] }} />, { myWork: broken, pageView: true });
-    const line: HTMLElement = (await second.findByText('The request list is not available.')).closest('p') as HTMLElement;
+    const line: HTMLElement = (await second.findByText('The request list is not available.')).closest('.ai-page-strip-item') as HTMLElement;
     expect(line.textContent).toBe('My requests — The request list is not available.');
     expect(line.querySelector('.ai-pill')).toBeNull();
     expect(second.container.textContent).not.toContain('500');
@@ -96,7 +101,7 @@ describe('StatusStripBlock', () => {
     const textOnly: IStatusStripBlock = { ...BLOCK, items: [BLOCK.items[2]] };
     const service: IFakeMyWorkService = createFakeMyWorkService(ok([]));
     const { container, unmount } = renderWithFrontDoor(<StatusStripBlock block={textOnly} />, { myWork: service, pageView: true });
-    expect(container.querySelectorAll('p.ai-page-strip-item')).toHaveLength(1);
+    expect(container.querySelectorAll('div.ai-page-strip-item')).toHaveLength(1);
     expect(service.calls).toBe(0);
     unmount();
     const { container: without } = renderWithFrontDoor(<StatusStripBlock block={{ ...BLOCK, items: [BLOCK.items[0]] }} />, { pageView: true });
@@ -107,7 +112,7 @@ describe('StatusStripBlock', () => {
   it('renders a request item without a link as plain text and keeps its lead text', async () => {
     const block: IStatusStripBlock = { ...BLOCK, items: [{ kind: 'myRequests', label: 'Requests', text: 'Yours:' }] };
     const { container } = renderWithFrontDoor(<StatusStripBlock block={block} />, { myWork: createFakeMyWorkService(ok([item('a', 'Closed - Pilot')])), pageView: true });
-    const line: HTMLElement = (await screen.findByText('1 closed')).closest('p') as HTMLElement;
+    const line: HTMLElement = (await screen.findByText('1 closed')).closest('.ai-page-strip-item') as HTMLElement;
     expect(line.textContent).toBe('Requests — Yours: 1 closed');
     expect(container.querySelector('a')).toBeNull();
   });
@@ -115,5 +120,27 @@ describe('StatusStripBlock', () => {
   it('keeps the loading line while the service has not answered', () => {
     const { container } = renderWithFrontDoor(<StatusStripBlock block={{ ...BLOCK, items: [BLOCK.items[0]] }} />, { myWork: createPendingMyWorkService(), pageView: true });
     expect(container.textContent).toBe(`My requests — ${MY_REQUESTS_LOADING_TEXT}`);
+  });
+
+  it('draws the freshness line of a dated text item against the document clock and threshold', () => {
+    const block: IStatusStripBlock = {
+      ...BLOCK,
+      items: [
+        { kind: 'text', label: 'Current', text: 'Read back.', asOf: '2026-09-01', source: 'AI CoE check' },
+        { kind: 'text', label: 'Stale', text: 'Read back a while ago.', asOf: '2026-07-01', source: 'AI CoE check' },
+        { kind: 'text', label: 'Undated', text: 'Not yet read back.', source: 'AI CoE check' },
+        { kind: 'text', label: 'Example', text: 'Made up.', illustrative: true },
+        { kind: 'text', label: 'Recent', text: 'Read back this week.', asOf: '2026-09-15' }
+      ]
+    };
+    const { container } = renderWithFrontDoor(<StatusStripBlock block={block} />, { now: new Date('2026-09-19T12:00:00Z'), settings: { freshnessDays: 7, minimumCohort: 5 }, pageView: true });
+    const lines: NodeListOf<HTMLElement> = container.querySelectorAll('div.ai-page-strip-item > p.ai-page-freshness');
+    expect(lines).toHaveLength(5);
+    expect(lines[0].textContent).toBe('As of 1 Sep 2026 · AI CoE check Needs refresh');
+    expect(lines[1].textContent).toBe('As of 1 Jul 2026 · AI CoE check Needs refresh');
+    expect(lines[2].textContent).toBe('Awaiting source Do not infer progress.');
+    expect(lines[3].textContent).toBe('Example');
+    expect(lines[4].textContent).toBe('As of 15 Sep 2026');
+    expect(lines[4].querySelector('.ai-pill')).toBeNull();
   });
 });

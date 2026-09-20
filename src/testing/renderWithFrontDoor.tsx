@@ -3,7 +3,7 @@ import type { RenderResult } from '@testing-library/react';
 import * as React from 'react';
 import { createBranding } from '../webparts/aiCoeFrontDoor/branding/branding';
 import type { IBranding } from '../webparts/aiCoeFrontDoor/branding/branding';
-import type { ISharedSections, IVocabulary, PagePlane } from '../webparts/aiCoeFrontDoor/content/pageContent';
+import type { IDocumentSettings, ISharedSections, IVocabulary, PagePlane } from '../webparts/aiCoeFrontDoor/content/pageContent';
 import type { TelemetryProvider } from '../webparts/aiCoeFrontDoor/content/telemetryTiles';
 import type { RouteTable } from '../webparts/aiCoeFrontDoor/content/routes';
 import { createWorkflowCatalog } from '../webparts/aiCoeFrontDoor/content/workflows/catalog';
@@ -57,6 +57,8 @@ export interface ITestFrontDoorOptions {
   shared?: ISharedSections;
   /** The plane of the page; the user plane by default. */
   plane?: PagePlane;
+  /** The document settings the blocks read (the freshness threshold, the cohort minimum); the defaults unless given. */
+  settings?: IDocumentSettings;
 }
 
 export interface ITestFrontDoor {
@@ -103,7 +105,15 @@ export function renderWithFrontDoor(ui: React.ReactElement, options: ITestFrontD
     <FrontDoorProvider value={testFrontDoor.value}>
       <SubmissionProvider governanceService={testFrontDoor.governance}>
         <PageDocumentProvider
-          value={createPageDocumentContext({ now: options.now, routes: options.routes, roles: options.roles, shared: options.shared, plane: options.plane, vocabulary: options.vocabulary })}
+          value={createPageDocumentContext({
+            now: options.now,
+            routes: options.routes,
+            roles: options.roles,
+            shared: options.shared,
+            plane: options.plane,
+            vocabulary: options.vocabulary,
+            settings: options.settings
+          })}
         >
           {ui}
         </PageDocumentProvider>

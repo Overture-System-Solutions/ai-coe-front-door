@@ -5,6 +5,7 @@ import type { IStatusItem, IStatusRowBlock } from '../../../content/pageContent'
 import type { IRouteOptions } from '../../../content/routes';
 import { useFrontDoor } from '../../../context/FrontDoorContext';
 import { StatusPill } from '../../../controls/StatusPill';
+import { Freshness } from '../Freshness';
 import { Markup } from '../Markup';
 import { usePageDocument } from '../PageDocumentContext';
 
@@ -14,7 +15,8 @@ export interface IStatusRowBlockProps {
 
 /**
  * Short labelled lines side by side, such as "Status" and "Support" at the foot of a page. An item
- * with a state or a route ends with its pill, resolved against the document's route list.
+ * with a state or a route ends with its pill, resolved against the document's route list; an item
+ * that says when and where its fact was read carries the freshness line under it.
  */
 export function StatusRowBlock({ block }: IStatusRowBlockProps): React.ReactElement {
   const { siteUrl } = useFrontDoor();
@@ -25,7 +27,7 @@ export function StatusRowBlock({ block }: IStatusRowBlockProps): React.ReactElem
       {block.items.map((item: IStatusItem, index: number): React.ReactElement => {
         const look: IPillLook | undefined = resolvePill(item, routes, options);
         return (
-          <p key={index} className="ai-page-status-item">
+          <div key={index} className="ai-page-status-item">
             <strong>{item.label}</strong>
             {' — '}
             <Markup text={item.text} />
@@ -35,7 +37,8 @@ export function StatusRowBlock({ block }: IStatusRowBlockProps): React.ReactElem
                 <StatusPill state={look.pill} label={look.label} />
               </>
             )}
-          </p>
+            <Freshness asOf={item.asOf} source={item.source} illustrative={item.illustrative} />
+          </div>
         );
       })}
     </div>

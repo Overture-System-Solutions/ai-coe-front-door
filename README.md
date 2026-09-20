@@ -208,10 +208,10 @@ copy in its version history). It is UTF-8 JSON:
 | `heading` | `text`; `level` 2 (default) or 3 |
 | `paragraph` | `text` |
 | `tiles` | `prominent` (true for the page's main choice: three to a row); `items`, each `{ "title", "kicker", "href", "state", "route", "description", "note", "icon", "tone" }`; `icon` is one of the web part's icon names (`MessageSquare`, `BriefcaseBusiness`, `Inbox`, `LayoutDashboard`, `Lightbulb`, …; an unknown name shows the light bulb); an item needs a title and at least one of `href`, `state`, `route` |
-| `cards` | `columns` 2 (default) or 3; `items`, each `{ "title", "kicker", "body", "meta", "tone", "state", "route", "asOf", "source" }`; `body` is one string (a blank line starts a new paragraph) or an array of paragraphs; `meta` is the italic closing line (a data boundary, a source); `asOf` is a YYYY-MM-DD date and `source` where the fact was read from (parsed now, drawn from 1.0.0.13) |
+| `cards` | `columns` 2 (default) or 3; `items`, each `{ "title", "kicker", "body", "meta", "tone", "state", "route", "asOf", "source", "illustrative" }`; `body` is one string (a blank line starts a new paragraph) or an array of paragraphs; `meta` is the italic closing line (a data boundary, a source); `asOf` (a YYYY-MM-DD date), `source` (where the fact was read from) and `illustrative` (`true` for an example) draw the freshness line under the card (see *Freshness* below) |
 | `lanes` | `items`, each `{ "tone": "green" or "amber" or "red", "title", "body", "note", "badge" }` |
-| `statusRow` | `items`, each `{ "label", "text", "state", "route", "asOf", "source" }`, shown side by side as **label** — text, with the state pill after the text when `state` or `route` is set |
-| `statusStrip` | `items`, each `{ "kind", "label", "text", "href", "state", "route", "asOf", "source" }`; `emptyText` (default "No requests from you yet."); `unavailableText` (default "Status unavailable: the request list could not be read."). `kind` is `text` (default; the item behaves as a `statusRow` item and needs `text`) or `myRequests` (the count of the signed-in person's own requests by plain status, "2 received · 1 in review", linked to `href` when set; `text` is an optional lead). The count comes from the request list (see *My work*); while the list cannot be read the item shows `unavailableText`, with the *Needs access* pill when the read was refused, and never a number. Only a strip with a `myRequests` item reads the list |
+| `statusRow` | `items`, each `{ "label", "text", "state", "route", "asOf", "source", "illustrative" }`, shown side by side as **label** — text, with the state pill after the text when `state` or `route` is set and the freshness line under the text when `asOf`, `source` or `illustrative` is set (see *Freshness* below) |
+| `statusStrip` | `items`, each `{ "kind", "label", "text", "href", "state", "route", "asOf", "source", "illustrative" }` (the last three draw the freshness line under a `text` item; a `myRequests` item counts live rows and never carries one); `emptyText` (default "No requests from you yet."); `unavailableText` (default "Status unavailable: the request list could not be read."). `kind` is `text` (default; the item behaves as a `statusRow` item and needs `text`) or `myRequests` (the count of the signed-in person's own requests by plain status, "2 received · 1 in review", linked to `href` when set; `text` is an optional lead). The count comes from the request list (see *My work*); while the list cannot be read the item shows `unavailableText`, with the *Needs access* pill when the read was refused, and never a number. Only a strip with a `myRequests` item reads the list |
 | `workCommand` | `prompt` (the question above the input); `placeholder`; `submitLabel` (default `Start`); `route` (a key of the `routes` table, default `work`); `note` (the line under the input; in-text markup allowed); `emptyText` (shown when the sentence is empty, default "Say what you need done first."). One per page: the first screen's single primary control (see *The work command* below) |
 | `notice` | `text` (in-text markup allowed); `tone` `info` (default) or `caution`; `title`. A short aside set apart from the prose (a data boundary, a pilot's limits, what the site records), rendered as a note with a toned left edge and its title, never colour alone |
 | `rules` | `items`, each `{ "title", "text" }` (a rule needs a title; `text` may carry in-text markup); `title`; `ordered` (default `true`: a numbered list; `false` for bullets). A block needs at least one titled item |
@@ -290,6 +290,16 @@ exactly those. A refused read (401 or 403) shows the *Needs access* pill and "Yo
 this site."; a list that cannot be read at all (missing, a server failure, no network) shows "Status unavailable:
 the request list could not be read."; the strip shows its `unavailableText` in both cases and never a number the
 list did not give. Nothing here is an approval: the status is the list's word for where the request stands.
+
+**Freshness (since 1.0.0.13).** A card, a `statusRow` item or a `statusStrip` text item may say when its fact was
+last read back (`asOf`, a YYYY-MM-DD date) and from where (`source`); the page then draws a freshness line under it,
+"As of 1 Sep 2026 · AI CoE check". Once the date is older than `settings.freshnessDays` (30 unless the document says
+otherwise) the line adds the *Needs refresh* pill, so an old truth is never read as a current one. A `source` with no
+date (a parameter such as `{AssistantVerifiedDate}` left blank, or an unreadable date) draws the *Awaiting source*
+pill and "Do not infer progress." instead of any date: nothing here invents one. An item marked `"illustrative": true`
+draws the *Example* pill, so a worked example is never mistaken for a fact of this environment. The three pill labels
+come from `vocabulary.chrome` (`needsRefresh`, `awaitingSource`, `example`); the clock is the page's, so a page left open
+shows what was true when it loaded.
 
 The envelope may also carry four optional sections and a page may name its plane; each is lenient and a malformed one
 is dropped, never the document:

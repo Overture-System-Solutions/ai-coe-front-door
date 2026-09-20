@@ -5,6 +5,7 @@ import { SAMPLE_PAGE_DOCUMENT } from '../../../../testing/pageDocument';
 import { renderWithFrontDoor, TEST_SITE_URL } from '../../../../testing/renderWithFrontDoor';
 import type { FrontDoorRenderResult, ITestFrontDoorOptions } from '../../../../testing/renderWithFrontDoor';
 import type { IPageDocument } from '../../content/pageContent';
+import { PageViewShell } from '../PageViewShell';
 import { CONTENT_UNAVAILABLE_TEXT, ContentPage, LOADING_PAGE_TEXT, NO_PAGE_KEY_TEXT, pageMissingText } from './ContentPage';
 
 function renderPage(pageKey: string | undefined, options: ITestFrontDoorOptions = {}): FrontDoorRenderResult {
@@ -38,6 +39,61 @@ describe('ContentPage', () => {
     expect(container.querySelectorAll('.ai-page-status-item')).toHaveLength(2);
     expect(screen.queryByText('AI CoE Lab')).not.toBeInTheDocument();
     expect(screen.queryByRole('status')).not.toBeInTheDocument();
+  });
+
+  it('dates the facts on the page against the clock of the page document context', async () => {
+    const document: IPageDocument = {
+      version: 1,
+      pages: {
+        status: {
+          title: 'Status',
+          blocks: [
+            {
+              type: 'cards',
+              columns: 2,
+              items: [
+                { title: 'What is running', body: ['x'], tone: 'teal', asOf: '2026-09-01', source: 'AI CoE check' },
+                { title: 'What is not running', body: ['y'], tone: 'gold', source: 'AI CoE check' }
+              ]
+            },
+            { type: 'statusRow', items: [{ label: 'Assistant', text: 'Read back.', asOf: '2026-07-01', source: 'AI CoE check' }] }
+          ]
+        }
+      }
+    };
+    const service = createFakePageContentService({ connected: true, message: 'ok', document });
+    const { container } = renderPage('status', { pageContent: service, now: new Date('2026-09-19T12:00:00Z') });
+    await screen.findByRole('heading', { level: 3, name: 'What is running' });
+    const lines: NodeListOf<HTMLElement> = container.querySelectorAll('p.ai-page-freshness');
+    expect(lines).toHaveLength(3);
+    expect(lines[0].textContent).toBe('As of 1 Sep 2026 · AI CoE check');
+    expect(lines[1].textContent).toBe('Awaiting source Do not infer progress.');
+    expect(lines[2].textContent).toBe('As of 1 Jul 2026 · AI CoE check Needs refresh');
+  });
+
+  it('honours the freshness threshold of the document settings', async () => {
+    const document: IPageDocument = {
+      version: 1,
+      settings: { freshnessDays: 7, minimumCohort: 5 },
+      pages: {
+        status: {
+          title: 'Status',
+          blocks: [{ type: 'cards', columns: 2, items: [{ title: 'Dated', body: ['x'], tone: 'teal', asOf: '2026-09-01', source: 'AI CoE check' }] }]
+        }
+      }
+    };
+    const service = createFakePageContentService({ connected: true, message: 'ok', document });
+    // On its own the page reads the host's settings (the defaults: current); through the shell the document's threshold applies (stale).
+    const alone = renderPage('status', { pageContent: service, now: new Date('2026-09-19T12:00:00Z') });
+    await alone.findByRole('heading', { level: 3, name: 'Dated' });
+    expect(alone.container.querySelector('p.ai-page-freshness')?.textContent).toBe('As of 1 Sep 2026 · AI CoE check');
+    alone.unmount();
+    const { container } = renderWithFrontDoor(<PageViewShell settings={{ view: 'page', layout: 'wide', pages: {}, pageKey: 'status' }} />, {
+      pageContent: service,
+      now: new Date('2026-09-19T12:00:00Z')
+    });
+    await screen.findByRole('heading', { level: 3, name: 'Dated' });
+    expect(container.querySelector('p.ai-page-freshness')?.textContent).toBe('As of 1 Sep 2026 · AI CoE check Needs refresh');
   });
 
   it('asks for a page key when none is configured', () => {

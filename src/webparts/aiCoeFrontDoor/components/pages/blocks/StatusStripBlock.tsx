@@ -8,6 +8,7 @@ import { toPlainRequestStatus } from '../../../content/truthStates';
 import { useFrontDoor } from '../../../context/FrontDoorContext';
 import { StatusPill } from '../../../controls/StatusPill';
 import type { IMyWorkItem } from '../../../services/myWorkService';
+import { Freshness } from '../Freshness';
 import { anchorProps, Markup } from '../Markup';
 import { usePageDocument } from '../PageDocumentContext';
 import { useMyWork } from '../useMyWork';
@@ -76,9 +77,10 @@ function hasRequestItem(block: IStatusStripBlock): boolean {
 
 /**
  * Short labelled lines side by side on the first screen. A `text` item behaves as a status-row item
- * (label, text, and the pill of its state or route); a `myRequests` item counts the person's own
- * requests by plain status, read through the my-work service, and links to the page the item names.
- * The list is asked only when the strip carries a request item.
+ * (label, text, the pill of its state or route, and the freshness line under it when the item says
+ * when and where its fact was read); a `myRequests` item counts the person's own requests by plain
+ * status, read through the my-work service, and links to the page the item names. The list is asked
+ * only when the strip carries a request item.
  */
 export function StatusStripBlock({ block }: IStatusStripBlockProps): React.ReactElement {
   const { siteUrl, services } = useFrontDoor();
@@ -90,7 +92,7 @@ export function StatusStripBlock({ block }: IStatusStripBlockProps): React.React
       {block.items.map((item: IStatusStripItem, index: number): React.ReactElement => {
         const look: IPillLook | undefined = item.kind === 'text' ? resolvePill(item, routes, options) : undefined;
         return (
-          <p key={index} className="ai-page-strip-item">
+          <div key={index} className="ai-page-strip-item">
             <strong>{item.label}</strong>
             {' — '}
             {item.text !== undefined && (
@@ -106,7 +108,8 @@ export function StatusStripBlock({ block }: IStatusStripBlockProps): React.React
                 <StatusPill state={look.pill} label={look.label} />
               </>
             )}
-          </p>
+            {item.kind === 'text' && <Freshness asOf={item.asOf} source={item.source} illustrative={item.illustrative} />}
+          </div>
         );
       })}
     </div>

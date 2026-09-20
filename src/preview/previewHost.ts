@@ -181,6 +181,14 @@ function previewLink(query: string): string {
   return `/?${query}`;
 }
 
+/** The YYYY-MM-DD date that many days before today (UTC), so the preview's dated facts stay current or stale by design, whenever it runs. */
+function isoDaysAgo(days: number): string {
+  const date: Date = new Date(Date.now() - days * 86400000);
+  const month: number = date.getUTCMonth() + 1;
+  const day: number = date.getUTCDate();
+  return `${date.getUTCFullYear()}-${month < 10 ? '0' : ''}${month}-${day < 10 ? '0' : ''}${day}`;
+}
+
 // Simulated preview data: the content document a site would keep in Site Assets, with Contoso wording and links
 // back into this preview. Every block type appears at least once. The route table shows the three answers a route
 // can give: an on-site route that is available, an off-site one still awaiting its tenant receipt (closed, with the
@@ -296,7 +304,8 @@ const SAMPLE_PAGE_DOCUMENT: { [key: string]: unknown } = {
           type: 'statusStrip',
           items: [
             { kind: 'myRequests', label: 'My requests', href: previewLink('page=status') },
-            { kind: 'text', label: 'Assistant', text: 'Answering from approved sources.', route: 'assistant' },
+            // A source with no read-back date: the line says "Awaiting source. Do not infer progress." instead of inventing one.
+            { kind: 'text', label: 'Assistant', text: 'Answering from approved sources.', route: 'assistant', source: 'AI CoE check (simulated)' },
             { kind: 'text', label: 'Support', text: 'Ask in [Teams](https://teams.microsoft.com/l/channel/contoso) or reply to any AI CoE mail.' }
           ]
         }
@@ -403,8 +412,9 @@ const SAMPLE_PAGE_DOCUMENT: { [key: string]: unknown } = {
           type: 'cards',
           columns: 2,
           items: [
-            { title: 'What is running', body: ['**Copilot Chat** for everyone in the pilot.', '**Prompt library** with tested prompts.'] },
-            { title: 'What is not running', body: ['**Agents** are still in review.', '**Connectors to line-of-business systems** are not enabled.'], tone: 'cyan' }
+            // Dated facts: the first was read back this week (current), the second long ago (the needs-refresh pill).
+            { title: 'What is running', body: ['**Copilot Chat** for everyone in the pilot.', '**Prompt library** with tested prompts.'], asOf: isoDaysAgo(3), source: 'AI CoE check (simulated)' },
+            { title: 'What is not running', body: ['**Agents** are still in review.', '**Connectors to line-of-business systems** are not enabled.'], tone: 'cyan', asOf: isoDaysAgo(45), source: 'AI CoE check (simulated)' }
           ]
         },
         // The kicker names the strip as diagnostics; with it set, the tiles take their labels from the document's vocabulary above.

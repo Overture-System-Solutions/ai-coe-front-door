@@ -345,17 +345,19 @@ describe('blocks', () => {
     expect(parseBlock({ type: 'cards', columns: 2, items: [] })).toBeUndefined();
   });
 
-  it('reads a state, a route, an as-of date and a source on cards', () => {
+  it('reads a state, a route, an as-of date, a source and the example flag on cards', () => {
     const cards: ICardsBlock = parseBlock({
       type: 'cards',
       items: [
         { title: 'What is running', body: 'x', state: ' availableNow ', route: ' assistant ', asOf: ' 2026-09-01 ', source: ' Read back from the tenant. ' },
-        { title: 'Loose', body: 'y', state: 'bogus', asOf: 'last Friday', source: '' }
+        { title: 'Loose', body: 'y', state: 'bogus', asOf: 'last Friday', source: '', illustrative: 'yes' },
+        { title: 'Example', body: 'z', asOf: '2026-08-28', illustrative: true }
       ]
     }) as ICardsBlock;
     expect(cards.items).toEqual([
       { title: 'What is running', body: ['x'], tone: 'teal', state: 'availableNow', route: 'assistant', asOf: '2026-09-01', source: 'Read back from the tenant.' },
-      { title: 'Loose', body: ['y'], tone: 'teal' }
+      { title: 'Loose', body: ['y'], tone: 'teal' },
+      { title: 'Example', body: ['z'], tone: 'teal', asOf: '2026-08-28', illustrative: true }
     ]);
   });
 
@@ -386,20 +388,22 @@ describe('blocks', () => {
     expect(parseBlock({ type: 'statusRow', items: [] })).toBeUndefined();
   });
 
-  it('reads a state, a route, an as-of date and a source on status items', () => {
+  it('reads a state, a route, an as-of date, a source and the example flag on status items', () => {
     expect(
       parseBlock({
         type: 'statusRow',
         items: [
           { label: 'Assistant', text: 'Answering from approved sources.', state: ' AVAILABLE ', route: ' assistant ', asOf: '2026-09-01', source: ' Tenant read-back ' },
-          { label: 'Prompts', text: 'All draft.', state: 'bogus', asOf: '2026-9-1', source: '  ' }
+          { label: 'Prompts', text: 'All draft.', state: 'bogus', asOf: '2026-9-1', source: '  ', illustrative: 1 },
+          { label: 'Example', text: 'Made up.', illustrative: true }
         ]
       })
     ).toEqual({
       type: 'statusRow',
       items: [
         { label: 'Assistant', text: 'Answering from approved sources.', state: 'AVAILABLE', route: 'assistant', asOf: '2026-09-01', source: 'Tenant read-back' },
-        { label: 'Prompts', text: 'All draft.' }
+        { label: 'Prompts', text: 'All draft.' },
+        { label: 'Example', text: 'Made up.', illustrative: true }
       ]
     });
   });
@@ -552,7 +556,8 @@ describe('blocks', () => {
       items: [
         { kind: 'myRequests', label: ' My requests ', href: ' SitePages/Status.aspx ' },
         { label: 'Assistant', text: 'Answering from approved sources.', state: ' AVAILABLE ', route: ' assistant ', asOf: '2026-09-01', source: ' Tenant read-back ' },
-        { kind: 'text', label: 'Prompts', text: 'All draft.', state: 'bogus', asOf: '2026-9-1', source: '  ' },
+        { kind: 'text', label: 'Prompts', text: 'All draft.', state: 'bogus', asOf: '2026-9-1', source: '  ', illustrative: 'true' },
+        { kind: 'text', label: 'Example', text: 'Made up.', illustrative: true },
         { kind: 'text', label: 'No text' },
         { kind: 'myRequests', text: 'No label' },
         { kind: 'cases', label: 'Unknown kind', text: 'x' },
@@ -564,7 +569,8 @@ describe('blocks', () => {
       items: [
         { kind: 'myRequests', label: 'My requests', href: 'SitePages/Status.aspx' },
         { kind: 'text', label: 'Assistant', text: 'Answering from approved sources.', state: 'AVAILABLE', route: 'assistant', asOf: '2026-09-01', source: 'Tenant read-back' },
-        { kind: 'text', label: 'Prompts', text: 'All draft.' }
+        { kind: 'text', label: 'Prompts', text: 'All draft.' },
+        { kind: 'text', label: 'Example', text: 'Made up.', illustrative: true }
       ],
       emptyText: 'No requests from you yet.',
       unavailableText: 'Status unavailable: the request list could not be read.'
