@@ -125,6 +125,34 @@ export function activationLabel(code: ActivationCode, vocabulary?: IVocabulary):
   }
 }
 
+/** The three chrome pills a page draws beside a fact: an illustrative item, a stale one, one still awaiting its source. */
+export type ChromePillKey = 'example' | 'needsRefresh' | 'awaitingSource';
+
+export interface IChromePill {
+  key: ChromePillKey;
+  label: string;
+  /** Name of a shipped icon (see pageIcons.ts). */
+  icon: string;
+  tone: TruthTone;
+}
+
+export const CHROME_PILLS: readonly IChromePill[] = [
+  { key: 'example', label: 'Example', icon: 'Info', tone: 'blue' },
+  { key: 'needsRefresh', label: 'Needs refresh', icon: 'RefreshCw', tone: 'amber' },
+  { key: 'awaitingSource', label: 'Awaiting source', icon: 'Clock3', tone: 'amber' }
+];
+
+/** The chrome pill with that key. */
+export function chromePill(key: ChromePillKey): IChromePill {
+  return CHROME_PILLS.filter((pill: IChromePill): boolean => pill.key === key)[0];
+}
+
+/** The label of a chrome pill, as the document vocabulary overrides it; a blank keeps the default. */
+export function chromeLabel(key: ChromePillKey, vocabulary?: IVocabulary): string {
+  const override: string | undefined = vocabulary === undefined ? undefined : vocabulary.chrome[key];
+  return override === undefined || override === '' ? chromePill(key).label : override;
+}
+
 /** The four status words the pilot intake list carries today. */
 export const PILOT_STATUSES: readonly string[] = ['Submitted - Pilot', 'In Review - Pilot', 'Closed - Pilot', 'Test Failed'];
 

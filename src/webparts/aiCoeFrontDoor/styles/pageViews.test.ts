@@ -125,6 +125,38 @@ describe('Page view stylesheet', () => {
     expect(rule(table, '.ai-view--page .ai-home-adminbar .ai-admin-back')).toEqual(['background:#087f83', 'border-color:#087f83', 'color:#fff', 'text-decoration:none']);
   });
 
+  it('draws the status pill as text plus an icon shape in every page view', () => {
+    expect(rule(table, '.ai-view .ai-pill')).toEqual([
+      'align-items:center',
+      'border-radius:999px',
+      'display:inline-flex',
+      'font-size:11px',
+      'font-weight:800',
+      'gap:6px',
+      'letter-spacing:0.02em',
+      'line-height:1.2',
+      'min-height:24px',
+      'padding:2px 10px',
+      'vertical-align:middle',
+      'white-space:nowrap'
+    ]);
+    expect(rule(table, '.ai-view .ai-pill svg')).toEqual(['height:12px', 'width:12px']);
+    expect(rule(table, '.ai-view .ai-pill code')).toEqual(['font-family:inherit', 'font-size:inherit', 'font-weight:600']);
+    // The traffic-light tones reuse the lane pairs the shipped stylesheet already draws.
+    expect(rule(table, '.ai-view .ai-pill--green')).toEqual(['background:#ddf6f0', 'color:#076b67']);
+    expect(rule(table, '.ai-view .ai-pill--amber')).toEqual(['background:#fff4cf', 'color:#725600']);
+    expect(rule(table, '.ai-view .ai-pill--red')).toEqual(['background:#fde8e8', 'color:#9b1c1c']);
+    for (const colour of ['#ddf6f0', '#076b67', '#fff4cf', '#725600', '#fde8e8', '#9b1c1c']) {
+      expect(shipped.indexOf(colour)).toBeGreaterThan(-1);
+    }
+    // The blue draft tone is a new pair: no shipped stylesheet or theme block carries it.
+    expect(rule(table, '.ai-view .ai-pill--blue')).toEqual(['background:#e7f0fb', 'color:#0b4a9b']);
+    for (const colour of ['#e7f0fb', '#0b4a9b']) {
+      expect(shipped.indexOf(colour)).toBe(-1);
+      expect(shippedTheme.indexOf(colour)).toBe(-1);
+    }
+  });
+
   it('stacks the content page blocks in the narrow layout', () => {
     for (const grid of ['.ai-page-tiles', '.ai-page-cards', '.ai-page-cards--3', '.ai-page-lanes', '.ai-page-status']) {
       expect(rule(table, `.ai-view--narrow ${grid}`)).toEqual(['grid-template-columns:1fr']);

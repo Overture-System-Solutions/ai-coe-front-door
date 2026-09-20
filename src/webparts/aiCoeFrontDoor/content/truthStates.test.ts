@@ -4,12 +4,14 @@ import { createBranding } from '../branding/branding';
 import {
   ACTIVATION_STATES,
   CANONICAL_STATUS,
+  CHROME_PILLS,
   KPI_PLACEHOLDERS,
   KPI_STATES,
   PILOT_STATUSES,
   STATUS_UNAVAILABLE,
   TRUTH_STATES,
   activationLabel,
+  chromeLabel,
   describeRequestStatus,
   kpiPlaceholderLabel,
   readState,
@@ -17,7 +19,7 @@ import {
   truthStateDefinition,
   truthStateLabel
 } from './truthStates';
-import type { ActivationCode, TruthStateKey } from './truthStates';
+import type { ActivationCode, ChromePillKey, TruthStateKey } from './truthStates';
 import type { IVocabulary } from './pageContent';
 
 const GENERATED_STYLESHEET: string = path.resolve(process.cwd(), 'src/webparts/aiCoeFrontDoor/styles/tailwind.generated.global.scss');
@@ -128,6 +130,25 @@ describe('truth states', () => {
   });
 });
 
+describe('chrome pills', () => {
+  it('lists the three chrome states with their labels, icons and tones', () => {
+    expect(CHROME_PILLS.map((pill): ChromePillKey => pill.key)).toEqual(['example', 'needsRefresh', 'awaitingSource']);
+    expect(CHROME_PILLS.map((pill): string => pill.label)).toEqual(['Example', 'Needs refresh', 'Awaiting source']);
+    expect(CHROME_PILLS.map((pill): string => pill.icon)).toEqual(['Info', 'RefreshCw', 'Clock3']);
+    expect(CHROME_PILLS.map((pill): string => pill.tone)).toEqual(['blue', 'amber', 'amber']);
+  });
+
+  it('lets the document vocabulary override a chrome label, blank keeps the default', () => {
+    expect(chromeLabel('example')).toBe('Example');
+    expect(chromeLabel('needsRefresh')).toBe('Needs refresh');
+    expect(chromeLabel('awaitingSource')).toBe('Awaiting source');
+    const vocabulary: IVocabulary = vocabularyWith({ chrome: { example: 'Sample only', needsRefresh: '' } });
+    expect(chromeLabel('example', vocabulary)).toBe('Sample only');
+    expect(chromeLabel('needsRefresh', vocabulary)).toBe('Needs refresh');
+    expect(chromeLabel('awaitingSource', vocabulary)).toBe('Awaiting source');
+  });
+});
+
 describe('plain request statuses', () => {
   it('walks the four pilot words and all 26 canonical codes without an unavailable status', () => {
     expect(PILOT_STATUSES).toEqual(['Submitted - Pilot', 'In Review - Pilot', 'Closed - Pilot', 'Test Failed']);
@@ -200,6 +221,7 @@ describe('utility-word safety', () => {
       .concat(Object.keys(PLAIN_LABELS).map((code: string): string => PLAIN_LABELS[code]))
       .concat(Object.keys(KPI_PLACEHOLDERS).map((code: string): string => KPI_PLACEHOLDERS[code]))
       .concat(ACTIVATION_STATES.map((code: ActivationCode): string => activationLabel(code) ?? ''))
+      .concat(CHROME_PILLS.map((pill): string => pill.label))
       .concat([STATUS_UNAVAILABLE]);
     const words: string[] = [];
     for (const label of labels) {

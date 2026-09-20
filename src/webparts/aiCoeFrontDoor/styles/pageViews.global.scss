@@ -262,6 +262,57 @@
   color: #9b1c1c;
 }
 
+/*
+ * Status pill: a truth state or a chrome state as text plus an icon shape, in every page view
+ * (content pages, the wizard views and the pieces alike), so the meaning never rests on colour alone.
+ * The three traffic-light tones reuse the lane pairs above; the blue draft tone is a new pair.
+ */
+#overture-ai-coe-pilot .ai-view .ai-pill {
+  align-items: center;
+  border-radius: 999px;
+  display: inline-flex;
+  font-size: 11px;
+  font-weight: 800;
+  gap: 6px;
+  letter-spacing: 0.02em;
+  line-height: 1.2;
+  min-height: 24px;
+  padding: 2px 10px;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+#overture-ai-coe-pilot .ai-view .ai-pill svg {
+  height: 12px;
+  width: 12px;
+}
+
+#overture-ai-coe-pilot .ai-view .ai-pill code {
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: 600;
+}
+
+#overture-ai-coe-pilot .ai-view .ai-pill--green {
+  background: #ddf6f0;
+  color: #076b67;
+}
+
+#overture-ai-coe-pilot .ai-view .ai-pill--blue {
+  background: #e7f0fb;
+  color: #0b4a9b;
+}
+
+#overture-ai-coe-pilot .ai-view .ai-pill--amber {
+  background: #fff4cf;
+  color: #725600;
+}
+
+#overture-ai-coe-pilot .ai-view .ai-pill--red {
+  background: #fde8e8;
+  color: #9b1c1c;
+}
+
 /* Status row: short labelled lines side by side. */
 #overture-ai-coe-pilot .ai-view--page .ai-page-status {
   display: grid;
