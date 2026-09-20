@@ -13,7 +13,7 @@ import * as path from 'path';
 import { TENANT_WORDS_PATH } from './tenantWords';
 
 const ROOT: string = process.cwd();
-const RELEASE: string = '1.0.0.12';
+const RELEASE: string = '1.0.0.13';
 const script: string = fs.readFileSync(path.join(ROOT, 'scripts/verify-package.mjs'), 'utf8');
 
 /** The sixteen `required_inventory_fields` of 13_SECURITY_AND_THREAT_MODEL/secrets-supply-chain.yaml, in its order. */

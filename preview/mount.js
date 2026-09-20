@@ -4,7 +4,11 @@ const TELEMETRY_PROVIDERS = ['claude', 'openai', 'both'];
 const VIEWS = ['legacy', 'home', 'idea', 'toolCheck', 'teamUsage', 'helpTraining', 'feedback', 'telemetry', 'admin', 'page'];
 const LAYOUTS = ['wide', 'narrow'];
 // Pages of the simulated content document the host serves as SiteAssets/ai-coe-pages.json.
-const PAGE_KEYS = ['startHere', 'learn', 'useAi', 'requests', 'prompts', 'status'];
+const PAGE_KEYS = ['startHere', 'learn', 'useAi', 'requests', 'prompts', 'status', 'operations'];
+// Simulation switches the host reads from the query string: which list refuses every read, and whether the
+// readback after a write fails (the pending receipt). Changing either reloads the page, because the host answers
+// requests from the query string as it was when the piece loaded.
+const DENY_TARGETS = ['none', 'intakes'];
 // The home tiles link to other pages; offline, every other page is this page showing another piece.
 const PAGE_PROPERTIES = {
   pageIdea: 'idea',
@@ -28,18 +32,25 @@ const view = VIEWS.includes(requestedView) ? requestedView : requestedPage ? 'pa
 const requestedLayout = params.get('layout') ?? '';
 const layout = LAYOUTS.includes(requestedLayout) ? requestedLayout : 'wide';
 const width = Number(params.get('width') ?? 0);
+const requestedDeny = params.get('deny') ?? '';
+const deny = DENY_TARGETS.includes(requestedDeny) ? requestedDeny : 'none';
+const readbackFails = params.get('readback') === 'fail';
 const input = document.getElementById('organization-name');
 const draftToggle = document.getElementById('simulate-draft');
 const providerSelect = document.getElementById('telemetry-provider');
 const viewSelect = document.getElementById('view');
 const layoutSelect = document.getElementById('layout');
 const pageSelect = document.getElementById('page-key');
+const denySelect = document.getElementById('simulate-deny');
+const readbackToggle = document.getElementById('simulate-readback');
 input.value = organization;
 draftToggle.checked = simulateDraft;
 providerSelect.value = provider;
 viewSelect.value = view;
 layoutSelect.value = layout;
 pageSelect.value = pageKey;
+denySelect.value = deny;
+readbackToggle.checked = readbackFails;
 if (width > 0) {
   // Approximates a section column so the narrow layout can be eyeballed.
   document.getElementById('app').style.maxWidth = `${width}px`;
@@ -106,6 +117,16 @@ function syncUrl() {
   } else {
     url.searchParams.delete('page');
   }
+  if (denySelect.value === 'none') {
+    url.searchParams.delete('deny');
+  } else {
+    url.searchParams.set('deny', denySelect.value);
+  }
+  if (readbackToggle.checked) {
+    url.searchParams.set('readback', 'fail');
+  } else {
+    url.searchParams.delete('readback');
+  }
   history.replaceState(null, '', url);
 }
 
@@ -142,4 +163,16 @@ pageSelect.addEventListener('change', () => {
   }
   syncUrl();
   window.FrontDoorPreview.setPageKey(pageSelect.value);
+});
+
+// The host reads these two switches from the query string on every request, and the pieces read their lists once
+// on load, so the page reloads with the new address to show the effect.
+denySelect.addEventListener('change', () => {
+  syncUrl();
+  location.reload();
+});
+
+readbackToggle.addEventListener('change', () => {
+  syncUrl();
+  location.reload();
 });

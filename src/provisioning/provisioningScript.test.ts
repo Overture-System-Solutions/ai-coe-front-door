@@ -285,9 +285,9 @@ describe('page provisioning script', () => {
 
 describe('README', () => {
   it('documents the current package and the page layout', () => {
-    expect(readme).toContain('## Deploy 1.0.0.12');
+    expect(readme).toContain('## Deploy 1.0.0.13');
+    expect(readme).not.toContain('Deploy 1.0.0.12');
     expect(readme).not.toContain('Deploy 1.0.0.11');
-    expect(readme).not.toContain('Deploy 1.0.0.10');
     expect(readme).toContain('### Rollback');
     expect(readme).toContain('## Lay out the front door across pages');
     expect(readme).toContain('New-FrontDoorPages.ps1');
@@ -356,6 +356,29 @@ describe('README', () => {
     expect(readme).not.toContain('Claude draft flow URL');
     expect(readme).not.toContain('OSS Demo');
     expect(readme).toContain('evidence/dependency-inventory.json');
+  });
+
+  it('documents the release close of 1.0.0.13: the receipts, my work, the strip, the case card, the settings, Operations, the record table, the preview switches and the rollback', () => {
+    for (const key of ['myWork', 'statusStrip', 'caseCards', 'freshnessDays', 'vocabulary.telemetry', 'listSecurity']) {
+      expect(readme).toContain(`\`${key}\``);
+    }
+    for (const label of ['Saved and confirmed', 'Saved, not yet confirmed', 'Saved but not yet confirmed.', 'INCONCLUSIVE']) {
+      expect(readme).toContain(label);
+    }
+    expect(readme).toContain('Operations');
+    expect(readme).toContain('Who writes which record');
+    // The preview shows the refused list and the pending receipt without a tenant.
+    expect(readme).toContain('?deny=intakes');
+    expect(readme).toContain('?readback=fail');
+    expect(readme).toContain('?page=operations');
+    // The upgrade path of this release: no -Overwrite, the Operations page is created, the lists are secured first.
+    expect(readme).toMatch(/Operations[^.\n]*is created/);
+    // Rollback: the previous package and its script; the Operations page stays or is removed by hand; the list security is reverted.
+    const rollback: string = readme.slice(readme.indexOf('### Rollback'), readme.indexOf('### Enable AI drafting'));
+    expect(rollback).toContain('1.0.0.12');
+    expect(rollback).toContain('Operations');
+    expect(rollback).toMatch(/harmless|by hand/);
+    expect(rollback).toMatch(/List security|-ReadSecurity 1 -WriteSecurity 1/);
   });
 
   it('documents the list security of 1.0.0.13: why it works, the flow identity, the tenant check and the rollback', () => {

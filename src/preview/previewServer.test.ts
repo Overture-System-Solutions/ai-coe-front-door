@@ -81,7 +81,7 @@ describe('offline preview server', () => {
     expect(page.body).toContain('option value="narrow"');
     const pageSelect: RegExpExecArray | null = /<select id="page-key">([\s\S]*?)<\/select>/.exec(page.body);
     expect(pageSelect).not.toBeNull();
-    for (const key of ['startHere', 'learn', 'useAi', 'requests', 'prompts', 'status']) {
+    for (const key of ['startHere', 'learn', 'useAi', 'requests', 'prompts', 'status', 'operations']) {
       expect((pageSelect as RegExpExecArray)[1]).toContain(`option value="${key}"`);
     }
     const directives: string[] = String(page.headers['content-security-policy'])
@@ -103,6 +103,30 @@ describe('offline preview server', () => {
     expect(mount.body).toContain('pageKey');
     expect(mount.body).toContain('contentUrl');
     expect(mount.body).toContain('setPageKey');
+  });
+
+  it('offers the 1.0.0.13 simulation switches: a refused intake list and a failed readback', async () => {
+    const page: IResponse = await get(`${base}/`);
+    const denySelect: RegExpExecArray | null = /<select id="simulate-deny">([\s\S]*?)<\/select>/.exec(page.body);
+    expect(denySelect).not.toBeNull();
+    expect((denySelect as RegExpExecArray)[1]).toContain('option value="none"');
+    expect((denySelect as RegExpExecArray)[1]).toContain('option value="intakes"');
+    expect(page.body).toContain('id="simulate-readback"');
+    // mount.js reads both switches from the query string and writes them back when the banner changes.
+    const mount: IResponse = await get(`${base}/mount.js`);
+    expect(mount.body).toContain("get('deny')");
+    expect(mount.body).toContain("get('readback')");
+    expect(mount.body).toContain('simulate-deny');
+    expect(mount.body).toContain('simulate-readback');
+    // The host answers the my-work filter and the readback by id, refuses the intake list under ?deny=intakes and
+    // fails the GET that follows a POST under ?readback=fail, so the pending receipt can be seen offline.
+    const host: IResponse = await get(`${base}/host.js`);
+    expect(host.body).toContain('$filter');
+    // The compiled host matches the readback URL with a regular expression, so the parenthesis is escaped in the source.
+    expect(host.body).toContain('items\\(');
+    expect(host.body).toContain('deny=intakes');
+    expect(host.body).toContain('readback=fail');
+    expect(host.body).toContain('403');
   });
 
   it('serves only the allowlisted assets', async () => {
@@ -130,8 +154,10 @@ describe('offline preview server', () => {
     expect(host.body).toContain('ai-coe-pages.json');
     expect(host.body).toContain('claude-sonnet-5');
     expect(host.body).toContain('Simulated preview data');
-    // The simulated document carries the 1.0.0.12 sections: the route table, the work command, notices and the shared support route.
-    for (const key of ['workCommand', 'supportRoute', 'notice', 'routes']) {
+    // The simulated document carries the 1.0.0.12 sections (the route table, the work command, notices and the shared
+    // support route) and the 1.0.0.13 ones (the status strip, my work and the case card on Status, the telemetry piece
+    // under its kicker on the operator-plane Operations page, the feed labels in vocabulary.telemetry).
+    for (const key of ['workCommand', 'supportRoute', 'notice', 'routes', 'statusStrip', 'myWork', 'caseCards', 'operations', "plane: 'operator'", 'telemetry: {']) {
       expect(host.body).toContain(key);
     }
     // Opening a new tab is stubbed, never blocked: the work command opens an available route after saving the draft.

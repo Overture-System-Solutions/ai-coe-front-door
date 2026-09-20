@@ -6,12 +6,15 @@ feedback), a telemetry snapshot and an administrator dashboard, all writing to S
 
 This project is the maintainable source for the web part that shipped as package **1.0.0.7** (`original/`). The
 shipped package was reverse-engineered (see `docs/RECOVERY.md`) and then ported to idiomatic TypeScript with a
-test-first approach. It builds the next in-place upgrade, **1.0.0.12**, with the same solution, feature and web part
+test-first approach. It builds the next in-place upgrade, **1.0.0.13**, with the same solution, feature and web part
 identities, and it is tenant neutral: the organization name is a web part property. Since 1.0.0.10 the front door can
 also be spread over several native pages, one piece per page, since 1.0.0.11 it renders whole content pages from a
-document in Site Assets, in its own style (see "Lay out the front door across pages"), and since 1.0.0.12 the first
+document in Site Assets, in its own style (see "Lay out the front door across pages"), since 1.0.0.12 the first
 screen tells the truth: one work command, a route table that fails closed, a shared support footer, and a recorded
-answer to what a move to another tenant would throw away (see "Rebind to another tenant").
+answer to what a move to another tenant would throw away (see "Rebind to another tenant"), and since 1.0.0.13 every
+submission is read back before the page says it was saved, each person sees their own requests on Status, the
+request lists carry item-level security the script makes effective, and the telemetry strip sits on an owners-only
+Operations page (see "Receipts", "My work", "List security" and "Deploy").
 
 ## Work with it
 
@@ -29,8 +32,14 @@ Use Node.js 22.14 or newer (below 23) and npm.
   banner's field to try the branding property; `?provider=openai` or `?provider=both` (or the banner's selector) tries
   the telemetry modes against seeded sample usage rows; `?view=home` (or any other piece, see below) shows one piece,
   with its links pointing back at the preview, `?page=learn` (or the banner's page selector) a content page from a
-  simulated Site Assets document, `?layout=narrow` the narrow layout, and `?width=560` caps the mount so a section
-  column can be eyeballed. `npm run preview -- --port 4174` changes the port;
+  simulated Site Assets document (`?page=operations` the operator-plane page that carries the telemetry strip),
+  `?layout=narrow` the narrow layout, and `?width=560` caps the mount so a section column can be eyeballed. Since
+  1.0.0.13 the banner also carries two simulation switches (each reloads the page): `?deny=intakes` makes the
+  simulated request list refuse every read, so Status and the first screen show *Needs access* and no count, and
+  `?readback=fail` makes the read that follows a write fail, so a submission from a form page (`?view=idea`) shows
+  the pending receipt, *Saved, not yet confirmed*, with its **Confirm again** button; the three requests of the
+  preview person on Status are seeded, and another person's row is kept out of every read the way the list's
+  item-level security keeps it out on a site. `npm run preview -- --port 4174` changes the port;
   `npm run preview -- --bundle <path>` previews another bundle, for example the shipped one under
   `recovered/package/ClientSideAssets/`.
 - `npm start` runs `heft start` for the SharePoint hosted workbench (requires a tenant; not needed for local work).
@@ -41,32 +50,47 @@ Use Node.js 22.14 or newer (below 23) and npm.
   inventory fields; what the lock file cannot say reads `AWAITING_TENANT_INVENTORY` until the tenant inventory
   fills it). Both files are committed with each release.
 
-## Deploy 1.0.0.12
+## Deploy 1.0.0.13
 
 Upload `sharepoint/solution/overture-ai-coe-front-door.sppkg` to the app catalog as an update of the existing app.
 The solution id (`f125ebdf-4a9d-4e6e-8479-3a18874e7752`), feature id (`69ab84b7-608c-47ee-9623-af8ebaf2cb10`,
 version 1.0.0.2) and web part id (`cf2e5904-0703-4fe4-ae5a-ec012d6fa689`) are unchanged, so the three provisioned
-lists (AI CoE Pilot Intakes and its two schemas under `sharepoint/assets/`) are left untouched; 1.0.0.12 changes no
-list, column or permission. The other four lists the web part reads (AI CoE Use Cases, AI CoE Decisions, AI Usage
-Daily, AI CoE Incidents) are provisioned by the companion Power Automate solutions, exactly as before.
+lists (AI CoE Pilot Intakes and its two schemas under `sharepoint/assets/`) are left untouched; 1.0.0.13 changes no
+list or column and adds no web part property. What it changes on the site comes from the script, not the package:
+the permissions of the two intake lists (item-level read and write security, see "List security") and one new page,
+Operations, restricted to site owners. The other four lists the web part reads (AI CoE Use Cases, AI CoE Decisions,
+AI Usage Daily, AI CoE Incidents) are provisioned by the companion Power Automate solutions, exactly as before.
 
-After deployment, open the web part's property pane and set **Branding → Organization name**; **Governance
-reference** and **Review system name** may stay blank (see "Branding"). The **Telemetry → Usage metrics provider**
-dropdown defaults to Claude (see below). Existing instances keep rendering the whole front door on one page: the
-**Page layout → Piece shown on this page** dropdown defaults to that, and the page properties are ignored until
-another piece is chosen. Then apply the page definition (see "Applying it"): on a site that already carries the
-1.0.0.11 pages the script runs without `-Overwrite` first, and the tenant acceptance for this release is to submit
-the work command with every URL blank and see the idea wizard resume the sentence, tab through Start here and see
-the focus rings, open a form page and see the support footer below the wizard, and confirm the property pane has no
-provider-named draft-flow label.
+After deployment the property pane is as in 1.0.0.12: **Branding → Organization name** set, **Governance
+reference** and **Review system name** blank or set (see "Branding"); the **Telemetry → Usage metrics provider**
+dropdown now matters only on the Operations instance, the one that carries the strip. Existing instances keep
+rendering the whole front door on one page: the **Page layout → Piece shown on this page** dropdown defaults to
+that, and the page properties are ignored until another piece is chosen. Then apply the page definition (see
+"Applying it"): on a site that already carries the 1.0.0.12 pages the script runs without `-Overwrite`; every
+existing page is skipped, the two intake lists are put under item-level security first, the content document is
+rewritten (Status now opens with the person's own requests and carries the illustrative case card, the strip is
+gone from Status and Prompts from the navigation), and the Operations page is created. What the web part does
+differently on every page: a submission is read back before the page says it was saved, and a form page shows the
+receipt, the pending state or the failure notice (see "Receipts").
+
+The tenant acceptance for this release: with a second account that is a site Member (not an owner) and has sent one
+request, open Status and confirm only that account's rows appear there and in the list UI, and record the result
+against plan open decision 3 under *Negative access test (tenant)*; submit from a form page and see *Saved and
+confirmed* with the reference, the source line and the time; confirm the companion flows still write and read every
+row (their connection holds Override List Behaviors: Full Control, Design or a custom level); open Operations as an
+owner and see the strip under its diagnostics kicker, and as a member see SharePoint refuse the page.
 
 ### Rollback
 
-Redeploy the 1.0.0.11 package from that release's build and rerun that version's `New-FrontDoorPages.ps1`: the
-content document is rewritten from that version's `pages.json` (Site Assets keeps every version, so the 1.0.0.12
-document stays in its history), the older bundle ignores the two Branding properties it does not know, and because
-1.0.0.12 changes no list, column or permission there is nothing else to revert. Pages are additive: a page created
-by a later run remains until an owner removes it.
+Redeploy the 1.0.0.12 package from that release's build and rerun that version's `New-FrontDoorPages.ps1` without
+`-Overwrite`: the content document is rewritten from that version's `pages.json` (Site Assets keeps every version,
+so the 1.0.0.13 document stays in its history), so Status shows the 1.0.0.12 layout again, and the older bundle has
+nothing to ignore because this release adds no property. Pages are additive: the Operations page stays, an
+owners-only page whose instance the older document does not describe (harmless; the page reports the missing key
+and nothing else), or an owner deletes it by hand from Site Pages. The older script does not touch the intake
+lists' permissions, so the item-level security of 1.0.0.13 is reverted by hand as *List security* documents
+(`Set-PnPList -ReadSecurity 1 -WriteSecurity 1`, then `-ResetRoleInheritance`, on each of the two lists); the rows
+are untouched either way.
 
 ### Enable AI drafting of idea summaries
 
@@ -294,8 +318,9 @@ list did not give. Nothing here is an approval: the status is the list's word fo
 
 **Freshness (since 1.0.0.13).** A card, a `statusRow` item or a `statusStrip` text item may say when its fact was
 last read back (`asOf`, a YYYY-MM-DD date) and from where (`source`); the page then draws a freshness line under it,
-"As of 1 Sep 2026 · AI CoE check". Once the date is older than `settings.freshnessDays` (30 unless the document says
-otherwise) the line adds the *Needs refresh* pill, so an old truth is never read as a current one. A `source` with no
+"As of 1 Sep 2026 · AI CoE check". Once the date is older than the document's threshold (`freshnessDays` under
+`settings`, 30 unless the document says otherwise) the line adds the *Needs refresh* pill, so an old truth is never
+read as a current one. A `source` with no
 date (a parameter such as `{AssistantVerifiedDate}` left blank, or an unreadable date) draws the *Awaiting source*
 pill and "Do not infer progress." instead of any date: nothing here invents one. An item marked `"illustrative": true`
 draws the *Example* pill, so a worked example is never mistaken for a fact of this environment. The three pill labels
@@ -353,6 +378,19 @@ and reads back.
 *Reverting it.* `Set-PnPList -Identity 'AI CoE Pilot Intakes' -ReadSecurity 1 -WriteSecurity 1` then
 `Set-PnPList -Identity 'AI CoE Pilot Intakes' -ResetRoleInheritance`, and the same for *AI CoE Use Cases*; the rows
 are untouched. This is the list part of the 1.0.0.13 rollback (see *Rollback* under *Deploy*).
+
+**Who writes which record.** Every record the front door touches, who creates it, who changes it afterwards and who
+reads it, so no two writers meet on one row and every reader's view can be named:
+
+| Record | Written by | Updated by | Read by |
+|---|---|---|---|
+| A request row in *AI CoE Pilot Intakes* (key `IntakeId`, `OVT-AICOE-…`) | the web part, one row per submission from any of the five wizards, `Status` `Submitted - Pilot`; read back by id before the receipt; a retry finds the row and writes nothing twice | the companion flows and site owners in the list UI (status, triage); the web part never updates a row | the person who sent it (the `myWork` piece and the `myRequests` count: their own rows, as the list's item-level security returns them), the admin dashboard (owners: every row), the companion flows (their connection holds Override List Behaviors) |
+| A use-case row in *AI CoE Use Cases* (key `CoEID`) | the web part, for the governance workflows only (an AI idea, a tool-check review request, team AI use), `Status` `Submitted`; a retry finds the row by `CoEID` and skips it | the companion flows (triage, approval, outcome) | the admin dashboard; the companion flows |
+| A decision row in *AI CoE Decisions* | the companion flows | the companion flows | the admin dashboard |
+| Usage rows in *AI Usage Daily*, incidents in *AI CoE Incidents* | the companion telemetry solution (every six hours; an over-budget incident) | the companion telemetry solution (an incident is resolved when spend is back under budget) | the `telemetry` piece on the owners-only Operations page and the legacy landing strip; nothing in the web part writes them |
+| The content document, `SiteAssets/ai-coe-pages.json` | the script, on every run, from `pages.json` and the parameters | a page owner by hand in Site Assets, until the next run rewrites it (Site Assets keeps every version) | every page view: the seven content pages and, for the shared footer, the five form pages |
+| A draft (`overture-ai-coe-front-door:draft:<workflow>` in the browser's localStorage) | the wizards as answers are given; the work command, as the first answer of the idea wizard | the wizards (kept after a failed or pending submission on a form page, cleared once the record is saved; the legacy view clears it on every submit) | the wizards and the home tiles ("Resume draft") on the same browser only; never sent anywhere |
+| A case card on Status | nobody at run time: committed content of `pages.json` (one illustrative card, `EXAMPLE-01`) | the page definition, by a commit | the Status page; a cases list is not part of this release |
 
 The envelope may also carry four optional sections and a page may name its plane; each is lenient and a malformed one
 is dropped, never the document:
@@ -415,7 +453,7 @@ script against. That list is deliberately not tenant-neutral (it is what the sca
 
 **Applying it** (site owner, outside this repository; the build and tests never touch a tenant):
 
-1. Deploy 1.0.0.12 and "Get it" on the site, so the component is available to the script.
+1. Deploy 1.0.0.13 and "Get it" on the site, so the component is available to the script.
 2. Copy `sharepoint/pages/parameters.sample.json` to `sharepoint/pages/parameters.json` (ignored by git), fill in the values.
 3. Run, with PowerShell 7.4 and the pinned PnP.PowerShell version from the script header. Interactive login needs
    your own Entra app registration once (`Register-PnPEntraIDAppForInteractiveLogin`); pass its id with `-ClientId`,
@@ -440,10 +478,11 @@ script against. That list is deliberately not tenant-neutral (it is what the sca
    feature adds and the template defaults. The admin page gets owners-only item permissions. This needs a
    communication site, whose horizontal top navigation is the QuickLaunch; on any other site the script stops unless
    `-AllowNonCommunicationSite` is given, because there the QuickLaunch is the left navigation.
-   On a site that already carries the pages of 1.0.0.11, run without `-Overwrite` first: every existing page is
-   skipped and the content document is rewritten from `pages.json`, so the existing content pages show the new
-   document at once (the first screen, the routes, the shared footer); a page the definition adds (Operations in
-   1.0.0.13) is created on that run. The five form instances need `contentUrl`,
+   On a site that already carries the pages of 1.0.0.11 or 1.0.0.12, run without `-Overwrite` first: every existing
+   page is skipped and the content document is rewritten from `pages.json`, so the existing content pages show the
+   new document at once (the first screen, the routes, the shared footer; my work and the case card on Status); the
+   intake lists are secured on every run, and a page the definition adds (Operations in 1.0.0.13, owners-only, with
+   the telemetry provider of the run) is created on that run. The five form instances need `contentUrl`,
    and every instance the two Branding properties, which this release's script writes only when it creates a
    page: rerun with `-Overwrite` (every page is rebuilt from `pages.json`; browser edits go to the recycle bin) or
    set the values in each instance's property pane. The end-of-run summary names the bindings that are still
@@ -529,14 +568,19 @@ the identity line, the site's owners group on the admin page). Bindings, the pro
 | AI CoE Decisions | the companion Power Automate solution | list | absent: the dashboard section reads as unavailable |
 | AI Usage Daily | the companion telemetry solution | list | absent: every usage tile keeps "Awaiting data" |
 | AI CoE Incidents | the companion telemetry solution | list | absent: no alerts are shown |
+| Item-level security on AI CoE Pilot Intakes and AI CoE Use Cases (since 1.0.0.13) | the script's "List security" section, from the `listSecurity` entries of `pages.json`, on every run | list security | script not run: the lists keep the site's inherited permissions, every site member reads every row, and the `myWork` piece shows whatever the server returns; run the script, then the two-account test under *List security* |
+| The Operations page (since 1.0.0.13) | created by the script, owners-only, with `telemetryProvider` from `TelemetryProvider`; its plane and blocks in `pages.json` | page | not created (the script not run): the strip is on no page; the legacy landing keeps its own |
+| `vocabulary.telemetry` (since 1.0.0.13) | the `vocabulary` section of `pages.json`, copied verbatim into the content document | document text | a missing feed label keeps the bundle's feed name for that tile (a portability exception below) |
 
 Rebinding in the contract's order: **export and package** with `npm ci`, `npm run build` and `npm run verify`
 (the `.sppkg` and the two evidence files); **rebind the tenant configuration** with a new `parameters.json` from the
 sample and the property pane values above; **reauthorize the connections** (approve the package's Microsoft Flow
 Service / User request, point `DraftServiceUrl` at the new tenant's flow, reconnect the companion solutions);
-**remap identities and sources** (the site's owners group, the four companion lists, the usage rows); **requalify**
-(the tenant acceptance steps under "Deploy", a qualification receipt for each off-site route, the tenant inventory
-that fills the `AWAITING_TENANT_INVENTORY` fields of `evidence/dependency-inventory.json`); then **activate** by
+**remap identities and sources** (the site's owners group, the four companion lists, the usage rows, the
+companion flows' connection with Override List Behaviors on the secured intake lists); **requalify**
+(the tenant acceptance steps under "Deploy", the two-account list-security test, a qualification receipt for each
+off-site route, the tenant inventory that fills the `AWAITING_TENANT_INVENTORY` fields of
+`evidence/dependency-inventory.json`); then **activate** by
 setting the route states, dates and receipt references and rerunning the script. Workflow logic, schemas, the
 content document's structure and the tests travel unchanged.
 
@@ -618,14 +662,15 @@ The shipped stylesheet is reproduced exactly (`styles/cssParity.test.ts` proves 
 
 ## Tests
 
-`npm test` runs 673 tests in seven layers: pure modules (branding, definitions, page views, the content document
+`npm test` runs 726 tests in seven layers: pure modules (branding, definitions, page views, the content document
 parser and markup, form engine, services, summaries), React Testing Library component and journey tests with fake
 services (including every content block), bundle-level lifecycle tests that
 load the built AMD bundle in a simulated SPFx host, a journey parity suite that plays every workflow through the
 shipped 1.0.0.7 bundle and the port side by side (screens, drafts, downloads and posted list items must match), the
 stylesheet parity test plus the page view and responsive stylesheet guards, a preview-server test, a hostile-document test (script
 tags, executable link schemes, a 200 kB string, arrays nested fifty deep and `__proto__` keys render as text and dead
-anchors), and static checks on the page definition, the provisioning script, the tenant word list, the claims
+anchors), the negative-access suite over the list security (`src/security/negativeAccess.test.ts`, see *List
+security*), and static checks on the page definition, the provisioning script, the tenant word list, the claims
 ledger, the release verifier and its evidence (`src/provisioning/verifyPackage.test.ts`: the version, the exact
 pins, the sixteen inventory fields on every row), the thrown-away inventory (`src/portability/thrownAway.test.ts`)
 and the lint configuration (`react/no-danger` is an error and no source under the web part uses

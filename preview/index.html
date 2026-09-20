@@ -51,14 +51,21 @@ body { margin: 0; font-family: "Segoe UI", system-ui, sans-serif; }
 <option value="requests">Requests</option>
 <option value="prompts">Prompts</option>
 <option value="status">Status</option>
+<option value="operations">Operations (operator plane)</option>
 </select>
 <label for="layout">Layout (web part property):</label>
 <select id="layout">
 <option value="wide">Wide (full page width)</option>
 <option value="narrow">Narrow (one column)</option>
 </select>
+<label for="simulate-deny">Simulate a refused list (reloads):</label>
+<select id="simulate-deny">
+<option value="none">None: the request list answers</option>
+<option value="intakes">Request list refuses every read (403)</option>
+</select>
+<label for="simulate-readback"><input id="simulate-readback" type="checkbox"> Simulate a failed readback after a write (the pending receipt; reloads)</label>
 </form>
-<p>Usage rows and the open incident shown in the telemetry strip are fictional sample data seeded by the simulation. Page views link to this page with another piece; add <code>?width=560</code> to the address to preview a narrow column, or <code>?page=learn</code> to open a content page from the simulated Site Assets document.</p>
+<p>Usage rows and the open incident shown in the telemetry strip are fictional sample data seeded by the simulation, as are the three requests of the preview person on Status. Page views link to this page with another piece; add <code>?width=560</code> to the address to preview a narrow column, <code>?page=learn</code> to open a content page from the simulated Site Assets document, <code>?page=operations</code> for the operator-plane page that carries the telemetry strip, <code>?deny=intakes</code> to see the refused request list on Status and the first screen, or <code>?readback=fail</code> to see the pending receipt after a submission from a form page.</p>
 </aside>
 <div id="preview-error" role="alert"></div>
 <div id="app"></div>

@@ -7,7 +7,9 @@
  * contacts a tenant. Compiled to lib/preview/previewHost.js and served as /host.js.
  *
  * Query switches beside `view=` and `page=`: `deny=intakes` makes every read of the intake list answer
- * 403, so the my-work piece and the status strip show their refused state.
+ * 403, so the my-work piece and the status strip show their refused state; `readback=fail` makes the
+ * GET by id that follows a POST answer 503, so a submission from a form page shows the pending receipt
+ * ("Saved, not yet confirmed" with the confirm-again button) instead of the confirmed one.
  *
  * Written without spread, rest or async/await on purpose: the ES5 build would otherwise import
  * tslib helpers, which a browser cannot resolve from a bare module specifier.
@@ -242,10 +244,10 @@ const SAMPLE_PAGE_DOCUMENT: { [key: string]: unknown } = {
       title: 'Start here',
       blocks: [
         {
+          // The operating promise, no call to action: the work command below is the page's one primary control.
           type: 'hero',
           title: 'What do you need done?',
-          text: 'Ask the AI CoE in [Teams](https://teams.microsoft.com/l/channel/contoso), [learn the basics](/?page=learn) or [start a request](/?page=requests).',
-          cta: { label: 'Start a request', href: previewLink('page=requests') }
+          text: 'Ask the AI CoE in [Teams](https://teams.microsoft.com/l/channel/contoso), [learn the basics](/?page=learn) or [start a request](/?page=requests).'
         },
         {
           type: 'workCommand',
@@ -380,7 +382,7 @@ const SAMPLE_PAGE_DOCUMENT: { [key: string]: unknown } = {
             teamUsage: previewLink('view=teamUsage'),
             helpTraining: previewLink('view=helpTraining'),
             feedback: previewLink('view=feedback'),
-            telemetry: previewLink('page=status'),
+            // No snapshot link: the telemetry strip sits on the operator-plane Operations page since 1.0.0.13.
             admin: previewLink('view=admin')
           }
         }
@@ -405,7 +407,7 @@ const SAMPLE_PAGE_DOCUMENT: { [key: string]: unknown } = {
     status: {
       title: 'Status',
       blocks: [
-        { type: 'paragraph', text: 'Updated every Friday by the AI CoE. Numbers below come from the simulated telemetry lists of this preview.' },
+        { type: 'paragraph', text: 'Updated every Friday by the AI CoE. Your own requests below come from the simulated request list of this preview.' },
         // The person's own requests, read from the simulated intake list (add "&deny=intakes" to see the refused state).
         { type: 'piece', piece: 'myWork', pages: {} },
         {
@@ -435,8 +437,6 @@ const SAMPLE_PAGE_DOCUMENT: { [key: string]: unknown } = {
             { title: 'What is not running', body: ['**Agents** are still in review.', '**Connectors to line-of-business systems** are not enabled.'], tone: 'cyan', asOf: isoDaysAgo(45), source: 'AI CoE check (simulated)' }
           ]
         },
-        // The kicker names the strip as diagnostics; with it set, the tiles take their labels from the document's vocabulary above.
-        { type: 'piece', piece: 'telemetry', pages: {}, kicker: 'Diagnostics: usage feeds (simulated)' },
         {
           type: 'cards',
           columns: 2,
@@ -445,6 +445,18 @@ const SAMPLE_PAGE_DOCUMENT: { [key: string]: unknown } = {
             { title: 'If something is wrong', body: 'Say so in [Teams](https://teams.microsoft.com/l/channel/contoso) or use [Share feedback](/?view=feedback).', tone: 'gold' }
           ]
         }
+      ]
+    },
+    // The operator-plane page (owners-only on a site): the telemetry strip left Status for it in 1.0.0.13. On the
+    // operator plane a case card or request row also shows its status code beside the plain wording.
+    operations: {
+      title: 'Operations',
+      plane: 'operator',
+      blocks: [
+        { type: 'heading', level: 2, text: 'Operations diagnostics' },
+        { type: 'paragraph', text: 'Usage and cost of the AI services this site reads about, for the people who run the pilot. Numbers below come from the simulated telemetry lists of this preview.' },
+        // The kicker names the strip as diagnostics; with it set, the tiles take their labels from the document's vocabulary above.
+        { type: 'piece', piece: 'telemetry', pages: {}, kicker: 'Diagnostics: usage and cost, not a measure of value (simulated)' }
       ]
     }
   }
@@ -521,6 +533,10 @@ function request(method: 'GET' | 'POST', url: string, options: { body?: string }
     lists[list].push(item);
     result = item;
     status = 201;
+  } else if (itemMatch !== null && list === 'AI CoE Pilot Intakes' && location.search.indexOf('readback=fail') >= 0) {
+    // "?readback=fail": the row was written but the read that should confirm it fails, so the receipt reads pending.
+    result = 'Service unavailable (simulated readback failure)';
+    status = 503;
   } else if (itemMatch !== null) {
     // The readback that follows a write: one row by id, 404 when the list holds no such row.
     const id: number = Number(itemMatch[1]);
