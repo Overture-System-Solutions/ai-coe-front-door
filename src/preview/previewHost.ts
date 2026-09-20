@@ -12,7 +12,8 @@
  * ("Saved, not yet confirmed" with the confirm-again button) instead of the confirmed one; `role=`
  * names the role to simulate, which the host answers as site group membership and as the one
  * permission check. The role switch exists here and nowhere else: the shipped bundle resolves the
- * role from identity and reads nothing out of the address.
+ * role from identity and reads nothing out of the address. `palette=` is read by the mount script
+ * alone and reaches the bundle as the `paletteOverrides` property, the way the script writes it.
  *
  * Written without spread, rest or async/await on purpose: the ES5 build would otherwise import
  * tslib helpers, which a browser cannot resolve from a bare module specifier.
@@ -60,6 +61,8 @@ interface IPreviewApi {
   setLayout(layout: string): void;
   /** Switches the page of the simulated content document a content page shows. */
   setPageKey(pageKey: string): void;
+  /** Sets the tenant colours the way the script writes them (`accent=#008B83;ink=#102B3D`); blank clears them. */
+  setPaletteOverrides(overrides: string): void;
 }
 
 type AmdFactory = (...modules: unknown[]) => { default: new () => IPreviewWebPart };
@@ -71,7 +74,7 @@ interface IPreviewWindow {
   FrontDoorPreview: IPreviewApi;
 }
 
-const LIST_TITLES: string[] = ['AI CoE Pilot Intakes', 'AI CoE Use Cases', 'AI CoE Decisions', 'AI Usage Daily', 'AI CoE Incidents'];
+const LIST_TITLES: string[] = ['AI CoE Pilot Intakes', 'AI CoE Use Cases', 'AI CoE Decisions', 'AI Usage Daily', 'AI CoE Incidents', 'AI CoE Program Measures'];
 const previewWindow: IPreviewWindow = window as unknown as IPreviewWindow;
 const lists: { [title: string]: IPreviewItem[] } = {};
 const requests: IPreviewRequest[] = [];
@@ -181,6 +184,53 @@ function seedIntakes(): void {
 }
 seedIntakes();
 
+/**
+ * Fictional rows of the measures list an operator fills in by hand, so the Enterprise value page shows
+ * the three answers a tile can give offline: a measured rate with its period and evidence reference, a
+ * measure whose baseline period is not complete (its evidence note under the placeholder), and a measured
+ * row covering fewer people than the document's minimum, which is held back whatever it claims.
+ */
+function seedMeasures(): void {
+  const measures: IPreviewItem[] = lists['AI CoE Program Measures'];
+  const rows: IPreviewItem[] = [
+    {
+      Id: nextId++,
+      Title: 'Useful safe completion rate',
+      MeasureId: 'useful-safe-completion-rate',
+      State: 'MEASURED',
+      Value: 0.62,
+      Unit: '%',
+      PeriodStart: isoDaysAgo(60),
+      PeriodEnd: isoDaysAgo(30),
+      EvidenceRef: 'PREVIEW-EV-01 (simulated)',
+      CohortSize: 48
+    },
+    {
+      Id: nextId++,
+      Title: 'Median time to a useful outcome',
+      MeasureId: 'median-time-to-useful-outcome',
+      State: 'PENDING_BASELINE',
+      EvidenceNote: 'Simulated preview data: the first period closes at the end of the pilot; no number is shown until it does.'
+    },
+    {
+      Id: nextId++,
+      Title: 'Repeat-use useful completion rate',
+      MeasureId: 'repeat-use-useful-completion-rate',
+      State: 'MEASURED',
+      Value: 0.71,
+      Unit: '%',
+      PeriodStart: isoDaysAgo(60),
+      PeriodEnd: isoDaysAgo(30),
+      EvidenceRef: 'PREVIEW-EV-02 (simulated)',
+      EvidenceNote: 'Simulated preview data: too few people took part for this period to be shown.',
+      CohortSize: 3
+    }
+  ];
+  for (let index: number = 0; index < rows.length; index++) {
+    measures.push(rows[index]);
+  }
+}
+
 /** A page of this preview showing another piece or content page. */
 function previewLink(query: string): string {
   return `/?${query}`;
@@ -193,6 +243,8 @@ function isoDaysAgo(days: number): string {
   const day: number = date.getUTCDate();
   return `${date.getUTCFullYear()}-${month < 10 ? '0' : ''}${month}-${day < 10 ? '0' : ''}${day}`;
 }
+// Seeded here rather than beside the other lists: the rows carry dated periods, which this helper writes.
+seedMeasures();
 
 // Simulated preview data: the content document a site would keep in Site Assets, with Contoso wording and links
 // back into this preview. Every block type appears at least once. The route table shows the three answers a route
@@ -200,12 +252,29 @@ function isoDaysAgo(days: number): string {
 // guided intake as fallback), and one with no link at all.
 const SAMPLE_PAGE_DOCUMENT: { [key: string]: unknown } = {
   version: 1,
+  // What a provisioning run writes on the document it uploads: the content it named, and every tenant input it
+  // was given or still owes, by name, kind and state. A value never travels with a binding; the one exception is
+  // the reference of a qualification receipt, which names a record.
+  release: { id: 'preview-1.0.0.14 (simulated)', publishedAt: isoDaysAgo(1), source: 'SiteAssets/ai-coe-pages.json' },
+  bindings: [
+    { name: 'AssistantUrl', kind: 'url', state: 'bound' },
+    { name: 'AssistantReceiptRef', kind: 'optional', state: 'bound', receiptRef: 'PREVIEW-RECEIPT-01 (simulated)' },
+    { name: 'WorkCommandUrl', kind: 'url', state: 'awaiting' },
+    { name: 'LeadersGroup', kind: 'group', state: 'bound' },
+    { name: 'OperatorsGroup', kind: 'group', state: 'bound' },
+    { name: 'DesignAuthorityGroup', kind: 'group', state: 'awaiting' }
+  ],
+  // How old a dated fact may be before it needs refreshing, and the smallest group a measure may be shown for.
+  settings: { freshnessDays: 30, minimumCohort: 5 },
   routes: {
     guidedIntake: { label: 'Start a guided request', href: previewLink('view=idea'), state: 'availableNow' },
     work: { label: 'Get work done', state: 'availableNow', note: 'The work command is not yet proved in this environment.' },
     // carriesReference: the hand-off card after a saved request would append the record reference once the route opens.
     assistant: { label: 'the assistant', href: 'https://assistant.example/chat', state: 'availableNow', carriesReference: true, note: 'Opens in a new tab once the tenant receipt is recorded.' },
-    improve: { label: 'Improve a task', href: previewLink('view=toolCheck'), state: 'availableNow' }
+    improve: { label: 'Improve a task', href: previewLink('view=toolCheck'), state: 'availableNow' },
+    // A route with roles: a leader or an operator reaches the Enterprise value page, anyone else its fallback row.
+    value: { label: 'Enterprise AI value', href: previewLink('page=value'), state: 'availableNow', roles: ['leader', 'operator'], fallback: 'valueFallback' },
+    valueFallback: { label: 'Check status', href: previewLink('page=status'), state: 'availableNow', note: 'Leaders and operators see the evidence-backed view; measured results also appear on Status.' }
   },
   // Telemetry tile labels by metric key: read only by a telemetry piece that names its own kicker, so the page names the feed.
   vocabulary: {
@@ -312,6 +381,16 @@ const SAMPLE_PAGE_DOCUMENT: { [key: string]: unknown } = {
             // A source with no read-back date: the line says "Awaiting source. Do not infer progress." instead of inventing one.
             { kind: 'text', label: 'Assistant', text: 'Answering from approved sources.', route: 'assistant', source: 'AI CoE check (simulated)' },
             { kind: 'text', label: 'Support', text: 'Ask in [Teams](https://teams.microsoft.com/l/channel/contoso) or reply to any AI CoE mail.' }
+          ]
+        },
+        {
+          // The leader block: shown only to someone holding the leader role ("?role=leader"), two static links and no figure.
+          type: 'cards',
+          columns: 2,
+          audience: ['leader'],
+          items: [
+            { title: 'Decisions waiting on you', kicker: 'For leaders', body: 'What the AI CoE needs a decision on, with the evidence behind each one.', route: 'value' },
+            { title: 'Material changes', kicker: 'For leaders', body: 'What changed since the last review, and what is still running.', href: previewLink('page=status'), tone: 'gold' }
           ]
         }
       ]
@@ -455,11 +534,48 @@ const SAMPLE_PAGE_DOCUMENT: { [key: string]: unknown } = {
     operations: {
       title: 'Operations',
       plane: 'operator',
+      requiredRole: ['operator'],
       blocks: [
         { type: 'heading', level: 2, text: 'Operations diagnostics' },
         { type: 'paragraph', text: 'Usage and cost of the AI services this site reads about, for the people who run the pilot. Numbers below come from the simulated telemetry lists of this preview.' },
         // The kicker names the strip as diagnostics; with it set, the tiles take their labels from the document's vocabulary above.
-        { type: 'piece', piece: 'telemetry', pages: {}, kicker: 'Diagnostics: usage and cost, not a measure of value (simulated)' }
+        { type: 'piece', piece: 'telemetry', pages: {}, kicker: 'Diagnostics: usage and cost, not a measure of value (simulated)' },
+        // The release and the bindings above, as the run wrote them: names, kinds and states, never a value.
+        { type: 'bindings', title: 'This content and what it is bound to' }
+      ]
+    },
+    // The leaders' page (site owners, the leaders group and the operators group on a site): a number appears only
+    // where a row of the simulated measures list says it was measured and the group is large enough to show.
+    value: {
+      title: 'Enterprise value',
+      plane: 'operator',
+      requiredRole: ['leader', 'operator'],
+      blocks: [
+        { type: 'heading', level: 2, text: 'Enterprise AI value' },
+        {
+          type: 'notice',
+          tone: 'info',
+          title: 'How to read this page',
+          text: 'A number appears only when it has been measured against a baseline. Pending baseline means the measure is defined but the first period is not complete. Not established means no baseline exists yet. Nothing here is estimated.'
+        },
+        {
+          type: 'kpi',
+          unavailableText: 'Measures unavailable: the program measures list could not be read on this site. Nothing on this page is a measured result.',
+          items: [
+            { id: 'useful-safe-completion-rate', label: 'Useful safe completion rate' },
+            { id: 'median-time-to-useful-outcome', label: 'Median time to a useful outcome' },
+            { id: 'repeat-use-useful-completion-rate', label: 'Repeat-use useful completion rate' }
+          ]
+        },
+        {
+          type: 'cards',
+          columns: 3,
+          items: [
+            { title: 'Hypothesis', body: 'What the AI CoE expects a measure to show, written before the period starts, with the baseline it will be read against.', illustrative: true, tone: 'teal' },
+            { title: 'Forecast', body: 'What the hypothesis implies for the period, kept apart from the measures above so a forecast is never read as a result.', illustrative: true, tone: 'gold' },
+            { title: 'Realised', body: 'What the period actually produced, once the measure has been recorded with its evidence and the group is large enough to show.', illustrative: true, tone: 'cyan' }
+          ]
+        }
       ]
     }
   }
@@ -785,6 +901,15 @@ previewWindow.FrontDoorPreview = {
       throw new Error('Mount the web part first.');
     }
     mounted.properties.pageKey = pageKey;
+    mounted.render();
+  },
+  setPaletteOverrides: (overrides: string): void => {
+    if (mounted === undefined) {
+      throw new Error('Mount the web part first.');
+    }
+    // The property the script writes from the Palette parameter; the web part sets each pair on its own
+    // element when it renders and removes the ones a new value drops, so a blank restores the shipped colours.
+    mounted.properties.paletteOverrides = overrides;
     mounted.render();
   }
 };

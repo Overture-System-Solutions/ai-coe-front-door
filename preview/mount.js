@@ -4,7 +4,7 @@ const TELEMETRY_PROVIDERS = ['claude', 'openai', 'both'];
 const VIEWS = ['legacy', 'home', 'idea', 'toolCheck', 'teamUsage', 'helpTraining', 'feedback', 'telemetry', 'admin', 'page'];
 const LAYOUTS = ['wide', 'narrow'];
 // Pages of the simulated content document the host serves as SiteAssets/ai-coe-pages.json.
-const PAGE_KEYS = ['startHere', 'learn', 'useAi', 'requests', 'prompts', 'status', 'operations'];
+const PAGE_KEYS = ['startHere', 'learn', 'useAi', 'requests', 'prompts', 'status', 'operations', 'value'];
 // Simulation switches the host reads from the query string: which list refuses every read, and whether the
 // readback after a write fails (the pending receipt). Changing either reloads the page, because the host answers
 // requests from the query string as it was when the piece loaded.
@@ -41,6 +41,8 @@ const deny = DENY_TARGETS.includes(requestedDeny) ? requestedDeny : 'none';
 const readbackFails = params.get('readback') === 'fail';
 const requestedRole = params.get('role') ?? '';
 const role = ROLES.includes(requestedRole) ? requestedRole : 'owner';
+// The tenant colours, in the form the script writes on every instance; the web part drops any pair it cannot read.
+const palette = params.get('palette') ?? '';
 const input = document.getElementById('organization-name');
 const draftToggle = document.getElementById('simulate-draft');
 const providerSelect = document.getElementById('telemetry-provider');
@@ -50,6 +52,7 @@ const pageSelect = document.getElementById('page-key');
 const denySelect = document.getElementById('simulate-deny');
 const readbackToggle = document.getElementById('simulate-readback');
 const roleSelect = document.getElementById('simulate-role');
+const paletteInput = document.getElementById('simulate-palette');
 input.value = organization;
 draftToggle.checked = simulateDraft;
 providerSelect.value = provider;
@@ -59,6 +62,7 @@ pageSelect.value = pageKey;
 denySelect.value = deny;
 readbackToggle.checked = readbackFails;
 roleSelect.value = role;
+paletteInput.value = palette;
 if (width > 0) {
   // Approximates a section column so the narrow layout can be eyeballed.
   document.getElementById('app').style.maxWidth = `${width}px`;
@@ -81,6 +85,8 @@ const properties = {
   contentUrl: 'SiteAssets/ai-coe-pages.json',
   // The same binding the script writes on a real site; the host answers the group membership the switch above names.
   roleGroups: ROLE_GROUPS,
+  // The colours of a tenant, as the script writes them from the Palette parameter; blank keeps the shipped ones.
+  paletteOverrides: palette,
   returnUrl: viewLink('home'),
   // Blank keeps the policy library link of the simulated site, which the preview leaves inert.
   pagePolicy: ''
@@ -142,6 +148,12 @@ function syncUrl() {
   } else {
     url.searchParams.set('role', roleSelect.value);
   }
+  const colours = paletteInput.value.trim();
+  if (colours) {
+    url.searchParams.set('palette', colours);
+  } else {
+    url.searchParams.delete('palette');
+  }
   history.replaceState(null, '', url);
 }
 
@@ -178,6 +190,13 @@ pageSelect.addEventListener('change', () => {
   }
   syncUrl();
   window.FrontDoorPreview.setPageKey(pageSelect.value);
+});
+
+// The palette needs no reload: the web part sets each pair on its own element whenever it renders, and removes the
+// ones a new value drops, so a blank puts the shipped colours back.
+paletteInput.addEventListener('change', () => {
+  syncUrl();
+  window.FrontDoorPreview.setPaletteOverrides(paletteInput.value.trim());
 });
 
 // The host reads these two switches from the query string on every request, and the pieces read their lists once

@@ -610,7 +610,8 @@ describe('page provisioning script', () => {
 
 describe('README', () => {
   it('documents the current package and the page layout', () => {
-    expect(readme).toContain('## Deploy 1.0.0.13');
+    expect(readme).toContain('## Deploy 1.0.0.14');
+    expect(readme).not.toContain('Deploy 1.0.0.13');
     expect(readme).not.toContain('Deploy 1.0.0.12');
     expect(readme).not.toContain('Deploy 1.0.0.11');
     expect(readme).toContain('### Rollback');
@@ -706,14 +707,37 @@ describe('README', () => {
     expect(readme).toContain('?deny=intakes');
     expect(readme).toContain('?readback=fail');
     expect(readme).toContain('?page=operations');
-    // The upgrade path of this release: no -Overwrite, the Operations page is created, the lists are secured first.
+    // The upgrade path of 1.0.0.13: no -Overwrite, the Operations page is created, the lists are secured first.
     expect(readme).toMatch(/Operations[^.\n]*is created/);
-    // Rollback: the previous package and its script; the Operations page stays or is removed by hand; the list security is reverted.
-    const rollback: string = readme.slice(readme.indexOf('### Rollback'), readme.indexOf('### Enable AI drafting'));
-    expect(rollback).toContain('1.0.0.12');
-    expect(rollback).toContain('Operations');
+    // Its list security is reverted by hand, which the rollback of the release that followed still says.
+    expect(readme).toMatch(/-ReadSecurity 1 -WriteSecurity 1/);
+  });
+
+  it('documents the release close of 1.0.0.14: the roles, the protected pages, the lists, the palette and the rollback', () => {
+    // The deploy section of this release: what the package changes, what the script changes and what the site owes first.
+    const deploy: string = readme.slice(readme.indexOf('## Deploy 1.0.0.14'), readme.indexOf('### Enable AI drafting'));
+    expect(deploy).toContain('roleGroups');
+    expect(deploy).toContain('paletteOverrides');
+    expect(deploy).toContain('groups:');
+    expect(deploy).toContain('LeadersGroup');
+    expect(deploy).toContain('OperatorsGroup');
+    expect(deploy).toContain('Enterprise value');
+    expect(deploy).toContain('AI CoE Program Measures');
+    // The upgrade path: the groups are created first, the script is run without -Overwrite, the properties move in place.
+    expect(deploy).toMatch(/without `-Overwrite`/);
+    expect(deploy).toMatch(/updated in place/);
+    // The preview switches of this release, so the pages can be seen before a tenant has them.
+    expect(readme).toContain('?role=');
+    expect(readme).toContain('?palette=');
+    expect(readme).toContain('?page=value');
+    // Rollback: the previous package and its script; the list, the pages and the group permissions are additive and stay.
+    const rollback: string = deploy.slice(deploy.indexOf('### Rollback'));
+    expect(rollback).toContain('1.0.0.13');
+    expect(rollback).toContain('AI CoE Program Measures');
+    expect(rollback).toContain('Enterprise value');
     expect(rollback).toMatch(/harmless|by hand/);
-    expect(rollback).toMatch(/List security|-ReadSecurity 1 -WriteSecurity 1/);
+    // The README wraps its paragraphs, so the two words may be parted by a newline.
+    expect(rollback).toMatch(/instance\s+properties/i);
   });
 
   it('documents the list security of 1.0.0.13: why it works, the flow identity, the tenant check and the rollback', () => {

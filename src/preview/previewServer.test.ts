@@ -151,6 +151,34 @@ describe('offline preview server', () => {
     expect(host.body).toContain('previewIsAdmin');
   });
 
+  it('offers the 1.0.0.14 palette switch, the Enterprise value page and the seeded measures rows', async () => {
+    const page: IResponse = await get(`${base}/`);
+    expect(page.body).toContain('id="simulate-palette"');
+    const pageSelect: RegExpExecArray | null = /<select id="page-key">([\s\S]*?)<\/select>/.exec(page.body);
+    expect(pageSelect).not.toBeNull();
+    expect((pageSelect as RegExpExecArray)[1]).toContain('option value="value"');
+    // mount.js reads the palette from the query string, writes it back and applies it without a reload.
+    const mount: IResponse = await get(`${base}/mount.js`);
+    expect(mount.body).toContain("get('palette')");
+    expect(mount.body).toContain('simulate-palette');
+    expect(mount.body).toContain('paletteOverrides');
+    expect(mount.body).toContain('setPaletteOverrides');
+    const host: IResponse = await get(`${base}/host.js`);
+    expect(host.body).toContain('setPaletteOverrides');
+    // The measures list the Enterprise value page reads is seeded: one measured row, one still awaiting its
+    // baseline and one whose group is smaller than the document's minimum.
+    expect(host.body).toContain('AI CoE Program Measures');
+    expect(host.body).toContain('MeasureId');
+    expect(host.body).toContain('useful-safe-completion-rate');
+    expect(host.body).toContain('PENDING_BASELINE');
+    expect(host.body).toContain('CohortSize');
+    // The 1.0.0.14 sections of the simulated document: the Enterprise value page with its measure tiles, the
+    // leader block on Start here, the release and the bindings a run writes, and the settings the tiles read.
+    for (const key of ['kpi', 'bindings', 'release:', 'settings:', 'minimumCohort', 'requiredRole', 'awaiting']) {
+      expect(host.body).toContain(key);
+    }
+  });
+
   it('serves only the allowlisted assets', async () => {
     for (const route of ['/react.js', '/react-dom.js', '/host.js', '/strings.js', '/bundle.js', '/mount.js']) {
       const asset: IResponse = await get(`${base}${route}`);

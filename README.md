@@ -6,15 +6,19 @@ feedback), a telemetry snapshot and an administrator dashboard, all writing to S
 
 This project is the maintainable source for the web part that shipped as package **1.0.0.7** (`original/`). The
 shipped package was reverse-engineered (see `docs/RECOVERY.md`) and then ported to idiomatic TypeScript with a
-test-first approach. It builds the next in-place upgrade, **1.0.0.13**, with the same solution, feature and web part
+test-first approach. It builds the next in-place upgrade, **1.0.0.14**, with the same solution, feature and web part
 identities, and it is tenant neutral: the organization name is a web part property. Since 1.0.0.10 the front door can
 also be spread over several native pages, one piece per page, since 1.0.0.11 it renders whole content pages from a
 document in Site Assets, in its own style (see "Lay out the front door across pages"), since 1.0.0.12 the first
 screen tells the truth: one work command, a route table that fails closed, a shared support footer, and a recorded
-answer to what a move to another tenant would throw away (see "Rebind to another tenant"), and since 1.0.0.13 every
+answer to what a move to another tenant would throw away (see "Rebind to another tenant"), since 1.0.0.13 every
 submission is read back before the page says it was saved, each person sees their own requests on Status, the
 request lists carry item-level security the script makes effective, and the telemetry strip sits on an owners-only
-Operations page (see "Receipts", "My work", "List security" and "Deploy").
+Operations page (see "Receipts", "My work", "List security" and "Deploy"), and since 1.0.0.14 the site's own groups
+decide what a page offers: a leaders' Enterprise value page that shows a number only where a measure was recorded
+with its evidence, the two operator pages behind their groups, the colours of the organization as a parameter, and
+a run that reports the release it published and every binding the site still owes (see "Branding", "Palette
+override", "Page permissions" and "Instance properties").
 
 ## Work with it
 
@@ -32,14 +36,21 @@ Use Node.js 22.14 or newer (below 23) and npm.
   banner's field to try the branding property; `?provider=openai` or `?provider=both` (or the banner's selector) tries
   the telemetry modes against seeded sample usage rows; `?view=home` (or any other piece, see below) shows one piece,
   with its links pointing back at the preview, `?page=learn` (or the banner's page selector) a content page from a
-  simulated Site Assets document (`?page=operations` the operator-plane page that carries the telemetry strip),
+  simulated Site Assets document (`?page=operations` the operator-plane page that carries the telemetry strip,
+  `?page=value` the leaders' Enterprise value page),
   `?layout=narrow` the narrow layout, and `?width=560` caps the mount so a section column can be eyeballed. Since
   1.0.0.13 the banner also carries two simulation switches (each reloads the page): `?deny=intakes` makes the
   simulated request list refuse every read, so Status and the first screen show *Needs access* and no count, and
   `?readback=fail` makes the read that follows a write fail, so a submission from a form page (`?view=idea`) shows
   the pending receipt, *Saved, not yet confirmed*, with its **Confirm again** button; the three requests of the
   preview person on Status are seeded, and another person's row is kept out of every read the way the list's
-  item-level security keeps it out on a site. `npm run preview -- --port 4174` changes the port;
+  item-level security keeps it out on a site. Since 1.0.0.14 two more: `?role=leader` (`employee`, `operator`,
+  `designAuthority`, or the default site owner) makes the simulated site groups answer as that role, so the leader
+  block on the first screen and the two protected pages can be seen offline — production resolves the role from
+  identity and the bundle reads no role from the address — and `?palette=accent%3D%23008B83` sets the
+  `paletteOverrides` property, so a tenant's colours can be tried without a tenant. The measures behind the
+  Enterprise value page are seeded rows of a simulated measures list: one measured, one awaiting its baseline and
+  one held back because its group is too small. `npm run preview -- --port 4174` changes the port;
   `npm run preview -- --bundle <path>` previews another bundle, for example the shipped one under
   `recovered/package/ClientSideAssets/`.
 - `npm start` runs `heft start` for the SharePoint hosted workbench (requires a tenant; not needed for local work).
@@ -50,45 +61,62 @@ Use Node.js 22.14 or newer (below 23) and npm.
   inventory fields; what the lock file cannot say reads `AWAITING_TENANT_INVENTORY` until the tenant inventory
   fills it). Both files are committed with each release.
 
-## Deploy 1.0.0.13
+## Deploy 1.0.0.14
 
 Upload `sharepoint/solution/overture-ai-coe-front-door.sppkg` to the app catalog as an update of the existing app.
 The solution id (`f125ebdf-4a9d-4e6e-8479-3a18874e7752`), feature id (`69ab84b7-608c-47ee-9623-af8ebaf2cb10`,
 version 1.0.0.2) and web part id (`cf2e5904-0703-4fe4-ae5a-ec012d6fa689`) are unchanged, so the three provisioned
-lists (AI CoE Pilot Intakes and its two schemas under `sharepoint/assets/`) are left untouched; 1.0.0.13 changes no
-list or column and adds no web part property. What it changes on the site comes from the script, not the package:
-the permissions of the two intake lists (item-level read and write security, see "List security") and one new page,
-Operations, restricted to site owners. The other four lists the web part reads (AI CoE Use Cases, AI CoE Decisions,
-AI Usage Daily, AI CoE Incidents) are provisioned by the companion Power Automate solutions, exactly as before.
+lists (AI CoE Pilot Intakes and its two schemas under `sharepoint/assets/`) are left untouched; 1.0.0.14 changes no
+shipped list and no column of one. It adds two web part properties, both in the Branding group and both blank by
+default: `roleGroups`, which binds site groups to the roles the front door knows, and `paletteOverrides`, which
+carries the colours of the organization (see "Branding" and "Palette override"). What it changes on the site comes
+from the script, not the package: one new list, **AI CoE Program Measures**, created from the `lists` section of
+`pages.json` (see "Lists"); one new page, **Enterprise value**, behind `groups:LeadersGroup,OperatorsGroup`; the
+Operations page moved from owners-only to `groups:OperatorsGroup` (owners keep it either way); and the operators
+group added to the two secured intake lists at Full Control, so an operator reads every request row. The other four
+lists the web part reads (AI CoE Use Cases, AI CoE Decisions, AI Usage Daily, AI CoE Incidents) are provisioned by
+the companion Power Automate solutions, exactly as before.
 
-After deployment the property pane is as in 1.0.0.12: **Branding → Organization name** set, **Governance
-reference** and **Review system name** blank or set (see "Branding"); the **Telemetry → Usage metrics provider**
-dropdown now matters only on the Operations instance, the one that carries the strip. Existing instances keep
-rendering the whole front door on one page: the **Page layout → Piece shown on this page** dropdown defaults to
-that, and the page properties are ignored until another piece is chosen. Then apply the page definition (see
-"Applying it"): on a site that already carries the 1.0.0.12 pages the script runs without `-Overwrite`; every
-existing page is skipped, the two intake lists are put under item-level security first, the content document is
-rewritten (Status now opens with the person's own requests and carries the illustrative case card, the strip is
-gone from Status and Prompts from the navigation), and the Operations page is created. What the web part does
-differently on every page: a submission is read back before the page says it was saved, and a form page shows the
-receipt, the pending state or the failure notice (see "Receipts").
+Do first, before the script runs: create the site groups this release binds (a leaders group, an operators group
+and, if you want the role bound at all, a design authority group) and put their titles in `LeadersGroup`,
+`OperatorsGroup` and `DesignAuthorityGroup` in `parameters.json`, with `Palette` and `ContentRelease` if you want
+them. A group parameter that is blank, or that names a group the site does not carry, is a warning and not an
+error: the page that names it stays owners-only and the role behind it stays unbound (see "Page permissions").
 
-The tenant acceptance for this release: with a second account that is a site Member (not an owner) and has sent one
-request, open Status and confirm only that account's rows appear there and in the list UI, and record the result
-against plan open decision 3 under *Negative access test (tenant)*; submit from a form page and see *Saved and
-confirmed* with the reference, the source line and the time; confirm the companion flows still write and read every
-row (their connection holds Override List Behaviors: Full Control, Design or a custom level); open Operations as an
-owner and see the strip under its diagnostics kicker, and as a member see SharePoint refuse the page.
+After deployment the property pane is as in 1.0.0.13, with the two new Branding fields the script fills:
+**Role groups** and **Palette overrides**. Existing instances keep rendering the whole front door on one page: the
+**Page layout → Piece shown on this page** dropdown defaults to that, and the page properties are ignored until
+another piece is chosen. Then apply the page definition (see "Applying it"): on a site that already carries the
+1.0.0.13 pages the script runs without `-Overwrite`; every existing page keeps its content and its
+instance properties are **updated in place** (see "Instance properties"), so `roleGroups` and `paletteOverrides`
+arrive without rebuilding anything; the measures list is created (or given only the columns it lacks); the content
+document is rewritten (the first screen gains the leader block, Operations gains the bindings section); and the
+Enterprise value page is created. What the web part does differently on every page: it reads the groups of the
+signed-in person once and offers only what their roles allow, and a page that asks for a role nobody holds says so
+instead of showing itself — page and list permissions remain the control.
+
+The tenant acceptance for this release: create the groups, fill the group parameters and run the script; signed in
+as someone in neither group (and not a site owner), confirm SharePoint itself refuses `Enterprise-value.aspx` and
+`Operations.aspx`; as a member of the leaders group open Enterprise value and see the three measures as
+placeholders with their evidence notes and no number anywhere; add one row to **AI CoE Program Measures** with
+`MeasureId` `median-time-to-useful-outcome` and `State` `PENDING_BASELINE` and confirm the tile reads *Pending
+baseline*; and confirm the end-of-run summary names the content release and lists every binding still `AWAITING`.
 
 ### Rollback
 
-Redeploy the 1.0.0.12 package from that release's build and rerun that version's `New-FrontDoorPages.ps1` without
+Redeploy the 1.0.0.13 package from that release's build and rerun that version's `New-FrontDoorPages.ps1` without
 `-Overwrite`: the content document is rewritten from that version's `pages.json` (Site Assets keeps every version,
-so the 1.0.0.13 document stays in its history), so Status shows the 1.0.0.12 layout again, and the older bundle has
-nothing to ignore because this release adds no property. Pages are additive: the Operations page stays, an
-owners-only page whose instance the older document does not describe (harmless; the page reports the missing key
-and nothing else), or an owner deletes it by hand from Site Pages. The older script does not touch the intake
-lists' permissions, so the item-level security of 1.0.0.13 is reverted by hand as *List security* documents
+so the 1.0.0.14 document stays in its history), so the first screen loses the leader block and Operations its
+bindings section. What this release added is additive and stays. The **AI CoE Program Measures** list stays with
+its rows, read by nothing (harmless), until an owner deletes it by hand. The **Enterprise value** page stays, a page
+whose instance the older document does not describe (harmless; the page reports the missing key and nothing else),
+or an owner deletes it by hand from Site Pages. The page permissions granted to the leaders and operators groups
+stay as this release set them, because the older script does not touch a page it does not create; reset them by
+hand from each page's permissions panel if that is not wanted, which leaves the two pages owners-only. Instance
+properties are another matter: the older script writes them only on a page it creates, so `roleGroups` and
+`paletteOverrides` stay in the property bags, inert (the 1.0.0.13 bundle reads neither), unless you rerun the older
+script with `-Overwrite`, which rebuilds every page from that version's definition. The intake lists' item-level
+security of 1.0.0.13 is untouched by either script and is reverted by hand as *List security* documents
 (`Set-PnPList -ReadSecurity 1 -WriteSecurity 1`, then `-ResetRoleInheritance`, on each of the two lists); the rows
 are untouched either way.
 
@@ -571,7 +599,9 @@ state are printed: a value belongs to the tenant and never goes to the console.
 
 **Applying it** (site owner, outside this repository; the build and tests never touch a tenant):
 
-1. Deploy 1.0.0.13 and "Get it" on the site, so the component is available to the script.
+1. Deploy 1.0.0.14 and "Get it" on the site, so the component is available to the script. Create the site groups
+   the definition binds (leaders, operators, design authority) before the run, so the pages that name them are not
+   left owners-only.
 2. Copy `sharepoint/pages/parameters.sample.json` to `sharepoint/pages/parameters.json` (ignored by git), fill in the values.
 3. Run, with PowerShell 7.4 and the pinned PnP.PowerShell version from the script header: the script is written for
    that version and no other. `src/provisioning/pnpCmdletParameters.json` records, per cmdlet, the parameters that
@@ -612,8 +642,9 @@ state are printed: a value belongs to the tenant and never goes to the console.
    routes, the shared footer; my work and the case card on Status); every existing page keeps its content and gets its
    instance properties updated in place, so `contentUrl` on the five form instances and the Branding properties
    (`governanceReference`, `reviewSystemName`, `roleGroups`, `paletteOverrides`) arrive without rebuilding anything
-   (see *Instance properties*); the intake lists are secured on every run; and a page the definition adds (Operations
-   in 1.0.0.13, owners-only, with the telemetry provider of the run) is created on that run. The end-of-run summary
+   (see *Instance properties*); the intake lists are secured and the declared lists ensured on every run; and a page
+   the definition adds — Operations in the previous release, Enterprise value in this one — is created on that run,
+   with the permissions its `groups:` mode names. The end-of-run summary
    names the release and every binding that is still `AWAITING` a value.
 4. Open each page once: check the narrow layout where a piece sits in a column, and add the links behind the tiles
    and calls to action the script reported as shown as closed once their URL parameters are known (rerun with
@@ -804,7 +835,7 @@ The shipped stylesheet is reproduced exactly (`styles/cssParity.test.ts` proves 
 
 ## Tests
 
-`npm test` runs 726 tests in seven layers: pure modules (branding, definitions, page views, the content document
+`npm test` runs 853 tests in seven layers: pure modules (branding, definitions, page views, the content document
 parser and markup, form engine, services, summaries), React Testing Library component and journey tests with fake
 services (including every content block), bundle-level lifecycle tests that
 load the built AMD bundle in a simulated SPFx host, a journey parity suite that plays every workflow through the
