@@ -211,11 +211,12 @@ copy in its version history). It is UTF-8 JSON:
 | `cards` | `columns` 2 (default) or 3; `items`, each `{ "title", "kicker", "body", "meta", "tone", "state", "route", "asOf", "source" }`; `body` is one string (a blank line starts a new paragraph) or an array of paragraphs; `meta` is the italic closing line (a data boundary, a source); `asOf` is a YYYY-MM-DD date and `source` where the fact was read from (parsed now, drawn from 1.0.0.13) |
 | `lanes` | `items`, each `{ "tone": "green" or "amber" or "red", "title", "body", "note", "badge" }` |
 | `statusRow` | `items`, each `{ "label", "text", "state", "route", "asOf", "source" }`, shown side by side as **label** — text, with the state pill after the text when `state` or `route` is set |
+| `statusStrip` | `items`, each `{ "kind", "label", "text", "href", "state", "route", "asOf", "source" }`; `emptyText` (default "No requests from you yet."); `unavailableText` (default "Status unavailable: the request list could not be read."). `kind` is `text` (default; the item behaves as a `statusRow` item and needs `text`) or `myRequests` (the count of the signed-in person's own requests by plain status, "2 received · 1 in review", linked to `href` when set; `text` is an optional lead). The count comes from the request list (see *My work*); while the list cannot be read the item shows `unavailableText`, with the *Needs access* pill when the read was refused, and never a number. Only a strip with a `myRequests` item reads the list |
 | `workCommand` | `prompt` (the question above the input); `placeholder`; `submitLabel` (default `Start`); `route` (a key of the `routes` table, default `work`); `note` (the line under the input; in-text markup allowed); `emptyText` (shown when the sentence is empty, default "Say what you need done first."). One per page: the first screen's single primary control (see *The work command* below) |
 | `notice` | `text` (in-text markup allowed); `tone` `info` (default) or `caution`; `title`. A short aside set apart from the prose (a data boundary, a pilot's limits, what the site records), rendered as a note with a toned left edge and its title, never colour alone |
 | `rules` | `items`, each `{ "title", "text" }` (a rule needs a title; `text` may carry in-text markup); `title`; `ordered` (default `true`: a numbered list; `false` for bullets). A block needs at least one titled item |
 | `supportRoute` | `label` (the route: the pilot channel, a mailbox); `href` (the label becomes a link; an off-site link opens in a new tab); `stopWhen` (a list of the situations in which to stop and ask); `reportFields` (a list of what a report should carry: the task type, the time, the status shown, what was expected); `routes`, each `{ "issue", "owner", "action", "kind" }` (a row needs an issue; a blank `owner` reads "not yet named"; `kind` is one of `identity`, `privacy`, `approval`, `claims`, `recovery`, `support` and lets the failure notice of a form page name the owner of an access failure (`identity`) or of anything else (`support`) without reading the row's wording; an unknown kind is dropped, the row stays). Rendered as a "Support" section with the two lists side by side and the routing rows as a description list, never a data grid element. Meant for the shared footer (below), so it is the same help in the same place on every page view (WCAG 2.2 3.2.6, Consistent Help) |
-| `piece` | `piece`: `home` (the five path cards and the resource strip; `pages` maps `idea`, `toolCheck`, `teamUsage`, `helpTraining`, `feedback`, `telemetry`, `admin`, `policy` to site paths or URLs) or `telemetry` (the operations snapshot; the instance's usage metrics provider applies) |
+| `piece` | `piece`: `home` (the five path cards and the resource strip; `pages` maps `idea`, `toolCheck`, `teamUsage`, `helpTraining`, `feedback`, `telemetry`, `admin`, `policy` to site paths or URLs), `telemetry` (the operations snapshot; the instance's usage metrics provider applies; an optional `kicker` replaces the strip's shipped "LIVE GOVERNANCE TELEMETRY" line and, only then, the tiles take their labels from `vocabulary.telemetry` by metric key, so the page names the feed and never a provider) or `myWork` (the signed-in person's own requests; see *My work* below) |
 
 `tone` on tiles and cards is `teal` (default), `blue`, `violet`, `gold` or `cyan`. Every `text`, `body`, `note` and
 `meta` string may carry in-text markup: `[label](href)`, `**bold**` and `*italic*` (flat, no nesting; anything
@@ -273,6 +274,22 @@ The legacy single-page view keeps its shipped acknowledgement and failure screen
 every submit as it always did, and gains one branch: a pending record reads "Saved but not yet confirmed." with the
 advice to open the form again and confirm with the same reference, never the "not created" heading above a record
 that may exist.
+
+**My work (since 1.0.0.13).** The `myWork` piece lists the signed-in person's own requests, and a `statusStrip`
+item of kind `myRequests` counts them. Both read the *AI CoE Pilot Intakes* list through one service created with
+the web part (`services/myWorkService.ts`): a single GET of
+`items?$filter=RequestorEmail eq '<email>'&$select=Id,Title,IntakeId,WorkflowType,Status,SubmittedAt,Modified&$orderby=SubmittedAt desc&$top=20`
+(apostrophes in the email doubled; the payload column is never asked for). Each row shows the workflow ("AI idea",
+"Help or training", …), the status as its plain wording in a pill with an icon shape ("Received", "In review",
+"Closed", "Needs attention", and the wording of the 26 canonical codes; the document's `vocabulary.requestStatuses`
+may rename a code, and an operator-plane page shows the code beside it), the reference for copying, and the dates
+("Sent Sep 1, 2026 · Updated Sep 2, 2026"; a missing date says so and is never invented). The filter is what the
+web part asks for; what the server returns is decided by the list's item-level read security, which the 1.0.0.13
+script makes effective (see *Deploy*): a site member sees their own rows and nothing else, and the piece shows
+exactly those. A refused read (401 or 403) shows the *Needs access* pill and "You cannot read the request list on
+this site."; a list that cannot be read at all (missing, a server failure, no network) shows "Status unavailable:
+the request list could not be read."; the strip shows its `unavailableText` in both cases and never a number the
+list did not give. Nothing here is an approval: the status is the list's word for where the request stands.
 
 The envelope may also carry four optional sections and a page may name its plane; each is lenient and a malformed one
 is dropped, never the document:
@@ -532,7 +549,7 @@ The shipped stylesheet is reproduced exactly (`styles/cssParity.test.ts` proves 
 
 ## Tests
 
-`npm test` runs 532 tests in seven layers: pure modules (branding, definitions, page views, the content document
+`npm test` runs 673 tests in seven layers: pure modules (branding, definitions, page views, the content document
 parser and markup, form engine, services, summaries), React Testing Library component and journey tests with fake
 services (including every content block), bundle-level lifecycle tests that
 load the built AMD bundle in a simulated SPFx host, a journey parity suite that plays every workflow through the

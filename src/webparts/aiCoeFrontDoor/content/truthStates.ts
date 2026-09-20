@@ -253,6 +253,40 @@ export function describeRequestStatus(status: unknown, plane: PagePlane, vocabul
   return plane === 'operator' && code !== '' ? `${plain} (${code})` : plain;
 }
 
+/** How a request status is drawn beside its plain wording: a pill tone and a shipped icon shape, so it never rests on colour alone. */
+export interface IRequestStatusLook {
+  tone: TruthTone;
+  /** Name of a shipped icon (see pageIcons.ts). */
+  icon: string;
+}
+
+/** Keyed by the default plain wording, so a vocabulary override renames a status without changing its look. */
+const REQUEST_STATUS_LOOKS: { [plain: string]: IRequestStatusLook } = {
+  [RECEIVED]: { tone: 'blue', icon: 'Inbox' },
+  Draft: { tone: 'blue', icon: 'Save' },
+  [IN_REVIEW]: { tone: 'amber', icon: 'Clock3' },
+  'We need a little more from you': { tone: 'amber', icon: 'CircleQuestionMark' },
+  [WAITING]: { tone: 'amber', icon: 'Clock3' },
+  [READY_FOR_DECISION]: { tone: 'amber', icon: 'Clock3' },
+  'Needs a re-check': { tone: 'amber', icon: 'RefreshCw' },
+  [CLOSED]: { tone: 'green', icon: 'Check' },
+  [DECIDED]: { tone: 'green', icon: 'CircleCheck' },
+  [UNDER_WAY]: { tone: 'green', icon: 'RefreshCw' },
+  [IN_USE]: { tone: 'green', icon: 'ShieldCheck' },
+  [NEEDS_ATTENTION]: { tone: 'red', icon: 'ShieldAlert' },
+  'Under way, at risk': { tone: 'red', icon: 'ShieldAlert' }
+};
+
+const UNKNOWN_STATUS_LOOK: IRequestStatusLook = { tone: 'amber', icon: 'CircleQuestionMark' };
+
+/** The look of a request status by its code; anything unknown is amber with a question mark (something to look at). */
+export function requestStatusLook(status: unknown): IRequestStatusLook {
+  const code: string = typeof status === 'string' ? status.trim() : '';
+  const plain: string | undefined = code === '' ? undefined : lookup(PLAIN_REQUEST_STATUS, code);
+  const look: IRequestStatusLook | undefined = plain === undefined ? undefined : REQUEST_STATUS_LOOKS[plain];
+  return look === undefined ? UNKNOWN_STATUS_LOOK : { tone: look.tone, icon: look.icon };
+}
+
 /** The states a program measure can be in. */
 export type KpiState = 'MEASURED' | 'NOT_ESTABLISHED' | 'PENDING_BASELINE' | 'NOT_AVAILABLE' | 'INSUFFICIENT_VOLUME';
 export const KPI_STATES: readonly KpiState[] = ['MEASURED', 'NOT_ESTABLISHED', 'PENDING_BASELINE', 'NOT_AVAILABLE', 'INSUFFICIENT_VOLUME'];

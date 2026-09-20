@@ -8,6 +8,7 @@ import { NoticeBlock } from './blocks/NoticeBlock';
 import { PieceBlock } from './blocks/PieceBlock';
 import { RulesBlock } from './blocks/RulesBlock';
 import { StatusRowBlock } from './blocks/StatusRowBlock';
+import { StatusStripBlock } from './blocks/StatusStripBlock';
 import { SupportRouteBlock } from './blocks/SupportRouteBlock';
 import { HeadingBlock, ParagraphBlock } from './blocks/TextBlocks';
 import { TilesBlock } from './blocks/TilesBlock';
@@ -36,6 +37,8 @@ export function renderBlock(block: PageBlock, drafts: DraftFlags): React.ReactEl
       return <LanesBlock block={block} />;
     case 'statusRow':
       return <StatusRowBlock block={block} />;
+    case 'statusStrip':
+      return <StatusStripBlock block={block} />;
     case 'workCommand':
       return <WorkCommandBlock block={block} />;
     case 'notice':

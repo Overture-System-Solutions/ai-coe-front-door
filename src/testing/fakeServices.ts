@@ -5,6 +5,7 @@
 import type { IBranding } from '../webparts/aiCoeFrontDoor/branding/branding';
 import type { IIdeaDraftResult, IIdeaDraftService } from '../webparts/aiCoeFrontDoor/services/draftService';
 import type { IDraftStore } from '../webparts/aiCoeFrontDoor/services/draftStorage';
+import type { IMyWorkResult, IMyWorkService } from '../webparts/aiCoeFrontDoor/services/myWorkService';
 import type { IPageContentResult, IPageContentService } from '../webparts/aiCoeFrontDoor/services/pageContentService';
 import { createToolPolicyEvaluator } from '../webparts/aiCoeFrontDoor/services/toolPolicyEvaluator';
 import type { IToolPolicyEvaluator } from '../webparts/aiCoeFrontDoor/services/toolPolicyEvaluator';
@@ -120,6 +121,29 @@ export function createFakePageContentService(result: IPageContentResult | Promis
 /** Never answers: for asserting the loading state of a content page. */
 export function createPendingPageContentService(): IFakePageContentService {
   return createFakePageContentService(new Promise<IPageContentResult>((): void => undefined));
+}
+
+export interface IFakeMyWorkService extends IMyWorkService {
+  calls: number;
+}
+
+export const EMPTY_MY_WORK_RESULT: IMyWorkResult = { state: 'ok', items: [], message: 'Read 0 requests.' };
+
+/** Resolves with `result` (a value or a promise the test controls) on every call; no requests by default. */
+export function createFakeMyWorkService(result: IMyWorkResult | Promise<IMyWorkResult> = EMPTY_MY_WORK_RESULT): IFakeMyWorkService {
+  const service: IFakeMyWorkService = {
+    calls: 0,
+    getMine: async (): Promise<IMyWorkResult> => {
+      service.calls += 1;
+      return result;
+    }
+  };
+  return service;
+}
+
+/** Never answers: for asserting the loading state of the my-work piece and the status strip. */
+export function createPendingMyWorkService(): IFakeMyWorkService {
+  return createFakeMyWorkService(new Promise<IMyWorkResult>((): void => undefined));
 }
 
 /** Draft store that keeps JSON copies in memory, so tests see exactly what localStorage would. */

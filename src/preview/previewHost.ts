@@ -6,6 +6,9 @@
  * list store. Every response is simulated and all external network access is blocked; nothing here
  * contacts a tenant. Compiled to lib/preview/previewHost.js and served as /host.js.
  *
+ * Query switches beside `view=` and `page=`: `deny=intakes` makes every read of the intake list answer
+ * 403, so the my-work piece and the status strip show their refused state.
+ *
  * Written without spread, rest or async/await on purpose: the ES5 build would otherwise import
  * tslib helpers, which a browser cannot resolve from a bare module specifier.
  */
@@ -133,6 +136,46 @@ function seedTelemetry(): void {
 }
 seedTelemetry();
 
+/** Fictional requests of the preview person, so the my-work piece and the status strip have rows to count. */
+function seedIntakes(): void {
+  const intakes: IPreviewItem[] = lists['AI CoE Pilot Intakes'];
+  const rows: { suffix: string; workflowType: string; status: string; daysAgo: number }[] = [
+    { suffix: 'PREVIEW1', workflowType: 'idea', status: 'Submitted - Pilot', daysAgo: 2 },
+    { suffix: 'PREVIEW2', workflowType: 'helpTraining', status: 'In Review - Pilot', daysAgo: 9 },
+    { suffix: 'PREVIEW3', workflowType: 'feedback', status: 'Closed - Pilot', daysAgo: 20 }
+  ];
+  for (let index: number = 0; index < rows.length; index++) {
+    const submitted: Date = new Date(Date.now() - rows[index].daysAgo * 86400000);
+    const intakeId: string = `OVT-AICOE-${submitted.toISOString().slice(0, 10).replace(/-/g, '')}-${rows[index].suffix}`;
+    intakes.push({
+      Id: nextId++,
+      Title: `${rows[index].workflowType} — ${intakeId}`,
+      IntakeId: intakeId,
+      WorkflowType: rows[index].workflowType,
+      Status: rows[index].status,
+      RequestorName: 'Local Preview (fictional)',
+      RequestorEmail: 'preview@example.invalid',
+      SubmittedAt: submitted.toISOString(),
+      Modified: new Date(submitted.getTime() + 3600000).toISOString(),
+      PayloadJson: '{"simulated":true}'
+    });
+  }
+  // Another person's row: the simulated item-level security below keeps it out of the preview person's reads.
+  intakes.push({
+    Id: nextId++,
+    Title: 'idea — OVT-AICOE-20260101-OTHERONE',
+    IntakeId: 'OVT-AICOE-20260101-OTHERONE',
+    WorkflowType: 'idea',
+    Status: 'Submitted - Pilot',
+    RequestorName: 'Someone Else (fictional)',
+    RequestorEmail: 'someone.else@example.invalid',
+    SubmittedAt: '2026-01-01T09:00:00Z',
+    Modified: '2026-01-01T09:00:00Z',
+    PayloadJson: '{"simulated":true}'
+  });
+}
+seedIntakes();
+
 /** A page of this preview showing another piece or content page. */
 function previewLink(query: string): string {
   return `/?${query}`;
@@ -150,6 +193,15 @@ const SAMPLE_PAGE_DOCUMENT: { [key: string]: unknown } = {
     // carriesReference: the hand-off card after a saved request would append the record reference once the route opens.
     assistant: { label: 'the assistant', href: 'https://assistant.example/chat', state: 'availableNow', carriesReference: true, note: 'Opens in a new tab once the tenant receipt is recorded.' },
     improve: { label: 'Improve a task', href: previewLink('view=toolCheck'), state: 'availableNow' }
+  },
+  // Telemetry tile labels by metric key: read only by a telemetry piece that names its own kicker, so the page names the feed.
+  vocabulary: {
+    telemetry: {
+      anthropic_api_spend_mtd: 'Usage feed A: spend this month',
+      anthropic_api_tokens_mtd: 'Usage feed A: tokens this month',
+      anthropic_api_output_tokens_mtd: 'Usage feed A: output tokens this month',
+      open_coe_alerts: 'Open incidents'
+    }
   },
   // The shared footer: the same support route below every page view, the five wizard views included (open "?view=idea").
   shared: {
@@ -240,10 +292,12 @@ const SAMPLE_PAGE_DOCUMENT: { [key: string]: unknown } = {
           ]
         },
         {
-          type: 'statusRow',
+          // The status strip: the person's own request counts (read from the simulated intake list; add "&deny=intakes" to see the refused state) beside two labelled lines.
+          type: 'statusStrip',
           items: [
-            { label: 'Status', text: 'Green. Nothing is blocked this week; see [Status](/?page=status).' },
-            { label: 'Support', text: 'Ask in [Teams](https://teams.microsoft.com/l/channel/contoso) or reply to any AI CoE mail.' }
+            { kind: 'myRequests', label: 'My requests', href: previewLink('page=status') },
+            { kind: 'text', label: 'Assistant', text: 'Answering from approved sources.', route: 'assistant' },
+            { kind: 'text', label: 'Support', text: 'Ask in [Teams](https://teams.microsoft.com/l/channel/contoso) or reply to any AI CoE mail.' }
           ]
         }
       ]
@@ -343,6 +397,8 @@ const SAMPLE_PAGE_DOCUMENT: { [key: string]: unknown } = {
       title: 'Status',
       blocks: [
         { type: 'paragraph', text: 'Updated every Friday by the AI CoE. Numbers below come from the simulated telemetry lists of this preview.' },
+        // The person's own requests, read from the simulated intake list (add "&deny=intakes" to see the refused state).
+        { type: 'piece', piece: 'myWork', pages: {} },
         {
           type: 'cards',
           columns: 2,
@@ -351,7 +407,8 @@ const SAMPLE_PAGE_DOCUMENT: { [key: string]: unknown } = {
             { title: 'What is not running', body: ['**Agents** are still in review.', '**Connectors to line-of-business systems** are not enabled.'], tone: 'cyan' }
           ]
         },
-        { type: 'piece', piece: 'telemetry', pages: {} },
+        // The kicker names the strip as diagnostics; with it set, the tiles take their labels from the document's vocabulary above.
+        { type: 'piece', piece: 'telemetry', pages: {}, kicker: 'Diagnostics: usage feeds (simulated)' },
         {
           type: 'cards',
           columns: 2,
@@ -427,7 +484,11 @@ function request(method: 'GET' | 'POST', url: string, options: { body?: string }
   let status: number = 200;
   const itemMatch: RegExpMatchArray | null = String(url).match(/\/items\((\d+)\)/);
   const filterMatch: RegExpMatchArray | null = String(url).match(/[?&]\$filter=([^&]*)/);
-  if (method === 'POST') {
+  if (method === 'GET' && list === 'AI CoE Pilot Intakes' && location.search.indexOf('deny=intakes') >= 0) {
+    // "?deny=intakes": the list refuses every read, as it does for a person without permission on it.
+    result = 'Access denied (simulated)';
+    status = 403;
+  } else if (method === 'POST') {
     const item: IPreviewItem = Object.assign({}, body as object, { Id: nextId++ }) as IPreviewItem;
     lists[list].push(item);
     result = item;
@@ -439,11 +500,14 @@ function request(method: 'GET' | 'POST', url: string, options: { body?: string }
     result = found === undefined ? 'Item does not exist' : found;
     status = found === undefined ? 404 : 200;
   } else if (filterMatch !== null) {
-    // The pre-read of a retry: a one-field `<Field> eq '<value>'` filter; any other shape matches nothing.
+    // The pre-read of a retry and the my-work read: a one-field `<Field> eq '<value>'` filter; any other shape matches
+    // nothing. The intake list also simulates item-level read security: only the preview person's own rows come back.
     const clause: RegExpExecArray | null = /^\s*([A-Za-z_][A-Za-z0-9_]*)\s+eq\s+'((?:[^']|'')*)'\s*$/.exec(decodeURIComponent(filterMatch[1]));
     const rows: IPreviewItem[] =
       clause === null ? [] : lists[list].filter((item: IPreviewItem): boolean => item[clause[1]] !== undefined && String(item[clause[1]]) === clause[2].replace(/''/g, "'"));
-    result = { value: rows };
+    const visible: IPreviewItem[] =
+      list === 'AI CoE Pilot Intakes' ? rows.filter((item: IPreviewItem): boolean => item.RequestorEmail === undefined || item.RequestorEmail === 'preview@example.invalid') : rows;
+    result = { value: visible };
   } else {
     result = { value: lists[list].slice() };
   }

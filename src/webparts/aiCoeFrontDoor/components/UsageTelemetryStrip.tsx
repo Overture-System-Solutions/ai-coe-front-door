@@ -4,6 +4,17 @@ import type { ITelemetryAlertsCopy, ITelemetryTile } from '../content/telemetryT
 import { useFrontDoor } from '../context/FrontDoorContext';
 import { CircleCheck } from '../icons';
 import type { IUsageAlert, IUsageMetric, IUsageMetricsResult } from '../services/types';
+import { usePageDocument } from './pages/PageDocumentContext';
+
+export interface IUsageTelemetryStripProps {
+  /**
+   * The small line above the heading. Blank keeps the shipped line; a page that names one also names
+   * its tiles through `vocabulary.telemetry` (by metric key), so the page names the feed, never a provider.
+   */
+  kicker?: string;
+}
+
+export const DEFAULT_TELEMETRY_KICKER: string = 'LIVE GOVERNANCE TELEMETRY';
 
 interface ITelemetryState {
   loading: boolean;
@@ -85,12 +96,18 @@ function connectionLabel(state: ITelemetryState): string {
  * feed (four for one provider, seven for both) and open alerts. The service always returns every
  * feed it finds; the mode only decides which tiles are shown.
  */
-export function UsageTelemetryStrip(): React.ReactElement {
+export function UsageTelemetryStrip({ kicker }: IUsageTelemetryStripProps = {}): React.ReactElement {
   const { services, telemetryProvider } = useFrontDoor();
+  const { vocabulary } = usePageDocument();
   const { usage } = services;
   const tiles: ITelemetryTile[] = telemetryTilesFor(telemetryProvider);
   const alertsCopy: ITelemetryAlertsCopy = TELEMETRY_ALERTS_COPY[telemetryProvider];
   const [state, setState] = React.useState<ITelemetryState>(INITIAL_STATE);
+  const pageKicker: string = typeof kicker === 'string' ? kicker.trim() : '';
+  const kickerText: string = pageKicker === '' ? DEFAULT_TELEMETRY_KICKER : pageKicker;
+  // Only a page that names its own kicker names its tiles; the legacy landing page keeps the feed labels verbatim.
+  const tileLabel = (tile: ITelemetryTile, item: IUsageMetric | undefined): string =>
+    pageKicker !== '' && Object.prototype.hasOwnProperty.call(vocabulary.telemetry, tile.key) ? vocabulary.telemetry[tile.key] : item?.metricLabel || tile.label;
 
   React.useEffect((): (() => void) => {
     let cancelled: boolean = false;
@@ -119,7 +136,7 @@ export function UsageTelemetryStrip(): React.ReactElement {
     <section className="ai-usage-section" aria-labelledby="ai-usage-heading">
       <div className="ai-usage-heading-row">
         <div>
-          <span className="ai-usage-kicker">LIVE GOVERNANCE TELEMETRY</span>
+          <span className="ai-usage-kicker">{kickerText}</span>
           <h2 id="ai-usage-heading">AI operations snapshot</h2>
         </div>
         <span className={`ai-usage-connection ${state.connected ? 'is-connected' : ''}`}>{connectionLabel(state)}</span>
@@ -131,7 +148,7 @@ export function UsageTelemetryStrip(): React.ReactElement {
           return (
             <article key={tile.key} className={`ai-metric-card ai-metric-card--${tile.tone}`}>
               <div className="ai-metric-topline">
-                <span className="ai-metric-label">{item?.metricLabel || tile.label}</span>
+                <span className="ai-metric-label">{tileLabel(tile, item)}</span>
                 <span className={`ai-metric-status ${pending ? 'is-pending' : 'is-current'}`}>{pending ? 'Pending' : item?.dataStatus || 'Current'}</span>
               </div>
               <strong className={`ai-metric-value ${pending ? 'is-pending' : ''}`}>{state.loading ? 'Loading…' : formatMetricValue(item)}</strong>

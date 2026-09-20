@@ -230,6 +230,37 @@ describe('Page view stylesheet', () => {
     expect(rule(table, '.ai-view--narrow .ai-page-support-row')).toEqual(['grid-template-columns:1fr']);
   });
 
+  it('draws the my-work rows and the status strip on the card surface with the shipped inks', () => {
+    expect(rule(table, '.ai-view--page .ai-page-mywork-title')).toEqual(['color:#10243e', 'font-size:20px', 'font-weight:700', 'line-height:1.3', 'margin:0 0 10px']);
+    expect(rule(table, '.ai-view--page .ai-page-mywork-list')).toEqual(['display:grid', 'gap:10px', 'margin:0']);
+    expect(rule(table, '.ai-view--page .ai-mywork-row')).toEqual([
+      'background:#fff',
+      'border-left:5px solid #07878a',
+      'border-radius:13px',
+      'border:1px solid #dbe5ec',
+      'color:#2b3d52',
+      'font-size:15px',
+      'line-height:1.5',
+      'padding:12px 16px'
+    ]);
+    expect(rule(table, '.ai-view--page .ai-mywork-head')).toEqual(['align-items:center', 'display:flex', 'flex-wrap:wrap', 'gap:8px 12px', 'margin:0 0 4px']);
+    expect(rule(table, '.ai-view--page .ai-mywork-label')).toEqual(['color:#10243e', 'font-weight:700']);
+    expect(rule(table, '.ai-view--page .ai-mywork-reference')).toEqual(['margin:0 0 4px']);
+    expect(rule(table, '.ai-view--page .ai-mywork-key')).toEqual(['color:#5b6878', 'font-size:13px', 'font-weight:700', 'letter-spacing:0.03em', 'text-transform:uppercase']);
+    expect(rule(table, '.ai-view--page .ai-mywork-row code')).toEqual(['background:#e5ebf0', 'border-radius:6px', 'color:#10243e', 'font-family:consolas, menlo, monospace', 'font-size:14px', 'padding:1px 6px']);
+    expect(rule(table, '.ai-view--page .ai-mywork-dates')).toEqual(['color:#5b6878', 'font-size:13px', 'margin:0']);
+    expect(rule(table, '.ai-view--page .ai-mywork-note')).toEqual(['color:#2b3d52', 'font-size:15px', 'line-height:1.5', 'margin:0']);
+    // The strip: short labelled lines in a fluid row, each at least a line of the status-row size; the request counts are a link.
+    expect(rule(table, '.ai-view--page .ai-page-strip')).toEqual(['display:grid', 'gap:12px 24px', 'grid-template-columns:repeat(auto-fit, minmax(220px, 1fr))']);
+    expect(rule(table, '.ai-view--page .ai-page-strip-item')).toEqual(['color:#2b3d52', 'font-size:15px', 'line-height:1.5', 'margin:0']);
+    expect(rule(table, '.ai-view--page .ai-page-strip-item strong')).toEqual(['color:#10243e']);
+    expect(rule(table, '.ai-view--page .ai-page-strip a')).toEqual(['color:#076874', 'font-weight:600', 'text-decoration:underline']);
+    for (const colour of ['#07878a', '#dbe5ec', '#10243e', '#5b6878', '#076874', '#e5ebf0']) {
+      expect(shipped.indexOf(colour)).toBeGreaterThan(-1);
+    }
+    expect(rule(table, '.ai-view--narrow .ai-page-strip')).toEqual(['grid-template-columns:1fr']);
+  });
+
   it('draws the page-view chrome: the header line and the identity line, in every page view', () => {
     // The header keeps the shipped workflow header's size and weight; the identity line is quiet, in the shipped muted ink.
     expect(rule(table, '.ai-view .ai-page-header')).toEqual(['margin:0']);

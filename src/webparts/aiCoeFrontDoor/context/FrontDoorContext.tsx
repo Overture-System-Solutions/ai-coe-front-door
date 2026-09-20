@@ -3,6 +3,7 @@ import type { IBranding } from '../branding/branding';
 import type { TelemetryProvider } from '../content/telemetryTiles';
 import type { IIdeaDraftService } from '../services/draftService';
 import type { IDraftStore } from '../services/draftStorage';
+import type { IMyWorkService } from '../services/myWorkService';
 import type { Navigate } from '../services/navigation';
 import type { IPageContentService } from '../services/pageContentService';
 import type { IToolPolicyEvaluator } from '../services/toolPolicyEvaluator';
@@ -23,6 +24,8 @@ export interface IFrontDoorServices {
   ideaDrafts?: IIdeaDraftService;
   /** Reads the page content document; present for web parts, absent in the legacy-only test setups. */
   pageContent?: IPageContentService;
+  /** Reads the person's own requests; present for web parts, absent in the legacy-only test setups (the pieces then report the list as unavailable). */
+  myWork?: IMyWorkService;
 }
 
 /** Everything the pages need from the host: who is looking, where they are, and the services to talk to. */

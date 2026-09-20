@@ -7,6 +7,7 @@ import { useFrontDoor } from '../../../context/FrontDoorContext';
 import { HomePage } from '../../HomePage';
 import type { DraftFlags } from '../../LandingPage';
 import { UsageTelemetryStrip } from '../../UsageTelemetryStrip';
+import { MyWork } from '../MyWork';
 
 export interface IPieceBlockProps {
   block: IPieceBlock;
@@ -15,14 +16,18 @@ export interface IPieceBlockProps {
 }
 
 /**
- * A front-door piece between the content blocks: the home tiles (one per page) or the telemetry strip.
- * The page links come from the document, so each passes the same href guard as every other block link:
- * a blank target is no tile, a forbidden scheme or a protocol-less host is a dead anchor.
+ * A front-door piece between the content blocks: the home tiles (one per page), the telemetry strip
+ * (with the document's kicker when it names one) or the person's own requests. The page links come
+ * from the document, so each passes the same href guard as every other block link: a blank target is
+ * no tile, a forbidden scheme or a protocol-less host is a dead anchor.
  */
 export function PieceBlock({ block, drafts }: IPieceBlockProps): React.ReactElement {
   const { siteUrl } = useFrontDoor();
   if (block.piece === 'telemetry') {
-    return <UsageTelemetryStrip />;
+    return <UsageTelemetryStrip kicker={block.kicker} />;
+  }
+  if (block.piece === 'myWork') {
+    return <MyWork />;
   }
   const pages: PageLinks = {};
   for (const target of PAGE_TARGETS) {

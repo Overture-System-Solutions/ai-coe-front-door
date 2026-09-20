@@ -15,11 +15,14 @@ import {
   describeRequestStatus,
   kpiPlaceholderLabel,
   readState,
+  requestStatusLook,
   toPlainRequestStatus,
   truthStateDefinition,
   truthStateLabel
 } from './truthStates';
-import type { ActivationCode, ChromePillKey, TruthStateKey } from './truthStates';
+import type { ActivationCode, ChromePillKey, IRequestStatusLook, TruthStateKey } from './truthStates';
+import { pageIcon } from './pageIcons';
+import { Lightbulb } from '../icons';
 import type { IVocabulary } from './pageContent';
 
 const GENERATED_STYLESHEET: string = path.resolve(process.cwd(), 'src/webparts/aiCoeFrontDoor/styles/tailwind.generated.global.scss');
@@ -184,6 +187,42 @@ describe('plain request statuses', () => {
     expect(describeRequestStatus('bogus', 'operator')).toBe('Status unavailable (bogus)');
     expect(describeRequestStatus('', 'operator')).toBe('Status unavailable');
     expect(describeRequestStatus(undefined, 'user')).toBe('Status unavailable');
+  });
+
+  it('gives every status a pill tone and a shipped icon shape, so a status never rests on colour alone', () => {
+    const expectedTones: { [code: string]: IRequestStatusLook['tone'] } = {
+      'Submitted - Pilot': 'blue',
+      READY_FOR_TRIAGE: 'blue',
+      DRAFT: 'blue',
+      'In Review - Pilot': 'amber',
+      EVIDENCE_BUILDING: 'amber',
+      CLARIFYING: 'amber',
+      AWAITING_SME: 'amber',
+      READY_FOR_ELT: 'amber',
+      REVALIDATION_REQUIRED: 'amber',
+      'Closed - Pilot': 'green',
+      RETIRED: 'green',
+      APPROVED: 'green',
+      REJECTED: 'green',
+      IN_DELIVERY: 'green',
+      OPERATING: 'green',
+      'Test Failed': 'red',
+      BLOCKED: 'red',
+      AT_RISK: 'red'
+    };
+    for (const code of Object.keys(expectedTones)) {
+      expect({ code, tone: requestStatusLook(code).tone }).toEqual({ code, tone: expectedTones[code] });
+    }
+    for (const code of PILOT_STATUSES.concat(CANONICAL_STATUS)) {
+      const look: IRequestStatusLook = requestStatusLook(code);
+      expect(['green', 'blue', 'amber', 'red']).toContain(look.tone);
+      // An unknown icon name would fall back to the light bulb; every status names a shipped icon.
+      expect(pageIcon(look.icon)).not.toBe(Lightbulb);
+    }
+    // Anything unknown is amber with a question mark: something to look at, not a failure and not a success.
+    expect(requestStatusLook('bogus')).toEqual({ tone: 'amber', icon: 'CircleQuestionMark' });
+    expect(requestStatusLook(undefined)).toEqual({ tone: 'amber', icon: 'CircleQuestionMark' });
+    expect(requestStatusLook(' Submitted - Pilot ')).toEqual({ tone: 'blue', icon: 'Inbox' });
   });
 });
 

@@ -31,6 +31,7 @@ import type {
   IPieceBlock,
   IRulesBlock,
   ISharedSections,
+  IStatusStripBlock,
   ISupportRouteBlock,
   ITilesBlock,
   IVocabulary,
@@ -523,7 +524,7 @@ describe('blocks', () => {
     expect(parseBlock({ type: 'supportRoute' })).toBeUndefined();
   });
 
-  it('reads the two embeddable pieces and keeps only known page targets', () => {
+  it('reads the three embeddable pieces and keeps only known page targets', () => {
     const home: IPieceBlock = parseBlock({
       type: 'piece',
       piece: 'home',
@@ -532,8 +533,55 @@ describe('blocks', () => {
     expect(home).toEqual({ type: 'piece', piece: 'home', pages: { idea: 'SitePages/Idea.aspx', admin: 'SitePages/Admin.aspx' } });
     expect(parseBlock({ type: 'piece', piece: 'telemetry', pages: { idea: 'x' } })).toEqual({ type: 'piece', piece: 'telemetry', pages: {} });
     expect(parseBlock({ type: 'piece', piece: 'home' })).toEqual({ type: 'piece', piece: 'home', pages: {} });
+    expect(parseBlock({ type: 'piece', piece: 'myWork', pages: { idea: 'x' } })).toEqual({ type: 'piece', piece: 'myWork', pages: {} });
     expect(parseBlock({ type: 'piece', piece: 'admin' })).toBeUndefined();
     expect(parseBlock({ type: 'piece' })).toBeUndefined();
+  });
+
+  it('reads a kicker on the telemetry piece only', () => {
+    expect(parseBlock({ type: 'piece', piece: 'telemetry', kicker: ' Diagnostics: usage feed ' })).toEqual({ type: 'piece', piece: 'telemetry', pages: {}, kicker: 'Diagnostics: usage feed' });
+    expect(parseBlock({ type: 'piece', piece: 'telemetry', kicker: '   ' })).toEqual({ type: 'piece', piece: 'telemetry', pages: {} });
+    expect(parseBlock({ type: 'piece', piece: 'telemetry', kicker: 7 })).toEqual({ type: 'piece', piece: 'telemetry', pages: {} });
+    expect(parseBlock({ type: 'piece', piece: 'home', kicker: 'x' })).toEqual({ type: 'piece', piece: 'home', pages: {} });
+    expect(parseBlock({ type: 'piece', piece: 'myWork', kicker: 'x' })).toEqual({ type: 'piece', piece: 'myWork', pages: {} });
+  });
+
+  it('reads a status strip of request counts and labelled lines, filling the two default texts', () => {
+    const strip: IStatusStripBlock = parseBlock({
+      type: 'statusStrip',
+      items: [
+        { kind: 'myRequests', label: ' My requests ', href: ' SitePages/Status.aspx ' },
+        { label: 'Assistant', text: 'Answering from approved sources.', state: ' AVAILABLE ', route: ' assistant ', asOf: '2026-09-01', source: ' Tenant read-back ' },
+        { kind: 'text', label: 'Prompts', text: 'All draft.', state: 'bogus', asOf: '2026-9-1', source: '  ' },
+        { kind: 'text', label: 'No text' },
+        { kind: 'myRequests', text: 'No label' },
+        { kind: 'cases', label: 'Unknown kind', text: 'x' },
+        'text'
+      ]
+    }) as IStatusStripBlock;
+    expect(strip).toEqual({
+      type: 'statusStrip',
+      items: [
+        { kind: 'myRequests', label: 'My requests', href: 'SitePages/Status.aspx' },
+        { kind: 'text', label: 'Assistant', text: 'Answering from approved sources.', state: 'AVAILABLE', route: 'assistant', asOf: '2026-09-01', source: 'Tenant read-back' },
+        { kind: 'text', label: 'Prompts', text: 'All draft.' }
+      ],
+      emptyText: 'No requests from you yet.',
+      unavailableText: 'Status unavailable: the request list could not be read.'
+    });
+    expect(
+      parseBlock({ type: 'statusStrip', items: [{ kind: 'myRequests', label: 'Mine', text: 'Yours:' }], emptyText: ' Nothing yet. ', unavailableText: ' Not now. ' })
+    ).toEqual({
+      type: 'statusStrip',
+      items: [{ kind: 'myRequests', label: 'Mine', text: 'Yours:' }],
+      emptyText: 'Nothing yet.',
+      unavailableText: 'Not now.'
+    });
+    expect(parseBlock({ type: 'statusStrip', items: [] })).toBeUndefined();
+    expect(parseBlock({ type: 'statusStrip', items: [{ kind: 'text', label: 'x' }] })).toBeUndefined();
+    expect(parseBlock({ type: 'statusStrip' })).toBeUndefined();
+    // The strip may sit in the shared footer; the pieces still may not.
+    expect(parseShared({ footer: [{ type: 'statusStrip', items: [{ kind: 'myRequests', label: 'Mine' }] }, { type: 'piece', piece: 'myWork' }] }).footer.map((block): string => block.type)).toEqual(['statusStrip']);
   });
 });
 

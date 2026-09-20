@@ -177,16 +177,45 @@ export interface IStatusRowBlock {
   items: IStatusItem[];
 }
 
-/** The two front-door pieces a content page can embed between its blocks. */
-export type PieceKind = 'home' | 'telemetry';
-export const PIECE_KINDS: readonly PieceKind[] = ['home', 'telemetry'];
+/** The three front-door pieces a content page can embed between its blocks: the home tiles, the telemetry strip, the person's own requests. */
+export type PieceKind = 'home' | 'telemetry' | 'myWork';
+export const PIECE_KINDS: readonly PieceKind[] = ['home', 'telemetry', 'myWork'];
 
 export interface IPieceBlock {
   type: 'piece';
   piece: PieceKind;
   /** Where the home tiles lead, as written in the document (site paths or full URLs). */
   pages: PageLinks;
+  /** Telemetry only: the small line above the strip's heading, replacing the shipped one; the tile labels then come from `vocabulary.telemetry`. */
+  kicker?: string;
 }
+
+/** What a status strip item is: the count of the person's own requests, or a labelled line like a status row's. */
+export type StatusStripItemKind = 'myRequests' | 'text';
+export const STATUS_STRIP_ITEM_KINDS: readonly StatusStripItemKind[] = ['myRequests', 'text'];
+
+export interface IStatusStripItem extends IActionFields, IFactFields {
+  kind: StatusStripItemKind;
+  label: string;
+  /** The line's text (required for a `text` item; a lead before the counts on a `myRequests` item); in-text markup allowed. */
+  text?: string;
+}
+
+/**
+ * Short labelled lines side by side on the first screen, one of which may count the person's own
+ * requests by plain status (read from the request list, never a number when the list cannot be read).
+ */
+export interface IStatusStripBlock {
+  type: 'statusStrip';
+  items: IStatusStripItem[];
+  /** Shown for the request count when the person has sent nothing. */
+  emptyText: string;
+  /** Shown for the request count when the list cannot be read. */
+  unavailableText: string;
+}
+
+export const DEFAULT_STATUS_STRIP_EMPTY_TEXT: string = 'No requests from you yet.';
+export const DEFAULT_STATUS_STRIP_UNAVAILABLE_TEXT: string = 'Status unavailable: the request list could not be read.';
 
 /**
  * The first screen's one command: a sentence about the work to be done, saved as the idea draft and
@@ -275,7 +304,20 @@ export interface ISupportRouteBlock {
   routes: ISupportRouteItem[];
 }
 
-export type PageBlock = IHeroBlock | IHeadingBlock | IParagraphBlock | ITilesBlock | ICardsBlock | ILanesBlock | IStatusRowBlock | IPieceBlock | IWorkCommandBlock | INoticeBlock | IRulesBlock | ISupportRouteBlock;
+export type PageBlock =
+  | IHeroBlock
+  | IHeadingBlock
+  | IParagraphBlock
+  | ITilesBlock
+  | ICardsBlock
+  | ILanesBlock
+  | IStatusRowBlock
+  | IStatusStripBlock
+  | IPieceBlock
+  | IWorkCommandBlock
+  | INoticeBlock
+  | IRulesBlock
+  | ISupportRouteBlock;
 
 export interface IContentPage {
   title: string;
@@ -479,7 +521,39 @@ function parsePiece(raw: Raw): IPieceBlock | undefined {
   if (piece === undefined) {
     return undefined;
   }
-  return { type: 'piece', piece, pages: piece === 'home' ? readPageLinks(raw.pages) : {} };
+  const block: IPieceBlock = { type: 'piece', piece, pages: piece === 'home' ? readPageLinks(raw.pages) : {} };
+  if (piece === 'telemetry') {
+    setOptional(block, 'kicker', readText(raw.kicker));
+  }
+  return block;
+}
+
+function readStatusStripItem(raw: Raw): IStatusStripItem | undefined {
+  const label: string | undefined = readText(raw.label);
+  const kind: StatusStripItemKind | undefined = raw.kind === undefined ? 'text' : readTone(STATUS_STRIP_ITEM_KINDS, raw.kind);
+  const text: string | undefined = readText(raw.text);
+  if (label === undefined || kind === undefined || (kind === 'text' && text === undefined)) {
+    return undefined;
+  }
+  const item: IStatusStripItem = { kind, label };
+  setOptional(item, 'text', text);
+  readActionFields(item, raw);
+  readFactFields(item, raw);
+  return item;
+}
+
+/** The status strip: needs at least one well-formed item; the two texts for the request count fall back to their defaults. */
+export function parseStatusStrip(raw: Raw): IStatusStripBlock | undefined {
+  const items: IStatusStripItem[] = readItems(raw.items, readStatusStripItem);
+  if (items.length === 0) {
+    return undefined;
+  }
+  return {
+    type: 'statusStrip',
+    items,
+    emptyText: readText(raw.emptyText) ?? DEFAULT_STATUS_STRIP_EMPTY_TEXT,
+    unavailableText: readText(raw.unavailableText) ?? DEFAULT_STATUS_STRIP_UNAVAILABLE_TEXT
+  };
 }
 
 /** The work command: needs a prompt; the submit label, the route and the empty-sentence text fall back to their defaults. */
@@ -595,6 +669,8 @@ export function parseBlock(value: unknown): PageBlock | undefined {
       return parseLanes(raw);
     case 'statusRow':
       return parseStatusRow(raw);
+    case 'statusStrip':
+      return parseStatusStrip(raw);
     case 'piece':
       return parsePiece(raw);
     case 'workCommand':

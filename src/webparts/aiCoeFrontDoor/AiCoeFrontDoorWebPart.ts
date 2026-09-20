@@ -31,6 +31,7 @@ import type { IDraftHttpClient } from './services/draftService';
 import { browserLocalStorage, LocalStorageDraftStore } from './services/draftStorage';
 import { createFlowClientFactory } from './services/flowClient';
 import { GovernanceService } from './services/GovernanceService';
+import { MyWorkService } from './services/myWorkService';
 import { browserNavigate } from './services/navigation';
 import { PageContentService } from './services/pageContentService';
 import { createToolPolicyEvaluator } from './services/toolPolicyEvaluator';
@@ -53,6 +54,7 @@ export interface IAiCoeFrontDoorWebPartProps extends IPageViewProperties {
 interface ICoreServices {
   governance: GovernanceService;
   usage: UsageMetricsService;
+  myWork: MyWorkService;
   draftStore: LocalStorageDraftStore;
   flowClient: () => Promise<IDraftHttpClient>;
   user: IFrontDoorUser;
@@ -74,10 +76,11 @@ export default class AiCoeFrontDoorWebPart extends BaseClientSideWebPart<IAiCoeF
       client: this.context.spHttpClient,
       configuration: SPHttpClient.configurations.v1
     };
-    // Both services are created once here; the shipped build rebuilt the telemetry service on every render.
+    // The list services are created once here; the shipped build rebuilt the telemetry service on every render.
     this._core = {
       governance: new GovernanceService(serviceContext),
       usage: new UsageMetricsService(serviceContext),
+      myWork: new MyWorkService(serviceContext),
       draftStore: new LocalStorageDraftStore(browserLocalStorage()),
       flowClient: createFlowClientFactory(this.context.aadHttpClientFactory),
       user: serviceContext.user,
@@ -292,6 +295,7 @@ export default class AiCoeFrontDoorWebPart extends BaseClientSideWebPart<IAiCoeF
       this._services = {
         governance: core.governance,
         usage: core.usage,
+        myWork: core.myWork,
         draftStore: core.draftStore,
         toolPolicyEvaluator: createToolPolicyEvaluator(branding),
         ideaDrafts: createIdeaDraftService(draftServiceUrl, core.flowClient),

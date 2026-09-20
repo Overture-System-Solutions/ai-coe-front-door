@@ -3,7 +3,7 @@ import type { RenderResult } from '@testing-library/react';
 import * as React from 'react';
 import { createBranding } from '../webparts/aiCoeFrontDoor/branding/branding';
 import type { IBranding } from '../webparts/aiCoeFrontDoor/branding/branding';
-import type { ISharedSections, PagePlane } from '../webparts/aiCoeFrontDoor/content/pageContent';
+import type { ISharedSections, IVocabulary, PagePlane } from '../webparts/aiCoeFrontDoor/content/pageContent';
 import type { TelemetryProvider } from '../webparts/aiCoeFrontDoor/content/telemetryTiles';
 import type { RouteTable } from '../webparts/aiCoeFrontDoor/content/routes';
 import { createWorkflowCatalog } from '../webparts/aiCoeFrontDoor/content/workflows/catalog';
@@ -12,6 +12,7 @@ import { FrontDoorProvider } from '../webparts/aiCoeFrontDoor/context/FrontDoorC
 import type { IFrontDoorContextValue, IFrontDoorUser } from '../webparts/aiCoeFrontDoor/context/FrontDoorContext';
 import { SubmissionProvider } from '../webparts/aiCoeFrontDoor/context/SubmissionContext';
 import type { IIdeaDraftService } from '../webparts/aiCoeFrontDoor/services/draftService';
+import type { IMyWorkService } from '../webparts/aiCoeFrontDoor/services/myWorkService';
 import type { IPageContentService } from '../webparts/aiCoeFrontDoor/services/pageContentService';
 import type { IToolPolicyEvaluator } from '../webparts/aiCoeFrontDoor/services/toolPolicyEvaluator';
 import type { IUsageMetricsService } from '../webparts/aiCoeFrontDoor/services/types';
@@ -38,6 +39,10 @@ export interface ITestFrontDoorOptions {
   ideaDrafts?: IIdeaDraftService;
   /** Absent by default; content pages report the document as unavailable without it. */
   pageContent?: IPageContentService;
+  /** Absent by default; the my-work piece and the status strip report the request list as unavailable without it. */
+  myWork?: IMyWorkService;
+  /** The document's wording overrides the blocks read; the defaults unless given. */
+  vocabulary?: IVocabulary;
   /** Records where page views navigate to; a fresh mock unless given. */
   navigate?: jest.Mock;
   /** The clock the page document context hands to the blocks; the moment of rendering unless given. */
@@ -80,7 +85,8 @@ export function createTestFrontDoor(options: ITestFrontDoorOptions = {}): ITestF
       draftStore,
       toolPolicyEvaluator: options.toolPolicyEvaluator ?? createImmediateEvaluator(branding),
       ideaDrafts: options.ideaDrafts,
-      pageContent: options.pageContent
+      pageContent: options.pageContent,
+      myWork: options.myWork
     },
     navigate,
     pageView: options.pageView ?? false
@@ -96,7 +102,9 @@ export function renderWithFrontDoor(ui: React.ReactElement, options: ITestFrontD
   const result: RenderResult = render(
     <FrontDoorProvider value={testFrontDoor.value}>
       <SubmissionProvider governanceService={testFrontDoor.governance}>
-        <PageDocumentProvider value={createPageDocumentContext({ now: options.now, routes: options.routes, roles: options.roles, shared: options.shared, plane: options.plane })}>
+        <PageDocumentProvider
+          value={createPageDocumentContext({ now: options.now, routes: options.routes, roles: options.roles, shared: options.shared, plane: options.plane, vocabulary: options.vocabulary })}
+        >
           {ui}
         </PageDocumentProvider>
       </SubmissionProvider>

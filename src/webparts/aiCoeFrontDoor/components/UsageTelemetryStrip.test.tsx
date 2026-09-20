@@ -4,7 +4,8 @@ import { createDeferred, createFakeUsageService } from '../../../testing/fakeSer
 import type { IDeferred } from '../../../testing/fakeServices';
 import { renderWithFrontDoor } from '../../../testing/renderWithFrontDoor';
 import type { IUsageAlert, IUsageMetric, IUsageMetricsResult } from '../services/types';
-import { formatDelta, formatMetricValue, formatRefreshedAt, truncateDetails, UsageTelemetryStrip } from './UsageTelemetryStrip';
+import type { IVocabulary } from '../content/pageContent';
+import { DEFAULT_TELEMETRY_KICKER, formatDelta, formatMetricValue, formatRefreshedAt, truncateDetails, UsageTelemetryStrip } from './UsageTelemetryStrip';
 
 function metric(overrides: Partial<IUsageMetric>): IUsageMetric {
   return {
@@ -228,6 +229,33 @@ describe('UsageTelemetryStrip', () => {
     expect(screen.getByText('OpenAI API spend this month')).toBeInTheDocument();
     expect(screen.getByText('AI CoE alerts and ChatGPT / Work overages')).toBeInTheDocument();
     expect(screen.getByText('No open API, ChatGPT, or Work overage alerts.')).toBeInTheDocument();
+  });
+
+  it('keeps the shipped kicker by default and takes a kicker from the page, reading tile labels from the vocabulary only then', async () => {
+    expect(DEFAULT_TELEMETRY_KICKER).toBe('LIVE GOVERNANCE TELEMETRY');
+    const vocabulary: IVocabulary = { truthStates: {}, requestStatuses: {}, chrome: {}, roles: {}, telemetry: { anthropic_api_spend_mtd: 'Usage feed spend this month', open_coe_alerts: 'Open incidents' } };
+    const result: IUsageMetricsResult = {
+      connected: true,
+      message: 'ok',
+      alerts: [],
+      metrics: [metric({ metricKey: 'anthropic_api_spend_mtd', metricLabel: 'Claude API spend this month', provider: 'anthropic', unit: 'USD', currentValue: 42.5 })]
+    };
+    // A blank kicker is no kicker: the shipped line and the feed labels stay, even with a vocabulary present.
+    const plain = renderWithFrontDoor(<UsageTelemetryStrip kicker="  " />, { usage: createFakeUsageService(result), telemetryProvider: 'claude', vocabulary });
+    await flush();
+    expect(screen.getByText('LIVE GOVERNANCE TELEMETRY')).toHaveClass('ai-usage-kicker');
+    expect(screen.getByText('Claude API spend this month')).toHaveClass('ai-metric-label');
+    plain.unmount();
+    renderWithFrontDoor(<UsageTelemetryStrip kicker="Diagnostics: usage feed" />, { usage: createFakeUsageService(result), telemetryProvider: 'claude', vocabulary });
+    await flush();
+    expect(screen.getByText('Diagnostics: usage feed')).toHaveClass('ai-usage-kicker');
+    expect(screen.queryByText('LIVE GOVERNANCE TELEMETRY')).not.toBeInTheDocument();
+    expect(screen.getByText('Usage feed spend this month')).toHaveClass('ai-metric-label');
+    expect(screen.getByText('Open incidents')).toHaveClass('ai-metric-label');
+    expect(screen.queryByText('Claude API spend this month')).not.toBeInTheDocument();
+    expect(screen.getByText('Claude API tokens this month')).toBeInTheDocument();
+    // The heading and the alerts panel keep their wording either way.
+    expect(screen.getByRole('heading', { name: 'AI operations snapshot' })).toBeInTheDocument();
   });
 
   it('uses the singular for one alert', async () => {
