@@ -12,7 +12,11 @@ const ROOT: string = process.cwd();
 const COMPILED: string = path.join(ROOT, 'lib-commonjs/webparts/aiCoeFrontDoor/styles/pageViews.global.scss.css');
 const SHIPPED_STYLESHEET: string = path.join(ROOT, 'parity/AiCoeFrontDoor.global.1.0.0.7.css');
 const SHIPPED_THEME: string = path.join(ROOT, 'parity/theme.1.0.0.7.css');
-const SCOPED_SELECTOR: RegExp = /^#overture-ai-coe-pilot (\.overture-app)?\.ai-view(--(home|telemetry|narrow|page))?( |$)/;
+/**
+ * Root id, then the view class, plain or (for the one floor that must lose to every other rule) the whole compound
+ * inside a zero-specificity `:where()`: only the class alone in `:where()` would leave the rest of the compound counted.
+ */
+const SCOPED_SELECTOR: RegExp = /^#overture-ai-coe-pilot ((\.overture-app)?\.ai-view(--(home|telemetry|narrow|page))?|:where\(\.ai-view--page a\.ai-service-card\))( |$)/;
 
 type DeclarationTable = { [selector: string]: string[] };
 
@@ -98,6 +102,13 @@ describe('Page view stylesheet', () => {
     // The call to action is a 44px target (WCAG 2.5.5); the page tiles already stand 92px, above that floor.
     expect(rule(table, '.ai-view--page a.ai-hero-cta')).toEqual(['min-height:44px', 'text-decoration:none']);
     expect(rule(table, '.ai-view--page a.ai-service-card')).toEqual(['text-decoration:none']);
+    // Every card link in a page view is at least a 44px target. The whole compound sits in `:where()`, so the rule's
+    // specificity is the root id alone, (1,0,0): it loses to the shipped `.ai-service-card` (1,1,0), which keeps the
+    // home piece's cards at 116px inside a page view, and to the 92px tiles rule (1,3,0). A floor under cards no
+    // other rule sizes, never a change to the ones they do. (`:where(.ai-view--page) a.ai-service-card` would be
+    // (1,1,1) and beat the shipped floor.)
+    expect(rule(table, ':where(.ai-view--page a.ai-service-card)')).toEqual(['min-height:44px']);
+    expect(table['#overture-ai-coe-pilot :where(.ai-view--page) a.ai-service-card']).toBeUndefined();
     expect(rule(table, '.ai-view--page .ai-page-tiles')).toEqual(['display:grid', 'gap:16px', 'grid-template-columns:repeat(auto-fit, minmax(220px, 1fr))']);
     expect(rule(table, '.ai-view--page .ai-page-tiles .ai-service-card')).toEqual(['grid-column:auto', 'min-height:92px']);
     expect(rule(table, '.ai-view--page .ai-page-cards')).toEqual(['display:grid', 'gap:16px', 'grid-template-columns:repeat(2, minmax(0, 1fr))']);

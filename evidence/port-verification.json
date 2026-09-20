@@ -1,9 +1,9 @@
 {
-  "verifiedAt": "2026-09-20T09:04:02.989Z",
+  "verifiedAt": "2026-09-20T09:37:10.533Z",
   "package": {
     "path": "sharepoint/solution/overture-ai-coe-front-door.sppkg",
-    "sha256": "6487969ec48827e23906ce503bd5e131140446404034d19122ab563477fd3577",
-    "bytes": 80571,
+    "sha256": "f111a3c912d276e7f51f0117c3135107b3e15065246f6ffc73717c885f4e6961",
+    "bytes": 80572,
     "version": "1.0.0.12",
     "productId": "f125ebdf-4a9d-4e6e-8479-3a18874e7752",
     "isDomainIsolated": "false",
@@ -91,6 +91,7 @@
   },
   "packageScan": {
     "lists": [
+      "clientWords",
       "bundlePhrases",
       "hosts",
       "people",
@@ -98,8 +99,9 @@
       "secretPatterns"
     ],
     "exempt": [
-      "bundlePhrases in elements.xml, intake-schema.xml, decision-schema.xml (byte-identical to the shipped 1.0.0.7 package)",
-      "bundlePhrases in the <DeveloperProperties> element of AppManifest.xml (the publisher, from config/package-solution.json)"
+      "bundlePhrases and clientWords in elements.xml, intake-schema.xml, decision-schema.xml (byte-identical to the shipped 1.0.0.7 package)",
+      "every list in the <DeveloperProperties> element of AppManifest.xml (the publisher, from config/package-solution.json)",
+      "clientWords in the documented identifiers: the overture-ai-coe- family (package, solution name, draft key prefix, DOM scope id, download file names), overture-confirm-title and the .overture-* classes of parity/theme.1.0.0.7.css"
     ],
     "binarySkipped": [
       "ClientSideAssets/cf2e5904-0703-4fe4-ae5a-ec012d6fa689_color.png",
@@ -134,7 +136,7 @@
     "awaitingToken": "AWAITING_TENANT_INVENTORY",
     "fieldsSource": "13_SECURITY_AND_THREAT_MODEL/secrets-supply-chain.yaml required_inventory_fields"
   },
-  "tests": "532 passed (npm run build on 2026-09-20)",
+  "tests": "536 passed, 0 failed (npm test on 2026-09-20; no rebuild, package of the 1.0.0.12 build)",
   "scope": "Local build verification only: no tenant upload, deployment, SharePoint change or model call.",
   "failures": []
 }

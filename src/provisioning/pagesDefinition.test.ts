@@ -98,9 +98,10 @@ const OFF_SITE_ROUTES: string[] = ['work', 'assistant'];
 const ON_SITE_ROUTES: string[] = ['guidedIntake', 'improve', 'value'];
 /** Every parameter the definition declares, by kind (Contracts § pages.json parameters). */
 const EXPECTED_PARAMETERS: { [kind: string]: string[] } = {
-  text: ['OrganizationName', 'TelemetryProvider', 'AssistantName', 'ChatName', 'PilotMembers', 'StatusDate', 'PromptCount', 'PromptsAddedCount', 'PromptsAddedDate', 'PromptTestRecordCount', 'PromptStatusCounts', 'PromptIdAdminQueue', 'PromptIdMorningBrief', 'PromptIdRepeatableWork', 'LeadTeamContinuation'],
+  text: ['OrganizationName', 'TelemetryProvider', 'AssistantName', 'ChatName', 'StatusDate', 'PromptCount', 'PromptsAddedCount', 'PromptsAddedDate', 'PromptTestRecordCount', 'PromptStatusCounts', 'PromptIdAdminQueue', 'PromptIdMorningBrief', 'PromptIdRepeatableWork', 'LeadTeamContinuation'],
   url: ['DraftServiceUrl', 'AssistantUrl', 'ChatUrl', 'WorkCommandUrl', 'SupportUrl', 'TeamsUrl', 'PromptLibraryUrl'],
-  optional: ['AssistantState', 'AssistantVerifiedDate', 'AssistantReceiptRef', 'WorkCommandState', 'WorkCommandVerifiedDate', 'WorkCommandReceiptRef', 'SupportOwnerLabel', 'IdentityOwnerLabel', 'PrivacyOwnerLabel', 'BusinessApproverLabel', 'ClaimsOwnerLabel', 'RecoveryOwnerLabel', 'GovernanceBodyFastPath', 'GovernanceBodyArchitecture', 'GovernanceBodyExecutive', 'PilotTeamName', 'GovernanceReference', 'ReviewSystemName']
+  // PilotMembers is optional (a 1.0.0.12 verifier finding): it feeds only the private-pilot notice, which the script drops when PilotTeamName is blank.
+  optional: ['AssistantState', 'AssistantVerifiedDate', 'AssistantReceiptRef', 'WorkCommandState', 'WorkCommandVerifiedDate', 'WorkCommandReceiptRef', 'SupportOwnerLabel', 'IdentityOwnerLabel', 'PrivacyOwnerLabel', 'BusinessApproverLabel', 'ClaimsOwnerLabel', 'RecoveryOwnerLabel', 'GovernanceBodyFastPath', 'GovernanceBodyArchitecture', 'GovernanceBodyExecutive', 'PilotTeamName', 'PilotMembers', 'GovernanceReference', 'ReviewSystemName']
 };
 /** The Branding properties the script writes on every instance from a parameter (Contracts § Property pane; decision 21). */
 const INSTANCE_BRANDING_TOKENS: { [property: string]: string } = { organizationName: '{OrganizationName}', governanceReference: '{GovernanceReference}', reviewSystemName: '{ReviewSystemName}' };
@@ -565,6 +566,11 @@ describe('front door page definition', () => {
     expect(pilot.text).toContain('{PilotTeamName}');
     expect(pilot.text).toContain('{PilotMembers}');
     expect(definition.parameters.PilotTeamName.kind).toBe('optional');
+    expect(definition.parameters.PilotMembers.kind).toBe('optional');
+    // Blank members take a default, so the notice never reads "tried by <team>: ." with a dangling colon.
+    expect(definition.parameters.PilotMembers.default).toBe('the named pilot members');
+    expect(String(pilot.text).replace('{PilotTeamName}', 'a team').replace('{PilotMembers}', String(definition.parameters.PilotMembers.default)))
+      .toMatch(/^This front door is being tried by a team: the named pilot members\. Something wrong/);
     // The Requests page repeats the boundary word for word.
     expect(blockOf('requests', 'notice').text).toBe(boundary.text);
     expect(blockOf('requests', 'notice').title).toBe('Data boundary');

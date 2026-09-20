@@ -27,7 +27,7 @@
     "GovernanceBodyArchitecture": { "kind": "optional", "default": "a named approver (not yet named)", "description": "Who decides a red request on the architecture side; blank reads 'a named approver (not yet named)'." },
     "GovernanceBodyExecutive": { "kind": "optional", "default": "a named approver (not yet named)", "description": "Who decides a red request on the executive side; blank reads 'a named approver (not yet named)'." },
     "PilotTeamName": { "kind": "optional", "description": "Name of the team trying the front door; blank drops the private-pilot notice from Start here." },
-    "PilotMembers": { "kind": "text", "description": "Names of the private pilot members, comma separated, shown in the pilot notice on Start here." },
+    "PilotMembers": { "kind": "optional", "default": "the named pilot members", "description": "Names of the private pilot members, comma separated, shown in the pilot notice on Start here; blank reads 'the named pilot members' (the notice itself is dropped when PilotTeamName is blank)." },
     "GovernanceReference": { "kind": "optional", "description": "Policy reference quoted on review requests and exports, for example a policy name, version and date; blank keeps the default wording and is reported as AWAITING in the run summary." },
     "ReviewSystemName": { "kind": "optional", "description": "Name of the performance-review system the tool guidance sends a review request through; blank keeps the default wording." },
     "TeamsUrl": { "kind": "url", "description": "Deep link to the AI CoE Teams channel or chat; blank keeps the sentence and drops the link." },

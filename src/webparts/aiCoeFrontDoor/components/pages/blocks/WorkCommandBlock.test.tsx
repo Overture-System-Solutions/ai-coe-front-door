@@ -6,9 +6,16 @@ import type { FrontDoorRenderResult } from '../../../../../testing/renderWithFro
 import type { IWorkCommandBlock } from '../../../content/pageContent';
 import { NO_FALLBACK_LABEL } from '../../../content/routes';
 import type { RouteTable } from '../../../content/routes';
-import { WorkCommandBlock } from './WorkCommandBlock';
+import { SAVE_FAILED_TEXT, WorkCommandBlock } from './WorkCommandBlock';
 
 const SENTENCE: string = 'prepare me for a customer meeting';
+
+/** A draft store that fails the way LocalStorageDraftStore does: it resolves `{ ok: false }` and never rejects. */
+class FailingDraftStore extends InMemoryDraftStore {
+  public async save(): Promise<{ ok: boolean }> {
+    return { ok: false };
+  }
+}
 const GUIDED_INTAKE_HREF: string = `${TEST_SITE_URL}/SitePages/Explore-an-AI-idea.aspx`;
 const WORK_HREF: string = 'https://work.example/start';
 
@@ -190,6 +197,39 @@ describe('WorkCommandBlock', () => {
     await Promise.resolve();
     expect(navigate).not.toHaveBeenCalled();
     expect(draftStore.keys()).toEqual([]);
+  });
+
+  it('marks the input invalid only for an empty sentence, never for the configuration alert', async () => {
+    const { navigate } = renderCommand({});
+    const input: HTMLInputElement = submitSentence(SENTENCE);
+    const alert: HTMLElement = screen.getByRole('alert');
+    expect(alert.textContent).toBe(NO_FALLBACK_LABEL);
+    // The sentence is fine; the document is not. The input carries no error attributes for that.
+    expect(input).not.toHaveAttribute('aria-invalid');
+    expect(input).not.toHaveAttribute('aria-describedby');
+    await Promise.resolve();
+    expect(navigate).not.toHaveBeenCalled();
+  });
+
+  it('alerts, opens nothing and goes nowhere when the draft cannot be kept, keeping the sentence in the field', async () => {
+    for (const routes of [OPEN_ROUTES, CLOSED_ROUTES]) {
+      const { navigate, draftStore, unmount } = renderWithFrontDoor(<WorkCommandBlock block={BLOCK} />, { routes, now: NOW, draftStore: new FailingDraftStore() });
+      const input: HTMLInputElement = submitSentence(SENTENCE);
+      const alert: HTMLElement = await screen.findByRole('alert');
+      expect(alert.tagName).toBe('P');
+      expect(alert).toHaveClass('ai-page-command-alert');
+      expect(alert.textContent).toBe(SAVE_FAILED_TEXT);
+      expect(alert.textContent).toBe('Your sentence could not be kept on this device. Copy it and use the guided request.');
+      // The sentence stays where it can be copied; the input is not at fault, so it is not marked invalid.
+      expect(input.value).toBe(SENTENCE);
+      expect(input).not.toHaveAttribute('aria-invalid');
+      expect(input).not.toHaveAttribute('aria-describedby');
+      expect(openSpy).not.toHaveBeenCalled();
+      expect(navigate).not.toHaveBeenCalled();
+      expect(draftStore.keys()).toEqual([]);
+      expect(screen.queryByRole('status')).not.toBeInTheDocument();
+      unmount();
+    }
   });
 
   it('clears the alert once a sentence is submitted', async () => {

@@ -9,7 +9,8 @@
 // shipped package (recovered/inventory.json), exactly one JavaScript bundle plus its strings chunk, no phrase,
 // host, roster surname or secret shape of the tenant word list (src/provisioning/tenantWords.json) in the
 // bundle, the strings chunk or the packaged component manifest, the data contracts still present, the word
-// list itself and its entries absent from every entry of the archive, and every dependency pinned exactly.
+// list itself and its entries (client words included, beyond the documented identifiers) absent from every entry
+// of the archive, and every dependency pinned exactly.
 // Writes the dependency inventory (one row per runtime component of package-lock.json, the sixteen fields of
 // 13_SECURITY_AND_THREAT_MODEL/secrets-supply-chain.yaml `required_inventory_fields`) and records its hash.
 // Exits non-zero on any failure.
@@ -43,11 +44,39 @@ const EXPECTED = {
   // The lists of the tenant word list the bundle, its strings chunk and the packaged manifest are scanned with
   // (a bare product name stays legal: the parity-pinned telemetry labels use it).
   forbiddenInBundle: { path: TENANT_WORDS_PATH, lists: ['bundlePhrases', 'hosts', 'people', 'secretPatterns'] },
-  // The lists every entry of the archive is scanned with; client words are not among them because the documented
-  // identifiers (the solution name, the DOM scope id, the draft keys, the shipped stylesheet classes) carry one.
-  forbiddenInPackage: ['bundlePhrases', 'hosts', 'people', 'caseIds', 'secretPatterns'],
+  // The lists every entry of the archive is scanned with. Client words (case-insensitive) are applied after the
+  // documented identifiers below are masked, so any other appearance of one fails the scan.
+  forbiddenInPackage: ['clientWords', 'bundlePhrases', 'hosts', 'people', 'caseIds', 'secretPatterns'],
   requiredInBundle: ['OVT-AICOE-', 'overture-ai-coe-front-door:draft:', 'overture-ai-coe-pilot', 'AI CoE Pilot Intakes']
 };
+
+// The identifiers that carry the vendor word by contract (README "Data contracts never change" and "Portability
+// exceptions"), masked before the client-word scan of every archive entry and nowhere else:
+//  - the overture-ai-coe- family: the package overture-ai-coe-front-door, the solution name
+//    overture-ai-coe-front-door-client-side-solution (AppManifest Name and Title), the localStorage draft key prefix
+//    overture-ai-coe-front-door:draft:, the DOM scope id overture-ai-coe-pilot and the download file names
+//    overture-ai-coe-*.txt (the bundle also carries the bare prefix, concatenated with a workflow id);
+//  - the confirm dialog heading id overture-confirm-title (controls/ConfirmDialog.tsx, a legacy screen);
+//  - the .overture-* classes of the shipped stylesheet, read from the parity baseline rather than listed by hand.
+const SHIPPED_THEME_PATH = 'parity/theme.1.0.0.7.css';
+const DOCUMENTED_IDENTIFIERS = [/\boverture-ai-coe-[a-z0-9:.-]*/g, /\boverture-confirm-title\b/g];
+
+/** The shipped stylesheet's vendor-prefixed class names, longest first so no name masks a prefix of another. */
+function shippedClassPatterns() {
+  const css = fs.readFileSync(path.join(root, SHIPPED_THEME_PATH), 'utf8');
+  const names = [...new Set((css.match(/\.overture-[a-z0-9-]+/g) ?? []).map((token) => token.slice(1)))];
+  names.sort((a, b) => b.length - a.length);
+  return names.map((name) => new RegExp(`\\b${name}\\b`, 'g'));
+}
+
+/** The text with every documented identifier replaced, so the client-word scan sees only what is not one. */
+function maskDocumentedIdentifiers(text, patterns) {
+  let masked = text;
+  for (const pattern of patterns) {
+    masked = masked.replace(pattern, '[documented-identifier]');
+  }
+  return masked;
+}
 
 // The sixteen `required_inventory_fields` of 13_SECURITY_AND_THREAT_MODEL/secrets-supply-chain.yaml, in its order.
 const INVENTORY_FIELDS = [
@@ -229,15 +258,19 @@ for (const list of EXPECTED.forbiddenInBundle.lists) {
   check(found.length === 0, `The bundle, strings chunk or packaged manifest contains ${list} of the tenant word list: ${[...new Set(found)].join(', ')}`);
 }
 
-// The archive as a whole: neither the word list file nor any of its entries. Two documented exemptions, both recorded
-// in the evidence: the phrase list is not applied to the three shipped provisioning XML files (asserted byte-identical
-// to 1.0.0.7 above; their site column group names the vendor) nor to the publisher block of AppManifest.xml
-// (<DeveloperProperties>, from config/package-solution.json). Image entries are not text and are listed as skipped.
+// The archive as a whole: neither the word list file nor any of its entries. Three documented exemptions, all recorded
+// in the evidence: the phrase and client-word lists are not applied to the three shipped provisioning XML files
+// (asserted byte-identical to 1.0.0.7 above; their site column group and the list description name the vendor), no
+// list is applied to the publisher block of AppManifest.xml (<DeveloperProperties>, from config/package-solution.json),
+// and the documented identifiers are masked before the client-word scan. Image entries are not text and are listed as
+// skipped.
+const identifierPatterns = [...DOCUMENTED_IDENTIFIERS, ...shippedClassPatterns()];
 const packageScan = {
   lists: EXPECTED.forbiddenInPackage,
   exempt: [
-    `bundlePhrases in ${EXPECTED.provisioningFiles.join(', ')} (byte-identical to the shipped 1.0.0.7 package)`,
-    'bundlePhrases in the <DeveloperProperties> element of AppManifest.xml (the publisher, from config/package-solution.json)'
+    `bundlePhrases and clientWords in ${EXPECTED.provisioningFiles.join(', ')} (byte-identical to the shipped 1.0.0.7 package)`,
+    'every list in the <DeveloperProperties> element of AppManifest.xml (the publisher, from config/package-solution.json)',
+    `clientWords in the documented identifiers: the overture-ai-coe- family (package, solution name, draft key prefix, DOM scope id, download file names), overture-confirm-title and the .overture-* classes of ${SHIPPED_THEME_PATH}`
   ],
   binarySkipped: [],
   scanned: [],
@@ -253,14 +286,18 @@ for (const entry of entries) {
   let text = entry.bytes.toString('utf8');
   let lists = EXPECTED.forbiddenInPackage;
   if (EXPECTED.provisioningFiles.includes(path.basename(entry.name))) {
-    lists = lists.filter((list) => list !== 'bundlePhrases');
+    lists = lists.filter((list) => list !== 'bundlePhrases' && list !== 'clientWords');
   }
   if (path.basename(entry.name) === 'AppManifest.xml') {
     text = text.replace(/<DeveloperProperties>[\s\S]*?<\/DeveloperProperties>/, '<DeveloperProperties/>');
   }
+  text = unescapeXml(text);
   packageScan.scanned.push(entry.name);
-  for (const finding of findTenantWords(unescapeXml(text), tenantWords, lists)) {
-    packageScan.findings.push(`${entry.name}: ${finding}`);
+  for (const list of lists) {
+    const subject = list === 'clientWords' ? maskDocumentedIdentifiers(text, identifierPatterns) : text;
+    for (const finding of findTenantWords(subject, tenantWords, [list])) {
+      packageScan.findings.push(`${entry.name}: ${finding}`);
+    }
   }
 }
 check(packageScan.findings.length === 0, `The package contains entries of the tenant word list: ${[...new Set(packageScan.findings)].join('; ')}`);

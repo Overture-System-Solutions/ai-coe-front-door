@@ -36,7 +36,7 @@ Use Node.js 22.14 or newer (below 23) and npm.
 - `npm start` runs `heft start` for the SharePoint hosted workbench (requires a tenant; not needed for local work).
 - `npm run verify -- --tests "<summary of the test run>"` checks the package the build wrote (identity, version, the
   shipped list schemas byte for byte, the bundle's data contracts, no word of the tenant list anywhere in the
-  archive, every dependency pinned exactly) and writes `evidence/port-verification.json` and
+  archive beyond the documented identifiers, every dependency pinned exactly) and writes `evidence/port-verification.json` and
   `evidence/dependency-inventory.json` (one row per runtime component of `package-lock.json`, with the sixteen
   inventory fields; what the lock file cannot say reads `AWAITING_TENANT_INVENTORY` until the tenant inventory
   fills it). Both files are committed with each release.
@@ -145,9 +145,12 @@ reports a blank `GovernanceReference` as AWAITING in its end-of-run summary; bot
 `docs/content-claims.md` (class `binding`) and of "Portability exceptions" below.
 
 Data contracts never change: intake ids (`OVT-AICOE-…`), list titles and field names, the localStorage draft keys
-(`overture-ai-coe-front-door:draft:*`), download file names (`overture-ai-coe-*.txt`) and the DOM scope id
-(`overture-ai-coe-pilot`). No phrase, tenant host, roster surname or secret shape of the tenant word list appears in
-the built bundle, its strings chunk or the packaged manifest (a test and the verifier enforce this).
+(`overture-ai-coe-front-door:draft:*`), download file names (`overture-ai-coe-*.txt`), the DOM scope id
+(`overture-ai-coe-pilot`), the confirm dialog heading id (`overture-confirm-title`) and the `.overture-*` classes of
+the shipped stylesheet. No phrase, tenant host, roster surname or secret shape of the tenant word list appears in
+the built bundle, its strings chunk or the packaged manifest (a test and the verifier enforce this), and no client
+word of the list appears anywhere in the archive beyond those documented identifiers (the verifier masks exactly
+them before its client-word scan).
 
 ## Lay out the front door across pages
 
@@ -390,7 +393,7 @@ the identity line, the site's owners group on the admin page). Bindings, the pro
 | `GovernanceBodyArchitecture` | `parameters.json` | optional | "a named approver (not yet named)" |
 | `GovernanceBodyExecutive` | `parameters.json` | optional | "a named approver (not yet named)" |
 | `PilotTeamName` | `parameters.json` | optional | the private-pilot notice is dropped from Start here |
-| `PilotMembers` | `parameters.json` | text | must be filled (shown only while the pilot notice is kept) |
+| `PilotMembers` | `parameters.json` | optional | "the named pilot members" (the declared default; the notice itself is dropped when `PilotTeamName` is blank) |
 | `GovernanceReference` | `parameters.json` | optional | default wording (see "Branding"); reported AWAITING in the run summary |
 | `ReviewSystemName` | `parameters.json` | optional | default wording (see "Branding") |
 | `TeamsUrl` | `parameters.json` | url | the sentence stays, the link is dropped |
@@ -437,9 +440,9 @@ What the built bundle still carries from its first tenant, each with an owner an
 | The governance reference, "version 1.1, August 26, 2026" | the blank value of `governanceReference` in `branding/branding.ts`; rendered in the legacy view only | AI CoE policy owner | set `GovernanceReference` on rebind; the script reports it AWAITING until then |
 | `OVT-AICOE-`, the intake id prefix | `services/intakeId.ts`; the `IntakeId` column of AI CoE Pilot Intakes (unique key), relied on by the companion flows | AI CoE records owner | kept as the record key; a tenant work-id prefix waits for a work-records list; existing rows keep their ids |
 | `overture-ai-coe-front-door:draft:`, the localStorage draft key prefix | `content/constants.ts` | front-door maintainers | kept: drafts are per browser and per pilot; renaming would orphan drafts in progress |
-| `overture-ai-coe-pilot`, the DOM scope id, and the `.overture-*` classes | `content/constants.ts`; `styles/frontDoor.global.scss` (the shipped stylesheet, reproduced rule for rule) | front-door maintainers | kept: the stylesheet parity suite pins every rule; changes only with a deliberate stylesheet release |
+| `overture-ai-coe-pilot`, the DOM scope id, the `.overture-*` classes and `overture-confirm-title`, the confirm dialog heading id | `content/constants.ts`; `styles/theme.global.scss` (the shipped stylesheet, reproduced rule for rule); `controls/ConfirmDialog.tsx` | front-door maintainers | kept: the stylesheet parity suite pins every rule and the legacy screens are parity-locked; changes only with a deliberate stylesheet release; with the package name, the solution name, the draft key prefix and the download file names these are the documented identifiers the verifier masks before its client-word scan of the archive |
 | The telemetry feed labels (`Claude API spend this month`, `OpenAI API spend this month` and the rest) | `content/telemetryTiles.ts`, `services/UsageMetricsService.ts` | AI CoE operations | product names of the usage feeds, not of a tenant; the legacy strip keeps them verbatim (parity); page views take labels from `vocabulary.telemetry` when the strip moves to an operators page in 1.0.0.13 |
-| The vendor name in the shipped list schemas (site column group) and in the package publisher block | `sharepoint/assets/*.xml` (byte-identical to 1.0.0.7); the developer block of `config/package-solution.json` | package maintainers | metadata, never rendered; changing the schemas would break the in-place upgrade; the two are the recorded exemptions of the verifier's package scan |
+| The vendor name in the shipped list schemas (site column group) and in the package publisher block | `sharepoint/assets/*.xml` (byte-identical to 1.0.0.7); the developer block of `config/package-solution.json` | package maintainers | metadata, never rendered; changing the schemas would break the in-place upgrade; with the documented identifiers above, the two are the recorded exemptions of the verifier's package scan |
 | `src/provisioning/tenantWords.json`, the tenant word list | outside `src/webparts`, imported by nothing in the web part, never packaged (the verifier asserts the archive holds neither the file nor its entries) | front-door maintainers | deliberately not tenant-neutral: it is what every scan looks for; on rebind it is replaced with the words of the new first tenant |
 
 ## Implementation route

@@ -216,6 +216,8 @@ describe('utility-word safety', () => {
   it('keeps every plain label out of the generated utility selectors', () => {
     const css: string = fs.readFileSync(GENERATED_STYLESHEET, 'utf8');
     const selectors: string[] = (css.match(/\.[A-Za-z0-9_\\:-]+/g) ?? []).map((selector: string): string => selector.replace(/\\/g, ''));
+    // The generated stylesheet carries over a hundred class tokens; fewer means the extraction broke, not that the labels are safe.
+    expect(selectors.length).toBeGreaterThan(100);
     const labels: string[] = TRUTH_STATES.map((state): string => state.label)
       .concat(TRUTH_STATES.map((state): string => state.definition(createBranding(''))))
       .concat(Object.keys(PLAIN_LABELS).map((code: string): string => PLAIN_LABELS[code]))

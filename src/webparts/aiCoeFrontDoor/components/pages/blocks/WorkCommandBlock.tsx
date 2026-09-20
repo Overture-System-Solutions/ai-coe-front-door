@@ -41,6 +41,9 @@ export function openedText(label: string): string {
   return `${label} opened in a new tab; your sentence is saved as a draft request.`;
 }
 
+/** The alert when the draft store cannot keep the sentence (it answers `{ ok: false }`, it never throws). */
+export const SAVE_FAILED_TEXT: string = 'Your sentence could not be kept on this device. Copy it and use the guided request.';
+
 let commandCount: number = 0;
 
 /** Ids come from a counter, so two commands on one page (or one page rendered twice) never share an id. */
@@ -49,7 +52,12 @@ function nextCommandId(): string {
   return `ai-page-command-${commandCount}`;
 }
 
-type CommandMessage = { kind: 'alert'; text: string } | { kind: 'status'; text: string } | undefined;
+/**
+ * What the form says below its controls: `invalid` is the one message about the input itself (an
+ * empty sentence), so only it marks the input; `alert` is about the document or the device; `status`
+ * reports where an available destination opened.
+ */
+type CommandMessage = { kind: 'invalid' | 'alert'; text: string } | { kind: 'status'; text: string } | undefined;
 
 /**
  * The first screen's one command (FD-05): a sentence about the work to be done. On submit the
@@ -57,7 +65,8 @@ type CommandMessage = { kind: 'alert'; text: string } | { kind: 'status'; text: 
  * document's route list: an available destination opens in a new tab (the draft keeps the sentence
  * for later); anything else, including an unknown route, goes to the fallback (the guided intake)
  * in the same tab, which resumes the draft with the sentence as its first answer. The sentence never
- * enters a URL. With no fallback link at all nothing is saved and the form says so.
+ * enters a URL. With no fallback link at all nothing is saved and the form says so; when the draft
+ * cannot be kept nothing opens, the sentence stays in the field and the form says so.
  */
 export function WorkCommandBlock({ block }: IWorkCommandBlockProps): React.ReactElement {
   const { siteUrl, services, navigate } = useFrontDoor();
@@ -77,13 +86,20 @@ export function WorkCommandBlock({ block }: IWorkCommandBlockProps): React.React
 
   const inputId: string = `${id}-input`;
   const messageId: string = `${id}-message`;
-  const isAlert: boolean = message !== undefined && message.kind === 'alert';
+  const isInvalid: boolean = message !== undefined && message.kind === 'invalid';
+  const isAlert: boolean = message !== undefined && (message.kind === 'invalid' || message.kind === 'alert');
+
+  const onSaveFailed = (): void => {
+    if (mounted.current) {
+      setMessage({ kind: 'alert', text: SAVE_FAILED_TEXT });
+    }
+  };
 
   const onSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
     event.preventDefault();
     const text: string = sentence.trim();
     if (text === '') {
-      setMessage({ kind: 'alert', text: block.emptyText });
+      setMessage({ kind: 'invalid', text: block.emptyText });
       inputRef.current?.focus();
       return;
     }
@@ -98,19 +114,20 @@ export function WorkCommandBlock({ block }: IWorkCommandBlockProps): React.React
     // Only the named route, proved available, opens as the destination; the fallback row is a same-tab hand-off.
     const opensDestination: boolean = route.state === 'availableNow' && route.key === block.route;
     const leave: Navigate = navigate ?? browserNavigate;
-    services.draftStore.save(WORK_COMMAND_WORKFLOW_ID, workCommandDraft(text)).then(
-      (): void => {
-        if (opensDestination) {
-          if (mounted.current) {
-            setMessage({ kind: 'status', text: route.note ?? openedText(route.label) });
-          }
-          window.open(href, '_blank', 'noopener');
-        } else {
-          leave(href);
+    services.draftStore.save(WORK_COMMAND_WORKFLOW_ID, workCommandDraft(text)).then((result: { ok: boolean }): void => {
+      if (!result.ok) {
+        onSaveFailed();
+        return;
+      }
+      if (opensDestination) {
+        if (mounted.current) {
+          setMessage({ kind: 'status', text: route.note ?? openedText(route.label) });
         }
-      },
-      (): void => undefined
-    );
+        window.open(href, '_blank', 'noopener');
+      } else {
+        leave(href);
+      }
+    }, onSaveFailed);
   };
 
   return (
@@ -126,8 +143,8 @@ export function WorkCommandBlock({ block }: IWorkCommandBlockProps): React.React
         value={sentence}
         placeholder={block.placeholder}
         autoComplete="off"
-        aria-invalid={isAlert || undefined}
-        aria-describedby={isAlert ? messageId : undefined}
+        aria-invalid={isInvalid || undefined}
+        aria-describedby={isInvalid ? messageId : undefined}
         onChange={(event: React.ChangeEvent<HTMLInputElement>): void => setSentence(event.target.value)}
       />
       <button type="submit" className="overture-btn-primary ai-page-command-submit">
@@ -138,7 +155,7 @@ export function WorkCommandBlock({ block }: IWorkCommandBlockProps): React.React
           <Markup text={block.note} />
         </p>
       )}
-      {message !== undefined && message.kind === 'alert' && (
+      {isAlert && message !== undefined && (
         <p id={messageId} className="ai-page-command-alert" role="alert">
           {message.text}
         </p>

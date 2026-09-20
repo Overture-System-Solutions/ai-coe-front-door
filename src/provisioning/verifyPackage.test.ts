@@ -110,6 +110,19 @@ describe('verify-package', () => {
     expect(script).toMatch(/exempt/);
   });
 
+  it('applies the client words to every archive entry, exempting only the documented identifiers', () => {
+    expect(script).toMatch(/forbiddenInPackage: \['clientWords', 'bundlePhrases', 'hosts', 'people', 'caseIds', 'secretPatterns'\]/);
+    // The identifiers that carry the vendor word by contract are masked before the client-word scan, nothing else is.
+    expect(script).toMatch(/DOCUMENTED_IDENTIFIERS/);
+    expect(script).toMatch(/list === 'clientWords'/);
+    for (const identifier of ['overture-ai-coe-front-door-client-side-solution', 'overture-ai-coe-front-door:draft:', 'overture-ai-coe-front-door', 'overture-ai-coe-pilot', 'overture-confirm-title']) {
+      expect(script).toContain(identifier);
+    }
+    // The shipped stylesheet classes come from the parity baseline, never from a list written by hand.
+    expect(script).toContain('parity/theme.1.0.0.7.css');
+    expect(script).not.toMatch(/'overture-(app|input|btn-primary)'/);
+  });
+
   it('writes the dependency inventory from the lock file with the sixteen required fields on every row', () => {
     expect(script).toContain('package-lock.json');
     expect(script).toContain('evidence/dependency-inventory.json');
@@ -162,11 +175,13 @@ describe('verify-package', () => {
     interface IRecord {
       package: { version: string };
       dependencyInventory: { path: string; sha256: string; components: number };
-      packageScan: { findings: string[] };
+      packageScan: { lists: string[]; exempt: string[]; findings: string[] };
       failures: string[];
     }
     const record: IRecord = readJson<IRecord>('evidence/port-verification.json');
     expect(record.package.version).toBe(RELEASE);
+    expect(record.packageScan.lists).toEqual(['clientWords', 'bundlePhrases', 'hosts', 'people', 'caseIds', 'secretPatterns']);
+    expect(record.packageScan.exempt).toHaveLength(3);
     expect(record.dependencyInventory.path).toBe('evidence/dependency-inventory.json');
     expect(record.dependencyInventory.sha256).toBe(sha256('evidence/dependency-inventory.json'));
     expect(record.dependencyInventory.components).toBe(readJson<IInventory>('evidence/dependency-inventory.json').components.length);

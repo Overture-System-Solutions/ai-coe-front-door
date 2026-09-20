@@ -1,3 +1,4 @@
+/* eslint-disable no-script-url -- the script URL is the hostile input the href guard is tested against */
 import { screen, within } from '@testing-library/react';
 import * as React from 'react';
 import { createFakeUsageService } from '../../../../../testing/fakeServices';
@@ -21,6 +22,25 @@ describe('PieceBlock', () => {
     expect(screen.queryByText('Check a tool or task')).not.toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'AI operations snapshot' })).toHaveAttribute('href', 'https://contoso.sharepoint.com/sites/ai/SitePages/Status.aspx');
     expect(screen.queryByRole('heading', { level: 1 })).not.toBeInTheDocument();
+  });
+
+  it('renders a dead link for a page target with a forbidden scheme or a protocol-less host', () => {
+    const block: IPieceBlock = {
+      type: 'piece',
+      piece: 'home',
+      pages: { idea: 'javascript:alert(1)', feedback: '//evil.example/SitePages/Share-feedback.aspx', telemetry: 'data:text/html,hi', toolCheck: '  ' }
+    };
+    const { container } = renderWithFrontDoor(<PieceBlock block={block} drafts={{}} />);
+    expect(screen.getByText('Explore an AI idea').closest('a')).toHaveAttribute('href', '#');
+    expect(screen.getByText('Share feedback').closest('a')).toHaveAttribute('href', '#');
+    expect(screen.getByRole('link', { name: 'AI operations snapshot' })).toHaveAttribute('href', '#');
+    // A blank target is no link at all, as before.
+    expect(screen.queryByText('Check a tool or task')).not.toBeInTheDocument();
+    const anchors: HTMLAnchorElement[] = Array.prototype.slice.call(container.querySelectorAll('a'));
+    expect(anchors.length).toBeGreaterThan(3);
+    for (const anchor of anchors) {
+      expect(anchor.getAttribute('href') ?? '').not.toMatch(/evil|javascript|data:/);
+    }
   });
 
   it('embeds the telemetry strip', async () => {
