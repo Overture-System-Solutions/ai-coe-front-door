@@ -1,13 +1,19 @@
 import {
   DEFAULT_CONTENT_URL,
+  DEFAULT_SETTINGS,
+  DEFAULT_VOCABULARY,
   PAGE_DOCUMENT_VERSION,
+  pagePlane,
   parseBlock,
   parseContentUrl,
   parsePageDocument,
+  parseSettings,
+  parseVocabulary,
+  readPlane,
   readParagraphs,
   resolveContentHref
 } from './pageContent';
-import type { ICardsBlock, IHeroBlock, ILanesBlock, IPageDocument, IPieceBlock, ITilesBlock } from './pageContent';
+import type { ICardsBlock, IContentPage, IHeroBlock, ILanesBlock, IPageDocument, IPieceBlock, ITilesBlock, IVocabulary } from './pageContent';
 
 const SITE: string = 'https://contoso.sharepoint.com/sites/ai';
 
@@ -37,6 +43,103 @@ describe('page document', () => {
       })
     );
     expect(document).toEqual({ version: 1, pages: { startHere: { title: 'Start here', blocks: [{ type: 'paragraph', text: 'Hello' }] } } });
+  });
+});
+
+describe('document envelope', () => {
+  it('parses a document without vocabulary, settings or planes exactly as before', () => {
+    const document: IPageDocument | undefined = parsePageDocument(JSON.stringify({ version: 1, pages: { learn: { title: 'Learn', blocks: [] } } }));
+    expect(document).toEqual({ version: 1, pages: { learn: { title: 'Learn', blocks: [] } } });
+    expect(Object.keys(document as IPageDocument)).toEqual(['version', 'pages']);
+    expect(pagePlane((document as IPageDocument).pages.learn)).toBe('user');
+  });
+
+  it('keeps only string maps of the vocabulary and ignores unknown keys', () => {
+    expect(DEFAULT_VOCABULARY).toEqual({ truthStates: {}, requestStatuses: {}, chrome: {}, roles: {}, telemetry: {} });
+    expect(parseVocabulary(undefined)).toEqual(DEFAULT_VOCABULARY);
+    expect(parseVocabulary('x')).toEqual(DEFAULT_VOCABULARY);
+    expect(parseVocabulary([])).toEqual(DEFAULT_VOCABULARY);
+    const vocabulary: IVocabulary = parseVocabulary({
+      truthStates: {
+        availableNow: { label: ' Ready ', definition: 'checked in the {organization} environment.' },
+        needsAccess: { label: '', definition: 7 },
+        draftOnly: 'Draft',
+        bogus: { label: 'x' }
+      },
+      requestStatuses: { BLOCKED: 'Stuck', DRAFT: '', AT_RISK: 3, EXTRA: ' Custom ' },
+      chrome: { badge: 'Pilot', example: 'Sample', needsRefresh: 'Stale', awaitingSource: ' Source pending ', protectedPage: 'Not for {role}.', unknown: 'x', hidden: 4 },
+      roles: { leader: 'Leaders', operator: '', 7: 'seven' },
+      telemetry: { claude: 'Assistant', openai: 2 },
+      unknownSection: { a: 'b' }
+    });
+    expect(vocabulary).toEqual({
+      truthStates: { availableNow: { label: 'Ready', definition: 'checked in the {organization} environment.' }, needsAccess: {} },
+      requestStatuses: { BLOCKED: 'Stuck', EXTRA: 'Custom' },
+      chrome: { badge: 'Pilot', example: 'Sample', needsRefresh: 'Stale', awaitingSource: 'Source pending', protectedPage: 'Not for {role}.' },
+      roles: { leader: 'Leaders', '7': 'seven' },
+      telemetry: { claude: 'Assistant' }
+    });
+    expect(parseVocabulary({ truthStates: 'x', requestStatuses: ['a'], chrome: null })).toEqual(DEFAULT_VOCABULARY);
+  });
+
+  it('reads settings as bounded integers with defaults', () => {
+    expect(DEFAULT_SETTINGS).toEqual({ freshnessDays: 30, minimumCohort: 5 });
+    expect(parseSettings(undefined)).toEqual(DEFAULT_SETTINGS);
+    expect(parseSettings({})).toEqual(DEFAULT_SETTINGS);
+    expect(parseSettings('x')).toEqual(DEFAULT_SETTINGS);
+    expect(parseSettings({ freshnessDays: 14, minimumCohort: 10 })).toEqual({ freshnessDays: 14, minimumCohort: 10 });
+    expect(parseSettings({ freshnessDays: 1, minimumCohort: 1 })).toEqual({ freshnessDays: 1, minimumCohort: 1 });
+    expect(parseSettings({ freshnessDays: 3650, minimumCohort: 1000 })).toEqual({ freshnessDays: 3650, minimumCohort: 1000 });
+    expect(parseSettings({ freshnessDays: 0, minimumCohort: 0 })).toEqual(DEFAULT_SETTINGS);
+    expect(parseSettings({ freshnessDays: 3651, minimumCohort: 1001 })).toEqual(DEFAULT_SETTINGS);
+    expect(parseSettings({ freshnessDays: 2.5, minimumCohort: '5' })).toEqual(DEFAULT_SETTINGS);
+    expect(parseSettings({ freshnessDays: -7, minimumCohort: NaN })).toEqual(DEFAULT_SETTINGS);
+  });
+
+  it('carries vocabulary and settings on the document and drops a malformed section, never the document', () => {
+    const document: IPageDocument | undefined = parsePageDocument(
+      JSON.stringify({
+        version: 1,
+        settings: { freshnessDays: 7 },
+        vocabulary: { chrome: { example: 'Sample' } },
+        pages: { learn: { title: 'Learn', blocks: [] } }
+      })
+    );
+    expect(document).toEqual({
+      version: 1,
+      pages: { learn: { title: 'Learn', blocks: [] } },
+      settings: { freshnessDays: 7, minimumCohort: 5 },
+      vocabulary: { truthStates: {}, requestStatuses: {}, chrome: { example: 'Sample' }, roles: {}, telemetry: {} }
+    });
+    const damaged: IPageDocument | undefined = parsePageDocument(
+      JSON.stringify({ version: 1, settings: 'soon', vocabulary: ['x'], pages: { learn: { title: 'Learn', blocks: [] } } })
+    );
+    expect(damaged).toEqual({ version: 1, pages: { learn: { title: 'Learn', blocks: [] } } });
+  });
+
+  it('accepts the operator plane on a page and treats everything else as the user plane', () => {
+    expect(readPlane('operator')).toBe('operator');
+    expect(readPlane(' operator ')).toBe('operator');
+    expect(readPlane('user')).toBe('user');
+    expect(readPlane('OPERATOR')).toBe('user');
+    expect(readPlane('admin')).toBe('user');
+    expect(readPlane(undefined)).toBe('user');
+    const document: IPageDocument | undefined = parsePageDocument(
+      JSON.stringify({
+        version: 1,
+        pages: {
+          operations: { title: 'Operations', plane: 'operator', blocks: [] },
+          learn: { title: 'Learn', plane: 'user', blocks: [] },
+          status: { title: 'Status', plane: 'bogus', blocks: [] }
+        }
+      })
+    );
+    const pages: { [key: string]: IContentPage } = (document as IPageDocument).pages;
+    expect(pages.operations).toEqual({ title: 'Operations', blocks: [], plane: 'operator' });
+    expect(pages.learn).toEqual({ title: 'Learn', blocks: [] });
+    expect(pages.status).toEqual({ title: 'Status', blocks: [] });
+    expect(pagePlane(pages.operations)).toBe('operator');
+    expect(pagePlane(pages.learn)).toBe('user');
   });
 });
 

@@ -172,6 +172,21 @@ item the web part does not understand is left out and the rest of the page still
 not the page. The script rewrites the document on every run, so lasting wording changes belong in `pages.json`; a
 quick correction can be made in Site Assets and shows on the next page load.
 
+The envelope may also carry two optional sections and a page may name its plane; each is lenient and a malformed one
+is dropped, never the document:
+
+| Key | Shape |
+|---|---|
+| `settings` | `{ "freshnessDays": 30, "minimumCohort": 5 }` — whole numbers (1–3650 and 1–1000); anything else keeps the default |
+| `vocabulary` | string maps only, unknown keys ignored, a blank keeps the default: `truthStates` `{ "<key>": { "label", "definition" } }` for `availableNow`, `draftOnly`, `needsApproval`, `needsAccess`, `notSupported`; `requestStatuses` `{ "<code>": "plain wording" }`; `chrome` `{ "badge", "example", "needsRefresh", "awaitingSource", "protectedPage" }`; `roles` `{ "<roleId>": "name" }`; `telemetry` `{ "<feedId>": "name" }`. `{organization}` and `{role}` in the text are filled by the web part, not by the script |
+| page `plane` | `user` (default) or `operator` |
+
+The truth states are the five plain-language states of the activation playbook (Available now, Draft only, Needs
+approval, Needs access, Not supported) with their definitions; the web part also knows the six activation codes
+(`DESIGNED`, `QUALIFIED`, `AVAILABLE`, `ACTIVE`, `PAUSED`, `RETIRED`), the plain wording of the four pilot statuses
+and the 26 canonical status codes (anything else reads "Status unavailable"), and the placeholders a measure shows
+instead of a number (`src/webparts/aiCoeFrontDoor/content/truthStates.ts`).
+
 **The twelve pages** described in `sharepoint/pages/pages.json` (six in the top navigation, five form pages under
 Requests, one owners-only admin page), each with one front-door instance and, for the navigation pages, the blocks
 of the content document:

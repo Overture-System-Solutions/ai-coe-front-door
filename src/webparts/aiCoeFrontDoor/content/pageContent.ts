@@ -8,9 +8,51 @@
  */
 import { PAGE_TARGETS, resolvePageUrl } from './pageViews';
 import type { PageLinks, PageTarget } from './pageViews';
+import { TRUTH_STATE_KEYS } from './truthStates';
+import type { TruthStateKey } from './truthStates';
 
 export const PAGE_DOCUMENT_VERSION: number = 1;
 export const DEFAULT_CONTENT_URL: string = 'SiteAssets/ai-coe-pages.json';
+
+/** Who a page is written for: people using the front door, or the operators who run it. */
+export type PagePlane = 'user' | 'operator';
+export const PAGE_PLANES: readonly PagePlane[] = ['user', 'operator'];
+export const DEFAULT_PAGE_PLANE: PagePlane = 'user';
+
+/** Wording a document may override for one truth state; a blank keeps the default. */
+export interface ITruthStateWording {
+  label?: string;
+  definition?: string;
+}
+
+/** The chrome labels a document may override. */
+export type ChromeLabel = 'badge' | 'example' | 'needsRefresh' | 'awaitingSource' | 'protectedPage';
+export const CHROME_LABELS: readonly ChromeLabel[] = ['badge', 'example', 'needsRefresh', 'awaitingSource', 'protectedPage'];
+
+/**
+ * The document's wording overrides, all optional and all string maps: truth-state labels and
+ * definitions, plain request-status names by code, chrome labels, role names and telemetry feed names.
+ * `{organization}` and `{role}` in the text are filled by the renderer, never by the script.
+ */
+export interface IVocabulary {
+  truthStates: { [key in TruthStateKey]?: ITruthStateWording };
+  requestStatuses: { [code: string]: string };
+  chrome: { [key in ChromeLabel]?: string };
+  roles: { [roleId: string]: string };
+  telemetry: { [feedId: string]: string };
+}
+
+export const DEFAULT_VOCABULARY: IVocabulary = { truthStates: {}, requestStatuses: {}, chrome: {}, roles: {}, telemetry: {} };
+
+/** Numbers the document sets for every page: how old a fact may be, and the smallest group a measure may describe. */
+export interface IDocumentSettings {
+  freshnessDays: number;
+  minimumCohort: number;
+}
+
+export const DEFAULT_SETTINGS: IDocumentSettings = { freshnessDays: 30, minimumCohort: 5 };
+const MAX_FRESHNESS_DAYS: number = 3650;
+const MAX_MINIMUM_COHORT: number = 1000;
 
 /** The colour families the service and metric cards already ship. */
 export type CardTone = 'teal' | 'blue' | 'violet' | 'gold' | 'cyan';
@@ -119,11 +161,17 @@ export type PageBlock = IHeroBlock | IHeadingBlock | IParagraphBlock | ITilesBlo
 export interface IContentPage {
   title: string;
   blocks: PageBlock[];
+  /** Present only when the page is written for operators; absent means the user plane. */
+  plane?: PagePlane;
 }
 
 export interface IPageDocument {
   version: number;
   pages: { [key: string]: IContentPage };
+  /** Present when the document carries a vocabulary object; a malformed one is dropped. */
+  vocabulary?: IVocabulary;
+  /** Present when the document carries a settings object; a malformed one is dropped. */
+  settings?: IDocumentSettings;
 }
 
 type Raw = { [key: string]: unknown };
@@ -319,6 +367,87 @@ export function parseBlock(value: unknown): PageBlock | undefined {
   }
 }
 
+/** The plane a page names; anything but `operator` is the user plane. */
+export function readPlane(value: unknown): PagePlane {
+  return readTone(PAGE_PLANES, value) ?? DEFAULT_PAGE_PLANE;
+}
+
+/** The plane of a parsed page (user unless the page says operator). */
+export function pagePlane(page: IContentPage): PagePlane {
+  return page.plane ?? DEFAULT_PAGE_PLANE;
+}
+
+/** Trimmed, non-empty strings of an object, keyed as written; anything else is left out. */
+function readStringMap(value: unknown): { [key: string]: string } {
+  const raw: Raw | undefined = asObject(value);
+  const map: { [key: string]: string } = {};
+  if (raw !== undefined) {
+    for (const key of Object.keys(raw)) {
+      const text: string | undefined = readText(raw[key]);
+      if (text !== undefined) {
+        map[key] = text;
+      }
+    }
+  }
+  return map;
+}
+
+/** Only the known keys of a string map. */
+function pickKeys<K extends string>(map: { [key: string]: string }, keys: readonly K[]): { [key in K]?: string } {
+  const picked: { [key in K]?: string } = {};
+  for (const key of keys) {
+    if (Object.prototype.hasOwnProperty.call(map, key)) {
+      picked[key] = map[key];
+    }
+  }
+  return picked;
+}
+
+function readTruthStateWording(value: unknown): { [key in TruthStateKey]?: ITruthStateWording } {
+  const raw: Raw | undefined = asObject(value);
+  const wording: { [key in TruthStateKey]?: ITruthStateWording } = {};
+  if (raw !== undefined) {
+    for (const key of TRUTH_STATE_KEYS) {
+      const entry: Raw | undefined = asObject(raw[key]);
+      if (entry !== undefined) {
+        const item: ITruthStateWording = {};
+        setOptional(item, 'label', readText(entry.label));
+        setOptional(item, 'definition', readText(entry.definition));
+        wording[key] = item;
+      }
+    }
+  }
+  return wording;
+}
+
+/** The vocabulary section: string maps only, unknown keys ignored, anything malformed left out. */
+export function parseVocabulary(value: unknown): IVocabulary {
+  const raw: Raw | undefined = asObject(value);
+  if (raw === undefined) {
+    return { truthStates: {}, requestStatuses: {}, chrome: {}, roles: {}, telemetry: {} };
+  }
+  return {
+    truthStates: readTruthStateWording(raw.truthStates),
+    requestStatuses: readStringMap(raw.requestStatuses),
+    chrome: pickKeys(readStringMap(raw.chrome), CHROME_LABELS),
+    roles: readStringMap(raw.roles),
+    telemetry: readStringMap(raw.telemetry)
+  };
+}
+
+function readBoundedInteger(value: unknown, max: number, fallback: number): number {
+  return typeof value === 'number' && isFinite(value) && Math.floor(value) === value && value >= 1 && value <= max ? value : fallback;
+}
+
+/** The settings section: whole numbers within their bounds, the defaults for anything else. */
+export function parseSettings(value: unknown): IDocumentSettings {
+  const raw: Raw | undefined = asObject(value);
+  return {
+    freshnessDays: readBoundedInteger(raw === undefined ? undefined : raw.freshnessDays, MAX_FRESHNESS_DAYS, DEFAULT_SETTINGS.freshnessDays),
+    minimumCohort: readBoundedInteger(raw === undefined ? undefined : raw.minimumCohort, MAX_MINIMUM_COHORT, DEFAULT_SETTINGS.minimumCohort)
+  };
+}
+
 function parsePage(value: unknown): IContentPage | undefined {
   const raw: Raw | undefined = asObject(value);
   const title: string | undefined = raw === undefined ? undefined : readText(raw.title);
@@ -332,10 +461,18 @@ function parsePage(value: unknown): IContentPage | undefined {
       blocks.push(block);
     }
   }
-  return { title, blocks };
+  const page: IContentPage = { title, blocks };
+  if (readPlane(raw.plane) === 'operator') {
+    page.plane = 'operator';
+  }
+  return page;
 }
 
-/** Parses the document text; undefined unless it is a version 1 object with a pages object. */
+/**
+ * Parses the document text; undefined unless it is a version 1 object with a pages object. The
+ * optional `vocabulary` and `settings` sections are carried when they are objects and dropped
+ * (never the document) when they are not.
+ */
 export function parsePageDocument(text: string): IPageDocument | undefined {
   let parsed: unknown;
   try {
@@ -355,7 +492,14 @@ export function parsePageDocument(text: string): IPageDocument | undefined {
       pages[key] = page;
     }
   }
-  return { version: PAGE_DOCUMENT_VERSION, pages };
+  const document: IPageDocument = { version: PAGE_DOCUMENT_VERSION, pages };
+  if (asObject(raw.settings) !== undefined) {
+    document.settings = parseSettings(raw.settings);
+  }
+  if (asObject(raw.vocabulary) !== undefined) {
+    document.vocabulary = parseVocabulary(raw.vocabulary);
+  }
+  return document;
 }
 
 /** The configured document path, or the default when blank. */
