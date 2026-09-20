@@ -6,6 +6,7 @@ import type { IDraftStore } from '../services/draftStorage';
 import type { IMyWorkService } from '../services/myWorkService';
 import type { Navigate } from '../services/navigation';
 import type { IPageContentService } from '../services/pageContentService';
+import type { IProgramMeasuresService } from '../services/programMeasuresService';
 import type { IRoleResolver } from '../services/roleResolver';
 import type { IToolPolicyEvaluator } from '../services/toolPolicyEvaluator';
 import type { IGovernanceService, IUsageMetricsService } from '../services/types';
@@ -29,6 +30,8 @@ export interface IFrontDoorServices {
   myWork?: IMyWorkService;
   /** Resolves the roles of the signed-in person from the site groups; absent in the legacy-only test setups (everyone is then an employee). */
   roles?: IRoleResolver;
+  /** Reads the program measures; present for web parts, absent in the legacy-only test setups (every measure then reads as not available). */
+  programMeasures?: IProgramMeasuresService;
 }
 
 /** Everything the pages need from the host: who is looking, where they are, and the services to talk to. */

@@ -593,6 +593,44 @@
   margin: 6px 0 0;
 }
 
+/* Measure tiles: the shipped metric card in a three-column row, with the evidence a placeholder waits for and the operator codes below it. */
+#overture-ai-coe-pilot .ai-view--page .ai-page-kpi {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+#overture-ai-coe-pilot .ai-view--page .ai-metric-evidence {
+  color: #5b6878;
+  font-size: 13px;
+  font-style: italic;
+  line-height: 1.45;
+  margin: 8px 0 0;
+}
+
+#overture-ai-coe-pilot .ai-view--page .ai-metric-codes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 10px;
+  margin: 10px 0 0;
+}
+
+#overture-ai-coe-pilot .ai-view--page .ai-metric-codes code {
+  background: #e5ebf0;
+  border-radius: 6px;
+  color: #10243e;
+  font-family: Consolas, Menlo, monospace;
+  font-size: 14px;
+  padding: 1px 6px;
+}
+
+#overture-ai-coe-pilot .ai-view--page .ai-page-kpi-note {
+  color: #5b6878;
+  font-size: 13px;
+  line-height: 1.45;
+  margin: 8px 0 0;
+}
+
 /* My work: the person's own requests as rows on the card surface, each with the workflow, the status pill, the reference and the dates. */
 #overture-ai-coe-pilot .ai-view--page .ai-page-mywork-title {
   color: #10243e;
@@ -1212,6 +1250,7 @@
 #overture-ai-coe-pilot .ai-view--narrow .ai-page-cards,
 #overture-ai-coe-pilot .ai-view--narrow .ai-page-cards--3,
 #overture-ai-coe-pilot .ai-view--narrow .ai-page-cases,
+#overture-ai-coe-pilot .ai-view--narrow .ai-page-kpi,
 #overture-ai-coe-pilot .ai-view--narrow .ai-page-lanes,
 #overture-ai-coe-pilot .ai-view--narrow .ai-page-status,
 #overture-ai-coe-pilot .ai-view--narrow .ai-page-strip,

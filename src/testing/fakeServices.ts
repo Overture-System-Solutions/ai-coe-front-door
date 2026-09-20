@@ -7,6 +7,7 @@ import type { IIdeaDraftResult, IIdeaDraftService } from '../webparts/aiCoeFront
 import type { IDraftStore } from '../webparts/aiCoeFrontDoor/services/draftStorage';
 import type { IMyWorkResult, IMyWorkService } from '../webparts/aiCoeFrontDoor/services/myWorkService';
 import type { IPageContentResult, IPageContentService } from '../webparts/aiCoeFrontDoor/services/pageContentService';
+import type { IProgramMeasuresResult, IProgramMeasuresService } from '../webparts/aiCoeFrontDoor/services/programMeasuresService';
 import type { IRoleResolution, IRoleResolver } from '../webparts/aiCoeFrontDoor/services/roleResolver';
 import { createToolPolicyEvaluator } from '../webparts/aiCoeFrontDoor/services/toolPolicyEvaluator';
 import type { IToolPolicyEvaluator } from '../webparts/aiCoeFrontDoor/services/toolPolicyEvaluator';
@@ -145,6 +146,29 @@ export function createFakeMyWorkService(result: IMyWorkResult | Promise<IMyWorkR
 /** Never answers: for asserting the loading state of the my-work piece and the status strip. */
 export function createPendingMyWorkService(): IFakeMyWorkService {
   return createFakeMyWorkService(new Promise<IMyWorkResult>((): void => undefined));
+}
+
+export interface IFakeProgramMeasuresService extends IProgramMeasuresService {
+  calls: number;
+}
+
+export const EMPTY_MEASURES_RESULT: IProgramMeasuresResult = { state: 'ok', measures: {}, message: 'Read 0 measures.' };
+
+/** Resolves with `result` (a value or a promise the test controls) on every call; no measures by default. */
+export function createFakeProgramMeasuresService(result: IProgramMeasuresResult | Promise<IProgramMeasuresResult> = EMPTY_MEASURES_RESULT): IFakeProgramMeasuresService {
+  const service: IFakeProgramMeasuresService = {
+    calls: 0,
+    getMeasures: async (): Promise<IProgramMeasuresResult> => {
+      service.calls += 1;
+      return result;
+    }
+  };
+  return service;
+}
+
+/** Never answers: for asserting the loading state of the measure tiles. */
+export function createPendingProgramMeasuresService(): IFakeProgramMeasuresService {
+  return createFakeProgramMeasuresService(new Promise<IProgramMeasuresResult>((): void => undefined));
 }
 
 export interface IFakeRoleResolver extends IRoleResolver {

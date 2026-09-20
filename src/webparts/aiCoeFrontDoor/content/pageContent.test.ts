@@ -1,6 +1,7 @@
 /* eslint-disable no-script-url -- the script URLs are the hostile inputs the href guard is tested against */
 import {
   DEFAULT_CONTENT_URL,
+  DEFAULT_KPI_UNAVAILABLE_TEXT,
   DEFAULT_SETTINGS,
   DEFAULT_VOCABULARY,
   isExternalHref,
@@ -29,6 +30,7 @@ import type {
   IHeroBlock,
   ILanesBlock,
   INoticeBlock,
+  IKpiBlock,
   IPageDocument,
   IPieceBlock,
   IRulesBlock,
@@ -680,6 +682,40 @@ describe('blocks', () => {
       expect((parseBlock({ type: 'caseCards', items: [{ id: 'x', title: 'y', state: code }] }) as ICaseCardsBlock).items[0].state).toBe(code);
     }
     expect(parseShared({ footer: [{ type: 'caseCards', items: [{ id: 'x', title: 'y', state: 'DRAFT' }] }] }).footer.map((block): string => block.type)).toEqual(['caseCards']);
+  });
+
+  it('reads measure tiles: an id each, an optional label and example flag, and nothing the row alone may say', () => {
+    const kpi: IKpiBlock = parseBlock({
+      type: 'kpi',
+      items: [
+        { id: ' useful-safe-completion-rate ', label: ' Useful safe completion rate ' },
+        // A tile that illustrates how a measure reads carries the flag; the number still comes from the row.
+        { id: 'median-time-to-useful-outcome', illustrative: true },
+        // Anything a document might be tempted to assert about a measure is dropped: only the list holds these.
+        { id: 'repeat-use', label: '', value: 0.62, unit: '%', state: 'MEASURED', periodEnd: '2026-06-30', evidenceRef: 'EV-2026-Q2', cohortSize: 48, illustrative: 'yes' },
+        { label: 'No id' },
+        { id: '   ' },
+        'text'
+      ],
+      unavailableText: ' No measures could be read. '
+    }) as IKpiBlock;
+    expect(kpi).toEqual({
+      type: 'kpi',
+      items: [
+        { id: 'useful-safe-completion-rate', label: 'Useful safe completion rate' },
+        { id: 'median-time-to-useful-outcome', illustrative: true },
+        { id: 'repeat-use' }
+      ],
+      unavailableText: 'No measures could be read.'
+    });
+    expect((parseBlock({ type: 'kpi', items: [{ id: 'a' }] }) as IKpiBlock).unavailableText).toBe(DEFAULT_KPI_UNAVAILABLE_TEXT);
+    expect(DEFAULT_KPI_UNAVAILABLE_TEXT).toBe('Measures unavailable: the measures list could not be read.');
+    expect(parseBlock({ type: 'kpi', items: [] })).toBeUndefined();
+    expect(parseBlock({ type: 'kpi', items: [{ label: 'No id' }] })).toBeUndefined();
+    expect(parseBlock({ type: 'kpi' })).toBeUndefined();
+    // The block may name the roles it is written for, like every other block, and may sit in the shared footer.
+    expect((parseBlock({ type: 'kpi', items: [{ id: 'a' }], audience: ['leader'] }) as IKpiBlock).audience).toEqual(['leader']);
+    expect(parseShared({ footer: [{ type: 'kpi', items: [{ id: 'a' }] }] }).footer.map((block): string => block.type)).toEqual(['kpi']);
   });
 });
 

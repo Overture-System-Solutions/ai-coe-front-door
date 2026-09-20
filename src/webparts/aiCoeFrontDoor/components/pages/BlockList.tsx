@@ -4,6 +4,7 @@ import type { DraftFlags } from '../LandingPage';
 import { CardsBlock } from './blocks/CardsBlock';
 import { CaseCardsBlock } from './blocks/CaseCardsBlock';
 import { HeroBlock } from './blocks/HeroBlock';
+import { KpiTilesBlock } from './blocks/KpiTilesBlock';
 import { LanesBlock } from './blocks/LanesBlock';
 import { NoticeBlock } from './blocks/NoticeBlock';
 import { PieceBlock } from './blocks/PieceBlock';
@@ -50,6 +51,8 @@ export function renderBlock(block: PageBlock, drafts: DraftFlags): React.ReactEl
       return <SupportRouteBlock block={block} />;
     case 'caseCards':
       return <CaseCardsBlock block={block} />;
+    case 'kpi':
+      return <KpiTilesBlock block={block} />;
     default:
       return <PieceBlock block={block} drafts={drafts} />;
   }

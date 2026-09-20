@@ -302,6 +302,26 @@ describe('Page view stylesheet', () => {
     expect(rule(table, '.ai-view--narrow .ai-page-cases')).toEqual(['grid-template-columns:1fr']);
   });
 
+  it('lays out the measure tiles on the shipped metric card, three across', () => {
+    // The tile itself is the shipped telemetry metric card, unchanged: only the row it sits in and the two lines
+    // below it are new, so a measure reads exactly like the numbers the front door already draws.
+    expect(rule(table, '.ai-view--page .ai-page-kpi')).toEqual(['display:grid', 'gap:16px', 'grid-template-columns:repeat(3, minmax(0, 1fr))']);
+    expect(shipped.indexOf('.ai-metric-card')).toBeGreaterThan(-1);
+    expect(shipped.indexOf('.ai-metric-value.is-pending')).toBeGreaterThan(-1);
+    expect(rule(table, '.ai-view--page .ai-metric-card')).toBeUndefined();
+    expect(rule(table, '.ai-view--page .ai-metric-value')).toBeUndefined();
+    // The evidence a placeholder waits for reads as the quiet caption it is; the note under the tiles matches it.
+    expect(rule(table, '.ai-view--page .ai-metric-evidence')).toEqual(['color:#5b6878', 'font-size:13px', 'font-style:italic', 'line-height:1.45', 'margin:8px 0 0']);
+    expect(rule(table, '.ai-view--page .ai-page-kpi-note')).toEqual(['color:#5b6878', 'font-size:13px', 'line-height:1.45', 'margin:8px 0 0']);
+    // The operator codes are chips in the same code style the reference and the case id use.
+    expect(rule(table, '.ai-view--page .ai-metric-codes')).toEqual(['display:flex', 'flex-wrap:wrap', 'gap:6px 10px', 'margin:10px 0 0']);
+    expect(rule(table, '.ai-view--page .ai-metric-codes code')).toEqual(rule(table, '.ai-view--page .ai-mywork-row code'));
+    for (const colour of ['#5b6878', '#e5ebf0', '#10243e']) {
+      expect(shipped.indexOf(colour)).toBeGreaterThan(-1);
+    }
+    expect(rule(table, '.ai-view--narrow .ai-page-kpi')).toEqual(['grid-template-columns:1fr']);
+  });
+
   it('draws the page-view chrome: the header line and the identity line, in every page view', () => {
     // The header keeps the shipped workflow header's size and weight; the identity line is quiet, in the shipped muted ink.
     expect(rule(table, '.ai-view .ai-page-header')).toEqual(['margin:0']);

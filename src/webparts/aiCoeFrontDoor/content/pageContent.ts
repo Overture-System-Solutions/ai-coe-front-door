@@ -349,6 +349,31 @@ export interface ICaseCardsBlock extends IBlockAudience {
   items: ICaseCardItem[];
 }
 
+/**
+ * One measure the Enterprise value page asks the measures list for. The document names the measure
+ * and, when the list's own title is not the wording a page wants, the label to show; the number, the
+ * period, the evidence and the size of the group all come from the row, never from the document, so
+ * a measure nobody has recorded reads as a placeholder rather than as a figure someone wrote down.
+ */
+export interface IKpiItem {
+  /** The `MeasureId` of the row to read. */
+  id: string;
+  /** The wording above the number; the row's title, or the id, when the document gives none. */
+  label?: string;
+  /** Present when the tile illustrates how a measure reads, not a measure of this environment. */
+  illustrative?: true;
+}
+
+/** The measure tiles of a page; each reads one row of the measures list, or shows why it cannot. */
+export interface IKpiBlock extends IBlockAudience {
+  type: 'kpi';
+  items: IKpiItem[];
+  /** Shown once under the tiles when the measures list could not be read at all. */
+  unavailableText: string;
+}
+
+export const DEFAULT_KPI_UNAVAILABLE_TEXT: string = 'Measures unavailable: the measures list could not be read.';
+
 export type PageBlock =
   | IHeroBlock
   | IHeadingBlock
@@ -363,7 +388,8 @@ export type PageBlock =
   | INoticeBlock
   | IRulesBlock
   | ISupportRouteBlock
-  | ICaseCardsBlock;
+  | ICaseCardsBlock
+  | IKpiBlock;
 
 export interface IContentPage {
   title: string;
@@ -733,6 +759,29 @@ export function parseCaseCards(raw: Raw): ICaseCardsBlock | undefined {
   return items.length === 0 ? undefined : { type: 'caseCards', items };
 }
 
+function readKpiItem(raw: Raw): IKpiItem | undefined {
+  const id: string | undefined = readText(raw.id);
+  if (id === undefined) {
+    return undefined;
+  }
+  const item: IKpiItem = { id };
+  setOptional(item, 'label', readText(raw.label));
+  if (readFlag(raw.illustrative) === true) {
+    item.illustrative = true;
+  }
+  // A number, a period or an evidence reference written here would be a claim the document cannot make: only the row can.
+  return item;
+}
+
+/** The measure tiles: needs at least one item naming a measure; the unavailable line falls back to its default. */
+export function parseKpi(raw: Raw): IKpiBlock | undefined {
+  const items: IKpiItem[] = readItems(raw.items, readKpiItem);
+  if (items.length === 0) {
+    return undefined;
+  }
+  return { type: 'kpi', items, unavailableText: readText(raw.unavailableText) ?? DEFAULT_KPI_UNAVAILABLE_TEXT };
+}
+
 /**
  * Reads one block; undefined for anything that is not a well-formed block of a known type. Any block
  * may name the roles it is written for; a malformed or empty audience is left out, so the block stays
@@ -781,6 +830,8 @@ function parseTypedBlock(raw: Raw): PageBlock | undefined {
       return parseSupportRoute(raw);
     case 'caseCards':
       return parseCaseCards(raw);
+    case 'kpi':
+      return parseKpi(raw);
     default:
       return undefined;
   }

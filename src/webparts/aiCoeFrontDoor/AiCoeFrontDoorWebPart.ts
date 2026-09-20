@@ -35,6 +35,7 @@ import { GovernanceService } from './services/GovernanceService';
 import { MyWorkService } from './services/myWorkService';
 import { browserNavigate } from './services/navigation';
 import { PageContentService } from './services/pageContentService';
+import { ProgramMeasuresService } from './services/programMeasuresService';
 import { RoleResolver } from './services/roleResolver';
 import { createToolPolicyEvaluator } from './services/toolPolicyEvaluator';
 import type { IServiceContext } from './services/types';
@@ -59,6 +60,7 @@ interface ICoreServices {
   governance: GovernanceService;
   usage: UsageMetricsService;
   myWork: MyWorkService;
+  programMeasures: ProgramMeasuresService;
   draftStore: LocalStorageDraftStore;
   flowClient: () => Promise<IDraftHttpClient>;
   user: IFrontDoorUser;
@@ -85,6 +87,7 @@ export default class AiCoeFrontDoorWebPart extends BaseClientSideWebPart<IAiCoeF
       governance: new GovernanceService(serviceContext),
       usage: new UsageMetricsService(serviceContext),
       myWork: new MyWorkService(serviceContext),
+      programMeasures: new ProgramMeasuresService(serviceContext),
       draftStore: new LocalStorageDraftStore(browserLocalStorage()),
       flowClient: createFlowClientFactory(this.context.aadHttpClientFactory),
       user: serviceContext.user,
@@ -307,6 +310,7 @@ export default class AiCoeFrontDoorWebPart extends BaseClientSideWebPart<IAiCoeF
         governance: core.governance,
         usage: core.usage,
         myWork: core.myWork,
+        programMeasures: core.programMeasures,
         // Reads the site groups once per bundle; the manageWeb answer is passed in at the call, never checked again.
         roles: new RoleResolver(core.serviceContext, parseRoleGroups(roleGroups)),
         draftStore: core.draftStore,
