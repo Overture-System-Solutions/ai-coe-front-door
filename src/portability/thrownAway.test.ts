@@ -12,7 +12,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { findTenantWords, readTenantWords } from '../provisioning/tenantWords';
 import type { ITenantWords } from '../provisioning/tenantWords';
-import { DECISIONS_LIST_TITLE, INTAKES_LIST_TITLE, USE_CASES_LIST_TITLE } from '../webparts/aiCoeFrontDoor/services/GovernanceService';
+import { DECISIONS_LIST_TITLE, INTAKES_LIST_TITLE, OUTCOME_RECORDS_LIST_TITLE, USE_CASES_LIST_TITLE } from '../webparts/aiCoeFrontDoor/services/GovernanceService';
 import { PROGRAM_MEASURES_LIST_TITLE } from '../webparts/aiCoeFrontDoor/services/lists';
 import { INCIDENTS_LIST_TITLE, USAGE_LIST_TITLE } from '../webparts/aiCoeFrontDoor/services/UsageMetricsService';
 
@@ -87,6 +87,11 @@ describe('what would be thrown away', () => {
       const row: string[] | undefined = rows.filter((cells: string[]): boolean => cells[0] === `\`${name}\``)[0];
       expect({ name, row }).toEqual({ name, row: [`\`${name}\``, expect.stringContaining('parameters.json'), definition.parameters[name].kind, expect.stringMatching(/\S/)] });
     }
+    // 1.0.0.15 binds one more site group, the pilot team's, and it is a group like the other three: blank is a
+    // warning, the page it protects stays owners-only, and no group title is ever committed.
+    expect(names).toContain('PilotGroup');
+    const pilotGroup: string[] = rows.filter((cells: string[]): boolean => cells[0] === '`PilotGroup`')[0];
+    expect(pilotGroup[2]).toBe('group');
   });
 
   it('documents every tenant-bound web part property and every list title the services read', () => {
@@ -105,8 +110,14 @@ describe('what would be thrown away', () => {
       const row: string[] | undefined = rows.filter((cells: string[]): boolean => cells[0] === `\`${name}\``)[0];
       expect({ name, row }).toEqual({ name, row: [`\`${name}\``, expect.stringContaining('property'), 'property', expect.stringMatching(/\S/)] });
     }
-    // The measures list is the first the script itself creates (1.0.0.14); it is a tenant's own rows like the rest.
-    for (const title of [INTAKES_LIST_TITLE, USE_CASES_LIST_TITLE, DECISIONS_LIST_TITLE, USAGE_LIST_TITLE, INCIDENTS_LIST_TITLE, PROGRAM_MEASURES_LIST_TITLE]) {
+    // The page link to the outcome record is a page-view property like the other `page*` links: it binds to a page of
+    // this site, not to the tenant, so it is filtered out above and the rebind table carries no row for it (1.0.0.15).
+    expect(readManifestProperties()).toContain('pageOutcome');
+    expect(properties).not.toContain('pageOutcome');
+    expect(rows.filter((cells: string[]): boolean => cells[0] === '`pageOutcome`')).toEqual([]);
+    // The measures list is the first the script itself creates (1.0.0.14), the outcome records the second (1.0.0.15);
+    // both hold a tenant's own rows like the rest.
+    for (const title of [INTAKES_LIST_TITLE, USE_CASES_LIST_TITLE, DECISIONS_LIST_TITLE, USAGE_LIST_TITLE, INCIDENTS_LIST_TITLE, PROGRAM_MEASURES_LIST_TITLE, OUTCOME_RECORDS_LIST_TITLE]) {
       const row: string[] | undefined = rows.filter((cells: string[]): boolean => cells[0] === title)[0];
       expect({ title, row }).toEqual({ title, row: [title, expect.stringMatching(/\S/), 'list', expect.stringMatching(/\S/)] });
     }
@@ -119,6 +130,11 @@ describe('what would be thrown away', () => {
       const row: string[] | undefined = rows.filter((cells: string[]): boolean => cells[0].indexOf(exception) >= 0)[0];
       expect({ exception, row }).toEqual({ exception, row: [expect.stringContaining(exception), expect.stringMatching(/\S/), expect.stringMatching(/\S/), expect.stringMatching(/\S/)] });
     }
+    // The record key of 1.0.0.15 keys a second list: the same prefix is written to `OutcomeId`, so the exception
+    // names both columns the companion flows and the operators read it from.
+    const key: string[] = rows.filter((cells: string[]): boolean => cells[0].indexOf('OVT-AICOE-') >= 0)[0];
+    expect(key[1]).toContain('OutcomeId');
+    expect(key[1]).toContain(OUTCOME_RECORDS_LIST_TITLE);
     // The word list itself is the one file that is not tenant-neutral, and the README says so where the exceptions are.
     expect(exceptions()).toContain('src/provisioning/tenantWords.json');
     expect(exceptions()).toContain('deliberately not tenant-neutral');

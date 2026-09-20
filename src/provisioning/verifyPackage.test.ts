@@ -13,7 +13,7 @@ import * as path from 'path';
 import { TENANT_WORDS_PATH } from './tenantWords';
 
 const ROOT: string = process.cwd();
-const RELEASE: string = '1.0.0.14';
+const RELEASE: string = '1.0.0.15';
 const script: string = fs.readFileSync(path.join(ROOT, 'scripts/verify-package.mjs'), 'utf8');
 
 /** The sixteen `required_inventory_fields` of 13_SECURITY_AND_THREAT_MODEL/secrets-supply-chain.yaml, in its order. */
@@ -86,6 +86,16 @@ describe('verify-package', () => {
     // The three files bump together (CON-VERSION-BUMP).
     expect(readJson<{ solution: { version: string } }>('config/package-solution.json').solution.version).toBe(RELEASE);
     expect(fs.readFileSync(path.join(ROOT, 'README.md'), 'utf8')).toContain(`## Deploy ${RELEASE}`);
+  });
+
+  it('counts the eleven toolbox entries of 1.0.0.15, the legacy view first and the outcome record last', () => {
+    // The packaged component manifest is what a site reads: one entry per piece, the content page and, since
+    // 1.0.0.15, the outcome record. The legacy entry stays first so an upgraded instance without a view renders
+    // as before, and the new entry is appended last.
+    expect(script).toMatch(/preconfiguredViews\.length === 11/);
+    expect(script).toContain('Expected eleven toolbox entries');
+    expect(script).toMatch(/preconfiguredViews\[0\] === 'legacy'/);
+    expect(script).toMatch(/preconfiguredViews\[preconfiguredViews\.length - 1\] === 'outcome'/);
   });
 
   it('reads the forbidden words from the tenant word list and scans the bundle, the strings chunk and the packaged manifest', () => {

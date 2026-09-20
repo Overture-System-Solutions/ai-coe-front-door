@@ -6,7 +6,7 @@ feedback), a telemetry snapshot and an administrator dashboard, all writing to S
 
 This project is the maintainable source for the web part that shipped as package **1.0.0.7** (`original/`). The
 shipped package was reverse-engineered (see `docs/RECOVERY.md`) and then ported to idiomatic TypeScript with a
-test-first approach. It builds the next in-place upgrade, **1.0.0.14**, with the same solution, feature and web part
+test-first approach. It builds the next in-place upgrade, **1.0.0.15**, with the same solution, feature and web part
 identities, and it is tenant neutral: the organization name is a web part property. Since 1.0.0.10 the front door can
 also be spread over several native pages, one piece per page, since 1.0.0.11 it renders whole content pages from a
 document in Site Assets, in its own style (see "Lay out the front door across pages"), since 1.0.0.12 the first
@@ -18,7 +18,10 @@ Operations page (see "Receipts", "My work", "List security" and "Deploy"), and s
 decide what a page offers: a leaders' Enterprise value page that shows a number only where a measure was recorded
 with its evidence, the two operator pages behind their groups, the colours of the organization as a parameter, and
 a run that reports the release it published and every binding the site still owes (see "Branding", "Palette
-override", "Page permissions" and "Instance properties").
+override", "Page permissions" and "Instance properties"), and since 1.0.0.15 a pilot team can be given a start page
+of its own, keyed on the team's name and read by its own site group, and anyone can record how a task went on a page
+whose every answer is a choice, so the row it writes holds no prompt, no output and no text of the work itself (see
+"Deploy", "The outcome record" and "Lists").
 
 ## Work with it
 
@@ -61,64 +64,68 @@ Use Node.js 22.14 or newer (below 23) and npm.
   inventory fields; what the lock file cannot say reads `AWAITING_TENANT_INVENTORY` until the tenant inventory
   fills it). Both files are committed with each release.
 
-## Deploy 1.0.0.14
+## Deploy 1.0.0.15
 
 Upload `sharepoint/solution/overture-ai-coe-front-door.sppkg` to the app catalog as an update of the existing app.
 The solution id (`f125ebdf-4a9d-4e6e-8479-3a18874e7752`), feature id (`69ab84b7-608c-47ee-9623-af8ebaf2cb10`,
 version 1.0.0.2) and web part id (`cf2e5904-0703-4fe4-ae5a-ec012d6fa689`) are unchanged, so the three provisioned
-lists (AI CoE Pilot Intakes and its two schemas under `sharepoint/assets/`) are left untouched; 1.0.0.14 changes no
-shipped list and no column of one. It adds two web part properties, both in the Branding group and both blank by
-default: `roleGroups`, which binds site groups to the roles the front door knows, and `paletteOverrides`, which
-carries the colours of the organization (see "Branding" and "Palette override"). What it changes on the site comes
-from the script, not the package: one new list, **AI CoE Program Measures**, created from the `lists` section of
-`pages.json` (see "Lists"); one new page, **Enterprise value**, behind `groups:LeadersGroup,OperatorsGroup`; the
-Operations page moved from owners-only to `groups:OperatorsGroup` (owners keep it either way); and the operators
-group added to the two secured intake lists at Full Control, so an operator reads every request row. The other four
+lists (AI CoE Pilot Intakes and its two schemas under `sharepoint/assets/`) are left untouched; 1.0.0.15 changes no
+shipped list and no column of one. It adds one web part property, `pageOutcome` (**Record a task outcome page**, in
+the Page links group, blank by default), which is where a home piece sends the sixth card, and an eleventh toolbox
+entry, **AI CoE: Record a task outcome**, which presets the new outcome piece; the ten entries before it, the legacy
+view first, are unchanged. What it changes on the site comes from the script, not the package: one new list,
+**AI CoE Outcome Records**, created from the `lists` section of `pages.json` and secured from its own declaration
+(see "Lists" and "The outcome record"); one new page, **Record a task outcome**, a child of Requests that everyone
+may open; and one new page for a pilot team, **{PilotTeamName} start** (`Pilot-start.aspx`), behind
+`groups:PilotGroup` and keyed on `PilotTeamName` with `skipWhenBlank`, so a site that names no pilot team never
+builds it and nothing on the site points at it. The content document also gains the three workflow cards and the
+"What this site records" notice on Start here, and the outcome card on the Requests home piece. The other four
 lists the web part reads (AI CoE Use Cases, AI CoE Decisions, AI Usage Daily, AI CoE Incidents) are provisioned by
 the companion Power Automate solutions, exactly as before.
 
-Do first, before the script runs: create the site groups this release binds (a leaders group, an operators group
-and, if you want the role bound at all, a design authority group) and put their titles in `LeadersGroup`,
-`OperatorsGroup` and `DesignAuthorityGroup` in `parameters.json`, with `Palette` and `ContentRelease` if you want
-them. A group parameter that is blank, or that names a group the site does not carry, is a warning and not an
-error: the page that names it stays owners-only and the role behind it stays unbound (see "Page permissions").
+Do first, before the script runs: if this site is running a pilot, create the pilot team's site group, put its title
+in `PilotGroup` and the team's name in `PilotTeamName` in `parameters.json` (the groups of 1.0.0.14 stay as they
+are). Both blanks are allowed and neither is an error: a blank `PilotTeamName` skips the start page altogether, and
+a blank or unknown `PilotGroup` is a warning that leaves the page owners-only (see "Page permissions"). The outcome
+page and its list are built either way, because recording how a task went is not a pilot's privilege.
 
-After deployment the property pane is as in 1.0.0.13, with the two new Branding fields the script fills:
-**Role groups** and **Palette overrides**. Existing instances keep rendering the whole front door on one page: the
-**Page layout → Piece shown on this page** dropdown defaults to that, and the page properties are ignored until
+After deployment the property pane is as in 1.0.0.14, with one new Page links field the script fills on the Requests
+home instance: **Record a task outcome page**. Existing instances keep rendering the whole front door on one page:
+the **Page layout → Piece shown on this page** dropdown defaults to that, and the page properties are ignored until
 another piece is chosen. Then apply the page definition (see "Applying it"): on a site that already carries the
-1.0.0.13 pages the script runs without `-Overwrite`; every existing page keeps its content and its
-instance properties are **updated in place** (see "Instance properties"), so `roleGroups` and `paletteOverrides`
-arrive without rebuilding anything; the measures list is created (or given only the columns it lacks); the content
-document is rewritten (the first screen gains the leader block, Operations gains the bindings section); and the
-Enterprise value page is created. What the web part does differently on every page: it reads the groups of the
-signed-in person once and offers only what their roles allow, and a page that asks for a role nobody holds says so
-instead of showing itself — page and list permissions remain the control.
+1.0.0.14 pages the script runs without `-Overwrite`; every existing page keeps its content and its instance
+properties are **updated in place** (see "Instance properties"), so `pageOutcome` arrives without rebuilding
+anything; the outcome list is created, its inheritance broken, its two built-in person columns taken off the default
+view and `ReadSecurity 2 / WriteSecurity 2` set; the content document is rewritten (Start here gains the workflow
+cards, the records notice and the card to the pilot start; Requests' home piece gains the sixth card); and the two
+new pages are created, the pilot start only where `PilotTeamName` is filled in.
 
-The tenant acceptance for this release: create the groups, fill the group parameters and run the script; signed in
-as someone in neither group (and not a site owner), confirm SharePoint itself refuses `Enterprise-value.aspx` and
-`Operations.aspx`; as a member of the leaders group open Enterprise value and see the three measures as
-placeholders with their evidence notes and no number anywhere; add one row to **AI CoE Program Measures** with
-`MeasureId` `median-time-to-useful-outcome` and `State` `PENDING_BASELINE` and confirm the tile reads *Pending
-baseline*; and confirm the end-of-run summary names the content release and lists every binding still `AWAITING`.
+The tenant acceptance for this release: create the pilot group, set `PilotTeamName` and run the script; open the
+pilot team's start page as a member of that group and confirm the three workflow cards and the five checks are
+there; then record one outcome on **Record a task outcome** and confirm the receipt names the reference, that the
+row in **AI CoE Outcome Records** holds no prompt, no answer and no text of the task itself (every column is a
+choice or a value the web part writes), and that a second member of the pilot group cannot read that row in the
+list UI while an operator can.
 
 ### Rollback
 
-Redeploy the 1.0.0.13 package from that release's build and rerun that version's `New-FrontDoorPages.ps1` without
+Redeploy the 1.0.0.14 package from that release's build and rerun that version's `New-FrontDoorPages.ps1` without
 `-Overwrite`: the content document is rewritten from that version's `pages.json` (Site Assets keeps every version,
-so the 1.0.0.14 document stays in its history), so the first screen loses the leader block and Operations its
-bindings section. What this release added is additive and stays. The **AI CoE Program Measures** list stays with
-its rows, read by nothing (harmless), until an owner deletes it by hand. The **Enterprise value** page stays, a page
-whose instance the older document does not describe (harmless; the page reports the missing key and nothing else),
-or an owner deletes it by hand from Site Pages. The page permissions granted to the leaders and operators groups
-stay as this release set them, because the older script does not touch a page it does not create; reset them by
-hand from each page's permissions panel if that is not wanted, which leaves the two pages owners-only. Instance
-properties are another matter: the older script writes them only on a page it creates, so `roleGroups` and
-`paletteOverrides` stay in the property bags, inert (the 1.0.0.13 bundle reads neither), unless you rerun the older
-script with `-Overwrite`, which rebuilds every page from that version's definition. The intake lists' item-level
-security of 1.0.0.13 is untouched by either script and is reverted by hand as *List security* documents
-(`Set-PnPList -ReadSecurity 1 -WriteSecurity 1`, then `-ResetRoleInheritance`, on each of the two lists); the rows
-are untouched either way.
+so the 1.0.0.15 document stays in its history), so Start here loses the workflow cards, the records notice and the
+card to the pilot start, and the Requests home piece its sixth card. What this release added is additive and stays.
+The **AI CoE Outcome Records** list stays with its rows and the item-level security the script set, read by nothing
+(harmless), until an owner exports the rows and deletes it by hand. The **Record a task outcome** and pilot team
+start pages stay; the older document describes neither key, so the pilot start reports the missing key and nothing
+else, while the outcome page's instance asks for a piece that package does not know and falls back to the whole
+front door on one page — delete either page by hand from Site Pages if that is not wanted. The page permission
+granted to the pilot group stays as this release set it, because the older script does not touch a page it does not
+create; reset it by hand from that page's permissions panel, which leaves the page owners-only. The `pageOutcome`
+property stays in the property bags, inert (the 1.0.0.14 bundle reads it not), unless you rerun the older script
+with `-Overwrite`, which rebuilds every page from that version's definition. The eleventh toolbox entry is part of
+the package, so it disappears with it: **AI CoE: Record a task outcome** is no longer offered when a page is
+edited. The intake lists' item-level security of 1.0.0.13 is untouched by either script and is reverted by hand as
+*List security* documents (`Set-PnPList -ReadSecurity 1 -WriteSecurity 1`, then `-ResetRoleInheritance`, on each of
+the two lists); the rows are untouched either way.
 
 ### Enable AI drafting of idea summaries
 
@@ -429,8 +436,8 @@ section (run before the document upload, from the `listSecurity` entries of `pag
 of `services/lists.ts`) breaks each list's permission inheritance keeping the existing grants, gives the site's Owners
 group Full Control (they read every row, as the admin dashboard needs), gives the same to every site group the entry's
 `fullControlGroups` names (since 1.0.0.14 that is `OperatorsGroup` on both lists, so a person in the operators group
-who is not a site owner reads every request row and not only the rows they sent), and sets the two flags;
-the Members group is left at its level. Each name in `fullControlGroups` is a parameter of kind `group`, never a
+holds Full Control there and, without being a site owner, reads every request row and not only the rows they sent),
+and sets the two flags; the Members group is left at its level. Each name in `fullControlGroups` is a parameter of kind `group`, never a
 group title, so nothing tenant-bound is committed; a group that is blank or that the site does not carry is reported
 with a warning and granted nothing, the list is still secured, and that role then reads only its own rows until the
 group exists and the script is rerun. A list the site does not carry is skipped with a
@@ -515,6 +522,7 @@ reads it, so no two writers meet on one row and every reader's view can be named
 |---|---|---|---|
 | A request row in *AI CoE Pilot Intakes* (key `IntakeId`, `OVT-AICOE-…`) | the web part, one row per submission from any of the five wizards, `Status` `Submitted - Pilot`; read back by id before the receipt; a retry finds the row and writes nothing twice | the companion flows and site owners in the list UI (status, triage); the web part never updates a row | the person who sent it (the `myWork` piece and the `myRequests` count: their own rows, as the list's item-level security returns them), the admin dashboard (owners: every row), the companion flows (their connection holds Override List Behaviors) |
 | A use-case row in *AI CoE Use Cases* (key `CoEID`) | the web part, for the governance workflows only (an AI idea, a tool-check review request, team AI use), `Status` `Submitted`; a retry finds the row by `CoEID` and skips it | the companion flows (triage, approval, outcome) | the admin dashboard; the companion flows |
+| An outcome row in *AI CoE Outcome Records* (key `OutcomeId`, `OVT-AICOE-…`; since 1.0.0.15) | the web part, one row per outcome recorded on *Record a task outcome*: five choices, the key, the moment and the version of the questions, read back by id before the receipt; a retry finds the row and writes nothing twice | nobody: no flow and no page updates a row, and the web part never does | the person who recorded it (their own rows, as the list's item-level security returns them), the site owners and the operators group in the list UI; no page of the front door reads the list back |
 | A decision row in *AI CoE Decisions* | the companion flows | the companion flows | the admin dashboard |
 | Usage rows in *AI Usage Daily*, incidents in *AI CoE Incidents* | the companion telemetry solution (every six hours; an over-budget incident) | the companion telemetry solution (an incident is resolved when spend is back under budget) | the `telemetry` piece on the owners-only Operations page and the legacy landing strip; nothing in the web part writes them |
 | The content document, `SiteAssets/ai-coe-pages.json` | the script, on every run, from `pages.json` and the parameters | a page owner by hand in Site Assets, until the next run rewrites it (Site Assets keeps every version) | every page view: the seven content pages and, for the shared footer, the five form pages |
@@ -655,9 +663,9 @@ state are printed: a value belongs to the tenant and never goes to the console.
 
 **Applying it** (site owner, outside this repository; the build and tests never touch a tenant):
 
-1. Deploy 1.0.0.14 and "Get it" on the site, so the component is available to the script. Create the site groups
-   the definition binds (leaders, operators, design authority) before the run, so the pages that name them are not
-   left owners-only.
+1. Deploy 1.0.0.15 and "Get it" on the site, so the component is available to the script. Create the site groups
+   the definition binds (leaders, operators, design authority, and since 1.0.0.15 the pilot team's) before the run,
+   so the pages that name them are not left owners-only.
 2. Copy `sharepoint/pages/parameters.sample.json` to `sharepoint/pages/parameters.json` (ignored by git), fill in the values.
 3. Run, with PowerShell 7.4 and the pinned PnP.PowerShell version from the script header: the script is written for
    that version and no other. `src/provisioning/pnpCmdletParameters.json` records, per cmdlet, the parameters that
@@ -697,17 +705,19 @@ state are printed: a value belongs to the tenant and never goes to the console.
    rewritten from `pages.json`, so the existing content pages show the new document at once (the first screen, the
    routes, the shared footer; my work and the case card on Status); every existing page keeps its content and gets its
    instance properties updated in place, so `contentUrl` on the five form instances and the Branding properties
-   (`governanceReference`, `reviewSystemName`, `roleGroups`, `paletteOverrides`) arrive without rebuilding anything
+   (`governanceReference`, `reviewSystemName`, `roleGroups`, `paletteOverrides`, and `pageOutcome` on the Requests
+   home instance) arrive without rebuilding anything
    (see *Instance properties*); the intake lists are secured and the declared lists ensured on every run; and a page
-   the definition adds — Operations in the previous release, Enterprise value in this one — is created on that run,
-   with the permissions its `groups:` mode names. The end-of-run summary
-   names the release and every binding that is still `AWAITING` a value.
+   the definition adds — Operations, Enterprise value, the pilot start and the outcome page — is created on that run
+   with the permissions its `groups:` mode names, unless a `skipWhenBlank` parameter of its own is blank. The
+   end-of-run summary names the release and every binding that is still `AWAITING` a value.
 4. Open each page once: check the narrow layout where a piece sits in a column, and add the links behind the tiles
    and calls to action the script reported as shown as closed once their URL parameters are known (rerun with
    `-Overwrite`, or edit the document in Site Assets).
 
-Manual fallback: upload a hand-written `ai-coe-pages.json` to Site Assets, create the fourteen pages by hand, add the
-matching toolbox entry to each (**AI CoE: Content page** with the page key for the seven content pages), type the
+Manual fallback: upload a hand-written `ai-coe-pages.json` to Site Assets, create the sixteen pages by hand, add the
+matching toolbox entry to each (**AI CoE: Content page** with the page key for the nine content pages, **AI CoE:
+Record a task outcome** for the outcome page), type the
 return page into the form pages' property pane, paste the AI draft flow URL on the Explore an AI idea page, pick
 the usage metrics provider on Operations, restrict Operations and the admin page to site owners, and edit the
 navigation in the site header.
@@ -792,9 +802,12 @@ the identity line, the site's owners group on the admin page). Bindings, the pro
 | AI Usage Daily | the companion telemetry solution | list | absent: every usage tile keeps "Awaiting data" |
 | AI CoE Incidents | the companion telemetry solution | list | absent: no alerts are shown |
 | AI CoE Program Measures | the script's "Lists" section, from the `lists` entries of `pages.json` (since 1.0.0.14) | list | absent: every measure reads "Not available" |
+| AI CoE Outcome Records | the script's "Lists" section, from the `lists` entries of `pages.json`, with the item-level security of its own declaration (since 1.0.0.15) | list | absent: an outcome cannot be saved and the page reports it as not available on this site (failure class `SOURCE`), with the answers kept; nothing else reads the list |
 | Item-level security on AI CoE Pilot Intakes and AI CoE Use Cases (since 1.0.0.13) | the script's "List security" section, from the `listSecurity` entries of `pages.json`, on every run | list security | script not run: the lists keep the site's inherited permissions, every site member reads every row, and the `myWork` piece shows whatever the server returns; run the script, then the two-account test under *List security* |
 | The Operations page (since 1.0.0.13) | created by the script, behind `OperatorsGroup` from 1.0.0.14 (owners always), with `telemetryProvider` from `TelemetryProvider`; its plane and blocks in `pages.json` | page | not created (the script not run): the strip is on no page; the legacy landing keeps its own |
 | The Enterprise value page (since 1.0.0.14) | created by the script, behind `LeadersGroup` and `OperatorsGroup` (owners always); its plane, measures and blocks in `pages.json` | page | not created (the script not run): no page reads the measures list, and the `value` route falls back to Status for everyone |
+| The pilot team's start page (since 1.0.0.15) | created by the script from `PilotTeamName` (its title and its `skipWhenBlank` key) and behind `PilotGroup` (owners always); its blocks in `pages.json` | page | not created (no pilot team named, or the script not run): the card on Start here that leads to it is dropped with it, and no other page links to it |
+| The *Record a task outcome* page (since 1.0.0.15) | created by the script as a child of Requests, with `pageOutcome` on the Requests home instance pointing at it; its piece is the outcome record, its list *AI CoE Outcome Records* | page | not created (the script not run): the sixth card is not shown, nothing writes outcome rows, and the rest of the front door is unchanged |
 | `vocabulary.telemetry` (since 1.0.0.13) | the `vocabulary` section of `pages.json`, copied verbatim into the content document | document text | a missing feed label keeps the bundle's feed name for that tile (a portability exception below) |
 
 Rebinding in the contract's order: **export and package** with `npm ci`, `npm run build` and `npm run verify`
@@ -818,7 +831,7 @@ What the built bundle still carries from its first tenant, each with an owner an
 |---|---|---|---|
 | `TESS`, the review-system name | the blank value of `reviewSystemName` in `branding/branding.ts`; rendered in the legacy view only, read by `services/toolPolicyEvaluator.ts` and `summaries/teamUsageSummary.ts` | AI CoE | set `ReviewSystemName` on rebind and the literal is never rendered; the literal leaves the bundle when the legacy view's parity pin is retired |
 | The governance reference, "version 1.1, August 26, 2026" | the blank value of `governanceReference` in `branding/branding.ts`; rendered in the legacy view only | AI CoE policy owner | set `GovernanceReference` on rebind; the script reports it AWAITING until then |
-| `OVT-AICOE-`, the intake id prefix | `services/intakeId.ts`; the `IntakeId` column of AI CoE Pilot Intakes (unique key), relied on by the companion flows | AI CoE records owner | kept as the record key; a tenant work-id prefix waits for a work-records list; existing rows keep their ids |
+| `OVT-AICOE-`, the record id prefix | `services/intakeId.ts`; the `IntakeId` column of AI CoE Pilot Intakes (unique key), relied on by the companion flows, and since 1.0.0.15 the `OutcomeId` column of AI CoE Outcome Records (the same generator, the same prefix, shown as *Reference* on that page's receipt) | AI CoE records owner | kept as the record key of both lists; a tenant work-id prefix waits for a work-records list; existing rows keep their ids |
 | `overture-ai-coe-front-door:draft:`, the localStorage draft key prefix | `content/constants.ts` | front-door maintainers | kept: drafts are per browser and per pilot; renaming would orphan drafts in progress |
 | `overture-ai-coe-pilot`, the DOM scope id, the `.overture-*` classes and `overture-confirm-title`, the confirm dialog heading id | `content/constants.ts`; `styles/theme.global.scss` (the shipped stylesheet, reproduced rule for rule); `controls/ConfirmDialog.tsx` | front-door maintainers | kept: the stylesheet parity suite pins every rule and the legacy screens are parity-locked; changes only with a deliberate stylesheet release; with the package name, the solution name, the draft key prefix and the download file names these are the documented identifiers the verifier masks before its client-word scan of the archive |
 | The telemetry feed labels (`Claude API spend this month`, `OpenAI API spend this month` and the rest) | `content/telemetryTiles.ts`, `services/UsageMetricsService.ts` | AI CoE operations | product names of the usage feeds, not of a tenant; the legacy strip keeps them verbatim (parity); the page-view strip on the owners-only Operations page (1.0.0.13) takes its labels from `vocabulary.telemetry`, so the page names the feed and never a provider |
@@ -892,7 +905,7 @@ The shipped stylesheet is reproduced exactly (`styles/cssParity.test.ts` proves 
 
 ## Tests
 
-`npm test` runs 853 tests in seven layers: pure modules (branding, definitions, page views, the content document
+`npm test` runs 901 tests in seven layers: pure modules (branding, definitions, page views, the content document
 parser and markup, form engine, services, summaries), React Testing Library component and journey tests with fake
 services (including every content block), bundle-level lifecycle tests that
 load the built AMD bundle in a simulated SPFx host, a journey parity suite that plays every workflow through the
