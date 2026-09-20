@@ -214,7 +214,7 @@ copy in its version history). It is UTF-8 JSON:
 | `workCommand` | `prompt` (the question above the input); `placeholder`; `submitLabel` (default `Start`); `route` (a key of the `routes` table, default `work`); `note` (the line under the input; in-text markup allowed); `emptyText` (shown when the sentence is empty, default "Say what you need done first."). One per page: the first screen's single primary control (see *The work command* below) |
 | `notice` | `text` (in-text markup allowed); `tone` `info` (default) or `caution`; `title`. A short aside set apart from the prose (a data boundary, a pilot's limits, what the site records), rendered as a note with a toned left edge and its title, never colour alone |
 | `rules` | `items`, each `{ "title", "text" }` (a rule needs a title; `text` may carry in-text markup); `title`; `ordered` (default `true`: a numbered list; `false` for bullets). A block needs at least one titled item |
-| `supportRoute` | `label` (the route: the pilot channel, a mailbox); `href` (the label becomes a link; an off-site link opens in a new tab); `stopWhen` (a list of the situations in which to stop and ask); `reportFields` (a list of what a report should carry: the task type, the time, the status shown, what was expected); `routes`, each `{ "issue", "owner", "action" }` (a row needs an issue; a blank `owner` reads "not yet named"). Rendered as a "Support" section with the two lists side by side and the routing rows as a description list, never a data grid element. Meant for the shared footer (below), so it is the same help in the same place on every page view (WCAG 2.2 3.2.6, Consistent Help) |
+| `supportRoute` | `label` (the route: the pilot channel, a mailbox); `href` (the label becomes a link; an off-site link opens in a new tab); `stopWhen` (a list of the situations in which to stop and ask); `reportFields` (a list of what a report should carry: the task type, the time, the status shown, what was expected); `routes`, each `{ "issue", "owner", "action", "kind" }` (a row needs an issue; a blank `owner` reads "not yet named"; `kind` is one of `identity`, `privacy`, `approval`, `claims`, `recovery`, `support` and lets the failure notice of a form page name the owner of an access failure (`identity`) or of anything else (`support`) without reading the row's wording; an unknown kind is dropped, the row stays). Rendered as a "Support" section with the two lists side by side and the routing rows as a description list, never a data grid element. Meant for the shared footer (below), so it is the same help in the same place on every page view (WCAG 2.2 3.2.6, Consistent Help) |
 | `piece` | `piece`: `home` (the five path cards and the resource strip; `pages` maps `idea`, `toolCheck`, `teamUsage`, `helpTraining`, `feedback`, `telemetry`, `admin`, `policy` to site paths or URLs) or `telemetry` (the operations snapshot; the instance's usage metrics provider applies) |
 
 `tone` on tiles and cards is `teal` (default), `blue`, `violet`, `gold` or `cyan`. Every `text`, `body`, `note` and
@@ -249,13 +249,38 @@ the fallback (the guided intake) in the same tab, where the wizard resumes with 
 sentence never enters a URL. An empty sentence shows `emptyText` and goes nowhere; a route with no fallback link
 shows "No fallback is configured" and saves nothing.
 
+**Receipts (since 1.0.0.13).** Every submission is read back from the list before the page may say it was saved
+(see *Behaviour notes*). On a form page (a page view) the acknowledgement reflects what the readback found:
+
+- *Saved and confirmed*: the operation and its source ("Saved to the AI CoE request list on this site"), the
+  reference and the time the row was confirmed, "Read back from the list", an "Open the record" link, the reminder
+  that the acknowledgement is not an approval decision, and a *Draft only* pill (the request is recorded, nothing has
+  been sent or decided). Below it a hand-off card, *Continue with …*, resolves the `assistant` route exactly as a tile
+  does: open, it links there (in a new tab, with the reference appended as `?ref=` only when the row declares
+  `carriesReference`); closed, it shows the route's state and links to the fallback. The reference is always shown
+  as text for copying.
+- *Saved, not yet confirmed*: SharePoint accepted the write but did not confirm it back. One button, **Confirm
+  again**, sends the same request under the same reference: the service looks the rows up first and writes only what
+  is missing, so nothing is duplicated. On an operator-plane page the class code (`INCONCLUSIVE`) is shown beside it.
+- A failure notice for anything else: the class in words (*Needs access*, *Not available on this site*, *Not
+  available right now; try again*, *Not supported*), the sentence the service attached (never the response body),
+  what to do, who owns that kind of issue (the shared support route's `identity` row for an access failure, its
+  `support` row otherwise, "not yet named" when blank) and when trying again makes sense; a transient failure offers
+  **Try again**. In every case but *saved*, the answers are kept as a draft on this device: the wizard writes the
+  draft again, so the form resumes on its review or summary step, and clears it only once the record is saved.
+
+The legacy single-page view keeps its shipped acknowledgement and failure screens byte for byte, clears the draft on
+every submit as it always did, and gains one branch: a pending record reads "Saved but not yet confirmed." with the
+advice to open the form again and confirm with the same reference, never the "not created" heading above a record
+that may exist.
+
 The envelope may also carry four optional sections and a page may name its plane; each is lenient and a malformed one
 is dropped, never the document:
 
 | Key | Shape |
 |---|---|
 | `shared` | `{ "footer": [ blocks ] }` — the `footer` blocks every page view draws below its content, in the same relative place: the content pages and the five wizard pages alike (any instance whose `contentUrl` is set). Read like a page's blocks, less `hero`, `piece` and `workCommand`, which belong to one page each and are left out here. Meant for the `supportRoute` block, so the pilot's support route is the same help in the same place everywhere |
-| `routes` | `{ "<key>": { "label", "href", "state", "verifiedOn", "receiptRef", "fallback", "note", "roles", "carriesReference", "capabilityId" } }` — the named destinations tiles, the call to action, status items and the work command point at. A row needs a `label`; `state` is a truth-state key or activation code; `verifiedOn` (YYYY-MM-DD) and `receiptRef` (the tenant qualification receipt reference) are what an off-site `href` needs before it opens; `fallback` names the row people are sent to while this one is closed (`guidedIntake` by default); `roles` limits the row to role ids (everyone when absent); `carriesReference` lets a hand-off card append the record reference; `capabilityId` is reserved. Resolution fails closed, in this order: an unknown key goes to the `guidedIntake` row (no such row: "No fallback is configured", no link); roles named and none held, a blank `href`, or a state other than *Available now* keep the label and link to the fallback with their own pill; an *Available now* off-site `href` without a valid, not-future `verifiedOn` or without `receiptRef` shows "Awaiting source" and links to the fallback; a site path or same-origin URL needs neither. Off-site links never carry user text |
+| `routes` | `{ "<key>": { "label", "href", "state", "verifiedOn", "receiptRef", "fallback", "note", "roles", "carriesReference", "capabilityId" } }` — the named destinations tiles, the call to action, status items and the work command point at. A row needs a `label`; `state` is a truth-state key or activation code; `verifiedOn` (YYYY-MM-DD) and `receiptRef` (the tenant qualification receipt reference) are what an off-site `href` needs before it opens; `fallback` names the row people are sent to while this one is closed (`guidedIntake` by default); `roles` limits the row to role ids (everyone when absent); `carriesReference` lets the hand-off card after a saved request append the record reference to the row's own link as `?ref=<reference>` (see *Receipts*; the fallback link never carries it); `capabilityId` is reserved. Resolution fails closed, in this order: an unknown key goes to the `guidedIntake` row (no such row: "No fallback is configured", no link); roles named and none held, a blank `href`, or a state other than *Available now* keep the label and link to the fallback with their own pill; an *Available now* off-site `href` without a valid, not-future `verifiedOn` or without `receiptRef` shows "Awaiting source" and links to the fallback; a site path or same-origin URL needs neither. Off-site links never carry user text |
 | `settings` | `{ "freshnessDays": 30, "minimumCohort": 5 }` — whole numbers (1–3650 and 1–1000); anything else keeps the default |
 | `vocabulary` | string maps only, unknown keys ignored, a blank keeps the default: `truthStates` `{ "<key>": { "label", "definition" } }` for `availableNow`, `draftOnly`, `needsApproval`, `needsAccess`, `notSupported`; `requestStatuses` `{ "<code>": "plain wording" }`; `chrome` `{ "badge", "example", "needsRefresh", "awaitingSource", "protectedPage" }` (`badge` is the wizard-page header badge, default "Governed intake"); `roles` `{ "<roleId>": "name" }`; `telemetry` `{ "<feedId>": "name" }`. `{organization}` and `{role}` in the text are filled by the web part, not by the script |
 | page `plane` | `user` (default) or `operator` |
@@ -543,6 +568,13 @@ The port preserves the shipped behaviour, including these traits inherited from 
 
 Two internal defects were fixed: the telemetry service is created once (the shipped build refetched on every render;
 the parity suite documents the difference) and intake id suffixes use `crypto.getRandomValues` in the same format.
+
+Since 1.0.0.13 every submission is read back before the page may say it was saved: after the POST the service reads
+`items(<Id>)?$select=Id,IntakeId,Modified` and reports the record *saved* only when the row comes back under the same
+identifier; a write that was accepted but not confirmed is reported *pending* (class `INCONCLUSIVE`), never as a
+failure. A retry hands the same identifier back, and the service then looks the rows up (`IntakeId eq`, and `CoEID eq`
+on the use-case list) before writing anything, so a retry completes the record and never duplicates it. The POST
+bodies and their order are unchanged; the parity trace compares screens, drafts, downloads and POSTs, not GETs.
 
 ## Provenance and rules
 

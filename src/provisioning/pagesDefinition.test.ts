@@ -644,6 +644,8 @@ describe('front door page definition', () => {
     expect(routes).toHaveLength(6);
     expect(routes.map((row: IRawItem): unknown => row.owner)).toEqual(['{IdentityOwnerLabel}', '{PrivacyOwnerLabel}', '{BusinessApproverLabel}', '{ClaimsOwnerLabel}', '{RecoveryOwnerLabel}', '{SupportOwnerLabel}']);
     expect(routes.map((row: IRawItem): unknown => row.issue)).toEqual(['Access or sign-in', 'Private or regulated data', 'A business decision or approval', 'A claim that cannot be supported', 'An outcome you are unsure about', 'Anything else']);
+    // The failure notice of a wizard page routes a permission failure to the identity owner and anything else to the support owner by these kinds.
+    expect(routes.map((row: IRawItem): unknown => row.kind)).toEqual(['identity', 'privacy', 'approval', 'claims', 'recovery', 'support']);
     for (const row of routes) {
       // A blank owner label leaves the row's owner out, and the page then reads "not yet named".
       expect(definition.parameters[String(row.owner).slice(1, -1)].kind).toBe('optional');

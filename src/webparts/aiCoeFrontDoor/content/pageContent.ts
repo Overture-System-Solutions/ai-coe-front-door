@@ -6,6 +6,7 @@
  *
  * Wording note: this file is scanned for Tailwind utility names; keep prose free of utility words.
  */
+import { includes } from '../utils/collections';
 import { PAGE_TARGETS } from './pageViews';
 import type { PageLinks, PageTarget } from './pageViews';
 import { asObject, ownKeys, readFlag, readIsoDate, readItems, readStringList, readText, setOptional } from './rawJson';
@@ -240,12 +241,22 @@ export interface IRulesBlock {
   ordered: boolean;
 }
 
+/**
+ * What a support routing row is for, so a page can pick the owner of a kind of failure without
+ * reading the row's wording: `identity` takes access failures, `support` takes anything else.
+ */
+export type SupportRouteKind = 'identity' | 'privacy' | 'approval' | 'claims' | 'recovery' | 'support';
+
+export const SUPPORT_ROUTE_KINDS: readonly SupportRouteKind[] = ['identity', 'privacy', 'approval', 'claims', 'recovery', 'support'];
+
 /** One row of the support routing grid: what went wrong, who it goes to, and what to do at once. */
 export interface ISupportRouteItem {
   issue: string;
   /** The named owner; absent means the page says "not yet named". */
   owner?: string;
   action?: string;
+  /** Which kind of issue the row takes; absent means the row is shown but never chosen for a failure notice. */
+  kind?: SupportRouteKind;
 }
 
 /**
@@ -529,7 +540,21 @@ function readSupportRouteItem(raw: Raw): ISupportRouteItem | undefined {
   const item: ISupportRouteItem = { issue };
   setOptional(item, 'owner', readText(raw.owner));
   setOptional(item, 'action', readText(raw.action));
+  const kind: string | undefined = readText(raw.kind);
+  if (kind !== undefined && includes(SUPPORT_ROUTE_KINDS, kind as SupportRouteKind)) {
+    item.kind = kind as SupportRouteKind;
+  }
   return item;
+}
+
+/** The support route among the shared footer blocks, if the document has one. */
+export function findSupportRoute(blocks: readonly PageBlock[]): ISupportRouteBlock | undefined {
+  for (const block of blocks) {
+    if (block.type === 'supportRoute') {
+      return block;
+    }
+  }
+  return undefined;
 }
 
 /** The support route: needs a label; the link, the two lists and the routing rows are optional and rows without an issue are dropped. */

@@ -1,4 +1,4 @@
-import { fireEvent, screen } from '@testing-library/react';
+import { fireEvent, screen, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { spyOnDownloads } from '../../../../testing/dom';
 import type { IDownloadSpy } from '../../../../testing/dom';
@@ -8,6 +8,7 @@ import { firstStepOf, ISO_TIMESTAMP, renderWorkflowPage } from '../../../../test
 import type { IWorkflowHarness, IWorkflowPageOptions } from '../../../../testing/workflowHarness';
 import { createBranding } from '../../branding/branding';
 import { createWorkflowCatalog } from '../../content/workflows/catalog';
+import type { ISubmissionResult } from '../../services/types';
 import { buildFeedbackRecord, feedbackWhatHappensNext } from '../../summaries/feedbackSummary';
 import type { IAnswers, IWorkflowDefinition } from '../../workflows/types';
 import { FeedbackWorkflow } from './FeedbackWorkflow';
@@ -85,6 +86,34 @@ describe('FeedbackWorkflow', () => {
     renderFeedback({ draftStore, resumeDraft: true });
     await screen.findByText('Picking up where you left off.');
     expect(screen.getByRole('heading', { name: 'Check your feedback' })).toBeInTheDocument();
+  });
+
+  it('keeps the feedback as a draft after a pending submission in a page view and clears it once confirmed again', async () => {
+    const draftStore: InMemoryDraftStore = new InMemoryDraftStore();
+    const harness: IWorkflowHarness = await reachReview({ draftStore, pageView: true });
+    const saved: ISubmissionResult = harness.governance.result;
+    harness.governance.result = {
+      connected: false,
+      state: 'pending',
+      intakeId: 'OVT-AICOE-20260911-RETRYME2',
+      message: 'SharePoint accepted the AI CoE record OVT-AICOE-20260911-RETRYME2 but did not confirm it back.',
+      failureClass: 'INCONCLUSIVE',
+      userMessage: 'Saved, not yet confirmed.'
+    };
+    fireEvent.click(screen.getByRole('button', { name: 'Confirm my feedback' }));
+    await screen.findByText('Saved, not yet confirmed');
+    expect(screen.getByRole('heading', { name: 'Thank you for your feedback.' })).toBeInTheDocument();
+    expect(screen.queryByText('The AI CoE record was not created.')).not.toBeInTheDocument();
+    await waitFor((): void => expect(draftStore.keys()).toEqual(['feedback']));
+    expect(JSON.parse(draftStore.drafts.feedback)).toEqual({ answers, currentStepId: 'contactEmail', phase: 'review', themes: [] });
+    expect(harness.onDraftsChanged).not.toHaveBeenCalledWith('feedback', false);
+
+    harness.governance.result = saved;
+    fireEvent.click(screen.getByRole('button', { name: 'Confirm again' }));
+    await screen.findByText('Saved and confirmed');
+    expect(harness.governance.submissions.map((submission): string | undefined => submission.intakeId)).toEqual([undefined, 'OVT-AICOE-20260911-RETRYME2']);
+    expect(draftStore.keys()).toEqual([]);
+    expect(harness.onDraftsChanged).toHaveBeenCalledWith('feedback', false);
   });
 
   it('goes back from the review page to the last question', async () => {

@@ -99,12 +99,12 @@
         ],
         "reportFields": ["task type", "time", "status shown", "what you expected", "never secrets or unnecessary private content"],
         "routes": [
-          { "issue": "Access or sign-in", "owner": "{IdentityOwnerLabel}", "action": "Stop; do not widen access." },
-          { "issue": "Private or regulated data", "owner": "{PrivacyOwnerLabel}", "action": "Stop the affected task; keep only the evidence needed." },
-          { "issue": "A business decision or approval", "owner": "{BusinessApproverLabel}", "action": "Keep it a draft until it is approved." },
-          { "issue": "A claim that cannot be supported", "owner": "{ClaimsOwnerLabel}", "action": "Remove or label the claim; say which source is missing." },
-          { "issue": "An outcome you are unsure about", "owner": "{RecoveryOwnerLabel}", "action": "Check what actually happened before trying again." },
-          { "issue": "Anything else", "owner": "{SupportOwnerLabel}", "action": "A workflow that failed, a page that is hard to use: report it as it is." }
+          { "issue": "Access or sign-in", "owner": "{IdentityOwnerLabel}", "action": "Stop; do not widen access.", "kind": "identity" },
+          { "issue": "Private or regulated data", "owner": "{PrivacyOwnerLabel}", "action": "Stop the affected task; keep only the evidence needed.", "kind": "privacy" },
+          { "issue": "A business decision or approval", "owner": "{BusinessApproverLabel}", "action": "Keep it a draft until it is approved.", "kind": "approval" },
+          { "issue": "A claim that cannot be supported", "owner": "{ClaimsOwnerLabel}", "action": "Remove or label the claim; say which source is missing.", "kind": "claims" },
+          { "issue": "An outcome you are unsure about", "owner": "{RecoveryOwnerLabel}", "action": "Check what actually happened before trying again.", "kind": "recovery" },
+          { "issue": "Anything else", "owner": "{SupportOwnerLabel}", "action": "A workflow that failed, a page that is hard to use: report it as it is.", "kind": "support" }
         ]
       }
     ]

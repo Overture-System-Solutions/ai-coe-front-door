@@ -1,6 +1,7 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { InMemoryDraftStore } from '../../../testing/fakeServices';
+import { playJourney, TEAM_USAGE_JOURNEY } from '../../../testing/journeys';
 import { createTestFrontDoor } from '../../../testing/renderWithFrontDoor';
 import type { ITestFrontDoor } from '../../../testing/renderWithFrontDoor';
 import { firstStepOf } from '../../../testing/workflowHarness';
@@ -66,6 +67,15 @@ describe('AiCoeFrontDoor', () => {
     rerender(<AiCoeFrontDoor {...propsFor('home')} />);
     expect(screen.getByText('Explore an AI idea').closest('a')).not.toBeNull();
     await waitFor((): void => expect(screen.queryByText('Resume draft')).not.toBeInTheDocument());
+  });
+
+  it('tells the pages they are a page view, so the summary review shows its draft state', async () => {
+    const { value }: ITestFrontDoor = createTestFrontDoor();
+    renderRoot(false, { pageView: { view: 'teamUsage', layout: 'wide', pages: {} }, navigate: jest.fn() });
+    await firstStepOf(value.catalog.teamUsage);
+    playJourney(TEAM_USAGE_JOURNEY, value.catalog.teamUsage);
+    expect(screen.getByRole('heading', { name: "Here's a summary of what you shared" })).toBeInTheDocument();
+    expect(screen.getByText('Draft only').closest('.ai-pill')).not.toBeNull();
   });
 
   it('hands navigate to the page views', async () => {

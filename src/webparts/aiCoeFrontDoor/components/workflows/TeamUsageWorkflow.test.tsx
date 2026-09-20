@@ -1,4 +1,4 @@
-import { fireEvent, screen } from '@testing-library/react';
+import { fireEvent, screen, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { spyOnDownloads } from '../../../../testing/dom';
 import type { IDownloadSpy } from '../../../../testing/dom';
@@ -9,6 +9,7 @@ import type { IWorkflowHarness, IWorkflowPageOptions } from '../../../../testing
 import { createBranding } from '../../branding/branding';
 import type { IBranding } from '../../branding/branding';
 import { createWorkflowCatalog } from '../../content/workflows/catalog';
+import type { ISubmissionResult } from '../../services/types';
 import { buildTeamUsageSummaryDraft, TEAM_USAGE_SUMMARY_FIELDS, teamUsageReviewIndicators, teamUsageWhatHappensNext } from '../../summaries/teamUsageSummary';
 import type { ITeamUsageSummaryDraft } from '../../summaries/teamUsageSummary';
 import type { IAnswers, IWorkflowDefinition } from '../../workflows/types';
@@ -84,6 +85,38 @@ describe('TeamUsageWorkflow', () => {
     } finally {
       downloads.restore();
     }
+  });
+
+  it('keeps the summary as a draft after a failed submission in a page view and clears it after a saved retry', async () => {
+    const draftStore: InMemoryDraftStore = new InMemoryDraftStore();
+    const harness: IWorkflowHarness = await reachSummary({ draftStore, pageView: true });
+    expect(screen.getByText('Draft only').closest('.ai-pill')).not.toBeNull();
+    const saved: ISubmissionResult = harness.governance.result;
+    harness.governance.result = {
+      connected: false,
+      state: 'failed',
+      intakeId: 'OVT-AICOE-20260911-RETRYME3',
+      message: 'SharePoint could not create the AI CoE record. AI CoE Pilot Intakes returned 503: boom',
+      failureClass: 'TRANSIENT',
+      userMessage: 'Not available right now; try again.'
+    };
+    fireEvent.change(screen.getByLabelText('Tool and team'), { target: { value: 'Edited headline' } });
+    fireEvent.click(screen.getByRole('button', { name: "Confirm this reflects what's happening" }));
+    const notice: HTMLElement = await screen.findByRole('alert');
+    expect(notice).toHaveTextContent('Not available right now; try again');
+    expect(screen.queryByText(/boom/)).not.toBeInTheDocument();
+    await waitFor((): void => expect(draftStore.keys()).toEqual(['teamUsage']));
+    expect(JSON.parse(draftStore.drafts.teamUsage)).toMatchObject({ answers, phase: 'summary', summaryDraft: { ...draft, headline: 'Edited headline' } });
+    expect(harness.onDraftsChanged).not.toHaveBeenCalledWith('teamUsage', false);
+
+    harness.governance.result = saved;
+    fireEvent.click(screen.getByRole('button', { name: 'Try again' }));
+    await screen.findByText('Saved and confirmed');
+    expect(harness.governance.submissions).toHaveLength(2);
+    expect(harness.governance.submissions[1].intakeId).toBe('OVT-AICOE-20260911-RETRYME3');
+    expect(harness.governance.submissions[1].payload).toEqual(harness.governance.submissions[0].payload);
+    expect(draftStore.keys()).toEqual([]);
+    expect(harness.onDraftsChanged).toHaveBeenCalledWith('teamUsage', false);
   });
 
   it('flags changed answers and resets the summary on request', async () => {

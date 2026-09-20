@@ -5,6 +5,8 @@
 import * as React from 'react';
 import { useFrontDoor } from '../../context/FrontDoorContext';
 import { ConfirmDialog } from '../../controls/ConfirmDialog';
+import { submissionState } from '../../services/types';
+import type { ISubmissionResult } from '../../services/types';
 import { visibleSteps } from '../../workflows/formEngine';
 import type { ISessionBase } from '../../workflows/formEngine';
 import type { IStep, IWorkflowDefinition, WorkflowId } from '../../workflows/types';
@@ -96,6 +98,22 @@ export function useClearDraft(workflowId: WorkflowId, onDraftsChanged: IWorkflow
     await draftStore.clear(workflowId);
     onDraftsChanged(workflowId, false);
   }, [draftStore, workflowId, onDraftsChanged]);
+}
+
+/**
+ * What becomes of the draft once a submission has an outcome. The legacy shell clears it on every
+ * submit, as shipped. A page view keeps the answers unless the record is saved: it writes the draft
+ * again (so the notice's promise that the answers are kept is true even when nothing was saved
+ * before) and swallows a store failure, since the answers are still on screen.
+ */
+export function settleDraft(result: ISubmissionResult, pageView: boolean, keep: () => Promise<unknown>, clear: () => Promise<void>): Promise<void> {
+  if (pageView && submissionState(result) !== 'saved') {
+    return keep().then(
+      (): void => undefined,
+      (): void => undefined
+    );
+  }
+  return clear();
 }
 
 export interface IStartOverDialogProps {

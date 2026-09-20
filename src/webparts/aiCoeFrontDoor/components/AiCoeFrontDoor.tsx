@@ -32,11 +32,12 @@ export interface IAiCoeFrontDoorProps {
  * nothing is announced twice), and the providers the pages read from.
  */
 export function AiCoeFrontDoor({ isDarkTheme, branding, siteUrl, user, isAdmin, telemetryProvider, services, pageView, navigate }: IAiCoeFrontDoorProps): React.ReactElement {
-  const value: IFrontDoorContextValue = React.useMemo(
-    (): IFrontDoorContextValue => ({ branding, catalog: createWorkflowCatalog(branding), siteUrl, user, isAdmin, telemetryProvider, services, navigate }),
-    [branding, siteUrl, user, isAdmin, telemetryProvider, services, navigate]
-  );
   const settings: IPageViewSettings | undefined = pageView === undefined || pageView.view === 'legacy' ? undefined : pageView;
+  const isPageView: boolean = settings !== undefined;
+  const value: IFrontDoorContextValue = React.useMemo(
+    (): IFrontDoorContextValue => ({ branding, catalog: createWorkflowCatalog(branding), siteUrl, user, isAdmin, telemetryProvider, services, navigate, pageView: isPageView }),
+    [branding, siteUrl, user, isAdmin, telemetryProvider, services, navigate, isPageView]
+  );
   return (
     <section id="overture-ai-coe-pilot" className={styles.aiCoeFrontDoor} data-theme={isDarkTheme ? 'dark' : 'light'}>
       {settings === undefined && <span className={styles.signedInUser}>{`Signed in as ${user.displayName}`}</span>}

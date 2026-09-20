@@ -37,6 +37,12 @@ export interface IFrontDoorContextValue {
   services: IFrontDoorServices;
   /** Leaves the page for another URL. Absent in the legacy shell, which never navigates; page views fall back to the browser. */
   navigate?: Navigate;
+  /**
+   * True when the instance renders one piece on a native page (a page view); false in the legacy
+   * single-page shell. The receipt, the failure notice and the kept drafts exist in page views only,
+   * so the legacy screens stay as shipped.
+   */
+  pageView: boolean;
 }
 
 const FrontDoorContext: React.Context<IFrontDoorContextValue | undefined> = React.createContext<IFrontDoorContextValue | undefined>(undefined);
@@ -56,4 +62,10 @@ export function useFrontDoor(): IFrontDoorContextValue {
     throw new Error('useFrontDoor must be called inside a FrontDoorProvider.');
   }
   return value;
+}
+
+/** Whether the tree is a page view; false outside any provider, where only the shipped legacy controls are ever mounted. */
+export function usePageViewFlag(): boolean {
+  const value: IFrontDoorContextValue | undefined = React.useContext(FrontDoorContext);
+  return value !== undefined && value.pageView;
 }

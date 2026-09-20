@@ -14,12 +14,13 @@ import { SummaryReview } from '../../controls/SummaryReview';
 import type { ISummaryReviewCopy } from '../../controls/SummaryReview';
 import { WorkflowHeader } from '../../controls/WorkflowHeader';
 import type { IDraftProvenance } from '../../services/draftService';
+import type { ISubmissionResult } from '../../services/types';
 import type { ISummaryField } from '../../summaries/types';
 import { validateStep } from '../../workflows/formEngine';
 import { createSummarySession, summaryReducer, toStoredSummaryDraft } from '../../workflows/summarySession';
 import type { ISummarySession, ISummaryWorkflowDraft, SummarySessionAction } from '../../workflows/summarySession';
 import type { IAnswers, IWorkflowDefinition, WorkflowId } from '../../workflows/types';
-import { SETTING_UP_TEXT, StartOverDialog, stepPosition, SUBMITTING_TEXT, SummaryFooter, useClearDraft, useDraftBoot, useSaveDraft, WorkflowCard } from './shared';
+import { SETTING_UP_TEXT, settleDraft, StartOverDialog, stepPosition, SUBMITTING_TEXT, SummaryFooter, useClearDraft, useDraftBoot, useSaveDraft, WorkflowCard } from './shared';
 import type { IStepPosition, IWorkflowProps } from './shared';
 
 /** An AI draft source: returns the summary draft and where it came from. */
@@ -70,8 +71,8 @@ const DEFAULT_AI_COPY: IAiDraftCopy = {
 /** Question-by-question form followed by an editable summary, shared by the idea and team-usage workflows. */
 export function SummaryWorkflow<TKey extends string>({ config, resumeDraft, onExit, onDraftsChanged }: ISummaryWorkflowProps<TKey>): React.ReactElement {
   type TDraft = { [key in TKey]: string };
-  const { branding, catalog, services } = useFrontDoor();
-  const { submit } = useSubmission();
+  const { branding, catalog, services, pageView } = useFrontDoor();
+  const { submit, retryLast } = useSubmission();
   const definition: IWorkflowDefinition = catalog[config.workflowId];
   const generator: IDraftGenerator<TDraft> | undefined = config.aiDraft === undefined ? undefined : config.aiDraft(services);
   const aiCopy: IAiDraftCopy = config.aiCopy ?? DEFAULT_AI_COPY;
@@ -185,10 +186,14 @@ export function SummaryWorkflow<TKey extends string>({ config, resumeDraft, onEx
     );
   };
 
+  /** After an outcome: the legacy shell clears the draft; a page view keeps the summary as a draft unless the record is saved. */
+  const settle = (result: ISubmissionResult): Promise<void> =>
+    settleDraft(result, pageView, (): Promise<string> => saveDraft({ ...toStoredSummaryDraft(session), phase: 'summary' }), clearDraft);
+
   const confirmSummary = async (): Promise<void> => {
     dispatch({ type: 'SET_PHASE', phase: 'submitting' });
-    await submit(config.workflowId, config.buildPayload(definition, session, config.indicators(session.answers)));
-    await clearDraft();
+    const result: ISubmissionResult = await submit(config.workflowId, config.buildPayload(definition, session, config.indicators(session.answers)));
+    await settle(result);
     dispatch({ type: 'SET_PHASE', phase: 'result' });
   };
 
@@ -197,6 +202,23 @@ export function SummaryWorkflow<TKey extends string>({ config, resumeDraft, onEx
     confirmSummary().catch((error: unknown): void => {
       console.error('AI CoE submission failed', error);
       dispatch({ type: 'SET_PHASE', phase: 'summary' });
+    });
+  };
+
+  /** Sends the last attempt again under its reference (page views: a pending or failed record completes, nothing duplicates). */
+  const confirmAgain = async (): Promise<void> => {
+    dispatch({ type: 'SET_PHASE', phase: 'submitting' });
+    const result: ISubmissionResult | undefined = await retryLast();
+    if (result !== undefined) {
+      await settle(result);
+    }
+    dispatch({ type: 'SET_PHASE', phase: 'result' });
+  };
+
+  const retry = (): void => {
+    confirmAgain().catch((error: unknown): void => {
+      console.error('AI CoE submission failed', error);
+      dispatch({ type: 'SET_PHASE', phase: 'result' });
     });
   };
 
@@ -269,6 +291,7 @@ export function SummaryWorkflow<TKey extends string>({ config, resumeDraft, onEx
             downloadFilename={config.downloadFilename}
             onStartOver={(): void => setConfirmingRestart(true)}
             onDone={onExit}
+            onRetry={retry}
           />
         )}
         {inForm && (

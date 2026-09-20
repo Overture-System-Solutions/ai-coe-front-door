@@ -487,9 +487,10 @@ describe('blocks', () => {
       stopWhen: [' a source is missing ', '', 7, 'a claim cannot be verified'],
       reportFields: ['the task type', ' the time '],
       routes: [
-        { issue: ' Wrong identity or access ', owner: ' Identity owner ', action: ' Stop; do not widen access ' },
-        { issue: 'Outcome is uncertain after an action', owner: '   ', action: 'Reconcile the native state before retrying' },
-        { issue: 'A claim looks wrong' },
+        { issue: ' Wrong identity or access ', owner: ' Identity owner ', action: ' Stop; do not widen access ', kind: ' identity ' },
+        { issue: 'Outcome is uncertain after an action', owner: '   ', action: 'Reconcile the native state before retrying', kind: 'recovery' },
+        { issue: 'A claim looks wrong', kind: 'bogus' },
+        { issue: 'Anything else', owner: 'Support desk', kind: 'support' },
         { owner: 'Nobody', action: 'No issue named' },
         'not a row'
       ]
@@ -501,9 +502,11 @@ describe('blocks', () => {
       stopWhen: ['a source is missing', 'a claim cannot be verified'],
       reportFields: ['the task type', 'the time'],
       routes: [
-        { issue: 'Wrong identity or access', owner: 'Identity owner', action: 'Stop; do not widen access' },
-        { issue: 'Outcome is uncertain after an action', action: 'Reconcile the native state before retrying' },
-        { issue: 'A claim looks wrong' }
+        { issue: 'Wrong identity or access', owner: 'Identity owner', action: 'Stop; do not widen access', kind: 'identity' },
+        { issue: 'Outcome is uncertain after an action', action: 'Reconcile the native state before retrying', kind: 'recovery' },
+        // An unknown kind is dropped, never the row: the failure notice then cannot route to it, and says so.
+        { issue: 'A claim looks wrong' },
+        { issue: 'Anything else', owner: 'Support desk', kind: 'support' }
       ]
     });
     // The lists and the rows are optional; the label alone makes a block, without a link.

@@ -3,6 +3,7 @@ import type { RenderResult } from '@testing-library/react';
 import * as React from 'react';
 import { createBranding } from '../webparts/aiCoeFrontDoor/branding/branding';
 import type { IBranding } from '../webparts/aiCoeFrontDoor/branding/branding';
+import type { ISharedSections, PagePlane } from '../webparts/aiCoeFrontDoor/content/pageContent';
 import type { TelemetryProvider } from '../webparts/aiCoeFrontDoor/content/telemetryTiles';
 import type { RouteTable } from '../webparts/aiCoeFrontDoor/content/routes';
 import { createWorkflowCatalog } from '../webparts/aiCoeFrontDoor/content/workflows/catalog';
@@ -45,6 +46,12 @@ export interface ITestFrontDoorOptions {
   routes?: RouteTable;
   /** Role ids the person holds; none by default. */
   roles?: string[];
+  /** True to render as a page view (the receipt, the failure notice, the kept drafts); the legacy view by default. */
+  pageView?: boolean;
+  /** The shared sections of the document (the footer with the support route); empty by default. */
+  shared?: ISharedSections;
+  /** The plane of the page; the user plane by default. */
+  plane?: PagePlane;
 }
 
 export interface ITestFrontDoor {
@@ -75,7 +82,8 @@ export function createTestFrontDoor(options: ITestFrontDoorOptions = {}): ITestF
       ideaDrafts: options.ideaDrafts,
       pageContent: options.pageContent
     },
-    navigate
+    navigate,
+    pageView: options.pageView ?? false
   };
   return { value, branding, governance, draftStore, navigate };
 }
@@ -88,7 +96,9 @@ export function renderWithFrontDoor(ui: React.ReactElement, options: ITestFrontD
   const result: RenderResult = render(
     <FrontDoorProvider value={testFrontDoor.value}>
       <SubmissionProvider governanceService={testFrontDoor.governance}>
-        <PageDocumentProvider value={createPageDocumentContext({ now: options.now, routes: options.routes, roles: options.roles })}>{ui}</PageDocumentProvider>
+        <PageDocumentProvider value={createPageDocumentContext({ now: options.now, routes: options.routes, roles: options.roles, shared: options.shared, plane: options.plane })}>
+          {ui}
+        </PageDocumentProvider>
       </SubmissionProvider>
     </FrontDoorProvider>
   );
