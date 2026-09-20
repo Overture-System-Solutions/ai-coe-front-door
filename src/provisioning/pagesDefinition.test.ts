@@ -23,7 +23,7 @@ import type { ITelemetryTile } from '../webparts/aiCoeFrontDoor/content/telemetr
 import { CANONICAL_STATUS } from '../webparts/aiCoeFrontDoor/content/truthStates';
 import { WORKFLOW_ORDER } from '../webparts/aiCoeFrontDoor/content/workflows/catalog';
 import * as icons from '../webparts/aiCoeFrontDoor/icons';
-import { INTAKES_LIST_TITLE, OWN_ITEMS_LISTS, OWN_ITEMS_SECURITY, USE_CASES_LIST_TITLE } from '../webparts/aiCoeFrontDoor/services/lists';
+import { INTAKES_LIST_TITLE, OWN_ITEMS_LISTS, OWN_ITEMS_SECURITY, PROGRAM_MEASURES_LIST_TITLE, USE_CASES_LIST_TITLE } from '../webparts/aiCoeFrontDoor/services/lists';
 import type { WorkflowId } from '../webparts/aiCoeFrontDoor/workflows/types';
 import { findTenantWords, PROVISIONING_SCAN, readTenantWords } from './tenantWords';
 import type { ITenantWords } from './tenantWords';
@@ -83,6 +83,25 @@ interface IPagesDefinition {
   settings?: { [key: string]: unknown };
   /** The lists the script puts under item-level security (decision 6); the script's section, never part of the document. */
   listSecurity: { title: string; security: string }[];
+  /** The lists the script creates and extends (decision 9, 1.0.0.14); the script's section too, never part of the document. */
+  lists: IListDefinition[];
+}
+
+/** One list the script ensures: created as a generic list when the site has none, then given the columns it lacks. */
+interface IListDefinition {
+  title: string;
+  description: string;
+  fields: IListField[];
+}
+
+/** One column of a declared list; a flag left out is false. */
+interface IListField {
+  name: string;
+  type: string;
+  choices?: string[];
+  indexed?: boolean;
+  required?: boolean;
+  unique?: boolean;
 }
 
 /** The sections the script copies without the token pass, and the token check therefore leaves out. */
@@ -134,6 +153,10 @@ const EXPECTED_PARAMETERS: { [kind: string]: string[] } = {
  * site groups named by `group` parameters (1.0.0.14), each of which the script looks up on the site.
  */
 const PAGE_PERMISSIONS: RegExp = /^(inherit|owners|groups:[A-Za-z][A-Za-z0-9]*(,[A-Za-z][A-Za-z0-9]*)*)$/;
+/** A column name SharePoint takes as an internal name without mangling it: a letter, then letters and digits, 32 at most. */
+const FIELD_NAME: RegExp = /^[A-Za-z][A-Za-z0-9]{0,31}$/;
+/** The column types the script may create (Contracts § SharePoint lists); anything else is refused rather than guessed. */
+const FIELD_TYPES: string[] = ['Text', 'Note', 'Number', 'DateTime', 'Choice', 'Boolean'];
 /** The Branding properties the script writes on every instance from a parameter (Contracts § Property pane; decision 21). */
 const INSTANCE_BRANDING_TOKENS: { [property: string]: string } = { organizationName: '{OrganizationName}', governanceReference: '{GovernanceReference}', reviewSystemName: '{ReviewSystemName}' };
 const REMOVED_PARAMETERS: string[] = ['ConciergeUrl', 'CopilotChatUrl', 'ConciergeSourceCount', 'ConciergeNewestSourceDate', 'VerifiedDate'];
@@ -892,6 +915,66 @@ describe('front door page definition', () => {
     // The section belongs to the script and never reaches the document the web part reads.
     expect(resolveDocument({})).not.toContain('listSecurity');
     expect(resolveDocument({})).not.toContain('ownItems');
+  });
+
+  it('declares the lists the script creates, by title, column, type and flag (decision 9, 1.0.0.14)', () => {
+    // New lists come from this section alone: the package feature's XML stays byte-identical, so the program measures
+    // list the Enterprise value page reads is declared here and created by the script's "Lists" section.
+    expect(definition.lists.map((list: IListDefinition): string => list.title)).toEqual([PROGRAM_MEASURES_LIST_TITLE]);
+    const measures: IListDefinition = definition.lists[0];
+    expect(measures.title).toBe('AI CoE Program Measures');
+    expect(measures.description.length).toBeGreaterThan(40);
+    expect(measures.fields.map((field: IListField): string => `${field.name}:${field.type}`)).toEqual([
+      'MeasureId:Text',
+      'Value:Number',
+      'Unit:Text',
+      'State:Choice',
+      'PeriodStart:DateTime',
+      'PeriodEnd:DateTime',
+      'EvidenceRef:Text',
+      'EvidenceNote:Note',
+      'CohortSize:Number'
+    ]);
+    // The measure key is the row's identity: indexed, unique and required, as the intake key is in the feature's schema.
+    expect(measures.fields.filter((field: IListField): boolean => field.unique === true).map((field: IListField): string => field.name)).toEqual(['MeasureId']);
+    const measureId: IListField = measures.fields[0];
+    expect({ indexed: measureId.indexed, required: measureId.required, unique: measureId.unique }).toEqual({ indexed: true, required: true, unique: true });
+    expect(measures.fields.filter((field: IListField): boolean => field.name === 'State')[0].required).toBe(true);
+    // Every list: a title, a description, at least one column, and no title declared twice.
+    const titles: string[] = [];
+    for (const list of definition.lists) {
+      expect(typeof list.title).toBe('string');
+      expect(titles).not.toContain(list.title);
+      titles.push(list.title);
+      expect(typeof list.description).toBe('string');
+      expect(list.fields.length).toBeGreaterThan(0);
+      const names: string[] = [];
+      for (const field of list.fields) {
+        expect({ list: list.title, field: field.name, named: FIELD_NAME.test(field.name) }).toEqual({ list: list.title, field: field.name, named: true });
+        expect(FIELD_TYPES).toContain(field.type);
+        expect(names).not.toContain(field.name);
+        names.push(field.name);
+        // Title and Id are the list's own columns; a declaration would try to add them again.
+        expect(['Id', 'Title', 'Author', 'Editor', 'Created', 'Modified']).not.toContain(field.name);
+        // Choices belong to a Choice column and to no other, and a Choice column needs at least two.
+        if (field.type === 'Choice') {
+          expect((field.choices ?? []).length).toBeGreaterThan(1);
+        } else {
+          expect({ field: field.name, choices: field.choices }).toEqual({ field: field.name, choices: undefined });
+        }
+        for (const flag of ['indexed', 'required', 'unique']) {
+          const value: unknown = (field as unknown as { [key: string]: unknown })[flag];
+          expect({ field: field.name, flag, value }).toEqual({ field: field.name, flag, value: value === undefined ? undefined : value === true });
+        }
+        // A unique column is indexed: SharePoint refuses unique values on a column it has not indexed.
+        if (field.unique === true) {
+          expect({ field: field.name, indexed: field.indexed }).toEqual({ field: field.name, indexed: true });
+        }
+      }
+    }
+    // The section belongs to the script; the document the web part reads carries no list definition.
+    expect(resolveDocument({})).not.toContain('AI CoE Program Measures');
+    expect(resolveDocument({})).not.toContain('EvidenceNote');
   });
 
   it('resolves every link target to a page or a URL parameter, and carries no HTML', () => {

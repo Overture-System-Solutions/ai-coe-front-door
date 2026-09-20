@@ -386,6 +386,28 @@ built bundle: the draft flow down and every off-site route blank, Start here sti
 sentence as a draft and hands off to the guided request, the closed tile reads *Needs access*, and a request saves
 and reads back.
 
+**Lists (since 1.0.0.14).** A list the front door needs but the package feature does not provision is declared in the
+`lists` section of `pages.json` and created by the script's "Lists" section, which runs before the content document is
+uploaded. 1.0.0.14 declares one: *AI CoE Program Measures*, the measures an operator records by hand and the
+Enterprise value page reads. Its columns are `MeasureId` (text, indexed, unique, required: the key each measure tile
+names), `Value` (number), `Unit` (text), `State` (choice: `MEASURED`, `NOT_ESTABLISHED`, `PENDING_BASELINE`,
+`NOT_AVAILABLE`, `INSUFFICIENT_VOLUME`, required), `PeriodStart` and `PeriodEnd` (date), `EvidenceRef` (text),
+`EvidenceNote` (multi-line text) and `CohortSize` (number); `Title` is the list's own column. A site without the list
+is not an error: every measure then reads *Not available*.
+
+*Additive only.* The script creates a list the site does not carry (a generic list, whose description is written once,
+in the same step that creates it, so a page owner's own wording is never overwritten) and
+gives a list it already carries only the columns it lacks, each added to the default view; it never removes a column,
+never renames one and never changes a column's type, because a tenant's rows are in it. A later release appends a
+column, or declares another list; a column that must mean something else gets a new name and the old one is left where
+it is. The script carries a `# Migration:` note that each version adds a line to, and the end-of-run summary names the
+lists it ensured. Rerunning changes nothing. The list titles and column names live in `pages.json` and, for the web
+part, in `services/lists.ts`; `src/provisioning/listsDefinition.test.ts` checks that the two agree, that every column a
+service selects exists on the list, and that a choice column carries the same values the web part maps.
+
+*Rolling it back.* Lists and columns are additive and stay: an older package ignores a list it does not read, and a
+list an operator no longer wants is deleted by hand (its rows go with it, so export them first).
+
 *Reverting it.* `Set-PnPList -Identity 'AI CoE Pilot Intakes' -ReadSecurity 1 -WriteSecurity 1` then
 `Set-PnPList -Identity 'AI CoE Pilot Intakes' -ResetRoleInheritance`, and the same for *AI CoE Use Cases*; the rows
 are untouched. This is the list part of the 1.0.0.13 rollback (see *Rollback* under *Deploy*).
@@ -478,7 +500,10 @@ owners-only rather than open.
 
 1. Deploy 1.0.0.13 and "Get it" on the site, so the component is available to the script.
 2. Copy `sharepoint/pages/parameters.sample.json` to `sharepoint/pages/parameters.json` (ignored by git), fill in the values.
-3. Run, with PowerShell 7.4 and the pinned PnP.PowerShell version from the script header. Interactive login needs
+3. Run, with PowerShell 7.4 and the pinned PnP.PowerShell version from the script header: the script is written for
+   that version and no other. `src/provisioning/pnpCmdletParameters.json` records, per cmdlet, the parameters that
+   version accepts, and the suite fails on a parameter it does not have, because a wrong one binds only at run time
+   and would stop the run on the site. Regenerate that file and change the `#Requires` line together. Interactive login needs
    your own Entra app registration once (`Register-PnPEntraIDAppForInteractiveLogin`); pass its id with `-ClientId`,
    or set the `ENTRAID_CLIENT_ID` environment variable and omit the parameter:
 
@@ -492,12 +517,16 @@ owners-only rather than open.
    The script first checks that the front-door component is available on the site (and stops if it is not), then
    looks up the site group of every `group` parameter (see *Page permissions*), then
    puts the two intake lists under item-level security (see *List security*; a list the site does not carry is
-   skipped with a warning), then
+   skipped with a warning), then ensures the declared lists (see *Lists*; a missing list is created, an existing one
+   is given only the columns it lacks and keeps its rows), then
    resolves the tokens and uploads the content document to Site Assets (creating the library if the site has none,
    and reading the file back to make sure), then creates the pages, verifying after each one that SharePoint bound
    the component to the instance. Existing pages are skipped unless `-Overwrite` is given, which sends them
    to the site recycle bin and rebuilds them from `pages.json`: edits made in the browser are recoverable from the
-   recycle bin, not carried over. A page whose build fails part-way is recycled so the next run recreates it. The
+   recycle bin, not carried over. `-Overwrite` recycles pages and nothing else: every page `pages.json` declares,
+   the five form pages and the admin page included, is rebuilt; no list, column, row or list permission is touched by
+   it, and the lists stay additive on every run (see *Lists*).
+   A page whose build fails part-way is recycled so the next run recreates it. The
    navigation is rebuilt every run; it replaces every QuickLaunch node, including the three list links the package
    feature adds and the template defaults. The admin page and the Operations page get owners-only item permissions
    (see *Page permissions*). This needs a
@@ -594,6 +623,7 @@ the identity line, the site's owners group on the admin page). Bindings, the pro
 | AI CoE Decisions | the companion Power Automate solution | list | absent: the dashboard section reads as unavailable |
 | AI Usage Daily | the companion telemetry solution | list | absent: every usage tile keeps "Awaiting data" |
 | AI CoE Incidents | the companion telemetry solution | list | absent: no alerts are shown |
+| AI CoE Program Measures | the script's "Lists" section, from the `lists` entries of `pages.json` (since 1.0.0.14) | list | absent: every measure reads "Not available" |
 | Item-level security on AI CoE Pilot Intakes and AI CoE Use Cases (since 1.0.0.13) | the script's "List security" section, from the `listSecurity` entries of `pages.json`, on every run | list security | script not run: the lists keep the site's inherited permissions, every site member reads every row, and the `myWork` piece shows whatever the server returns; run the script, then the two-account test under *List security* |
 | The Operations page (since 1.0.0.13) | created by the script, owners-only, with `telemetryProvider` from `TelemetryProvider`; its plane and blocks in `pages.json` | page | not created (the script not run): the strip is on no page; the legacy landing keeps its own |
 | `vocabulary.telemetry` (since 1.0.0.13) | the `vocabulary` section of `pages.json`, copied verbatim into the content document | document text | a missing feed label keeps the bundle's feed name for that tile (a portability exception below) |
@@ -658,7 +688,8 @@ accessibility and support requirements (FD-41, FD-42, GOV-13, GOV-37).
     src/testing/                      fakes: SharePoint list store, services, AMD bundle host, journeys
     src/parity/                       journey parity suite against the shipped bundle
     src/preview/                      offline preview host and its server test
-    src/provisioning/                 checks on the page definition, the provisioning script, the tenant word list,
+    src/provisioning/                 checks on the page definition, the provisioning script (with the cmdlet
+                                      parameters of the pinned PnP.PowerShell version), the tenant word list,
                                       the claims ledger and the release verifier
     src/portability/                  the thrown-away test: the rebind inventory and the portability exceptions
     scripts/verify-package.mjs        the release verifier (package checks, tenant word scan, dependency inventory)

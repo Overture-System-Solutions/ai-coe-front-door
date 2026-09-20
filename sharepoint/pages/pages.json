@@ -123,6 +123,23 @@
     { "title": "AI CoE Pilot Intakes", "security": "ownItems" },
     { "title": "AI CoE Use Cases", "security": "ownItems" }
   ],
+  "lists": [
+    {
+      "title": "AI CoE Program Measures",
+      "description": "One row per program measure the Enterprise value page reads: the measure, the period it covers, the evidence behind it and how many people it covers. Operators fill it in by hand; the front door only reads it, and a row that is not measured shows its plain placeholder instead of a number.",
+      "fields": [
+        { "name": "MeasureId", "type": "Text", "required": true, "indexed": true, "unique": true },
+        { "name": "Value", "type": "Number" },
+        { "name": "Unit", "type": "Text" },
+        { "name": "State", "type": "Choice", "required": true, "choices": ["MEASURED", "NOT_ESTABLISHED", "PENDING_BASELINE", "NOT_AVAILABLE", "INSUFFICIENT_VOLUME"] },
+        { "name": "PeriodStart", "type": "DateTime" },
+        { "name": "PeriodEnd", "type": "DateTime" },
+        { "name": "EvidenceRef", "type": "Text" },
+        { "name": "EvidenceNote", "type": "Note" },
+        { "name": "CohortSize", "type": "Number" }
+      ]
+    }
+  ],
   "pages": [
     {
       "key": "startHere",

@@ -24,3 +24,11 @@ export const OWN_ITEMS_SECURITY: string = 'ownItems';
  * level and sets the two flags; the web part never widens a read beyond what the server returns.
  */
 export const OWN_ITEMS_LISTS: readonly string[] = [INTAKES_LIST_TITLE, USE_CASES_LIST_TITLE];
+
+/**
+ * The measures an operator records by hand and the Enterprise value page reads, one row per measure (1.0.0.14).
+ * The list is not part of the package feature: the script creates it from the `lists` section of `pages.json`,
+ * which names it by this constant, so a rename has one home. A site whose script has not run yet carries no such
+ * list, and every measure then reads as not available rather than as a number nobody can source.
+ */
+export const PROGRAM_MEASURES_LIST_TITLE: string = 'AI CoE Program Measures';

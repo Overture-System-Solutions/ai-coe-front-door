@@ -39,6 +39,13 @@ the Members group at its level and sets ReadSecurity 2 / WriteSecurity 2. A list
 with a warning. The companion flows' connection must hold Override List Behaviors on both lists (Full Control, Design
 or a custom level); an Edit-level connection is trimmed to its own items.
 
+Lists (since 1.0.0.14): before the upload, every list named in the 'lists' section of pages.json (the program
+measures list the Enterprise value page reads) is ensured: a list the site does not carry is created as a generic
+list with the declared description, and a list it already carries keeps its rows and its design and is given only the
+columns it lacks, each added to the default view, with a unique column indexed and made unique in one call. The
+section never removes or renames a column, so a tenant's rows stay readable across releases; a column that must mean
+something else gets a new name in a later version instead. Rerunning changes nothing.
+
 Page permissions (since 1.0.0.14): each page in pages.json declares 'inherit' (the site's own permissions), 'owners'
 (the site's Owners group alone, as the admin dashboard and the Operations page do) or 'groups:<Name>[,<Name>]', where
 each name is a parameter of kind 'group'. For the last two the script resets the page's item permissions, gives the
@@ -359,6 +366,75 @@ if ($securedLists.Count -gt 0) {
 }
 
 # ---------------------------------------------------------------------------------------------------------------
+# Lists: the lists pages.json declares, created once and only ever added to (1.0.0.14)
+# ---------------------------------------------------------------------------------------------------------------
+# A list this site does not carry is created as a plain generic list; a list it already carries is kept as it is and
+# given only the columns it lacks. This section never removes or renames a field: a column an earlier version created
+# holds a tenant's own rows, so a declaration that no longer names it leaves it where it is, and a column that must
+# mean something else gets a new name instead. Rerunning changes nothing.
+# # Migration: 1.0.0.14 creates the program measures list with its nine columns. Later versions append a column to
+# # that list, or declare another list; no version drops a column, renames one, or changes its type.
+# The section runs before the content document is uploaded, so a page the document carries never names a list the
+# site is still missing. The titles and column names come from pages.json; this script names none of them.
+$ensuredLists = @()
+$listTypes = @('Text', 'Note', 'Number', 'DateTime', 'Choice', 'Boolean')
+$listDefinitions = if ($definition.Contains('lists')) { @($definition['lists']) } else { @() }
+# The whole declaration is checked before anything is created, so a typo in the second list cannot leave the first
+# one half-built.
+foreach ($entry in $listDefinitions) {
+  $title = [string]$entry['title']
+  foreach ($field in @($entry['fields'])) {
+    $internalName = [string]$field['name']
+    if ($internalName -notmatch '^[A-Za-z][A-Za-z0-9]{0,31}$') {
+      throw "List '$title' in pages.json declares a column '$internalName'; a column name is a letter followed by letters or digits, 32 characters at most."
+    }
+    if ([string]$field['type'] -notin $listTypes) {
+      throw "Column '$internalName' of list '$title' in pages.json is of type '$($field['type'])'; expected 'Text', 'Note', 'Number', 'DateTime', 'Choice' or 'Boolean'."
+    }
+    $hasChoices = $field.Contains('choices') -and @($field['choices']).Count -gt 0
+    if (([string]$field['type'] -eq 'Choice') -ne $hasChoices) {
+      throw "Column '$internalName' of list '$title' in pages.json must declare 'choices' when it is a Choice column and must not declare them otherwise."
+    }
+  }
+}
+foreach ($entry in $listDefinitions) {
+  $title = [string]$entry['title']
+  $fields = @($entry['fields'])
+  $list = Get-PnPList -Identity $title -ErrorAction SilentlyContinue
+  if ($null -eq $list) {
+    Write-Host "Creating list $title ..."
+    # The description is written once, at creation, so a page owner's own wording is never overwritten. It is a
+    # second call because New-PnPList in the pinned PnP.PowerShell takes no description; Set-PnPList does.
+    New-PnPList -Title $title -Template GenericList -OnQuickLaunch:$false | Out-Null
+    Set-PnPList -Identity $title -Description ([string]$entry['description'])
+  } else {
+    Write-Host "List $title is already on this site; adding the columns it lacks ..."
+  }
+  foreach ($field in $fields) {
+    $internalName = [string]$field['name']
+    $existing = Get-PnPField -List $title -Identity $internalName -ErrorAction SilentlyContinue
+    if ($null -ne $existing) {
+      Write-Host "  $internalName is already there and is left as it is."
+      continue
+    }
+    $required = $field.Contains('required') -and [bool]$field['required']
+    if ([string]$field['type'] -eq 'Choice') {
+      Add-PnPField -List $title -DisplayName $internalName -InternalName $internalName -Type Choice -Choices ([string[]]@($field['choices'])) -Required:$required -AddToDefaultView | Out-Null
+    } else {
+      Add-PnPField -List $title -DisplayName $internalName -InternalName $internalName -Type ([string]$field['type']) -Required:$required -AddToDefaultView | Out-Null
+    }
+    # A unique column must be indexed as well, so both flags are set in one call, as the feature's intake key is.
+    if ($field.Contains('unique') -and [bool]$field['unique']) {
+      Set-PnPField -List $title -Identity $internalName -Values @{ Indexed = $true; EnforceUniqueValues = $true }
+    } elseif ($field.Contains('indexed') -and [bool]$field['indexed']) {
+      Set-PnPField -List $title -Identity $internalName -Values @{ Indexed = $true }
+    }
+    Write-Host "  Added $internalName ($($field['type']))."
+  }
+  $ensuredLists += $title
+}
+
+# ---------------------------------------------------------------------------------------------------------------
 # Content document: the blocks of every page that has them, resolved and uploaded to Site Assets
 # ---------------------------------------------------------------------------------------------------------------
 $documentPages = [ordered]@{}
@@ -508,6 +584,7 @@ Write-Host "Content document: $contentPath ($($documentPages.Count) pages; earli
 Write-Host "Created: $($created.Count) page(s)$(if ($created.Count -gt 0) { ' - ' + ($created -join ', ') })"
 Write-Host "Skipped: $($skipped.Count) page(s)$(if ($skipped.Count -gt 0) { ' - ' + ($skipped -join ', ') })"
 Write-Host "Locked: $($locked.Count) page(s)$(if ($locked.Count -gt 0) { ' - ' + ($locked -join ', ') })"
+Write-Host "Lists: $($ensuredLists.Count) declared list(s) created or extended$(if ($ensuredLists.Count -gt 0) { ' - ' + ($ensuredLists -join ', ') }); a column an earlier version created is never removed or renamed"
 Write-Host "List security: $($securedLists.Count) list(s) under item-level security$(if ($securedLists.Count -gt 0) { ' - ' + ($securedLists -join ', ') })$(if ($unsecuredLists.Count -gt 0) { '; not on this site: ' + ($unsecuredLists -join ', ') })"
 # Bindings the pages carry from parameters rather than from committed content. A blank GovernanceReference leaves the
 # legacy view quoting the package's own default policy reference and every page view reading "reference not yet set",

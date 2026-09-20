@@ -13,6 +13,74 @@ const script: string = fs.readFileSync(path.join(PAGES_DIR, 'New-FrontDoorPages.
 const readme: string = fs.readFileSync(path.join(ROOT, 'README.md'), 'utf8');
 const tenantWords: ITenantWords = readTenantWords(ROOT);
 
+/** The parameters the pinned PnP.PowerShell version gives each cmdlet the script calls (src/provisioning/pnpCmdletParameters.json). */
+interface IPnPParameters {
+  module: string;
+  version: string;
+  common: string[];
+  dynamic: { [cmdlet: string]: string[] };
+  cmdlets: { [cmdlet: string]: string[] };
+}
+
+const pnpParameters: IPnPParameters = JSON.parse(
+  fs.readFileSync(path.join(ROOT, 'src/provisioning/pnpCmdletParameters.json'), 'utf8')
+) as IPnPParameters;
+
+/** Comments carry cmdlet names and prose; only the code the shell runs is read. */
+function codeOnly(text: string): string {
+  const lines: string[] = text.replace(/<#[\s\S]*?#>/g, '').split('\n');
+  const kept: string[] = [];
+  for (let i: number = 0; i < lines.length; i += 1) {
+    kept.push(/^\s*#/.test(lines[i]) ? '' : lines[i]);
+  }
+  return kept.join('\n');
+}
+
+/**
+ * Every `-Parameter` passed to a PnP cmdlet, one entry per pair. The reader walks from the cmdlet name to the end of
+ * its call: a pipe or a semicolon ends it, a closing bracket that was never opened ends it (the call sits inside a
+ * sub-expression), quoted text and anything nested in brackets belongs to an argument, not to the call.
+ */
+function pnpCalls(text: string): { cmdlet: string; parameter: string }[] {
+  const found: { cmdlet: string; parameter: string }[] = [];
+  const finder: RegExp = /\b([A-Z][A-Za-z]*-PnP[A-Za-z]+)\b/g;
+  let match: RegExpExecArray | null = finder.exec(text);
+  while (match !== null) {
+    const cmdlet: string = match[1];
+    let depth: number = 0;
+    let i: number = match.index + cmdlet.length;
+    while (i < text.length) {
+      const character: string = text.charAt(i);
+      if (character === '\n') { break; }
+      if (character === "'" || character === '"') {
+        i += 1;
+        while (i < text.length && text.charAt(i) !== character && text.charAt(i) !== '\n') { i += 1; }
+        i += 1;
+        continue;
+      }
+      if (character === '(' || character === '{' || character === '[') { depth += 1; i += 1; continue; }
+      if (character === ')' || character === '}' || character === ']') {
+        depth -= 1;
+        if (depth < 0) { break; }
+        i += 1;
+        continue;
+      }
+      if (depth === 0 && (character === '|' || character === ';')) { break; }
+      if (depth === 0 && character === '-') {
+        const parameter: RegExpExecArray | null = /^-([A-Za-z][A-Za-z0-9]*)/.exec(text.slice(i));
+        if (parameter !== null) {
+          found.push({ cmdlet: cmdlet, parameter: parameter[1] });
+          i += parameter[0].length;
+          continue;
+        }
+      }
+      i += 1;
+    }
+    match = finder.exec(text);
+  }
+  return found;
+}
+
 describe('page provisioning script', () => {
   it('reads the page definition and pins its tooling', () => {
     expect(script).toContain('pages.json');
@@ -40,6 +108,41 @@ describe('page provisioning script', () => {
     expect(script).toContain('Set-StrictMode');
     expect(script).toContain("$ErrorActionPreference = 'Stop'");
     expect(script).toContain('ConvertFrom-Json -AsHashtable');
+  });
+
+  it('calls no cmdlet parameter the pinned PnP.PowerShell version lacks', () => {
+    // A parameter the module does not have binds at run time, not at parse time: with $ErrorActionPreference = 'Stop'
+    // the run stops on the tenant, and a suite that only matches the script text sees nothing. So every pair the script
+    // writes is checked against the parameters of the version the #Requires line pins.
+    const required: RegExpExecArray | null = /RequiredVersion\s*=\s*'([\d.]+)'/.exec(script);
+    expect(required).not.toBeNull();
+    expect((required as RegExpExecArray)[1]).toBe(pnpParameters.version);
+    expect(pnpParameters.module).toBe('PnP.PowerShell');
+    const calls: { cmdlet: string; parameter: string }[] = pnpCalls(codeOnly(script));
+    expect(calls.length).toBeGreaterThan(30);
+    const unknown: string[] = [];
+    for (const call of calls) {
+      const declared: string[] | undefined = pnpParameters.cmdlets[call.cmdlet];
+      if (declared === undefined) {
+        unknown.push(`${call.cmdlet} is not in pnpCmdletParameters.json; add it from the pinned module`);
+        continue;
+      }
+      const dynamic: string[] = pnpParameters.dynamic[call.cmdlet] || [];
+      const known: boolean =
+        declared.indexOf(call.parameter) >= 0 ||
+        dynamic.indexOf(call.parameter) >= 0 ||
+        pnpParameters.common.indexOf(call.parameter) >= 0;
+      if (!known) {
+        unknown.push(`${call.cmdlet} -${call.parameter}`);
+      }
+    }
+    expect(unknown).toEqual([]);
+    // The check is live: this is the parameter 3.1.0 does not give New-PnPList, and the list description goes through
+    // Set-PnPList instead (the Lists section below pins that shape).
+    expect(pnpParameters.cmdlets['New-PnPList'].indexOf('Description')).toBe(-1);
+    expect(pnpParameters.cmdlets['Set-PnPList'].indexOf('Description')).toBeGreaterThan(-1);
+    // A dynamic parameter is invisible to Get-Command, so each one is recorded with the cmdlet it belongs to.
+    expect(pnpParameters.dynamic['Add-PnPField']).toContain('Choices');
   });
 
   it('declares the parameters and handles every token kind, including in-text links', () => {
@@ -246,10 +349,11 @@ describe('page provisioning script', () => {
     expect(section).toBeLessThan(script.indexOf('Add-PnPFile'));
     expect(script).toContain("'listSecurity'");
     expect(script).toContain("'ownItems'");
-    // A list the site does not carry is skipped with a warning; the script never creates one.
+    // A list the site does not carry is skipped with a warning; this section never creates one (the "Lists" section
+    // below creates the lists pages.json declares, and neither intake list is declared there).
     expect(script).toMatch(/Get-PnPList -Identity \$title[^\n]*-ErrorAction SilentlyContinue/);
     expect(script).toContain('is not on this site; read security not applied');
-    expect(script).not.toContain('New-PnPList');
+    expect(script.slice(section, script.indexOf('# Lists:'))).not.toContain('New-PnPList');
     // Set-PnPList breaks the inheritance (once: a rerun finds it unique); Set-PnPListPermission only adds or removes roles.
     expect(script).toMatch(/HasUniqueRoleAssignments/);
     expect(script).toMatch(/Set-PnPList -Identity \$title -BreakRoleInheritance -CopyRoleAssignments/);
@@ -292,6 +396,56 @@ describe('page provisioning script', () => {
     expect(script).not.toContain('AI CoE Use Cases');
     // The run summary reports what was secured and what was skipped.
     expect(script).toMatch(/List security:/);
+  });
+
+  it('ensures the declared lists before the upload: creates what is missing, adds the columns a list lacks, removes none', () => {
+    // Decision 9: a new list comes from the declarative 'lists' section of pages.json and from nowhere else, because the
+    // package feature's XML stays byte-identical. The section runs before the document upload, as list security does.
+    const start: number = script.indexOf('# Lists:');
+    expect(start).toBeGreaterThan(script.indexOf('# List security'));
+    expect(start).toBeLessThan(script.indexOf('Add-PnPFile'));
+    const section: string = script.slice(start, script.indexOf('# Content document'));
+    expect(section.length).toBeGreaterThan(600);
+    expect(script).toContain("'lists'");
+    // Created as a plain generic list; an existing one is kept as it is and only extended.
+    expect(section).toMatch(/New-PnPList[^\n]*-Template GenericList/);
+    // The pinned PnP.PowerShell gives New-PnPList no description; the wording is written once, in the same branch,
+    // with the cmdlet that has one.
+    expect(section).not.toMatch(/New-PnPList[^\n]*-Description/);
+    expect(section).toMatch(/Set-PnPList -Identity \$title -Description/);
+    expect(section).toMatch(/Get-PnPList -Identity \$title[^\n]*-ErrorAction SilentlyContinue/);
+    // A column already on the list is read back and left alone; a missing one is added and put on the default view.
+    expect(section).toMatch(/Get-PnPField -List \$title -Identity \$internalName[^\n]*-ErrorAction SilentlyContinue/);
+    expect(section).toMatch(/Add-PnPField[^\n]*-AddToDefaultView/);
+    expect(section).toMatch(/Add-PnPField[^\n]*-Type Choice[^\n]*-Choices/);
+    // A unique column is indexed and unique in one call, as the feature's intake key is.
+    expect(section).toMatch(/Set-PnPField -List \$title -Identity \$internalName -Values @\{ ?Indexed = \$true; ?EnforceUniqueValues = \$true ?\}/);
+    // The rule that keeps a tenant's rows readable across releases, and the note every later release adds a line to.
+    expect(section).toContain('never removes or renames a field');
+    expect(section).toMatch(/# Migration:/);
+    expect(section).not.toMatch(/Remove-PnPField|Remove-PnPList|Set-PnPField[^\n]*-Title/);
+    // The declaration is checked before anything is created: an unknown type or a choice list on another type stops the
+    // run. The check is a pass of its own, so a typo in the second list cannot leave the first one half-built.
+    expect(section).toMatch(/throw/);
+    const loop: string = 'foreach ($entry in $listDefinitions)';
+    expect(section.indexOf(loop)).toBeLessThan(section.lastIndexOf(loop));
+    const validation: string = section.slice(section.indexOf(loop), section.lastIndexOf(loop));
+    expect(validation).toMatch(/throw/);
+    expect(validation).not.toMatch(/-PnP/);
+    expect(section).toContain("'Text', 'Note', 'Number', 'DateTime', 'Choice' or 'Boolean'");
+    // The titles and columns come from pages.json; the script names neither.
+    const definition: { lists: { title: string; fields: { name: string }[] }[] } = JSON.parse(fs.readFileSync(path.join(PAGES_DIR, 'pages.json'), 'utf8'));
+    expect(definition.lists.length).toBeGreaterThan(0);
+    // As whole words in this section: elsewhere the script reads a regular expression group's own .Value.
+    const words: string[] = section.split(/[^A-Za-z0-9_]+/);
+    for (const list of definition.lists) {
+      expect(script).not.toContain(list.title);
+      for (const field of list.fields) {
+        expect(words).not.toContain(field.name);
+      }
+    }
+    // The run summary reports the lists it ensured.
+    expect(script).toMatch(/Lists:/);
   });
 
   it('no longer needs the native web part templates or HTML text parts', () => {
@@ -385,6 +539,8 @@ describe('README', () => {
     expect(readme).toMatch(/owners-only[^.]*the role[^.]*unbound|the role[^.]*unbound[^.]*owners-only/);
     expect(readme).toContain('src/provisioning/tenantWords.json');
     expect(readme).toContain('deliberately not tenant-neutral');
+    // The module the script is written for, and where the operator reads what that version accepts.
+    expect(readme).toContain('src/provisioning/pnpCmdletParameters.json');
   });
 
   it('documents the release close of 1.0.0.12: the document sections, the truth states, the ledger, the properties and the portability sections', () => {
@@ -447,6 +603,25 @@ describe('README', () => {
     // Manage Lists is never described as the bypass; the Members group stays at its level.
     expect(readme).not.toMatch(/Manage Lists[^.\n]*(bypass|is why|is what makes)/i);
     expect(readme).toMatch(/Members[^.\n]*(left|stays|stay) at (their|its) level/);
+  });
+
+  it('documents the declared lists of 1.0.0.14: the columns, the additive rule and what -Overwrite recycles', () => {
+    const definition: { lists: { title: string; fields: { name: string }[] }[] } = JSON.parse(fs.readFileSync(path.join(PAGES_DIR, 'pages.json'), 'utf8'));
+    expect(readme).toContain('**Lists (since 1.0.0.14).**');
+    expect(readme).toContain('`lists` section');
+    for (const list of definition.lists) {
+      expect(readme).toContain(list.title);
+      for (const field of list.fields) {
+        expect(readme).toContain(`\`${field.name}\``);
+      }
+    }
+    // The rule that keeps a tenant's rows: additive only, and a column is never renamed or retyped.
+    expect(readme).toMatch(/never removes a column,\s+never renames one and never changes a column's type/);
+    expect(readme).toContain('`# Migration:`');
+    expect(readme).toContain('src/provisioning/listsDefinition.test.ts');
+    // What -Overwrite touches: pages, never a list, a column, a row or a list permission.
+    expect(readme).toMatch(/`-Overwrite` recycles pages and nothing else/);
+    expect(readme).toMatch(/no list, column, row or list permission is touched by\s+it/);
   });
 
   it('documents the route table, the action states and the closed tiles', () => {
