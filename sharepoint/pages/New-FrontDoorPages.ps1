@@ -6,7 +6,7 @@ front-door web part instance per page, the top navigation and the home page.
 .DESCRIPTION
 Operator tool for a site owner; the build and the tests never run it. It reads pages.json next to this script,
 resolves the tokens from a parameter file (copy parameters.sample.json, fill it in, keep it out of git) and the named
-parameters, uploads the resolved content document (the blocks of the seven content pages, the plane of a page written
+parameters, uploads the resolved content document (the blocks of the content pages, the plane of a page written
 for operators, and the shared footer every page view draws below its content, the five form pages included) to Site
 Assets, then creates each page with a single front-door instance. A page that already exists keeps its content and its
 browser edits: only the properties of its front-door instance are rewritten from pages.json and the page is
@@ -25,6 +25,9 @@ title of a site group, which the script looks up once: a blank title, or one the
 nothing else happens, so a site whose groups are not created yet still provisions. Tokens inside the 'routes' table are resolved
 the same way. A block that names a parameter in 'skipWhenBlank' (the private-pilot notice on Start here names
 PilotTeamName) is dropped, with a warning, when that parameter is blank; the key itself never reaches the document.
+A page may name a parameter the same way (since 1.0.0.15 the role-start page names PilotTeamName): a run without a
+value for it builds no page, uploads no blocks for it, adds no navigation node, and drops every tile, card and in-text
+link that targets it, each with a warning, so nothing on the site points at a page that was not built.
 The web part opens links to other origins in a new tab.
 
 The package must already be installed on the site (upload as an update to the app catalog, then "Get it" on the site);
@@ -218,7 +221,27 @@ function Get-PageFile([string]$key) {
   return [string](Get-Page $key)['file']
 }
 
+# Pages this run does not build (1.0.0.15): a page may name a parameter in 'skipWhenBlank' (the role-start page names
+# PilotTeamName), and a run without a value for it builds no page, uploads no blocks for it, puts no node in the
+# navigation, and drops every tile, card and in-text link that targets it. The set is answered once, before the token
+# pass, so nothing downstream can resolve a link to a page that is not there.
+$skippedPages = @{}
+foreach ($page in $definition['pages']) {
+  if (-not ($page.Contains('skipWhenBlank'))) { continue }
+  $name = [string]$page['skipWhenBlank']
+  if (-not $kinds.ContainsKey($name)) { throw "Page '$($page['key'])' names an undeclared parameter '$name' in skipWhenBlank." }
+  if ([string]::IsNullOrWhiteSpace([string]$values[$name])) {
+    Write-Warning "The page $($page['file']) is skipped because the parameter '$name' is blank; every tile, card and link that targets it is dropped."
+    $skippedPages[[string]$page['key']] = $true
+  }
+}
+
+function Test-PageKept($page) {
+  return -not $skippedPages.ContainsKey([string]$page['key'])
+}
+
 function Get-PageUrl([string]$key) {
+  if ($skippedPages.ContainsKey($key)) { throw "pages.json links to page '$key', which this run skipped; the link must be a tile, card or in-text link the run can drop." }
   return "$webRoot/SitePages/$(Get-PageFile $key)"
 }
 
@@ -244,6 +267,12 @@ function Resolve-Text([string]$text) {
     if (-not $values.ContainsKey($name)) { throw "Unknown token {$name} in pages.json." }
     return [string]$values[$name]
   }
+  $skippedLink = [System.Text.RegularExpressions.MatchEvaluator] {
+    param($match)
+    if ($skippedPages.ContainsKey($match.Groups[2].Value)) { return $match.Groups[1].Value }
+    return $match.Value
+  }
+  $text = [regex]::Replace($text, '\[([^\[\]]+)\]\(\{Page:([A-Za-z]+)\}\)', $skippedLink)
   $text = [regex]::Replace($text, '\[([^\[\]]+)\]\(\{Url:([A-Za-z]+)\}\)', $urlLink)
   $text = [regex]::Replace($text, '\{Page:([A-Za-z]+)\}', $pageLink)
   $text = [regex]::Replace($text, '\{Url:([A-Za-z]+)\}', $urlToken)
@@ -256,14 +285,34 @@ function Test-Unlinked($item) {
   return [string]::IsNullOrWhiteSpace([string]$item['href']) -and -not $item.Contains('state') -and -not $item.Contains('route')
 }
 
+# True when an item (a tile, a card, a status line) still has its destination: it names no page this run skipped
+# (1.0.0.15). A card pointing at a page that was not built would promise a link SharePoint answers with a 404, so the
+# item goes and the page keeps the rest of the block.
+function Test-TargetKept($item, [string]$where, [bool]$report = $true) {
+  if (-not ($item -is [System.Collections.IDictionary]) -or -not $item.Contains('href')) { return $true }
+  $target = [regex]::Match([string]$item['href'], '^\{Page:([A-Za-z]+)\}$')
+  if (-not $target.Success -or -not $skippedPages.ContainsKey($target.Groups[1].Value)) { return $true }
+  if ($report) {
+    Write-Warning "The item '$($item['title'])' on $where is dropped because it targets $($target.Groups[1].Value), a page this run skipped."
+  }
+  return $false
+}
+
 # True when a block stays in the document: it names no parameter in 'skipWhenBlank', or the one it names has a value
-# (the private-pilot notice on Start here sets skipWhenBlank to PilotTeamName, so a site without a pilot team shows none).
+# (the private-pilot notice on Start here sets skipWhenBlank to PilotTeamName, so a site without a pilot team shows none),
+# and it still has an item after the items targeting a skipped page were dropped (1.0.0.15).
 function Test-BlockKept($block, [string]$where) {
-  if (-not ($block -is [System.Collections.IDictionary]) -or -not $block.Contains('skipWhenBlank')) { return $true }
-  $name = [string]$block['skipWhenBlank']
-  if (-not $kinds.ContainsKey($name)) { throw "A block on $where names an undeclared parameter '$name' in skipWhenBlank." }
-  if ([string]::IsNullOrWhiteSpace([string]$values[$name])) {
-    Write-Warning "The $($block['type']) block '$($block['title'])' on $where is dropped because the parameter '$name' is blank."
+  if (-not ($block -is [System.Collections.IDictionary])) { return $true }
+  if ($block.Contains('skipWhenBlank')) {
+    $name = [string]$block['skipWhenBlank']
+    if (-not $kinds.ContainsKey($name)) { throw "A block on $where names an undeclared parameter '$name' in skipWhenBlank." }
+    if ([string]::IsNullOrWhiteSpace([string]$values[$name])) {
+      Write-Warning "The $($block['type']) block '$($block['title'])' on $where is dropped because the parameter '$name' is blank."
+      return $false
+    }
+  }
+  if ($block.Contains('items') -and @($block['items']).Count -gt 0 -and @($block['items'] | Where-Object { Test-TargetKept $_ $where $false }).Count -eq 0) {
+    Write-Warning "The $($block['type']) block on $where is dropped because every item in it targets a page this run skipped."
     return $false
   }
   return $true
@@ -285,6 +334,14 @@ function Resolve-Node($node, [string]$where) {
     foreach ($key in @($node.Keys)) {
       # The skip rule is the script's, decided by Test-BlockKept; the web part never sees the key.
       if ($key -eq 'skipWhenBlank') { continue }
+      if ($key -eq 'items' -and $node[$key] -is [System.Collections.IList]) {
+        # An item pointing at a page this run skipped goes before the token pass, so its {Page:} link never resolves.
+        # The filtered list is held in a variable and passed as it is: an array argument reaches the parameter whole,
+        # and wrapping it (a unary comma) would hand Resolve-Node an array of one array and nest every items list.
+        $keptItems = @($node[$key] | Where-Object { Test-TargetKept $_ $where })
+        $resolved[$key] = Resolve-Node $keptItems $where
+        continue
+      }
       $resolved[$key] = Resolve-Node $node[$key] $where
     }
     if ($resolved.Contains('type') -and $resolved['type'] -eq 'tiles') {
@@ -524,6 +581,7 @@ foreach ($entry in $listDefinitions) {
 $documentPages = [ordered]@{}
 foreach ($page in $definition['pages']) {
   if (-not $page.Contains('blocks')) { continue }
+  if (-not (Test-PageKept $page)) { continue }
   $instance = $page['instance']
   if ($instance['view'] -ne 'page' -or $instance['pageKey'] -ne $page['key'] -or $instance['contentUrl'] -ne $contentPath) {
     throw "Page '$($page['key'])' carries blocks, so its instance must be a 'page' view with pageKey '$($page['key'])' reading $contentPath."
@@ -630,7 +688,12 @@ $created = @()
 $updated = @()
 $skipped = @()
 $locked = @()
+$notBuilt = @()
 foreach ($page in $definition['pages']) {
+  if (-not (Test-PageKept $page)) {
+    $notBuilt += [string]$page['file']
+    continue
+  }
   $file = [string]$page['file']
   $pageName = $file -replace '\.aspx$', ''
   $properties = Get-InstanceProperties $page
@@ -692,9 +755,12 @@ foreach ($page in $definition['pages']) {
 # ---------------------------------------------------------------------------------------------------------------
 Get-PnPNavigationNode -Location QuickLaunch | ForEach-Object { Remove-PnPNavigationNode -Identity $_.Id -Force }
 foreach ($entry in $definition['navigation']) {
+  # A navigation entry for a page this run skipped is dropped, as every tile and card that targets one is.
+  if ($skippedPages.ContainsKey([string]$entry['page'])) { continue }
   $node = Add-PnPNavigationNode -Location QuickLaunch -Title ([string]$entry['title']) -Url (Get-PageUrl ([string]$entry['page']))
   if ($entry.Contains('children')) {
     foreach ($child in $entry['children']) {
+      if ($skippedPages.ContainsKey([string]$child['page'])) { continue }
       Add-PnPNavigationNode -Location QuickLaunch -Parent $node.Id -Title ([string]$child['title']) -Url (Get-PageUrl ([string]$child['page'])) | Out-Null
     }
   }
@@ -707,6 +773,7 @@ Write-Host "Created: $($created.Count) page(s)$(if ($created.Count -gt 0) { ' - 
 Write-Host "Updated: $($updated.Count) page(s) whose instance properties were rewritten in place$(if ($updated.Count -gt 0) { ' - ' + ($updated -join ', ') })"
 Write-Host "Skipped: $($skipped.Count) page(s)$(if ($skipped.Count -gt 0) { ' - ' + ($skipped -join ', ') })"
 Write-Host "Locked: $($locked.Count) page(s)$(if ($locked.Count -gt 0) { ' - ' + ($locked -join ', ') })"
+Write-Host "Not built: $($notBuilt.Count) page(s) skipped because the parameter they are keyed on is blank$(if ($notBuilt.Count -gt 0) { ' - ' + ($notBuilt -join ', ') })"
 Write-Host "Lists: $($ensuredLists.Count) declared list(s) created or extended$(if ($ensuredLists.Count -gt 0) { ' - ' + ($ensuredLists -join ', ') }); a column an earlier version created is never removed or renamed"
 Write-Host "List security: $($securedLists.Count) list(s) under item-level security$(if ($securedLists.Count -gt 0) { ' - ' + ($securedLists -join ', ') })$(if ($unsecuredLists.Count -gt 0) { '; not on this site: ' + ($unsecuredLists -join ', ') })"
 # Bindings: what the pages carry from the tenant's own parameters rather than from committed content. A parameter this

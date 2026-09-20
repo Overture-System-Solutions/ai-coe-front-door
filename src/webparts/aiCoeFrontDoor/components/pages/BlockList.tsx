@@ -16,6 +16,7 @@ import { SupportRouteBlock } from './blocks/SupportRouteBlock';
 import { HeadingBlock, ParagraphBlock } from './blocks/TextBlocks';
 import { TilesBlock } from './blocks/TilesBlock';
 import { WorkCommandBlock } from './blocks/WorkCommandBlock';
+import { WorkflowCardsBlock } from './blocks/WorkflowCardsBlock';
 
 export interface IBlockListProps {
   blocks: PageBlock[];
@@ -54,6 +55,8 @@ export function renderBlock(block: PageBlock, drafts: DraftFlags): React.ReactEl
       return <CaseCardsBlock block={block} />;
     case 'kpi':
       return <KpiTilesBlock block={block} />;
+    case 'workflowCards':
+      return <WorkflowCardsBlock block={block} />;
     case 'bindings':
       return <BindingsBlock block={block} />;
     default:

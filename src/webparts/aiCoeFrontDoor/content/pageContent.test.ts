@@ -40,7 +40,8 @@ import type {
   ISupportRouteBlock,
   ITilesBlock,
   IVocabulary,
-  IWorkCommandBlock
+  IWorkCommandBlock,
+  IWorkflowCardsBlock
 } from './pageContent';
 
 const SITE: string = 'https://contoso.sharepoint.com/sites/ai';
@@ -756,6 +757,59 @@ describe('blocks', () => {
     // The block may name the roles it is written for, like every other block, and may sit in the shared footer.
     expect((parseBlock({ type: 'kpi', items: [{ id: 'a' }], audience: ['leader'] }) as IKpiBlock).audience).toEqual(['leader']);
     expect(parseShared({ footer: [{ type: 'kpi', items: [{ id: 'a' }] }] }).footer.map((block): string => block.type)).toEqual(['kpi']);
+  });
+
+  it('reads workflow cards: the five fields a card must have, the optional ones, and the family it is tagged with', () => {
+    const workflows: IWorkflowCardsBlock = parseBlock({
+      type: 'workflowCards',
+      items: [
+        {
+          title: ' Campaign brief ',
+          input: ' approved objective, audience context and permitted current sources. ',
+          output: 'audience, pain points, message, channel plan, content calendar, evidence gaps and review needs.',
+          humanDecision: 'Marketing validates strategy and voice.',
+          pass: 'Every factual claim cites a current source or is marked unknown; nothing is published.',
+          example: 'Turn an approved objective into a brief.',
+          href: '/SitePages/Use-AI.aspx',
+          state: 'availableNow',
+          illustrative: true,
+          family: 'marketing'
+        },
+        // The five fields are all required: a card missing one of them would describe a workflow nobody can check.
+        { title: 'No input', output: 'o', humanDecision: 'h', pass: 'p' },
+        { title: 'No output', input: 'i', humanDecision: 'h', pass: 'p' },
+        { title: 'No decision', input: 'i', output: 'o', pass: 'p' },
+        { title: 'No pass', input: 'i', output: 'o', humanDecision: 'h' },
+        { input: 'i', output: 'o', humanDecision: 'h', pass: 'p' },
+        // A state that is neither a truth state nor an activation code is no state at all; the card stays.
+        { title: 'Loose fields', input: 'i', output: 'o', humanDecision: 'h', pass: 'p', state: 'bogus', illustrative: 'yes', route: 'work' },
+        'text'
+      ]
+    }) as IWorkflowCardsBlock;
+    expect(workflows).toEqual({
+      type: 'workflowCards',
+      items: [
+        {
+          title: 'Campaign brief',
+          input: 'approved objective, audience context and permitted current sources.',
+          output: 'audience, pain points, message, channel plan, content calendar, evidence gaps and review needs.',
+          humanDecision: 'Marketing validates strategy and voice.',
+          pass: 'Every factual claim cites a current source or is marked unknown; nothing is published.',
+          example: 'Turn an approved objective into a brief.',
+          href: '/SitePages/Use-AI.aspx',
+          state: 'availableNow',
+          illustrative: true,
+          family: 'marketing'
+        },
+        { title: 'Loose fields', input: 'i', output: 'o', humanDecision: 'h', pass: 'p' }
+      ]
+    });
+    expect(parseBlock({ type: 'workflowCards', items: [] })).toBeUndefined();
+    expect(parseBlock({ type: 'workflowCards' })).toBeUndefined();
+    // The block may name the roles it is written for, like every other block, and may sit in the shared footer.
+    const card: object = { title: 't', input: 'i', output: 'o', humanDecision: 'h', pass: 'p' };
+    expect((parseBlock({ type: 'workflowCards', items: [card], audience: ['leader'] }) as IWorkflowCardsBlock).audience).toEqual(['leader']);
+    expect(parseShared({ footer: [{ type: 'workflowCards', items: [card] }] }).footer.map((block): string => block.type)).toEqual(['workflowCards']);
   });
 
   it('reads the bindings block, with or without a title of its own', () => {

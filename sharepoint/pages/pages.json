@@ -26,13 +26,14 @@
     "GovernanceBodyFastPath": { "kind": "optional", "default": "the AI CoE", "description": "Who names the owner of an amber request and writes it with the requester; blank reads 'the AI CoE'." },
     "GovernanceBodyArchitecture": { "kind": "optional", "default": "a named approver (not yet named)", "description": "Who decides a red request on the architecture side; blank reads 'a named approver (not yet named)'." },
     "GovernanceBodyExecutive": { "kind": "optional", "default": "a named approver (not yet named)", "description": "Who decides a red request on the executive side; blank reads 'a named approver (not yet named)'." },
-    "PilotTeamName": { "kind": "optional", "description": "Name of the team trying the front door; blank drops the private-pilot notice from Start here." },
+    "PilotTeamName": { "kind": "optional", "description": "Name of the team trying the front door; blank drops the private-pilot notice from Start here, and the pilot team's start page is not built at all, with the card on Start here that leads to it." },
     "PilotMembers": { "kind": "optional", "default": "the named pilot members", "description": "Names of the private pilot members, comma separated, shown in the pilot notice on Start here; blank reads 'the named pilot members' (the notice itself is dropped when PilotTeamName is blank)." },
     "GovernanceReference": { "kind": "optional", "description": "Policy reference quoted on review requests and exports, for example a policy name, version and date; blank keeps the default wording and is reported as AWAITING in the run summary." },
     "ReviewSystemName": { "kind": "optional", "description": "Name of the performance-review system the tool guidance sends a review request through; blank keeps the default wording." },
     "LeadersGroup": { "kind": "group", "description": "Title of the site group whose members hold the leader role; blank or unknown leaves the role unbound and a page that names it owners-only." },
     "OperatorsGroup": { "kind": "group", "description": "Title of the site group whose members hold the AI CoE operator role; blank or unknown leaves the role unbound and a page that names it owners-only." },
     "DesignAuthorityGroup": { "kind": "group", "description": "Title of the site group whose members hold the design authority role; blank or unknown leaves the role unbound and a page that names it owners-only." },
+    "PilotGroup": { "kind": "group", "description": "Title of the site group that reads the pilot team's start page; blank or unknown leaves that page owners-only. The page itself is skipped when PilotTeamName is blank." },
     "ContentRelease": { "kind": "optional", "description": "Name this run gives the content it uploads, shown in the end-of-run summary; blank names the run by its own date and time." },
     "Palette": { "kind": "optional", "description": "Colour overrides written to every instance as key=value pairs parted by semicolons, for example accent=#008B83;ink=#102B3D; blank keeps the shipped colours." },
     "TeamsUrl": { "kind": "url", "description": "Deep link to the AI CoE Teams channel or chat; blank keeps the sentence and drops the link." },
@@ -238,6 +239,35 @@
           "skipWhenBlank": "PilotTeamName",
           "text": "This front door is being tried by {PilotTeamName}: {PilotMembers}. Something wrong or contradictory? Tell the AI CoE. No PHI, customer data, credentials or regulated information unless the approved environment is confirmed."
         },
+        {
+          "type": "workflowCards",
+          "items": [
+            {
+              "title": "Campaign brief",
+              "input": "approved objective, audience context and permitted current sources.",
+              "output": "audience, pain points, message, channel plan, content calendar, evidence gaps and review needs.",
+              "humanDecision": "Marketing validates strategy and voice.",
+              "pass": "Every factual claim cites a current source or is marked unknown; nothing is published.",
+              "illustrative": true
+            },
+            {
+              "title": "Content and internal PR plan",
+              "input": "accepted campaign brief, current brand assets, channel owners and product truth.",
+              "output": "asset register, copy variants, calendar, owners, dependencies and approvals.",
+              "humanDecision": "Marketing/communications approves copy and channel.",
+              "pass": "One destination, one CTA, accessible copy, no unsupported capability/value claim.",
+              "illustrative": true
+            },
+            {
+              "title": "Meeting-to-campaign follow-through",
+              "input": "permitted meeting notes/transcript and current campaign packet.",
+              "output": "decisions, action proposals, brief changes, communications drafts and unresolved questions.",
+              "humanDecision": "Meeting owner accepts decisions/actions; communications owner sends.",
+              "pass": "No assignment, message, calendar event or campaign change occurs without the appropriate confirmation and native readback.",
+              "illustrative": true
+            }
+          ]
+        },
         { "type": "heading", "level": 2, "text": "Where to begin" },
         {
           "type": "cards",
@@ -246,6 +276,18 @@
             { "title": "New hire", "body": ["*I am new at {OrganizationName}. What can I use AI for, what must I never put in, and where do I go when I am unsure?*"], "tone": "teal" },
             { "title": "Employee", "body": ["*Here is something I do every week: [describe it]. Can I use AI for it, and what must I check before the output counts?*"], "tone": "gold" },
             { "title": "Manager", "body": ["*My team wants to use AI for [describe it]. What has to be true before I say yes, and what goes to the AI CoE first?*"], "tone": "cyan" }
+          ]
+        },
+        {
+          "type": "cards",
+          "columns": 2,
+          "items": [
+            {
+              "title": "{PilotTeamName} start",
+              "body": ["The three workflows {PilotTeamName} is trying, the rules that hold for all of them, the five checks before you accept a result, and the ten-minute quick start."],
+              "href": "{Page:roleStart}",
+              "tone": "violet"
+            }
           ]
         }
       ]
@@ -729,6 +771,108 @@
               "tone": "cyan"
             }
           ]
+        }
+      ]
+    },
+    {
+      "key": "roleStart",
+      "title": "{PilotTeamName} start",
+      "file": "Pilot-start.aspx",
+      "commentsEnabled": false,
+      "permissions": "groups:PilotGroup",
+      "skipWhenBlank": "PilotTeamName",
+      "instance": { "view": "page", "pageKey": "roleStart", "contentUrl": "SiteAssets/ai-coe-pages.json", "layout": "wide", "organizationName": "{OrganizationName}", "governanceReference": "{GovernanceReference}", "reviewSystemName": "{ReviewSystemName}", "roleGroups": "leader={LeadersGroup};operator={OperatorsGroup};designAuthority={DesignAuthorityGroup}" },
+      "blocks": [
+        {
+          "type": "hero",
+          "title": "Start with one real task.",
+          "text": "Three workflows for {PilotTeamName}, the three rules that hold for all of them, and what to check before you accept a result."
+        },
+        {
+          "type": "workflowCards",
+          "items": [
+            {
+              "title": "Campaign brief",
+              "input": "approved objective, audience context and permitted current sources.",
+              "output": "audience, pain points, message, channel plan, content calendar, evidence gaps and review needs.",
+              "humanDecision": "Marketing validates strategy and voice.",
+              "pass": "Every factual claim cites a current source or is marked unknown; nothing is published.",
+              "example": "Turn an approved objective into a campaign brief.",
+              "illustrative": true
+            },
+            {
+              "title": "Content and internal PR plan",
+              "input": "accepted campaign brief, current brand assets, channel owners and product truth.",
+              "output": "asset register, copy variants, calendar, owners, dependencies and approvals.",
+              "humanDecision": "Marketing/communications approves copy and channel.",
+              "pass": "One destination, one CTA, accessible copy, no unsupported capability/value claim.",
+              "example": "Turn an accepted brief into an internal content plan.",
+              "illustrative": true
+            },
+            {
+              "title": "Meeting-to-campaign follow-through",
+              "input": "permitted meeting notes/transcript and current campaign packet.",
+              "output": "decisions, action proposals, brief changes, communications drafts and unresolved questions.",
+              "humanDecision": "Meeting owner accepts decisions/actions; communications owner sends.",
+              "pass": "No assignment, message, calendar event or campaign change occurs without the appropriate confirmation and native readback.",
+              "example": "Turn permitted meeting notes into decisions, actions and draft follow-up.",
+              "illustrative": true
+            }
+          ]
+        },
+        {
+          "type": "rules",
+          "title": "Three rules",
+          "items": [
+            { "title": "Use only information you are allowed to use.", "text": "Do not paste passwords, secrets, personal information or restricted client material into an unapproved place." },
+            { "title": "Check the result.", "text": "AI can be incomplete, outdated or wrong. Verify names, numbers, dates, sources, tone and commitments." },
+            { "title": "People send and approve.", "text": "AI may draft. You decide what is accepted, sent, posted or published." }
+          ]
+        },
+        {
+          "type": "rules",
+          "title": "Before you accept the result",
+          "ordered": false,
+          "items": [
+            { "title": "Is every claim supported by a current source?" },
+            { "title": "Are unknowns labeled instead of guessed?" },
+            { "title": "Does the voice sound like {OrganizationName}?" },
+            { "title": "Are the audience, owner and next action clear?" },
+            { "title": "Did it remain a draft?", "text": "Correct the result or stop if any answer is no." }
+          ]
+        },
+        {
+          "type": "cards",
+          "columns": 2,
+          "items": [
+            {
+              "title": "Ten-minute quick start",
+              "kicker": "10 minutes",
+              "body": [
+                "**Minute 0-2: choose one small task.** Pick a task you already need to complete: turn an approved objective into a campaign brief; turn an accepted brief into an internal content plan; or turn permitted meeting notes into decisions, actions and draft follow-up.",
+                "**Minute 2-4: give the minimum useful context.** Use the pattern beside this card.",
+                "**Minute 4-7: ask for a draft.** Name the sources it may use, the sections the result must have, and that nothing is to be sent, posted, published or assigned.",
+                "**Minute 7-9: review it.** Work through the five checks above.",
+                "**Minute 9-10: record the outcome.** Accepted, corrected, unavailable or stopped, and what you had to correct."
+              ],
+              "tone": "teal"
+            },
+            {
+              "title": "Prompt pattern",
+              "kicker": "2 minutes",
+              "body": [
+                "*Help me [complete this task] for [audience]. Use only [permitted sources]. The result must include [required sections]. Mark missing facts and assumptions. Do not send, post, publish, assign work or change records.*"
+              ],
+              "meta": "More patterns on [Use AI]({Page:useAi}).",
+              "tone": "violet"
+            }
+          ]
+        },
+        {
+          "type": "notice",
+          "tone": "caution",
+          "title": "Start small",
+          "text": "Start with a small task; not one that is high-risk, public, legally sensitive or confidential."
         }
       ]
     },

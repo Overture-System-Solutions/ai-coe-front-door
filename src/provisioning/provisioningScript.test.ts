@@ -244,6 +244,41 @@ describe('page provisioning script', () => {
     expect(keyed).toEqual(['startHere:notice:PilotTeamName']);
   });
 
+  it('skips a page whose skipWhenBlank parameter is blank and drops every tile, card and link that targets it (1.0.0.15)', () => {
+    // The set is answered once, before the token pass, so nothing downstream can resolve a link to a page the run
+    // did not build: the document carries no blocks for it, the navigation no node, and a link to it would throw.
+    expect(script).toMatch(/\$skippedPages = @\{\}/);
+    expect(script).toMatch(/function Test-PageKept/);
+    expect(script).toMatch(/Write-Warning "The page \$\(\$page\['file'\]\) is skipped because the parameter '\$name' is blank/);
+    expect(script).toMatch(/names an undeclared parameter '\$name' in skipWhenBlank/);
+    // An item that targets a skipped page goes, with a warning, before its {Page:} link can resolve; an in-text link keeps its label alone.
+    expect(script).toMatch(/function Test-TargetKept/);
+    expect(script).toMatch(/Write-Warning "The item '\$\(\$item\['title'\]\)' on \$where is dropped because it targets/);
+    // The filtered list is named first and then passed whole. Wrapping it in a unary comma would hand Resolve-Node
+    // an array holding one array, so every block's items would be written one level too deep and the tiles pass
+    // would throw on the nested list; a pin on the Where-Object filter alone matches both shapes, so pin the call.
+    expect(script).toMatch(/\$keptItems = @\(\$node\[\$key\] \| Where-Object \{ Test-TargetKept \$_ \$where \}\)/);
+    expect(script).toMatch(/\$resolved\[\$key\] = Resolve-Node \$keptItems \$where/);
+    expect(script).not.toMatch(/Resolve-Node \(,/);
+    expect(script).toMatch(/\$skippedPages\.ContainsKey\(\$match\.Groups\[2\]\.Value\)/);
+    // A block left with no item at all goes too, so no page draws an empty grid.
+    expect(script).toMatch(/every item in it targets a page this run skipped/);
+    // The document, the navigation and the page loop all read the same answer, and the summary names what was not built.
+    expect(script).toMatch(/if \(-not \(Test-PageKept \$page\)\) \{ continue \}/);
+    expect(script).toMatch(/\$skippedPages\.ContainsKey\(\[string\]\$entry\['page'\]\)/);
+    expect(script).toMatch(/\$notBuilt \+= \[string\]\$page\['file'\]/);
+    expect(script).toMatch(/Not built:/);
+    // A page link the run cannot drop (a navigation node, a home page) is an error rather than a broken link.
+    expect(script).toMatch(/which this run skipped/);
+    // The definition keys the role-start page on PilotTeamName and nothing else.
+    const definition: { pages: { key: string; skipWhenBlank?: string; permissions: string }[] } = JSON.parse(fs.readFileSync(path.join(PAGES_DIR, 'pages.json'), 'utf8'));
+    const keyedPages: string[] = definition.pages
+      .filter((page: { skipWhenBlank?: string }): boolean => page.skipWhenBlank !== undefined)
+      .map((page: { key: string; skipWhenBlank?: string }): string => `${page.key}:${String(page.skipWhenBlank)}`);
+    expect(keyedPages).toEqual(['roleStart:PilotTeamName']);
+    expect(definition.pages.filter((page: { key: string }): boolean => page.key === 'roleStart')[0].permissions).toBe('groups:PilotGroup');
+  });
+
   it('ships tenant-neutral: no word of the tenant list in the committed provisioning files', () => {
     // Only the committed files: an operator's filled-in parameters.json may name the tenant. The word list itself is
     // the single permitted home for client names and the reference roster (src/provisioning/tenantWords.json).
@@ -661,11 +696,16 @@ describe('README', () => {
     expect(readme).toContain('one instance per page');
     // 1.0.0.14: fourteen pages, Prompts out of the navigation, my work on Status, and the two operator pages
     // (Operations with the strip and the bindings, Enterprise value with the measures) behind their site groups.
-    expect(readme).toContain('The fourteen pages');
+    // 1.0.0.15 adds the role-start page, which a site without a pilot team name never builds.
+    expect(readme).toContain('The fifteen pages');
+    expect(readme).not.toContain('The fourteen pages');
     expect(readme).not.toContain('The thirteen pages');
     expect(readme).not.toContain('The twelve pages');
     expect(readme).toContain('key `operations`');
     expect(readme).toContain('key `value`');
+    expect(readme).toContain('key `roleStart`');
+    expect(readme).toContain('`skipWhenBlank`');
+    expect(readme).toContain('`PilotGroup`');
     expect(readme).toContain('Diagnostics: usage and cost, not a measure of value');
     expect(readme).toContain('`myWork`');
     expect(readme).toContain('-ClientId');
@@ -683,7 +723,7 @@ describe('README', () => {
     expect(readme).toContain('Site Assets');
     expect(readme).toContain('version history');
     expect(readme).toContain('"version": 1');
-    for (const block of ['hero', 'heading', 'paragraph', 'tiles', 'cards', 'lanes', 'statusRow', 'piece', 'workCommand', 'notice', 'rules', 'supportRoute', 'caseCards', 'kpi', 'bindings']) {
+    for (const block of ['hero', 'heading', 'paragraph', 'tiles', 'cards', 'lanes', 'statusRow', 'piece', 'workCommand', 'notice', 'rules', 'supportRoute', 'caseCards', 'kpi', 'workflowCards', 'bindings']) {
       expect(readme).toContain(`\`${block}\``);
     }
     // The shared footer: the support route below every page view, the form pages included.

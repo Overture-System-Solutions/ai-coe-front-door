@@ -336,6 +336,25 @@ describe('Page view stylesheet', () => {
     expect(rule(table, '.ai-view--narrow .ai-page-kpi')).toEqual(['grid-template-columns:1fr']);
   });
 
+  it('lays out the workflow cards three across on the card surface, their four answers as a description list', () => {
+    expect(rule(table, '.ai-view--page .ai-page-workflows')).toEqual(['display:grid', 'gap:16px', 'grid-template-columns:repeat(3, minmax(0, 1fr))']);
+    // The card is the case card's surface: the same edge, radius, ink and padding, so a workflow reads like every other card.
+    expect(rule(table, '.ai-view--page .ai-page-workflow')).toEqual(rule(table, '.ai-view--page .ai-case-card'));
+    expect(rule(table, '.ai-view--page .ai-page-workflow--closed')).toEqual(['opacity:0.85']);
+    expect(rule(table, '.ai-view--page .ai-page-workflow-head')).toEqual(rule(table, '.ai-view--page .ai-case-head'));
+    expect(rule(table, '.ai-view--page .ai-page-workflow h3')).toEqual(rule(table, '.ai-view--page .ai-page-card h3'));
+    expect(rule(table, '.ai-view--page .ai-page-workflow-fields')).toEqual(['display:grid', 'gap:4px 12px', 'grid-template-columns:minmax(0, 1fr)', 'margin:0']);
+    // The four questions are the kicker of the card: the shipped small-caps label, so the answers carry the weight.
+    expect(rule(table, '.ai-view--page .ai-page-workflow-fields dt')).toEqual(rule(table, '.ai-view .ai-page-support-key').filter((declaration: string): boolean => declaration !== 'display:block'));
+    expect(rule(table, '.ai-view--page .ai-page-workflow-fields dd')).toEqual(['margin:0 0 6px']);
+    expect(rule(table, '.ai-view--page .ai-page-workflow-example')).toEqual(rule(table, '.ai-view--page .ai-case-caption'));
+    expect(rule(table, '.ai-view--page a.ai-page-workflow-link')).toEqual(['color:#076874', 'display:inline-block', 'font-size:14px', 'font-weight:600', 'margin-top:8px', 'min-height:24px', 'text-decoration:underline']);
+    for (const colour of ['#07878a', '#dbe5ec', '#10243e', '#5b6878', '#076874']) {
+      expect(shipped.indexOf(colour)).toBeGreaterThan(-1);
+    }
+    expect(rule(table, '.ai-view--narrow .ai-page-workflows')).toEqual(['grid-template-columns:1fr']);
+  });
+
   it('draws the page-view chrome: the header line and the identity line, in every page view', () => {
     // The header keeps the shipped workflow header's size and weight; the identity line is quiet, in the shipped muted ink.
     expect(rule(table, '.ai-view .ai-page-header')).toEqual(['margin:0']);

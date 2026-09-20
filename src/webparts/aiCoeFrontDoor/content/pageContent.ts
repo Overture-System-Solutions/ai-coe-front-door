@@ -375,6 +375,39 @@ export interface IKpiBlock extends IBlockAudience {
 export const DEFAULT_KPI_UNAVAILABLE_TEXT: string = 'Measures unavailable: the measures list could not be read.';
 
 /**
+ * One workflow as a page shows it: the work it takes in, the work it gives back, the person who
+ * decides, and what counts as a pass. Nothing here is read from a registry yet, so a card that
+ * describes a workflow rather than naming one this environment runs says so with the example pill.
+ */
+export interface IWorkflowCardItem {
+  title: string;
+  /** Where the card leads, when it leads anywhere; a card names no route: a workflow is not a destination. */
+  href?: string;
+  /** A truth state or activation code; anything but `availableNow` draws the closed pill. */
+  state?: StateCode;
+  /** What the workflow is given. */
+  input: string;
+  /** What it gives back. */
+  output: string;
+  /** The person who decides, and what they decide. */
+  humanDecision: string;
+  /** What has to be true before the result may be used. */
+  pass: string;
+  /** A worked example of the work the card describes; in-text markup allowed. */
+  example?: string;
+  /** Present when the card illustrates a workflow, not one proved in this environment; it carries the example pill. */
+  illustrative?: true;
+  /** A workflow-family tag: read and never drawn, so content can be tagged before a catalogue list exists. */
+  family?: string;
+}
+
+/** One card per workflow; a card may lead somewhere, and says nothing about availability it cannot prove. */
+export interface IWorkflowCardsBlock extends IBlockAudience {
+  type: 'workflowCards';
+  items: IWorkflowCardItem[];
+}
+
+/**
  * The bindings of the run, as the provisioning run wrote them on the document. The block carries no
  * binding of its own: everything it shows comes from `release` and `bindings` below, so a page cannot
  * claim a tenant input the run never had.
@@ -401,6 +434,7 @@ export type PageBlock =
   | ISupportRouteBlock
   | ICaseCardsBlock
   | IKpiBlock
+  | IWorkflowCardsBlock
   | IBindingsBlock;
 
 export interface IContentPage {
@@ -831,6 +865,36 @@ export function parseKpi(raw: Raw): IKpiBlock | undefined {
   return { type: 'kpi', items, unavailableText: readText(raw.unavailableText) ?? DEFAULT_KPI_UNAVAILABLE_TEXT };
 }
 
+function readWorkflowCard(raw: Raw): IWorkflowCardItem | undefined {
+  const title: string | undefined = readText(raw.title);
+  const input: string | undefined = readText(raw.input);
+  const output: string | undefined = readText(raw.output);
+  const humanDecision: string | undefined = readText(raw.humanDecision);
+  const pass: string | undefined = readText(raw.pass);
+  if (title === undefined || input === undefined || output === undefined || humanDecision === undefined || pass === undefined) {
+    return undefined;
+  }
+  const item: IWorkflowCardItem = { title, input, output, humanDecision, pass };
+  setOptional(item, 'example', readText(raw.example));
+  setOptional(item, 'href', readText(raw.href));
+  const state: StateCode | undefined = readState(raw.state);
+  if (state !== undefined) {
+    item.state = state;
+  }
+  if (readFlag(raw.illustrative) === true) {
+    item.illustrative = true;
+  }
+  // `family` is carried and never drawn: the catalogue list that would give a family meaning does not exist yet.
+  setOptional(item, 'family', readText(raw.family));
+  return item;
+}
+
+/** The workflow cards: needs at least one item naming the work, what it takes, what it gives, who decides and what a pass is. */
+export function parseWorkflowCards(raw: Raw): IWorkflowCardsBlock | undefined {
+  const items: IWorkflowCardItem[] = readItems(raw.items, readWorkflowCard);
+  return items.length === 0 ? undefined : { type: 'workflowCards', items };
+}
+
 /** The bindings block: nothing of its own but the wording above the rows, which the run fills in. */
 export function parseBindings(raw: Raw): IBindingsBlock {
   const block: IBindingsBlock = { type: 'bindings' };
@@ -918,6 +982,8 @@ function parseTypedBlock(raw: Raw): PageBlock | undefined {
       return parseCaseCards(raw);
     case 'kpi':
       return parseKpi(raw);
+    case 'workflowCards':
+      return parseWorkflowCards(raw);
     case 'bindings':
       return parseBindings(raw);
     default:

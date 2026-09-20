@@ -14,7 +14,7 @@ import { resolveAction } from '../webparts/aiCoeFrontDoor/content/actions';
 import type { ResolvedAction } from '../webparts/aiCoeFrontDoor/content/actions';
 import { HOME_CARDS } from '../webparts/aiCoeFrontDoor/content/homeCards';
 import { CARD_TONES, DEFAULT_CONTENT_URL, LANE_TONES, parsePageDocument } from '../webparts/aiCoeFrontDoor/content/pageContent';
-import type { ICardsBlock, ICaseCardsBlock, IPageDocument, IPieceBlock, ITilesBlock, IStatusStripBlock, IWorkCommandBlock } from '../webparts/aiCoeFrontDoor/content/pageContent';
+import type { ICardsBlock, ICaseCardsBlock, IPageDocument, IPieceBlock, ITilesBlock, IStatusStripBlock, IWorkCommandBlock, IWorkflowCardsBlock } from '../webparts/aiCoeFrontDoor/content/pageContent';
 import { FRONT_DOOR_VIEWS, PAGE_TARGETS } from '../webparts/aiCoeFrontDoor/content/pageViews';
 import { ROLE_IDS } from '../webparts/aiCoeFrontDoor/content/roles';
 import { resolveRoute } from '../webparts/aiCoeFrontDoor/content/routes';
@@ -65,6 +65,8 @@ interface IPage {
   permissions: string;
   instance: { [name: string]: string };
   blocks?: IRawBlock[];
+  /** Name of a parameter; the script builds no page at all when that parameter is blank (the role-start page, 1.0.0.15). */
+  skipWhenBlank?: string;
   plane?: string;
   /** Role ids, any one of which opens the page; the site's own permissions are what actually shut it (1.0.0.14). */
   requiredRole?: string[];
@@ -125,7 +127,9 @@ const NAVIGATION_TITLES: string[] = ['Start here', 'Learn', 'Use AI', 'Requests'
  * operators. The link, document and lint walks read this list, so a page leaving the navigation drops nothing
  * silently.
  */
-const CONTENT_PAGES: string[] = [...NAVIGATION_PAGES, 'prompts', 'operations', 'value'];
+const CONTENT_PAGES: string[] = [...NAVIGATION_PAGES, 'prompts', 'operations', 'value', 'roleStart'];
+/** The pages a run only builds when the parameter they are keyed on has a value (1.0.0.15, decision 15). */
+const KEYED_PAGES: { [key: string]: string } = { roleStart: 'PilotTeamName' };
 const PIECE_PAGES: string[] = ['idea', 'toolCheck', 'teamUsage', 'helpTraining', 'feedback', 'admin'];
 const BLOCK_TYPES: string[] = [
   'hero',
@@ -143,12 +147,14 @@ const BLOCK_TYPES: string[] = [
   'supportRoute',
   'caseCards',
   'kpi',
+  'workflowCards',
   'bindings'
 ];
 const EXPECTED_BLOCKS: { [key: string]: string[] } = {
   // The status strip carries the person's own request count beside the assistant and Requests lines (1.0.0.13);
-  // the leader block sits right below it from 1.0.0.14 and is shown to a leader alone.
-  startHere: ['hero', 'workCommand', 'tiles', 'statusStrip', 'cards', 'heading', 'rules', 'notice', 'notice', 'heading', 'cards'],
+  // the leader block sits right below it from 1.0.0.14 and is shown to a leader alone. From 1.0.0.15 the three
+  // workflow cards sit below the notices for every tenant, and the last card leads to the role-start page.
+  startHere: ['hero', 'workCommand', 'tiles', 'statusStrip', 'cards', 'heading', 'rules', 'notice', 'notice', 'workflowCards', 'heading', 'cards', 'cards'],
   learn: ['paragraph', 'paragraph', 'paragraph', 'rules', 'cards', 'cards', 'heading', 'paragraph', 'paragraph', 'paragraph', 'paragraph', 'heading', 'paragraph', 'paragraph'],
   useAi: ['paragraph', 'paragraph', 'heading', 'cards', 'heading', 'cards', 'heading', 'cards', 'heading', 'cards', 'heading', 'paragraph', 'paragraph'],
   requests: ['heading', 'paragraph', 'paragraph', 'heading', 'lanes', 'cards', 'notice', 'heading', 'paragraph', 'piece'],
@@ -159,7 +165,10 @@ const EXPECTED_BLOCKS: { [key: string]: string[] } = {
   // the bindings of the run join it in 1.0.0.14.
   operations: ['heading', 'piece', 'bindings'],
   // The Enterprise value page of 1.0.0.14: how to read it, the three measures, and the three illustrative columns.
-  value: ['heading', 'notice', 'kpi', 'cards']
+  value: ['heading', 'notice', 'kpi', 'cards'],
+  // The role start of 1.0.0.15: the promise, the three workflows, the three rules, the five checks, the quick start
+  // and the pattern, and the caution to start small (MKT-03/22/23/77).
+  roleStart: ['hero', 'workflowCards', 'rules', 'rules', 'cards', 'notice']
 };
 const OPERATIONS_KICKER: string = 'Diagnostics: usage and cost, not a measure of value';
 /** The route keys the first screen and the status items point at; the two off-site ones take their proof from parameters. */
@@ -178,9 +187,9 @@ const EXPECTED_PARAMETERS: { [kind: string]: string[] } = {
   url: ['DraftServiceUrl', 'AssistantUrl', 'ChatUrl', 'WorkCommandUrl', 'SupportUrl', 'TeamsUrl', 'PromptLibraryUrl'],
   // PilotMembers is optional (a 1.0.0.12 verifier finding): it feeds only the private-pilot notice, which the script drops when PilotTeamName is blank.
   optional: ['AssistantState', 'AssistantVerifiedDate', 'AssistantReceiptRef', 'WorkCommandState', 'WorkCommandVerifiedDate', 'WorkCommandReceiptRef', 'SupportOwnerLabel', 'IdentityOwnerLabel', 'PrivacyOwnerLabel', 'BusinessApproverLabel', 'ClaimsOwnerLabel', 'RecoveryOwnerLabel', 'GovernanceBodyFastPath', 'GovernanceBodyArchitecture', 'GovernanceBodyExecutive', 'PilotTeamName', 'PilotMembers', 'GovernanceReference', 'ReviewSystemName', 'ContentRelease', 'Palette'],
-  // 1.0.0.14: one group parameter per bindable role (decision 8). The pilot group of 1.0.0.15 joins them with the
-  // role-start page.
-  group: ['LeadersGroup', 'OperatorsGroup', 'DesignAuthorityGroup']
+  // 1.0.0.14: one group parameter per bindable role (decision 8). The pilot group of 1.0.0.15 joined them with the
+  // role-start page; it binds no role (decision 15: no fifth role id), it only names who may read that page.
+  group: ['LeadersGroup', 'OperatorsGroup', 'DesignAuthorityGroup', 'PilotGroup']
 };
 /**
  * The parameters the script applies itself instead of through a `{token}` in the definition: the palette it writes to
@@ -210,7 +219,34 @@ const REMOVED_PARAMETERS: string[] = ['ConciergeUrl', 'CopilotChatUrl', 'Concier
 const LINK_TARGET: RegExp = /\]\(([^)\s]*)\)/g;
 
 /** The fields the user plane renders as text; everything else on an item (state, route, href, icon, tone, ...) is a code. */
-const USER_PLANE_FIELDS: string[] = ['title', 'text', 'body', 'note', 'meta', 'kicker', 'label', 'description', 'prompt', 'placeholder', 'submitLabel', 'emptyText', 'unavailableText', 'caption', 'nextAction', 'historicalStage', 'stopWhen', 'reportFields', 'issue', 'action'];
+const USER_PLANE_FIELDS: string[] = [
+  'title',
+  'text',
+  'body',
+  'note',
+  'meta',
+  'kicker',
+  'label',
+  'description',
+  'prompt',
+  'placeholder',
+  'submitLabel',
+  'emptyText',
+  'unavailableText',
+  'caption',
+  'nextAction',
+  'historicalStage',
+  'stopWhen',
+  'reportFields',
+  'issue',
+  'action',
+  // 1.0.0.15: the four answers a workflow card renders and the worked example above its link; `family` is a tag, not a text.
+  'input',
+  'output',
+  'humanDecision',
+  'pass',
+  'example'
+];
 /** The fields a freshness claim ("live", "running", "answering") needs a date on; a title such as "What is running" passes. */
 const FRESHNESS_FIELDS: string[] = ['text', 'body', 'meta'];
 const PROVIDER_WORDS: RegExp = /concierge|copilot|claude|chatgpt|work iq|openai|gemini/i;
@@ -374,11 +410,53 @@ function isKept(block: IRawBlock, optionalValues: { [name: string]: string }): b
   return block.skipWhenBlank === undefined || parameterValue(block.skipWhenBlank, optionalValues) !== '';
 }
 
-/** The block types a page renders in a run: the source order, less the blocks the script drops for a blank parameter. */
+/** The page keys a run does not build: the page names a parameter in `skipWhenBlank` and the run has no value for it. */
+function skippedPages(optionalValues: { [name: string]: string }): string[] {
+  return definition.pages
+    .filter((target: IPage): boolean => target.skipWhenBlank !== undefined && parameterValue(target.skipWhenBlank, optionalValues) === '')
+    .map((target: IPage): string => target.key);
+}
+
+/** The content pages a run does upload, in definition order. */
+function renderedPages(optionalValues: { [name: string]: string }): string[] {
+  const skipped: string[] = skippedPages(optionalValues);
+  return CONTENT_PAGES.filter((key: string): boolean => skipped.indexOf(key) < 0);
+}
+
+/** True when an item still has its destination: it targets no page this run skipped (1.0.0.15). */
+function targetsKeptPage(item: IRawItem, skipped: string[]): boolean {
+  const target: RegExpExecArray | null = /^\{Page:([A-Za-z]+)\}$/.exec(String(item.href ?? ''));
+  return target === null || skipped.indexOf(target[1]) < 0;
+}
+
+/**
+ * A block as a run keeps it: an item that targets a page the run skipped is dropped, and a block whose items all
+ * went is dropped with them, so no page draws an empty grid or a link to a page that was never built.
+ */
+function keptBlock(block: IRawBlock, skipped: string[]): IRawBlock | undefined {
+  if (!Array.isArray(block.items)) {
+    return block;
+  }
+  const items: IRawItem[] = itemsOf(block).filter((item: IRawItem): boolean => targetsKeptPage(item, skipped));
+  return items.length === 0 ? undefined : { ...block, items };
+}
+
+/** The blocks a page renders in a run: the source order, less what the run drops for a blank parameter or a skipped page. */
+function keptBlocks(key: string, optionalValues: { [name: string]: string }): IRawBlock[] {
+  const skipped: string[] = skippedPages(optionalValues);
+  const kept: IRawBlock[] = [];
+  for (const block of blocksOf(key)) {
+    const trimmed: IRawBlock | undefined = isKept(block, optionalValues) ? keptBlock(block, skipped) : undefined;
+    if (trimmed !== undefined) {
+      kept.push(trimmed);
+    }
+  }
+  return kept;
+}
+
+/** The block types a page renders in a run. */
 function renderedTypes(key: string, optionalValues: { [name: string]: string }): string[] {
-  return blocksOf(key)
-    .filter((block: IRawBlock): boolean => isKept(block, optionalValues))
-    .map((block: IRawBlock): string => block.type);
+  return keptBlocks(key, optionalValues).map((block: IRawBlock): string => block.type);
 }
 
 /**
@@ -390,14 +468,12 @@ function renderedTypes(key: string, optionalValues: { [name: string]: string }):
  */
 function resolveDocument(urlValues: { [name: string]: string }, optionalValues: { [name: string]: string } = {}): string {
   const pages: { [key: string]: unknown } = {};
-  for (const key of CONTENT_PAGES) {
-    const kept: IRawBlock[] = blocksOf(key)
-      .filter((block: IRawBlock): boolean => isKept(block, optionalValues))
-      .map((block: IRawBlock): IRawBlock => {
-        const copy: IRawBlock = { ...block };
-        delete copy.skipWhenBlank;
-        return copy;
-      });
+  for (const key of renderedPages(optionalValues)) {
+    const kept: IRawBlock[] = keptBlocks(key, optionalValues).map((block: IRawBlock): IRawBlock => {
+      const copy: IRawBlock = { ...block };
+      delete copy.skipWhenBlank;
+      return copy;
+    });
     const resolved: string = resolveTokens(JSON.stringify({ title: page(key).title, blocks: kept }), urlValues, optionalValues);
     const parsedPage: { title: string; blocks: IRawBlock[]; plane?: string; requiredRole?: string[] } = JSON.parse(resolved) as { title: string; blocks: IRawBlock[] };
     if (page(key).plane !== undefined) {
@@ -547,10 +623,11 @@ describe('front door page definition', () => {
     expect(children.map((child: INavigationEntry): string => child.title)).toEqual(WORKFLOW_ORDER.map((id: WorkflowId): string => HOME_CARDS[id].title));
   });
 
-  it('defines fourteen pages with unique keys and files, one instance each', () => {
-    expect(definition.pages).toHaveLength(14);
-    expect(new Set(pageKeys).size).toBe(14);
-    expect(new Set(pageFiles).size).toBe(14);
+  it('defines fifteen pages with unique keys and files, one instance each', () => {
+    // 1.0.0.15 adds the role-start page; a site whose pilot team is not named builds fourteen of the fifteen.
+    expect(definition.pages).toHaveLength(15);
+    expect(new Set(pageKeys).size).toBe(15);
+    expect(new Set(pageFiles).size).toBe(15);
     expect(pageKeys.slice().sort()).toEqual([...CONTENT_PAGES, ...PIECE_PAGES].sort());
     for (const target of definition.pages) {
       expect(target.file).toMatch(/^[A-Za-z0-9-]+\.aspx$/);
@@ -565,7 +642,7 @@ describe('front door page definition', () => {
     }
   });
 
-  it('renders the eight content pages from the shared document; only Operations carries the usage feed', () => {
+  it('renders the nine content pages from the shared document; only Operations carries the usage feed', () => {
     for (const key of CONTENT_PAGES) {
       const instance: { [name: string]: string } = page(key).instance;
       expect(instance.view).toBe('page');
@@ -696,7 +773,10 @@ describe('front door page definition', () => {
         }
         if (block.type === 'cards') {
           expect([2, 3]).toContain(block.columns);
-          expect(itemsOf(block)).toHaveLength(block.columns as number);
+          // A row is full or shorter than its columns, never longer: the single card that leads to the role start
+          // (1.0.0.15) sits in a two-column row, and every other row fills its columns.
+          expect(itemsOf(block).length).toBeGreaterThan(0);
+          expect(itemsOf(block).length).toBeLessThanOrEqual(block.columns as number);
           for (const item of itemsOf(block)) {
             expect(CARD_TONES).toContain(item.tone);
             expect(Array.isArray(item.body)).toBe(true);
@@ -742,6 +822,20 @@ describe('front door page definition', () => {
             // reference written here would be a claim only the measures list may make.
             expect(typeof item.id).toBe('string');
             expect(Object.keys(item).filter((field: string): boolean => ['id', 'label', 'illustrative'].indexOf(field) < 0)).toEqual([]);
+          }
+        }
+        if (block.type === 'workflowCards') {
+          // Every card answers the same four questions, and every committed card is an example: no workflow is
+          // claimed as one this environment runs until a catalogue says so (MKT-03, decision 15).
+          expect(itemsOf(block)).toHaveLength(3);
+          for (const item of itemsOf(block)) {
+            for (const field of ['title', 'input', 'output', 'humanDecision', 'pass']) {
+              expect({ title: item.title, field, filled: typeof item[field] === 'string' && String(item[field]).length > 0 }).toEqual({ title: item.title, field, filled: true });
+            }
+            expect({ title: item.title, illustrative: item.illustrative }).toEqual({ title: item.title, illustrative: true });
+            expect(item.state).toBeUndefined();
+            expect(item.href).toBeUndefined();
+            expect(item.route).toBeUndefined();
           }
         }
         if (block.type === 'bindings') {
@@ -923,6 +1017,108 @@ describe('front door page definition', () => {
     expect((document.pages.startHere.blocks[4] as ICardsBlock).audience).toEqual(['leader']);
   });
 
+  it('shows the three workflows on Start here for every tenant, whether or not a pilot team is named (MKT-03)', () => {
+    const workflows: IRawBlock = blockOf('startHere', 'workflowCards');
+    // Unconditional and for everyone: a tenant that names no pilot team still sees what the three workflows are.
+    expect(workflows.skipWhenBlank).toBeUndefined();
+    expect(workflows.audience).toBeUndefined();
+    expect(blocksOf('startHere')[9]).toBe(workflows);
+    expect(itemsOf(workflows).map((item: IRawItem): unknown => item.title)).toEqual(['Campaign brief', 'Content and internal PR plan', 'Meeting-to-campaign follow-through']);
+    // The wording is the playbook's, section by section; only the tenant's own names would be left out, and it has none.
+    expect(itemsOf(workflows)[0]).toEqual({
+      title: 'Campaign brief',
+      input: 'approved objective, audience context and permitted current sources.',
+      output: 'audience, pain points, message, channel plan, content calendar, evidence gaps and review needs.',
+      humanDecision: 'Marketing validates strategy and voice.',
+      pass: 'Every factual claim cites a current source or is marked unknown; nothing is published.',
+      illustrative: true
+    });
+    expect(itemsOf(workflows)[1].pass).toBe('One destination, one CTA, accessible copy, no unsupported capability/value claim.');
+    expect(itemsOf(workflows)[2].pass).toBe(
+      'No assignment, message, calendar event or campaign change occurs without the appropriate confirmation and native readback.'
+    );
+    // The same three workflows stand on the role start, each with the worked example the quick start names.
+    const onRoleStart: IRawBlock = blockOf('roleStart', 'workflowCards');
+    expect(itemsOf(onRoleStart).map((item: IRawItem): unknown => item.title)).toEqual(itemsOf(workflows).map((item: IRawItem): unknown => item.title));
+    for (let index: number = 0; index < 3; index += 1) {
+      const onPage: IRawItem = itemsOf(onRoleStart)[index];
+      const onStart: IRawItem = itemsOf(workflows)[index];
+      for (const field of ['title', 'input', 'output', 'humanDecision', 'pass', 'illustrative']) {
+        expect({ index, field, value: onPage[field] }).toEqual({ index, field, value: onStart[field] });
+      }
+      expect(typeof onPage.example).toBe('string');
+      expect(onStart.example).toBeUndefined();
+    }
+    // The document carries the block parsed, with its four answers and its example flag, on both pages.
+    const document: IPageDocument = parsePageDocument(resolveDocument({}, { PilotTeamName: 'Marketing' })) as IPageDocument;
+    const parsed: IWorkflowCardsBlock = document.pages.startHere.blocks[9] as IWorkflowCardsBlock;
+    expect(parsed.type).toBe('workflowCards');
+    expect(parsed.items).toEqual(itemsOf(workflows));
+    expect((document.pages.roleStart.blocks[1] as IWorkflowCardsBlock).items).toHaveLength(3);
+  });
+
+  it('gives the named pilot team a start page behind its group, skipped when the team is not named (decision 15)', () => {
+    const roleStart: IPage = page('roleStart');
+    expect(roleStart.file).toBe('Pilot-start.aspx');
+    expect(roleStart.title).toBe('{PilotTeamName} start');
+    expect(roleStart.skipWhenBlank).toBe('PilotTeamName');
+    expect(roleStart.permissions).toBe('groups:PilotGroup');
+    expect(definition.parameters.PilotGroup.kind).toBe('group');
+    // The operator reads the parameter's own description while filling parameters.json, so it names both things a
+    // blank value costs: the pilot notice on Start here and this page (with the card that leads to it).
+    expect(definition.parameters.PilotTeamName.description).toContain('private-pilot notice');
+    expect(definition.parameters.PilotTeamName.description).toContain('start page is not built');
+    // No fifth role: the site group is what keeps the page shut, and the page names no role to read it.
+    expect(roleStart.requiredRole).toBeUndefined();
+    expect(roleStart.plane).toBeUndefined();
+    expect(roleStart.commentsEnabled).toBe(false);
+    // Only this page is keyed on a parameter; every other page is built on every run.
+    expect(definition.pages.filter((target: IPage): boolean => target.skipWhenBlank !== undefined).map((target: IPage): string => target.key)).toEqual(['roleStart']);
+    expect(Object.keys(KEYED_PAGES)).toEqual(['roleStart']);
+    expect(KEYED_PAGES.roleStart).toBe(roleStart.skipWhenBlank);
+    // The three rules are Start here's, word for word; the five checks are the playbook's, in the tenant's own name.
+    const rules: IRawBlock = blockOf('roleStart', 'rules', 0);
+    expect(rules.title).toBe('Three rules');
+    expect(itemsOf(rules)).toEqual(itemsOf(blockOf('startHere', 'rules')));
+    const checks: IRawBlock = blockOf('roleStart', 'rules', 1);
+    expect(checks.title).toBe('Before you accept the result');
+    expect(checks.ordered).toBe(false);
+    expect(itemsOf(checks).map((item: IRawItem): unknown => item.title)).toEqual([
+      'Is every claim supported by a current source?',
+      'Are unknowns labeled instead of guessed?',
+      'Does the voice sound like {OrganizationName}?',
+      'Are the audience, owner and next action clear?',
+      'Did it remain a draft?'
+    ]);
+    expect(itemsOf(checks)[4].text).toBe('Correct the result or stop if any answer is no.');
+    // The quick start is the ten minutes of the employee guide; the pattern is the one Use AI already gives.
+    const cards: IRawBlock = blockOf('roleStart', 'cards');
+    expect(itemsOf(cards).map((item: IRawItem): unknown => item.title)).toEqual(['Ten-minute quick start', 'Prompt pattern']);
+    const minutes: string[] = stringsIn(itemsOf(cards)[0].body);
+    expect(minutes).toHaveLength(5);
+    expect(minutes.map((text: string): string => text.split(':')[0])).toEqual(['**Minute 0-2', '**Minute 2-4', '**Minute 4-7', '**Minute 7-9', '**Minute 9-10']);
+    const pattern: string =
+      '*Help me [complete this task] for [audience]. Use only [permitted sources]. The result must include [required sections]. Mark missing facts and assumptions. Do not send, post, publish, assign work or change records.*';
+    expect(stringsIn(itemsOf(cards)[1].body)).toEqual([pattern]);
+    expect(String(blocksOf('useAi')[0].text)).toContain(pattern);
+    // The caution the playbook ends the first task with (MKT-22).
+    const notice: IRawBlock = blockOf('roleStart', 'notice');
+    expect(notice.tone).toBe('caution');
+    expect(notice.title).toBe('Start small');
+    expect(notice.text).toBe('Start with a small task; not one that is high-risk, public, legally sensitive or confidential.');
+    // The page is on the user plane, so its wording is read by the user-plane lints like Start here's.
+    expect(userPlaneTexts().filter((entry: IUserPlaneText): boolean => entry.where.indexOf('roleStart') === 0).length).toBeGreaterThan(20);
+    // The blocks parse in full once the team is named, and the page is out of the navigation.
+    const document: IPageDocument = parsePageDocument(resolveDocument({}, { PilotTeamName: 'Marketing' })) as IPageDocument;
+    expect(document.pages.roleStart.blocks.map((block): string => block.type)).toEqual(EXPECTED_BLOCKS.roleStart);
+    expect(document.pages.roleStart.requiredRole).toBeUndefined();
+    const navigated: string[] = [];
+    for (const entry of definition.navigation) {
+      navigated.push(entry.page, ...(entry.children ?? []).map((child: INavigationEntry): string => child.page));
+    }
+    expect(navigated).not.toContain('roleStart');
+  });
+
   it('declares the six routes with the on-site rows open by content and the off-site rows proved by parameters', () => {
     expect(Object.keys(definition.routes).sort()).toEqual(ROUTE_KEYS.slice().sort());
     expect(definition.routes.guidedIntake).toEqual({ label: 'Use the guided request instead', href: '{Page:idea}', state: 'availableNow' });
@@ -1039,11 +1235,13 @@ describe('front door page definition', () => {
       admin: 'owners',
       // 1.0.0.14: the site's own permissions are the control; the page's requiredRole only tells a reader whose page it is.
       operations: 'groups:OperatorsGroup',
-      value: 'groups:LeadersGroup,OperatorsGroup'
+      value: 'groups:LeadersGroup,OperatorsGroup',
+      // 1.0.0.15: the pilot group reads the role start; it binds no role, so the page names none (decision 15).
+      roleStart: 'groups:PilotGroup'
     };
     for (const target of definition.pages) {
       expect({ page: target.key, permissions: target.permissions }).toEqual({ page: target.key, permissions: PROTECTED[target.key] ?? 'inherit' });
-      // Only the two pages a group protects name a role; the admin page is owners-only and names none.
+      // Only the two operator pages name a role; the admin page is owners-only and the role start binds no role.
       const required: { [key: string]: string[] } = { operations: ['operator'], value: ['leader', 'operator'] };
       expect({ page: target.key, requiredRole: target.requiredRole }).toEqual({ page: target.key, requiredRole: required[target.key] });
     }
@@ -1209,11 +1407,28 @@ describe('front door page definition', () => {
         used[first] = true;
       }
     }
+    // A group parameter may be read without a token: a page's permissions and a list's full-control groups name it.
+    for (const target of definition.pages) {
+      if (target.permissions.indexOf('groups:') === 0) {
+        for (const name of target.permissions.slice('groups:'.length).split(',')) {
+          used[name] = true;
+        }
+      }
+      if (target.skipWhenBlank !== undefined) {
+        used[target.skipWhenBlank] = true;
+      }
+    }
+    for (const entry of definition.listSecurity) {
+      for (const name of entry.fullControlGroups ?? []) {
+        used[name] = true;
+      }
+    }
     for (const name of Object.keys(definition.parameters)) {
       const parameter: IParameter = definition.parameters[name];
       expect(['text', 'url', 'optional', 'group']).toContain(parameter.kind);
       expect(parameter.description.length).toBeGreaterThan(0);
-      // Every parameter is read somewhere: through a token here, or by the script itself (the palette and the release id).
+      // Every parameter is read somewhere: through a token here, through a page's permissions or skip key, or by the
+      // script itself (the palette and the release id).
       expect({ name, used: used[name] === true || SCRIPT_APPLIED_PARAMETERS.indexOf(name) >= 0 }).toEqual({ name, used: true });
       // Only an optional parameter may carry a default, and a default is text.
       if (parameter.default !== undefined) {
@@ -1288,15 +1503,18 @@ describe('front door page definition', () => {
     for (const urlValues of [filled, {}]) {
       const document: IPageDocument | undefined = parsePageDocument(resolveDocument(urlValues));
       expect(document).toBeDefined();
-      expect(Object.keys((document as IPageDocument).pages)).toEqual(CONTENT_PAGES);
-      for (const key of CONTENT_PAGES) {
+      // Every content page but the one this run skips for a blank parameter: the role start needs a pilot team name.
+      expect(Object.keys((document as IPageDocument).pages)).toEqual(renderedPages({}));
+      expect(renderedPages({})).not.toContain('roleStart');
+      expect(renderedPages({ PilotTeamName: 'Marketing' })).toEqual(CONTENT_PAGES);
+      for (const key of renderedPages({})) {
         const parsed: IPageDocument['pages'][string] = (document as IPageDocument).pages[key];
         expect(parsed.title).toBe(page(key).title);
         expect({ key, blocks: parsed.blocks.map((block): string => block.type) }).toEqual({ key, blocks: renderedTypes(key, {}) });
         // The plane and the required role travel with the page: the two operator pages carry both, every other page neither.
         expect({ key, plane: parsed.plane }).toEqual({ key, plane: page(key).plane as string | undefined });
         expect({ key, requiredRole: parsed.requiredRole }).toEqual({ key, requiredRole: page(key).requiredRole });
-        const sources: IRawBlock[] = blocksOf(key).filter((block: IRawBlock): boolean => isKept(block, {}));
+        const sources: IRawBlock[] = keptBlocks(key, {});
         for (let index: number = 0; index < parsed.blocks.length; index++) {
           const source: IRawBlock = sources[index];
           const block: { items?: unknown[] } = parsed.blocks[index] as { items?: unknown[] };
@@ -1399,17 +1617,32 @@ describe('front door page definition', () => {
     expect((proven.pages.status.blocks[3] as ICardsBlock).items[0].asOf).toBe('2026-01-15');
   });
 
-  it('drops the pilot notice when the pilot team name is blank and keeps it when set', () => {
+  it('drops the pilot notice and the role-start card when the pilot team name is blank, and keeps both when set', () => {
     const blank: IPageDocument = parsePageDocument(resolveDocument({})) as IPageDocument;
-    expect(blank.pages.startHere.blocks.map((block): string => block.type)).toEqual(EXPECTED_BLOCKS.startHere.filter((type: string, index: number): boolean => index !== 8));
+    // Two blocks go with a blank pilot team: the private-pilot notice (its own `skipWhenBlank`) and the card that
+    // leads to the role-start page, which this run never builds (1.0.0.15).
+    expect(blank.pages.startHere.blocks.map((block): string => block.type)).toEqual(
+      EXPECTED_BLOCKS.startHere.filter((type: string, index: number): boolean => index !== 8 && index !== EXPECTED_BLOCKS.startHere.length - 1)
+    );
     expect(blank.pages.startHere.blocks.filter((block): boolean => block.type === 'notice')).toHaveLength(1);
     expect(JSON.stringify(blank)).not.toContain('Private pilot');
+    expect(Object.keys(blank.pages)).not.toContain('roleStart');
+    expect(JSON.stringify(blank)).not.toContain('Pilot-start.aspx');
+    // The three workflow cards stay whether or not a pilot team is named: every tenant sees the three workflows (MKT-03).
+    expect(blank.pages.startHere.blocks.filter((block): boolean => block.type === 'workflowCards')).toHaveLength(1);
     const named: IPageDocument = parsePageDocument(resolveDocument({}, { PilotTeamName: 'Marketing' })) as IPageDocument;
     expect(named.pages.startHere.blocks.map((block): string => block.type)).toEqual(EXPECTED_BLOCKS.startHere);
     const pilot: { title?: string; text: string } = named.pages.startHere.blocks[8] as { title?: string; text: string };
     expect(pilot.title).toBe('Private pilot');
     expect(pilot.text).toContain('Marketing');
     expect(JSON.stringify(named)).not.toContain('skipWhenBlank');
+    // With the team named the card leads to the page the same run builds, under the team's own name.
+    const card: ICardsBlock = named.pages.startHere.blocks[EXPECTED_BLOCKS.startHere.length - 1] as ICardsBlock;
+    expect(card.type).toBe('cards');
+    expect(card.items).toHaveLength(1);
+    expect(card.items[0].title).toBe('Marketing start');
+    expect(card.items[0].href).toBe(`${SITE_URL}/SitePages/${page('roleStart').file}`);
+    expect(named.pages.roleStart.title).toBe('Marketing start');
   });
 
   it('keeps the user plane free of provider names, route codes, engineering words and hype', () => {
