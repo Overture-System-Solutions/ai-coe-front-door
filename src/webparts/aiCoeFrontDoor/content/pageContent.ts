@@ -210,7 +210,37 @@ export const DEFAULT_WORK_COMMAND_SUBMIT_LABEL: string = 'Start';
 export const DEFAULT_WORK_COMMAND_ROUTE: string = 'work';
 export const DEFAULT_WORK_COMMAND_EMPTY_TEXT: string = 'Say what you need done first.';
 
-export type PageBlock = IHeroBlock | IHeadingBlock | IParagraphBlock | ITilesBlock | ICardsBlock | ILanesBlock | IStatusRowBlock | IPieceBlock | IWorkCommandBlock;
+/** How a notice is meant: something to know, or something to take care over (a data boundary, a pilot's limits). */
+export type NoticeTone = 'info' | 'caution';
+export const NOTICE_TONES: readonly NoticeTone[] = ['info', 'caution'];
+export const DEFAULT_NOTICE_TONE: NoticeTone = 'info';
+
+/** A short aside set apart from the page's prose: a boundary, a limit, a fact about what the site records. */
+export interface INoticeBlock {
+  type: 'notice';
+  tone: NoticeTone;
+  title?: string;
+  /** In-text markup allowed. */
+  text: string;
+}
+
+/** One rule: what to do, in a few words, and optionally why or how. */
+export interface IRuleItem {
+  title: string;
+  /** In-text markup allowed. */
+  text?: string;
+}
+
+/** A short numbered (or bulleted) set of rules people are asked to keep, such as the three rules of the pilot. */
+export interface IRulesBlock {
+  type: 'rules';
+  title?: string;
+  items: IRuleItem[];
+  /** Numbered unless the document says `false`. */
+  ordered: boolean;
+}
+
+export type PageBlock = IHeroBlock | IHeadingBlock | IParagraphBlock | ITilesBlock | ICardsBlock | ILanesBlock | IStatusRowBlock | IPieceBlock | IWorkCommandBlock | INoticeBlock | IRulesBlock;
 
 export interface IContentPage {
   title: string;
@@ -423,6 +453,38 @@ export function parseWorkCommand(raw: Raw): IWorkCommandBlock | undefined {
   return block;
 }
 
+/** A notice: needs text; the tone falls back to info and the title is optional. */
+export function parseNotice(raw: Raw): INoticeBlock | undefined {
+  const text: string | undefined = readText(raw.text);
+  if (text === undefined) {
+    return undefined;
+  }
+  const block: INoticeBlock = { type: 'notice', tone: readTone(NOTICE_TONES, raw.tone) ?? DEFAULT_NOTICE_TONE, text };
+  setOptional(block, 'title', readText(raw.title));
+  return block;
+}
+
+function readRule(raw: Raw): IRuleItem | undefined {
+  const title: string | undefined = readText(raw.title);
+  if (title === undefined) {
+    return undefined;
+  }
+  const item: IRuleItem = { title };
+  setOptional(item, 'text', readText(raw.text));
+  return item;
+}
+
+/** Rules: needs at least one titled item; numbered unless `ordered` is a literal false; the title is optional. */
+export function parseRules(raw: Raw): IRulesBlock | undefined {
+  const items: IRuleItem[] = readItems(raw.items, readRule);
+  if (items.length === 0) {
+    return undefined;
+  }
+  const block: IRulesBlock = { type: 'rules', items, ordered: raw.ordered !== false };
+  setOptional(block, 'title', readText(raw.title));
+  return block;
+}
+
 /** Reads one block; undefined for anything that is not a well-formed block of a known type. */
 export function parseBlock(value: unknown): PageBlock | undefined {
   const raw: Raw | undefined = asObject(value);
@@ -448,6 +510,10 @@ export function parseBlock(value: unknown): PageBlock | undefined {
       return parsePiece(raw);
     case 'workCommand':
       return parseWorkCommand(raw);
+    case 'notice':
+      return parseNotice(raw);
+    case 'rules':
+      return parseRules(raw);
     default:
       return undefined;
   }

@@ -159,6 +159,34 @@ describe('Page view stylesheet', () => {
     expect(rule(table, '.ai-view--narrow .ai-page-command')).toEqual(['grid-template-columns:1fr']);
   });
 
+  it('draws a notice with a toned left edge and spaces the rules list', () => {
+    expect(rule(table, '.ai-view--page .ai-page-notice')).toEqual([
+      'background:#fff',
+      'border-radius:13px',
+      'border:1px solid #dbe5ec',
+      'color:#2b3d52',
+      'font-size:15px',
+      'line-height:1.5',
+      'max-width:860px',
+      'padding:14px 18px'
+    ]);
+    // The tone is carried by the left edge and the title, never by colour alone: info in the shipped link blue, caution in the amber lane ink.
+    expect(rule(table, '.ai-view--page .ai-page-notice--info')).toEqual(['border-left:5px solid #0b66d4']);
+    expect(rule(table, '.ai-view--page .ai-page-notice--caution')).toEqual(['border-left:5px solid #725600']);
+    for (const colour of ['#0b66d4', '#725600']) {
+      expect(shipped.indexOf(colour)).toBeGreaterThan(-1);
+    }
+    expect(rule(table, '.ai-view--page .ai-page-notice-title')).toEqual(['color:#10243e', 'display:block', 'font-size:16px', 'margin:0 0 4px']);
+    expect(rule(table, '.ai-view--page .ai-page-notice-text')).toEqual(['margin:0']);
+    expect(rule(table, '.ai-view--page .ai-page-notice a')).toEqual(['color:#076874', 'font-weight:600', 'text-decoration:underline']);
+    expect(rule(table, '.ai-view--page .ai-page-rules-title')).toEqual(['color:#10243e', 'font-size:18px', 'font-weight:700', 'line-height:1.3', 'margin:0 0 10px']);
+    expect(rule(table, '.ai-view--page .ai-page-rules')).toEqual(['color:#2b3d52', 'font-size:16px', 'line-height:1.5', 'margin:0', 'max-width:860px', 'padding:0 0 0 26px']);
+    expect(rule(table, '.ai-view--page .ai-page-rules > li')).toEqual(['padding-left:6px']);
+    expect(rule(table, '.ai-view--page .ai-page-rules > li + li')).toEqual(['margin-top:10px']);
+    expect(rule(table, '.ai-view--page .ai-page-rule-title')).toEqual(['color:#10243e', 'display:block']);
+    expect(rule(table, '.ai-view--page .ai-page-rules a')).toEqual(['color:#076874', 'font-weight:600', 'text-decoration:underline']);
+  });
+
   it('draws the status pill as text plus an icon shape in every page view', () => {
     expect(rule(table, '.ai-view .ai-pill')).toEqual([
       'align-items:center',

@@ -7,7 +7,9 @@ import {
   pagePlane,
   parseBlock,
   parseContentUrl,
+  parseNotice,
   parsePageDocument,
+  parseRules,
   parseSettings,
   parseVocabulary,
   parseWorkCommand,
@@ -15,7 +17,7 @@ import {
   readParagraphs,
   resolveContentHref
 } from './pageContent';
-import type { ICardsBlock, IContentPage, IHeroBlock, ILanesBlock, IPageDocument, IPieceBlock, ITilesBlock, IVocabulary, IWorkCommandBlock } from './pageContent';
+import type { ICardsBlock, IContentPage, IHeroBlock, ILanesBlock, INoticeBlock, IPageDocument, IPieceBlock, IRulesBlock, ITilesBlock, IVocabulary, IWorkCommandBlock } from './pageContent';
 
 const SITE: string = 'https://contoso.sharepoint.com/sites/ai';
 
@@ -380,6 +382,52 @@ describe('blocks', () => {
     expect(parseWorkCommand({ prompt: '  ', submitLabel: 'Go' })).toBeUndefined();
     expect(parseWorkCommand({ submitLabel: 'Go' })).toBeUndefined();
     expect(parseBlock({ type: 'workCommand' })).toBeUndefined();
+  });
+
+  it('reads a notice with an info default tone, an optional title, and drops one without text', () => {
+    expect(parseNotice({ text: ' Never paste customer data. ' })).toEqual({ type: 'notice', tone: 'info', text: 'Never paste customer data.' });
+    const caution: INoticeBlock = parseBlock({ type: 'notice', tone: ' caution ', title: ' Data boundary ', text: 'Keep **personal data** out of every prompt.' }) as INoticeBlock;
+    expect(caution).toEqual({ type: 'notice', tone: 'caution', title: 'Data boundary', text: 'Keep **personal data** out of every prompt.' });
+    // An unknown tone, a blank title and a non-string title fall back rather than dropping the notice.
+    expect(parseNotice({ tone: 'danger', title: '   ', text: 'Read this.' })).toEqual({ type: 'notice', tone: 'info', text: 'Read this.' });
+    expect(parseNotice({ tone: 3, title: 7, text: 'Read this.' })).toEqual({ type: 'notice', tone: 'info', text: 'Read this.' });
+    expect(parseNotice({ tone: 'caution', title: 'Data boundary' })).toBeUndefined();
+    expect(parseNotice({ tone: 'caution', text: '   ' })).toBeUndefined();
+    expect(parseBlock({ type: 'notice' })).toBeUndefined();
+  });
+
+  it('reads rules as titled items, ordered unless the block says otherwise, and drops a block without a titled item', () => {
+    expect(parseRules({ items: [{ title: ' Check every number. ' }] })).toEqual({ type: 'rules', ordered: true, items: [{ title: 'Check every number.' }] });
+    const rules: IRulesBlock = parseBlock({
+      type: 'rules',
+      title: ' Three rules ',
+      ordered: false,
+      items: [
+        { title: 'You decide', text: ' The tool *suggests*; you decide. ' },
+        { text: 'No title here' },
+        'not an item',
+        { title: '   ', text: 'Blank title' },
+        { title: 'Say when you used it', text: '' }
+      ]
+    }) as IRulesBlock;
+    expect(rules).toEqual({
+      type: 'rules',
+      title: 'Three rules',
+      ordered: false,
+      items: [
+        { title: 'You decide', text: 'The tool *suggests*; you decide.' },
+        { title: 'Say when you used it' }
+      ]
+    });
+    // Only a literal false turns the numbering off; anything else keeps the default.
+    expect((parseRules({ ordered: 'false', items: [{ title: 'A' }] }) as IRulesBlock).ordered).toBe(true);
+    expect((parseRules({ ordered: 0, items: [{ title: 'A' }] }) as IRulesBlock).ordered).toBe(true);
+    expect((parseRules({ ordered: true, items: [{ title: 'A' }] }) as IRulesBlock).ordered).toBe(true);
+    expect(parseRules({ title: 'Three rules', items: [{ text: 'no title' }] })).toBeUndefined();
+    expect(parseRules({ title: 'Three rules', items: [] })).toBeUndefined();
+    expect(parseRules({ title: 'Three rules', items: 'not a list' })).toBeUndefined();
+    expect(parseRules({ title: 'Three rules' })).toBeUndefined();
+    expect(parseBlock({ type: 'rules' })).toBeUndefined();
   });
 
   it('reads the two embeddable pieces and keeps only known page targets', () => {

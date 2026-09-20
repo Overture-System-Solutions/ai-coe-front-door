@@ -106,6 +106,33 @@ describe('ContentPage', () => {
     });
   });
 
+  it('renders notices and rules in their block wrappers', async () => {
+    const document: IPageDocument = {
+      version: 1,
+      pages: {
+        startHere: {
+          title: 'Start here',
+          blocks: [
+            { type: 'heading', level: 2, text: 'Three rules' },
+            { type: 'rules', ordered: true, items: [{ title: 'You decide', text: 'The tool suggests.' }, { title: 'Check every number' }, { title: 'Say when you used it' }] },
+            { type: 'notice', tone: 'caution', title: 'Data boundary', text: 'Keep **personal data** out of every prompt.' },
+            { type: 'notice', tone: 'info', text: 'Nothing here is graded.' }
+          ]
+        }
+      }
+    };
+    const { container } = renderPage('startHere', { pageContent: createFakePageContentService({ connected: true, document, message: 'ok' }) });
+    await screen.findByRole('heading', { level: 2, name: 'Three rules' });
+    expect(blockTypes(container)).toEqual(['heading', 'rules', 'notice', 'notice']);
+    expect(container.querySelectorAll('.ai-page-block--rules > ol.ai-page-rules > li.ai-page-rule')).toHaveLength(3);
+    const notes: HTMLElement[] = screen.getAllByRole('note');
+    expect(notes).toHaveLength(2);
+    expect(notes[0]).toHaveClass('ai-page-notice--caution');
+    expect(notes[0].querySelector('strong.ai-page-notice-title')?.textContent).toBe('Data boundary');
+    expect(notes[1]).toHaveClass('ai-page-notice--info');
+    expect(container.querySelectorAll('.ai-page-block--notice > aside.ai-page-notice')).toHaveLength(2);
+  });
+
   it('embeds the telemetry strip between the cards on the status page', async () => {
     const { container } = renderPage('status', { usage: createFakeUsageService() });
     await screen.findByText('SharePoint connected');

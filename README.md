@@ -116,8 +116,8 @@ Data contracts never change: intake ids (`OVT-AICOE-…`), list titles and field
 The shipped experience is one web part that switches screens in memory. Since 1.0.0.10 each instance can instead
 render exactly one piece (the home tiles, one wizard, the telemetry strip or the dashboard), and since 1.0.0.11 an
 instance can render a whole **content page**: the structure of a short communication site (a hero, headings,
-paragraphs, quick-link tiles, three-column cards, the three request lanes, a status row) drawn in the front door's
-own style, with the home tiles or the telemetry strip embedded between the blocks. The six navigation pages of the
+paragraphs, quick-link tiles, three-column cards, the three request lanes, a status row, notices, a short set of
+rules) drawn in the front door's own style, with the home tiles or the telemetry strip embedded between the blocks. The six navigation pages of the
 site are therefore front-door pages too. The wizards, drafts, list writes and downloads are unchanged; only where the
 pieces sit and how they link to each other differs.
 
@@ -162,6 +162,8 @@ copy in its version history). It is UTF-8 JSON:
 | `lanes` | `items`, each `{ "tone": "green" or "amber" or "red", "title", "body", "note", "badge" }` |
 | `statusRow` | `items`, each `{ "label", "text", "state", "route", "asOf", "source" }`, shown side by side as **label** — text, with the state pill after the text when `state` or `route` is set |
 | `workCommand` | `prompt` (the question above the input); `placeholder`; `submitLabel` (default `Start`); `route` (a key of the `routes` table, default `work`); `note` (the line under the input; in-text markup allowed); `emptyText` (shown when the sentence is empty, default "Say what you need done first."). One per page: the first screen's single primary control (see *The work command* below) |
+| `notice` | `text` (in-text markup allowed); `tone` `info` (default) or `caution`; `title`. A short aside set apart from the prose (a data boundary, a pilot's limits, what the site records), rendered as a note with a toned left edge and its title, never colour alone |
+| `rules` | `items`, each `{ "title", "text" }` (a rule needs a title; `text` may carry in-text markup); `title`; `ordered` (default `true`: a numbered list; `false` for bullets). A block needs at least one titled item |
 | `piece` | `piece`: `home` (the five path cards and the resource strip; `pages` maps `idea`, `toolCheck`, `teamUsage`, `helpTraining`, `feedback`, `telemetry`, `admin`, `policy` to site paths or URLs) or `telemetry` (the operations snapshot; the instance's usage metrics provider applies) |
 
 `tone` on tiles and cards is `teal` (default), `blue`, `violet`, `gold` or `cyan`. Every `text`, `body`, `note` and

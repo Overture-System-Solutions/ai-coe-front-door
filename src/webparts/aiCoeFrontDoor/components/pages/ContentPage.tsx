@@ -9,7 +9,9 @@ import { useDraftFlags } from '../useDraftFlags';
 import { CardsBlock } from './blocks/CardsBlock';
 import { HeroBlock } from './blocks/HeroBlock';
 import { LanesBlock } from './blocks/LanesBlock';
+import { NoticeBlock } from './blocks/NoticeBlock';
 import { PieceBlock } from './blocks/PieceBlock';
+import { RulesBlock } from './blocks/RulesBlock';
 import { StatusRowBlock } from './blocks/StatusRowBlock';
 import { HeadingBlock, ParagraphBlock } from './blocks/TextBlocks';
 import { TilesBlock } from './blocks/TilesBlock';
@@ -51,6 +53,10 @@ function renderBlock(block: PageBlock, drafts: DraftFlags): React.ReactElement {
       return <StatusRowBlock block={block} />;
     case 'workCommand':
       return <WorkCommandBlock block={block} />;
+    case 'notice':
+      return <NoticeBlock block={block} />;
+    case 'rules':
+      return <RulesBlock block={block} />;
     default:
       return <PieceBlock block={block} drafts={drafts} />;
   }
@@ -66,7 +72,7 @@ function hasHomePiece(page: IContentPage | undefined): boolean {
 
 /**
  * One page of the content document rendered as front-door blocks: the hero, the work command,
- * headings, paragraphs, tiles, cards, lanes and status lines in the order the document lists them,
+ * headings, paragraphs, tiles, cards, lanes, status lines, notices and rules in the order the document lists them,
  * with the home tiles or the telemetry strip embedded where the document places them. The document's route list,
  * vocabulary and settings reach the blocks through the page document context, never through props;
  * the clock and the roles come from the host (the shell, or the test harness).

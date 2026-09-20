@@ -187,6 +187,21 @@ const SAMPLE_PAGE_DOCUMENT: { [key: string]: unknown } = {
             { title: 'Check status', href: previewLink('page=status'), description: 'What is running, what is not, what is next.', icon: 'LayoutDashboard', tone: 'gold' }
           ]
         },
+        { type: 'heading', level: 2, text: 'Three rules for the pilot' },
+        {
+          type: 'rules',
+          items: [
+            { title: 'You decide', text: 'The tool *suggests*; you decide, and you sign what goes out.' },
+            { title: 'Check every number', text: 'Against the source, every time, before it leaves your hands.' },
+            { title: 'Say when you used it', text: 'One line is enough: "drafted with AI, checked by me".' }
+          ]
+        },
+        {
+          type: 'notice',
+          tone: 'caution',
+          title: 'Data boundary',
+          text: 'Keep **personal data**, contracts and anything regulated out of every prompt. If you are not sure, [check the tool or task](/?view=toolCheck) first.'
+        },
         { type: 'heading', level: 2, text: 'Three prompts to try today' },
         {
           type: 'cards',
@@ -210,6 +225,17 @@ const SAMPLE_PAGE_DOCUMENT: { [key: string]: unknown } = {
       title: 'Learn',
       blocks: [
         { type: 'paragraph', text: 'Four exercises, about ten minutes in total. Do them in Copilot Chat with your own work; nothing is graded.' },
+        {
+          type: 'rules',
+          title: 'Before you start',
+          ordered: false,
+          items: [
+            { title: 'Use your own work', text: 'A document you have read, a message you need to send.' },
+            { title: 'Keep the boundary', text: 'Public information and your own notes only.' },
+            { title: 'Expect mistakes', text: 'Finding them is the exercise.' }
+          ]
+        },
+        { type: 'notice', tone: 'info', text: 'Nothing here is recorded. The exercises stay on your device and in your own chat history.' },
         {
           type: 'cards',
           columns: 2,
