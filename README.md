@@ -454,13 +454,25 @@ truth state, a route whose proof comes from the tenant, a default literal the bu
 an in-text link into its label and marks a tile or call to action pointing at it `needsAccess`, so it stays on the
 page shown as closed (a labelled non-link with its state; the script says which); `optional` parameters may be blank
 too, and a blank one takes the `default` its declaration carries (only an `optional` parameter may declare one) or
-stays empty. Tokens inside the `routes` table and the `shared` sections are resolved the same way; the `vocabulary`
+stays empty; a `group` parameter (since 1.0.0.14) carries the title of a site group, which the script looks up on the
+site once, and a blank or unknown title is a warning rather than an error: the page that names the group stays
+owners-only and the role the group would bind stays unbound. Tokens inside the `routes` table and the `shared` sections are resolved the same way; the `vocabulary`
 and `settings` sections are copied as written. `src/provisioning/pagesDefinition.test.ts` checks the structure, the
 tokens, that the web part's parser accepts every block once the tokens are resolved, and that no word of the tenant
 list is in the file: `src/provisioning/tenantWords.json` is the one list of client names, tenant hosts, the reference
 roster, case ids and secret shapes that the provisioning tests scan `pages.json`, `parameters.sample.json` and the
 script against. That list is deliberately not tenant-neutral (it is what the scans look for), lives outside
 `src/webparts`, is imported by nothing in the web part and is never packaged.
+
+**Page permissions.** Every page declares one of three modes. `inherit` leaves the page with the site's own
+permissions. `owners` gives the site's Owners group Full Control and nobody else: the admin dashboard and the
+Operations page. `groups:<Name>[,<Name>]` (since 1.0.0.14) does the same and gives Read to each site group named,
+where every name is a `group` parameter, so the group titles stay in `parameters.json` and no tenant's group is
+committed. In both cases the script resets the page's item permissions first (breaking inheritance on an item that is
+already unique would keep stray grants from an earlier run), so SharePoint itself refuses the page to everyone else;
+the role a page asks for in the document decides only what the web part offers and is never the access control. A
+group parameter that is blank, or that names a group the site does not carry, grants nobody, which leaves that page
+owners-only rather than open.
 
 **Applying it** (site owner, outside this repository; the build and tests never touch a tenant):
 
@@ -478,6 +490,7 @@ script against. That list is deliberately not tenant-neutral (it is what the sca
    (see *List security*; not needed for read security). Every parameter is named; anything else on the line is rejected.
 
    The script first checks that the front-door component is available on the site (and stops if it is not), then
+   looks up the site group of every `group` parameter (see *Page permissions*), then
    puts the two intake lists under item-level security (see *List security*; a list the site does not carry is
    skipped with a warning), then
    resolves the tokens and uploads the content document to Site Assets (creating the library if the site has none,
@@ -486,7 +499,8 @@ script against. That list is deliberately not tenant-neutral (it is what the sca
    to the site recycle bin and rebuilds them from `pages.json`: edits made in the browser are recoverable from the
    recycle bin, not carried over. A page whose build fails part-way is recycled so the next run recreates it. The
    navigation is rebuilt every run; it replaces every QuickLaunch node, including the three list links the package
-   feature adds and the template defaults. The admin page gets owners-only item permissions. This needs a
+   feature adds and the template defaults. The admin page and the Operations page get owners-only item permissions
+   (see *Page permissions*). This needs a
    communication site, whose horizontal top navigation is the QuickLaunch; on any other site the script stops unless
    `-AllowNonCommunicationSite` is given, because there the QuickLaunch is the left navigation.
    On a site that already carries the pages of 1.0.0.11 or 1.0.0.12, run without `-Overwrite` first: every existing

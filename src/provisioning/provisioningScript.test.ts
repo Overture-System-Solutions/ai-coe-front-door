@@ -56,8 +56,8 @@ describe('page provisioning script', () => {
   });
 
   it('accepts the optional kind: only a text parameter must be filled, a blank optional one takes its default', () => {
-    expect(script).toContain("-notin @('text', 'url', 'optional')");
-    expect(script).toContain("expected 'text', 'url' or 'optional'");
+    expect(script).toContain("-notin @('text', 'url', 'optional', 'group')");
+    expect(script).toContain("expected 'text', 'url', 'optional' or 'group'");
     // Required-ness is decided by the kind alone, in one place, and only for text.
     expect(script.match(/\$missing \+= \$name/g)).toHaveLength(1);
     expect(script).toMatch(/if \(\$kinds\[\$name\] -eq 'text'\) \{ \$missing \+= \$name \}/);
@@ -67,6 +67,54 @@ describe('page provisioning script', () => {
     expect(script).toMatch(/-eq 'optional' -and \$declaration\.Contains\('default'\)\) \{ \$values\[\$name\] = \[string\]\$declaration\['default'\] \}/);
     expect(script).toMatch(/\$declaration\.Contains\('default'\) -and \$kinds\[\$name\] -ne 'optional'\) \{ throw/);
     expect(script).toMatch(/Optional parameters may be blank too: a\s+blank one takes the 'default'/);
+  });
+
+  it('accepts the group kind: a site group looked up on the site, a blank or unknown title warning and never throwing', () => {
+    // 1.0.0.14: a `group` parameter carries a site group title. The script looks it up; a blank or unknown title is a
+    // warning, so a site whose groups do not exist yet still provisions: the page that names the group stays
+    // owners-only and the role it would bind stays unbound.
+    const section: string = script.slice(script.indexOf('# Site groups'), script.indexOf('# List security'));
+    expect(section.length).toBeGreaterThan(200);
+    expect(section).toMatch(/if \(\$kinds\[\$name\] -ne 'group'\) \{ continue \}/);
+    expect(section).toMatch(/try \{ \$group = Get-PnPGroup -Identity \$title -ErrorAction SilentlyContinue \} catch \{ \$group = \$null \}/);
+    expect(section).toMatch(/Write-Warning "[^"]*is not found; page stays owners-only and the role stays unbound/);
+    // Never an error: neither a blank title nor a group the site does not carry stops the run.
+    expect(section).not.toContain('throw');
+    expect(section).toMatch(/IsNullOrWhiteSpace\(\$title\)/);
+    // Only a group that was found is kept, and it is kept by parameter name, so a page names the parameter, never a title.
+    expect(section).toMatch(/\$siteGroups\[\$name\] = \$group/);
+    // The group section runs before the lists and the pages, so every later grant sees the same resolved groups.
+    expect(script.indexOf('# Site groups')).toBeGreaterThan(script.indexOf('Get-PnPPageComponent'));
+    expect(script.indexOf('# Site groups')).toBeLessThan(script.indexOf('# List security'));
+  });
+
+  it('applies the groups: page permissions - Read per named group, owners Administrator, inheritance reset first', () => {
+    // The page map protects Operations and Enterprise value with site groups; SharePoint itself refuses the page to
+    // everyone else. Each name in 'groups:<Name>[,<Name>]' is a group parameter, so no group title is committed.
+    expect(script).toMatch(/function Set-PagePermission/);
+    expect(script).toContain("'^groups:[A-Za-z][A-Za-z0-9]*(,[A-Za-z][A-Za-z0-9]*)*$'");
+    expect(script).toMatch(/expected 'inherit', 'owners' or 'groups:<Name>\[,<Name>\]'/);
+    expect(script).toMatch(/is not a parameter of kind 'group'/);
+    expect(script).toMatch(/RoleTypeKind -eq 'Reader'/);
+    // The page loop delegates; the inline owners-only branch is gone.
+    expect(script).toMatch(/Set-PagePermission \$file \(\[string\]\$page\['permissions'\]\)/);
+    expect(script).not.toMatch(/if \(\[string\]\$page\['permissions'\] -eq 'owners'\)/);
+    const body: string = script.slice(script.indexOf('function Set-PagePermission'), script.indexOf('# Pages: one section'));
+    expect(body.length).toBeGreaterThan(400);
+    expect(body).toContain('-AssociatedOwnerGroup');
+    expect(body).toMatch(/Set-PnPListItemPermission -List 'Site Pages' -Identity \$item\.Id -Group \$group -AddRole \$readRole/);
+    // Reset first (an item already unique keeps stray grants from an earlier run), then the owners, then the readers.
+    const reset: number = body.indexOf('-InheritPermissions');
+    const owners: number = body.indexOf('-AddRole $fullControlRole');
+    const readers: number = body.indexOf('-AddRole $readRole');
+    expect(reset).toBeGreaterThan(-1);
+    expect(reset).toBeLessThan(owners);
+    expect(owners).toBeLessThan(readers);
+    expect(body).toContain('-ClearExisting');
+    // A group parameter that is blank or names a group the site does not carry was not resolved, so the page keeps the
+    // owners-only grant and nothing else: 'inherit' alone leaves the page as it is.
+    expect(body).toMatch(/\$siteGroups\.ContainsKey\(\$parameterName\)/);
+    expect(body).toMatch(/-eq 'inherit'\) \{ return \}/);
   });
 
   it('drops a block whose skipWhenBlank parameter is blank (the pilot notice), with a warning, and never uploads the key', () => {
@@ -330,6 +378,11 @@ describe('README', () => {
   it('documents the parameter kinds and the tenant word list', () => {
     expect(readme).toContain('`optional`');
     expect(readme).toContain('`default`');
+    // 1.0.0.14: the group kind and the page permissions it feeds.
+    expect(readme).toContain('`group`');
+    expect(readme).toContain('`groups:<Name>[,<Name>]`');
+    expect(readme).toMatch(/blank or unknown[^.]*warning/);
+    expect(readme).toMatch(/owners-only[^.]*the role[^.]*unbound|the role[^.]*unbound[^.]*owners-only/);
     expect(readme).toContain('src/provisioning/tenantWords.json');
     expect(readme).toContain('deliberately not tenant-neutral');
   });

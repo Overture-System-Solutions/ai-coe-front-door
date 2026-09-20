@@ -29,8 +29,11 @@ import { findTenantWords, PROVISIONING_SCAN, readTenantWords } from './tenantWor
 import type { ITenantWords } from './tenantWords';
 
 interface IParameter {
-  /** `text` must be filled; `url` may be blank and fails closed; `optional` may be blank and takes its `default`. */
-  kind: 'text' | 'url' | 'optional';
+  /**
+   * `text` must be filled; `url` may be blank and fails closed; `optional` may be blank and takes its `default`;
+   * `group` carries a site group title the script looks up, and a blank or unknown one only warns (1.0.0.14).
+   */
+  kind: 'text' | 'url' | 'optional' | 'group';
   description: string;
   /** Substituted when an `optional` parameter is blank; the other kinds may not declare one. */
   default?: string;
@@ -121,8 +124,16 @@ const EXPECTED_PARAMETERS: { [kind: string]: string[] } = {
   text: ['OrganizationName', 'TelemetryProvider', 'AssistantName', 'ChatName', 'StatusDate', 'PromptCount', 'PromptsAddedCount', 'PromptsAddedDate', 'PromptTestRecordCount', 'PromptStatusCounts', 'PromptIdAdminQueue', 'PromptIdMorningBrief', 'PromptIdRepeatableWork', 'LeadTeamContinuation'],
   url: ['DraftServiceUrl', 'AssistantUrl', 'ChatUrl', 'WorkCommandUrl', 'SupportUrl', 'TeamsUrl', 'PromptLibraryUrl'],
   // PilotMembers is optional (a 1.0.0.12 verifier finding): it feeds only the private-pilot notice, which the script drops when PilotTeamName is blank.
-  optional: ['AssistantState', 'AssistantVerifiedDate', 'AssistantReceiptRef', 'WorkCommandState', 'WorkCommandVerifiedDate', 'WorkCommandReceiptRef', 'SupportOwnerLabel', 'IdentityOwnerLabel', 'PrivacyOwnerLabel', 'BusinessApproverLabel', 'ClaimsOwnerLabel', 'RecoveryOwnerLabel', 'GovernanceBodyFastPath', 'GovernanceBodyArchitecture', 'GovernanceBodyExecutive', 'PilotTeamName', 'PilotMembers', 'GovernanceReference', 'ReviewSystemName']
+  optional: ['AssistantState', 'AssistantVerifiedDate', 'AssistantReceiptRef', 'WorkCommandState', 'WorkCommandVerifiedDate', 'WorkCommandReceiptRef', 'SupportOwnerLabel', 'IdentityOwnerLabel', 'PrivacyOwnerLabel', 'BusinessApproverLabel', 'ClaimsOwnerLabel', 'RecoveryOwnerLabel', 'GovernanceBodyFastPath', 'GovernanceBodyArchitecture', 'GovernanceBodyExecutive', 'PilotTeamName', 'PilotMembers', 'GovernanceReference', 'ReviewSystemName'],
+  // The script reads the kind from 1.0.0.14; the group parameters themselves arrive with the instance properties and
+  // the protected pages that name them, so the definition declares none yet.
+  group: []
 };
+/**
+ * What a page may declare as its `permissions`: inherited, the site's owners group alone, or Read for one or more
+ * site groups named by `group` parameters (1.0.0.14), each of which the script looks up on the site.
+ */
+const PAGE_PERMISSIONS: RegExp = /^(inherit|owners|groups:[A-Za-z][A-Za-z0-9]*(,[A-Za-z][A-Za-z0-9]*)*)$/;
 /** The Branding properties the script writes on every instance from a parameter (Contracts § Property pane; decision 21). */
 const INSTANCE_BRANDING_TOKENS: { [property: string]: string } = { organizationName: '{OrganizationName}', governanceReference: '{GovernanceReference}', reviewSystemName: '{ReviewSystemName}' };
 const REMOVED_PARAMETERS: string[] = ['ConciergeUrl', 'CopilotChatUrl', 'ConciergeSourceCount', 'ConciergeNewestSourceDate', 'VerifiedDate'];
@@ -472,7 +483,7 @@ describe('front door page definition', () => {
       expect(target.file).toMatch(/^[A-Za-z0-9-]+\.aspx$/);
       expect(target.title.length).toBeGreaterThan(0);
       expect(typeof target.commentsEnabled).toBe('boolean');
-      expect(['inherit', 'owners']).toContain(target.permissions);
+      expect(target.permissions).toMatch(PAGE_PERMISSIONS);
       expect(typeof target.instance).toBe('object');
       expect((target as { sections?: unknown }).sections).toBeUndefined();
     }
@@ -846,6 +857,29 @@ describe('front door page definition', () => {
     }
   });
 
+  it('admits inherit, owners and groups:<Name> permissions, every name a group parameter (1.0.0.14)', () => {
+    // A protected page names the group parameters that may read it, never a site group title: the titles are the
+    // tenant's and live in parameters.json. The script gives the owners group Full Control and each named group Read.
+    for (const target of definition.pages) {
+      expect({ page: target.key, permissions: target.permissions }).toEqual({ page: target.key, permissions: expect.stringMatching(PAGE_PERMISSIONS) });
+      if (target.permissions.indexOf('groups:') !== 0) {
+        continue;
+      }
+      const names: string[] = target.permissions.slice('groups:'.length).split(',');
+      expect(names.length).toBeGreaterThan(0);
+      for (const name of names) {
+        expect({ page: target.key, name, kind: definition.parameters[name]?.kind }).toEqual({ page: target.key, name, kind: 'group' });
+      }
+    }
+    // The form: one or more parameter names after `groups:`, nothing else.
+    for (const admitted of ['inherit', 'owners', 'groups:OperatorsGroup', 'groups:LeadersGroup,OperatorsGroup']) {
+      expect({ permissions: admitted, admitted: PAGE_PERMISSIONS.test(admitted) }).toEqual({ permissions: admitted, admitted: true });
+    }
+    for (const refused of ['', 'groups:', 'groups:A,', 'group:A', 'everyone', 'groups:A B', 'groups:Ops Group', 'owners,groups:A']) {
+      expect({ permissions: refused, admitted: PAGE_PERMISSIONS.test(refused) }).toEqual({ permissions: refused, admitted: false });
+    }
+  });
+
   it('names the two intake lists for item-level security by the titles the web part writes to (decision 6)', () => {
     // The script's "List security" section reads this: each person reads and edits their own rows; owners (and, once bound,
     // operators) read every row. The titles are the constants the services write with, so a rename cannot drift.
@@ -899,7 +933,7 @@ describe('front door page definition', () => {
     }
     for (const name of Object.keys(definition.parameters)) {
       const parameter: IParameter = definition.parameters[name];
-      expect(['text', 'url', 'optional']).toContain(parameter.kind);
+      expect(['text', 'url', 'optional', 'group']).toContain(parameter.kind);
       expect(parameter.description.length).toBeGreaterThan(0);
       expect(used[name]).toBe(true);
       // Only an optional parameter may carry a default, and a default is text.
@@ -917,7 +951,7 @@ describe('front door page definition', () => {
   });
 
   it('declares the provider-neutral parameters of the plan, by kind, and none of the removed ones', () => {
-    const byKind: { [kind: string]: string[] } = { text: [], url: [], optional: [] };
+    const byKind: { [kind: string]: string[] } = { text: [], url: [], optional: [], group: [] };
     for (const name of Object.keys(definition.parameters)) {
       byKind[definition.parameters[name].kind].push(name);
     }

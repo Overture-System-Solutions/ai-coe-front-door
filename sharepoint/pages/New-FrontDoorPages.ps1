@@ -18,7 +18,9 @@ Tokens in pages.json: {Name} is a parameter value; {Page:key} is the server-rela
 {Url:Name} is a URL parameter. Text parameters must have a value. URL parameters may be blank: a blank one turns an
 in-text link "[label]({Url:Name})" into its label, and a tile or call to action pointing at it is marked 'needsAccess'
 with a warning, so the web part shows it as closed rather than dropping it. Optional parameters may be blank too: a
-blank one takes the 'default' its declaration carries, or stays empty. Tokens inside the 'routes' table are resolved
+blank one takes the 'default' its declaration carries, or stays empty. Group parameters (since 1.0.0.14) carry the
+title of a site group, which the script looks up once: a blank title, or one the site does not carry, is reported and
+nothing else happens, so a site whose groups are not created yet still provisions. Tokens inside the 'routes' table are resolved
 the same way. A block that names a parameter in 'skipWhenBlank' (the private-pilot notice on Start here names
 PilotTeamName) is dropped, with a warning, when that parameter is blank; the key itself never reaches the document.
 The web part opens links to other origins in a new tab.
@@ -36,6 +38,13 @@ script breaks the list's inheritance (keeping the existing grants), gives the si
 the Members group at its level and sets ReadSecurity 2 / WriteSecurity 2. A list the site does not carry is skipped
 with a warning. The companion flows' connection must hold Override List Behaviors on both lists (Full Control, Design
 or a custom level); an Edit-level connection is trimmed to its own items.
+
+Page permissions (since 1.0.0.14): each page in pages.json declares 'inherit' (the site's own permissions), 'owners'
+(the site's Owners group alone, as the admin dashboard and the Operations page do) or 'groups:<Name>[,<Name>]', where
+each name is a parameter of kind 'group'. For the last two the script resets the page's item permissions, gives the
+Owners group Full Control and each named site group Read, so SharePoint itself refuses the page to everyone else. A
+group parameter that is blank, or that names a group the site does not carry, grants nobody: that page stays
+owners-only and the role the group would bind stays unbound.
 
 Every parameter must be given by name; a stray token on the command line (for example a bracket copied from an
 example) is rejected instead of becoming a value.
@@ -125,7 +134,7 @@ $missing = @()
 foreach ($name in @($definition['parameters'].Keys)) {
   $declaration = $definition['parameters'][$name]
   $kinds[$name] = [string]$declaration['kind']
-  if ($kinds[$name] -notin @('text', 'url', 'optional')) { throw "Parameter '$name' in pages.json has an unknown kind '$($kinds[$name])'; expected 'text', 'url' or 'optional'." }
+  if ($kinds[$name] -notin @('text', 'url', 'optional', 'group')) { throw "Parameter '$name' in pages.json has an unknown kind '$($kinds[$name])'; expected 'text', 'url', 'optional' or 'group'." }
   if ($declaration.Contains('default') -and $kinds[$name] -ne 'optional') { throw "Parameter '$name' in pages.json declares a default, which only an 'optional' parameter may carry." }
   if (-not $values.ContainsKey($name)) { $values[$name] = '' }
   if ([string]::IsNullOrWhiteSpace($values[$name])) {
@@ -269,6 +278,36 @@ function Resolve-Node($node, [string]$where) {
 }
 
 # ---------------------------------------------------------------------------------------------------------------
+# Site groups and permission levels: the 'group' parameters, resolved once (1.0.0.14)
+# ---------------------------------------------------------------------------------------------------------------
+# The role names are resolved by kind (Administrator, Editor, Contributor, Reader) as the admin page's grant does, so
+# a site in another language gets the same levels.
+$fullControlRole = (Get-PnPRoleDefinition | Where-Object { $_.RoleTypeKind -eq 'Administrator' } | Select-Object -First 1).Name
+$editRole = (Get-PnPRoleDefinition | Where-Object { $_.RoleTypeKind -eq 'Editor' } | Select-Object -First 1).Name
+$contributeRole = (Get-PnPRoleDefinition | Where-Object { $_.RoleTypeKind -eq 'Contributor' } | Select-Object -First 1).Name
+$readRole = (Get-PnPRoleDefinition | Where-Object { $_.RoleTypeKind -eq 'Reader' } | Select-Object -First 1).Name
+# A parameter of kind 'group' carries the title of a site group, which belongs to the tenant and never to pages.json.
+# Each is looked up here, once, and kept under its parameter name. A blank title, or one the site does not carry, is
+# reported and skipped: the run goes on, a page that names the group keeps its owners-only grant, and the role the
+# group would bind stays unbound, so the person sees the protected-page wording instead of content that is not theirs.
+$siteGroups = @{}
+foreach ($name in @($kinds.Keys)) {
+  if ($kinds[$name] -ne 'group') { continue }
+  $title = [string]$values[$name]
+  $group = $null
+  if (-not [string]::IsNullOrWhiteSpace($title)) {
+    try { $group = Get-PnPGroup -Identity $title -ErrorAction SilentlyContinue } catch { $group = $null }
+  }
+  if ($null -eq $group) {
+    $named = if ([string]::IsNullOrWhiteSpace($title)) { 'blank' } else { "'$title'" }
+    Write-Warning "The site group of '$name' ($named) is not found; page stays owners-only and the role stays unbound."
+    continue
+  }
+  $siteGroups[$name] = $group
+  Write-Host "Site group for ${name}: $title"
+}
+
+# ---------------------------------------------------------------------------------------------------------------
 # List security: item-level read and write security on the intake lists, made effective (decision 6)
 # ---------------------------------------------------------------------------------------------------------------
 # SharePoint bypasses item-level security (ReadSecurity 2 / WriteSecurity 2) for a principal whose permission level
@@ -278,11 +317,7 @@ function Resolve-Node($node, [string]$where) {
 # group Full Control (they read every row, as the admin dashboard needs), leave the Members group at its level, then
 # set the two flags last, so a run that stops part-way never trims a list before the owners can read it. Rerunning
 # changes nothing: inheritance is broken once, and a role already held is not granted twice.
-# The role names are resolved by kind (Administrator, Editor, Contributor) as the admin page's grant does, so a site
-# in another language gets the same levels.
-$fullControlRole = (Get-PnPRoleDefinition | Where-Object { $_.RoleTypeKind -eq 'Administrator' } | Select-Object -First 1).Name
-$editRole = (Get-PnPRoleDefinition | Where-Object { $_.RoleTypeKind -eq 'Editor' } | Select-Object -First 1).Name
-$contributeRole = (Get-PnPRoleDefinition | Where-Object { $_.RoleTypeKind -eq 'Contributor' } | Select-Object -First 1).Name
+# The role names come from the section above, resolved by kind so a site in another language gets the same levels.
 $securedLists = @()
 $unsecuredLists = @()
 $listSecurity = if ($definition.Contains('listSecurity')) { @($definition['listSecurity']) } else { @() }
@@ -373,6 +408,37 @@ if ($readBack['version'] -ne 1 -or @($readBack['pages'].Keys).Count -ne $documen
 }
 
 # ---------------------------------------------------------------------------------------------------------------
+# Page permissions: 'inherit', 'owners' or 'groups:<Name>[,<Name>]'
+# ---------------------------------------------------------------------------------------------------------------
+# A protected page names group parameters, never a group title, so nothing tenant-bound is committed. The item's
+# inheritance is reset first, because breaking it on an item that is already unique would keep stray grants from an
+# earlier run; then the site's Owners group gets Full Control and each site group the parameters resolved gets Read.
+# A group parameter that was blank, or that named a group the site does not carry, was reported above and grants
+# nobody here, so the page stays owners-only rather than open to everyone.
+function Set-PagePermission([string]$file, [string]$permissions) {
+  if ([string]::IsNullOrWhiteSpace($permissions) -or $permissions -eq 'inherit') { return }
+  $readers = @()
+  if ($permissions -ne 'owners') {
+    if ($permissions -notmatch '^groups:[A-Za-z][A-Za-z0-9]*(,[A-Za-z][A-Za-z0-9]*)*$') {
+      throw "Page '$file' in pages.json declares permissions '$permissions'; expected 'inherit', 'owners' or 'groups:<Name>[,<Name>]'."
+    }
+    foreach ($parameterName in (($permissions -replace '^groups:', '') -split ',')) {
+      if (-not $kinds.ContainsKey($parameterName) -or $kinds[$parameterName] -ne 'group') {
+        throw "Page '$file' names '$parameterName' in its permissions, which is not a parameter of kind 'group' in pages.json."
+      }
+      if ($siteGroups.ContainsKey($parameterName)) { $readers += $siteGroups[$parameterName] }
+    }
+  }
+  $item = Find-PageItem $file
+  $owners = Get-PnPGroup -AssociatedOwnerGroup
+  Set-PnPListItemPermission -List 'Site Pages' -Identity $item.Id -InheritPermissions
+  Set-PnPListItemPermission -List 'Site Pages' -Identity $item.Id -Group $owners -AddRole $fullControlRole -ClearExisting
+  foreach ($group in $readers) {
+    Set-PnPListItemPermission -List 'Site Pages' -Identity $item.Id -Group $group -AddRole $readRole
+  }
+}
+
+# ---------------------------------------------------------------------------------------------------------------
 # Pages: one section, one front-door instance each
 # ---------------------------------------------------------------------------------------------------------------
 $created = @()
@@ -414,14 +480,7 @@ foreach ($page in $definition['pages']) {
     }
     Set-PnPPage -Identity $pageName -Publish | Out-Null
 
-    if ([string]$page['permissions'] -eq 'owners') {
-      $item = Find-PageItem $file
-      $owners = Get-PnPGroup -AssociatedOwnerGroup
-      $adminRole = (Get-PnPRoleDefinition | Where-Object { $_.RoleTypeKind -eq 'Administrator' } | Select-Object -First 1).Name
-      # Reset first: breaking inheritance on an item that is already unique keeps stray grants from an earlier run.
-      Set-PnPListItemPermission -List 'Site Pages' -Identity $item.Id -InheritPermissions
-      Set-PnPListItemPermission -List 'Site Pages' -Identity $item.Id -Group $owners -AddRole $adminRole -ClearExisting
-    }
+    Set-PagePermission $file ([string]$page['permissions'])
   } catch {
     Write-Warning "Building $file failed; the partial page is recycled so the next run recreates it."
     Remove-PnPPage -Identity $pageName -Force -Recycle -ErrorAction SilentlyContinue | Out-Null
