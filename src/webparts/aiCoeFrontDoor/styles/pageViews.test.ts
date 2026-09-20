@@ -219,6 +219,13 @@ describe('Page view stylesheet', () => {
     expect(rule(table, '.ai-view--narrow .ai-page-support-row')).toEqual(['grid-template-columns:1fr']);
   });
 
+  it('draws the page-view chrome: the header line and the identity line, in every page view', () => {
+    // The header keeps the shipped workflow header's size and weight; the identity line is quiet, in the shipped muted ink.
+    expect(rule(table, '.ai-view .ai-page-header')).toEqual(['margin:0']);
+    expect(rule(table, '.ai-view .ai-page-identity')).toEqual(['color:#5b6878', 'font-size:13px', 'line-height:1.4', 'margin:0 0 16px']);
+    expect(shipped.indexOf('#5b6878')).toBeGreaterThan(-1);
+  });
+
   it('draws the status pill as text plus an icon shape in every page view', () => {
     expect(rule(table, '.ai-view .ai-pill')).toEqual([
       'align-items:center',

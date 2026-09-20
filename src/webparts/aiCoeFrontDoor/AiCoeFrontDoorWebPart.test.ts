@@ -332,7 +332,13 @@ describe('AiCoeFrontDoorWebPart bundle', () => {
     expect(root.querySelector('.ai-view--toolCheck.ai-view--narrow')).not.toBeNull();
     expect(root.querySelector('.min-h-screen')).toBeNull();
     expect(within(root).getByRole('heading', { level: 1, name: catalog.toolCheck.title })).toBeInTheDocument();
-    expect(within(root).getByText('AI CoE Lab')).toBeInTheDocument();
+    // The page-view header names the CoE and the badge names the intake; the sr-only span stays with the legacy view.
+    expect(root.querySelector('p.ai-page-header')?.textContent).toMatch(/AI CoE$/);
+    expect(within(root).queryByText('AI CoE Lab')).not.toBeInTheDocument();
+    expect(root.querySelector('.overture-badge')?.textContent).toBe('Governed intake');
+    expect(root.querySelector('p.ai-page-identity')?.textContent).toMatch(/^Signed in as /);
+    expect(within(root).getAllByText(/^Signed in as /)).toHaveLength(1);
+    expect(root.querySelector('div[role="region"]')).toHaveAttribute('aria-label', catalog.toolCheck.title);
     await waitFor((): void => expect(within(root).getByRole('button', { name: 'Continue' })).toBeInTheDocument());
   });
 
@@ -357,7 +363,7 @@ describe('AiCoeFrontDoorWebPart bundle', () => {
     const root: HTMLElement = named.webPart.domElement;
     await waitFor((): void => expect(within(root).getByRole('heading', { level: 2, name: 'Support' })).toBeInTheDocument());
     expect(within(root).getByRole('heading', { level: 1, name: catalog.idea.title })).toBeInTheDocument();
-    expect(root.querySelector('.ai-workflow-shell > main + .ai-page-block--shared > .ai-page-block--supportRoute > section.ai-page-support')).not.toBeNull();
+    expect(root.querySelector('.ai-workflow-shell > div[role="region"] + .ai-page-block--shared > .ai-page-block--supportRoute > section.ai-page-support')).not.toBeNull();
     expect(within(root).getByRole('link', { name: 'Ask in the pilot channel' })).toHaveAttribute('href', 'https://teams.microsoft.com/l/channel/contoso');
     await waitFor((): void => expect(within(root).getByRole('button', { name: 'Continue' })).toBeInTheDocument());
     expect(fileReads(named)).toHaveLength(1);

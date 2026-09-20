@@ -99,7 +99,8 @@ value `Overture` the web part reproduces the 1.0.0.7 wording verbatim; blank kee
 
 | Where | Value set (`Contoso`) | Blank |
 |---|---|---|
-| Workflow header | Contoso AI CoE Lab | AI CoE Lab |
+| Workflow header (legacy view) | Contoso AI CoE Lab | AI CoE Lab |
+| Header of a wizard page view (since 1.0.0.12) | Contoso AI CoE | AI CoE |
 | Hero badge | CONTOSO AI COE | AI COE |
 | Downloaded summaries, first line | Contoso AI CoE — *workflow title* | AI CoE — *workflow title* |
 | Policy reference on review requests | Contoso AI CoE governance controls, version 1.1, August 26, 2026 | AI CoE governance controls, … |
@@ -121,6 +122,14 @@ rules) drawn in the front door's own style, with the home tiles or the telemetry
 since 1.0.0.12 every page view draws the document's shared footer (the support route) below its content. The six
 navigation pages of the site are therefore front-door pages too. The wizards, drafts, list writes and downloads are unchanged; only where the
 pieces sit and how they link to each other differs.
+
+Since 1.0.0.12 the chrome of a page view says only what is true: a wizard page heads with the CoE name (`branding.coeName`,
+no "Lab") and a badge reading **Governed intake** (the document's `vocabulary.chrome.badge` overrides the wording; nothing
+claims a connection the page has not proved); every page view shows a visible "Signed in as …" line (`p.ai-page-identity`)
+and the legacy view alone keeps its screen-reader-only one, so the person is announced once either way; the piece sits in
+a `region` landmark named after the workflow, the page title or the piece (Home tiles, AI operations snapshot,
+Administrator dashboard, Content page), while the legacy shell keeps its `main` landmark; and the hero illustration on a
+content page is decoration, hidden from assistive technology, where the landing page keeps its named image.
 
 **Properties** (group *Page layout*; *Page content* for a content page; *Page links* for the home tiles):
 
@@ -202,7 +211,7 @@ is dropped, never the document:
 | `shared` | `{ "footer": [ blocks ] }` — the `footer` blocks every page view draws below its content, in the same relative place: the content pages and the five wizard pages alike (any instance whose `contentUrl` is set). Read like a page's blocks, less `hero`, `piece` and `workCommand`, which belong to one page each and are left out here. Meant for the `supportRoute` block, so the pilot's support route is the same help in the same place everywhere |
 | `routes` | `{ "<key>": { "label", "href", "state", "verifiedOn", "receiptRef", "fallback", "note", "roles", "carriesReference", "capabilityId" } }` — the named destinations tiles, the call to action, status items and the work command point at. A row needs a `label`; `state` is a truth-state key or activation code; `verifiedOn` (YYYY-MM-DD) and `receiptRef` (the tenant qualification receipt reference) are what an off-site `href` needs before it opens; `fallback` names the row people are sent to while this one is closed (`guidedIntake` by default); `roles` limits the row to role ids (everyone when absent); `carriesReference` lets a hand-off card append the record reference; `capabilityId` is reserved. Resolution fails closed, in this order: an unknown key goes to the `guidedIntake` row (no such row: "No fallback is configured", no link); roles named and none held, a blank `href`, or a state other than *Available now* keep the label and link to the fallback with their own pill; an *Available now* off-site `href` without a valid, not-future `verifiedOn` or without `receiptRef` shows "Awaiting source" and links to the fallback; a site path or same-origin URL needs neither. Off-site links never carry user text |
 | `settings` | `{ "freshnessDays": 30, "minimumCohort": 5 }` — whole numbers (1–3650 and 1–1000); anything else keeps the default |
-| `vocabulary` | string maps only, unknown keys ignored, a blank keeps the default: `truthStates` `{ "<key>": { "label", "definition" } }` for `availableNow`, `draftOnly`, `needsApproval`, `needsAccess`, `notSupported`; `requestStatuses` `{ "<code>": "plain wording" }`; `chrome` `{ "badge", "example", "needsRefresh", "awaitingSource", "protectedPage" }`; `roles` `{ "<roleId>": "name" }`; `telemetry` `{ "<feedId>": "name" }`. `{organization}` and `{role}` in the text are filled by the web part, not by the script |
+| `vocabulary` | string maps only, unknown keys ignored, a blank keeps the default: `truthStates` `{ "<key>": { "label", "definition" } }` for `availableNow`, `draftOnly`, `needsApproval`, `needsAccess`, `notSupported`; `requestStatuses` `{ "<code>": "plain wording" }`; `chrome` `{ "badge", "example", "needsRefresh", "awaitingSource", "protectedPage" }` (`badge` is the wizard-page header badge, default "Governed intake"); `roles` `{ "<roleId>": "name" }`; `telemetry` `{ "<feedId>": "name" }`. `{organization}` and `{role}` in the text are filled by the web part, not by the script |
 | page `plane` | `user` (default) or `operator` |
 
 The truth states are the five plain-language states of the activation playbook (Available now, Draft only, Needs

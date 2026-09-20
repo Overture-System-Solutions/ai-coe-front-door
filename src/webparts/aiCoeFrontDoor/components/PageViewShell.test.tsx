@@ -8,12 +8,14 @@ import { createBranding } from '../branding/branding';
 import type { IPageDocument } from '../content/pageContent';
 import type { FrontDoorView, IPageViewSettings } from '../content/pageViews';
 import { createWorkflowCatalog, WORKFLOW_ORDER } from '../content/workflows/catalog';
+import type { IFrontDoorUser } from '../context/FrontDoorContext';
 import type { IWorkflowCatalog } from '../workflows/types';
 import { NO_PAGE_KEY_TEXT } from './pages/ContentPage';
-import { ADMIN_ONLY_TEXT, PageViewShell, UNCONFIGURED_VIEW_TEXT } from './PageViewShell';
+import { ADMIN_ONLY_TEXT, DEFAULT_CHROME_BADGE, PageViewShell, UNCONFIGURED_VIEW_TEXT } from './PageViewShell';
 
 const catalog: IWorkflowCatalog = createWorkflowCatalog(createBranding('Overture'));
 const RETURN_URL: string = 'https://contoso.sharepoint.com/sites/ai/SitePages/Requests.aspx';
+const ADA: IFrontDoorUser = { displayName: 'Ada Contoso', email: 'ada@contoso.com' };
 
 /** A document whose shared footer carries the support route and a closing line, and one content page. */
 const FOOTER_DOCUMENT: IPageDocument = {
@@ -56,17 +58,66 @@ function renderView(settings: IPageViewSettings, options: ITestFrontDoorOptions 
 
 describe('PageViewShell', () => {
   it('renders a workflow view inside the workflow shell with the header chrome and no hero', async () => {
-    const { container } = renderView(settingsFor('idea'));
+    const { container } = renderView(settingsFor('idea'), { user: ADA });
     expect(container.firstChild).toHaveClass('overture-app', 'ai-view', 'ai-view--idea');
     expect(container.firstChild).not.toHaveClass('min-h-screen');
     expect(container.firstChild).not.toHaveClass('ai-view--narrow');
     expect(container.querySelector('.ai-workflow-shell')).not.toBeNull();
     expect(container.querySelector('.ai-home-shell')).toBeNull();
-    expect((screen.getByText('AI CoE Lab').closest('p') as HTMLElement).textContent).toBe('Overture AI CoE Lab');
-    expect(screen.getByText('Governed intake · SharePoint connected')).toHaveClass('overture-badge');
+    // The header names the CoE, never a "Lab"; the badge names the intake, never a connection it has not proved.
+    expect(container.querySelector('p.ai-page-header')?.textContent).toBe('Overture AI CoE');
+    expect(screen.queryByText('AI CoE Lab')).not.toBeInTheDocument();
+    const badge: HTMLElement = container.querySelector('.overture-badge') as HTMLElement;
+    expect(badge.textContent).toBe(DEFAULT_CHROME_BADGE);
+    expect(badge.textContent).toBe('Governed intake');
+    expect(screen.queryByText('Governed intake · SharePoint connected')).not.toBeInTheDocument();
+    expect(container.querySelector('p.ai-page-identity')?.textContent).toBe('Signed in as Ada Contoso');
     expect(screen.getByRole('heading', { level: 1, name: catalog.idea.title })).toBeInTheDocument();
     await firstStepOf(catalog.idea);
     expect(screen.queryByText('AI, safely put to work.')).not.toBeInTheDocument();
+  });
+
+  it('takes the badge wording from the document vocabulary', async () => {
+    const document: IPageDocument = { ...FOOTER_DOCUMENT, vocabulary: { truthStates: {}, requestStatuses: {}, chrome: { badge: 'Pilot intake' }, roles: {}, telemetry: {} } };
+    const { container } = renderView(settingsFor('idea'), { pageContent: createFakePageContentService({ connected: true, message: 'ok', document }) });
+    await firstStepOf(catalog.idea);
+    await waitFor((): void => expect(container.querySelector('.overture-badge')?.textContent).toBe('Pilot intake'));
+    expect(screen.queryByText('Governed intake')).not.toBeInTheDocument();
+  });
+
+  it('wraps a workflow view in a region named after the workflow, with no main landmark', async () => {
+    const { container } = renderView(settingsFor('feedback'));
+    await firstStepOf(catalog.feedback);
+    const region: HTMLElement = container.querySelector('.ai-workflow-shell > div[role="region"]') as HTMLElement;
+    expect(region).not.toBeNull();
+    expect(region).toHaveAttribute('aria-label', catalog.feedback.title);
+    expect(within(region).getByRole('heading', { level: 1, name: catalog.feedback.title })).toBeInTheDocument();
+    expect(container.querySelector('main')).toBeNull();
+    expect(screen.getByRole('region', { name: catalog.feedback.title })).toBe(region);
+  });
+
+  it('names the region of every other piece and shows the identity line on each', async () => {
+    const cases: { settings: IPageViewSettings; label: string; options?: ITestFrontDoorOptions }[] = [
+      { settings: settingsFor('home'), label: 'Home tiles' },
+      { settings: settingsFor('telemetry'), label: 'AI operations snapshot', options: { usage: createFakeUsageService() } },
+      { settings: settingsFor('admin'), label: 'Administrator dashboard' },
+      { settings: settingsFor('page'), label: 'Content page', options: { pageContent: createFakePageContentService() } }
+    ];
+    for (const item of cases) {
+      const { container, unmount } = renderView(item.settings, { ...(item.options ?? {}), user: ADA });
+      const region: HTMLElement = container.querySelector('.ai-home-shell > div[role="region"]') as HTMLElement;
+      expect(region).toHaveAttribute('aria-label', item.label);
+      expect(container.querySelector('main')).toBeNull();
+      expect(container.querySelector('p.ai-page-identity')?.textContent).toBe('Signed in as Ada Contoso');
+      expect(container.querySelectorAll('.ai-page-identity')).toHaveLength(1);
+      expect(container.querySelector('.overture-badge')).toBeNull();
+      if (item.settings.view === 'telemetry') {
+        await screen.findByText('SharePoint connected');
+      }
+      // Let the draft discovery of the home piece settle before the tree goes away.
+      await act(async (): Promise<void> => undefined);
+      unmount();
+    }
   });
 
   it('exits a workflow to the return page', async () => {
@@ -160,12 +211,17 @@ describe('PageViewShell', () => {
     expect(screen.queryByText('AI, safely put to work.')).not.toBeInTheDocument();
   });
 
-  it('renders a content page inside the home shell', async () => {
-    const { container } = renderView(settingsFor('page', { pageKey: 'startHere' }), { pageContent: createFakePageContentService() });
+  it('renders a content page inside the home shell, in a region named after the page, with the identity line', async () => {
+    const { container } = renderView(settingsFor('page', { pageKey: 'startHere' }), { pageContent: createFakePageContentService(), user: ADA });
     expect(container.firstChild).toHaveClass('overture-app', 'ai-view', 'ai-view--page');
     await screen.findByRole('heading', { level: 1, name: 'What do you need done?' });
-    expect(container.querySelector('.ai-home-shell > main > .ai-home.ai-page > .ai-page-block--hero')).not.toBeNull();
+    expect(container.querySelector('.ai-home-shell > div[role="region"] > .ai-home.ai-page > .ai-page-block--hero')).not.toBeNull();
+    expect(container.querySelector('main')).toBeNull();
+    expect(screen.getByRole('region', { name: 'Start here' })).toBe(container.querySelector('.ai-home-shell > div[role="region"]'));
+    expect(container.querySelector('p.ai-page-identity')?.textContent).toBe('Signed in as Ada Contoso');
+    expect(container.querySelectorAll('.ai-page-identity')).toHaveLength(1);
     expect(container.querySelector('.ai-workflow-shell')).toBeNull();
+    expect(container.querySelector('.overture-badge')).toBeNull();
     expect(screen.queryByText('AI CoE Lab')).not.toBeInTheDocument();
     expect(screen.queryByText('AI, safely put to work.')).not.toBeInTheDocument();
   });
@@ -196,7 +252,7 @@ describe('PageViewShell', () => {
         const shell: HTMLElement = container.querySelector('.ai-home-shell, .ai-workflow-shell') as HTMLElement;
         expect(shared.parentElement).toBe(shell);
         expect(shell.lastElementChild).toBe(shared);
-        expect(shared.previousElementSibling).toBe(container.querySelector('main'));
+        expect(shared.previousElementSibling).toBe(container.querySelector('div[role="region"]'));
         expect(within(shared).getByRole('link', { name: 'Ask in the pilot channel' })).toHaveAttribute('href', 'https://teams.microsoft.com/l/channel/contoso');
         expect(within(shared).getByText('Nothing here is graded.')).toBeInTheDocument();
         expect(shared.querySelectorAll('.ai-page-block--supportRoute, .ai-page-block--paragraph')).toHaveLength(2);

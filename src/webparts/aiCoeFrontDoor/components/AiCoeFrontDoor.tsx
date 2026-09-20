@@ -28,7 +28,8 @@ export interface IAiCoeFrontDoorProps {
 
 /**
  * Root of the React tree: the scoped section every stylesheet targets, the screen-reader-only
- * signed-in line, and the providers the pages read from.
+ * signed-in line of the legacy view (a page view shows the person visibly in its own chrome, so
+ * nothing is announced twice), and the providers the pages read from.
  */
 export function AiCoeFrontDoor({ isDarkTheme, branding, siteUrl, user, isAdmin, telemetryProvider, services, pageView, navigate }: IAiCoeFrontDoorProps): React.ReactElement {
   const value: IFrontDoorContextValue = React.useMemo(
@@ -38,7 +39,7 @@ export function AiCoeFrontDoor({ isDarkTheme, branding, siteUrl, user, isAdmin, 
   const settings: IPageViewSettings | undefined = pageView === undefined || pageView.view === 'legacy' ? undefined : pageView;
   return (
     <section id="overture-ai-coe-pilot" className={styles.aiCoeFrontDoor} data-theme={isDarkTheme ? 'dark' : 'light'}>
-      <span className={styles.signedInUser}>{`Signed in as ${user.displayName}`}</span>
+      {settings === undefined && <span className={styles.signedInUser}>{`Signed in as ${user.displayName}`}</span>}
       <FrontDoorProvider value={value}>
         <SubmissionProvider governanceService={services.governance}>
           {settings === undefined ? <FrontDoorShell /> : <PageViewShell key={settings.view} settings={settings} />}

@@ -643,6 +643,18 @@
   text-transform: uppercase;
 }
 
+/* Page view chrome: the header line names the CoE and the identity line the signed-in person, in the shipped muted ink. */
+#overture-ai-coe-pilot .ai-view .ai-page-header {
+  margin: 0;
+}
+
+#overture-ai-coe-pilot .ai-view .ai-page-identity {
+  color: #5b6878;
+  font-size: 13px;
+  line-height: 1.4;
+  margin: 0 0 16px;
+}
+
 /* Narrow layout (a half or one-third column): the shipped phone breakpoints, keyed on the piece instead of the viewport. */
 #overture-ai-coe-pilot .ai-view--narrow .ai-workflow-shell {
   max-width: none;

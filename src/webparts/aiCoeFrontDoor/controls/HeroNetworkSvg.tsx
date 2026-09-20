@@ -1,9 +1,18 @@
 import * as React from 'react';
 
+export interface IHeroNetworkSvgProps {
+  /**
+   * True hides the drawing from assistive technology (no image role, no name): the page hero already
+   * says everything in words. Absent keeps the shipped landing-page markup, a named image.
+   */
+  decorative?: boolean;
+}
+
 /** Decorative "connected network" illustration behind the landing-page hero. */
-export function HeroNetworkSvg(): React.ReactElement {
+export function HeroNetworkSvg({ decorative }: IHeroNetworkSvgProps = {}): React.ReactElement {
+  const naming: React.SVGAttributes<SVGSVGElement> = decorative === true ? { 'aria-hidden': 'true' } : { role: 'img', 'aria-label': 'Abstract connected network' };
   return (
-    <svg className="ai-hero-network" viewBox="0 0 760 300" role="img" aria-label="Abstract connected network" preserveAspectRatio="xMidYMid slice">
+    <svg className="ai-hero-network" viewBox="0 0 760 300" {...naming} preserveAspectRatio="xMidYMid slice">
       <defs>
         <radialGradient id="ai-node-glow" cx="35%" cy="30%" r="75%">
           <stop offset="0" stopColor="#74F1EE" stopOpacity="0.85" />

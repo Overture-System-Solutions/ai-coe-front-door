@@ -88,6 +88,16 @@ describe('AiCoeFrontDoor', () => {
     expect(screen.getByRole('heading', { level: 1, name: 'AI, safely put to work.' })).toBeInTheDocument();
   });
 
+  it('announces the signed-in person once in a page view, as the visible identity line and not the hidden span', async () => {
+    const section: HTMLElement = renderRoot(false, { pageView: { view: 'feedback', layout: 'wide', pages: {} } });
+    const lines: HTMLElement[] = screen.getAllByText('Signed in as Pat Example');
+    expect(lines).toHaveLength(1);
+    expect(lines[0]).toHaveClass('ai-page-identity');
+    expect(lines[0].tagName).toBe('P');
+    expect(section.querySelector('[class^="signedInUser"]')).toBeNull();
+    await firstStepOf(createTestFrontDoor().value.catalog.feedback);
+  });
+
   it('marks the dark theme', () => {
     expect(renderRoot(true)).toHaveAttribute('data-theme', 'dark');
   });

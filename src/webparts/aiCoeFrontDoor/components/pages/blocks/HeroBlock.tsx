@@ -71,7 +71,7 @@ export function HeroBlock({ block }: IHeroBlockProps): React.ReactElement {
         )}
         {block.cta !== undefined && action !== undefined && <HeroAction cta={block.cta} action={action} siteUrl={siteUrl} />}
       </div>
-      <HeroNetworkSvg />
+      <HeroNetworkSvg decorative={true} />
     </section>
   );
 }

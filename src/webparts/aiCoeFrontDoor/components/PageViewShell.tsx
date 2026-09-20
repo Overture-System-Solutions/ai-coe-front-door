@@ -31,6 +31,22 @@ export interface IPageViewShellProps {
 
 export const ADMIN_ONLY_TEXT: string = 'The AI CoE administrator dashboard is available to site administrators only.';
 export const UNCONFIGURED_VIEW_TEXT: string = 'This web part has no page view configured. Choose one under Page layout in the web part properties.';
+/** The badge beside the header of a wizard view: it names the intake and claims nothing about a connection. Overridable by `vocabulary.chrome.badge`. */
+export const DEFAULT_CHROME_BADGE: string = 'Governed intake';
+
+/** The accessible name of the region around a piece that is not a wizard and not a loaded content page. */
+const PIECE_LABELS: { [view: string]: string } = {
+  home: 'Home tiles',
+  telemetry: 'AI operations snapshot',
+  admin: 'Administrator dashboard',
+  page: 'Content page'
+};
+
+/** The badge wording: the document's chrome override, or the default when the document sets none. */
+function chromeBadge(vocabulary: IPageDocumentContextValue['vocabulary']): string {
+  const override: string | undefined = vocabulary.chrome.badge;
+  return override === undefined || override === '' ? DEFAULT_CHROME_BADGE : override;
+}
 
 /** No landing page shares the tree with a workflow piece, so there is nothing to keep in sync; the home page rediscovers drafts when it loads. */
 const NO_DRAFT_TRACKING: IWorkflowProps['onDraftsChanged'] = (): void => undefined;
@@ -47,7 +63,7 @@ const NO_DRAFTS: DraftFlags = {};
  * support route) is drawn below the content of every view, in the same place on each.
  */
 export function PageViewShell({ settings }: IPageViewShellProps): React.ReactElement {
-  const { branding, isAdmin, siteUrl, services, navigate: contextNavigate } = useFrontDoor();
+  const { branding, catalog, isAdmin, siteUrl, services, user, navigate: contextNavigate } = useFrontDoor();
   const host: IPageDocumentContextValue = usePageDocument();
   const draftStore: typeof services.draftStore = services.draftStore;
   const pageContent: IPageContentService | undefined = services.pageContent;
@@ -109,24 +125,27 @@ export function PageViewShell({ settings }: IPageViewShellProps): React.ReactEle
       content = <NoticeBanner>{UNCONFIGURED_VIEW_TEXT}</NoticeBanner>;
   }
 
+  // The piece sits in a labelled region (the legacy shell keeps its own main landmark on its own page): a wizard is
+  // named after its workflow, a content page after its page title once the document is read, any other piece after itself.
+  const regionLabel: string = isWorkflowView(view) ? catalog[view].title : page !== undefined ? page.title : (PIECE_LABELS[view] ?? branding.coeName);
   const rootClass: string = `overture-app ai-view ai-view--${view}${settings.layout === 'narrow' ? ' ai-view--narrow' : ''}`;
   return (
     <PageDocumentProvider value={context}>
       <div className={rootClass}>
         <div className={homeLike ? 'ai-home-shell' : 'ai-workflow-shell'}>
           {!homeLike && (
-            <>
-              <div className="mb-6 flex items-center justify-between gap-3">
-                <p className="text-sm font-semibold tracking-wide">
-                  {branding.headerPrefix}
-                  <span style={{ color: 'var(--color-primary)' }}>AI CoE Lab</span>
-                </p>
-                <span className="overture-badge rounded-full px-3 py-1 text-xs font-medium">Governed intake · SharePoint connected</span>
-              </div>
-              <div className="mb-8 h-px w-full" style={{ backgroundColor: 'var(--color-line)' }} />
-            </>
+            <div className="mb-6 flex items-center justify-between gap-3">
+              <p className="ai-page-header text-sm font-semibold tracking-wide">
+                <span style={{ color: 'var(--color-primary)' }}>{branding.coeName}</span>
+              </p>
+              <span className="overture-badge rounded-full px-3 py-1 text-xs font-medium">{chromeBadge(context.vocabulary)}</span>
+            </div>
           )}
-          <main>{content}</main>
+          <p className="ai-page-identity">{`Signed in as ${user.displayName}`}</p>
+          {!homeLike && <div className="mb-8 h-px w-full" style={{ backgroundColor: 'var(--color-line)' }} />}
+          <div role="region" aria-label={regionLabel}>
+            {content}
+          </div>
           {context.shared.footer.length > 0 && (
             <div className="ai-page-block ai-page-block--shared">
               <BlockList blocks={context.shared.footer} drafts={NO_DRAFTS} />

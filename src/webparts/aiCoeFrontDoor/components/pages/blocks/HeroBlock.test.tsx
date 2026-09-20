@@ -29,6 +29,17 @@ describe('HeroBlock', () => {
     expect(hero.querySelector('.ai-hero-copy + *')).not.toBeNull();
   });
 
+  it('draws the illustration as decoration: hidden from assistive technology, with no image role or name', () => {
+    const { container } = renderWithFrontDoor(<HeroBlock block={BLOCK} />);
+    const illustration: HTMLElement = container.querySelector('section.ai-hero > svg.ai-hero-network') as HTMLElement;
+    expect(illustration).not.toBeNull();
+    expect(illustration).toHaveAttribute('aria-hidden', 'true');
+    expect(illustration).not.toHaveAttribute('role');
+    expect(illustration).not.toHaveAttribute('aria-label');
+    expect(screen.queryByRole('img')).not.toBeInTheDocument();
+    expect(screen.queryByRole('img', { hidden: true, name: 'Abstract connected network' })).not.toBeInTheDocument();
+  });
+
   it('uses the badge from the block and leaves out what the block does not have', () => {
     const { container } = renderWithFrontDoor(<HeroBlock block={{ type: 'hero', title: 'Welcome', badge: 'Private pilot' }} />);
     expect(screen.getByText('Private pilot')).toHaveClass('ai-hero-badge');
