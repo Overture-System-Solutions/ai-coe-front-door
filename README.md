@@ -212,6 +212,7 @@ copy in its version history). It is UTF-8 JSON:
 | `lanes` | `items`, each `{ "tone": "green" or "amber" or "red", "title", "body", "note", "badge" }` |
 | `statusRow` | `items`, each `{ "label", "text", "state", "route", "asOf", "source", "illustrative" }`, shown side by side as **label** — text, with the state pill after the text when `state` or `route` is set and the freshness line under the text when `asOf`, `source` or `illustrative` is set (see *Freshness* below) |
 | `statusStrip` | `items`, each `{ "kind", "label", "text", "href", "state", "route", "asOf", "source", "illustrative" }` (the last three draw the freshness line under a `text` item; a `myRequests` item counts live rows and never carries one); `emptyText` (default "No requests from you yet."); `unavailableText` (default "Status unavailable: the request list could not be read."). `kind` is `text` (default; the item behaves as a `statusRow` item and needs `text`) or `myRequests` (the count of the signed-in person's own requests by plain status, "2 received · 1 in review", linked to `href` when set; `text` is an optional lead). The count comes from the request list (see *My work*); while the list cannot be read the item shows `unavailableText`, with the *Needs access* pill when the read was refused, and never a number. Only a strip with a `myRequests` item reads the list |
+| `caseCards` | `items`, each `{ "id", "title", "description", "state", "historicalStage", "historicalHealth", "sourceDate", "nextAction", "caption", "illustrative" }`; an item needs `id`, `title` and `state`, a canonical status code (`AWAITING_SOURCE`, `IN_DELIVERY`, …; a pilot word or anything else drops the item). One card per case: the id as code, the state pill (*Awaiting source* for `AWAITING_SOURCE`, the plain wording of every other code, the code beside it on the operator plane), the title, the description, then "Historical stage: …", "Historical health: Green/Amber/Red" (`historicalHealth` is `green`, `amber` or `red`; anything else is dropped) and "Source: 28 Aug 2026" (`sourceDate`, a YYYY-MM-DD date) as chips, then "Next: …" and the caption. A `sourceDate` older than `settings.freshnessDays` adds the *Needs refresh* pill and, when no caption is given, "Do not infer progress."; `illustrative` adds the *Example* pill; without a `sourceDate` no date is shown. A `source` `{ "list" }` is accepted and ignored until a cases list exists (see *Case cards* below) |
 | `workCommand` | `prompt` (the question above the input); `placeholder`; `submitLabel` (default `Start`); `route` (a key of the `routes` table, default `work`); `note` (the line under the input; in-text markup allowed); `emptyText` (shown when the sentence is empty, default "Say what you need done first."). One per page: the first screen's single primary control (see *The work command* below) |
 | `notice` | `text` (in-text markup allowed); `tone` `info` (default) or `caution`; `title`. A short aside set apart from the prose (a data boundary, a pilot's limits, what the site records), rendered as a note with a toned left edge and its title, never colour alone |
 | `rules` | `items`, each `{ "title", "text" }` (a rule needs a title; `text` may carry in-text markup); `title`; `ordered` (default `true`: a numbered list; `false` for bullets). A block needs at least one titled item |
@@ -300,6 +301,16 @@ pill and "Do not infer progress." instead of any date: nothing here invents one.
 draws the *Example* pill, so a worked example is never mistaken for a fact of this environment. The three pill labels
 come from `vocabulary.chrome` (`needsRefresh`, `awaitingSource`, `example`); the clock is the page's, so a page left open
 shows what was true when it loaded.
+
+**Case cards (since 1.0.0.13).** The `caseCards` block shows one card per case: the record id, the state as a pill,
+the stage and health the latest authoritative source recorded (labelled *historical*, never current), the day that
+source was read, the next action and a caption. No cases list exists yet, so the block reads nothing: every item is
+committed content, and the shipped Status page carries exactly one, `EXAMPLE-01`, marked `illustrative` (the *Example*
+pill), in state `AWAITING_SOURCE` (the *Awaiting source* pill), with a made-up past `sourceDate` so the *Needs refresh*
+pill and the caption "Do not infer progress" can be seen without a tenant fact. Each illustrative item is listed in
+`docs/content-claims.md`; the definition test requires every case card to be illustrative or dated, keeps `state` out
+of the user-plane lint (it is a code, not a text) and refuses a literal date on any other item. When a cases list
+exists the block's `source` `{ "list" }` will name it; until then it is accepted and ignored.
 
 The envelope may also carry four optional sections and a page may name its plane; each is lenient and a malformed one
 is dropped, never the document:

@@ -2,6 +2,7 @@ import * as React from 'react';
 import type { PageBlock } from '../../content/pageContent';
 import type { DraftFlags } from '../LandingPage';
 import { CardsBlock } from './blocks/CardsBlock';
+import { CaseCardsBlock } from './blocks/CaseCardsBlock';
 import { HeroBlock } from './blocks/HeroBlock';
 import { LanesBlock } from './blocks/LanesBlock';
 import { NoticeBlock } from './blocks/NoticeBlock';
@@ -47,6 +48,8 @@ export function renderBlock(block: PageBlock, drafts: DraftFlags): React.ReactEl
       return <RulesBlock block={block} />;
     case 'supportRoute':
       return <SupportRouteBlock block={block} />;
+    case 'caseCards':
+      return <CaseCardsBlock block={block} />;
     default:
       return <PieceBlock block={block} drafts={drafts} />;
   }

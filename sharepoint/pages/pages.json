@@ -519,6 +519,23 @@
       "blocks": [
         { "type": "paragraph", "text": "Everything on this page is what is actually true on {StatusDate}, not what is planned." },
         {
+          "type": "caseCards",
+          "items": [
+            {
+              "id": "EXAMPLE-01",
+              "title": "Example case: a proof-of-value programme",
+              "description": "Shows how a case looks when its latest evidence is older than the freshness threshold.",
+              "state": "AWAITING_SOURCE",
+              "historicalStage": "Validate",
+              "historicalHealth": "amber",
+              "sourceDate": "2026-08-28",
+              "nextAction": "Read the latest authoritative source before updating the case.",
+              "caption": "Do not infer progress",
+              "illustrative": true
+            }
+          ]
+        },
+        {
           "type": "cards",
           "columns": 2,
           "items": [

@@ -263,6 +263,41 @@ describe('Page view stylesheet', () => {
     expect(rule(table, '.ai-view--narrow .ai-page-strip')).toEqual(['grid-template-columns:1fr']);
   });
 
+  it('draws the case cards on the card surface with a traffic-light edge, the id as code and the tags as toned chips', () => {
+    expect(rule(table, '.ai-view--page .ai-page-cases')).toEqual(['display:grid', 'gap:16px', 'grid-template-columns:repeat(2, minmax(0, 1fr))']);
+    expect(rule(table, '.ai-view--page .ai-case-card')).toEqual([
+      'background:#fff',
+      'border-left:5px solid #07878a',
+      'border-radius:13px',
+      'border:1px solid #dbe5ec',
+      'color:#2b3d52',
+      'font-size:15px',
+      'line-height:1.5',
+      'min-width:0',
+      'padding:17px 18px 15px'
+    ]);
+    // The historical health colours the left edge and the health chip with the lane pairs; the chip's text carries the word, so the meaning never rests on colour alone.
+    expect(rule(table, '.ai-view--page .ai-case-card--green')).toEqual(['border-left-color:#076b67']);
+    expect(rule(table, '.ai-view--page .ai-case-card--amber')).toEqual(['border-left-color:#725600']);
+    expect(rule(table, '.ai-view--page .ai-case-card--red')).toEqual(['border-left-color:#9b1c1c']);
+    expect(rule(table, '.ai-view--page .ai-case-head')).toEqual(['align-items:center', 'display:flex', 'flex-wrap:wrap', 'gap:8px 12px', 'margin:0 0 8px']);
+    expect(rule(table, '.ai-view--page .ai-case-id')).toEqual(rule(table, '.ai-view--page .ai-mywork-row code'));
+    expect(rule(table, '.ai-view--page .ai-case-card h3')).toEqual(rule(table, '.ai-view--page .ai-page-card h3'));
+    expect(rule(table, '.ai-view--page .ai-case-description')).toEqual(['margin:0 0 10px']);
+    expect(rule(table, '.ai-view--page .ai-case-tags')).toEqual(['display:flex', 'flex-wrap:wrap', 'gap:6px 10px', 'margin:0 0 10px']);
+    expect(rule(table, '.ai-view--page .ai-case-tag')).toEqual(['background:#e5ebf0', 'border-radius:999px', 'color:#10243e', 'font-size:13px', 'font-weight:600', 'line-height:1.4', 'padding:2px 10px']);
+    expect(rule(table, '.ai-view--page .ai-case-tag--green')).toEqual(rule(table, '.ai-view .ai-pill--green'));
+    expect(rule(table, '.ai-view--page .ai-case-tag--amber')).toEqual(rule(table, '.ai-view .ai-pill--amber'));
+    expect(rule(table, '.ai-view--page .ai-case-tag--red')).toEqual(rule(table, '.ai-view .ai-pill--red'));
+    expect(rule(table, '.ai-view--page .ai-case-footer')).toEqual(['border-top:1px solid #dbe5ec', 'margin:10px 0 0', 'padding-top:10px']);
+    expect(rule(table, '.ai-view--page .ai-case-next')).toEqual(['color:#10243e', 'font-weight:600', 'margin:0']);
+    expect(rule(table, '.ai-view--page .ai-case-caption')).toEqual(['color:#5b6878', 'font-size:13px', 'font-style:italic', 'line-height:1.45', 'margin:6px 0 0']);
+    for (const colour of ['#07878a', '#dbe5ec', '#10243e', '#5b6878', '#e5ebf0', '#076b67', '#725600', '#9b1c1c']) {
+      expect(shipped.indexOf(colour)).toBeGreaterThan(-1);
+    }
+    expect(rule(table, '.ai-view--narrow .ai-page-cases')).toEqual(['grid-template-columns:1fr']);
+  });
+
   it('draws the page-view chrome: the header line and the identity line, in every page view', () => {
     // The header keeps the shipped workflow header's size and weight; the identity line is quiet, in the shipped muted ink.
     expect(rule(table, '.ai-view .ai-page-header')).toEqual(['margin:0']);

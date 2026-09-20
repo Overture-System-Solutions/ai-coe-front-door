@@ -240,7 +240,7 @@ describe('README', () => {
     expect(readme).toContain('Site Assets');
     expect(readme).toContain('version history');
     expect(readme).toContain('"version": 1');
-    for (const block of ['hero', 'heading', 'paragraph', 'tiles', 'cards', 'lanes', 'statusRow', 'piece', 'workCommand', 'notice', 'rules', 'supportRoute']) {
+    for (const block of ['hero', 'heading', 'paragraph', 'tiles', 'cards', 'lanes', 'statusRow', 'piece', 'workCommand', 'notice', 'rules', 'supportRoute', 'caseCards']) {
       expect(readme).toContain(`\`${block}\``);
     }
     // The shared footer: the support route below every page view, the form pages included.

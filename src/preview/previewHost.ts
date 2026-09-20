@@ -409,6 +409,24 @@ const SAMPLE_PAGE_DOCUMENT: { [key: string]: unknown } = {
         // The person's own requests, read from the simulated intake list (add "&deny=intakes" to see the refused state).
         { type: 'piece', piece: 'myWork', pages: {} },
         {
+          // The one illustrative case card: an example, its source read 45 days ago, so the example and needs-refresh pills both show.
+          type: 'caseCards',
+          items: [
+            {
+              id: 'EXAMPLE-01',
+              title: 'Example case: a proof-of-value programme',
+              description: 'Shows how a case looks when its latest evidence is older than the freshness threshold.',
+              state: 'AWAITING_SOURCE',
+              historicalStage: 'Validate',
+              historicalHealth: 'amber',
+              sourceDate: isoDaysAgo(45),
+              nextAction: 'Read the latest authoritative source before updating the case.',
+              caption: 'Do not infer progress',
+              illustrative: true
+            }
+          ]
+        },
+        {
           type: 'cards',
           columns: 2,
           items: [

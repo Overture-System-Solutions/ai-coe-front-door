@@ -13,7 +13,7 @@ import { asObject, ownKeys, readFlag, readIsoDate, readItems, readStringList, re
 import type { Raw } from './rawJson';
 import { parseRoutes } from './routes';
 import type { RouteTable } from './routes';
-import { readState, TRUTH_STATE_KEYS } from './truthStates';
+import { readCanonicalStatus, readState, TRUTH_STATE_KEYS } from './truthStates';
 import type { StateCode, TruthStateKey } from './truthStates';
 
 export { isExternalHref, resolveContentHref } from './links';
@@ -306,6 +306,39 @@ export interface ISupportRouteBlock {
   routes: ISupportRouteItem[];
 }
 
+/** The traffic-light health a case last recorded; the same three tones as the request lanes. */
+export type CaseHealth = LaneTone;
+
+/**
+ * One case as the page shows it: the record id, the canonical status code (never a pilot word), and
+ * what its latest authoritative source said (the stage and health then, the day that source was
+ * read, the next action). Nothing here is read from a list yet; an example item says so with the
+ * example pill, and a dated one carries its freshness like a card.
+ */
+export interface ICaseCardItem {
+  id: string;
+  title: string;
+  description?: string;
+  /** A canonical status code; `AWAITING_SOURCE` draws the awaiting-source pill, every other code its plain wording. */
+  state: string;
+  /** The stage the latest source recorded, such as "Validate". */
+  historicalStage?: string;
+  historicalHealth?: CaseHealth;
+  /** YYYY-MM-DD: the day the latest source was read. */
+  sourceDate?: string;
+  nextAction?: string;
+  /** Closing line under the case; a stale case without one says not to infer progress. */
+  caption?: string;
+  /** Present when the case is an illustration, not a record of this environment; it carries the example pill. */
+  illustrative?: true;
+}
+
+/** One card per case; a `source` naming a cases list is accepted and ignored until that list exists. */
+export interface ICaseCardsBlock {
+  type: 'caseCards';
+  items: ICaseCardItem[];
+}
+
 export type PageBlock =
   | IHeroBlock
   | IHeadingBlock
@@ -319,7 +352,8 @@ export type PageBlock =
   | IWorkCommandBlock
   | INoticeBlock
   | IRulesBlock
-  | ISupportRouteBlock;
+  | ISupportRouteBlock
+  | ICaseCardsBlock;
 
 export interface IContentPage {
   title: string;
@@ -653,6 +687,36 @@ export function parseSupportRoute(raw: Raw): ISupportRouteBlock | undefined {
   return block;
 }
 
+function readCaseCard(raw: Raw): ICaseCardItem | undefined {
+  const id: string | undefined = readText(raw.id);
+  const title: string | undefined = readText(raw.title);
+  const state: string | undefined = readCanonicalStatus(raw.state);
+  if (id === undefined || title === undefined || state === undefined) {
+    return undefined;
+  }
+  const item: ICaseCardItem = { id, title, state };
+  setOptional(item, 'description', readText(raw.description));
+  setOptional(item, 'historicalStage', readText(raw.historicalStage));
+  const health: CaseHealth | undefined = readTone(LANE_TONES, raw.historicalHealth);
+  if (health !== undefined) {
+    item.historicalHealth = health;
+  }
+  setOptional(item, 'sourceDate', readIsoDate(raw.sourceDate));
+  setOptional(item, 'nextAction', readText(raw.nextAction));
+  setOptional(item, 'caption', readText(raw.caption));
+  if (readFlag(raw.illustrative) === true) {
+    item.illustrative = true;
+  }
+  // `source` (where a cases list would be read from) is accepted here and left out: no list is read yet.
+  return item;
+}
+
+/** The case cards: needs at least one item with an id, a title and a canonical status code. */
+export function parseCaseCards(raw: Raw): ICaseCardsBlock | undefined {
+  const items: ICaseCardItem[] = readItems(raw.items, readCaseCard);
+  return items.length === 0 ? undefined : { type: 'caseCards', items };
+}
+
 /** Reads one block; undefined for anything that is not a well-formed block of a known type. */
 export function parseBlock(value: unknown): PageBlock | undefined {
   const raw: Raw | undefined = asObject(value);
@@ -686,6 +750,8 @@ export function parseBlock(value: unknown): PageBlock | undefined {
       return parseRules(raw);
     case 'supportRoute':
       return parseSupportRoute(raw);
+    case 'caseCards':
+      return parseCaseCards(raw);
     default:
       return undefined;
   }

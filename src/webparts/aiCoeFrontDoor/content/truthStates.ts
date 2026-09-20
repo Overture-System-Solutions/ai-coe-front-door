@@ -186,6 +186,12 @@ export const CANONICAL_STATUS: readonly string[] = [
   'RETIRED'
 ];
 
+/** A canonical status code, trimmed; undefined for a pilot word or anything else (a case card needs a canonical code). */
+export function readCanonicalStatus(value: unknown): string | undefined {
+  const code: string = typeof value === 'string' ? value.trim() : '';
+  return includes(CANONICAL_STATUS, code) ? code : undefined;
+}
+
 export const STATUS_UNAVAILABLE: string = 'Status unavailable';
 
 const RECEIVED: string = 'Received';

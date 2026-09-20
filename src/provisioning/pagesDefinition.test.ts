@@ -13,10 +13,11 @@ import { resolveAction } from '../webparts/aiCoeFrontDoor/content/actions';
 import type { ResolvedAction } from '../webparts/aiCoeFrontDoor/content/actions';
 import { HOME_CARDS } from '../webparts/aiCoeFrontDoor/content/homeCards';
 import { CARD_TONES, DEFAULT_CONTENT_URL, LANE_TONES, parsePageDocument } from '../webparts/aiCoeFrontDoor/content/pageContent';
-import type { IPageDocument, ITilesBlock, IStatusRowBlock, IWorkCommandBlock } from '../webparts/aiCoeFrontDoor/content/pageContent';
+import type { ICaseCardsBlock, IPageDocument, ITilesBlock, IStatusRowBlock, IWorkCommandBlock } from '../webparts/aiCoeFrontDoor/content/pageContent';
 import { FRONT_DOOR_VIEWS, PAGE_TARGETS } from '../webparts/aiCoeFrontDoor/content/pageViews';
 import { resolveRoute } from '../webparts/aiCoeFrontDoor/content/routes';
 import type { IResolvedRoute, RouteTable } from '../webparts/aiCoeFrontDoor/content/routes';
+import { CANONICAL_STATUS } from '../webparts/aiCoeFrontDoor/content/truthStates';
 import { WORKFLOW_ORDER } from '../webparts/aiCoeFrontDoor/content/workflows/catalog';
 import * as icons from '../webparts/aiCoeFrontDoor/icons';
 import type { WorkflowId } from '../webparts/aiCoeFrontDoor/workflows/types';
@@ -83,14 +84,15 @@ const PAGES_DIR: string = path.join(ROOT, 'sharepoint/pages');
 const SITE_URL: string = 'https://example.invalid/sites/ai';
 const NAVIGATION_PAGES: string[] = ['startHere', 'learn', 'useAi', 'requests', 'prompts', 'status'];
 const PIECE_PAGES: string[] = ['idea', 'toolCheck', 'teamUsage', 'helpTraining', 'feedback', 'admin'];
-const BLOCK_TYPES: string[] = ['hero', 'heading', 'paragraph', 'tiles', 'cards', 'lanes', 'statusRow', 'piece', 'workCommand', 'notice', 'rules', 'supportRoute'];
+const BLOCK_TYPES: string[] = ['hero', 'heading', 'paragraph', 'tiles', 'cards', 'lanes', 'statusRow', 'piece', 'workCommand', 'notice', 'rules', 'supportRoute', 'caseCards'];
 const EXPECTED_BLOCKS: { [key: string]: string[] } = {
   startHere: ['hero', 'workCommand', 'tiles', 'statusRow', 'heading', 'rules', 'notice', 'notice', 'heading', 'cards'],
   learn: ['paragraph', 'paragraph', 'paragraph', 'rules', 'cards', 'cards', 'heading', 'paragraph', 'paragraph', 'paragraph', 'paragraph', 'heading', 'paragraph', 'paragraph'],
   useAi: ['paragraph', 'paragraph', 'heading', 'cards', 'heading', 'cards', 'heading', 'cards', 'heading', 'cards', 'heading', 'paragraph', 'paragraph'],
   requests: ['heading', 'paragraph', 'paragraph', 'heading', 'lanes', 'cards', 'notice', 'heading', 'paragraph', 'piece'],
   prompts: ['paragraph', 'paragraph', 'heading', 'cards', 'cards'],
-  status: ['paragraph', 'cards', 'piece', 'cards']
+  // The one illustrative case card sits right after the opening line (decision 14); step 18 adds the my-work piece before it.
+  status: ['paragraph', 'caseCards', 'cards', 'piece', 'cards']
 };
 /** The route keys the first screen and the status items point at; the two off-site ones take their proof from parameters. */
 const ROUTE_KEYS: string[] = ['work', 'assistant', 'guidedIntake', 'improve', 'value'];
@@ -109,7 +111,7 @@ const REMOVED_PARAMETERS: string[] = ['ConciergeUrl', 'CopilotChatUrl', 'Concier
 const LINK_TARGET: RegExp = /\]\(([^)\s]*)\)/g;
 
 /** The fields the user plane renders as text; everything else on an item (state, route, href, icon, tone, ...) is a code. */
-const USER_PLANE_FIELDS: string[] = ['title', 'text', 'body', 'note', 'meta', 'kicker', 'label', 'description', 'prompt', 'placeholder', 'submitLabel', 'emptyText', 'unavailableText', 'caption', 'nextAction', 'stopWhen', 'reportFields', 'issue', 'action'];
+const USER_PLANE_FIELDS: string[] = ['title', 'text', 'body', 'note', 'meta', 'kicker', 'label', 'description', 'prompt', 'placeholder', 'submitLabel', 'emptyText', 'unavailableText', 'caption', 'nextAction', 'historicalStage', 'stopWhen', 'reportFields', 'issue', 'action'];
 /** The fields a freshness claim ("live", "running", "answering") needs a date on; a title such as "What is running" passes. */
 const FRESHNESS_FIELDS: string[] = ['text', 'body', 'meta'];
 const PROVIDER_WORDS: RegExp = /concierge|copilot|claude|chatgpt|work iq|openai|gemini/i;
@@ -516,8 +518,50 @@ describe('front door page definition', () => {
           expect(['info', 'caution']).toContain(block.tone);
           expect(typeof block.text).toBe('string');
         }
+        if (block.type === 'caseCards') {
+          expect(itemsOf(block).length).toBeGreaterThan(0);
+          for (const item of itemsOf(block)) {
+            expect(typeof item.id).toBe('string');
+            expect(typeof item.title).toBe('string');
+            expect(CANONICAL_STATUS).toContain(item.state);
+            if (item.historicalHealth !== undefined) {
+              expect(LANE_TONES).toContain(item.historicalHealth);
+            }
+            // Every case card is an example or says when its source was last read: no case is shown without a date (decision 14).
+            expect({ id: item.id, dated: item.illustrative === true || typeof item.sourceDate === 'string' }).toEqual({ id: item.id, dated: true });
+          }
+        }
       }
     }
+  });
+
+  it('shows one illustrative case card on Status, labelled as an example, with its state out of the user-plane lint (decision 14)', () => {
+    const cases: IRawBlock = blockOf('status', 'caseCards');
+    expect(blocksOf('status')[1]).toBe(cases);
+    expect(itemsOf(cases)).toHaveLength(1);
+    expect(itemsOf(cases)[0]).toEqual({
+      id: 'EXAMPLE-01',
+      title: 'Example case: a proof-of-value programme',
+      description: 'Shows how a case looks when its latest evidence is older than the freshness threshold.',
+      state: 'AWAITING_SOURCE',
+      historicalStage: 'Validate',
+      historicalHealth: 'amber',
+      sourceDate: '2026-08-28',
+      nextAction: 'Read the latest authoritative source before updating the case.',
+      caption: 'Do not infer progress',
+      illustrative: true
+    });
+    // `state` is a code, not a text: the UPPER_SNAKE lint never reads it, while the same code in a description is caught.
+    const probe: IUserPlaneText[] = collectUserPlane([{ type: 'caseCards', items: [{ id: 'X', title: 'x', state: 'AWAITING_SOURCE', description: 'y', historicalStage: 'Validate' }] }], 'probe', []);
+    expect(probe.map((entry: IUserPlaneText): string => entry.field).sort()).toEqual(['description', 'historicalStage', 'title']);
+    expect(offending(probe, (entry: IUserPlaneText): boolean => UPPER_SNAKE_CODE.test(entry.text))).toEqual([]);
+    const leak: IUserPlaneText[] = collectUserPlane([{ type: 'caseCards', items: [{ id: 'X', title: 'x', state: 'DRAFT', description: 'Now AWAITING_SOURCE.' }] }], 'probe', []);
+    expect(offending(leak, (entry: IUserPlaneText): boolean => UPPER_SNAKE_CODE.test(entry.text))).toHaveLength(1);
+    // The parsed document keeps the card with its example flag and its dated source, so the page draws the example pill and never a current fact.
+    const document: IPageDocument = parsePageDocument(resolveDocument({})) as IPageDocument;
+    const parsed: ICaseCardsBlock = document.pages.status.blocks[1] as ICaseCardsBlock;
+    expect(parsed.type).toBe('caseCards');
+    expect(parsed.items).toEqual([itemsOf(cases)[0]]);
   });
 
   it('opens Start here with the operating promise, the work command and the three action paths', () => {

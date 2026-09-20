@@ -14,6 +14,7 @@ import {
   chromeLabel,
   describeRequestStatus,
   kpiPlaceholderLabel,
+  readCanonicalStatus,
   readState,
   requestStatusLook,
   toPlainRequestStatus,
@@ -153,6 +154,16 @@ describe('chrome pills', () => {
 });
 
 describe('plain request statuses', () => {
+  it('reads a canonical status code, trimmed, and nothing else (a case card needs one)', () => {
+    expect(readCanonicalStatus(' AWAITING_SOURCE ')).toBe('AWAITING_SOURCE');
+    for (const code of CANONICAL_STATUS) {
+      expect(readCanonicalStatus(code)).toBe(code);
+    }
+    for (const value of (PILOT_STATUSES as unknown[]).concat(['awaiting_source', 'SHIPPED', '', '  ', undefined, null, 7, ['DRAFT']])) {
+      expect({ value, code: readCanonicalStatus(value) }).toEqual({ value, code: undefined });
+    }
+  });
+
   it('walks the four pilot words and all 26 canonical codes without an unavailable status', () => {
     expect(PILOT_STATUSES).toEqual(['Submitted - Pilot', 'In Review - Pilot', 'Closed - Pilot', 'Test Failed']);
     expect(CANONICAL_STATUS).toHaveLength(26);

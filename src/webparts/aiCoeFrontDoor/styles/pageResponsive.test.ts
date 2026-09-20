@@ -114,7 +114,7 @@ describe('Page responsive stylesheet', () => {
   });
 
   it('stacks the page grids and the work command in one column below 800px, whatever the layout setting', () => {
-    for (const grid of ['.ai-page-tiles', '.ai-page-tiles--prominent', '.ai-page-cards', '.ai-page-cards--3', '.ai-page-lanes', '.ai-page-status', '.ai-page-command']) {
+    for (const grid of ['.ai-page-tiles', '.ai-page-tiles--prominent', '.ai-page-cards', '.ai-page-cards--3', '.ai-page-cases', '.ai-page-lanes', '.ai-page-status', '.ai-page-command']) {
       expect(rule(queries, '(max-width: 800px)', `.ai-view ${grid}`)).toEqual(['grid-template-columns:1fr']);
     }
     for (const grid of ['.ai-page-support-columns', '.ai-page-support-row']) {

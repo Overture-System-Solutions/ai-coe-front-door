@@ -21,8 +21,10 @@ import {
   readParagraphs,
   resolveContentHref
 } from './pageContent';
+import { CANONICAL_STATUS } from './truthStates';
 import type {
   ICardsBlock,
+  ICaseCardsBlock,
   IContentPage,
   IHeroBlock,
   ILanesBlock,
@@ -588,6 +590,63 @@ describe('blocks', () => {
     expect(parseBlock({ type: 'statusStrip' })).toBeUndefined();
     // The strip may sit in the shared footer; the pieces still may not.
     expect(parseShared({ footer: [{ type: 'statusStrip', items: [{ kind: 'myRequests', label: 'Mine' }] }, { type: 'piece', piece: 'myWork' }] }).footer.map((block): string => block.type)).toEqual(['statusStrip']);
+  });
+
+  it('reads case cards: an id, a title and a canonical status code each, with the historical stage and health, the source date, the next action and the caption', () => {
+    const cases: ICaseCardsBlock = parseBlock({
+      type: 'caseCards',
+      items: [
+        {
+          id: ' EXAMPLE-01 ',
+          title: ' Example case ',
+          description: ' Shows a case. ',
+          state: ' AWAITING_SOURCE ',
+          historicalStage: ' Validate ',
+          historicalHealth: 'amber',
+          sourceDate: '2026-08-28',
+          nextAction: ' Read the source. ',
+          caption: ' Do not infer progress ',
+          illustrative: true,
+          // Where the block will read its cases from once a cases list exists: parsed and ignored until then.
+          source: { list: 'AI CoE Cases' }
+        },
+        { id: 'C-2', title: 'Loose fields', state: 'IN_DELIVERY', historicalHealth: 'teal', sourceDate: 'last Friday', illustrative: 'yes', description: '', nextAction: 7, caption: '  ' },
+        { id: 'C-3', title: 'A pilot word is not a canonical code', state: 'Submitted - Pilot' },
+        { id: 'C-4', title: 'Unknown code', state: 'SHIPPED' },
+        { id: 'C-5', title: 'No state' },
+        { title: 'No id', state: 'DRAFT' },
+        { id: 'C-7', state: 'DRAFT' },
+        'text'
+      ]
+    }) as ICaseCardsBlock;
+    expect(cases).toEqual({
+      type: 'caseCards',
+      items: [
+        {
+          id: 'EXAMPLE-01',
+          title: 'Example case',
+          description: 'Shows a case.',
+          state: 'AWAITING_SOURCE',
+          historicalStage: 'Validate',
+          historicalHealth: 'amber',
+          sourceDate: '2026-08-28',
+          nextAction: 'Read the source.',
+          caption: 'Do not infer progress',
+          illustrative: true
+        },
+        { id: 'C-2', title: 'Loose fields', state: 'IN_DELIVERY' }
+      ]
+    });
+    expect(parseBlock({ type: 'caseCards', items: [] })).toBeUndefined();
+    expect(parseBlock({ type: 'caseCards', items: [{ id: 'x', title: 'y', state: 'bogus' }] })).toBeUndefined();
+    expect(parseBlock({ type: 'caseCards' })).toBeUndefined();
+    // A malformed source is ignored like a well-formed one: the block reads no list yet.
+    expect((parseBlock({ type: 'caseCards', items: [{ id: 'x', title: 'y', state: 'DRAFT', source: 'AI CoE Cases' }] }) as ICaseCardsBlock).items).toEqual([{ id: 'x', title: 'y', state: 'DRAFT' }]);
+    // Every canonical code is accepted; the block is a page block like the others and may sit in the shared footer.
+    for (const code of CANONICAL_STATUS) {
+      expect((parseBlock({ type: 'caseCards', items: [{ id: 'x', title: 'y', state: code }] }) as ICaseCardsBlock).items[0].state).toBe(code);
+    }
+    expect(parseShared({ footer: [{ type: 'caseCards', items: [{ id: 'x', title: 'y', state: 'DRAFT' }] }] }).footer.map((block): string => block.type)).toEqual(['caseCards']);
   });
 });
 
