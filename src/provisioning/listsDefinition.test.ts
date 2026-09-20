@@ -8,7 +8,14 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import { KPI_STATES } from '../webparts/aiCoeFrontDoor/content/truthStates';
-import { INTAKES_LIST_TITLE, PROGRAM_MEASURES_LIST_TITLE } from '../webparts/aiCoeFrontDoor/services/lists';
+import {
+  CORRECTION_CATEGORIES,
+  OUTCOME_COLUMNS,
+  OUTCOME_VALUES,
+  REVIEW_STATES,
+  ROUTE_AVAILABILITY
+} from '../webparts/aiCoeFrontDoor/content/workflows/outcome';
+import { INTAKES_LIST_TITLE, OUTCOME_RECORDS_LIST_TITLE, OWN_ITEMS_SECURITY, PROGRAM_MEASURES_LIST_TITLE } from '../webparts/aiCoeFrontDoor/services/lists';
 import { MY_WORK_SELECT } from '../webparts/aiCoeFrontDoor/services/myWorkService';
 import { findTenantWords, PROVISIONING_SCAN, readTenantWords } from './tenantWords';
 import type { ITenantWords } from './tenantWords';
@@ -26,6 +33,12 @@ interface IListDefinition {
   title: string;
   description: string;
   fields: IListField[];
+  /** `ownItems` (1.0.0.15): the script secures the list it created, as it secures the two intake lists. */
+  security?: string;
+  /** The `group` parameters whose site groups read every row of the list. */
+  fullControlGroups?: string[];
+  /** Built-in columns taken off the default view, because SharePoint records them on every item. */
+  hideFromDefaultView?: string[];
 }
 
 const ROOT: string = process.cwd();
@@ -61,7 +74,8 @@ describe('declared lists and the services that read them', () => {
     // A rename has one home: services/lists.ts. The page definition and the script take the title from here, so a
     // list the script creates and a list the web part reads can never be two different lists.
     expect(PROGRAM_MEASURES_LIST_TITLE).toBe('AI CoE Program Measures');
-    expect(definition.lists.map((list: IListDefinition): string => list.title)).toEqual([PROGRAM_MEASURES_LIST_TITLE]);
+    expect(OUTCOME_RECORDS_LIST_TITLE).toBe('AI CoE Outcome Records');
+    expect(definition.lists.map((list: IListDefinition): string => list.title)).toEqual([PROGRAM_MEASURES_LIST_TITLE, OUTCOME_RECORDS_LIST_TITLE]);
     // The intake list is not declared here: the package feature provisions it and the script only secures it.
     expect(definition.lists.map((list: IListDefinition): string => list.title)).not.toContain(INTAKES_LIST_TITLE);
   });
@@ -85,6 +99,50 @@ describe('declared lists and the services that read them', () => {
       const known: boolean = schemaColumns.indexOf(column) >= 0 || BUILT_IN_COLUMNS.indexOf(column) >= 0;
       expect({ column, known }).toEqual({ column, known: true });
     }
+  });
+
+  it('carries every column one outcome record writes, and no column the record does not write (1.0.0.15)', () => {
+    // The record is content-free by construction: the list can hold nothing the workflow does not offer as a choice,
+    // so the declaration and `OUTCOME_COLUMNS` are the same list of columns, `Title` apart (SharePoint's own).
+    const outcomes: IListDefinition = listOf(OUTCOME_RECORDS_LIST_TITLE);
+    const declared: string[] = columnNames(outcomes);
+    for (const column of OUTCOME_COLUMNS) {
+      const known: boolean = declared.indexOf(column) >= 0 || BUILT_IN_COLUMNS.indexOf(column) >= 0;
+      expect({ column, known }).toEqual({ column, known: true });
+    }
+    for (const column of declared) {
+      expect(OUTCOME_COLUMNS).toContain(column);
+    }
+    // The key is the row's identity, as the measure key and the intake key are.
+    const key: IListField = outcomes.fields[0];
+    expect({ name: key.name, indexed: key.indexed, required: key.required, unique: key.unique }).toEqual({
+      name: 'OutcomeId',
+      indexed: true,
+      required: true,
+      unique: true
+    });
+    // No person column is declared: the submitter is only in SharePoint's own Created By, which the list hides.
+    expect(JSON.stringify(outcomes).toLowerCase()).not.toContain('email');
+    expect(outcomes.hideFromDefaultView).toEqual(['Author', 'Editor']);
+  });
+
+  it('gives the outcome record the vocabularies the workflow offers, so no answer can fall outside the column', () => {
+    const outcomes: IListDefinition = listOf(OUTCOME_RECORDS_LIST_TITLE);
+    const choicesOf = (name: string): string[] | undefined => outcomes.fields.filter((field: IListField): boolean => field.name === name)[0].choices;
+    expect(choicesOf('Outcome')).toEqual(OUTCOME_VALUES.slice());
+    expect(choicesOf('ReviewState')).toEqual(REVIEW_STATES.slice());
+    expect(choicesOf('CorrectionCategory')).toEqual(CORRECTION_CATEGORIES.slice());
+    expect(choicesOf('RouteAvailability')).toEqual(ROUTE_AVAILABILITY.slice());
+  });
+
+  it('secures the list it creates: each person reads their own row, operators and owners read them all', () => {
+    // Decision 16: the record is pseudonymous at best, so the list the script creates is put under the same
+    // item-level security as the intake lists, by its own declaration rather than by a second section.
+    const outcomes: IListDefinition = listOf(OUTCOME_RECORDS_LIST_TITLE);
+    expect(outcomes.security).toBe(OWN_ITEMS_SECURITY);
+    expect(outcomes.fullControlGroups).toEqual(['OperatorsGroup']);
+    // The measures list is read-only for everyone and carries no security declaration of its own.
+    expect(listOf(PROGRAM_MEASURES_LIST_TITLE).security).toBeUndefined();
   });
 
   it('gives each Choice column the vocabulary the web part maps, in the same order', () => {

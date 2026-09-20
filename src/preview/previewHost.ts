@@ -74,7 +74,7 @@ interface IPreviewWindow {
   FrontDoorPreview: IPreviewApi;
 }
 
-const LIST_TITLES: string[] = ['AI CoE Pilot Intakes', 'AI CoE Use Cases', 'AI CoE Decisions', 'AI Usage Daily', 'AI CoE Incidents', 'AI CoE Program Measures'];
+const LIST_TITLES: string[] = ['AI CoE Pilot Intakes', 'AI CoE Use Cases', 'AI CoE Decisions', 'AI Usage Daily', 'AI CoE Incidents', 'AI CoE Program Measures', 'AI CoE Outcome Records'];
 const previewWindow: IPreviewWindow = window as unknown as IPreviewWindow;
 const lists: { [title: string]: IPreviewItem[] } = {};
 const requests: IPreviewRequest[] = [];

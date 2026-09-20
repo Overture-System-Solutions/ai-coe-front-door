@@ -65,6 +65,12 @@ export interface IAdminDashboardData extends IFailureFields {
 
 export interface IGovernanceService {
   submitWorkflow(workflowType: SubmissionWorkflowType, payload: unknown, options?: ISubmitOptions): Promise<ISubmissionResult>;
+  /**
+   * Writes one outcome record (the answers of the outcome piece) to its own list: choices only, no
+   * person named, keyed by `OutcomeId` and read back before it is reported saved. `options.intakeId`
+   * carries that key on a retry, so a pending record completes instead of being written twice.
+   */
+  submitOutcome(payload: unknown, options?: ISubmitOptions): Promise<ISubmissionResult>;
   getAdminDashboardData(): Promise<IAdminDashboardData>;
 }
 

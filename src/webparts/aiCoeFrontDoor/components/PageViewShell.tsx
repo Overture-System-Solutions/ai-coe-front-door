@@ -129,6 +129,10 @@ export function PageViewShell({ settings }: IPageViewShellProps): React.ReactEle
     case 'helpTraining':
       content = <GenericWorkflow workflowId={view} {...workflowProps} />;
       break;
+    case 'outcome':
+      // The outcome record walks like the generic workflows and writes its own list (decision 16).
+      content = <GenericWorkflow workflowId={view} {...workflowProps} />;
+      break;
     case 'home':
       content = <HomePage drafts={drafts} pages={settings.pages} />;
       break;

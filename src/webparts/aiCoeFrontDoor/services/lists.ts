@@ -1,14 +1,20 @@
 /**
  * Every SharePoint list title the front door reads or writes, in one place, so the page definition,
  * the script's list-security section, the portability inventory and the tests name the same lists.
- * The five shipped titles stay where their services declare them and are re-exported here; the
+ * The titles the two services declare stay with those services and are re-exported here; the
  * item-level security mode is the word `pages.json` uses for the two intake lists (decision 6).
  *
  * Wording note: this file is scanned for Tailwind utility names; keep prose free of utility words.
  */
 import { INTAKES_LIST_TITLE, USE_CASES_LIST_TITLE } from './GovernanceService';
 
-export { DECISIONS_LIST_TITLE, INTAKES_LIST_TITLE, USE_CASES_LIST_TITLE } from './GovernanceService';
+/**
+ * The four titles the governance service writes or reads, re-exported here. `OUTCOME_RECORDS_LIST_TITLE`
+ * (1.0.0.15) is the one list of the four the script creates: one row per task outcome someone records, secured
+ * where it is declared because it holds no person column while SharePoint still writes Created By on every item
+ * (decision 16).
+ */
+export { DECISIONS_LIST_TITLE, INTAKES_LIST_TITLE, OUTCOME_RECORDS_LIST_TITLE, USE_CASES_LIST_TITLE } from './GovernanceService';
 export { INCIDENTS_LIST_TITLE, USAGE_LIST_TITLE } from './UsageMetricsService';
 
 /**

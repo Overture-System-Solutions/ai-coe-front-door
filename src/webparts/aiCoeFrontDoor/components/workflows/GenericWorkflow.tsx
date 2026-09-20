@@ -9,14 +9,16 @@ import { StepNav } from '../../controls/StepNav';
 import { StepRenderer } from '../../controls/StepRenderer';
 import { WorkflowHeader } from '../../controls/WorkflowHeader';
 import type { ISubmissionResult } from '../../services/types';
+import { pieceWorkflow } from '../../content/workflows/catalog';
 import { buildGenericExportText, createGenericSession, genericReducer, validateStep, whatHappensNextText } from '../../workflows/formEngine';
 import type { GenericSessionAction, IGenericDraft, IGenericSession } from '../../workflows/formEngine';
-import type { IWorkflowDefinition, WorkflowId } from '../../workflows/types';
+import type { IPieceWorkflowDefinition, PieceWorkflowId } from '../../workflows/types';
 import { IntroParagraph, SETTING_UP_TEXT, settleDraft, StartOverDialog, stepPosition, SUBMITTING_TEXT, useClearDraft, useDraftBoot, useSaveDraft, WorkflowCard } from './shared';
 import type { IStepPosition, IWorkflowProps } from './shared';
 
 export interface IGenericWorkflowProps extends IWorkflowProps {
-  workflowId: WorkflowId;
+  /** The outcome record walks the same way as the shipped generic workflows, with its own definition (decision 16). */
+  workflowId: PieceWorkflowId;
 }
 
 function continueLabel(session: IGenericSession, position: IStepPosition): string {
@@ -33,11 +35,11 @@ function continueLabel(session: IGenericSession, position: IStepPosition): strin
 export function GenericWorkflow({ workflowId, resumeDraft, onExit, onDraftsChanged }: IGenericWorkflowProps): React.ReactElement {
   const { branding, catalog, pageView } = useFrontDoor();
   const { submit, retryLast } = useSubmission();
-  const definition: IWorkflowDefinition = catalog[workflowId];
+  const definition: IPieceWorkflowDefinition = pieceWorkflow(catalog, workflowId);
   const [session, dispatch] = React.useReducer(
     genericReducer,
     definition,
-    (initial: IWorkflowDefinition): IGenericSession => createGenericSession(initial, undefined)
+    (initial: IPieceWorkflowDefinition): IGenericSession => createGenericSession(initial, undefined)
   );
   const [confirmingRestart, setConfirmingRestart] = React.useState<boolean>(false);
   const saveDraft: (draft: unknown) => Promise<string> = useSaveDraft(workflowId, onDraftsChanged);

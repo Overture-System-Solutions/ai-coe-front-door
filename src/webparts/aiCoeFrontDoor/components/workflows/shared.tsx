@@ -9,7 +9,7 @@ import { submissionState } from '../../services/types';
 import type { ISubmissionResult } from '../../services/types';
 import { visibleSteps } from '../../workflows/formEngine';
 import type { ISessionBase } from '../../workflows/formEngine';
-import type { IStep, IWorkflowDefinition, WorkflowId } from '../../workflows/types';
+import type { IPieceWorkflowDefinition, IStep, PieceWorkflowId, WorkflowId } from '../../workflows/types';
 
 export interface IWorkflowProps {
   /** True when the visitor chose to resume the draft saved on this device. */
@@ -29,7 +29,7 @@ export const DRAFT_NOT_SAVED_TEXT: string = 'We could not save a draft right now
  * Loads the saved draft (when resuming) and hands it to `onLoaded` once; returns true until then.
  * A workflow that unmounts before the draft arrives is left alone.
  */
-export function useDraftBoot<TDraft>(workflowId: WorkflowId, resumeDraft: boolean, onLoaded: (draft: TDraft | undefined) => void): boolean {
+export function useDraftBoot<TDraft>(workflowId: PieceWorkflowId, resumeDraft: boolean, onLoaded: (draft: TDraft | undefined) => void): boolean {
   const { draftStore } = useFrontDoor().services;
   const [loading, setLoading] = React.useState<boolean>(true);
   const latestOnLoaded: React.MutableRefObject<(draft: TDraft | undefined) => void> = React.useRef(onLoaded);
@@ -64,7 +64,7 @@ export interface IStepPosition {
   step: IStep | undefined;
 }
 
-export function stepPosition(definition: IWorkflowDefinition, session: ISessionBase<string, string>): IStepPosition {
+export function stepPosition(definition: IPieceWorkflowDefinition, session: ISessionBase<string, string>): IStepPosition {
   const steps: IStep[] = visibleSteps(definition, session.answers);
   let index: number = -1;
   for (let candidate: number = 0; candidate < steps.length; candidate++) {
@@ -77,12 +77,13 @@ export function stepPosition(definition: IWorkflowDefinition, session: ISessionB
 }
 
 /** Saves the draft and returns the notice to show; reports a new draft to the landing page on success. */
-export function useSaveDraft(workflowId: WorkflowId, onDraftsChanged: IWorkflowProps['onDraftsChanged']): (draft: unknown) => Promise<string> {
+export function useSaveDraft(workflowId: PieceWorkflowId, onDraftsChanged: IWorkflowProps['onDraftsChanged']): (draft: unknown) => Promise<string> {
   const { draftStore } = useFrontDoor().services;
   return React.useCallback(
     async (draft: unknown): Promise<string> => {
       const outcome: { ok: boolean } = await draftStore.save(workflowId, draft);
-      if (outcome.ok) {
+      // The landing page has no outcome card, so there is no badge to report for it (decision 16).
+      if (outcome.ok && workflowId !== 'outcome') {
         onDraftsChanged(workflowId, true);
       }
       return outcome.ok ? DRAFT_SAVED_TEXT : DRAFT_NOT_SAVED_TEXT;
@@ -92,11 +93,13 @@ export function useSaveDraft(workflowId: WorkflowId, onDraftsChanged: IWorkflowP
 }
 
 /** Clears the stored draft and tells the landing page it is gone (after a submission or a restart). */
-export function useClearDraft(workflowId: WorkflowId, onDraftsChanged: IWorkflowProps['onDraftsChanged']): () => Promise<void> {
+export function useClearDraft(workflowId: PieceWorkflowId, onDraftsChanged: IWorkflowProps['onDraftsChanged']): () => Promise<void> {
   const { draftStore } = useFrontDoor().services;
   return React.useCallback(async (): Promise<void> => {
     await draftStore.clear(workflowId);
-    onDraftsChanged(workflowId, false);
+    if (workflowId !== 'outcome') {
+      onDraftsChanged(workflowId, false);
+    }
   }, [draftStore, workflowId, onDraftsChanged]);
 }
 

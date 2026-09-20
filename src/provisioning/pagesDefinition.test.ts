@@ -24,7 +24,14 @@ import type { ITelemetryTile } from '../webparts/aiCoeFrontDoor/content/telemetr
 import { CANONICAL_STATUS } from '../webparts/aiCoeFrontDoor/content/truthStates';
 import { WORKFLOW_ORDER } from '../webparts/aiCoeFrontDoor/content/workflows/catalog';
 import * as icons from '../webparts/aiCoeFrontDoor/icons';
-import { INTAKES_LIST_TITLE, OWN_ITEMS_LISTS, OWN_ITEMS_SECURITY, PROGRAM_MEASURES_LIST_TITLE, USE_CASES_LIST_TITLE } from '../webparts/aiCoeFrontDoor/services/lists';
+import {
+  INTAKES_LIST_TITLE,
+  OUTCOME_RECORDS_LIST_TITLE,
+  OWN_ITEMS_LISTS,
+  OWN_ITEMS_SECURITY,
+  PROGRAM_MEASURES_LIST_TITLE,
+  USE_CASES_LIST_TITLE
+} from '../webparts/aiCoeFrontDoor/services/lists';
 import type { WorkflowId } from '../webparts/aiCoeFrontDoor/workflows/types';
 import { findTenantWords, PROVISIONING_SCAN, readTenantWords } from './tenantWords';
 import type { ITenantWords } from './tenantWords';
@@ -100,6 +107,12 @@ interface IListDefinition {
   title: string;
   description: string;
   fields: IListField[];
+  /** 1.0.0.15: `ownItems` puts the list the script created under item-level security, as the intake lists are. */
+  security?: string;
+  /** The `group` parameters whose site groups hold Full Control on the list, so they read every row. */
+  fullControlGroups?: string[];
+  /** Built-in columns taken off the default view of the list (Created By, Modified By). */
+  hideFromDefaultView?: string[];
 }
 
 /** One column of a declared list; a flag left out is false. */
@@ -1312,7 +1325,7 @@ describe('front door page definition', () => {
   it('declares the lists the script creates, by title, column, type and flag (decision 9, 1.0.0.14)', () => {
     // New lists come from this section alone: the package feature's XML stays byte-identical, so the program measures
     // list the Enterprise value page reads is declared here and created by the script's "Lists" section.
-    expect(definition.lists.map((list: IListDefinition): string => list.title)).toEqual([PROGRAM_MEASURES_LIST_TITLE]);
+    expect(definition.lists.map((list: IListDefinition): string => list.title)).toEqual([PROGRAM_MEASURES_LIST_TITLE, OUTCOME_RECORDS_LIST_TITLE]);
     const measures: IListDefinition = definition.lists[0];
     expect(measures.title).toBe('AI CoE Program Measures');
     expect(measures.description.length).toBeGreaterThan(40);
@@ -1371,6 +1384,36 @@ describe('front door page definition', () => {
     // The section belongs to the script; the document the web part reads carries no list definition.
     expect(resolveDocument({})).not.toContain('AI CoE Program Measures');
     expect(resolveDocument({})).not.toContain('EvidenceNote');
+    expect(resolveDocument({})).not.toContain('AI CoE Outcome Records');
+    expect(resolveDocument({})).not.toContain('CorrectionCategory');
+  });
+
+  it('declares the outcome records list with its own item-level security (decision 16, 1.0.0.15)', () => {
+    // The outcome record holds no person column, but SharePoint writes Created By on every item, so the list the
+    // script creates is secured where it is declared: each person reads their own row, the operators group and the
+    // owners read them all, and the two built-in person columns come off the default view.
+    const outcomes: IListDefinition = definition.lists[1];
+    expect(outcomes.title).toBe(OUTCOME_RECORDS_LIST_TITLE);
+    expect(outcomes.description.length).toBeGreaterThan(40);
+    expect(outcomes.fields.map((field: IListField): string => `${field.name}:${field.type}`)).toEqual([
+      'OutcomeId:Text',
+      'RecordedAt:DateTime',
+      'TaskType:Text',
+      'Outcome:Choice',
+      'ReviewState:Choice',
+      'CorrectionCategory:Choice',
+      'RouteAvailability:Choice',
+      'WorkflowVersion:Text'
+    ]);
+    expect(outcomes.security).toBe(OWN_ITEMS_SECURITY);
+    expect(outcomes.hideFromDefaultView).toEqual(['Author', 'Editor']);
+    const names: string[] = outcomes.fullControlGroups ?? [];
+    expect(names).toEqual(['OperatorsGroup']);
+    for (const name of names) {
+      expect({ name, kind: definition.parameters[name]?.kind }).toEqual({ name, kind: 'group' });
+    }
+    // The two intake lists keep their own section; the declared list carries its security with its columns.
+    expect(definition.listSecurity.map((entry: { title: string }): string => entry.title)).not.toContain(OUTCOME_RECORDS_LIST_TITLE);
   });
 
   it('resolves every link target to a page or a URL parameter, and carries no HTML', () => {

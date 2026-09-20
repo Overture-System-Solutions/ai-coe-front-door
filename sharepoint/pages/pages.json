@@ -156,6 +156,23 @@
         { "name": "EvidenceNote", "type": "Note" },
         { "name": "CohortSize", "type": "Number" }
       ]
+    },
+    {
+      "title": "AI CoE Outcome Records",
+      "description": "One row per task outcome a person records: the kind of task, how it turned out, whether a person reviewed it, what kind of correction it needed and what the page said about the route. Nothing that was typed, prompted or produced is written here, and no column names the person; SharePoint's own Created By does that, which is why each person reads only their own row while operators and owners read them all.",
+      "security": "ownItems",
+      "fullControlGroups": ["OperatorsGroup"],
+      "hideFromDefaultView": ["Author", "Editor"],
+      "fields": [
+        { "name": "OutcomeId", "type": "Text", "required": true, "indexed": true, "unique": true },
+        { "name": "RecordedAt", "type": "DateTime" },
+        { "name": "TaskType", "type": "Text" },
+        { "name": "Outcome", "type": "Choice", "choices": ["Accepted", "Corrected", "Unavailable", "Stopped"] },
+        { "name": "ReviewState", "type": "Choice", "choices": ["Reviewed by me", "Reviewed by someone else", "Not reviewed"] },
+        { "name": "CorrectionCategory", "type": "Choice", "choices": ["fact", "source", "audience", "policy", "brand", "action boundary"] },
+        { "name": "RouteAvailability", "type": "Choice", "choices": ["Available now", "Draft only", "Needs approval", "Needs access", "Not supported"] },
+        { "name": "WorkflowVersion", "type": "Text" }
+      ]
     }
   ],
   "pages": [

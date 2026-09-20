@@ -469,6 +469,23 @@ names), `Value` (number), `Unit` (text), `State` (choice: `MEASURED`, `NOT_ESTAB
 `EvidenceNote` (multi-line text) and `CohortSize` (number); `Title` is the list's own column. A site without the list
 is not an error: every measure then reads *Not available*.
 
+1.0.0.15 declares a second one: *AI CoE Outcome Records*, one row per task outcome recorded on the
+*Record a task outcome* page. Its columns are `OutcomeId` (text, indexed, unique, required: the record's key, shown
+as *Reference* on the receipt), `RecordedAt` (date), `TaskType` (text), `Outcome` (choice: `Accepted`, `Corrected`,
+`Unavailable`, `Stopped`), `ReviewState` (choice: `Reviewed by me`, `Reviewed by someone else`, `Not reviewed`),
+`CorrectionCategory` (choice: `fact`, `source`, `audience`, `policy`, `brand`, `action boundary`),
+`RouteAvailability` (choice: the five truth labels) and `WorkflowVersion` (text). Every one of them is a choice from
+a fixed list or a value the web part writes itself, so nothing typed, prompted or produced can reach the list.
+
+*What the outcome list still records about a person.* No column names the submitter, but SharePoint writes Created By
+and Modified By on every item of every list. So this list carries its own security in `pages.json`
+(`"security": "ownItems"`, `"fullControlGroups": ["OperatorsGroup"]`, `"hideFromDefaultView": ["Author", "Editor"]`)
+and the script applies it where it creates the list: inheritance broken, the owners and the operators group at Full
+Control, `ReadSecurity 2 / WriteSecurity 2` last, and the two built-in person columns taken off the default view. A
+person therefore reads only the rows they recorded; operators and owners read them all; the columns and the rows
+themselves are never removed. `settings.minimumCohort` is what keeps a measure derived from these rows from being
+shown for a group too small to be anonymous.
+
 *How a percentage is written.* A measure whose `Unit` is `%` is written as a proportion: 0.62 for 62%, and 1 for the
 whole. The tile multiplies a value between 0 and 1 by a hundred and shows a value above 1 as the percentage it already
 is (62 also reads *62%*), so 1 reads *100%* and never *1%*; write one percent as 0.01. The list's own description says

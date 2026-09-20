@@ -1,15 +1,15 @@
 import type { IBranding } from '../branding/branding';
 import type { ISubmissionResult } from '../services/types';
 import { isChoiceStep } from './types';
-import type { AnswerValue, IAnswers, IStep, IWorkflowDefinition } from './types';
+import type { AnswerValue, IAnswers, IPieceWorkflowDefinition, IStep } from './types';
 
 /** Steps whose `showIf` predicate (if any) holds for the current answers, in definition order. */
-export function visibleSteps(definition: IWorkflowDefinition, answers: IAnswers): IStep[] {
+export function visibleSteps(definition: IPieceWorkflowDefinition, answers: IAnswers): IStep[] {
   return definition.steps.filter((step: IStep): boolean => step.showIf === undefined || step.showIf(answers));
 }
 
 /** The closing sentence of a summary; the shipped build appended nothing else for the step types in use. */
-export function whatHappensNextText(definition: IWorkflowDefinition, _answers: IAnswers): string | undefined {
+export function whatHappensNextText(definition: IPieceWorkflowDefinition, _answers: IAnswers): string | undefined {
   return definition.whatHappensNext;
 }
 
@@ -58,7 +58,7 @@ export function formatAnswer(step: IStep, value: AnswerValue): string {
 
 /** Plain-text summary offered for download by the generic workflows. */
 export function buildGenericExportText(
-  definition: IWorkflowDefinition,
+  definition: IPieceWorkflowDefinition,
   answers: IAnswers,
   steps: IStep[],
   branding: IBranding,
@@ -110,7 +110,7 @@ export type IGenericDraft = IStoredDraftBase;
 export const RESUME_NOTICE: string = 'Picking up where you left off.';
 
 /** The saved step when it is still visible for the answers, otherwise the first visible step. */
-export function resumeStepId(definition: IWorkflowDefinition, answers: IAnswers, requested: string | undefined): string | undefined {
+export function resumeStepId(definition: IPieceWorkflowDefinition, answers: IAnswers, requested: string | undefined): string | undefined {
   const steps: IStep[] = visibleSteps(definition, answers);
   if (requested !== undefined && steps.some((step: IStep): boolean => step.id === requested)) {
     return requested;
@@ -118,7 +118,7 @@ export function resumeStepId(definition: IWorkflowDefinition, answers: IAnswers,
   return steps[0]?.id;
 }
 
-export function createGenericSession(definition: IWorkflowDefinition, draft: IGenericDraft | undefined): IGenericSession {
+export function createGenericSession(definition: IPieceWorkflowDefinition, draft: IGenericDraft | undefined): IGenericSession {
   const answers: IAnswers = draft?.answers ?? {};
   return {
     answers,

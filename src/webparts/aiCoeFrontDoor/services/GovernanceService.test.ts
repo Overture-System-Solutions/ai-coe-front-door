@@ -1,11 +1,13 @@
 import { createFakeListClient, InMemoryListStore } from '../../../testing/listStore';
 import type { IRecordedRequest } from '../../../testing/listStore';
+import { CORRECTION_CATEGORIES, OUTCOME_COLUMNS, OUTCOME_WORKFLOW_VERSION } from '../content/workflows/outcome';
 import {
   DECISIONS_LIST_TITLE,
   GovernanceService,
   INTAKES_LIST_TITLE,
   isGovernanceWorkflow,
   listItemsUrl,
+  OUTCOME_RECORDS_LIST_TITLE,
   USE_CASES_LIST_TITLE,
   workflowLabel
 } from './GovernanceService';
@@ -16,6 +18,7 @@ const FIXED_NOW: Date = new Date(Date.UTC(2026, 8, 11, 14, 30, 0));
 const FIXED_ID: string = 'OVT-AICOE-20260911-FIXEDSUF';
 const INTAKES_URL: string = "https://example.sharepoint.com/sites/demo/_api/web/lists/getbytitle('AI CoE Pilot Intakes')/items";
 const USE_CASES_URL: string = "https://example.sharepoint.com/sites/demo/_api/web/lists/getbytitle('AI CoE Use Cases')/items";
+const OUTCOMES_URL: string = "https://example.sharepoint.com/sites/demo/_api/web/lists/getbytitle('AI CoE Outcome Records')/items";
 
 function filterUrl(itemsUrl: string, field: string, value: string): string {
   return `${itemsUrl}?$select=Id,${field},Modified&$filter=${encodeURIComponent(`${field} eq '${value}'`)}&$top=1`;
@@ -36,7 +39,7 @@ async function silenced<T>(run: (errorSpy: jest.SpyInstance) => Promise<T>): Pro
 }
 
 function createHarness(): { store: InMemoryListStore; service: GovernanceService } {
-  const store: InMemoryListStore = new InMemoryListStore([INTAKES_LIST_TITLE, USE_CASES_LIST_TITLE, DECISIONS_LIST_TITLE]);
+  const store: InMemoryListStore = new InMemoryListStore([INTAKES_LIST_TITLE, USE_CASES_LIST_TITLE, DECISIONS_LIST_TITLE, OUTCOME_RECORDS_LIST_TITLE]);
   const context: IServiceContext = {
     siteUrl: 'https://example.sharepoint.com/sites/demo/',
     user: { displayName: 'Pat Lee', email: 'pat@example.com' },
@@ -520,6 +523,151 @@ describe('GovernanceService.submitWorkflow readback and retry', () => {
     expect(result.state).toBe('saved');
     expect(result.itemId).toBe(1);
     expect(result.itemUrl).toBe('https://example.sharepoint.com/sites/demo/Lists/AICoEPilotIntakes/DispForm.aspx?ID=1');
+  });
+});
+
+describe('GovernanceService.submitOutcome', () => {
+  const ANSWERS: { [stepId: string]: string } = {
+    taskType: 'Drafting or writing',
+    outcome: 'Corrected',
+    reviewState: 'Reviewed by me',
+    correctionCategory: 'source',
+    routeAvailability: 'Available now'
+  };
+
+  it('writes one row of choices to the outcome records list, with no email and no display name', async () => {
+    const { store, service } = createHarness();
+    const result: ISubmissionResult = await service.submitOutcome(ANSWERS);
+
+    const requests: IRecordedRequest[] = posts(store);
+    expect(requests).toHaveLength(1);
+    expect(requests[0].url).toBe(OUTCOMES_URL);
+    expect(requests[0].headers).toEqual({ Accept: 'application/json;odata=nometadata', 'Content-Type': 'application/json;odata=nometadata' });
+    expect(requests[0].body).toEqual({
+      Title: `Task outcome — ${FIXED_ID}`,
+      OutcomeId: FIXED_ID,
+      RecordedAt: '2026-09-11T14:30:00.000Z',
+      TaskType: 'Drafting or writing',
+      Outcome: 'Corrected',
+      ReviewState: 'Reviewed by me',
+      CorrectionCategory: 'source',
+      RouteAvailability: 'Available now',
+      WorkflowVersion: OUTCOME_WORKFLOW_VERSION
+    });
+    // The columns the list declares are the columns the record writes, in that order and no others.
+    expect(Object.keys(requests[0].body as object)).toEqual(OUTCOME_COLUMNS.slice());
+    // The row names no person: SharePoint's own Created By is the only trace, and only operators read it.
+    const written: string = JSON.stringify(requests[0].body);
+    expect(written).not.toContain('pat@example.com');
+    expect(written).not.toContain('Pat Lee');
+    expect(written.toLowerCase()).not.toContain('email');
+    expect(result).toEqual({
+      connected: true,
+      state: 'saved',
+      intakeId: FIXED_ID,
+      itemId: 1,
+      savedAt: '2026-09-11T14:30:00.000Z',
+      version: OUTCOME_WORKFLOW_VERSION,
+      message: 'Outcome recorded. No prompt or output text was saved.'
+    });
+  });
+
+  it('reads the row back by its key before reporting it saved', async () => {
+    const { store, service } = createHarness();
+    await service.submitOutcome(ANSWERS);
+    expect(store.requests.map((request: IRecordedRequest): string => `${request.method} ${request.url}`)).toEqual([
+      `POST ${OUTCOMES_URL}`,
+      `GET ${OUTCOMES_URL}(1)?$select=Id,OutcomeId,Modified`
+    ]);
+    expect(gets(store)[0].headers).toEqual({ Accept: 'application/json;odata=nometadata' });
+  });
+
+  it('writes nothing but declared choices, whatever the answers carry', async () => {
+    const { store, service } = createHarness();
+    await service.submitOutcome({
+      taskType: 'The Q4 launch brief',
+      outcome: 'Accepted',
+      reviewState: 'Not reviewed',
+      correctionCategory: CORRECTION_CATEGORIES[0],
+      routeAvailability: 'Available now',
+      notes: 'The model invented a customer name.'
+    });
+    const body: { [field: string]: unknown } = posts(store)[0].body as { [field: string]: unknown };
+    expect(body.TaskType).toBe('');
+    // An accepted outcome has no correction, so the category is not carried over from an earlier answer.
+    expect(body.CorrectionCategory).toBe('');
+    expect(JSON.stringify(body)).not.toContain('Q4');
+    expect(JSON.stringify(body)).not.toContain('invented');
+  });
+
+  it('reports pending when the write was accepted but the readback fails, and keeps the body out of the message', async () => {
+    const { store, service } = createHarness();
+    store.afterPost(OUTCOME_RECORDS_LIST_TITLE, (): void => store.fail(OUTCOME_RECORDS_LIST_TITLE, 500, 'gateway timeout secret=xyz'));
+    const result: ISubmissionResult = await silenced(async (errorSpy: jest.SpyInstance): Promise<ISubmissionResult> => {
+      const pending: ISubmissionResult = await service.submitOutcome(ANSWERS);
+      expect(errorSpy).toHaveBeenCalledWith('AI CoE submission not confirmed', 'AI CoE Outcome Records returned 500 (TRANSIENT)');
+      return pending;
+    });
+    expect(result).toEqual({
+      connected: false,
+      state: 'pending',
+      intakeId: FIXED_ID,
+      itemId: 1,
+      version: OUTCOME_WORKFLOW_VERSION,
+      message: `SharePoint accepted the AI CoE record ${FIXED_ID} but did not confirm it back.`,
+      failureClass: 'INCONCLUSIVE',
+      userMessage: 'Saved, not yet confirmed.'
+    });
+    expect(result.message).not.toContain('secret');
+    expect(store.items(OUTCOME_RECORDS_LIST_TITLE)).toHaveLength(1);
+  });
+
+  it('reports a refused write as failed with the class and no response body in the user message', async () => {
+    const { store, service } = createHarness();
+    store.deny(OUTCOME_RECORDS_LIST_TITLE, 403);
+    const result: ISubmissionResult = await silenced((): Promise<ISubmissionResult> => service.submitOutcome(ANSWERS));
+    expect(result).toEqual({
+      connected: false,
+      state: 'failed',
+      intakeId: FIXED_ID,
+      message: 'SharePoint could not create the AI CoE record. AI CoE Outcome Records returned 403: Access denied',
+      failureClass: 'PERMISSION',
+      userMessage: 'Needs access.'
+    });
+    expect(store.items(OUTCOME_RECORDS_LIST_TITLE)).toHaveLength(0);
+  });
+
+  it('completes a pending record on retry under the same key instead of writing a second row', async () => {
+    const { store, service } = createHarness();
+    store.afterPost(OUTCOME_RECORDS_LIST_TITLE, (): void => store.fail(OUTCOME_RECORDS_LIST_TITLE, 503, 'busy'));
+    const pending: ISubmissionResult = await silenced((): Promise<ISubmissionResult> => service.submitOutcome(ANSWERS));
+    expect(pending.state).toBe('pending');
+    store.recover(OUTCOME_RECORDS_LIST_TITLE);
+    store.requests.splice(0);
+
+    const retried: ISubmissionResult = await service.submitOutcome(ANSWERS, { intakeId: pending.intakeId });
+
+    expect(store.requests.map((request: IRecordedRequest): string => `${request.method} ${request.url}`)).toEqual([
+      `GET ${filterUrl(OUTCOMES_URL, 'OutcomeId', FIXED_ID)}`
+    ]);
+    expect(posts(store)).toHaveLength(0);
+    expect(store.items(OUTCOME_RECORDS_LIST_TITLE)).toHaveLength(1);
+    expect(retried.state).toBe('saved');
+    expect(retried.intakeId).toBe(FIXED_ID);
+  });
+
+  it('reports pending when the row read back does not carry the key that was written', async () => {
+    const { store, service } = createHarness();
+    store.afterPost(OUTCOME_RECORDS_LIST_TITLE, (item): void => {
+      item.OutcomeId = 'OVT-AICOE-20260911-SOMEBODY';
+    });
+    const result: ISubmissionResult = await silenced(async (errorSpy: jest.SpyInstance): Promise<ISubmissionResult> => {
+      const pending: ISubmissionResult = await service.submitOutcome(ANSWERS);
+      expect(errorSpy).toHaveBeenCalledWith('AI CoE submission not confirmed', 'AI CoE Outcome Records readback mismatch (INCONCLUSIVE)');
+      return pending;
+    });
+    expect(result.state).toBe('pending');
+    expect(result.failureClass).toBe('INCONCLUSIVE');
   });
 });
 

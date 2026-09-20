@@ -8,6 +8,7 @@ import { createBranding } from '../branding/branding';
 import type { IPageDocument } from '../content/pageContent';
 import type { FrontDoorView, IPageViewSettings } from '../content/pageViews';
 import { createWorkflowCatalog, WORKFLOW_ORDER } from '../content/workflows/catalog';
+import { OUTCOME_WORKFLOW } from '../content/workflows/outcome';
 import type { IFrontDoorUser } from '../context/FrontDoorContext';
 import type { IRoleResolution } from '../services/roleResolver';
 import type { IWorkflowCatalog } from '../workflows/types';
@@ -206,8 +207,10 @@ describe('PageViewShell', () => {
     expect(screen.queryByRole('heading', { level: 1 })).not.toBeInTheDocument();
   });
 
-  it('keeps the outcome view on the wizard path, never the home shell (decision 16)', () => {
+  it('keeps the outcome view on the wizard path, never the home shell (decision 16)', async () => {
     const { container } = renderView(settingsFor('outcome'), { user: ADA });
+    // Since step 29b the view renders the outcome piece, which reads the draft store before its first question.
+    await firstStepOf(OUTCOME_WORKFLOW);
     expect(container.firstChild).toHaveClass('overture-app', 'ai-view', 'ai-view--outcome');
     expect(container.querySelector('.ai-workflow-shell')).not.toBeNull();
     expect(container.querySelector('.ai-home-shell')).toBeNull();

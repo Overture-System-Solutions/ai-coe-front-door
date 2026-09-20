@@ -52,7 +52,11 @@ measures list the Enterprise value page reads) is ensured: a list the site does 
 list with the declared description, and a list it already carries keeps its rows and its design and is given only the
 columns it lacks, each added to the default view, with a unique column indexed and made unique in one call. The
 section never removes or renames a column, so a tenant's rows stay readable across releases; a column that must mean
-something else gets a new name in a later version instead. Rerunning changes nothing.
+something else gets a new name in a later version instead. Rerunning changes nothing. Since 1.0.0.15 a declared list
+may carry its own 'security' ('ownItems'), its own 'fullControlGroups' and a 'hideFromDefaultView' list: the list is
+then put under the same item-level security as the intake lists, and the built-in columns named there (Created By and
+Modified By, which SharePoint writes on every item whatever the list declares) are taken off its default view. The
+columns themselves and every row stay where they are.
 
 Page permissions (since 1.0.0.14): each page in pages.json declares 'inherit' (the site's own permissions), 'owners'
 (the site's Owners group alone, as the admin dashboard and the Operations page do) or 'groups:<Name>[,<Name>]', where
@@ -446,28 +450,23 @@ if ([string]::IsNullOrWhiteSpace($releaseId)) { $releaseId = [System.DateTime]::
 # The role names come from the section above, resolved by kind so a site in another language gets the same levels.
 $securedLists = @()
 $unsecuredLists = @()
-$listSecurity = if ($definition.Contains('listSecurity')) { @($definition['listSecurity']) } else { @() }
-foreach ($entry in $listSecurity) {
-  $title = [string]$entry['title']
-  if ([string]$entry['security'] -ne 'ownItems') {
-    throw "List security for '$title' in pages.json names an unknown mode '$($entry['security'])'; expected 'ownItems'."
-  }
-  # The groups that read every row of this list, named as parameters and never as group titles, so nothing
-  # tenant-bound is committed. A name that is not a declared 'group' parameter is an authoring mistake in pages.json
-  # and stops the run before anything is changed, exactly as it does for a page's permissions.
-  $fullControlGroups = if ($entry.Contains('fullControlGroups')) { @($entry['fullControlGroups']) } else { @() }
-  foreach ($parameterName in $fullControlGroups) {
-    if (-not $kinds.ContainsKey($parameterName) -or $kinds[$parameterName] -ne 'group') {
-      throw "List security for '$title' names '$parameterName' in 'fullControlGroups', which is not a parameter of kind 'group' in pages.json."
-    }
-  }
+
+# One list put under item-level security. Written once and called twice: here for the lists the package feature and
+# the companion solution provision, and again in the "Lists" section below for a list this script created that
+# declares its own security (1.0.0.15), so the two can never come to mean different things. The list is added to the
+# run summary where it is secured, so the counts stay true whichever section called this.
+function Set-OwnItemsSecurity {
+  param(
+    [Parameter(Mandatory = $true)][string]$title,
+    [string[]]$fullControlGroups = @()
+  )
   # Only a list the site already carries: the intake list comes from the package feature, the use-case list from the
-  # companion solution. Neither is created here.
+  # companion solution, and a declared list was created a moment ago. None of them is created here.
   $list = Get-PnPList -Identity $title -Includes HasUniqueRoleAssignments -ErrorAction SilentlyContinue
   if ($null -eq $list) {
     Write-Warning "The list '$title' is not on this site; read security not applied. Install what provisions it and rerun."
-    $unsecuredLists += $title
-    continue
+    $script:unsecuredLists += $title
+    return
   }
   Write-Host "Securing $title (each person reads and edits their own items; Owners: $fullControlRole) ..."
   $owners = Get-PnPGroup -AssociatedOwnerGroup
@@ -500,7 +499,35 @@ foreach ($entry in $listSecurity) {
     }
   }
   Set-PnPList -Identity $title -ReadSecurity 2 -WriteSecurity 2
-  $securedLists += $title
+  $script:securedLists += $title
+}
+
+# The groups that read every row of a list are named as parameters and never as group titles, so nothing
+# tenant-bound is committed. A name that is not a declared 'group' parameter is an authoring mistake in pages.json
+# and stops the run before anything is changed, exactly as it does for a page's permissions. A mode this script does
+# not know stops it too, rather than leaving a list open in the belief that it was secured.
+function Test-OwnItemsDeclaration {
+  param(
+    [Parameter(Mandatory = $true)][string]$title,
+    [string]$mode,
+    [string[]]$fullControlGroups = @()
+  )
+  if ($mode -ne 'ownItems') {
+    throw "List security for '$title' in pages.json names an unknown mode '$mode'; expected 'ownItems'."
+  }
+  foreach ($parameterName in $fullControlGroups) {
+    if (-not $kinds.ContainsKey($parameterName) -or $kinds[$parameterName] -ne 'group') {
+      throw "List security for '$title' names '$parameterName' in 'fullControlGroups', which is not a parameter of kind 'group' in pages.json."
+    }
+  }
+}
+
+$listSecurity = if ($definition.Contains('listSecurity')) { @($definition['listSecurity']) } else { @() }
+foreach ($entry in $listSecurity) {
+  $title = [string]$entry['title']
+  $fullControlGroups = if ($entry.Contains('fullControlGroups')) { @($entry['fullControlGroups']) } else { @() }
+  Test-OwnItemsDeclaration $title ([string]$entry['security']) $fullControlGroups
+  Set-OwnItemsSecurity $title $fullControlGroups
 }
 if ($securedLists.Count -gt 0) {
   Write-Warning "The companion flows' connection must hold Override List Behaviors (Full Control, Design or a custom permission level) on the intake lists; an Edit-level connection is trimmed to its own items."
@@ -524,6 +551,13 @@ $listDefinitions = if ($definition.Contains('lists')) { @($definition['lists']) 
 # one half-built.
 foreach ($entry in $listDefinitions) {
   $title = [string]$entry['title']
+  # A list may declare the security it is to end the run under (1.0.0.15: 'ownItems' and the groups that read every
+  # row). It is checked here, in the pass that creates nothing, so a mistyped mode or an unknown group parameter is
+  # found before a list exists to be left open.
+  if ($entry.Contains('security')) {
+    $declaredGroups = if ($entry.Contains('fullControlGroups')) { @($entry['fullControlGroups']) } else { @() }
+    Test-OwnItemsDeclaration $title ([string]$entry['security']) $declaredGroups
+  }
   foreach ($field in @($entry['fields'])) {
     $internalName = [string]$field['name']
     if ($internalName -notmatch '^[A-Za-z][A-Za-z0-9]{0,31}$') {
@@ -571,6 +605,39 @@ foreach ($entry in $listDefinitions) {
       Set-PnPField -List $title -Identity $internalName -Values @{ Indexed = $true }
     }
     Write-Host "  Added $internalName ($($field['type']))."
+  }
+  # SharePoint writes Created By and Modified By on every item, whatever a list declares, so a list meant to hold
+  # content-free rows still names whoever saved each one. A list that declares 'hideFromDefaultView' has those
+  # built-in columns taken off its default view: the columns and the rows are untouched (nothing is removed and
+  # nothing is renamed), the list simply does not put them in front of whoever opens it. A column already off the
+  # view is left alone, so rerunning changes nothing.
+  $hiddenColumns = if ($entry.Contains('hideFromDefaultView')) { @($entry['hideFromDefaultView']) } else { @() }
+  $viewOwner = if ($hiddenColumns.Count -gt 0) { Get-PnPList -Identity $title -Includes DefaultView } else { $null }
+  if ($null -ne $viewOwner -and $null -eq $viewOwner.DefaultView) {
+    Write-Warning "The list '$title' has no default view; its built-in person columns were left where they are."
+  } elseif ($null -ne $viewOwner) {
+    $view = $viewOwner.DefaultView
+    $viewContext = Get-PnPContext
+    $viewContext.Load($view.ViewFields)
+    Invoke-PnPQuery
+    $viewChanged = $false
+    foreach ($column in $hiddenColumns) {
+      if ($view.ViewFields -contains $column) {
+        $view.ViewFields.Remove($column)
+        $viewChanged = $true
+        Write-Host "  $column is no longer on the default view of $title."
+      }
+    }
+    if ($viewChanged) {
+      $view.Update()
+      Invoke-PnPQuery
+    }
+  }
+  # A list that declares its own security is put under it here, where it exists: the same rules, the same wording and
+  # the same summary as the lists the package feature provisions (decision 16). The flags go on last, as they do there.
+  if ($entry.Contains('security')) {
+    $entryGroups = if ($entry.Contains('fullControlGroups')) { @($entry['fullControlGroups']) } else { @() }
+    Set-OwnItemsSecurity $title $entryGroups
   }
   $ensuredLists += $title
 }

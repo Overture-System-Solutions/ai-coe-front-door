@@ -646,6 +646,64 @@ describe('page provisioning script', () => {
     expect(script).toMatch(/Lists:/);
   });
 
+  it('secures a declared list from its own declaration and takes the person columns off its default view (1.0.0.15)', () => {
+    // Decision 16: the outcome records list is created by the "Lists" section and must end the run under the same
+    // item-level security as the intake lists. The securing itself is written once, as a function in the "List
+    // security" section, and called from both places, so the two can never drift apart.
+    expect(script).toMatch(/function Set-OwnItemsSecurity/);
+    const security: string = script.slice(script.indexOf('# List security'), script.indexOf('# Lists:'));
+    expect(security).toMatch(/function Set-OwnItemsSecurity/);
+    expect(security).toMatch(/Set-OwnItemsSecurity/);
+    const section: string = script.slice(script.indexOf('# Lists:'), script.indexOf('# Content document'));
+    expect(section).toMatch(/Set-OwnItemsSecurity/);
+    // The declaration is checked in the validation pass, before anything is created: a mode the script does not know,
+    // or a group that is not a 'group' parameter, stops the run rather than leaving a list open. The check itself is
+    // the one the intake lists go through, so both sections refuse the same declarations.
+    const loop: string = 'foreach ($entry in $listDefinitions)';
+    const validation: string = section.slice(section.indexOf(loop), section.lastIndexOf(loop));
+    expect(validation).toContain("'security'");
+    expect(validation).toContain("'fullControlGroups'");
+    expect(validation).toContain('Test-OwnItemsDeclaration');
+    expect(validation).not.toMatch(/-PnP/);
+    expect(security).toMatch(/function Test-OwnItemsDeclaration/);
+    expect(security).toContain("expected 'ownItems'");
+    expect(security).toContain("is not a parameter of kind 'group' in pages.json");
+    // The built-in person columns come off the default view through the view itself; no column and no row is touched.
+    expect(section).toContain("'hideFromDefaultView'");
+    expect(section).toMatch(/Get-PnPList -Identity \$title -Includes DefaultView/);
+    expect(section).toMatch(/\$view\.ViewFields\.Remove\(/);
+    expect(section).toMatch(/\$view\.Update\(\)/);
+    expect(section).toMatch(/Invoke-PnPQuery/);
+    expect(section).not.toMatch(/Remove-PnPField|Remove-PnPList/);
+    // Order inside the section: the columns first, then the view, then the security (its two flags last of all).
+    const columns: number = section.indexOf('Add-PnPField');
+    const view: number = section.indexOf('$view.ViewFields.Remove(');
+    const secured: number = section.indexOf('Set-OwnItemsSecurity');
+    expect(columns).toBeLessThan(view);
+    expect(view).toBeLessThan(secured);
+    // The whole section still runs before the document is uploaded.
+    expect(secured).toBeGreaterThan(-1);
+    expect(script.indexOf('# Lists:')).toBeLessThan(script.indexOf('Add-PnPFile'));
+    // The titles, the groups and the hidden columns live in pages.json; the script names none of them.
+    const definition: { lists: { title: string; security?: string; fullControlGroups?: string[]; hideFromDefaultView?: string[] }[]; parameters: { [name: string]: { kind: string } } } =
+      JSON.parse(fs.readFileSync(path.join(PAGES_DIR, 'pages.json'), 'utf8'));
+    const secure: { title: string; security?: string; fullControlGroups?: string[]; hideFromDefaultView?: string[] }[] = definition.lists.filter(
+      (list: { security?: string }): boolean => list.security !== undefined
+    );
+    expect(secure).toHaveLength(1);
+    expect(secure[0].security).toBe('ownItems');
+    expect(secure[0].hideFromDefaultView).toEqual(['Author', 'Editor']);
+    for (const name of secure[0].fullControlGroups ?? []) {
+      expect(definition.parameters[name].kind).toBe('group');
+      expect(script).not.toContain(name);
+    }
+    for (const column of secure[0].hideFromDefaultView ?? []) {
+      expect(section).not.toContain(`'${column}'`);
+    }
+    // The run summary counts the list among the secured ones, so an operator sees it was not left open.
+    expect(script).toMatch(/List security:/);
+  });
+
   it('no longer needs the native web part templates or HTML text parts', () => {
     for (const legacy of ['Add-PnPPageTextPart', 'DefaultWebPartType', 'quicklinks.template.json', 'button.template.json', 'serverProcessedContent', 'target="_blank"', 'example.invalid']) {
       expect(script).not.toContain(legacy);

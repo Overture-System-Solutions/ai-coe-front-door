@@ -1,3 +1,5 @@
+import { OUTCOME_WORKFLOW_VERSION, outcomeRecordFields } from '../content/workflows/outcome';
+import type { IOutcomeRecordFields } from '../content/workflows/outcome';
 import { includes } from '../utils/collections';
 import type { SubmissionWorkflowType } from '../workflows/types';
 import { classifyError, failureLogDetail, failureUserMessage, statusError } from './failureClass';
@@ -10,9 +12,19 @@ import type { IAdminDashboardData, IGovernanceService, IListItem, IListResponse,
 export const INTAKES_LIST_TITLE: string = 'AI CoE Pilot Intakes';
 export const USE_CASES_LIST_TITLE: string = 'AI CoE Use Cases';
 export const DECISIONS_LIST_TITLE: string = 'AI CoE Decisions';
+/** The content-free outcome record (1.0.0.15); created by the operator script, never by the package feature. */
+export const OUTCOME_RECORDS_LIST_TITLE: string = 'AI CoE Outcome Records';
 
 /** What the readback of an intake row asks for: enough to match the identifier and date the receipt. */
 const READBACK_SELECT: string = 'Id,IntakeId,Modified';
+/** The same for an outcome row, whose key is its own. */
+const OUTCOME_READBACK_SELECT: string = 'Id,OutcomeId,Modified';
+/** The key column of each list the service writes, used for the readback and for a retry's pre-read. */
+const INTAKE_KEY: string = 'IntakeId';
+const OUTCOME_KEY: string = 'OutcomeId';
+/** The title an outcome row carries, with its key; the row says nothing else about the task. */
+const OUTCOME_TITLE: string = 'Task outcome';
+const OUTCOME_SAVED_MESSAGE: string = 'Outcome recorded. No prompt or output text was saved.';
 
 const ACCEPT_HEADER: { [name: string]: string } = { Accept: 'application/json;odata=nometadata' };
 const WRITE_HEADERS: { [name: string]: string } = {
@@ -161,7 +173,8 @@ export class GovernanceService implements IGovernanceService {
 
       // Native readback: the row is read again before the page may say it was saved (a found row was just read).
       let intakeItemId: number | undefined = itemId(intake);
-      const confirmed: IListItem | undefined = existing !== undefined ? existing : await this._readBack(intakeItemId, intakeId);
+      const confirmed: IListItem | undefined =
+        existing !== undefined ? existing : await this._readBack(INTAKES_LIST_TITLE, INTAKE_KEY, READBACK_SELECT, intakeItemId, intakeId);
       if (confirmed !== undefined && intakeItemId === undefined) {
         intakeItemId = itemId(confirmed);
       }
@@ -203,6 +216,78 @@ export class GovernanceService implements IGovernanceService {
         connected: false,
         state: 'failed',
         intakeId,
+        message: `SharePoint could not create the AI CoE record. ${errorMessage(error)}`,
+        failureClass,
+        userMessage: failureUserMessage(failureClass)
+      };
+    }
+  }
+
+  /**
+   * Writes one outcome record: the five choices the piece offers, the key, the moment and the version of
+   * the questions, and nothing else. No display name and no address is written, because the record is
+   * meant to be content-free; SharePoint's own Created By still names the submitter, which is why the
+   * script keeps the list under item-level security and takes that column off its default view
+   * (decision 16). The row is read back before the receipt, and a retry under the same key finds the row
+   * instead of writing a second one.
+   */
+  public async submitOutcome(payload: unknown, options?: ISubmitOptions): Promise<ISubmissionResult> {
+    const retryId: string | undefined = options !== undefined && typeof options.intakeId === 'string' && options.intakeId.trim() ? options.intakeId : undefined;
+    const outcomeId: string = retryId === undefined ? this._createIntakeId() : retryId;
+    const recordedAt: string = this._clock().toISOString();
+    const fields: IOutcomeRecordFields = outcomeRecordFields(asRecord(payload));
+
+    try {
+      const existing: IListItem | undefined = retryId === undefined ? undefined : await this._findByField(OUTCOME_RECORDS_LIST_TITLE, OUTCOME_KEY, outcomeId);
+      const row: IListItem =
+        existing !== undefined
+          ? existing
+          : await this._createListItem(OUTCOME_RECORDS_LIST_TITLE, {
+              Title: `${OUTCOME_TITLE} — ${outcomeId}`,
+              OutcomeId: outcomeId,
+              RecordedAt: recordedAt,
+              TaskType: fields.TaskType,
+              Outcome: fields.Outcome,
+              ReviewState: fields.ReviewState,
+              CorrectionCategory: fields.CorrectionCategory,
+              RouteAvailability: fields.RouteAvailability,
+              WorkflowVersion: OUTCOME_WORKFLOW_VERSION
+            });
+
+      let rowId: number | undefined = itemId(row);
+      const confirmed: IListItem | undefined =
+        existing !== undefined ? existing : await this._readBack(OUTCOME_RECORDS_LIST_TITLE, OUTCOME_KEY, OUTCOME_READBACK_SELECT, rowId, outcomeId);
+      if (confirmed !== undefined && rowId === undefined) {
+        rowId = itemId(confirmed);
+      }
+      if (confirmed === undefined) {
+        return {
+          connected: false,
+          state: 'pending',
+          intakeId: outcomeId,
+          itemId: rowId,
+          version: OUTCOME_WORKFLOW_VERSION,
+          message: `SharePoint accepted the AI CoE record ${outcomeId} but did not confirm it back.`,
+          failureClass: 'INCONCLUSIVE',
+          userMessage: failureUserMessage('INCONCLUSIVE')
+        };
+      }
+      return {
+        connected: true,
+        state: 'saved',
+        intakeId: outcomeId,
+        itemId: rowId,
+        savedAt: typeof confirmed.Modified === 'string' && confirmed.Modified ? confirmed.Modified : recordedAt,
+        version: OUTCOME_WORKFLOW_VERSION,
+        message: OUTCOME_SAVED_MESSAGE
+      };
+    } catch (error) {
+      console.error('AI CoE submission failed', failureLogDetail(error));
+      const failureClass: FailureClass = classifyError(error);
+      return {
+        connected: false,
+        state: 'failed',
+        intakeId: outcomeId,
         message: `SharePoint could not create the AI CoE record. ${errorMessage(error)}`,
         failureClass,
         userMessage: failureUserMessage(failureClass)
@@ -287,18 +372,18 @@ export class GovernanceService implements IGovernanceService {
   }
 
   /**
-   * Reads the intake row back by id (by identifier when the POST answer carried none) and returns it
-   * when it carries the identifier that was written; anything else is inconclusive and yields undefined
-   * (the console gets the status or the mismatch, never a body).
+   * Reads the row back by id (by key when the POST answer carried none) and returns it when it carries
+   * the key that was written; anything else is inconclusive and yields undefined (the console gets the
+   * status or the mismatch, never a body). The intake row and the outcome row are read the same way,
+   * each through its own list, key column and projection.
    */
-  private async _readBack(id: number | undefined, intakeId: string): Promise<IListItem | undefined> {
+  private async _readBack(listTitle: string, key: string, select: string, id: number | undefined, value: string): Promise<IListItem | undefined> {
     try {
-      const item: IListItem | undefined =
-        id === undefined ? await this._findByField(INTAKES_LIST_TITLE, 'IntakeId', intakeId) : await this._getItem(INTAKES_LIST_TITLE, id, READBACK_SELECT);
-      if (item !== undefined && item.IntakeId === intakeId) {
+      const item: IListItem | undefined = id === undefined ? await this._findByField(listTitle, key, value) : await this._getItem(listTitle, id, select);
+      if (item !== undefined && item[key] === value) {
         return item;
       }
-      console.error('AI CoE submission not confirmed', `${INTAKES_LIST_TITLE} readback mismatch (INCONCLUSIVE)`);
+      console.error('AI CoE submission not confirmed', `${listTitle} readback mismatch (INCONCLUSIVE)`);
       return undefined;
     } catch (error) {
       console.error('AI CoE submission not confirmed', failureLogDetail(error));

@@ -19,7 +19,7 @@ import type {
   IUsageMetricsResult,
   IUsageMetricsService
 } from '../webparts/aiCoeFrontDoor/services/types';
-import type { IAnswers, IWorkflowDefinition, SubmissionWorkflowType } from '../webparts/aiCoeFrontDoor/workflows/types';
+import type { IAnswers, IWorkflowDefinition, SubmissionPieceType } from '../webparts/aiCoeFrontDoor/workflows/types';
 import { SAMPLE_PAGE_DOCUMENT } from './pageDocument';
 
 export interface IDeferred<T> {
@@ -39,7 +39,7 @@ export function createDeferred<T>(): IDeferred<T> {
 }
 
 export interface IRecordedSubmission {
-  workflowType: SubmissionWorkflowType;
+  workflowType: SubmissionPieceType;
   payload: unknown;
   /** The identifier of the attempt being retried; absent on a first attempt. */
   intakeId?: string;
@@ -67,8 +67,12 @@ export function createFakeGovernanceService(): IFakeGovernanceService {
     },
     dashboard: { connected: true, intakes: [], useCases: [], decisions: [], message: 'Loaded.' },
     dashboardCalls: 0,
-    submitWorkflow: async (workflowType: SubmissionWorkflowType, payload: unknown, options?: ISubmitOptions): Promise<ISubmissionResult> => {
+    submitWorkflow: async (workflowType: SubmissionPieceType, payload: unknown, options?: ISubmitOptions): Promise<ISubmissionResult> => {
       service.submissions.push({ workflowType, payload, intakeId: options === undefined ? undefined : options.intakeId });
+      return service.result;
+    },
+    submitOutcome: async (payload: unknown, options?: ISubmitOptions): Promise<ISubmissionResult> => {
+      service.submissions.push({ workflowType: 'outcome', payload, intakeId: options === undefined ? undefined : options.intakeId });
       return service.result;
     },
     getAdminDashboardData: async (): Promise<IAdminDashboardData> => {

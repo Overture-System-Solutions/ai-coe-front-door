@@ -60,8 +60,20 @@ export type PieceWorkflowId = WorkflowId | 'outcome';
  */
 export type SubmissionWorkflowType = WorkflowId | 'toolCheck-review-request';
 
-export interface IWorkflowDefinition {
-  id: WorkflowId;
+/**
+ * What a page-view piece may submit: the shipped types, plus the outcome record, which the submission
+ * context routes to `submitOutcome` and its own list (decision 16). The shipped callers pass a
+ * `SubmissionWorkflowType` and are untouched by it.
+ */
+export type SubmissionPieceType = SubmissionWorkflowType | 'outcome';
+
+/**
+ * A piece that walks through steps: the five shipped workflow definitions and the outcome record. The
+ * step renderer, the form engine, the review page and the header read this shape, so the outcome record
+ * needs no entry in `IWorkflowCatalog` and the legacy landing page keeps its five.
+ */
+export interface IPieceWorkflowDefinition {
+  id: PieceWorkflowId;
   title: string;
   homeDescription: string;
   icon: LucideIcon;
@@ -69,6 +81,11 @@ export interface IWorkflowDefinition {
   whatHappensNext?: string;
   workflowVersion?: string;
   steps: IStep[];
+}
+
+/** One of the five shipped workflows: the same shape, with the catalog's own narrower id. */
+export interface IWorkflowDefinition extends IPieceWorkflowDefinition {
+  id: WorkflowId;
 }
 
 export type IWorkflowCatalog = { [id in WorkflowId]: IWorkflowDefinition };
