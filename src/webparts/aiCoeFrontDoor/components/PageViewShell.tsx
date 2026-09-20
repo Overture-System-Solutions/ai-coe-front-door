@@ -1,6 +1,7 @@
 import * as React from 'react';
 import type { IContentPage, IPageDocument } from '../content/pageContent';
 import { isWorkflowView } from '../content/pageViews';
+import { identityRole } from '../content/roles';
 import type { IPageViewSettings } from '../content/pageViews';
 import { useFrontDoor } from '../context/FrontDoorContext';
 import { NoticeBanner } from '../controls/NoticeBanner';
@@ -13,11 +14,13 @@ import type { DraftFlags } from './LandingPage';
 import { BlockList } from './pages/BlockList';
 import { ContentPage, findPage } from './pages/ContentPage';
 import { documentContext, PageDocumentProvider, usePageDocument } from './pages/PageDocumentContext';
-import type { IPageDocumentContextValue } from './pages/PageDocumentContext';
+import type { IPageDocumentContextValue, RoleMembershipState } from './pages/PageDocumentContext';
 import { useDocumentState } from './pages/useDocumentState';
 import type { DocumentState } from './pages/useDocumentState';
 import { UsageTelemetryStrip } from './UsageTelemetryStrip';
 import { useDraftFlags } from './useDraftFlags';
+import { useRoles } from './useRoles';
+import type { RoleLoadState } from './useRoles';
 import { FeedbackWorkflow } from './workflows/FeedbackWorkflow';
 import { GenericWorkflow } from './workflows/GenericWorkflow';
 import { IdeaWorkflow } from './workflows/IdeaWorkflow';
@@ -48,6 +51,14 @@ function chromeBadge(vocabulary: IPageDocumentContextValue['vocabulary']): strin
   return override === undefined || override === '' ? DEFAULT_CHROME_BADGE : override;
 }
 
+/** What the page document context says about the reader: their roles while the resolver is still reading, and after. */
+function rolesOf(state: RoleLoadState): { roles?: string[]; rolesState: RoleMembershipState } {
+  if (state.status === 'loading') {
+    return { rolesState: 'pending' };
+  }
+  return { roles: state.resolution.roles.slice(), rolesState: state.resolution.resolution };
+}
+
 /** No landing page shares the tree with a workflow piece, so there is nothing to keep in sync; the home page rediscovers drafts when it loads. */
 const NO_DRAFT_TRACKING: IWorkflowProps['onDraftsChanged'] = (): void => undefined;
 /** The shared footer carries no home piece, so it never shows a draft badge. */
@@ -61,10 +72,21 @@ const NO_DRAFTS: DraftFlags = {};
  * view with a page key, or a form page whose property bag names the document) and provides its route
  * list, vocabulary, settings and shared sections to every block; the document's shared footer (the
  * support route) is drawn below the content of every view, in the same place on each.
+ *
+ * It reads the roles of the signed-in person once for the whole page, names them on the identity line and
+ * hands them to the same context, so a page or a block written for a role answers to what the site groups
+ * say rather than to anything the address carries.
  */
 export function PageViewShell({ settings }: IPageViewShellProps): React.ReactElement {
   const { branding, catalog, isAdmin, siteUrl, services, user, navigate: contextNavigate } = useFrontDoor();
-  const host: IPageDocumentContextValue = usePageDocument();
+  const outerHost: IPageDocumentContextValue = usePageDocument();
+  // One read of the site groups for the whole page. Without a resolver (the legacy setups and the block tests,
+  // which hand their roles to the provider instead) the shell keeps the roles it was given, so nothing invents one.
+  const roleState: RoleLoadState = useRoles(services.roles, isAdmin);
+  const host: IPageDocumentContextValue = React.useMemo(
+    (): IPageDocumentContextValue => (services.roles === undefined ? outerHost : { ...outerHost, ...rolesOf(roleState) }),
+    [outerHost, roleState, services.roles]
+  );
   const draftStore: typeof services.draftStore = services.draftStore;
   const pageContent: IPageContentService | undefined = services.pageContent;
   const navigate: Navigate = contextNavigate ?? browserNavigate;
@@ -141,7 +163,7 @@ export function PageViewShell({ settings }: IPageViewShellProps): React.ReactEle
               <span className="overture-badge rounded-full px-3 py-1 text-xs font-medium">{chromeBadge(context.vocabulary)}</span>
             </div>
           )}
-          <p className="ai-page-identity">{`Signed in as ${user.displayName}`}</p>
+          <p className="ai-page-identity">{`Signed in as ${user.displayName} · ${identityRole(context.roles, context.vocabulary)}`}</p>
           {!homeLike && <div className="mb-8 h-px w-full" style={{ backgroundColor: 'var(--color-line)' }} />}
           <div role="region" aria-label={regionLabel}>
             {content}

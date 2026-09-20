@@ -56,9 +56,9 @@ function tagsOf(item: ICaseCardItem): ICaseTag[] {
  * Wording note: this file is scanned for Tailwind utility names; keep prose free of utility words.
  */
 export function CaseCardsBlock({ block }: ICaseCardsBlockProps): React.ReactElement {
-  const { now, settings, vocabulary, plane } = usePageDocument();
+  const { now, settings, vocabulary } = usePageDocument();
   const chrome = (key: ChromePillKey, code?: string): React.ReactElement => (
-    <StatusPill state={key} label={chromeLabel(key, vocabulary)} code={code} showCode={plane === 'operator'} />
+    <StatusPill state={key} label={chromeLabel(key, vocabulary)} code={code} />
   );
   const renderCard = (item: ICaseCardItem, index: number): React.ReactElement => {
     const stale: boolean = freshness(item.sourceDate, now, settings.freshnessDays) === 'stale';

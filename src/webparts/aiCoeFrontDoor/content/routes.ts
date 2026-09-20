@@ -7,8 +7,8 @@
  *
  * Wording note: this file is scanned for Tailwind utility names; keep prose free of utility words.
  */
-import { includes } from '../utils/collections';
 import { isExternalHref, resolveContentHref } from './links';
+import { holdsAnyRole } from './roles';
 import type { IVocabulary } from './pageContent';
 import { asObject, ownKeys, readFlag, readIsoDate, readStringList, readText, setOptional } from './rawJson';
 import type { Raw } from './rawJson';
@@ -165,12 +165,9 @@ function isVerified(row: IRouteRow, now: Date): boolean {
   return verifiedOn !== undefined && Date.parse(`${verifiedOn}T00:00:00Z`) <= now.getTime();
 }
 
-function holdsAnyRole(row: IRouteRow, held: string[] | undefined): boolean {
-  if (row.roles === undefined || row.roles.length === 0) {
-    return true;
-  }
-  const roles: string[] = held ?? [];
-  return row.roles.some((role: string): boolean => includes(roles, role));
+/** The row's roles are any-of, and the same test a page's `requiredRole` and a block's `audience` use. */
+function rowIsOpenTo(row: IRouteRow, held: string[] | undefined): boolean {
+  return holdsAnyRole(row.roles, held);
 }
 
 function closedRoute(row: IRouteRow, look: IStateLook, fallback: IRouteFallback | undefined): IResolvedRoute {
@@ -187,7 +184,7 @@ function resolveRow(routes: RouteTable, row: IRouteRow, options: IRouteOptions):
   const vocabulary: IVocabulary | undefined = options.vocabulary;
   const fallback: IRouteFallback | undefined = fallbackOf(routes, row, options.siteUrl);
   const needsAccess: IStateLook = stateLook('needsAccess', vocabulary) as IStateLook;
-  if (!holdsAnyRole(row, options.roles)) {
+  if (!rowIsOpenTo(row, options.roles)) {
     return closedRoute(row, needsAccess, fallback);
   }
   if (row.href === undefined) {

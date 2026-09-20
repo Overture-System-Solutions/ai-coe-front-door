@@ -63,3 +63,48 @@ export function roleLabel(roleId: string, vocabulary?: IVocabulary): string {
   }
   return isRoleId(roleId) ? DEFAULT_ROLE_LABELS[roleId] : roleId;
 }
+
+/**
+ * The any-of test behind every audience and every protected page: content that names no role is for
+ * everyone, and content that names roles opens as soon as one of them is held. Roles that were never
+ * read are no roles at all, so a page fails closed while the membership is unknown. Permissions, not
+ * this test, keep a page shut; this only decides what the page offers to draw.
+ */
+export function holdsAnyRole(named: readonly string[] | undefined, held: readonly string[] | undefined): boolean {
+  if (named === undefined || named.length === 0) {
+    return true;
+  }
+  const roles: readonly string[] = held ?? [];
+  return named.some((role: string): boolean => includes(roles, role));
+}
+
+/** The words shown instead of a page the person may not read; `{role}` is filled with the roles it is for. */
+export const DEFAULT_PROTECTED_PAGE_TEXT: string = 'This page is for the {role} role and is not available to you.';
+/** What the identity line says when no role beyond the default one was read for this person. */
+export const NO_ROLE_TEXT: string = 'role not set';
+
+const ROLE_TOKEN: RegExp = /\{role\}/g;
+
+/** The roles named on a page or a block, as a sentence: "Leader", "Leader or AI CoE operator". */
+function namedRoles(roleIds: readonly string[] | undefined, vocabulary?: IVocabulary): string {
+  const labels: string[] = (roleIds ?? []).map((roleId: string): string => roleLabel(roleId, vocabulary));
+  return labels.length === 0 ? NO_ROLE_TEXT : labels.join(' or ');
+}
+
+/** The protected-page wording, the document's own when it sets one, with the roles filled in. */
+export function protectedPageText(roleIds: readonly string[] | undefined, vocabulary?: IVocabulary): string {
+  const override: string | undefined = vocabulary === undefined ? undefined : vocabulary.chrome.protectedPage;
+  const wording: string = override === undefined || override === '' ? DEFAULT_PROTECTED_PAGE_TEXT : override;
+  return wording.replace(ROLE_TOKEN, namedRoles(roleIds, vocabulary));
+}
+
+/**
+ * What the identity line says about the person's role: the roles they were granted, in the order of
+ * the ids. `employee` is left out because everyone holds it: naming it would read as a binding the
+ * site never made, so a person with nothing else reads "role not set".
+ */
+export function identityRole(held: readonly string[] | undefined, vocabulary?: IVocabulary): string {
+  const roles: readonly string[] = held ?? [];
+  const granted: RoleId[] = ROLE_IDS.filter((roleId: RoleId): boolean => roleId !== 'employee' && includes(roles, roleId));
+  return granted.length === 0 ? NO_ROLE_TEXT : granted.map((roleId: RoleId): string => roleLabel(roleId, vocabulary)).join(', ');
+}

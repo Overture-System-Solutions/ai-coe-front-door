@@ -1,12 +1,13 @@
 import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import * as React from 'react';
-import { createFakePageContentService, createFakeUsageService, createPendingPageContentService, InMemoryDraftStore } from '../../../../testing/fakeServices';
+import { createFakePageContentService, createFakeRoleResolver, createFakeUsageService, createPendingPageContentService, InMemoryDraftStore } from '../../../../testing/fakeServices';
 import { SAMPLE_PAGE_DOCUMENT } from '../../../../testing/pageDocument';
 import { renderWithFrontDoor, TEST_SITE_URL } from '../../../../testing/renderWithFrontDoor';
 import type { FrontDoorRenderResult, ITestFrontDoorOptions } from '../../../../testing/renderWithFrontDoor';
+import { parsePageDocument } from '../../content/pageContent';
 import type { IPageDocument } from '../../content/pageContent';
 import { PageViewShell } from '../PageViewShell';
-import { CONTENT_UNAVAILABLE_TEXT, ContentPage, LOADING_PAGE_TEXT, NO_PAGE_KEY_TEXT, pageMissingText } from './ContentPage';
+import { CONTENT_UNAVAILABLE_TEXT, ContentPage, LOADING_PAGE_TEXT, NO_PAGE_KEY_TEXT, pageMissingText, ROLE_NOTE_TEXT } from './ContentPage';
 
 function renderPage(pageKey: string | undefined, options: ITestFrontDoorOptions = {}): FrontDoorRenderResult {
   return renderWithFrontDoor(<ContentPage pageKey={pageKey} />, { pageContent: createFakePageContentService(), ...options });
@@ -216,5 +217,165 @@ describe('ContentPage', () => {
     expect(blockTypes(container)).toEqual(['paragraph', 'cards', 'piece', 'cards']);
     expect(container.querySelector('.ai-page-block--piece > .ai-usage-section')).not.toBeNull();
     expect(container.querySelector('.ai-home-grid')).toBeNull();
+  });
+});
+
+/** A one-page document whose page carries whatever the case under test needs (plan step 22). */
+function audienceDocument(page: { [key: string]: unknown }): IPageDocument {
+  return parsePageDocument(JSON.stringify({ version: 1, pages: { startHere: { title: 'Start here', ...page } } })) as IPageDocument;
+}
+
+function documentService(document: IPageDocument): ReturnType<typeof createFakePageContentService> {
+  return createFakePageContentService({ connected: true, message: 'ok', document });
+}
+
+describe('ContentPage: audience-conditioned blocks', () => {
+  const DOCUMENT: IPageDocument = audienceDocument({
+    blocks: [
+      { type: 'paragraph', text: 'What this site is for.' },
+      { type: 'cards', columns: 2, audience: ['leader'], items: [{ title: 'Decisions waiting on you', body: ['Two requests.'], tone: 'teal' }] }
+    ]
+  });
+
+  it('shows a block to the role it is written for and leaves it out for everyone else', async () => {
+    const leader = renderPage('startHere', { pageContent: documentService(DOCUMENT), roles: ['employee', 'leader'] });
+    await screen.findByText('What this site is for.');
+    expect(blockTypes(leader.container)).toEqual(['paragraph', 'cards']);
+    expect(screen.getByRole('heading', { level: 3, name: 'Decisions waiting on you' })).toBeInTheDocument();
+    expect(leader.container.querySelector('p.ai-page-role-note')).toBeNull();
+    leader.unmount();
+
+    const { container } = renderPage('startHere', { pageContent: documentService(DOCUMENT), roles: ['employee'] });
+    await screen.findByText('What this site is for.');
+    expect(blockTypes(container)).toEqual(['paragraph']);
+    expect(screen.queryByText('Decisions waiting on you')).not.toBeInTheDocument();
+    // The membership was read and the role is simply not held: there is nothing to explain.
+    expect(container.querySelector('p.ai-page-role-note')).toBeNull();
+  });
+
+  it('resolves a route that names roles against the roles the reader holds', async () => {
+    const document: IPageDocument = parsePageDocument(
+      JSON.stringify({
+        version: 1,
+        routes: {
+          guidedIntake: { label: 'Start a guided request', href: 'SitePages/Explore-an-AI-idea.aspx', state: 'availableNow' },
+          value: { label: 'Enterprise value', href: 'SitePages/Enterprise-value.aspx', state: 'availableNow', roles: ['leader', 'operator'] }
+        },
+        pages: { startHere: { title: 'Start here', blocks: [{ type: 'tiles', items: [{ title: 'Enterprise value', route: 'value' }] }] } }
+      })
+    ) as IPageDocument;
+    const settings = { view: 'page' as const, layout: 'wide' as const, pages: {}, pageKey: 'startHere' };
+    const leader = renderWithFrontDoor(<PageViewShell settings={settings} />, {
+      pageContent: documentService(document),
+      roleResolver: createFakeRoleResolver({ roles: ['employee', 'leader'], resolution: 'resolved' })
+    });
+    expect(await leader.findByRole('link', { name: /Enterprise value/ })).toHaveAttribute('href', `${TEST_SITE_URL}/SitePages/Enterprise-value.aspx`);
+    leader.unmount();
+
+    const { container } = renderWithFrontDoor(<PageViewShell settings={settings} />, {
+      pageContent: documentService(document),
+      roleResolver: createFakeRoleResolver({ roles: ['employee'], resolution: 'resolved' })
+    });
+    await screen.findByText('Needs access');
+    expect(container.querySelector('div.ai-service-card--closed')).not.toBeNull();
+    expect(screen.queryByRole('link', { name: /Enterprise-value/ })).not.toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /Start a guided request/ })).toHaveAttribute('href', `${TEST_SITE_URL}/SitePages/Explore-an-AI-idea.aspx`);
+  });
+
+  it('says why a section is not there when the membership could not be confirmed', async () => {
+    const { container } = renderPage('startHere', { pageContent: documentService(DOCUMENT), roles: ['employee'], rolesState: 'unresolved' });
+    await screen.findByText('What this site is for.');
+    expect(blockTypes(container)).toEqual(['paragraph']);
+    expect(container.querySelector('p.ai-page-role-note')?.textContent).toBe(ROLE_NOTE_TEXT);
+    expect(ROLE_NOTE_TEXT).toBe('Some sections are not shown because your role could not be confirmed.');
+  });
+
+  it('keeps quiet while the roles are still on their way, and on a page that conditions nothing', async () => {
+    const pending = renderPage('startHere', { pageContent: documentService(DOCUMENT), rolesState: 'pending' });
+    await screen.findByText('What this site is for.');
+    expect(blockTypes(pending.container)).toEqual(['paragraph']);
+    expect(pending.container.querySelector('p.ai-page-role-note')).toBeNull();
+    pending.unmount();
+
+    const plain: IPageDocument = audienceDocument({ blocks: [{ type: 'paragraph', text: 'What this site is for.' }] });
+    const { container } = renderPage('startHere', { pageContent: documentService(plain), rolesState: 'unresolved' });
+    await screen.findByText('What this site is for.');
+    expect(container.querySelector('p.ai-page-role-note')).toBeNull();
+  });
+});
+
+describe('ContentPage: protected pages', () => {
+  const OPERATOR_PAGE: IPageDocument = audienceDocument({
+    requiredRole: ['operator'],
+    plane: 'operator',
+    blocks: [
+      { type: 'paragraph', text: 'What the operators watch.' },
+      { type: 'piece', piece: 'home' }
+    ]
+  });
+
+  it('shows the protected text alone to a person without the role, and mounts no piece', async () => {
+    const draftStore: InMemoryDraftStore = new InMemoryDraftStore();
+    await draftStore.save('idea', { answers: { workToImprove: 'Reports' }, currentStepId: 'painPoints', phase: 'form' });
+    const { container } = renderPage('startHere', { pageContent: documentService(OPERATOR_PAGE), roles: ['employee'], draftStore });
+    await screen.findByText('This page is for the AI CoE operator role and is not available to you.');
+    expect(container.querySelectorAll('.ai-page-block')).toHaveLength(0);
+    expect(screen.queryByText('What the operators watch.')).not.toBeInTheDocument();
+    expect(container.querySelector('.ai-home-grid')).toBeNull();
+    expect(screen.queryByText('Resume draft')).not.toBeInTheDocument();
+    expect(container.querySelector('p.ai-page-role-note')).toBeNull();
+  });
+
+  it('opens a page that names two roles to whoever holds either of them', async () => {
+    const document: IPageDocument = audienceDocument({ requiredRole: ['leader', 'operator'], blocks: [{ type: 'paragraph', text: 'Enterprise value.' }] });
+    const { container } = renderPage('startHere', { pageContent: documentService(document), roles: ['employee', 'operator'] });
+    await screen.findByText('Enterprise value.');
+    expect(blockTypes(container)).toEqual(['paragraph']);
+    expect(screen.queryByText(/is not available to you/)).not.toBeInTheDocument();
+  });
+
+  it('keeps a protected page shut while the membership is unread, and takes its wording from the document', async () => {
+    const unread = renderPage('startHere', { pageContent: documentService(OPERATOR_PAGE), rolesState: 'unresolved' });
+    await screen.findByText('This page is for the AI CoE operator role and is not available to you.');
+    unread.unmount();
+
+    const named: IPageDocument = parsePageDocument(
+      JSON.stringify({
+        version: 1,
+        vocabulary: { chrome: { protectedPage: 'Ask the {role} team for this page.' }, roles: { operator: 'Service desk' } },
+        pages: { startHere: { title: 'Start here', requiredRole: 'operator', blocks: [{ type: 'paragraph', text: 'What the operators watch.' }] } }
+      })
+    ) as IPageDocument;
+    renderWithFrontDoor(<PageViewShell settings={{ view: 'page', layout: 'wide', pages: {}, pageKey: 'startHere' }} />, { pageContent: documentService(named) });
+    await screen.findByText('Ask the Service desk team for this page.');
+    expect(screen.queryByText('What the operators watch.')).not.toBeInTheDocument();
+  });
+
+  it('shows the code beside the plain words on an operator page, and the plain words alone on a user page', async () => {
+    const cases: { plane: string; code: boolean }[] = [
+      { plane: 'operator', code: true },
+      { plane: 'user', code: false }
+    ];
+    for (const item of cases) {
+      const document: IPageDocument = parsePageDocument(
+        JSON.stringify({
+          version: 1,
+          pages: {
+            startHere: {
+              title: 'Start here',
+              plane: item.plane,
+              blocks: [{ type: 'caseCards', items: [{ id: 'EXAMPLE-01', title: 'A worked example', state: 'READY_FOR_TRIAGE', illustrative: true }] }]
+            }
+          }
+        })
+      ) as IPageDocument;
+      const { container, unmount } = renderWithFrontDoor(<PageViewShell settings={{ view: 'page', layout: 'wide', pages: {}, pageKey: 'startHere' }} />, {
+        pageContent: documentService(document)
+      });
+      await screen.findByRole('heading', { level: 3, name: 'A worked example' });
+      expect(container.querySelector('.ai-pill .ai-pill-label')?.textContent).toBe('Received');
+      expect(container.querySelector('.ai-pill code.ai-pill-code')?.textContent ?? '').toBe(item.code ? 'READY_FOR_TRIAGE' : '');
+      unmount();
+    }
   });
 });

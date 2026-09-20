@@ -13,7 +13,7 @@ import { waitFor, within } from '@testing-library/react';
 import * as React from 'react';
 import { readTenantWords, findTenantWords } from '../provisioning/tenantWords';
 import type { ITenantWords } from '../provisioning/tenantWords';
-import { createFakePageContentService } from '../testing/fakeServices';
+import { createFakePageContentService, createFakeRoleResolver } from '../testing/fakeServices';
 import { createFakeListClient, InMemoryListStore } from '../testing/listStore';
 import type { IRecordedRequest } from '../testing/listStore';
 import { renderWithFrontDoor, TEST_SITE_URL, TEST_USER } from '../testing/renderWithFrontDoor';
@@ -25,6 +25,7 @@ import type { IPageDocument } from '../webparts/aiCoeFrontDoor/content/pageConte
 import type { IFrontDoorUser } from '../webparts/aiCoeFrontDoor/context/FrontDoorContext';
 import { DECISIONS_LIST_TITLE, INTAKES_LIST_TITLE, OWN_ITEMS_LISTS, OWN_ITEMS_SECURITY, USE_CASES_LIST_TITLE } from '../webparts/aiCoeFrontDoor/services/lists';
 import { MyWorkService } from '../webparts/aiCoeFrontDoor/services/myWorkService';
+import type { IRoleResolution } from '../webparts/aiCoeFrontDoor/services/roleResolver';
 
 const ADA: IFrontDoorUser = { displayName: 'Ada Example', email: 'ada@contoso.com' };
 const PAT_REFERENCE: string = 'OVT-AICOE-20260901-PATPAT01';
@@ -62,6 +63,22 @@ const DOCUMENT: IPageDocument = parsePageDocument(
           { type: 'paragraph', text: 'What is true today.' },
           { type: 'piece', piece: 'myWork' }
         ]
+      },
+      // The same piece on a page written for the operator role: nobody without it may see even the request count.
+      operations: {
+        title: 'Operations',
+        plane: 'operator',
+        requiredRole: ['operator'],
+        blocks: [
+          { type: 'paragraph', text: 'What the operators watch.' },
+          { type: 'piece', piece: 'myWork' },
+          {
+            type: 'statusStrip',
+            items: [{ kind: 'myRequests', label: 'My requests', href: 'SitePages/Status.aspx' }],
+            emptyText: EMPTY_TEXT,
+            unavailableText: UNAVAILABLE_TEXT
+          }
+        ]
       }
     }
   })
@@ -93,13 +110,14 @@ interface IRun extends FrontDoorRenderResult {
 }
 
 /** Renders one page of the document as the given person, over the real my-work service and the store. */
-function renderPage(pageKey: 'startHere' | 'status', store: InMemoryListStore, user: IFrontDoorUser): IRun {
+function renderPage(pageKey: 'startHere' | 'status' | 'operations', store: InMemoryListStore, user: IFrontDoorUser, roles?: IRoleResolution): IRun {
   const myWork: MyWorkService = new MyWorkService({ siteUrl: TEST_SITE_URL, user, client: createFakeListClient(store), configuration: 'v1' });
   const result: FrontDoorRenderResult = renderWithFrontDoor(React.createElement(PageViewShell, { settings: { view: 'page', layout: 'wide', pages: {}, pageKey } }), {
     pageContent: createFakePageContentService({ connected: true, message: 'ok', document: DOCUMENT }),
     myWork,
     user,
-    pageView: true
+    pageView: true,
+    roleResolver: createFakeRoleResolver(roles ?? { roles: ['employee'], resolution: 'resolved' })
   });
   return { ...result, store };
 }
@@ -142,6 +160,51 @@ describe('Negative access: the lists under item-level security', () => {
     expect(OWN_ITEMS_LISTS).toEqual([INTAKES_LIST_TITLE, USE_CASES_LIST_TITLE]);
     expect(OWN_ITEMS_LISTS).toEqual(['AI CoE Pilot Intakes', 'AI CoE Use Cases']);
     expect(OWN_ITEMS_SECURITY).toBe('ownItems');
+  });
+});
+
+describe('Negative access: a page written for a role', () => {
+  it('asks the list for nothing at all when the reader does not hold the role', async () => {
+    const store: InMemoryListStore = newStore();
+    seedBoth(store);
+    const { container } = renderPage('operations', store, TEST_USER);
+    await within(container).findByText('This page is for the AI CoE operator role and is not available to you.');
+    // The piece and the strip are never mounted, so neither asks: the refusal costs the server nothing.
+    expect(store.requests).toEqual([]);
+    expect(intakeReads(store)).toHaveLength(0);
+    expect(container.textContent).not.toContain(PAT_REFERENCE);
+    expect(container.textContent).not.toContain('What the operators watch.');
+    expect(within(container).queryAllByRole('article')).toHaveLength(0);
+    expect(container.textContent).not.toMatch(/\d+ received/);
+    expectCleanDom(container);
+    // The rows are still on the server: this page is chrome, and the list's own permissions are the control.
+    expect(store.items(INTAKES_LIST_TITLE)).toHaveLength(2);
+  });
+
+  it('reads the list once for a reader who does hold the role', async () => {
+    const store: InMemoryListStore = newStore();
+    seedBoth(store);
+    store.trimTo(TEST_USER.email);
+    const { container } = renderPage('operations', store, TEST_USER, { roles: ['employee', 'operator'], resolution: 'resolved' });
+    const rows: HTMLElement[] = await within(container).findAllByRole('article');
+    expect(rows).toHaveLength(1);
+    expect(within(rows[0]).getByText(PAT_REFERENCE)).toBeInTheDocument();
+    // The piece and the strip each ask once, and each asks only for this person's rows.
+    const reads: IRecordedRequest[] = intakeReads(store);
+    expect(reads).toHaveLength(2);
+    expect(reads.map((request: IRecordedRequest): unknown => request.query.$filter)).toEqual([
+      `RequestorEmail eq '${TEST_USER.email}'`,
+      `RequestorEmail eq '${TEST_USER.email}'`
+    ]);
+    expect(container.textContent).not.toContain('is not available to you');
+  });
+
+  it('keeps the page shut while the membership cannot be read, and asks for nothing then either', async () => {
+    const store: InMemoryListStore = newStore();
+    seedBoth(store);
+    const { container } = renderPage('operations', store, TEST_USER, { roles: ['employee'], resolution: 'unresolved' });
+    await within(container).findByText('This page is for the AI CoE operator role and is not available to you.');
+    expect(store.requests).toEqual([]);
   });
 });
 

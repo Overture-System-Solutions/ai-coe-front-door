@@ -1,5 +1,7 @@
 import * as React from 'react';
+import { usePageDocument } from '../components/pages/PageDocumentContext';
 import { pageIcon } from '../content/pageIcons';
+import type { PagePlane } from '../content/pageContent';
 import { chromeLabel, chromePill, truthState } from '../content/truthStates';
 import type { ChromePillKey, IChromePill, ITruthState, TruthStateKey, TruthTone } from '../content/truthStates';
 import type { LucideIcon } from '../icons';
@@ -14,8 +16,9 @@ export interface IStatusPillProps {
   state: PillState;
   /** Wording that replaces the state's own label (a document vocabulary override, for example); blank keeps the default. */
   label?: string;
-  /** The underlying code (a canonical status, an activation code); shown only with `showCode`, on the operator plane. */
+  /** The underlying code (a canonical status, an activation code); shown on the operator plane. */
   code?: string;
+  /** Overrides the plane of the page it sits on; the operator plane shows the code, the user plane never does. */
   showCode?: boolean;
 }
 
@@ -40,13 +43,16 @@ function trimmed(value: string | undefined): string {
 
 /**
  * A state as text plus an icon shape in a toned span, so the meaning never rests on colour alone.
- * The pill is not interactive and carries no role: it labels the fact next to it.
+ * The pill is not interactive and carries no role: it labels the fact next to it. The plain words are
+ * what the user plane reads; the code behind them belongs to the operator plane, so the page the pill
+ * sits on decides whether it appears, exactly as the request-status pill does.
  */
 export function StatusPill({ state, label, code, showCode }: IStatusPillProps): React.ReactElement {
+  const { plane }: { plane: PagePlane } = usePageDocument();
   const look: IPillLook = lookOf(state);
   const Icon: LucideIcon = pageIcon(look.icon);
   const text: string = trimmed(label) === '' ? look.label : trimmed(label);
-  const shownCode: string = showCode === true ? trimmed(code) : '';
+  const shownCode: string = (showCode ?? plane === 'operator') ? trimmed(code) : '';
   return (
     <span className={`ai-pill ai-pill--${look.tone}`}>
       <Icon aria-hidden="true" focusable="false" />

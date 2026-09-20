@@ -56,6 +56,18 @@ describe('PageDocumentContext', () => {
     expect(createPageDocumentContext({ now: fixed, roles: ['leader'] }).roles).toEqual(['leader']);
   });
 
+  it('reads the membership behind the roles as answered when roles are given and as unread when they are not', () => {
+    // Outside a provider nothing was read: a page may then say so rather than show less without a word.
+    expect(createPageDocumentContext().rolesState).toBe('unresolved');
+    expect(createPageDocumentContext({ roles: ['employee', 'leader'] }).rolesState).toBe('resolved');
+    expect(createPageDocumentContext({ roles: ['employee'], rolesState: 'unresolved' }).rolesState).toBe('unresolved');
+    expect(createPageDocumentContext({ rolesState: 'pending' }).rolesState).toBe('pending');
+    const host: IPageDocumentContextValue = createPageDocumentContext({ roles: ['employee'], rolesState: 'unresolved' });
+    const carried: IPageDocumentContextValue = documentContext({ version: 1, pages: {} }, undefined, host);
+    expect(carried.roles).toEqual(['employee']);
+    expect(carried.rolesState).toBe('unresolved');
+  });
+
   it('is readable outside a provider with the defaults', () => {
     render(<Probe />);
     expect(screen.getByText(/^0 routes; plane user; now .*; freshness 30; footer 0$/)).toBeInTheDocument();

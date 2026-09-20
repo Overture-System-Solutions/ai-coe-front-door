@@ -8,6 +8,7 @@ import type { TelemetryProvider } from '../webparts/aiCoeFrontDoor/content/telem
 import type { RouteTable } from '../webparts/aiCoeFrontDoor/content/routes';
 import { createWorkflowCatalog } from '../webparts/aiCoeFrontDoor/content/workflows/catalog';
 import { createPageDocumentContext, PageDocumentProvider } from '../webparts/aiCoeFrontDoor/components/pages/PageDocumentContext';
+import type { RoleMembershipState } from '../webparts/aiCoeFrontDoor/components/pages/PageDocumentContext';
 import { FrontDoorProvider } from '../webparts/aiCoeFrontDoor/context/FrontDoorContext';
 import type { IFrontDoorContextValue, IFrontDoorUser } from '../webparts/aiCoeFrontDoor/context/FrontDoorContext';
 import { SubmissionProvider } from '../webparts/aiCoeFrontDoor/context/SubmissionContext';
@@ -54,6 +55,8 @@ export interface ITestFrontDoorOptions {
   routes?: RouteTable;
   /** Role ids the person holds; none by default. */
   roles?: string[];
+  /** How the membership behind those roles stands; read when roles are given, unread when they are not. */
+  rolesState?: RoleMembershipState;
   /** True to render as a page view (the receipt, the failure notice, the kept drafts); the legacy view by default. */
   pageView?: boolean;
   /** The shared sections of the document (the footer with the support route); empty by default. */
@@ -113,6 +116,7 @@ export function renderWithFrontDoor(ui: React.ReactElement, options: ITestFrontD
             now: options.now,
             routes: options.routes,
             roles: options.roles,
+            rolesState: options.rolesState,
             shared: options.shared,
             plane: options.plane,
             vocabulary: options.vocabulary,

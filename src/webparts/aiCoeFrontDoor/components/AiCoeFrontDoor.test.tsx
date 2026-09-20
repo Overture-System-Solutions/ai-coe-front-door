@@ -100,7 +100,8 @@ describe('AiCoeFrontDoor', () => {
 
   it('announces the signed-in person once in a page view, as the visible identity line and not the hidden span', async () => {
     const section: HTMLElement = renderRoot(false, { pageView: { view: 'feedback', layout: 'wide', pages: {} } });
-    const lines: HTMLElement[] = screen.getAllByText('Signed in as Pat Example');
+    // The page view names the role beside the person; with no resolver behind it, the line says the role is not set.
+    const lines: HTMLElement[] = screen.getAllByText('Signed in as Pat Example · role not set');
     expect(lines).toHaveLength(1);
     expect(lines[0]).toHaveClass('ai-page-identity');
     expect(lines[0].tagName).toBe('P');

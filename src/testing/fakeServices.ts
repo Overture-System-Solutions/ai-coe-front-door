@@ -7,6 +7,7 @@ import type { IIdeaDraftResult, IIdeaDraftService } from '../webparts/aiCoeFront
 import type { IDraftStore } from '../webparts/aiCoeFrontDoor/services/draftStorage';
 import type { IMyWorkResult, IMyWorkService } from '../webparts/aiCoeFrontDoor/services/myWorkService';
 import type { IPageContentResult, IPageContentService } from '../webparts/aiCoeFrontDoor/services/pageContentService';
+import type { IRoleResolution, IRoleResolver } from '../webparts/aiCoeFrontDoor/services/roleResolver';
 import { createToolPolicyEvaluator } from '../webparts/aiCoeFrontDoor/services/toolPolicyEvaluator';
 import type { IToolPolicyEvaluator } from '../webparts/aiCoeFrontDoor/services/toolPolicyEvaluator';
 import type {
@@ -144,6 +145,22 @@ export function createFakeMyWorkService(result: IMyWorkResult | Promise<IMyWorkR
 /** Never answers: for asserting the loading state of the my-work piece and the status strip. */
 export function createPendingMyWorkService(): IFakeMyWorkService {
   return createFakeMyWorkService(new Promise<IMyWorkResult>((): void => undefined));
+}
+
+export interface IFakeRoleResolver extends IRoleResolver {
+  calls: number;
+}
+
+/** Answers with the given membership on every call, as the real resolver does after its one read. */
+export function createFakeRoleResolver(resolution: IRoleResolution | Promise<IRoleResolution>): IFakeRoleResolver {
+  const resolver: IFakeRoleResolver = {
+    calls: 0,
+    resolve: async (): Promise<IRoleResolution> => {
+      resolver.calls += 1;
+      return resolution;
+    }
+  };
+  return resolver;
 }
 
 /** Draft store that keeps JSON copies in memory, so tests see exactly what localStorage would. */

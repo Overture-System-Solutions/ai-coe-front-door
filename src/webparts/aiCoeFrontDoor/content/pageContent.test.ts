@@ -221,6 +221,26 @@ describe('document envelope', () => {
     expect(pagePlane(pages.operations)).toBe('operator');
     expect(pagePlane(pages.learn)).toBe('user');
   });
+
+  it('reads the required role of a page as one id or a list of them, and drops a blank one', () => {
+    const document: IPageDocument | undefined = parsePageDocument(
+      JSON.stringify({
+        version: 1,
+        pages: {
+          operations: { title: 'Operations', requiredRole: 'operator', blocks: [] },
+          value: { title: 'Enterprise value', requiredRole: [' leader ', 'operator', '', 4], blocks: [] },
+          learn: { title: 'Learn', requiredRole: [], blocks: [] },
+          status: { title: 'Status', requiredRole: 7, blocks: [] }
+        }
+      })
+    );
+    const pages: { [key: string]: IContentPage } = (document as IPageDocument).pages;
+    expect(pages.operations).toEqual({ title: 'Operations', blocks: [], requiredRole: ['operator'] });
+    expect(pages.value).toEqual({ title: 'Enterprise value', blocks: [], requiredRole: ['leader', 'operator'] });
+    // Nothing to satisfy is an open page: an empty list and a malformed value leave the page as it was.
+    expect(pages.learn).toEqual({ title: 'Learn', blocks: [] });
+    expect(pages.status).toEqual({ title: 'Status', blocks: [] });
+  });
 });
 
 describe('blocks', () => {
@@ -229,6 +249,19 @@ describe('blocks', () => {
     expect(parseBlock('hero')).toBeUndefined();
     expect(parseBlock({})).toBeUndefined();
     expect(parseBlock({ type: 'unknown', text: 'x' })).toBeUndefined();
+  });
+
+  it('carries the audience of any block as role ids, and leaves an absent or malformed one out', () => {
+    expect(parseBlock({ type: 'paragraph', text: 'For leaders.', audience: [' leader ', 'operator', '', 4] })).toEqual({
+      type: 'paragraph',
+      text: 'For leaders.',
+      audience: ['leader', 'operator']
+    });
+    expect(parseBlock({ type: 'heading', level: 2, text: 'Decisions', audience: ['leader'] })).toEqual({ type: 'heading', level: 2, text: 'Decisions', audience: ['leader'] });
+    // An audience nobody can hold is still an audience: the block waits for a role rather than showing itself.
+    expect(parseBlock({ type: 'paragraph', text: 'x', audience: ['auditor'] })).toEqual({ type: 'paragraph', text: 'x', audience: ['auditor'] });
+    expect(parseBlock({ type: 'paragraph', text: 'x', audience: [] })).toEqual({ type: 'paragraph', text: 'x' });
+    expect(parseBlock({ type: 'paragraph', text: 'x', audience: 'leader' })).toEqual({ type: 'paragraph', text: 'x' });
   });
 
   it('reads a hero with its optional badge, text and call to action', () => {

@@ -307,6 +307,8 @@ describe('Page view stylesheet', () => {
     expect(rule(table, '.ai-view .ai-page-header')).toEqual(['margin:0']);
     expect(rule(table, '.ai-view .ai-page-identity')).toEqual(['color:#5b6878', 'font-size:13px', 'line-height:1.4', 'margin:0 0 16px']);
     expect(shipped.indexOf('#5b6878')).toBeGreaterThan(-1);
+    // The role note sits below the blocks in the same quiet ink, so it reads as chrome and not as content.
+    expect(rule(table, '.ai-view .ai-page-role-note')).toEqual(['color:#5b6878', 'font-size:13px', 'line-height:1.4', 'margin:16px 0 0']);
   });
 
   it('draws the status pill as text plus an icon shape in every page view', () => {

@@ -4,6 +4,7 @@
  */
 import { render } from '@testing-library/react';
 import * as React from 'react';
+import { renderWithFrontDoor } from '../../../testing/renderWithFrontDoor';
 import { StatusPill } from './StatusPill';
 import type { PillState } from './StatusPill';
 
@@ -95,6 +96,20 @@ describe('StatusPill', () => {
 
     const blankCode = render(<StatusPill state="needsAccess" code="  " showCode={true} />);
     expect(pillOf(blankCode.container).querySelector('code')).toBeNull();
+  });
+
+  it('shows the code on an operator page and never on a user page, without being asked', () => {
+    const operator = renderWithFrontDoor(<StatusPill state="needsAccess" code="AWAITING_SOURCE" />, { plane: 'operator' });
+    expect(pillOf(operator.container).querySelector('code.ai-pill-code')?.textContent).toBe('AWAITING_SOURCE');
+    operator.unmount();
+
+    const user = renderWithFrontDoor(<StatusPill state="needsAccess" code="AWAITING_SOURCE" />, { plane: 'user' });
+    expect(pillOf(user.container).querySelector('code')).toBeNull();
+    user.unmount();
+
+    // A caller may still decide for itself; the legacy view, which sits outside any page, keeps the user plane.
+    const quiet = renderWithFrontDoor(<StatusPill state="needsAccess" code="AWAITING_SOURCE" showCode={false} />, { plane: 'operator' });
+    expect(pillOf(quiet.container).querySelector('code')).toBeNull();
   });
 
   it('carries no interactive role and no colour-only signal', () => {

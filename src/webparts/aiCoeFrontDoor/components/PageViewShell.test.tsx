@@ -1,6 +1,6 @@
 import { act, fireEvent, screen, waitFor, within } from '@testing-library/react';
 import * as React from 'react';
-import { createFakePageContentService, createFakeUsageService, InMemoryDraftStore } from '../../../testing/fakeServices';
+import { createFakePageContentService, createFakeRoleResolver, createFakeUsageService, InMemoryDraftStore } from '../../../testing/fakeServices';
 import { renderWithFrontDoor, TEST_SITE_URL } from '../../../testing/renderWithFrontDoor';
 import type { FrontDoorRenderResult, ITestFrontDoorOptions } from '../../../testing/renderWithFrontDoor';
 import { firstStepOf } from '../../../testing/workflowHarness';
@@ -9,6 +9,7 @@ import type { IPageDocument } from '../content/pageContent';
 import type { FrontDoorView, IPageViewSettings } from '../content/pageViews';
 import { createWorkflowCatalog, WORKFLOW_ORDER } from '../content/workflows/catalog';
 import type { IFrontDoorUser } from '../context/FrontDoorContext';
+import type { IRoleResolution } from '../services/roleResolver';
 import type { IWorkflowCatalog } from '../workflows/types';
 import { NO_PAGE_KEY_TEXT } from './pages/ContentPage';
 import { ADMIN_ONLY_TEXT, DEFAULT_CHROME_BADGE, PageViewShell, UNCONFIGURED_VIEW_TEXT } from './PageViewShell';
@@ -71,7 +72,7 @@ describe('PageViewShell', () => {
     expect(badge.textContent).toBe(DEFAULT_CHROME_BADGE);
     expect(badge.textContent).toBe('Governed intake');
     expect(screen.queryByText('Governed intake · SharePoint connected')).not.toBeInTheDocument();
-    expect(container.querySelector('p.ai-page-identity')?.textContent).toBe('Signed in as Ada Contoso');
+    expect(container.querySelector('p.ai-page-identity')?.textContent).toBe('Signed in as Ada Contoso · role not set');
     expect(screen.getByRole('heading', { level: 1, name: catalog.idea.title })).toBeInTheDocument();
     await firstStepOf(catalog.idea);
     expect(screen.queryByText('AI, safely put to work.')).not.toBeInTheDocument();
@@ -108,7 +109,7 @@ describe('PageViewShell', () => {
       const region: HTMLElement = container.querySelector('.ai-home-shell > div[role="region"]') as HTMLElement;
       expect(region).toHaveAttribute('aria-label', item.label);
       expect(container.querySelector('main')).toBeNull();
-      expect(container.querySelector('p.ai-page-identity')?.textContent).toBe('Signed in as Ada Contoso');
+      expect(container.querySelector('p.ai-page-identity')?.textContent).toBe('Signed in as Ada Contoso · role not set');
       expect(container.querySelectorAll('.ai-page-identity')).toHaveLength(1);
       expect(container.querySelector('.overture-badge')).toBeNull();
       if (item.settings.view === 'telemetry') {
@@ -218,12 +219,54 @@ describe('PageViewShell', () => {
     expect(container.querySelector('.ai-home-shell > div[role="region"] > .ai-home.ai-page > .ai-page-block--hero')).not.toBeNull();
     expect(container.querySelector('main')).toBeNull();
     expect(screen.getByRole('region', { name: 'Start here' })).toBe(container.querySelector('.ai-home-shell > div[role="region"]'));
-    expect(container.querySelector('p.ai-page-identity')?.textContent).toBe('Signed in as Ada Contoso');
+    expect(container.querySelector('p.ai-page-identity')?.textContent).toBe('Signed in as Ada Contoso · role not set');
     expect(container.querySelectorAll('.ai-page-identity')).toHaveLength(1);
     expect(container.querySelector('.ai-workflow-shell')).toBeNull();
     expect(container.querySelector('.overture-badge')).toBeNull();
     expect(screen.queryByText('AI CoE Lab')).not.toBeInTheDocument();
     expect(screen.queryByText('AI, safely put to work.')).not.toBeInTheDocument();
+  });
+
+  it('names the role of the signed-in person on the identity line, from the site groups alone', async () => {
+    const { container } = renderView(settingsFor('page', { pageKey: 'startHere' }), {
+      pageContent: createFakePageContentService(),
+      user: ADA,
+      roleResolver: createFakeRoleResolver({ roles: ['employee', 'leader'], resolution: 'resolved' })
+    });
+    await screen.findByRole('heading', { level: 1, name: 'What do you need done?' });
+    await waitFor((): void => expect(container.querySelector('p.ai-page-identity')?.textContent).toBe('Signed in as Ada Contoso · Leader'));
+    expect(container.querySelectorAll('.ai-page-identity')).toHaveLength(1);
+  });
+
+  it('says the role is not set when the membership names none and when it could not be read', async () => {
+    const cases: IRoleResolution[] = [
+      { roles: ['employee'], resolution: 'resolved' },
+      { roles: ['employee'], resolution: 'unresolved' }
+    ];
+    for (const resolution of cases) {
+      const { container, unmount } = renderView(settingsFor('page', { pageKey: 'startHere' }), {
+        pageContent: createFakePageContentService(),
+        user: ADA,
+        roleResolver: createFakeRoleResolver(resolution)
+      });
+      await screen.findByRole('heading', { level: 1, name: 'What do you need done?' });
+      await waitFor((): void => expect(container.querySelector('p.ai-page-identity')?.textContent).toBe('Signed in as Ada Contoso · role not set'));
+      unmount();
+    }
+  });
+
+  it('takes the role wording from the document vocabulary', async () => {
+    const document: IPageDocument = {
+      ...FOOTER_DOCUMENT,
+      vocabulary: { truthStates: {}, requestStatuses: {}, chrome: {}, roles: { operator: 'Service desk' }, telemetry: {} }
+    };
+    const { container } = renderView(settingsFor('page', { pageKey: 'startHere' }), {
+      pageContent: createFakePageContentService({ connected: true, message: 'ok', document }),
+      user: ADA,
+      roleResolver: createFakeRoleResolver({ roles: ['employee', 'operator'], resolution: 'resolved' })
+    });
+    await screen.findByRole('heading', { level: 1, name: 'What do you need done?' });
+    await waitFor((): void => expect(container.querySelector('p.ai-page-identity')?.textContent).toBe('Signed in as Ada Contoso · Service desk'));
   });
 
   it('asks for a page key on a content page without one', () => {

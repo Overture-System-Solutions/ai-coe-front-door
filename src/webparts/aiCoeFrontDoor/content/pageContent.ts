@@ -91,13 +91,23 @@ export interface IFactFields {
   illustrative?: true;
 }
 
+/**
+ * What any block may say about who it is written for: role ids, any one of which shows it. A block
+ * without an audience is for everyone. The roles come from site group membership, so a block is a
+ * courtesy to the reader, never a protection: anything that must not be read is kept off the page by
+ * the site's own permissions.
+ */
+export interface IBlockAudience {
+  audience?: string[];
+}
+
 export interface IHeroCta extends IActionFields {
   label: string;
   /** Short line under the call to action. */
   note?: string;
 }
 
-export interface IHeroBlock {
+export interface IHeroBlock extends IBlockAudience {
   type: 'hero';
   title: string;
   /** The line under the title; in-text markup allowed. */
@@ -107,13 +117,13 @@ export interface IHeroBlock {
   cta?: IHeroCta;
 }
 
-export interface IHeadingBlock {
+export interface IHeadingBlock extends IBlockAudience {
   type: 'heading';
   level: 2 | 3;
   text: string;
 }
 
-export interface IParagraphBlock {
+export interface IParagraphBlock extends IBlockAudience {
   type: 'paragraph';
   /** In-text markup allowed. */
   text: string;
@@ -131,7 +141,7 @@ export interface ITileItem extends IActionFields {
   tone: CardTone;
 }
 
-export interface ITilesBlock {
+export interface ITilesBlock extends IBlockAudience {
   type: 'tiles';
   /** Present only when the tiles are the page's main choice: three to a row. */
   prominent?: true;
@@ -149,7 +159,7 @@ export interface ICardItem extends IActionFields, IFactFields {
   tone: CardTone;
 }
 
-export interface ICardsBlock {
+export interface ICardsBlock extends IBlockAudience {
   type: 'cards';
   columns: 2 | 3;
   items: ICardItem[];
@@ -163,7 +173,7 @@ export interface ILaneItem {
   badge?: string;
 }
 
-export interface ILanesBlock {
+export interface ILanesBlock extends IBlockAudience {
   type: 'lanes';
   items: ILaneItem[];
 }
@@ -174,7 +184,7 @@ export interface IStatusItem extends IActionFields, IFactFields {
   text: string;
 }
 
-export interface IStatusRowBlock {
+export interface IStatusRowBlock extends IBlockAudience {
   type: 'statusRow';
   items: IStatusItem[];
 }
@@ -183,7 +193,7 @@ export interface IStatusRowBlock {
 export type PieceKind = 'home' | 'telemetry' | 'myWork';
 export const PIECE_KINDS: readonly PieceKind[] = ['home', 'telemetry', 'myWork'];
 
-export interface IPieceBlock {
+export interface IPieceBlock extends IBlockAudience {
   type: 'piece';
   piece: PieceKind;
   /** Where the home tiles lead, as written in the document (site paths or full URLs). */
@@ -207,7 +217,7 @@ export interface IStatusStripItem extends IActionFields, IFactFields {
  * Short labelled lines side by side on the first screen, one of which may count the person's own
  * requests by plain status (read from the request list, never a number when the list cannot be read).
  */
-export interface IStatusStripBlock {
+export interface IStatusStripBlock extends IBlockAudience {
   type: 'statusStrip';
   items: IStatusStripItem[];
   /** Shown for the request count when the person has sent nothing. */
@@ -224,7 +234,7 @@ export const DEFAULT_STATUS_STRIP_UNAVAILABLE_TEXT: string = 'Status unavailable
  * carried to the route the block names (`work` by default) through the route list, so an unproved
  * destination fails closed to the guided intake with the sentence already filled in.
  */
-export interface IWorkCommandBlock {
+export interface IWorkCommandBlock extends IBlockAudience {
   type: 'workCommand';
   /** The question above the input, such as "What do you need done?". */
   prompt: string;
@@ -248,7 +258,7 @@ export const NOTICE_TONES: readonly NoticeTone[] = ['info', 'caution'];
 export const DEFAULT_NOTICE_TONE: NoticeTone = 'info';
 
 /** A short aside set apart from the page's prose: a boundary, a limit, a fact about what the site records. */
-export interface INoticeBlock {
+export interface INoticeBlock extends IBlockAudience {
   type: 'notice';
   tone: NoticeTone;
   title?: string;
@@ -264,7 +274,7 @@ export interface IRuleItem {
 }
 
 /** A short numbered (or bulleted) set of rules people are asked to keep, such as the three rules of the pilot. */
-export interface IRulesBlock {
+export interface IRulesBlock extends IBlockAudience {
   type: 'rules';
   title?: string;
   items: IRuleItem[];
@@ -294,7 +304,7 @@ export interface ISupportRouteItem {
  * The pilot's support route, shared by every page view: where to ask, when to stop and ask, what a
  * report should carry, and which owner each kind of issue goes to.
  */
-export interface ISupportRouteBlock {
+export interface ISupportRouteBlock extends IBlockAudience {
   type: 'supportRoute';
   /** The route, such as the pilot channel; a link when `href` is set, a plain label otherwise. */
   label: string;
@@ -334,7 +344,7 @@ export interface ICaseCardItem {
 }
 
 /** One card per case; a `source` naming a cases list is accepted and ignored until that list exists. */
-export interface ICaseCardsBlock {
+export interface ICaseCardsBlock extends IBlockAudience {
   type: 'caseCards';
   items: ICaseCardItem[];
 }
@@ -360,6 +370,12 @@ export interface IContentPage {
   blocks: PageBlock[];
   /** Present only when the page is written for operators; absent means the user plane. */
   plane?: PagePlane;
+  /**
+   * Role ids, any one of which opens the page; absent means everyone. The site's permissions are what
+   * actually keep a page shut (the script grants the same groups); this tells a person who does reach
+   * the page whose page it is, instead of drawing blocks that would only mislead them.
+   */
+  requiredRole?: string[];
 }
 
 /** The sections every page view shares: the footer rendered below the content, the wizards included. */
@@ -717,12 +733,25 @@ export function parseCaseCards(raw: Raw): ICaseCardsBlock | undefined {
   return items.length === 0 ? undefined : { type: 'caseCards', items };
 }
 
-/** Reads one block; undefined for anything that is not a well-formed block of a known type. */
+/**
+ * Reads one block; undefined for anything that is not a well-formed block of a known type. Any block
+ * may name the roles it is written for; a malformed or empty audience is left out, so the block stays
+ * a block for everyone rather than one nobody can see.
+ */
 export function parseBlock(value: unknown): PageBlock | undefined {
   const raw: Raw | undefined = asObject(value);
   if (raw === undefined) {
     return undefined;
   }
+  const block: PageBlock | undefined = parseTypedBlock(raw);
+  const audience: string[] = readStringList(raw.audience);
+  if (block !== undefined && audience.length > 0) {
+    block.audience = audience;
+  }
+  return block;
+}
+
+function parseTypedBlock(raw: Raw): PageBlock | undefined {
   switch (raw.type) {
     case 'hero':
       return parseHero(raw);
@@ -778,6 +807,12 @@ export function parseShared(value: unknown): ISharedSections {
 /** The plane a page names; anything but `operator` is the user plane. */
 export function readPlane(value: unknown): PagePlane {
   return readTone(PAGE_PLANES, value) ?? DEFAULT_PAGE_PLANE;
+}
+
+/** Role ids written as one id or a list of them; anything else is no requirement at all. */
+export function readRoleList(value: unknown): string[] {
+  const single: string | undefined = typeof value === 'string' ? readText(value) : undefined;
+  return single === undefined ? readStringList(value) : [single];
 }
 
 /** The plane of a parsed page (user unless the page says operator). */
@@ -872,6 +907,10 @@ function parsePage(value: unknown): IContentPage | undefined {
   const page: IContentPage = { title, blocks };
   if (readPlane(raw.plane) === 'operator') {
     page.plane = 'operator';
+  }
+  const requiredRole: string[] = readRoleList(raw.requiredRole);
+  if (requiredRole.length > 0) {
+    page.requiredRole = requiredRole;
   }
   return page;
 }
