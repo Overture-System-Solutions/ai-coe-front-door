@@ -44,6 +44,8 @@ function plainNumber(value: number): string {
 /**
  * The number as the tile reads it: a `%` measure written as a proportion (0.62) becomes 62%, one
  * already written as a percentage (62) stays 62%, and any other unit follows its number as a word.
+ * So 1 with the unit `%` is the whole and reads 100%; one percent is written 0.01. The convention is
+ * stated where the number is recorded: the measures list description in pages.json and the README.
  */
 function withUnit(value: number, unit: string | undefined): string {
   if (unit === PERCENT) {

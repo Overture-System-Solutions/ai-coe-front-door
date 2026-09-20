@@ -84,8 +84,11 @@ interface IPagesDefinition {
   vocabulary?: { [key: string]: unknown };
   /** Freshness and cohort settings, copied as written like the vocabulary. */
   settings?: { [key: string]: unknown };
-  /** The lists the script puts under item-level security (decision 6); the script's section, never part of the document. */
-  listSecurity: { title: string; security: string }[];
+  /**
+   * The lists the script puts under item-level security (decision 6); the script's section, never part of the
+   * document. `fullControlGroups` names the `group` parameters whose site groups read every row (1.0.0.14).
+   */
+  listSecurity: { title: string; security: string; fullControlGroups?: string[] }[];
   /** The lists the script creates and extends (decision 9, 1.0.0.14); the script's section too, never part of the document. */
   lists: IListDefinition[];
 }
@@ -1081,17 +1084,28 @@ describe('front door page definition', () => {
   });
 
   it('names the two intake lists for item-level security by the titles the web part writes to (decision 6)', () => {
-    // The script's "List security" section reads this: each person reads and edits their own rows; owners (and, once bound,
-    // operators) read every row. The titles are the constants the services write with, so a rename cannot drift.
+    // The script's "List security" section reads this: each person reads and edits their own rows; owners and the
+    // groups the entry names read every row. The titles are the constants the services write with, so a rename cannot drift.
     expect(definition.listSecurity).toEqual([
-      { title: INTAKES_LIST_TITLE, security: OWN_ITEMS_SECURITY },
-      { title: USE_CASES_LIST_TITLE, security: OWN_ITEMS_SECURITY }
+      { title: INTAKES_LIST_TITLE, security: OWN_ITEMS_SECURITY, fullControlGroups: ['OperatorsGroup'] },
+      { title: USE_CASES_LIST_TITLE, security: OWN_ITEMS_SECURITY, fullControlGroups: ['OperatorsGroup'] }
     ]);
     expect(definition.listSecurity.map((entry: { title: string }): string => entry.title)).toEqual(OWN_ITEMS_LISTS.slice());
     expect(OWN_ITEMS_LISTS).toEqual(['AI CoE Pilot Intakes', 'AI CoE Use Cases']);
+    // 1.0.0.14 promises an operator every request row, and ReadSecurity 2 trims anyone whose level withholds Override
+    // List Behaviors, so the operators group is granted Full Control here. Every name is a 'group' parameter, never a
+    // group title: the title belongs to the tenant's parameter file.
+    for (const entry of definition.listSecurity) {
+      const names: string[] = entry.fullControlGroups ?? [];
+      expect(names).toEqual(['OperatorsGroup']);
+      for (const name of names) {
+        expect({ list: entry.title, name, kind: definition.parameters[name]?.kind }).toEqual({ list: entry.title, name, kind: 'group' });
+      }
+    }
     // The section belongs to the script and never reaches the document the web part reads.
     expect(resolveDocument({})).not.toContain('listSecurity');
     expect(resolveDocument({})).not.toContain('ownItems');
+    expect(resolveDocument({})).not.toContain('fullControlGroups');
   });
 
   it('declares the lists the script creates, by title, column, type and flag (decision 9, 1.0.0.14)', () => {
@@ -1101,6 +1115,10 @@ describe('front door page definition', () => {
     const measures: IListDefinition = definition.lists[0];
     expect(measures.title).toBe('AI CoE Program Measures');
     expect(measures.description.length).toBeGreaterThan(40);
+    // The one convention an operator cannot guess from the columns: a `%` measure is written as a proportion, so the
+    // description says it where the row is filled in (`content/measures.ts` reads 0 to 1 as a proportion).
+    expect(measures.description).toContain('0.62 for 62%');
+    expect(measures.description).toContain('proportion');
     expect(measures.fields.map((field: IListField): string => `${field.name}:${field.type}`)).toEqual([
       'MeasureId:Text',
       'Value:Number',

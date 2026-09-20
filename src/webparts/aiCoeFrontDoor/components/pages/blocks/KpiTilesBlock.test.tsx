@@ -90,6 +90,33 @@ describe('KpiTilesBlock', () => {
     expect(tiles(container)).toHaveLength(3);
   });
 
+  it('reads a % value between 0 and 1 as a proportion: 0.62 is 62% and 1 is the whole, not one percent', async () => {
+    // The convention the AI CoE Program Measures list description and the README state, pinned here so the reading
+    // cannot drift: an operator who writes 1 in Value with Unit '%' has recorded everything, and the tile says 100%.
+    const { container } = renderWithFrontDoor(<KpiTilesBlock block={BLOCK} />, {
+      programMeasures: createFakeProgramMeasuresService(answered([MEASURED])),
+      now: NOW,
+      settings: SETTINGS
+    });
+    await screen.findByText('62%');
+    expect(valueOf(tiles(container)[0])).toBe('62%');
+    const whole = renderWithFrontDoor(<KpiTilesBlock block={BLOCK} />, {
+      programMeasures: createFakeProgramMeasuresService(answered([{ ...MEASURED, value: 1 }])),
+      now: NOW,
+      settings: SETTINGS
+    });
+    await within(whole.container).findByText('100%');
+    expect(valueOf(tiles(whole.container)[0])).toBe('100%');
+    // A value already written as a percentage is shown as it was written; neither reading invents a number.
+    const written = renderWithFrontDoor(<KpiTilesBlock block={BLOCK} />, {
+      programMeasures: createFakeProgramMeasuresService(answered([{ ...MEASURED, value: 62 }])),
+      now: NOW,
+      settings: SETTINGS
+    });
+    await within(written.container).findByText('62%');
+    expect(valueOf(tiles(written.container)[0])).toBe('62%');
+  });
+
   it('shows each placeholder as its plain words, with no digit and the evidence it is waiting for', async () => {
     const { container } = renderWithFrontDoor(<KpiTilesBlock block={BLOCK} />, {
       programMeasures: createFakeProgramMeasuresService(answered([PENDING, NOT_ESTABLISHED])),

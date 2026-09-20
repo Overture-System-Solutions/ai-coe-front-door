@@ -137,13 +137,13 @@
     }
   },
   "listSecurity": [
-    { "title": "AI CoE Pilot Intakes", "security": "ownItems" },
-    { "title": "AI CoE Use Cases", "security": "ownItems" }
+    { "title": "AI CoE Pilot Intakes", "security": "ownItems", "fullControlGroups": ["OperatorsGroup"] },
+    { "title": "AI CoE Use Cases", "security": "ownItems", "fullControlGroups": ["OperatorsGroup"] }
   ],
   "lists": [
     {
       "title": "AI CoE Program Measures",
-      "description": "One row per program measure the Enterprise value page reads: the measure, the period it covers, the evidence behind it and how many people it covers. Operators fill it in by hand; the front door only reads it, and a row that is not measured shows its plain placeholder instead of a number.",
+      "description": "One row per program measure the Enterprise value page reads: the measure, the period it covers, the evidence behind it and how many people it covers. Operators fill it in by hand; the front door only reads it, and a row that is not measured shows its plain placeholder instead of a number. A measure whose Unit is % is written as a proportion: 0.62 for 62%, and 1 for the whole, so a value between 0 and 1 is read as a share and a value above 1 is read as the percentage itself.",
       "fields": [
         { "name": "MeasureId", "type": "Text", "required": true, "indexed": true, "unique": true },
         { "name": "Value", "type": "Number" },

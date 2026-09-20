@@ -37,9 +37,12 @@ page shows each person exactly their own requests. SharePoint bypasses item-leve
 permission level holds Override List Behaviors (the Microsoft 365 permission reference lists it as Override Check-Out):
 the default Design and Full Control levels hold it, the default Edit level of the site Members group does not, so the
 script breaks the list's inheritance (keeping the existing grants), gives the site's Owners group Full Control, leaves
-the Members group at its level and sets ReadSecurity 2 / WriteSecurity 2. A list the site does not carry is skipped
-with a warning. The companion flows' connection must hold Override List Behaviors on both lists (Full Control, Design
-or a custom level); an Edit-level connection is trimmed to its own items.
+the Members group at its level and sets ReadSecurity 2 / WriteSecurity 2. Since 1.0.0.14 each entry may also name
+'fullControlGroups': the 'group' parameters whose site groups are given Full Control on that list too, so a person in
+the operators group who is not a site owner reads every row and not only the rows they sent. A group this site does
+not carry is reported and granted nothing, as a page permission that names it is. A list the site does not carry is
+skipped with a warning. The companion flows' connection must hold Override List Behaviors on both lists (Full Control,
+Design or a custom level); an Edit-level connection is trimmed to its own items.
 
 Lists (since 1.0.0.14): before the upload, every list named in the 'lists' section of pages.json (the program
 measures list the Enterprise value page reads) is ensured: a list the site does not carry is created as a generic
@@ -378,7 +381,9 @@ if ([string]::IsNullOrWhiteSpace($releaseId)) { $releaseId = [System.DateTime]::
 # holds Override List Behaviors (shown as Override Check-Out in the Microsoft 365 permission reference). The default
 # Design and Full Control levels hold it; the default Edit level of the site Members group does not. So: break the
 # list's inheritance keeping its grants (Set-PnPList; Set-PnPListPermission only adds or removes roles), give the Owners
-# group Full Control (they read every row, as the admin dashboard needs), leave the Members group at its level, then
+# group Full Control (they read every row, as the admin dashboard needs), give the same to every site group the
+# entry's 'fullControlGroups' names (1.0.0.14: the operators group, so an operator who is not a site owner reads every
+# row rather than only the rows they sent), leave the Members group at its level, then
 # set the two flags last, so a run that stops part-way never trims a list before the owners can read it. Rerunning
 # changes nothing: inheritance is broken once, and a role already held is not granted twice.
 # The role names come from the section above, resolved by kind so a site in another language gets the same levels.
@@ -389,6 +394,15 @@ foreach ($entry in $listSecurity) {
   $title = [string]$entry['title']
   if ([string]$entry['security'] -ne 'ownItems') {
     throw "List security for '$title' in pages.json names an unknown mode '$($entry['security'])'; expected 'ownItems'."
+  }
+  # The groups that read every row of this list, named as parameters and never as group titles, so nothing
+  # tenant-bound is committed. A name that is not a declared 'group' parameter is an authoring mistake in pages.json
+  # and stops the run before anything is changed, exactly as it does for a page's permissions.
+  $fullControlGroups = if ($entry.Contains('fullControlGroups')) { @($entry['fullControlGroups']) } else { @() }
+  foreach ($parameterName in $fullControlGroups) {
+    if (-not $kinds.ContainsKey($parameterName) -or $kinds[$parameterName] -ne 'group') {
+      throw "List security for '$title' names '$parameterName' in 'fullControlGroups', which is not a parameter of kind 'group' in pages.json."
+    }
   }
   # Only a list the site already carries: the intake list comes from the package feature, the use-case list from the
   # companion solution. Neither is created here.
@@ -404,6 +418,19 @@ foreach ($entry in $listSecurity) {
     Set-PnPList -Identity $title -BreakRoleInheritance -CopyRoleAssignments
   }
   Set-PnPListPermission -Identity $title -Group $owners -AddRole $fullControlRole
+  # Item-level security trims every principal whose permission level withholds Override List Behaviors, the site's
+  # owners included until the grant above; the same is true of an operator, so the role a page binds is given the list
+  # right that makes the operator view whole. A group that is blank, or that this site does not carry, was reported
+  # when the parameters were resolved: it is reported again here, against the list it would have read, and the run
+  # goes on with the list still secured.
+  foreach ($parameterName in $fullControlGroups) {
+    if (-not $siteGroups.ContainsKey($parameterName)) {
+      Write-Warning "The site group of '$parameterName' is not on this site; Full Control on '$title' not granted, so that role reads only its own rows."
+      continue
+    }
+    Set-PnPListPermission -Identity $title -Group $siteGroups[$parameterName] -AddRole $fullControlRole
+    Write-Host "  The site group of '$parameterName' holds $fullControlRole on $title and reads every row."
+  }
   if ($HardenMembers) {
     # Hardening only: Contribute removes Manage Lists (list design and view changes) from the Members group; it is not what makes read security work.
     # Read security rests on the Edit level withholding Override List Behaviors, which Contribute withholds as well.

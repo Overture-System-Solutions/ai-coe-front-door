@@ -510,15 +510,55 @@ describe('page provisioning script', () => {
     expect(grant).toBeLessThan(harden);
     expect(harden).toBeLessThan(flags);
     // The titles come from pages.json, which names the two intake lists; the script hard-codes none.
-    const definition: { listSecurity: { title: string; security: string }[] } = JSON.parse(fs.readFileSync(path.join(PAGES_DIR, 'pages.json'), 'utf8'));
+    const definition: { listSecurity: { title: string; security: string; fullControlGroups: string[] }[] } = JSON.parse(
+      fs.readFileSync(path.join(PAGES_DIR, 'pages.json'), 'utf8')
+    );
     expect(definition.listSecurity).toEqual([
-      { title: 'AI CoE Pilot Intakes', security: 'ownItems' },
-      { title: 'AI CoE Use Cases', security: 'ownItems' }
+      { title: 'AI CoE Pilot Intakes', security: 'ownItems', fullControlGroups: ['OperatorsGroup'] },
+      { title: 'AI CoE Use Cases', security: 'ownItems', fullControlGroups: ['OperatorsGroup'] }
     ]);
     expect(script).not.toContain('AI CoE Pilot Intakes');
     expect(script).not.toContain('AI CoE Use Cases');
     // The run summary reports what was secured and what was skipped.
     expect(script).toMatch(/List security:/);
+  });
+
+  it('grants every site group a listSecurity entry names Full Control on that list, after the owners grant (1.0.0.14)', () => {
+    // The 1.0.0.14 provisioning bullet and the README both say an operator reads every request row. ReadSecurity 2
+    // trims every principal whose permission level withholds Override List Behaviors, so the grant has to be made on
+    // the list itself: a person in the operators group who is not a site owner would otherwise see only the rows they
+    // sent, while the page and the README promised the whole queue.
+    const section: string = script.slice(script.indexOf('# List security'), script.indexOf('# Lists:'));
+    expect(section).toContain("'fullControlGroups'");
+    expect(section).toMatch(/Set-PnPListPermission -Identity \$title -Group \$siteGroups\[\$parameterName\] -AddRole \$fullControlRole/);
+    // The order inside the entry: the owners first, then the declared groups, then the two flags last.
+    const ownersGrant: number = section.indexOf('-Group $owners -AddRole $fullControlRole');
+    const groupGrant: number = section.indexOf('-Group $siteGroups[$parameterName] -AddRole $fullControlRole');
+    const flags: number = section.indexOf('-ReadSecurity 2 -WriteSecurity 2');
+    expect(ownersGrant).toBeGreaterThan(-1);
+    expect(ownersGrant).toBeLessThan(groupGrant);
+    expect(groupGrant).toBeLessThan(flags);
+    // A group this site does not carry is a warning and never a throw, exactly as a page that names it is: the list is
+    // still secured and the run goes on.
+    expect(section).toMatch(/if \(-not \$siteGroups\.ContainsKey\(\$parameterName\)\) \{[\s\S]{0,400}?Write-Warning[\s\S]{0,400}?continue/);
+    expect(section).toContain("Full Control on '$title' not granted");
+    // A name that is not a declared 'group' parameter is an authoring error in pages.json, as it is for a page.
+    expect(section).toContain("is not a parameter of kind 'group' in pages.json");
+    // The group names live in pages.json with the titles; the script carries neither.
+    const definition: { listSecurity: { title: string; fullControlGroups: string[] }[]; parameters: { [name: string]: { kind: string } } } = JSON.parse(
+      fs.readFileSync(path.join(PAGES_DIR, 'pages.json'), 'utf8')
+    );
+    for (const entry of definition.listSecurity) {
+      expect(entry.fullControlGroups).toEqual(['OperatorsGroup']);
+      for (const name of entry.fullControlGroups) {
+        expect(definition.parameters[name].kind).toBe('group');
+        expect(script).not.toContain(name);
+      }
+    }
+    // The script's own description says what the section now does, so an operator reading the header is not misled.
+    const header: string = script.slice(script.indexOf('List security (since 1.0.0.13)'), script.indexOf('Lists (since 1.0.0.14)'));
+    expect(header).toContain("'fullControlGroups'");
+    expect(header).toMatch(/Full Control[\s\S]{0,400}?reads every row|reads every row[\s\S]{0,400}?Full Control/);
   });
 
   it('ensures the declared lists before the upload: creates what is missing, adds the columns a list lacks, removes none', () => {
@@ -723,6 +763,9 @@ describe('README', () => {
     expect(deploy).toContain('OperatorsGroup');
     expect(deploy).toContain('Enterprise value');
     expect(deploy).toContain('AI CoE Program Measures');
+    // The sentence this release owes the tenant: an operator reads every request row, which the script's list-security
+    // section now actually grants (the `fullControlGroups` of each `listSecurity` entry).
+    expect(deploy).toMatch(/operators\s+group added to the two secured intake lists at Full Control/);
     // The upgrade path: the groups are created first, the script is run without -Overwrite, the properties move in place.
     expect(deploy).toMatch(/without `-Overwrite`/);
     expect(deploy).toMatch(/updated in place/);
@@ -753,6 +796,25 @@ describe('README', () => {
     // Manage Lists is never described as the bypass; the Members group stays at its level.
     expect(readme).not.toMatch(/Manage Lists[^.\n]*(bypass|is why|is what makes)/i);
     expect(readme).toMatch(/Members[^.\n]*(left|stays|stay) at (their|its) level/);
+    // 1.0.0.14: the operators group reads every row, granted from the entry's own declaration, not from the script.
+    expect(readme).toContain('`fullControlGroups`');
+    expect(readme).toMatch(/operators\s+group[\s\S]{0,200}?Full Control/i);
+    expect(readme).toMatch(/not on this site[\s\S]{0,200}?warning|warning[\s\S]{0,200}?not granted/i);
+  });
+
+  it('states the percentage convention wherever an operator meets a measure row: the list description, the Lists paragraph and the kpi row', () => {
+    // `content/measures.ts` reads a `%` value between 0 and 1 as a proportion, so Value 1 shows as 100%. The reading is
+    // defensible but unguessable, and the Enterprise value page is the one page whose premise is that a number appears
+    // only where it was measured: say it where the row is filled in and where a page owner reads what a tile will show.
+    const definition: { lists: { title: string; description: string }[] } = JSON.parse(fs.readFileSync(path.join(PAGES_DIR, 'pages.json'), 'utf8'));
+    expect(definition.lists[0].description).toContain('0.62 for 62%');
+    const paragraph: string = readme.slice(readme.indexOf('**Lists (since 1.0.0.14).**'), readme.indexOf('*Additive only.*'));
+    expect(paragraph).toContain('0.62 for 62%');
+    expect(paragraph).toContain('proportion');
+    const kpiRow: string[] = readme.split('\n').filter((line: string): boolean => line.indexOf('| `kpi` (since 1.0.0.14)') === 0);
+    expect(kpiRow).toHaveLength(1);
+    expect(kpiRow[0]).toContain('proportion');
+    expect(kpiRow[0]).toContain('0.62 for 62%');
   });
 
   it('documents the declared lists of 1.0.0.14: the columns, the additive rule and what -Overwrite recycles', () => {
