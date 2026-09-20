@@ -95,7 +95,8 @@ describe('Page view stylesheet', () => {
     expect(rule(table, '.ai-view--page .ai-page-heading')).toEqual(['color:#17283b', 'font-size:24px', 'font-weight:700', 'line-height:1.3', 'margin:0 0 12px']);
     expect(rule(table, '.ai-view--page .ai-page-paragraph')).toContain('font-size:17px');
     expect(rule(table, '.ai-view--page .ai-hero-copy p a')).toEqual(['color:#fff', 'text-decoration:underline']);
-    expect(rule(table, '.ai-view--page a.ai-hero-cta')).toEqual(['text-decoration:none']);
+    // The call to action is a 44px target (WCAG 2.5.5); the page tiles already stand 92px, above that floor.
+    expect(rule(table, '.ai-view--page a.ai-hero-cta')).toEqual(['min-height:44px', 'text-decoration:none']);
     expect(rule(table, '.ai-view--page a.ai-service-card')).toEqual(['text-decoration:none']);
     expect(rule(table, '.ai-view--page .ai-page-tiles')).toEqual(['display:grid', 'gap:16px', 'grid-template-columns:repeat(auto-fit, minmax(220px, 1fr))']);
     expect(rule(table, '.ai-view--page .ai-page-tiles .ai-service-card')).toEqual(['grid-column:auto', 'min-height:92px']);
@@ -123,6 +124,23 @@ describe('Page view stylesheet', () => {
     expect(rule(table, '.ai-view--page .ai-resource-strip')).toEqual(['margin:16px 0 0']);
     expect(rule(table, '.ai-view--page .ai-resource-strip--four')).toEqual(['grid-template-columns:repeat(4, minmax(0, 1fr))']);
     expect(rule(table, '.ai-view--page .ai-home-adminbar .ai-admin-back')).toEqual(['background:#087f83', 'border-color:#087f83', 'color:#fff', 'text-decoration:none']);
+  });
+
+  it('lays out prominent tiles, closed cards and the action states', () => {
+    expect(rule(table, '.ai-view--page .ai-page-tiles--prominent')).toEqual(['grid-template-columns:repeat(3, minmax(0, 1fr))']);
+    expect(rule(table, '.ai-view--page .ai-service-kicker')).toEqual(['color:#5b6878', 'font-size:11px', 'font-weight:800', 'letter-spacing:0.03em', 'margin:0 0 4px', 'text-transform:uppercase']);
+    expect(rule(table, '.ai-view--page .ai-service-note')).toEqual(['color:#5b6878', 'display:block', 'font-size:13px', 'font-style:italic', 'line-height:1.45', 'margin-top:6px']);
+    expect(rule(table, '.ai-view--page .ai-service-state')).toEqual(['display:block', 'margin-top:8px']);
+    expect(rule(table, '.ai-view--page .ai-service-card--closed')).toEqual(['cursor:default', 'opacity:0.85']);
+    expect(rule(table, '.ai-view--page .ai-service-card--closed:hover')).toEqual(['border-color:#d4dee6', 'box-shadow:0 5px 12px rgba(28, 49, 70, 0.1)', 'transform:none']);
+    expect(rule(table, '.ai-view--page a.ai-service-fallback')).toEqual(['color:#076874', 'display:inline-block', 'font-size:14px', 'font-weight:600', 'margin-top:8px', 'min-height:24px', 'text-decoration:underline']);
+    expect(rule(table, '.ai-view--page .ai-hero-cta--closed')).toEqual(['cursor:default', 'opacity:0.85']);
+    expect(rule(table, '.ai-view--page .ai-hero-cta--closed:hover')).toEqual(['background:#fff', 'color:#076874', 'transform:none']);
+    expect(rule(table, '.ai-view--page .ai-hero-state')).toEqual(['display:block', 'margin-top:12px']);
+    expect(rule(table, '.ai-view--page a.ai-hero-fallback')).toEqual(['color:#fff', 'display:inline-block', 'font-weight:600', 'margin:12px 0 0', 'min-height:24px', 'text-decoration:underline']);
+    expect(rule(table, '.ai-view--page .ai-hero-note')).toEqual(['font-size:14px', 'margin:10px 0 0', 'opacity:0.9']);
+    expect(rule(table, '.ai-view--page .ai-page-tiles .ai-service-card')).toContain('min-height:92px');
+    expect(rule(table, '.ai-view--narrow .ai-page-tiles--prominent')).toEqual(['grid-template-columns:1fr']);
   });
 
   it('draws the status pill as text plus an icon shape in every page view', () => {

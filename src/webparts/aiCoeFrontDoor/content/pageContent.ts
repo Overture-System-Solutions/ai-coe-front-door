@@ -6,10 +6,16 @@
  *
  * Wording note: this file is scanned for Tailwind utility names; keep prose free of utility words.
  */
-import { PAGE_TARGETS, resolvePageUrl } from './pageViews';
+import { PAGE_TARGETS } from './pageViews';
 import type { PageLinks, PageTarget } from './pageViews';
-import { TRUTH_STATE_KEYS } from './truthStates';
-import type { TruthStateKey } from './truthStates';
+import { asObject, readFlag, readIsoDate, readItems, readText, setOptional } from './rawJson';
+import type { Raw } from './rawJson';
+import { parseRoutes } from './routes';
+import type { RouteTable } from './routes';
+import { readState, TRUTH_STATE_KEYS } from './truthStates';
+import type { StateCode, TruthStateKey } from './truthStates';
+
+export { isExternalHref, resolveContentHref } from './links';
 
 export const PAGE_DOCUMENT_VERSION: number = 1;
 export const DEFAULT_CONTENT_URL: string = 'SiteAssets/ai-coe-pages.json';
@@ -63,9 +69,29 @@ export const DEFAULT_CARD_TONE: CardTone = 'teal';
 export type LaneTone = 'green' | 'amber' | 'red';
 export const LANE_TONES: readonly LaneTone[] = ['green', 'amber', 'red'];
 
-export interface ILinkTarget {
+/**
+ * What an item may say about where it leads: a link, a truth state or activation code, and a route
+ * key from the document's route list (which wins over the other two). An item with a state or a
+ * route may have no link: it is then shown as a labelled non-link with its pill.
+ */
+export interface IActionFields {
+  href?: string;
+  state?: StateCode;
+  route?: string;
+}
+
+/** What a fact may say about its age and origin. */
+export interface IFactFields {
+  /** YYYY-MM-DD: when the fact was last read back. */
+  asOf?: string;
+  /** Where the fact was read from. */
+  source?: string;
+}
+
+export interface IHeroCta extends IActionFields {
   label: string;
-  href: string;
+  /** Short line under the call to action. */
+  note?: string;
 }
 
 export interface IHeroBlock {
@@ -75,7 +101,7 @@ export interface IHeroBlock {
   text?: string;
   /** Replaces the branding badge when given. */
   badge?: string;
-  cta?: ILinkTarget;
+  cta?: IHeroCta;
 }
 
 export interface IHeadingBlock {
@@ -90,10 +116,13 @@ export interface IParagraphBlock {
   text: string;
 }
 
-export interface ITileItem {
+export interface ITileItem extends IActionFields {
   title: string;
-  href: string;
+  /** Small line above the title, such as "Do", "Ask", "Improve". */
+  kicker?: string;
   description?: string;
+  /** Short line under the description, such as where the link opens. */
+  note?: string;
   /** Name of an icon the front door ships; unknown names fall back to the light bulb. */
   icon?: string;
   tone: CardTone;
@@ -101,10 +130,12 @@ export interface ITileItem {
 
 export interface ITilesBlock {
   type: 'tiles';
+  /** Present only when the tiles are the page's main choice: three to a row. */
+  prominent?: true;
   items: ITileItem[];
 }
 
-export interface ICardItem {
+export interface ICardItem extends IActionFields, IFactFields {
   title: string;
   /** Small line above the title, such as a duration. */
   kicker?: string;
@@ -134,7 +165,7 @@ export interface ILanesBlock {
   items: ILaneItem[];
 }
 
-export interface IStatusItem {
+export interface IStatusItem extends IActionFields, IFactFields {
   label: string;
   /** In-text markup allowed. */
   text: string;
@@ -172,24 +203,8 @@ export interface IPageDocument {
   vocabulary?: IVocabulary;
   /** Present when the document carries a settings object; a malformed one is dropped. */
   settings?: IDocumentSettings;
-}
-
-type Raw = { [key: string]: unknown };
-
-function asObject(value: unknown): Raw | undefined {
-  return value !== null && typeof value === 'object' && !Array.isArray(value) ? (value as Raw) : undefined;
-}
-
-/** A trimmed, non-empty string; undefined for anything else. */
-function readText(value: unknown): string | undefined {
-  const text: string = typeof value === 'string' ? value.trim() : '';
-  return text === '' ? undefined : text;
-}
-
-function setOptional<T extends object>(target: T, key: keyof T, value: string | undefined): void {
-  if (value !== undefined) {
-    (target as { [name: string]: unknown })[key as string] = value;
-  }
+  /** Present when the document carries a routes object; a malformed one is dropped. */
+  routes?: RouteTable;
 }
 
 function readTone<T extends string>(candidates: readonly T[], value: unknown): T | undefined {
@@ -210,25 +225,34 @@ export function readParagraphs(value: unknown): string[] {
   return paragraphs;
 }
 
-function readItems<T>(value: unknown, readItem: (raw: Raw) => T | undefined): T[] {
-  const items: T[] = [];
-  if (Array.isArray(value)) {
-    for (const entry of value) {
-      const raw: Raw | undefined = asObject(entry);
-      const item: T | undefined = raw === undefined ? undefined : readItem(raw);
-      if (item !== undefined) {
-        items.push(item);
-      }
-    }
+/** Reads href, state and route onto an item; true when at least one of them is there (an item with none leads nowhere). */
+function readActionFields(item: IActionFields, raw: Raw): boolean {
+  setOptional(item, 'href', readText(raw.href));
+  const state: StateCode | undefined = readState(raw.state);
+  if (state !== undefined) {
+    item.state = state;
   }
-  return items;
+  setOptional(item, 'route', readText(raw.route));
+  return item.href !== undefined || item.state !== undefined || item.route !== undefined;
 }
 
-function readLinkTarget(value: unknown): ILinkTarget | undefined {
+function readFactFields(item: IFactFields, raw: Raw): void {
+  setOptional(item, 'asOf', readIsoDate(raw.asOf));
+  setOptional(item, 'source', readText(raw.source));
+}
+
+function readHeroCta(value: unknown): IHeroCta | undefined {
   const raw: Raw | undefined = asObject(value);
   const label: string | undefined = raw === undefined ? undefined : readText(raw.label);
-  const href: string | undefined = raw === undefined ? undefined : readText(raw.href);
-  return label !== undefined && href !== undefined ? { label, href } : undefined;
+  if (raw === undefined || label === undefined) {
+    return undefined;
+  }
+  const cta: IHeroCta = { label };
+  if (!readActionFields(cta, raw)) {
+    return undefined;
+  }
+  setOptional(cta, 'note', readText(raw.note));
+  return cta;
 }
 
 function parseHero(raw: Raw): IHeroBlock | undefined {
@@ -239,7 +263,7 @@ function parseHero(raw: Raw): IHeroBlock | undefined {
   const block: IHeroBlock = { type: 'hero', title };
   setOptional(block, 'text', readText(raw.text));
   setOptional(block, 'badge', readText(raw.badge));
-  const cta: ILinkTarget | undefined = readLinkTarget(raw.cta);
+  const cta: IHeroCta | undefined = readHeroCta(raw.cta);
   if (cta !== undefined) {
     block.cta = cta;
   }
@@ -258,19 +282,30 @@ function parseParagraph(raw: Raw): IParagraphBlock | undefined {
 
 function readTile(raw: Raw): ITileItem | undefined {
   const title: string | undefined = readText(raw.title);
-  const href: string | undefined = readText(raw.href);
-  if (title === undefined || href === undefined) {
+  if (title === undefined) {
     return undefined;
   }
-  const item: ITileItem = { title, href, tone: readTone(CARD_TONES, raw.tone) ?? DEFAULT_CARD_TONE };
+  const item: ITileItem = { title, tone: readTone(CARD_TONES, raw.tone) ?? DEFAULT_CARD_TONE };
+  if (!readActionFields(item, raw)) {
+    return undefined;
+  }
+  setOptional(item, 'kicker', readText(raw.kicker));
   setOptional(item, 'description', readText(raw.description));
+  setOptional(item, 'note', readText(raw.note));
   setOptional(item, 'icon', readText(raw.icon));
   return item;
 }
 
 function parseTiles(raw: Raw): ITilesBlock | undefined {
   const items: ITileItem[] = readItems(raw.items, readTile);
-  return items.length === 0 ? undefined : { type: 'tiles', items };
+  if (items.length === 0) {
+    return undefined;
+  }
+  const block: ITilesBlock = { type: 'tiles', items };
+  if (readFlag(raw.prominent) === true) {
+    block.prominent = true;
+  }
+  return block;
 }
 
 function readCard(raw: Raw): ICardItem | undefined {
@@ -281,6 +316,8 @@ function readCard(raw: Raw): ICardItem | undefined {
   const item: ICardItem = { title, body: readParagraphs(raw.body), tone: readTone(CARD_TONES, raw.tone) ?? DEFAULT_CARD_TONE };
   setOptional(item, 'kicker', readText(raw.kicker));
   setOptional(item, 'meta', readText(raw.meta));
+  readActionFields(item, raw);
+  readFactFields(item, raw);
   return item;
 }
 
@@ -309,7 +346,13 @@ function parseLanes(raw: Raw): ILanesBlock | undefined {
 function readStatusItem(raw: Raw): IStatusItem | undefined {
   const label: string | undefined = readText(raw.label);
   const text: string | undefined = readText(raw.text);
-  return label !== undefined && text !== undefined ? { label, text } : undefined;
+  if (label === undefined || text === undefined) {
+    return undefined;
+  }
+  const item: IStatusItem = { label, text };
+  readActionFields(item, raw);
+  readFactFields(item, raw);
+  return item;
 }
 
 function parseStatusRow(raw: Raw): IStatusRowBlock | undefined {
@@ -470,8 +513,8 @@ function parsePage(value: unknown): IContentPage | undefined {
 
 /**
  * Parses the document text; undefined unless it is a version 1 object with a pages object. The
- * optional `vocabulary` and `settings` sections are carried when they are objects and dropped
- * (never the document) when they are not.
+ * optional `vocabulary`, `settings` and `routes` sections are carried when they are objects and
+ * dropped (never the document) when they are not.
  */
 export function parsePageDocument(text: string): IPageDocument | undefined {
   let parsed: unknown;
@@ -499,21 +542,13 @@ export function parsePageDocument(text: string): IPageDocument | undefined {
   if (asObject(raw.vocabulary) !== undefined) {
     document.vocabulary = parseVocabulary(raw.vocabulary);
   }
+  if (asObject(raw.routes) !== undefined) {
+    document.routes = parseRoutes(raw.routes);
+  }
   return document;
 }
 
 /** The configured document path, or the default when blank. */
 export function parseContentUrl(value: unknown): string {
   return readText(value) ?? DEFAULT_CONTENT_URL;
-}
-
-const PASS_THROUGH: RegExp = /^(#|\?|mailto:|tel:)/i;
-
-/** A link target from the document: site paths resolve against the site; anchors, queries, mail and full URLs pass through. */
-export function resolveContentHref(siteUrl: string, href: string): string {
-  const text: string = href.trim();
-  if (PASS_THROUGH.test(text)) {
-    return text;
-  }
-  return resolvePageUrl(siteUrl, text) ?? '#';
 }

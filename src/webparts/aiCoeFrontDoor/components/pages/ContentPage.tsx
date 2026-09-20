@@ -13,6 +13,8 @@ import { PieceBlock } from './blocks/PieceBlock';
 import { StatusRowBlock } from './blocks/StatusRowBlock';
 import { HeadingBlock, ParagraphBlock } from './blocks/TextBlocks';
 import { TilesBlock } from './blocks/TilesBlock';
+import { documentContext, PageDocumentProvider, usePageDocument } from './PageDocumentContext';
+import type { IPageDocumentContextValue } from './PageDocumentContext';
 
 export interface IContentPageProps {
   /** Key of the page in the content document; absent when the instance is not configured yet. */
@@ -62,10 +64,13 @@ function hasHomePiece(page: IContentPage | undefined): boolean {
 /**
  * One page of the content document rendered as front-door blocks: the hero, headings, paragraphs,
  * tiles, cards, lanes and status lines in the order the document lists them, with the home tiles or
- * the telemetry strip embedded where the document places them.
+ * the telemetry strip embedded where the document places them. The document's route list,
+ * vocabulary and settings reach the blocks through the page document context, never through props;
+ * the clock and the roles come from the host (the shell, or the test harness).
  */
 export function ContentPage({ pageKey }: IContentPageProps): React.ReactElement {
   const { services } = useFrontDoor();
+  const host: IPageDocumentContextValue = usePageDocument();
   const pageContent: IPageContentService | undefined = services.pageContent;
   const [state, setState] = React.useState<ContentState>(pageContent === undefined ? { status: 'unavailable', message: NO_SERVICE_TEXT } : { status: 'loading' });
   // Nothing to read until a page key is configured; the service memoises, so a later key costs no second request.
@@ -95,6 +100,11 @@ export function ContentPage({ pageKey }: IContentPageProps): React.ReactElement 
 
   const page: IContentPage | undefined = state.status === 'ready' && pageKey !== undefined ? findPage(state.document, pageKey) : undefined;
   const drafts: DraftFlags = useDraftFlags(services.draftStore, hasHomePiece(page));
+  const document: IPageDocument | undefined = state.status === 'ready' ? state.document : undefined;
+  const context: IPageDocumentContextValue = React.useMemo(
+    (): IPageDocumentContextValue => (document === undefined ? host : documentContext(document, page, host)),
+    [document, page, host]
+  );
 
   let content: React.ReactNode;
   if (pageKey === undefined) {
@@ -119,5 +129,9 @@ export function ContentPage({ pageKey }: IContentPageProps): React.ReactElement 
     );
   }
 
-  return <div className="ai-home ai-page">{content}</div>;
+  return (
+    <PageDocumentProvider value={context}>
+      <div className="ai-home ai-page">{content}</div>
+    </PageDocumentProvider>
+  );
 }

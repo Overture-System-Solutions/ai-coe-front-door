@@ -79,6 +79,21 @@ describe('page provisioning script', () => {
     expect(upload).toBeLessThan(script.indexOf('Add-PnPPage -Name'));
   });
 
+  it('keeps an unlinked tile or call to action on the page as closed, and resolves tokens inside the route table', () => {
+    // A blank URL parameter used to drop the tile; now the page shows it closed (Needs access) so the promise stays visible and truthful.
+    expect(script).toContain("has no link (its URL parameter is blank) and is shown as closed");
+    expect(script).not.toContain('is left out');
+    expect(script).not.toContain('left out because');
+    expect(script).toContain("'needsAccess'");
+    expect(script).toMatch(/\$resolved\['type'\] -eq 'hero'[\s\S]*'needsAccess'/);
+    expect(script).not.toMatch(/\$resolved\.Remove\('cta'\)/);
+    expect(script).toContain("'routes'");
+    expect(script).toMatch(/Resolve-Node \$definition\['routes'\]/);
+    for (const section of ['vocabulary', 'settings']) {
+      expect(script).toContain(`'${section}'`);
+    }
+  });
+
   it('no longer needs the native web part templates or HTML text parts', () => {
     for (const legacy of ['Add-PnPPageTextPart', 'DefaultWebPartType', 'quicklinks.template.json', 'button.template.json', 'serverProcessedContent', 'target="_blank"', 'example.invalid']) {
       expect(script).not.toContain(legacy);
@@ -145,5 +160,16 @@ describe('README', () => {
     expect(readme).toContain('[label](href)');
     expect(readme).toContain('**bold**');
     expect(readme).toContain('*italic*');
+  });
+
+  it('documents the route table, the action states and the closed tiles', () => {
+    expect(readme).toContain('`routes`');
+    expect(readme).toContain('`guidedIntake`');
+    expect(readme).toContain('`receiptRef`');
+    expect(readme).toContain('`verifiedOn`');
+    expect(readme).toContain('`prominent`');
+    expect(readme).toContain('shown as closed');
+    expect(readme).not.toContain('reported as left out');
+    expect(readme).not.toContain('leaves out a tile');
   });
 });

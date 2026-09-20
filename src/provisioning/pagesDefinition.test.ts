@@ -50,6 +50,8 @@ interface IPagesDefinition {
   parameters: { [name: string]: IParameter };
   navigation: INavigationEntry[];
   pages: IPage[];
+  /** The route table the script copies into the document once the tokens are resolved; absent until the first screen carries one. */
+  routes?: { [key: string]: IRawItem };
 }
 
 const ROOT: string = process.cwd();
@@ -152,33 +154,47 @@ function expectLinkTarget(target: string): void {
   }
 }
 
+/** The script's token pass over one JSON-serialised node: in-text links, page links, URL parameters, then plain tokens. */
+function resolveTokens(text: string, urlValues: { [name: string]: string }): string {
+  return text
+    .replace(/\[([^[\]]+)\]\(\{Url:([A-Za-z]+)\}\)/g, (whole: string, label: string, name: string): string => (urlValues[name] ? whole : label))
+    .replace(/\{Page:([A-Za-z]+)\}/g, (whole: string, name: string): string => `https://example.invalid/sites/ai/SitePages/${page(name).file}`)
+    .replace(/\{Url:([A-Za-z]+)\}/g, (whole: string, name: string): string => urlValues[name] ?? '')
+    .replace(/\{([A-Za-z]+)\}/g, 'value');
+}
+
+/** A tile or call to action whose link resolved to nothing and that names neither a state nor a route is shown as closed. */
+function closeWhenUnlinked(item: IRawItem): IRawItem {
+  return item.href === '' && item.state === undefined && item.route === undefined ? { ...item, state: 'needsAccess' } : item;
+}
+
 /**
  * What the script does to the definition before uploading it: page links become URLs, URL parameters
- * are filled or, when blank, dropped from in-text links and from tiles. Text tokens become values.
+ * are filled or, when blank, dropped from in-text links; a tile or call to action whose link is blank
+ * is kept and marked `needsAccess` so the page shows it as closed. Text tokens become values. The
+ * route table, when the definition has one, goes through the same token pass.
  */
 function resolveDocument(urlValues: { [name: string]: string }): string {
   const pages: { [key: string]: unknown } = {};
   for (const key of NAVIGATION_PAGES) {
-    const resolved: string = JSON.stringify({ title: page(key).title, blocks: blocksOf(key) })
-      .replace(/\[([^[\]]+)\]\(\{Url:([A-Za-z]+)\}\)/g, (whole: string, label: string, name: string): string => (urlValues[name] ? whole : label))
-      .replace(/\{Page:([A-Za-z]+)\}/g, (whole: string, name: string): string => `https://example.invalid/sites/ai/SitePages/${page(name).file}`)
-      .replace(/\{Url:([A-Za-z]+)\}/g, (whole: string, name: string): string => urlValues[name] ?? '')
-      .replace(/\{([A-Za-z]+)\}/g, 'value');
+    const resolved: string = resolveTokens(JSON.stringify({ title: page(key).title, blocks: blocksOf(key) }), urlValues);
     const parsedPage: { title: string; blocks: IRawBlock[] } = JSON.parse(resolved) as { title: string; blocks: IRawBlock[] };
     parsedPage.blocks = parsedPage.blocks.map((block: IRawBlock): IRawBlock => {
       if (block.type === 'tiles') {
-        return { ...block, items: itemsOf(block).filter((item: IRawItem): boolean => item.href !== '') };
+        return { ...block, items: itemsOf(block).map(closeWhenUnlinked) };
       }
-      if (block.type === 'hero' && block.cta !== undefined && (block.cta as { href: string }).href === '') {
-        const withoutCta: IRawBlock = { ...block };
-        delete withoutCta.cta;
-        return withoutCta;
+      if (block.type === 'hero' && block.cta !== undefined) {
+        return { ...block, cta: closeWhenUnlinked(block.cta as IRawItem) };
       }
       return block;
     });
     pages[key] = parsedPage;
   }
-  return JSON.stringify({ version: 1, pages });
+  const document: { [key: string]: unknown } = { version: 1, pages };
+  if (definition.routes !== undefined) {
+    document.routes = JSON.parse(resolveTokens(JSON.stringify(definition.routes), urlValues));
+  }
+  return JSON.stringify(document);
 }
 
 describe('front door page definition', () => {
@@ -392,8 +408,14 @@ describe('front door page definition', () => {
           }
         }
       }
-      const tiles: { items: unknown[] } = (document as IPageDocument).pages.startHere.blocks[2] as { items: unknown[] };
-      expect(tiles.items).toHaveLength(urlValues === filled ? 4 : 3);
+      // A tile whose URL parameter is blank stays on the page, shown as closed, so both runs carry all four.
+      const tiles: { items: { href?: string; state?: string }[] } = (document as IPageDocument).pages.startHere.blocks[2] as { items: { href?: string; state?: string }[] };
+      expect(tiles.items).toHaveLength(4);
+      const unlinked: { href?: string; state?: string }[] = tiles.items.filter((item: { href?: string; state?: string }): boolean => item.href === undefined);
+      expect(unlinked.map((item: { href?: string; state?: string }): string | undefined => item.state)).toEqual(urlValues === filled ? [] : ['needsAccess']);
+      const hero: { cta?: { href?: string; state?: string } } = (document as IPageDocument).pages.startHere.blocks[0] as { cta?: { href?: string; state?: string } };
+      expect(hero.cta).toBeDefined();
+      expect((hero.cta as { href?: string }).href).toBeDefined();
     }
     expect(JSON.stringify(parsePageDocument(resolveDocument(filled)))).not.toMatch(/\{(Page|Url):|\{[A-Za-z]+\}/);
     const damaged: IPageDocument | undefined = parsePageDocument(resolveDocument(filled).replace('"type":"lanes"', '"type":"bogus"'));

@@ -2,6 +2,7 @@ import {
   DEFAULT_CONTENT_URL,
   DEFAULT_SETTINGS,
   DEFAULT_VOCABULARY,
+  isExternalHref,
   PAGE_DOCUMENT_VERSION,
   pagePlane,
   parseBlock,
@@ -117,6 +118,30 @@ describe('document envelope', () => {
     expect(damaged).toEqual({ version: 1, pages: { learn: { title: 'Learn', blocks: [] } } });
   });
 
+  it('carries the route table on the document and drops a malformed one, never the document', () => {
+    const document: IPageDocument | undefined = parsePageDocument(
+      JSON.stringify({
+        version: 1,
+        routes: {
+          guidedIntake: { label: 'Start a guided request', href: 'SitePages/Explore-an-AI-idea.aspx', state: 'availableNow' },
+          work: { label: 'Work command', href: '', state: 'availableNow', fallback: 'guidedIntake' },
+          noLabel: { href: 'x' }
+        },
+        pages: { learn: { title: 'Learn', blocks: [] } }
+      })
+    );
+    expect(document).toEqual({
+      version: 1,
+      pages: { learn: { title: 'Learn', blocks: [] } },
+      routes: {
+        guidedIntake: { key: 'guidedIntake', label: 'Start a guided request', href: 'SitePages/Explore-an-AI-idea.aspx', state: 'availableNow' },
+        work: { key: 'work', label: 'Work command', state: 'availableNow', fallback: 'guidedIntake' }
+      }
+    });
+    const damaged: IPageDocument | undefined = parsePageDocument(JSON.stringify({ version: 1, routes: ['x'], pages: { learn: { title: 'Learn', blocks: [] } } }));
+    expect(damaged).toEqual({ version: 1, pages: { learn: { title: 'Learn', blocks: [] } } });
+  });
+
   it('accepts the operator plane on a page and treats everything else as the user plane', () => {
     expect(readPlane('operator')).toBe('operator');
     expect(readPlane(' operator ')).toBe('operator');
@@ -167,6 +192,22 @@ describe('blocks', () => {
     expect(parseBlock({ type: 'hero', title: '  ' })).toBeUndefined();
   });
 
+  it('reads a call to action with a state or a route and no link, and its note', () => {
+    expect(parseBlock({ type: 'hero', title: 'T', cta: { label: 'Go', state: 'needsAccess' } })).toEqual({ type: 'hero', title: 'T', cta: { label: 'Go', state: 'needsAccess' } });
+    expect(parseBlock({ type: 'hero', title: 'T', cta: { label: 'Go', href: '', route: ' work ', note: ' Opens the assistant. ' } })).toEqual({
+      type: 'hero',
+      title: 'T',
+      cta: { label: 'Go', route: 'work', note: 'Opens the assistant.' }
+    });
+    expect(parseBlock({ type: 'hero', title: 'T', cta: { label: 'Go', href: 'SitePages/x.aspx', state: ' ACTIVE ', route: 'work' } })).toEqual({
+      type: 'hero',
+      title: 'T',
+      cta: { label: 'Go', href: 'SitePages/x.aspx', state: 'ACTIVE', route: 'work' }
+    });
+    expect(parseBlock({ type: 'hero', title: 'T', cta: { label: 'Go', state: 'bogus' } })).toEqual({ type: 'hero', title: 'T' });
+    expect(parseBlock({ type: 'hero', title: 'T', cta: { state: 'needsAccess' } })).toEqual({ type: 'hero', title: 'T' });
+  });
+
   it('reads headings at level 2 or 3 and paragraphs', () => {
     expect(parseBlock({ type: 'heading', text: 'The three lanes' })).toEqual({ type: 'heading', level: 2, text: 'The three lanes' });
     expect(parseBlock({ type: 'heading', level: 3, text: 'Sub' })).toEqual({ type: 'heading', level: 3, text: 'Sub' });
@@ -200,6 +241,32 @@ describe('blocks', () => {
     expect(parseBlock({ type: 'tiles' })).toBeUndefined();
   });
 
+  it('reads prominent tiles with a kicker, a note, a state or a route, which may have no link', () => {
+    const tiles: ITilesBlock = parseBlock({
+      type: 'tiles',
+      prominent: true,
+      items: [
+        { title: 'Ask the assistant', kicker: ' Ask ', note: ' Opens in a new tab. ', route: ' assistant ', tone: 'teal' },
+        { title: 'Work command', href: '', state: 'needsAccess' },
+        { title: 'Improve a task', href: 'SitePages/Check-a-tool-or-task.aspx', state: ' AVAILABLE ', route: 'improve' },
+        { title: 'Bogus state', href: 'SitePages/x.aspx', state: 'bogus' },
+        { title: 'Nothing', href: '', state: 'bogus' }
+      ]
+    }) as ITilesBlock;
+    expect(tiles).toEqual({
+      type: 'tiles',
+      prominent: true,
+      items: [
+        { title: 'Ask the assistant', kicker: 'Ask', note: 'Opens in a new tab.', route: 'assistant', tone: 'teal' },
+        { title: 'Work command', state: 'needsAccess', tone: 'teal' },
+        { title: 'Improve a task', href: 'SitePages/Check-a-tool-or-task.aspx', state: 'AVAILABLE', route: 'improve', tone: 'teal' },
+        { title: 'Bogus state', href: 'SitePages/x.aspx', tone: 'teal' }
+      ]
+    });
+    expect(parseBlock({ type: 'tiles', prominent: 'yes', items: [{ title: 'x', href: 'y' }] })).toEqual({ type: 'tiles', items: [{ title: 'x', href: 'y', tone: 'teal' }] });
+    expect(parseBlock({ type: 'tiles', prominent: false, items: [{ title: 'x', href: 'y' }] })).toEqual({ type: 'tiles', items: [{ title: 'x', href: 'y', tone: 'teal' }] });
+  });
+
   it('reads cards in two or three columns with paragraph bodies', () => {
     const cards: ICardsBlock = parseBlock({
       type: 'cards',
@@ -223,6 +290,20 @@ describe('blocks', () => {
     expect((parseBlock({ type: 'cards', items: [{ title: 'A' }] }) as ICardsBlock).columns).toBe(2);
     expect((parseBlock({ type: 'cards', columns: 4, items: [{ title: 'A' }] }) as ICardsBlock).columns).toBe(2);
     expect(parseBlock({ type: 'cards', columns: 2, items: [] })).toBeUndefined();
+  });
+
+  it('reads a state, a route, an as-of date and a source on cards', () => {
+    const cards: ICardsBlock = parseBlock({
+      type: 'cards',
+      items: [
+        { title: 'What is running', body: 'x', state: ' availableNow ', route: ' assistant ', asOf: ' 2026-09-01 ', source: ' Read back from the tenant. ' },
+        { title: 'Loose', body: 'y', state: 'bogus', asOf: 'last Friday', source: '' }
+      ]
+    }) as ICardsBlock;
+    expect(cards.items).toEqual([
+      { title: 'What is running', body: ['x'], tone: 'teal', state: 'availableNow', route: 'assistant', asOf: '2026-09-01', source: 'Read back from the tenant.' },
+      { title: 'Loose', body: ['y'], tone: 'teal' }
+    ]);
   });
 
   it('reads lanes and drops items whose tone is not a traffic light', () => {
@@ -250,6 +331,24 @@ describe('blocks', () => {
       items: [{ label: 'Status', text: 'Green' }]
     });
     expect(parseBlock({ type: 'statusRow', items: [] })).toBeUndefined();
+  });
+
+  it('reads a state, a route, an as-of date and a source on status items', () => {
+    expect(
+      parseBlock({
+        type: 'statusRow',
+        items: [
+          { label: 'Assistant', text: 'Answering from approved sources.', state: ' AVAILABLE ', route: ' assistant ', asOf: '2026-09-01', source: ' Tenant read-back ' },
+          { label: 'Prompts', text: 'All draft.', state: 'bogus', asOf: '2026-9-1', source: '  ' }
+        ]
+      })
+    ).toEqual({
+      type: 'statusRow',
+      items: [
+        { label: 'Assistant', text: 'Answering from approved sources.', state: 'AVAILABLE', route: 'assistant', asOf: '2026-09-01', source: 'Tenant read-back' },
+        { label: 'Prompts', text: 'All draft.' }
+      ]
+    });
   });
 
   it('reads the two embeddable pieces and keeps only known page targets', () => {
@@ -287,6 +386,17 @@ describe('content links', () => {
     expect(resolveContentHref(SITE, '?view=page&page=learn')).toBe('?view=page&page=learn');
     expect(resolveContentHref(SITE, 'mailto:coe@contoso.com')).toBe('mailto:coe@contoso.com');
     expect(resolveContentHref(SITE, '')).toBe('#');
+  });
+
+  it('tells an off-site URL from a site path or a same-origin URL', () => {
+    expect(isExternalHref(SITE, 'https://teams.microsoft.com/l/x')).toBe(true);
+    expect(isExternalHref(SITE, 'http://contoso.sharepoint.com/sites/ai/x')).toBe(true);
+    expect(isExternalHref(SITE, 'HTTPS://CONTOSO.sharepoint.com/sites/ai/SitePages/x.aspx')).toBe(false);
+    expect(isExternalHref(SITE, `${SITE}/SitePages/Status.aspx`)).toBe(false);
+    expect(isExternalHref(SITE, 'SitePages/Status.aspx')).toBe(false);
+    expect(isExternalHref(SITE, '/sites/other/x.aspx')).toBe(false);
+    expect(isExternalHref(SITE, 'mailto:coe@contoso.com')).toBe(false);
+    expect(isExternalHref(SITE, '#top')).toBe(false);
   });
 
   it('defaults the document path and trims a configured one', () => {

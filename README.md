@@ -154,13 +154,13 @@ copy in its version history). It is UTF-8 JSON:
 
 | Block | Fields |
 |---|---|
-| `hero` | `title`; `text` (the line under it); `badge` (replaces the organization badge); `cta` `{ "label", "href" }` |
+| `hero` | `title`; `text` (the line under it); `badge` (replaces the organization badge); `cta` `{ "label", "href", "state", "route", "note" }` (the action fields below; a `cta` needs a label and at least one of `href`, `state`, `route`) |
 | `heading` | `text`; `level` 2 (default) or 3 |
 | `paragraph` | `text` |
-| `tiles` | `items`, each `{ "title", "href", "description", "icon", "tone" }`; `icon` is one of the web part's icon names (`MessageSquare`, `BriefcaseBusiness`, `Inbox`, `LayoutDashboard`, `Lightbulb`, …; an unknown name shows the light bulb) |
-| `cards` | `columns` 2 (default) or 3; `items`, each `{ "title", "kicker", "body", "meta", "tone" }`; `body` is one string (a blank line starts a new paragraph) or an array of paragraphs; `meta` is the italic closing line (a data boundary, a source) |
+| `tiles` | `prominent` (true for the page's main choice: three to a row); `items`, each `{ "title", "kicker", "href", "state", "route", "description", "note", "icon", "tone" }`; `icon` is one of the web part's icon names (`MessageSquare`, `BriefcaseBusiness`, `Inbox`, `LayoutDashboard`, `Lightbulb`, …; an unknown name shows the light bulb); an item needs a title and at least one of `href`, `state`, `route` |
+| `cards` | `columns` 2 (default) or 3; `items`, each `{ "title", "kicker", "body", "meta", "tone", "state", "route", "asOf", "source" }`; `body` is one string (a blank line starts a new paragraph) or an array of paragraphs; `meta` is the italic closing line (a data boundary, a source); `asOf` is a YYYY-MM-DD date and `source` where the fact was read from (parsed now, drawn from 1.0.0.13) |
 | `lanes` | `items`, each `{ "tone": "green" or "amber" or "red", "title", "body", "note", "badge" }` |
-| `statusRow` | `items`, each `{ "label", "text" }`, shown side by side as **label** — text |
+| `statusRow` | `items`, each `{ "label", "text", "state", "route", "asOf", "source" }`, shown side by side as **label** — text, with the state pill after the text when `state` or `route` is set |
 | `piece` | `piece`: `home` (the five path cards and the resource strip; `pages` maps `idea`, `toolCheck`, `teamUsage`, `helpTraining`, `feedback`, `telemetry`, `admin`, `policy` to site paths or URLs) or `telemetry` (the operations snapshot; the instance's usage metrics provider applies) |
 
 `tone` on tiles and cards is `teal` (default), `blue`, `violet`, `gold` or `cyan`. Every `text`, `body`, `note` and
@@ -172,11 +172,20 @@ item the web part does not understand is left out and the rest of the page still
 not the page. The script rewrites the document on every run, so lasting wording changes belong in `pages.json`; a
 quick correction can be made in Site Assets and shows on the next page load.
 
-The envelope may also carry two optional sections and a page may name its plane; each is lenient and a malformed one
+**Action states.** A tile, the hero call to action and a status item may carry `state` (one of the five truth-state
+keys `availableNow`, `draftOnly`, `needsApproval`, `needsAccess`, `notSupported`, or an activation code `DESIGNED`,
+`QUALIFIED`, `AVAILABLE`, `ACTIVE`, `PAUSED`, `RETIRED`) and `route` (a key of the document's `routes` table). `route`
+wins over `href` and `state`; a filled `href` with neither stays a plain link; an item with a state and no link is a
+labelled non-link (shown as closed, with its state pill and, when a route supplies one, a link to the fallback); a
+`RETIRED` item is not rendered; `DESIGNED` and `QUALIFIED` read "Coming: not yet enabled", `PAUSED` reads "Paused".
+Only an item that resolves to *Available now* opens its own link, and only an off-site link opens in a new tab.
+
+The envelope may also carry three optional sections and a page may name its plane; each is lenient and a malformed one
 is dropped, never the document:
 
 | Key | Shape |
 |---|---|
+| `routes` | `{ "<key>": { "label", "href", "state", "verifiedOn", "receiptRef", "fallback", "note", "roles", "carriesReference", "capabilityId" } }` — the named destinations tiles, the call to action, status items and (from step 4) the work command point at. A row needs a `label`; `state` is a truth-state key or activation code; `verifiedOn` (YYYY-MM-DD) and `receiptRef` (the tenant qualification receipt reference) are what an off-site `href` needs before it opens; `fallback` names the row people are sent to while this one is closed (`guidedIntake` by default); `roles` limits the row to role ids (everyone when absent); `carriesReference` lets a hand-off card append the record reference; `capabilityId` is reserved. Resolution fails closed, in this order: an unknown key goes to the `guidedIntake` row (no such row: "No fallback is configured", no link); roles named and none held, a blank `href`, or a state other than *Available now* keep the label and link to the fallback with their own pill; an *Available now* off-site `href` without a valid, not-future `verifiedOn` or without `receiptRef` shows "Awaiting source" and links to the fallback; a site path or same-origin URL needs neither. Off-site links never carry user text |
 | `settings` | `{ "freshnessDays": 30, "minimumCohort": 5 }` — whole numbers (1–3650 and 1–1000); anything else keeps the default |
 | `vocabulary` | string maps only, unknown keys ignored, a blank keeps the default: `truthStates` `{ "<key>": { "label", "definition" } }` for `availableNow`, `draftOnly`, `needsApproval`, `needsAccess`, `notSupported`; `requestStatuses` `{ "<code>": "plain wording" }`; `chrome` `{ "badge", "example", "needsRefresh", "awaitingSource", "protectedPage" }`; `roles` `{ "<roleId>": "name" }`; `telemetry` `{ "<feedId>": "name" }`. `{organization}` and `{role}` in the text are filled by the web part, not by the script |
 | page `plane` | `user` (default) or `operator` |
@@ -206,7 +215,9 @@ The text is the front door's own copy of a short pilot site and carries tokens: 
 `parameters` declared at the top of `pages.json` (people, dates, counts, record ids), `{Page:key}` for links between the
 pages, and `{Url:Name}` for links to things outside the package (the Concierge agent, Teams, Copilot Chat, the prompt
 library). Text parameters are required; URL parameters may be blank, which turns an in-text link into its label and
-leaves out a tile or call to action pointing at it (the script says which). `src/provisioning/pagesDefinition.test.ts`
+marks a tile or call to action pointing at it `needsAccess`, so it stays on the page shown as closed (a labelled
+non-link with its state; the script says which). Tokens inside the `routes` table are resolved the same way; the
+`vocabulary` and `settings` sections are copied as written. `src/provisioning/pagesDefinition.test.ts`
 checks the structure, the tokens, that the web part's parser accepts every block once the tokens are resolved, and
 that no client or tenant name is in the file.
 
@@ -234,9 +245,9 @@ that no client or tenant name is in the file.
    feature adds and the template defaults. The admin page gets owners-only item permissions. This needs a
    communication site, whose horizontal top navigation is the QuickLaunch; on any other site the script stops unless
    `-AllowNonCommunicationSite` is given, because there the QuickLaunch is the left navigation.
-4. Open each page once: check the narrow layout where a piece sits in a column, and add the links the script
-   reported as left out once their URL parameters are known (rerun with `-Overwrite`, or edit the document in Site
-   Assets).
+4. Open each page once: check the narrow layout where a piece sits in a column, and add the links behind the tiles
+   and calls to action the script reported as shown as closed once their URL parameters are known (rerun with
+   `-Overwrite`, or edit the document in Site Assets).
 
 Manual fallback: upload a hand-written `ai-coe-pages.json` to Site Assets, create the twelve pages by hand, add the
 matching toolbox entry to each (**AI CoE: Content page** with the page key for the six navigation pages), type the

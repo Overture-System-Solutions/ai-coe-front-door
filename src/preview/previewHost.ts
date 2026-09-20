@@ -139,9 +139,17 @@ function previewLink(query: string): string {
 }
 
 // Simulated preview data: the content document a site would keep in Site Assets, with Contoso wording and links
-// back into this preview. Every block type appears at least once.
+// back into this preview. Every block type appears at least once. The route table shows the three answers a route
+// can give: an on-site route that is available, an off-site one still awaiting its tenant receipt (closed, with the
+// guided intake as fallback), and one with no link at all.
 const SAMPLE_PAGE_DOCUMENT: { [key: string]: unknown } = {
   version: 1,
+  routes: {
+    guidedIntake: { label: 'Start a guided request', href: previewLink('view=idea'), state: 'availableNow' },
+    work: { label: 'Get work done', state: 'availableNow', note: 'The work command is not yet proved in this environment.' },
+    assistant: { label: 'Ask the assistant', href: 'https://assistant.example/chat', state: 'availableNow', note: 'Opens in a new tab once the tenant receipt is recorded.' },
+    improve: { label: 'Improve a task', href: previewLink('view=toolCheck'), state: 'availableNow' }
+  },
   pages: {
     startHere: {
       title: 'Start here',
@@ -153,6 +161,15 @@ const SAMPLE_PAGE_DOCUMENT: { [key: string]: unknown } = {
           cta: { label: 'Start a request', href: previewLink('page=requests') }
         },
         { type: 'heading', level: 2, text: 'What do you want to do?' },
+        {
+          type: 'tiles',
+          prominent: true,
+          items: [
+            { title: 'Get work done', kicker: 'Do', route: 'work', description: 'Say what you need and the right path opens.', icon: 'Lightbulb' },
+            { title: 'Ask the assistant', kicker: 'Ask', route: 'assistant', description: 'Questions answered from approved sources.', icon: 'MessageSquare', tone: 'blue' },
+            { title: 'Improve a task', kicker: 'Improve', route: 'improve', description: 'Check a tool or a task before you rely on it.', icon: 'BriefcaseBusiness', tone: 'gold' }
+          ]
+        },
         {
           type: 'tiles',
           items: [

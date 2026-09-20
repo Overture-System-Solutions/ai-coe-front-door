@@ -15,8 +15,9 @@ recycled again so the next run recreates it.
 
 Tokens in pages.json: {Name} is a parameter value; {Page:key} is the server-relative URL of a defined page;
 {Url:Name} is a URL parameter. Text parameters must have a value. URL parameters may be blank: a blank one turns an
-in-text link "[label]({Url:Name})" into its label, and a tile or call to action pointing at it is left out with a
-warning. The web part opens links to other origins in a new tab.
+in-text link "[label]({Url:Name})" into its label, and a tile or call to action pointing at it is marked 'needsAccess'
+with a warning, so the web part shows it as closed rather than dropping it. Tokens inside the 'routes' table are
+resolved the same way. The web part opens links to other origins in a new tab.
 
 The package must already be installed on the site (upload as an update to the app catalog, then "Get it" on the site);
 the script stops before creating anything when the front-door component is not available, and verifies after each
@@ -186,8 +187,15 @@ function Resolve-Text([string]$text) {
   return $text
 }
 
-# Resolves every string in a block tree. Tiles whose link resolves to nothing (a blank URL parameter) are left out,
-# as is a hero call to action without a target; both are reported so the page owner can add the link later.
+# True when an action item (a tile, a call to action) has no link and names neither a state nor a route.
+function Test-Unlinked($item) {
+  return [string]::IsNullOrWhiteSpace([string]$item['href']) -and -not $item.Contains('state') -and -not $item.Contains('route')
+}
+
+# Resolves every string in a block tree (and in the route table). A tile or hero call to action whose link resolves
+# to nothing (a blank URL parameter) and that names neither a state nor a route stays on the page marked
+# 'needsAccess', so the web part shows it as closed (a labelled non-link with its state) instead of dropping the
+# promise; each is reported so the page owner can add the link later.
 function Resolve-Node($node, [string]$where) {
   if ($node -is [string]) { return Resolve-Text $node }
   if ($node -is [System.Collections.IList]) {
@@ -199,19 +207,16 @@ function Resolve-Node($node, [string]$where) {
     $resolved = [ordered]@{}
     foreach ($key in @($node.Keys)) { $resolved[$key] = Resolve-Node $node[$key] $where }
     if ($resolved.Contains('type') -and $resolved['type'] -eq 'tiles') {
-      $kept = @()
       foreach ($item in @($resolved['items'])) {
-        if ([string]::IsNullOrWhiteSpace([string]$item['href'])) {
-          Write-Warning "The tile '$($item['title'])' on $where has no link (its URL parameter is blank) and is left out."
-          continue
+        if (Test-Unlinked $item) {
+          Write-Warning "The tile '$($item['title'])' on $where has no link (its URL parameter is blank) and is shown as closed."
+          $item['state'] = 'needsAccess'
         }
-        $kept += , $item
       }
-      $resolved['items'] = $kept
     }
-    if ($resolved.Contains('type') -and $resolved['type'] -eq 'hero' -and $resolved.Contains('cta') -and [string]::IsNullOrWhiteSpace([string]$resolved['cta']['href'])) {
-      Write-Warning "The call to action '$($resolved['cta']['label'])' on $where has no link (its URL parameter is blank) and is left out."
-      $resolved.Remove('cta')
+    if ($resolved.Contains('type') -and $resolved['type'] -eq 'hero' -and $resolved.Contains('cta') -and (Test-Unlinked $resolved['cta'])) {
+      Write-Warning "The call to action '$($resolved['cta']['label'])' on $where has no link (its URL parameter is blank) and is shown as closed."
+      $resolved['cta']['state'] = 'needsAccess'
     }
     return $resolved
   }
@@ -234,6 +239,12 @@ foreach ($page in $definition['pages']) {
   }
 }
 $document = [ordered]@{ version = 1; pages = $documentPages }
+# The route table goes through the same token pass as the blocks; vocabulary and settings are copied as written
+# (their {organization} and {role} tokens belong to the web part, and Resolve-Text would refuse them).
+if ($definition.Contains('routes')) { $document['routes'] = Resolve-Node $definition['routes'] 'routes' }
+foreach ($section in @('vocabulary', 'settings')) {
+  if ($definition.Contains($section)) { $document[$section] = $definition[$section] }
+}
 $documentJson = $document | ConvertTo-Json -Depth 20
 
 Write-Host "Uploading $contentPath ($($documentPages.Count) pages) ..."
@@ -330,7 +341,7 @@ Write-Host "Content document: $contentPath ($($documentPages.Count) pages; earli
 Write-Host "Created: $($created.Count) page(s)$(if ($created.Count -gt 0) { ' - ' + ($created -join ', ') })"
 Write-Host "Skipped: $($skipped.Count) page(s)$(if ($skipped.Count -gt 0) { ' - ' + ($skipped -join ', ') })"
 Write-Host "Locked: $($locked.Count) page(s)$(if ($locked.Count -gt 0) { ' - ' + ($locked -join ', ') })"
-Write-Host 'Navigation and home page set. Open each page once in the browser; a warning above names any tile or link left out because its URL parameter was blank.'
+Write-Host 'Navigation and home page set. Open each page once in the browser; a warning above names any tile or call to action shown as closed because its URL parameter was blank.'
 if ($locked.Count -gt 0) {
   throw "$($locked.Count) page(s) were left as they were because they are locked for editing: $($locked -join ', '). Close the browser tabs that have them open, wait a few minutes, and rerun with -Overwrite."
 }

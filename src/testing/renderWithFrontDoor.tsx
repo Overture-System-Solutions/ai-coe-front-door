@@ -4,7 +4,9 @@ import * as React from 'react';
 import { createBranding } from '../webparts/aiCoeFrontDoor/branding/branding';
 import type { IBranding } from '../webparts/aiCoeFrontDoor/branding/branding';
 import type { TelemetryProvider } from '../webparts/aiCoeFrontDoor/content/telemetryTiles';
+import type { RouteTable } from '../webparts/aiCoeFrontDoor/content/routes';
 import { createWorkflowCatalog } from '../webparts/aiCoeFrontDoor/content/workflows/catalog';
+import { createPageDocumentContext, PageDocumentProvider } from '../webparts/aiCoeFrontDoor/components/pages/PageDocumentContext';
 import { FrontDoorProvider } from '../webparts/aiCoeFrontDoor/context/FrontDoorContext';
 import type { IFrontDoorContextValue, IFrontDoorUser } from '../webparts/aiCoeFrontDoor/context/FrontDoorContext';
 import { SubmissionProvider } from '../webparts/aiCoeFrontDoor/context/SubmissionContext';
@@ -37,6 +39,12 @@ export interface ITestFrontDoorOptions {
   pageContent?: IPageContentService;
   /** Records where page views navigate to; a fresh mock unless given. */
   navigate?: jest.Mock;
+  /** The clock the page document context hands to the blocks; the moment of rendering unless given. */
+  now?: Date;
+  /** The route table the blocks resolve against when no content page provides one; empty by default. */
+  routes?: RouteTable;
+  /** Role ids the person holds; none by default. */
+  roles?: string[];
 }
 
 export interface ITestFrontDoor {
@@ -79,7 +87,9 @@ export function renderWithFrontDoor(ui: React.ReactElement, options: ITestFrontD
   const testFrontDoor: ITestFrontDoor = createTestFrontDoor(options);
   const result: RenderResult = render(
     <FrontDoorProvider value={testFrontDoor.value}>
-      <SubmissionProvider governanceService={testFrontDoor.governance}>{ui}</SubmissionProvider>
+      <SubmissionProvider governanceService={testFrontDoor.governance}>
+        <PageDocumentProvider value={createPageDocumentContext({ now: options.now, routes: options.routes, roles: options.roles })}>{ui}</PageDocumentProvider>
+      </SubmissionProvider>
     </FrontDoorProvider>
   );
   return { ...result, ...testFrontDoor };
