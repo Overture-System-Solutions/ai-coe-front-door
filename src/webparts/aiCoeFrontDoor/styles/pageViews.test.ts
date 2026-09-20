@@ -258,6 +258,17 @@ describe('Page view stylesheet', () => {
     }
   });
 
+  it('gives every focusable control in a page view the shipped 3px focus ring (WCAG 2.2 2.4.7, 2.4.11)', () => {
+    // The ring is the shipped service-card ring (#0b66d4, 3px, offset 3px), applied by element so a block never ships a control without one.
+    for (const control of ['a', 'button', 'input', 'select', 'textarea']) {
+      expect(rule(table, `.ai-view ${control}:focus-visible`)).toEqual(['outline-offset:3px', 'outline:3px solid #0b66d4']);
+    }
+    expect(shipped.indexOf('outline: 3px solid #0b66d4')).toBeGreaterThan(-1);
+    // On the dark hero the ring keeps the shipped hero colour, which the blue ring would not contrast against.
+    expect(rule(table, '.ai-view .ai-hero a:focus-visible')).toEqual(['outline-color:#8be9ff']);
+    expect(shipped.indexOf('outline: 3px solid #8be9ff')).toBeGreaterThan(-1);
+  });
+
   it('stacks the content page blocks in the narrow layout', () => {
     for (const grid of ['.ai-page-tiles', '.ai-page-cards', '.ai-page-cards--3', '.ai-page-lanes', '.ai-page-status']) {
       expect(rule(table, `.ai-view--narrow ${grid}`)).toEqual(['grid-template-columns:1fr']);

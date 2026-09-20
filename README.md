@@ -317,6 +317,12 @@ The shipped stylesheet is reproduced exactly (`styles/cssParity.test.ts` proves 
   the web part sources. The output is git-ignored; `tailwind.config.js` keeps the shipped `important` prefix.
 - `styles/frontDoor.global.scss` holds the hand-written rules verbatim; `styles/theme.global.scss` holds the theme
   block the shipped bundle injected at runtime, scoped to the web part root without changing the cascade.
+- `styles/pageViews.global.scss` and `styles/pageResponsive.global.scss` are additive: every rule is scoped under a
+  `.ai-view` class the legacy view never carries, so the shipped rules are never shadowed. The first holds the page
+  view modifiers, the block rules and the keyboard focus ring (every link and form control in a page view shows the
+  shipped 3px ring); the second holds only media queries (one column below 800px, no hero illustration below 480px,
+  no transitions or hover lifts under `prefers-reduced-motion`). `styles/pageViews.test.ts` and
+  `styles/pageResponsive.test.ts` guard the scope, the at-rule split and the rules.
 - The stylesheets must keep the `.global.scss` suffix: the SharePoint Framework loader hashes every selector of any
   other stylesheet name as a CSS module (`AiCoeFrontDoorWebPart.test.ts` asserts the injected selectors).
 - `AiCoeFrontDoor.module.scss` is the one CSS module (two classes), as shipped.
@@ -328,7 +334,7 @@ parser and markup, form engine, services, summaries), React Testing Library comp
 services (including every content block), bundle-level lifecycle tests that
 load the built AMD bundle in a simulated SPFx host, a journey parity suite that plays every workflow through the
 shipped 1.0.0.7 bundle and the port side by side (screens, drafts, downloads and posted list items must match), the
-stylesheet parity test plus the page view stylesheet guard, a preview-server test, a hostile-document test (script
+stylesheet parity test plus the page view and responsive stylesheet guards, a preview-server test, a hostile-document test (script
 tags, executable link schemes, a 200 kB string, arrays nested fifty deep and `__proto__` keys render as text and dead
 anchors), and static checks on the page definition, the provisioning script and the lint configuration (`react/no-danger`
 is an error and no source under the web part uses `dangerouslySetInnerHTML`). Any React `act()` warning fails the suite.

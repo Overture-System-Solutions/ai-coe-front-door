@@ -9,12 +9,13 @@ import type { IPropertyPaneConfiguration, IPropertyPaneField, IPropertyPaneGroup
 import { BaseClientSideWebPart } from '@microsoft/sp-webpart-base';
 import * as strings from 'AiCoeFrontDoorWebPartStrings';
 
-// Order matters: utilities first, then the hand-written rules, then the theme variables, then the page view modifiers.
-// They must stay *.global.scss: the framework hashes the selectors of every other stylesheet name.
+// Order matters: utilities first, then the hand-written rules, then the theme variables, then the page view modifiers,
+// then their media queries. They must stay *.global.scss: the framework hashes the selectors of every other stylesheet name.
 import './styles/tailwind.generated.global.scss';
 import './styles/frontDoor.global.scss';
 import './styles/theme.global.scss';
 import './styles/pageViews.global.scss';
+import './styles/pageResponsive.global.scss';
 
 import { createBranding } from './branding/branding';
 import type { IBranding } from './branding/branding';

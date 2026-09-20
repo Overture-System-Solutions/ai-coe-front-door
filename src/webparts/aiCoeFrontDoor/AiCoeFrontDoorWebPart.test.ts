@@ -110,6 +110,12 @@ describe('AiCoeFrontDoorWebPart bundle', () => {
     // The page view modifiers ship as a fourth unhashed stylesheet.
     expect(injected).toContain('#overture-ai-coe-pilot .ai-view--narrow .ai-home-grid .ai-service-card{');
     expect(injected).toContain('#overture-ai-coe-pilot .ai-view--page .ai-page-tiles{');
+    // The focus ring is a selector list; cssnano keeps only the last selector before the brace.
+    expect(injected).toContain('#overture-ai-coe-pilot .ai-view textarea:focus-visible{');
+    // The page-view media queries ship as a fifth unhashed stylesheet, minified like the others.
+    expect(injected).toMatch(/@media \(max-width:800px\)\{#overture-ai-coe-pilot \.ai-view /);
+    expect(injected).toMatch(/@media \(max-width:480px\)\{#overture-ai-coe-pilot \.ai-view /);
+    expect(injected).toMatch(/@media \(prefers-reduced-motion:reduce\)\{#overture-ai-coe-pilot \.ai-view /);
     expect(injected).not.toMatch(/overture-ai-coe-pilot_[0-9a-f]{8}/);
     expect(injected).toMatch(/\.aiCoeFrontDoor_[0-9a-f]{8}\{/);
   });
