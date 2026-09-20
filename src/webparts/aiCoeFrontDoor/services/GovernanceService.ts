@@ -1,5 +1,7 @@
 import { includes } from '../utils/collections';
 import type { SubmissionWorkflowType } from '../workflows/types';
+import { classifyError, failureLogDetail, failureUserMessage, statusError } from './failureClass';
+import type { FailureClass } from './failureClass';
 import { evaluateFlags } from './flags';
 import type { IRecord, ISubmissionFlags } from './flags';
 import { createIntakeId } from './intakeId';
@@ -61,9 +63,10 @@ function errorMessage(error: unknown): string {
   return error instanceof Error ? error.message : String(error);
 }
 
+/** The shipped `<list> returned <status>: <body>` error, with the status kept beside the message for the failure class. */
 async function failureError(listTitle: string, response: IListResponse): Promise<Error> {
   const body: string = await response.text();
-  return new Error(`${listTitle} returned ${response.status}: ${body.slice(0, 500)}`);
+  return statusError(listTitle, response.status, body.slice(0, 500));
 }
 
 /** Writes submissions to the pilot intake list (and the core use-case list) and reads the admin dashboard data. */
@@ -149,11 +152,15 @@ export class GovernanceService implements IGovernanceService {
           : 'Submission received and added to the AI CoE service queue.'
       };
     } catch (error) {
-      console.error('AI CoE submission failed', error);
+      // The console gets the status and the class only; the shipped message keeps the body for the legacy panel.
+      console.error('AI CoE submission failed', failureLogDetail(error));
+      const failureClass: FailureClass = classifyError(error);
       return {
         connected: false,
         intakeId,
-        message: `SharePoint could not create the AI CoE record. ${errorMessage(error)}`
+        message: `SharePoint could not create the AI CoE record. ${errorMessage(error)}`,
+        failureClass,
+        userMessage: failureUserMessage(failureClass)
       };
     }
   }
@@ -177,13 +184,16 @@ export class GovernanceService implements IGovernanceService {
       ]);
       return { connected: true, intakes, useCases, decisions, message: 'SharePoint governance data refreshed.' };
     } catch (error) {
-      console.error('AI CoE dashboard refresh failed', error);
+      console.error('AI CoE dashboard refresh failed', failureLogDetail(error));
+      const failureClass: FailureClass = classifyError(error);
       return {
         connected: false,
         intakes: [],
         useCases: [],
         decisions: [],
-        message: `The dashboard could not load SharePoint data. ${errorMessage(error)}`
+        message: `The dashboard could not load SharePoint data. ${errorMessage(error)}`,
+        failureClass,
+        userMessage: failureUserMessage(failureClass)
       };
     }
   }

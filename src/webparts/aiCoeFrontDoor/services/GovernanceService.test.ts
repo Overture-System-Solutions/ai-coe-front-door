@@ -190,13 +190,76 @@ describe('GovernanceService.submitWorkflow', () => {
       expect(result).toEqual({
         connected: false,
         intakeId: 'OVT-AICOE-20260911-FIXEDSUF',
-        message: 'SharePoint could not create the AI CoE record. AI CoE Pilot Intakes returned 500: boom'
+        message: 'SharePoint could not create the AI CoE record. AI CoE Pilot Intakes returned 500: boom',
+        failureClass: 'TRANSIENT',
+        userMessage: 'Not available right now; try again.'
       });
-      expect(errorSpy).toHaveBeenCalledWith('AI CoE submission failed', expect.any(Error));
+      expect(errorSpy).toHaveBeenCalledWith('AI CoE submission failed', 'AI CoE Pilot Intakes returned 500 (TRANSIENT)');
       expect(posts(store)).toHaveLength(1);
     } finally {
       errorSpy.mockRestore();
     }
+  });
+
+  it('classifies a refused write and keeps the response body out of the user message and the console', async () => {
+    const { store, service } = createHarness();
+    const body: string = '{"error":{"message":"Access denied. token=eyJabc"}}';
+    store.fail(INTAKES_LIST_TITLE, 403, body);
+    const errorSpy: jest.SpyInstance = jest.spyOn(console, 'error').mockImplementation((): void => undefined);
+    try {
+      const result: ISubmissionResult = await service.submitWorkflow('feedback', { originalAnswers: {} });
+      expect(result.connected).toBe(false);
+      expect(result.failureClass).toBe('PERMISSION');
+      expect(result.userMessage).toBe('Needs access.');
+      expect(result.userMessage).not.toContain('token');
+      expect(result.message).toBe(`SharePoint could not create the AI CoE record. AI CoE Pilot Intakes returned 403: ${body}`);
+      expect(errorSpy).toHaveBeenCalledWith('AI CoE submission failed', 'AI CoE Pilot Intakes returned 403 (PERMISSION)');
+    } finally {
+      errorSpy.mockRestore();
+    }
+  });
+
+  it('classifies a missing list as a source failure and a rejected client as transient', async () => {
+    const errorSpy: jest.SpyInstance = jest.spyOn(console, 'error').mockImplementation((): void => undefined);
+    try {
+      const store: InMemoryListStore = new InMemoryListStore([]);
+      const missing: GovernanceService = new GovernanceService(
+        { siteUrl: 'https://example.sharepoint.com', user: { displayName: 'Pat', email: 'pat@example.com' }, client: createFakeListClient(store), configuration: undefined },
+        (): Date => FIXED_NOW,
+        (): string => 'OVT-AICOE-20260911-FIXEDSUF'
+      );
+      const notFound: ISubmissionResult = await missing.submitWorkflow('feedback', {});
+      expect(notFound.failureClass).toBe('SOURCE');
+      expect(notFound.userMessage).toBe('Not available on this site.');
+      expect(notFound.message).toBe('SharePoint could not create the AI CoE record. AI CoE Pilot Intakes returned 404: List not found');
+      expect(errorSpy).toHaveBeenLastCalledWith('AI CoE submission failed', 'AI CoE Pilot Intakes returned 404 (SOURCE)');
+
+      const offline: GovernanceService = new GovernanceService(
+        {
+          siteUrl: 'https://example.sharepoint.com',
+          user: { displayName: 'Pat', email: 'pat@example.com' },
+          client: { get: (): Promise<never> => Promise.reject(new Error('Failed to fetch')), post: (): Promise<never> => Promise.reject(new Error('Failed to fetch')) },
+          configuration: undefined
+        },
+        (): Date => FIXED_NOW,
+        (): string => 'OVT-AICOE-20260911-FIXEDSUF'
+      );
+      const network: ISubmissionResult = await offline.submitWorkflow('feedback', {});
+      expect(network.failureClass).toBe('TRANSIENT');
+      expect(network.userMessage).toBe('Not available right now; try again.');
+      expect(network.message).toBe('SharePoint could not create the AI CoE record. Failed to fetch');
+      expect(errorSpy).toHaveBeenLastCalledWith('AI CoE submission failed', 'TRANSIENT: Failed to fetch');
+    } finally {
+      errorSpy.mockRestore();
+    }
+  });
+
+  it('carries no failure class on a successful write', async () => {
+    const { service } = createHarness();
+    const result: ISubmissionResult = await service.submitWorkflow('feedback', {});
+    expect(result.connected).toBe(true);
+    expect(result.failureClass).toBeUndefined();
+    expect(result.userMessage).toBeUndefined();
   });
 });
 
@@ -232,11 +295,48 @@ describe('GovernanceService.getAdminDashboardData', () => {
         intakes: [],
         useCases: [],
         decisions: [],
-        message: 'The dashboard could not load SharePoint data. AI CoE Decisions returned 403: Access denied'
+        message: 'The dashboard could not load SharePoint data. AI CoE Decisions returned 403: Access denied',
+        failureClass: 'PERMISSION',
+        userMessage: 'Needs access.'
       });
-      expect(errorSpy).toHaveBeenCalledWith('AI CoE dashboard refresh failed', expect.any(Error));
+      expect(errorSpy).toHaveBeenCalledWith('AI CoE dashboard refresh failed', 'AI CoE Decisions returned 403 (PERMISSION)');
     } finally {
       errorSpy.mockRestore();
     }
+  });
+
+  it('classifies a missing list and a rejected client without exposing a body', async () => {
+    const errorSpy: jest.SpyInstance = jest.spyOn(console, 'error').mockImplementation((): void => undefined);
+    try {
+      const { store, service } = createHarness();
+      store.fail(INTAKES_LIST_TITLE, 404, '{"error":"List does not exist at site"}');
+      const missing: IAdminDashboardData = await service.getAdminDashboardData();
+      expect(missing.connected).toBe(false);
+      expect(missing.failureClass).toBe('SOURCE');
+      expect(missing.userMessage).toBe('Not available on this site.');
+      expect(errorSpy).toHaveBeenLastCalledWith('AI CoE dashboard refresh failed', 'AI CoE Pilot Intakes returned 404 (SOURCE)');
+
+      const offline: GovernanceService = new GovernanceService({
+        siteUrl: 'https://example.sharepoint.com',
+        user: { displayName: 'Pat', email: 'pat@example.com' },
+        client: { get: (): Promise<never> => Promise.reject(new Error('Failed to fetch')), post: (): Promise<never> => Promise.reject(new Error('Failed to fetch')) },
+        configuration: undefined
+      });
+      const network: IAdminDashboardData = await offline.getAdminDashboardData();
+      expect(network.failureClass).toBe('TRANSIENT');
+      expect(network.userMessage).toBe('Not available right now; try again.');
+      expect(network.message).toBe('The dashboard could not load SharePoint data. Failed to fetch');
+      expect(errorSpy).toHaveBeenLastCalledWith('AI CoE dashboard refresh failed', 'TRANSIENT: Failed to fetch');
+    } finally {
+      errorSpy.mockRestore();
+    }
+  });
+
+  it('carries no failure class when every list answered', async () => {
+    const { service } = createHarness();
+    const data: IAdminDashboardData = await service.getAdminDashboardData();
+    expect(data.connected).toBe(true);
+    expect(data.failureClass).toBeUndefined();
+    expect(data.userMessage).toBeUndefined();
   });
 });

@@ -222,7 +222,9 @@ describe('UsageMetricsService.getMetrics', () => {
       expect(withoutUsage.message).toBe('One SharePoint data source is unavailable.');
       expect(keys(withoutUsage.metrics)).toEqual(['open_coe_alerts']);
       expect(withoutUsage.alerts).toHaveLength(2);
-      expect(warnSpy).toHaveBeenCalledWith('AI Usage Daily is unavailable', expect.any(Error));
+      expect(withoutUsage.failureClass).toBe('SOURCE');
+      expect(withoutUsage.userMessage).toBe('Not available on this site.');
+      expect(warnSpy).toHaveBeenCalledWith('AI Usage Daily is unavailable', 'AI Usage Daily returned 404 (SOURCE)');
 
       const incidentsDown: { store: InMemoryListStore; service: UsageMetricsService } = createHarness();
       incidentsDown.store.fail(INCIDENTS_LIST_TITLE);
@@ -230,13 +232,29 @@ describe('UsageMetricsService.getMetrics', () => {
       const withoutIncidents: IUsageMetricsResult = await incidentsDown.service.getMetrics();
       expect(keys(withoutIncidents.metrics)).toEqual(['openai_api_spend_mtd', 'openai_api_requests_mtd', 'openai_api_tokens_mtd']);
       expect(withoutIncidents.alerts).toEqual([]);
-      expect(warnSpy).toHaveBeenCalledWith('AI CoE Incidents is unavailable', expect.any(Error));
+      expect(withoutIncidents.failureClass).toBe('TRANSIENT');
+      expect(withoutIncidents.userMessage).toBe('Not available right now; try again.');
+      expect(warnSpy).toHaveBeenCalledWith('AI CoE Incidents is unavailable', 'AI CoE Incidents returned 500 (TRANSIENT)');
 
       const bothDown: { store: InMemoryListStore; service: UsageMetricsService } = createHarness();
-      bothDown.store.fail(USAGE_LIST_TITLE);
+      bothDown.store.fail(USAGE_LIST_TITLE, 403, '{"error":"Access denied token=eyJabc"}');
       bothDown.store.fail(INCIDENTS_LIST_TITLE);
       const nothing: IUsageMetricsResult = await bothDown.service.getMetrics();
-      expect(nothing).toEqual({ connected: false, metrics: [], alerts: [], message: 'SharePoint usage and incident data are unavailable.' });
+      expect(nothing).toEqual({
+        connected: false,
+        metrics: [],
+        alerts: [],
+        message: 'SharePoint usage and incident data are unavailable.',
+        failureClass: 'PERMISSION',
+        userMessage: 'Needs access.'
+      });
+      expect(warnSpy).toHaveBeenCalledWith('AI Usage Daily is unavailable', 'AI Usage Daily returned 403 (PERMISSION)');
+
+      const connected: { store: InMemoryListStore; service: UsageMetricsService } = createHarness();
+      const fine: IUsageMetricsResult = await connected.service.getMetrics();
+      expect(fine.connected).toBe(true);
+      expect(fine.failureClass).toBeUndefined();
+      expect(fine.userMessage).toBeUndefined();
     } finally {
       warnSpy.mockRestore();
     }

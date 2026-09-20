@@ -7,9 +7,11 @@
  */
 import { parsePageDocument } from '../content/pageContent';
 import type { IPageDocument } from '../content/pageContent';
-import type { IListResponse, IServiceContext } from './types';
+import { classifyError, classifyResponse, failureUserMessage } from './failureClass';
+import type { FailureClass } from './failureClass';
+import type { IFailureFields, IListResponse, IServiceContext } from './types';
 
-export interface IPageContentResult {
+export interface IPageContentResult extends IFailureFields {
   /** False when the file could not be read at all (missing, forbidden, network). */
   connected: boolean;
   /** Present only when the file is a version 1 page document. */
@@ -79,7 +81,13 @@ export class PageContentService implements IPageContentService {
         headers: FILE_HEADERS
       });
       if (!response.ok) {
-        return { connected: false, message: `The page document could not be read: ${this._contentUrl} answered ${response.status}.` };
+        const failureClass: FailureClass = classifyResponse(response);
+        return {
+          connected: false,
+          message: `The page document could not be read: ${this._contentUrl} answered ${response.status}.`,
+          failureClass,
+          userMessage: failureUserMessage(failureClass)
+        };
       }
       const text: string = await response.text();
       if (text.length > MAX_DOCUMENT_CHARS) {
@@ -91,7 +99,13 @@ export class PageContentService implements IPageContentService {
       }
       return { connected: true, document, message: `Page content loaded from ${this._contentUrl}.` };
     } catch (error) {
-      return { connected: false, message: `The page document could not be read: ${describeError(error)}` };
+      const failureClass: FailureClass = classifyError(error);
+      return {
+        connected: false,
+        message: `The page document could not be read: ${describeError(error)}`,
+        failureClass,
+        userMessage: failureUserMessage(failureClass)
+      };
     }
   }
 }

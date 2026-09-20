@@ -1,7 +1,17 @@
 import type { SubmissionWorkflowType } from '../workflows/types';
+import type { FailureClass } from './failureClass';
+
+/**
+ * What a failed read or write carries beside its shipped `message`: the class of the failure and a
+ * sentence with no response body in it. Absent when the call succeeded.
+ */
+export interface IFailureFields {
+  failureClass?: FailureClass;
+  userMessage?: string;
+}
 
 /** Outcome of writing a submission to SharePoint. `connected` is false when the write failed. */
-export interface ISubmissionResult {
+export interface ISubmissionResult extends IFailureFields {
   connected: boolean;
   intakeId?: string;
   itemId?: number;
@@ -16,7 +26,7 @@ export interface IListItem {
   [field: string]: unknown;
 }
 
-export interface IAdminDashboardData {
+export interface IAdminDashboardData extends IFailureFields {
   connected: boolean;
   intakes: IListItem[];
   useCases: IListItem[];
@@ -61,7 +71,7 @@ export interface IUsageAlert {
   details: string;
 }
 
-export interface IUsageMetricsResult {
+export interface IUsageMetricsResult extends IFailureFields {
   connected: boolean;
   metrics: IUsageMetric[];
   alerts: IUsageAlert[];
