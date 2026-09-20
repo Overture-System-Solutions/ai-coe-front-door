@@ -8,6 +8,8 @@ define([], function() {
     "GovernanceReferenceFieldDescription": "Policy reference quoted on review requests, for example a policy name, version and date. Leave blank for the default wording.",
     "ReviewSystemNameFieldLabel": "Review system name",
     "ReviewSystemNameFieldDescription": "Name of the performance-review system quoted in tool guidance. Leave blank for the default wording.",
+    "RoleGroupsFieldLabel": "Role groups",
+    "RoleGroupsFieldDescription": "Site groups that map to roles, as role=Group title pairs separated by semicolons: leader=…; operator=…; designAuthority=…. Site owners always count as operators.",
     "DraftingGroupName": "AI drafting",
     "DraftServiceUrlFieldLabel": "AI draft flow URL",
     "DraftServiceUrlFieldDescription": "HTTP trigger URL of the drafting flow. The flow must allow any user in the tenant, and the Microsoft Flow Service API permission must be approved. Leave blank to keep plain summaries.",

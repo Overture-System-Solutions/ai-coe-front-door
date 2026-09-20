@@ -3,7 +3,8 @@
  * options the services send (`$select`, `$orderby`, `$top`, a one-field `$filter ... eq '...'`),
  * `items(<Id>)` reads, optional paging through `@odata.nextLink`, injected failures (`fail`,
  * `deny`, lifted again by `recover`), a hook that runs after a POST is committed (`afterPost`),
- * item-level read trimming (`trimTo`), and records every request for assertions.
+ * item-level read trimming (`trimTo`), the site groups of the signed-in person (`setGroups`,
+ * `denyGroups`, read through `_api/web/currentuser/groups`), and records every request for assertions.
  * Test support only: never bundled into the web part.
  */
 import type { IListClient, IListRequestOptions, IListResponse } from '../webparts/aiCoeFrontDoor/services/types';
@@ -19,6 +20,8 @@ export interface IRecordedRequest {
   list: string | undefined;
   /** Server-relative path when the request read a file instead of a list. */
   file?: string;
+  /** True when the request read the site groups of the signed-in person instead of a list. */
+  groups?: true;
   query: { [name: string]: string };
   headers: { [name: string]: string };
   body: unknown;
@@ -36,6 +39,7 @@ export type AfterPostHook = (item: IStoredItem) => void;
 const PERSON_FIELDS: readonly string[] = ['RequestorEmail', 'SubmitterEmail'];
 
 const ITEMS_URL: RegExp = /getbytitle\('((?:[^']|'')*)'\)\/items(?:\((\d+)\))?(?:\?(.*))?$/;
+const GROUPS_URL: RegExp = /\/_api\/web\/currentuser\/groups(?:\?(.*))?$/i;
 const FILE_URL: RegExp = /GetFileByServerRelativeUrl\('((?:[^']|'')*)'\)\/\$value$/i;
 const EQ_FILTER: RegExp = /^\s*([A-Za-z_][A-Za-z0-9_]*)\s+eq\s+'((?:[^']|'')*)'\s*$/;
 
@@ -110,6 +114,8 @@ export class InMemoryListStore {
   private readonly _files: { [serverRelativePath: string]: string } = {};
   private readonly _pageSize: number | undefined;
   private _reader: string | undefined;
+  private _groups: IStoredItem[] = [];
+  private _groupsFailure: IListFailure | undefined;
   private _nextId: number = 1;
 
   public constructor(titles: readonly string[], pageSize?: number) {
@@ -134,6 +140,19 @@ export class InMemoryListStore {
   /** Makes a file readable through `GetFileByServerRelativeUrl('<path>')/$value`. */
   public seedFile(serverRelativePath: string, body: string): void {
     this._files[serverRelativePath] = body;
+  }
+
+  /**
+   * The site groups `_api/web/currentuser/groups` reports for the signed-in person, in the order
+   * given; each gets an id, as the server assigns one. Seeding again replaces the whole membership.
+   */
+  public setGroups(titles: readonly string[]): void {
+    this._groups = titles.map((title: string): IStoredItem => ({ Id: this._nextId++, Title: title }));
+  }
+
+  /** Refuses every read of the site groups, as a web whose membership the person may not read does. */
+  public denyGroups(status: number = 403): void {
+    this._groupsFailure = { status, body: 'Access denied' };
   }
 
   /** Makes every request to the list fail with the given status and body. */
@@ -171,6 +190,16 @@ export class InMemoryListStore {
       const file: string = fileMatch[1].replace(/''/g, "'");
       this.requests.push({ method, url, list: undefined, file, query: {}, headers: options.headers, body: undefined });
       return Object.prototype.hasOwnProperty.call(this._files, file) ? respond(200, this._files[file]) : respond(404, 'File not found');
+    }
+    const groupsMatch: RegExpExecArray | null = GROUPS_URL.exec(url);
+    if (groupsMatch) {
+      const groupsQuery: { [name: string]: string } = parseQuery(groupsMatch[1]);
+      this.requests.push({ method, url, list: undefined, groups: true, query: groupsQuery, headers: options.headers, body: undefined });
+      if (this._groupsFailure) {
+        return respond(this._groupsFailure.status, this._groupsFailure.body);
+      }
+      const select: string[] | undefined = groupsQuery.$select ? groupsQuery.$select.split(',') : undefined;
+      return respond(200, { value: this._groups.map((group: IStoredItem): object => project(group, select)) });
     }
     const match: RegExpExecArray | null = ITEMS_URL.exec(url);
     const list: string | undefined = match ? match[1].replace(/''/g, "'") : undefined;

@@ -37,6 +37,8 @@ const LEGACY_PROPERTIES: { [name: string]: unknown } = {
   // Blank reproduces the shipped wording in the legacy view and neutral wording in page views (decision 21).
   governanceReference: '',
   reviewSystemName: '',
+  // Blank binds no site group, so every person keeps the employee role and a site owner the operator role (decision 8).
+  roleGroups: '',
   draftServiceUrl: '',
   telemetryProvider: 'claude',
   view: 'legacy',

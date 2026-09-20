@@ -168,6 +168,17 @@ The script writes both on every instance from the `GovernanceReference` and `Rev
 reports a blank `GovernanceReference` as AWAITING in its end-of-run summary; both default literals are rows of
 `docs/content-claims.md` (class `binding`) and of "Portability exceptions" below.
 
+A third Branding property (since 1.0.0.14), `roleGroups`, binds site groups to the four roles the front door knows
+(`employee`, `leader`, `operator`, `designAuthority`): pairs of a role id and a site group title, one pair per
+semicolon, for example `leader=AI CoE Leaders;operator=AI CoE Operators`. The web part reads the groups of the
+signed-in person once per page (`_api/web/currentuser/groups`), matches the titles case-insensitively and keeps
+everyone an employee; a site owner (the one `manageWeb` check the web part has always made) also counts as an
+operator, and the design-authority role stays unheld until a group is bound to it. A refused or unanswered read
+never widens a role: the person keeps the employee role and the page says the membership was not confirmed. There
+is no role selector anywhere in the bundle and no role is read out of the address; the offline preview simulates one
+(`?role=`) behind its own banner. Roles decide what a page offers, never what the server hands out: list and page
+permissions remain the control.
+
 Data contracts never change: intake ids (`OVT-AICOE-…`), list titles and field names, the localStorage draft keys
 (`overture-ai-coe-front-door:draft:*`), download file names (`overture-ai-coe-*.txt`), the DOM scope id
 (`overture-ai-coe-pilot`), the confirm dialog heading id (`overture-confirm-title`) and the `.overture-*` classes of
@@ -561,6 +572,7 @@ the identity line, the site's owners group on the admin page). Bindings, the pro
 | `organizationName` | web part property (Branding), written by the script from `OrganizationName` | property | neutral wording |
 | `governanceReference` | web part property (Branding), written by the script from `GovernanceReference` | property | the shipped literal in the legacy view, "reference not yet set" in page views |
 | `reviewSystemName` | web part property (Branding), written by the script from `ReviewSystemName` | property | the shipped literal in the legacy view, "the review system" in page views |
+| `roleGroups` | web part property (Branding), written by the script from the group parameters (1.0.0.14) | property | no site group is bound: everyone holds the employee role, a site owner also the operator role, and a page that asks for another role is not offered |
 | `draftServiceUrl` | web part property (AI drafting) on the idea page, written by the script from `DraftServiceUrl` | property | plain summaries |
 | `telemetryProvider` | web part property (Telemetry) on Operations, written by the script from `TelemetryProvider` | property | `claude` |
 | AI CoE Pilot Intakes | the package feature (`sharepoint/assets/intake-schema.xml`), untouched on upgrade | list | absent: a submission fails and the visitor sees the shipped failure screen |

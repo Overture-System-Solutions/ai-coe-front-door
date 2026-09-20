@@ -9,6 +9,10 @@ const PAGE_KEYS = ['startHere', 'learn', 'useAi', 'requests', 'prompts', 'status
 // readback after a write fails (the pending receipt). Changing either reloads the page, because the host answers
 // requests from the query string as it was when the piece loaded.
 const DENY_TARGETS = ['none', 'intakes'];
+// Roles the host can simulate: "owner" is this preview as it always was (a site owner in no group), the rest are
+// answered as site group membership. Production resolves the role from identity; the bundle reads no role here.
+const ROLES = ['owner', 'employee', 'leader', 'operator', 'designAuthority'];
+const ROLE_GROUPS = 'leader=Preview Leaders;operator=Preview Operators;designAuthority=Preview Design Authority';
 // The home tiles link to other pages; offline, every other page is this page showing another piece.
 const PAGE_PROPERTIES = {
   pageIdea: 'idea',
@@ -35,6 +39,8 @@ const width = Number(params.get('width') ?? 0);
 const requestedDeny = params.get('deny') ?? '';
 const deny = DENY_TARGETS.includes(requestedDeny) ? requestedDeny : 'none';
 const readbackFails = params.get('readback') === 'fail';
+const requestedRole = params.get('role') ?? '';
+const role = ROLES.includes(requestedRole) ? requestedRole : 'owner';
 const input = document.getElementById('organization-name');
 const draftToggle = document.getElementById('simulate-draft');
 const providerSelect = document.getElementById('telemetry-provider');
@@ -43,6 +49,7 @@ const layoutSelect = document.getElementById('layout');
 const pageSelect = document.getElementById('page-key');
 const denySelect = document.getElementById('simulate-deny');
 const readbackToggle = document.getElementById('simulate-readback');
+const roleSelect = document.getElementById('simulate-role');
 input.value = organization;
 draftToggle.checked = simulateDraft;
 providerSelect.value = provider;
@@ -51,6 +58,7 @@ layoutSelect.value = layout;
 pageSelect.value = pageKey;
 denySelect.value = deny;
 readbackToggle.checked = readbackFails;
+roleSelect.value = role;
 if (width > 0) {
   // Approximates a section column so the narrow layout can be eyeballed.
   document.getElementById('app').style.maxWidth = `${width}px`;
@@ -71,6 +79,8 @@ const properties = {
   layout,
   pageKey,
   contentUrl: 'SiteAssets/ai-coe-pages.json',
+  // The same binding the script writes on a real site; the host answers the group membership the switch above names.
+  roleGroups: ROLE_GROUPS,
   returnUrl: viewLink('home'),
   // Blank keeps the policy library link of the simulated site, which the preview leaves inert.
   pagePolicy: ''
@@ -127,6 +137,11 @@ function syncUrl() {
   } else {
     url.searchParams.delete('readback');
   }
+  if (roleSelect.value === 'owner') {
+    url.searchParams.delete('role');
+  } else {
+    url.searchParams.set('role', roleSelect.value);
+  }
   history.replaceState(null, '', url);
 }
 
@@ -173,6 +188,13 @@ denySelect.addEventListener('change', () => {
 });
 
 readbackToggle.addEventListener('change', () => {
+  syncUrl();
+  location.reload();
+});
+
+// The simulated identity is read when the piece loads (the group membership and the one permission check), so the
+// page reloads with the new address rather than pretending a role can change under a mounted piece.
+roleSelect.addEventListener('change', () => {
   syncUrl();
   location.reload();
 });

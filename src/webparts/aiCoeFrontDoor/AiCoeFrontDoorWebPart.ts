@@ -24,6 +24,7 @@ import type { IAiCoeFrontDoorProps } from './components/AiCoeFrontDoor';
 import { createPageViewSettings, FRONT_DOOR_VIEWS, isWorkflowView, PAGE_TARGET_PROPERTIES, PAGE_TARGETS, parseFrontDoorView, parsePieceLayout, PIECE_LAYOUTS } from './content/pageViews';
 import type { FrontDoorView, IPageViewProperties, PageTarget, PieceLayout } from './content/pageViews';
 import { parseContentUrl, parseOptionalContentUrl } from './content/pageContent';
+import { parseRoleGroups } from './content/roles';
 import { parseTelemetryProvider } from './content/telemetryTiles';
 import type { IFrontDoorServices, IFrontDoorUser } from './context/FrontDoorContext';
 import { createIdeaDraftService } from './services/draftService';
@@ -34,6 +35,7 @@ import { GovernanceService } from './services/GovernanceService';
 import { MyWorkService } from './services/myWorkService';
 import { browserNavigate } from './services/navigation';
 import { PageContentService } from './services/pageContentService';
+import { RoleResolver } from './services/roleResolver';
 import { createToolPolicyEvaluator } from './services/toolPolicyEvaluator';
 import type { IServiceContext } from './services/types';
 import { UsageMetricsService } from './services/UsageMetricsService';
@@ -45,6 +47,8 @@ export interface IAiCoeFrontDoorWebPartProps extends IPageViewProperties {
   governanceReference: string;
   /** Name of the review system quoted in tool guidance; blank keeps the shipped name in the legacy view and neutral wording in page views. */
   reviewSystemName: string;
+  /** Site group titles bound to the leader, operator and design-authority roles; blank binds none of them. */
+  roleGroups: string;
   /** HTTP trigger URL of the AI draft flow; blank keeps the deterministic summaries. */
   draftServiceUrl: string;
   /** Usage feed shown by the telemetry strip: "claude" (default), "openai" (as shipped in 1.0.0.7) or "both". */
@@ -212,6 +216,11 @@ export default class AiCoeFrontDoorWebPart extends BaseClientSideWebPart<IAiCoeF
             label: strings.ReviewSystemNameFieldLabel,
             description: strings.ReviewSystemNameFieldDescription,
             placeholder: 'Contoso Review Desk'
+          }),
+          PropertyPaneTextField('roleGroups', {
+            label: strings.RoleGroupsFieldLabel,
+            description: strings.RoleGroupsFieldDescription,
+            placeholder: 'leader=AI CoE Leaders;operator=AI CoE Operators'
           })
         ]
       },
@@ -285,17 +294,21 @@ export default class AiCoeFrontDoorWebPart extends BaseClientSideWebPart<IAiCoeF
   /** The service bundle handed to React; rebuilt only when a property it depends on changes. */
   private _servicesFor(core: ICoreServices, branding: IBranding): IFrontDoorServices {
     const draftServiceUrl: string = this.properties.draftServiceUrl ?? '';
+    // Which site group stands for which role; the resolver reads the membership once per bundle.
+    const roleGroups: string = this.properties.roleGroups ?? '';
     // A content page always has a document (the default path when blank); any other piece reads one only when its
     // property bag names it, so a form page shows the shared footer and an instance from before 1.0.0.12 reads nothing.
     const contentUrl: string | undefined =
       parseFrontDoorView(this.properties.view) === 'page' ? parseContentUrl(this.properties.contentUrl) : parseOptionalContentUrl(this.properties.contentUrl);
     // The tool policy evaluator reads the branding, so every branding input joins the key.
-    const key: string = JSON.stringify([branding.organizationName, branding.governanceReference, branding.reviewSystemName, draftServiceUrl, contentUrl ?? null]);
+    const key: string = JSON.stringify([branding.organizationName, branding.governanceReference, branding.reviewSystemName, draftServiceUrl, contentUrl ?? null, roleGroups]);
     if (this._services === undefined || this._servicesKey !== key) {
       this._services = {
         governance: core.governance,
         usage: core.usage,
         myWork: core.myWork,
+        // Reads the site groups once per bundle; the manageWeb answer is passed in at the call, never checked again.
+        roles: new RoleResolver(core.serviceContext, parseRoleGroups(roleGroups)),
         draftStore: core.draftStore,
         toolPolicyEvaluator: createToolPolicyEvaluator(branding),
         ideaDrafts: createIdeaDraftService(draftServiceUrl, core.flowClient),

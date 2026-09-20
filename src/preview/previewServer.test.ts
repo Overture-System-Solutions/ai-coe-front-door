@@ -129,6 +129,28 @@ describe('offline preview server', () => {
     expect(host.body).toContain('403');
   });
 
+  it('offers the 1.0.0.14 role simulation and says where the role really comes from', async () => {
+    const page: IResponse = await get(`${base}/`);
+    const roleSelect: RegExpExecArray | null = /<select id="simulate-role">([\s\S]*?)<\/select>/.exec(page.body);
+    expect(roleSelect).not.toBeNull();
+    for (const role of ['owner', 'employee', 'leader', 'operator', 'designAuthority']) {
+      expect((roleSelect as RegExpExecArray)[1]).toContain(`option value="${role}"`);
+    }
+    expect(page.body).toContain('Preview role simulation; production resolves the role from identity.');
+    // mount.js reads the switch from the query string, binds the simulated groups to the roles and reloads on a change.
+    const mount: IResponse = await get(`${base}/mount.js`);
+    expect(mount.body).toContain("get('role')");
+    expect(mount.body).toContain('simulate-role');
+    expect(mount.body).toContain('roleGroups');
+    expect(mount.body).toContain('Preview Leaders');
+    // The host answers the site groups request the resolver makes, and the same switch answers the permission check.
+    const host: IResponse = await get(`${base}/host.js`);
+    expect(host.body).toContain('currentuser/groups');
+    expect(host.body).toContain('role=');
+    expect(host.body).toContain('Preview Design Authority');
+    expect(host.body).toContain('previewIsAdmin');
+  });
+
   it('serves only the allowlisted assets', async () => {
     for (const route of ['/react.js', '/react-dom.js', '/host.js', '/strings.js', '/bundle.js', '/mount.js']) {
       const asset: IResponse = await get(`${base}${route}`);

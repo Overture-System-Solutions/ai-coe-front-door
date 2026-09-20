@@ -9,7 +9,10 @@
  * Query switches beside `view=` and `page=`: `deny=intakes` makes every read of the intake list answer
  * 403, so the my-work piece and the status strip show their refused state; `readback=fail` makes the
  * GET by id that follows a POST answer 503, so a submission from a form page shows the pending receipt
- * ("Saved, not yet confirmed" with the confirm-again button) instead of the confirmed one.
+ * ("Saved, not yet confirmed" with the confirm-again button) instead of the confirmed one; `role=`
+ * names the role to simulate, which the host answers as site group membership and as the one
+ * permission check. The role switch exists here and nowhere else: the shipped bundle resolves the
+ * role from identity and reads nothing out of the address.
  *
  * Written without spread, rest or async/await on purpose: the ES5 build would otherwise import
  * tslib helpers, which a browser cannot resolve from a bare module specifier.
@@ -493,6 +496,59 @@ document.addEventListener('click', (event: MouseEvent): void => {
   event.preventDefault();
 });
 
+/**
+ * The simulated identity of this preview. Production resolves the role from the site groups the
+ * signed-in person belongs to; here the address says which role to simulate, so every protected page
+ * and every leader block can be seen offline. Without `role=` the simulated person is a site owner
+ * (an operator by permission) in no group at all, which is how this preview always behaved.
+ */
+const PREVIEW_ROLE_GROUPS: { role: string; title: string }[] = [
+  { role: 'leader', title: 'Preview Leaders' },
+  { role: 'operator', title: 'Preview Operators' },
+  { role: 'designAuthority', title: 'Preview Design Authority' }
+];
+
+/** The simulated role named in the address (`?role=leader`); blank for the site owner this preview signs in as. */
+function previewRole(): string {
+  const match: RegExpMatchArray | null = location.search.match(/[?&]role=([A-Za-z]+)/);
+  return match === null ? '' : match[1];
+}
+
+/** The site groups `_api/web/currentuser/groups` reports for the simulated person. */
+function previewGroupTitles(): string[] {
+  const role: string = previewRole();
+  const titles: string[] = [];
+  for (let index: number = 0; index < PREVIEW_ROLE_GROUPS.length; index++) {
+    if (PREVIEW_ROLE_GROUPS[index].role === role) {
+      titles.push(PREVIEW_ROLE_GROUPS[index].title);
+    }
+  }
+  return titles;
+}
+
+/** The simulated answer to the web part's one `manageWeb` check: the site owner, and the operator role, unless another role is named. */
+function previewIsAdmin(): boolean {
+  const role: string = previewRole();
+  return role === '' || role === 'operator';
+}
+
+/** The simulated site groups behind `_api/web/currentuser/groups`. */
+function groupsResponse(method: 'GET' | 'POST'): Promise<IPreviewResponse> {
+  const titles: string[] = previewGroupTitles();
+  const value: { Id: number; Title: string }[] = [];
+  for (let index: number = 0; index < titles.length; index++) {
+    value.push({ Id: nextId++, Title: titles[index] });
+  }
+  requests.push({ method, list: 'site groups (simulated)', body: undefined, simulated: true });
+  const result: unknown = { value };
+  return Promise.resolve({
+    ok: true,
+    status: 200,
+    json: (): Promise<unknown> => Promise.resolve(result),
+    text: (): Promise<string> => Promise.resolve(JSON.stringify(result))
+  });
+}
+
 /** The simulated file behind `GetFileByServerRelativeUrl('<path>')/$value`: matched on the trailing site path, 404 otherwise. */
 function fileResponse(method: 'GET' | 'POST', path: string): Promise<IPreviewResponse> {
   const name: string | undefined = Object.keys(files).filter(
@@ -509,6 +565,9 @@ function fileResponse(method: 'GET' | 'POST', path: string): Promise<IPreviewRes
 }
 
 function request(method: 'GET' | 'POST', url: string, options: { body?: string } | undefined): Promise<IPreviewResponse> {
+  if (String(url).match(/\/_api\/web\/currentuser\/groups/i) !== null) {
+    return groupsResponse(method);
+  }
   const fileMatch: RegExpMatchArray | null = String(url).match(/GetFileByServerRelativeUrl\('((?:[^']|'')+)'\)\/\$value/i);
   if (fileMatch !== null) {
     return fileResponse(method, fileMatch[1].replace(/''/g, "'"));
@@ -605,7 +664,7 @@ function simulatedDraft(url: string, options: { body?: string } | undefined): Pr
 const context: unknown = {
   pageContext: {
     user: { displayName: 'Local Preview (fictional)', email: 'preview@example.invalid' },
-    web: { absoluteUrl: `${location.origin}/simulated-site`, permissions: { hasPermission: (): boolean => true } }
+    web: { absoluteUrl: `${location.origin}/simulated-site`, permissions: { hasPermission: (): boolean => previewIsAdmin() } }
   },
   spHttpClient: {
     get: (url: string, _configuration: unknown, options?: { body?: string }): Promise<IPreviewResponse> => request('GET', url, options),

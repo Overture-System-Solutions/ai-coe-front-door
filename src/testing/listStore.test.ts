@@ -227,3 +227,39 @@ describe('InMemoryListStore trimTo', () => {
     expect(store.items(INTAKES)).toHaveLength(3);
   });
 });
+
+describe('InMemoryListStore site groups', () => {
+  const GROUPS_URL: string = `${SITE}/_api/web/currentuser/groups?$select=Title`;
+
+  it('answers the site groups of the signed-in person, projected by $select and recorded', async () => {
+    const { store, client } = createStore();
+    store.setGroups(['AI CoE Leaders', 'AI CoE Operators']);
+    const groups: { status: number; value: IStoredItem[] } = await getValue(client, GROUPS_URL);
+    expect(groups.status).toBe(200);
+    expect(groups.value).toEqual([{ Title: 'AI CoE Leaders' }, { Title: 'AI CoE Operators' }]);
+    const recorded: IRecordedRequest = store.requests[0];
+    expect(recorded.method).toBe('GET');
+    expect(recorded.list).toBeUndefined();
+    expect(recorded.groups).toBe(true);
+    expect(recorded.query).toEqual({ $select: 'Title' });
+  });
+
+  it('answers no group at all until one is seeded, and gives each group an id when none is asked for', async () => {
+    const { store, client } = createStore();
+    const empty: { status: number; value: IStoredItem[] } = await getValue(client, GROUPS_URL);
+    expect(empty.value).toEqual([]);
+    store.setGroups(['Ops']);
+    const seeded: { status: number; value: IStoredItem[] } = await getValue(client, `${SITE}/_api/web/currentuser/groups`);
+    expect(seeded.value).toEqual([{ Id: 1, Title: 'Ops' }]);
+  });
+
+  it('refuses the route once denied, as a site whose group membership the person may not read does', async () => {
+    const { store, client } = createStore();
+    store.setGroups(['AI CoE Leaders']);
+    store.denyGroups();
+    const refused: IListResponse = await client.get(GROUPS_URL, 'v1', { headers: HEADERS });
+    expect(refused.status).toBe(403);
+    expect(await refused.text()).toBe('Access denied');
+    expect(store.requests).toHaveLength(1);
+  });
+});

@@ -6,6 +6,7 @@ import type { IDraftStore } from '../services/draftStorage';
 import type { IMyWorkService } from '../services/myWorkService';
 import type { Navigate } from '../services/navigation';
 import type { IPageContentService } from '../services/pageContentService';
+import type { IRoleResolver } from '../services/roleResolver';
 import type { IToolPolicyEvaluator } from '../services/toolPolicyEvaluator';
 import type { IGovernanceService, IUsageMetricsService } from '../services/types';
 import type { IWorkflowCatalog } from '../workflows/types';
@@ -26,6 +27,8 @@ export interface IFrontDoorServices {
   pageContent?: IPageContentService;
   /** Reads the person's own requests; present for web parts, absent in the legacy-only test setups (the pieces then report the list as unavailable). */
   myWork?: IMyWorkService;
+  /** Resolves the roles of the signed-in person from the site groups; absent in the legacy-only test setups (everyone is then an employee). */
+  roles?: IRoleResolver;
 }
 
 /** Everything the pages need from the host: who is looking, where they are, and the services to talk to. */

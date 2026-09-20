@@ -7,6 +7,8 @@ declare interface IAiCoeFrontDoorWebPartStrings {
   GovernanceReferenceFieldDescription: string;
   ReviewSystemNameFieldLabel: string;
   ReviewSystemNameFieldDescription: string;
+  RoleGroupsFieldLabel: string;
+  RoleGroupsFieldDescription: string;
   DraftingGroupName: string;
   DraftServiceUrlFieldLabel: string;
   DraftServiceUrlFieldDescription: string;

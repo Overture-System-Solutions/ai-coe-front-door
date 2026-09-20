@@ -281,6 +281,16 @@ describe('AiCoeFrontDoorWebPart bundle', () => {
           description: 'Name of the performance-review system quoted in tool guidance. Leave blank for the default wording.',
           placeholder: 'Contoso Review Desk'
         }
+      },
+      // The roles come from site group membership; the site owners the web part already asks about count as operators.
+      {
+        targetProperty: 'roleGroups',
+        properties: {
+          label: 'Role groups',
+          description:
+            'Site groups that map to roles, as role=Group title pairs separated by semicolons: leader=…; operator=…; designAuthority=…. Site owners always count as operators.',
+          placeholder: 'leader=AI CoE Leaders;operator=AI CoE Operators'
+        }
       }
     ]);
     // The drafting flow is named for what it does, never for a provider or a first tenant's flow name.
@@ -297,7 +307,7 @@ describe('AiCoeFrontDoorWebPart bundle', () => {
     ]);
   });
 
-  it('rebuilds the services once when the governance reference or the review system name changes', async () => {
+  it('rebuilds the services once when a branding property the services read changes', async () => {
     // The page content reader is part of the service bundle, so a rebuild shows as one more document read; a render
     // with the same values reads nothing, and the core services (telemetry) are never recreated.
     const instance: IHostedInstance = await mount({
@@ -309,7 +319,9 @@ describe('AiCoeFrontDoorWebPart bundle', () => {
     expect(fileReads(instance)).toHaveLength(1);
     for (const change of [
       { name: 'governanceReference', value: 'Contoso AI policy, version 2.0, 1 March 2027' },
-      { name: 'reviewSystemName', value: 'Contoso Review Desk' }
+      { name: 'reviewSystemName', value: 'Contoso Review Desk' },
+      // The role resolver reads the group bindings, so the property joins the key that rebuilds the bundle.
+      { name: 'roleGroups', value: 'leader=AI CoE Leaders;operator=AI CoE Operators' }
     ]) {
       const before: number = fileReads(instance).length;
       setProperty(instance.webPart, change.name, change.value);
@@ -323,8 +335,19 @@ describe('AiCoeFrontDoorWebPart bundle', () => {
     await act(async (): Promise<void> => {
       instance.webPart.render();
     });
-    expect(fileReads(instance)).toHaveLength(3);
+    expect(fileReads(instance)).toHaveLength(4);
     expect(usageReads(instance)).toHaveLength(0);
+  });
+
+  it('resolves the role from identity alone: the bundle reads no role out of the address', () => {
+    // The role switch lives in the offline preview host and nowhere else (decision 8): a page that could hand
+    // itself a role in a query string would be a role selector, and the permissions would be the only control left.
+    const code: string = fs.readFileSync(bundlePath, 'utf8');
+    for (const handling of ['role=', 'location.search', 'searchParams', 'URLSearchParams']) {
+      expect({ handling, at: code.indexOf(handling) }).toEqual({ handling, at: -1 });
+    }
+    // The permission behind the operator role is still asked about once, by the web part, as it always was.
+    expect(code.indexOf('manageWeb')).toBeGreaterThan(-1);
   });
 
   it('names the review system from the property: the shipped literal in the legacy view, neutral wording in a page view', async () => {

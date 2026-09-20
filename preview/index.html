@@ -64,7 +64,16 @@ body { margin: 0; font-family: "Segoe UI", system-ui, sans-serif; }
 <option value="intakes">Request list refuses every read (403)</option>
 </select>
 <label for="simulate-readback"><input id="simulate-readback" type="checkbox"> Simulate a failed readback after a write (the pending receipt; reloads)</label>
+<label for="simulate-role">Simulate a role (reloads):</label>
+<select id="simulate-role">
+<option value="owner">Site owner: an operator by permission, in no group</option>
+<option value="employee">Employee only</option>
+<option value="leader">Leader (in the leaders group)</option>
+<option value="operator">AI CoE operator (in the operators group)</option>
+<option value="designAuthority">Design authority (in the design authority group)</option>
+</select>
 </form>
+<p>Preview role simulation; production resolves the role from identity. The simulated site groups behind this switch answer the same request the web part makes on a real site, and the shipped bundle reads no role out of the address.</p>
 <p>Usage rows and the open incident shown in the telemetry strip are fictional sample data seeded by the simulation, as are the three requests of the preview person on Status. Page views link to this page with another piece; add <code>?width=560</code> to the address to preview a narrow column, <code>?page=learn</code> to open a content page from the simulated Site Assets document, <code>?page=operations</code> for the operator-plane page that carries the telemetry strip, <code>?deny=intakes</code> to see the refused request list on Status and the first screen, or <code>?readback=fail</code> to see the pending receipt after a submission from a form page.</p>
 </aside>
 <div id="preview-error" role="alert"></div>

@@ -14,6 +14,7 @@ import { SubmissionProvider } from '../webparts/aiCoeFrontDoor/context/Submissio
 import type { IIdeaDraftService } from '../webparts/aiCoeFrontDoor/services/draftService';
 import type { IMyWorkService } from '../webparts/aiCoeFrontDoor/services/myWorkService';
 import type { IPageContentService } from '../webparts/aiCoeFrontDoor/services/pageContentService';
+import type { IRoleResolver } from '../webparts/aiCoeFrontDoor/services/roleResolver';
 import type { IToolPolicyEvaluator } from '../webparts/aiCoeFrontDoor/services/toolPolicyEvaluator';
 import type { IUsageMetricsService } from '../webparts/aiCoeFrontDoor/services/types';
 import { createFakeGovernanceService, createImmediateEvaluator, createPendingUsageService, InMemoryDraftStore } from './fakeServices';
@@ -41,6 +42,8 @@ export interface ITestFrontDoorOptions {
   pageContent?: IPageContentService;
   /** Absent by default; the my-work piece and the status strip report the request list as unavailable without it. */
   myWork?: IMyWorkService;
+  /** Absent by default; the pieces then hold the employee role alone and report the membership as unresolved. */
+  roleResolver?: IRoleResolver;
   /** The document's wording overrides the blocks read; the defaults unless given. */
   vocabulary?: IVocabulary;
   /** Records where page views navigate to; a fresh mock unless given. */
@@ -88,7 +91,8 @@ export function createTestFrontDoor(options: ITestFrontDoorOptions = {}): ITestF
       toolPolicyEvaluator: options.toolPolicyEvaluator ?? createImmediateEvaluator(branding),
       ideaDrafts: options.ideaDrafts,
       pageContent: options.pageContent,
-      myWork: options.myWork
+      myWork: options.myWork,
+      roles: options.roleResolver
     },
     navigate,
     pageView: options.pageView ?? false

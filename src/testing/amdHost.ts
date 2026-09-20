@@ -43,6 +43,10 @@ export interface IAmdHostOptions {
   deny?: { [title: string]: number };
   /** Simulates item-level read security: GETs return only the rows whose person column matches this email. */
   trimTo?: string;
+  /** Site group titles the simulated person belongs to, as `_api/web/currentuser/groups` reports them. */
+  groups?: string[];
+  /** Status the site groups route answers with instead of the membership (403 for a refusal). */
+  denyGroups?: number;
   /** Hooks that run after a POST to the list is committed, keyed by title (for example to fail the readback that follows). */
   afterPost?: { [title: string]: AfterPostHook };
   /** Simulated AI draft flow behind the Entra-authenticated client; answers 404 when absent. */
@@ -185,6 +189,12 @@ export function loadWebPartBundle(bundlePath: string, stringsPath?: string): IWe
       }
       if (options.trimTo !== undefined) {
         store.trimTo(options.trimTo);
+      }
+      if (options.groups !== undefined) {
+        store.setGroups(options.groups);
+      }
+      if (options.denyGroups !== undefined) {
+        store.denyGroups(options.denyGroups);
       }
       const permissionChecks: unknown[] = [];
       const flowResources: string[] = [];
