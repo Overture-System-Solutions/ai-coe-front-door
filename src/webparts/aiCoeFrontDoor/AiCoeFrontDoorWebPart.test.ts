@@ -22,7 +22,10 @@ import type { IWorkflowCatalog } from './workflows/types';
 
 // Every mount re-evaluates the built bundle, and coverage tracking slows each evaluation; the journeys near the end of
 // this file otherwise drift past Jest's five-second default, and a test abandoned mid-act() crashes the worker at teardown.
-jest.setTimeout(30000);
+// A test that mounts three times and plays a whole journey through each needs well past thirty seconds against the
+// minified production bundle, and an abandoned test leaks its act() warnings into the next one, so allow the same
+// sixty seconds the journey parity suite allows.
+jest.setTimeout(60000);
 
 const bundlePath: string = newestDistBundle();
 const bundle: IWebPartBundle = loadWebPartBundle(bundlePath, newestStringsChunk());
