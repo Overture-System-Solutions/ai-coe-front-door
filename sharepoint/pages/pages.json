@@ -4,7 +4,7 @@
   "parameters": {
     "OrganizationName": { "kind": "text", "description": "Organization name used in the page text and on every front-door instance." },
     "DraftServiceUrl": { "kind": "url", "description": "HTTP trigger URL of the AI draft flow for the idea page; blank keeps plain summaries." },
-    "TelemetryProvider": { "kind": "text", "description": "Usage feed for the Status page: claude, openai or both." },
+    "TelemetryProvider": { "kind": "text", "description": "Usage feed for the Operations page: claude, openai or both." },
     "AssistantName": { "kind": "text", "description": "What the approved assistant is called on every page that mentions it, for example 'the assistant'." },
     "AssistantUrl": { "kind": "url", "description": "Where 'Ask {AssistantName}' opens; blank keeps the label, closes the route and sends people to the guided request." },
     "AssistantState": { "kind": "optional", "description": "Truth state of the assistant route once it is proved on this site: availableNow (or the activation code AVAILABLE); blank keeps the route closed." },
@@ -58,7 +58,6 @@
         { "title": "Share feedback", "page": "feedback" }
       ]
     },
-    { "title": "Prompts", "page": "prompts" },
     { "title": "Status", "page": "status" }
   ],
   "routes": {
@@ -109,6 +108,17 @@
       }
     ]
   },
+  "vocabulary": {
+    "telemetry": {
+      "anthropic_api_spend_mtd": "Assistant usage: spend this month",
+      "anthropic_api_tokens_mtd": "Assistant usage: tokens this month",
+      "anthropic_api_output_tokens_mtd": "Assistant usage: output tokens this month",
+      "openai_api_spend_mtd": "Second usage feed: spend this month",
+      "openai_api_requests_mtd": "Second usage feed: requests this month",
+      "openai_api_tokens_mtd": "Second usage feed: tokens this month",
+      "open_coe_alerts": "Open incidents"
+    }
+  },
   "pages": [
     {
       "key": "startHere",
@@ -141,10 +151,11 @@
           ]
         },
         {
-          "type": "statusRow",
+          "type": "statusStrip",
           "items": [
             { "label": "{AssistantName}", "text": "Answers from approved sources only and says when something is not established.", "route": "assistant", "asOf": "{AssistantVerifiedDate}", "source": "AI CoE check" },
-            { "label": "Requests", "text": "A person reads every request. There is no automated reply and no agreed response time yet.", "state": "availableNow" }
+            { "label": "Requests", "text": "A person reads every request. There is no automated reply and no agreed response time yet.", "state": "availableNow" },
+            { "kind": "myRequests", "label": "My requests", "href": "{Page:status}" }
           ]
         },
         { "type": "heading", "level": 2, "text": "Three rules" },
@@ -441,7 +452,7 @@
             "teamUsage": "{Page:teamUsage}",
             "helpTraining": "{Page:helpTraining}",
             "feedback": "{Page:feedback}",
-            "telemetry": "{Page:status}",
+            "telemetry": "",
             "admin": "{Page:admin}",
             "policy": ""
           }
@@ -515,9 +526,10 @@
       "file": "Status.aspx",
       "commentsEnabled": true,
       "permissions": "inherit",
-      "instance": { "view": "page", "pageKey": "status", "contentUrl": "SiteAssets/ai-coe-pages.json", "layout": "wide", "organizationName": "{OrganizationName}", "governanceReference": "{GovernanceReference}", "reviewSystemName": "{ReviewSystemName}", "telemetryProvider": "{TelemetryProvider}" },
+      "instance": { "view": "page", "pageKey": "status", "contentUrl": "SiteAssets/ai-coe-pages.json", "layout": "wide", "organizationName": "{OrganizationName}", "governanceReference": "{GovernanceReference}", "reviewSystemName": "{ReviewSystemName}" },
       "blocks": [
         { "type": "paragraph", "text": "Everything on this page is what is actually true on {StatusDate}, not what is planned." },
+        { "type": "piece", "piece": "myWork" },
         {
           "type": "caseCards",
           "items": [
@@ -556,21 +568,22 @@
               "body": [
                 "**Teams pilot** — not active. Separate approval required.",
                 "**Leadership reporting** — not established. No governed reporting view exists.",
-                "**Scheduled or automated runs** — none. Everything here is something a person runs by hand.",
-                "**Self-service status lookup** — not built."
+                "**Scheduled or automated runs** — none. Everything here is something a person runs by hand."
               ],
+              "state": "notSupported",
+              "asOf": "{StatusDate}",
+              "source": "AI CoE check",
               "tone": "gold"
             }
           ]
         },
-        { "type": "piece", "piece": "telemetry" },
         {
           "type": "cards",
           "columns": 2,
           "items": [
             {
               "title": "Checking a request you sent",
-              "body": ["Keep the acknowledgement you received — it carries your record id. To find out where it stands, ask the AI CoE with that id, or use [Requests]({Page:requests}) and say you are following up. A person answers. There is no automated reply and no agreed response time."],
+              "body": ["Your own requests are listed above with the status the request list holds for them. Keep the acknowledgement you received — it carries your record id. To ask about one, use [Requests]({Page:requests}) with that id and say you are following up. A person answers. There is no automated reply and no agreed response time."],
               "tone": "blue"
             },
             {
@@ -583,6 +596,19 @@
             }
           ]
         }
+      ]
+    },
+    {
+      "key": "operations",
+      "title": "Operations",
+      "file": "Operations.aspx",
+      "commentsEnabled": false,
+      "permissions": "owners",
+      "plane": "operator",
+      "instance": { "view": "page", "pageKey": "operations", "contentUrl": "SiteAssets/ai-coe-pages.json", "layout": "wide", "organizationName": "{OrganizationName}", "governanceReference": "{GovernanceReference}", "reviewSystemName": "{ReviewSystemName}", "telemetryProvider": "{TelemetryProvider}" },
+      "blocks": [
+        { "type": "heading", "level": 2, "text": "Operations diagnostics" },
+        { "type": "piece", "piece": "telemetry", "kicker": "Diagnostics: usage and cost, not a measure of value" }
       ]
     },
     {

@@ -152,6 +152,10 @@ describe('Page view stylesheet', () => {
     expect(rule(table, '.ai-view--page .ai-hero-note')).toEqual(['font-size:14px', 'margin:10px 0 0', 'opacity:0.9']);
     expect(rule(table, '.ai-view--page .ai-page-tiles .ai-service-card')).toContain('min-height:92px');
     expect(rule(table, '.ai-view--narrow .ai-page-tiles--prominent')).toEqual(['grid-template-columns:1fr']);
+    // A card that names a state or a route: the pill, the route note and the fallback link on one wrapping line, in the tile's words and colours.
+    expect(rule(table, '.ai-view--page .ai-page-card-state')).toEqual(['align-items:center', 'display:flex', 'flex-wrap:wrap', 'gap:8px', 'margin:10px 0 0']);
+    expect(rule(table, '.ai-view--page .ai-page-card-note')).toEqual(['color:#5b6878', 'font-size:13px', 'font-style:italic', 'line-height:1.45']);
+    expect(rule(table, '.ai-view--page a.ai-page-card-fallback')).toEqual(['color:#076874', 'display:inline-block', 'font-size:14px', 'font-weight:600', 'min-height:24px', 'text-decoration:underline']);
   });
 
   it('lays out the work command as a grid whose controls are 44px targets', () => {

@@ -307,6 +307,31 @@
   margin: 10px 0 0;
 }
 
+/* A card that names a state or a route ends with its pill, the route note and, when closed, the fallback link. */
+#overture-ai-coe-pilot .ai-view--page .ai-page-card-state {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 10px 0 0;
+}
+
+#overture-ai-coe-pilot .ai-view--page .ai-page-card-note {
+  color: #5b6878;
+  font-size: 13px;
+  font-style: italic;
+  line-height: 1.45;
+}
+
+#overture-ai-coe-pilot .ai-view--page a.ai-page-card-fallback {
+  color: #076874;
+  display: inline-block;
+  font-size: 14px;
+  font-weight: 600;
+  min-height: 24px;
+  text-decoration: underline;
+}
+
 /* Lanes: the three traffic-light tones, using the shipped status pill colours. */
 #overture-ai-coe-pilot .ai-view--page .ai-page-lanes {
   display: grid;

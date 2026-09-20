@@ -1,11 +1,12 @@
 /**
- * Guards the page definition a site owner applies with the PnP script: six navigation pages whose
- * content the web part renders from typed blocks, the form and admin pages, one front-door instance
- * per page, links that resolve, tokens that are declared, blocks the web part's parser accepts, the
- * route table, provider-neutral parameters, and no client or tenant names. The user-plane lints read
- * the rendered text fields: no provider names, no route codes, no hype, no freshness claims without a
- * date, no literal dates outside illustrative items, and no committed "available now" off site.
- * Structure and the lints only; the wording belongs to the page authors.
+ * Guards the page definition a site owner applies with the PnP script: seven content pages whose
+ * content the web part renders from typed blocks (five in the navigation, Prompts linked from Learn
+ * and Use AI, the owners-only Operations page on the operator plane), the form and admin pages, one
+ * front-door instance per page, links that resolve, tokens that are declared, blocks the web part's
+ * parser accepts, the route table, provider-neutral parameters, and no client or tenant names. The
+ * user-plane lints read the rendered text fields: no provider names, no route codes, no hype, no
+ * freshness claims without a date, no literal dates outside illustrative items, and no committed
+ * "available now" off site. Structure and the lints only; the wording belongs to the page authors.
  */
 import * as fs from 'fs';
 import * as path from 'path';
@@ -13,10 +14,12 @@ import { resolveAction } from '../webparts/aiCoeFrontDoor/content/actions';
 import type { ResolvedAction } from '../webparts/aiCoeFrontDoor/content/actions';
 import { HOME_CARDS } from '../webparts/aiCoeFrontDoor/content/homeCards';
 import { CARD_TONES, DEFAULT_CONTENT_URL, LANE_TONES, parsePageDocument } from '../webparts/aiCoeFrontDoor/content/pageContent';
-import type { ICaseCardsBlock, IPageDocument, ITilesBlock, IStatusRowBlock, IWorkCommandBlock } from '../webparts/aiCoeFrontDoor/content/pageContent';
+import type { ICardsBlock, ICaseCardsBlock, IPageDocument, IPieceBlock, ITilesBlock, IStatusStripBlock, IWorkCommandBlock } from '../webparts/aiCoeFrontDoor/content/pageContent';
 import { FRONT_DOOR_VIEWS, PAGE_TARGETS } from '../webparts/aiCoeFrontDoor/content/pageViews';
 import { resolveRoute } from '../webparts/aiCoeFrontDoor/content/routes';
 import type { IResolvedRoute, RouteTable } from '../webparts/aiCoeFrontDoor/content/routes';
+import { TELEMETRY_TILES } from '../webparts/aiCoeFrontDoor/content/telemetryTiles';
+import type { ITelemetryTile } from '../webparts/aiCoeFrontDoor/content/telemetryTiles';
 import { CANONICAL_STATUS } from '../webparts/aiCoeFrontDoor/content/truthStates';
 import { WORKFLOW_ORDER } from '../webparts/aiCoeFrontDoor/content/workflows/catalog';
 import * as icons from '../webparts/aiCoeFrontDoor/icons';
@@ -82,18 +85,30 @@ const VERBATIM_SECTIONS: ('vocabulary' | 'settings')[] = ['vocabulary', 'setting
 const ROOT: string = process.cwd();
 const PAGES_DIR: string = path.join(ROOT, 'sharepoint/pages');
 const SITE_URL: string = 'https://example.invalid/sites/ai';
-const NAVIGATION_PAGES: string[] = ['startHere', 'learn', 'useAi', 'requests', 'prompts', 'status'];
+/** The five pages in the top navigation, in order (decision 1: Prompts left it in 1.0.0.13). */
+const NAVIGATION_PAGES: string[] = ['startHere', 'learn', 'useAi', 'requests', 'status'];
+const NAVIGATION_TITLES: string[] = ['Start here', 'Learn', 'Use AI', 'Requests', 'Status'];
+/**
+ * Every page the content document carries: the navigation pages, Prompts (kept and linked from Learn and Use AI) and
+ * the owners-only Operations page. The link, document and lint walks read this list, so a page leaving the
+ * navigation drops nothing silently.
+ */
+const CONTENT_PAGES: string[] = [...NAVIGATION_PAGES, 'prompts', 'operations'];
 const PIECE_PAGES: string[] = ['idea', 'toolCheck', 'teamUsage', 'helpTraining', 'feedback', 'admin'];
-const BLOCK_TYPES: string[] = ['hero', 'heading', 'paragraph', 'tiles', 'cards', 'lanes', 'statusRow', 'piece', 'workCommand', 'notice', 'rules', 'supportRoute', 'caseCards'];
+const BLOCK_TYPES: string[] = ['hero', 'heading', 'paragraph', 'tiles', 'cards', 'lanes', 'statusRow', 'statusStrip', 'piece', 'workCommand', 'notice', 'rules', 'supportRoute', 'caseCards'];
 const EXPECTED_BLOCKS: { [key: string]: string[] } = {
-  startHere: ['hero', 'workCommand', 'tiles', 'statusRow', 'heading', 'rules', 'notice', 'notice', 'heading', 'cards'],
+  // The status strip carries the person's own request count beside the assistant and Requests lines (1.0.0.13).
+  startHere: ['hero', 'workCommand', 'tiles', 'statusStrip', 'heading', 'rules', 'notice', 'notice', 'heading', 'cards'],
   learn: ['paragraph', 'paragraph', 'paragraph', 'rules', 'cards', 'cards', 'heading', 'paragraph', 'paragraph', 'paragraph', 'paragraph', 'heading', 'paragraph', 'paragraph'],
   useAi: ['paragraph', 'paragraph', 'heading', 'cards', 'heading', 'cards', 'heading', 'cards', 'heading', 'cards', 'heading', 'paragraph', 'paragraph'],
   requests: ['heading', 'paragraph', 'paragraph', 'heading', 'lanes', 'cards', 'notice', 'heading', 'paragraph', 'piece'],
   prompts: ['paragraph', 'paragraph', 'heading', 'cards', 'cards'],
-  // The one illustrative case card sits right after the opening line (decision 14); step 18 adds the my-work piece before it.
-  status: ['paragraph', 'caseCards', 'cards', 'piece', 'cards']
+  // The person's own requests first, then the one illustrative case card (decision 14), then the dated facts.
+  status: ['paragraph', 'piece', 'caseCards', 'cards', 'cards'],
+  // The telemetry strip lives here from 1.0.0.13 (decision 7), under a diagnostics kicker, on the operator plane.
+  operations: ['heading', 'piece']
 };
+const OPERATIONS_KICKER: string = 'Diagnostics: usage and cost, not a measure of value';
 /** The route keys the first screen and the status items point at; the two off-site ones take their proof from parameters. */
 const ROUTE_KEYS: string[] = ['work', 'assistant', 'guidedIntake', 'improve', 'value'];
 const OFF_SITE_ROUTES: string[] = ['work', 'assistant'];
@@ -176,14 +191,21 @@ function stringsIn(value: unknown, into: string[] = []): string[] {
   return into;
 }
 
-/** Every link target in the blocks: tile hrefs (an item that names a route has none), calls to action, the home piece's pages and in-text links. */
+/** Every link target in the blocks: tile hrefs (an item that names a route has none), calls to action, strip links, the home piece's pages and in-text links. */
 function linkTargets(): string[] {
   const targets: string[] = [];
-  for (const key of NAVIGATION_PAGES) {
+  for (const key of CONTENT_PAGES) {
     for (const block of blocksOf(key)) {
       if (block.type === 'tiles') {
         for (const item of itemsOf(block)) {
           if (item.route === undefined) {
+            targets.push(String(item.href));
+          }
+        }
+      }
+      if (block.type === 'statusStrip') {
+        for (const item of itemsOf(block)) {
+          if (item.href !== undefined) {
             targets.push(String(item.href));
           }
         }
@@ -280,11 +302,11 @@ function renderedTypes(key: string, optionalValues: { [name: string]: string }):
  * are filled or, when blank, dropped from in-text links; a tile or call to action whose link is blank
  * is kept and marked `needsAccess` so the page shows it as closed; a block whose `skipWhenBlank`
  * parameter is blank is dropped. Text tokens become values. The route table and the shared sections go
- * through the same token pass.
+ * through the same token pass. A page that names its plane carries it into the document.
  */
 function resolveDocument(urlValues: { [name: string]: string }, optionalValues: { [name: string]: string } = {}): string {
   const pages: { [key: string]: unknown } = {};
-  for (const key of NAVIGATION_PAGES) {
+  for (const key of CONTENT_PAGES) {
     const kept: IRawBlock[] = blocksOf(key)
       .filter((block: IRawBlock): boolean => isKept(block, optionalValues))
       .map((block: IRawBlock): IRawBlock => {
@@ -293,7 +315,10 @@ function resolveDocument(urlValues: { [name: string]: string }, optionalValues: 
         return copy;
       });
     const resolved: string = resolveTokens(JSON.stringify({ title: page(key).title, blocks: kept }), urlValues, optionalValues);
-    const parsedPage: { title: string; blocks: IRawBlock[] } = JSON.parse(resolved) as { title: string; blocks: IRawBlock[] };
+    const parsedPage: { title: string; blocks: IRawBlock[]; plane?: string } = JSON.parse(resolved) as { title: string; blocks: IRawBlock[] };
+    if (page(key).plane !== undefined) {
+      parsedPage.plane = page(key).plane;
+    }
     parsedPage.blocks = parsedPage.blocks.map((block: IRawBlock): IRawBlock => {
       if (block.type === 'tiles') {
         return { ...block, items: itemsOf(block).map(closeWhenUnlinked) };
@@ -352,10 +377,10 @@ function collectUserPlane(node: unknown, where: string, into: IUserPlaneText[], 
   return into;
 }
 
-/** The texts the user plane renders: every page whose plane is not `operator`, the shared footer and the route table. */
+/** The texts the user plane renders: every content page whose plane is not `operator`, the shared footer and the route table. */
 function userPlaneTexts(): IUserPlaneText[] {
   const texts: IUserPlaneText[] = [];
-  for (const key of NAVIGATION_PAGES) {
+  for (const key of CONTENT_PAGES) {
     if (page(key).plane !== 'operator') {
       collectUserPlane(blocksOf(key), key, texts);
     }
@@ -375,13 +400,13 @@ function isOnSite(href: unknown): boolean {
   return typeof href === 'string' && (/^\{Page:[A-Za-z]+\}$/.test(href) || (href.charAt(0) === '/' && href.substring(0, 2) !== '//'));
 }
 
-/** Every item that may carry an action or a state: route rows, tiles, calls to action, status items and cards. */
+/** Every item that may carry an action or a state: route rows, tiles, calls to action, status and strip items and cards. */
 function actionItems(): { where: string; item: IRawItem; kind: 'route' | 'action' | 'fact' }[] {
   const found: { where: string; item: IRawItem; kind: 'route' | 'action' | 'fact' }[] = [];
   for (const key of Object.keys(definition.routes)) {
     found.push({ where: `routes.${key}`, item: definition.routes[key], kind: 'route' });
   }
-  for (const key of NAVIGATION_PAGES) {
+  for (const key of CONTENT_PAGES) {
     blocksOf(key).forEach((block: IRawBlock, index: number): void => {
       const where: string = `${key}[${index}]`;
       if (block.type === 'tiles') {
@@ -392,7 +417,7 @@ function actionItems(): { where: string; item: IRawItem; kind: 'route' | 'action
       if (block.type === 'hero' && block.cta !== undefined) {
         found.push({ where: `${where}.cta`, item: block.cta as IRawItem, kind: 'action' });
       }
-      if (block.type === 'statusRow' || block.type === 'cards') {
+      if (block.type === 'statusRow' || block.type === 'statusStrip' || block.type === 'cards') {
         itemsOf(block).forEach((item: IRawItem, nth: number): void => {
           found.push({ where: `${where}.items[${nth}]`, item, kind: 'fact' });
         });
@@ -409,12 +434,22 @@ describe('front door page definition', () => {
     expect(`SiteAssets/${definition.contentFile}`).toBe(DEFAULT_CONTENT_URL);
   });
 
-  it('mirrors the six navigation pages in order', () => {
-    expect(definition.navigation.map((entry: INavigationEntry): string => entry.title)).toEqual(['Start here', 'Learn', 'Use AI', 'Requests', 'Prompts', 'Status']);
+  it('carries the five navigation pages in order; Prompts and Operations stay out of the navigation (decision 1)', () => {
+    expect(definition.navigation.map((entry: INavigationEntry): string => entry.title)).toEqual(NAVIGATION_TITLES);
     expect(definition.navigation.map((entry: INavigationEntry): string => entry.page)).toEqual(NAVIGATION_PAGES);
     for (const entry of definition.navigation) {
       expect(pageKeys).toContain(entry.page);
     }
+    const navigated: string[] = [];
+    for (const entry of definition.navigation) {
+      navigated.push(entry.page, ...(entry.children ?? []).map((child: INavigationEntry): string => child.page));
+    }
+    expect(navigated).not.toContain('prompts');
+    expect(navigated).not.toContain('operations');
+    // The Prompts page is still provisioned and reachable: Learn and Use AI link to it.
+    expect(page('prompts').title).toBe('Prompts');
+    expect(JSON.stringify(blocksOf('learn'))).toContain('{Page:prompts}');
+    expect(JSON.stringify(blocksOf('useAi'))).toContain('{Page:prompts}');
   });
 
   it('lists the five form pages under Requests in home-card order', () => {
@@ -425,11 +460,11 @@ describe('front door page definition', () => {
     expect(children.map((child: INavigationEntry): string => child.title)).toEqual(WORKFLOW_ORDER.map((id: WorkflowId): string => HOME_CARDS[id].title));
   });
 
-  it('defines twelve pages with unique keys and files, one instance each', () => {
-    expect(definition.pages).toHaveLength(12);
-    expect(new Set(pageKeys).size).toBe(12);
-    expect(new Set(pageFiles).size).toBe(12);
-    expect(pageKeys.slice().sort()).toEqual([...NAVIGATION_PAGES, ...PIECE_PAGES].sort());
+  it('defines thirteen pages with unique keys and files, one instance each', () => {
+    expect(definition.pages).toHaveLength(13);
+    expect(new Set(pageKeys).size).toBe(13);
+    expect(new Set(pageFiles).size).toBe(13);
+    expect(pageKeys.slice().sort()).toEqual([...CONTENT_PAGES, ...PIECE_PAGES].sort());
     for (const target of definition.pages) {
       expect(target.file).toMatch(/^[A-Za-z0-9-]+\.aspx$/);
       expect(target.title.length).toBeGreaterThan(0);
@@ -443,20 +478,49 @@ describe('front door page definition', () => {
     }
   });
 
-  it('renders the six navigation pages as content pages of the shared document', () => {
-    for (const key of NAVIGATION_PAGES) {
+  it('renders the seven content pages from the shared document; only Operations carries the usage feed', () => {
+    for (const key of CONTENT_PAGES) {
       const instance: { [name: string]: string } = page(key).instance;
       expect(instance.view).toBe('page');
       expect(instance.pageKey).toBe(key);
       expect(instance.contentUrl).toBe(DEFAULT_CONTENT_URL);
       expect(instance.layout).toBe('wide');
       expect(instance.organizationName).toBe('{OrganizationName}');
-      expect(instance.telemetryProvider).toBe(key === 'status' ? '{TelemetryProvider}' : undefined);
+      // The strip left Status for Operations (decision 7), and the provider property goes with it.
+      expect({ key, telemetryProvider: instance.telemetryProvider }).toEqual({ key, telemetryProvider: key === 'operations' ? '{TelemetryProvider}' : undefined });
       expect(blocksOf(key).length).toBeGreaterThan(0);
     }
     for (const key of PIECE_PAGES) {
       expect(page(key).blocks).toBeUndefined();
     }
+  });
+
+  it('puts the Operations page on the operator plane, owners-only, with the strip under a diagnostics kicker (decision 7)', () => {
+    const operations: IPage = page('operations');
+    expect(operations.title).toBe('Operations');
+    expect(operations.file).toBe('Operations.aspx');
+    expect(operations.permissions).toBe('owners');
+    expect(operations.plane).toBe('operator');
+    expect(operations.commentsEnabled).toBe(false);
+    expect(blocksOf('operations')[0]).toEqual({ type: 'heading', level: 2, text: 'Operations diagnostics' });
+    const strip: IRawBlock = blockOf('operations', 'piece');
+    expect(strip.piece).toBe('telemetry');
+    expect(strip.kicker).toBe(OPERATIONS_KICKER);
+    // No other page names a plane: everything else is the user plane by default.
+    for (const target of definition.pages) {
+      expect({ page: target.key, plane: target.plane }).toEqual({ page: target.key, plane: target.key === 'operations' ? 'operator' : undefined });
+    }
+    // With the kicker set, the tiles read their labels from the vocabulary: one per feed key, naming the feed and never a provider brand.
+    const telemetry: { [feedId: string]: unknown } = (definition.vocabulary as { telemetry: { [feedId: string]: unknown } }).telemetry;
+    expect(Object.keys(telemetry).sort()).toEqual(TELEMETRY_TILES.map((tile: ITelemetryTile): string => tile.key).sort());
+    for (const feedId of Object.keys(telemetry)) {
+      expect(typeof telemetry[feedId]).toBe('string');
+      expect({ feedId, provider: PROVIDER_WORDS.test(String(telemetry[feedId])) }).toEqual({ feedId, provider: false });
+    }
+    expect(telemetry.anthropic_api_spend_mtd).toMatch(/^Assistant usage/);
+    // The operator plane is outside the user-plane lint: its texts are not collected, so the kicker's "cost" and "usage" words are never read as claims.
+    expect(userPlaneTexts().filter((entry: IUserPlaneText): boolean => entry.where.indexOf('operations') === 0)).toEqual([]);
+    expect(collectUserPlane(blocksOf('operations'), 'operations', []).map((entry: IUserPlaneText): string => entry.text)).toContain(OPERATIONS_KICKER);
   });
 
   it('gives every piece page its workflow or dashboard, returning to Requests', () => {
@@ -482,9 +546,9 @@ describe('front door page definition', () => {
     }
   });
 
-  it('lays out each navigation page as the plan describes', () => {
-    for (const key of NAVIGATION_PAGES) {
-      expect(blocksOf(key).map((block: IRawBlock): string => block.type)).toEqual(EXPECTED_BLOCKS[key]);
+  it('lays out each content page as the plan describes', () => {
+    for (const key of CONTENT_PAGES) {
+      expect({ key, blocks: blocksOf(key).map((block: IRawBlock): string => block.type) }).toEqual({ key, blocks: EXPECTED_BLOCKS[key] });
       for (const block of blocksOf(key)) {
         expect(BLOCK_TYPES).toContain(block.type);
         if (block.type === 'heading') {
@@ -535,9 +599,43 @@ describe('front door page definition', () => {
     }
   });
 
+  it('opens Status with the person own requests, then the dated facts with their states, and no lookup promise', () => {
+    // The my-work piece comes right after the opening line (decision 6); it reads the intake list trimmed by list security.
+    const myWork: IRawBlock = blocksOf('status')[1];
+    expect(myWork).toEqual({ type: 'piece', piece: 'myWork' });
+    // The two fact cards: the assistant through its route with its verified date, and what is not here as a closed state dated by the page owner.
+    const facts: IRawBlock = blockOf('status', 'cards', 0);
+    expect(itemsOf(facts).map((item: IRawItem): unknown => item.title)).toEqual(['What is running', 'What is not running']);
+    expect(itemsOf(facts)[0]).toMatchObject({ route: 'assistant', asOf: '{AssistantVerifiedDate}', source: 'AI CoE check' });
+    expect(itemsOf(facts)[0].state).toBeUndefined();
+    expect(itemsOf(facts)[1]).toMatchObject({ state: 'notSupported', asOf: '{StatusDate}', source: 'AI CoE check' });
+    expect(itemsOf(facts)[1].route).toBeUndefined();
+    expect(itemsOf(facts)[1].href).toBeUndefined();
+    // The self-service lookup exists now (the my-work piece), so the page no longer says it is not built.
+    expect(definitionText).not.toContain('Self-service status lookup');
+    // The closing cards point at Requests for a follow-up and at the AI CoE for faults; neither claims a state.
+    const closing: IRawBlock = blockOf('status', 'cards', 1);
+    expect(itemsOf(closing).map((item: IRawItem): unknown => item.title)).toEqual(['Checking a request you sent', 'If something is wrong']);
+    for (const item of itemsOf(closing)) {
+      expect(item.state).toBeUndefined();
+      expect(item.route).toBeUndefined();
+    }
+    // The parsed page keeps the states and the route, so the cards draw their pills against the route table.
+    const document: IPageDocument = parsePageDocument(resolveDocument({})) as IPageDocument;
+    expect(document.pages.status.blocks[1]).toEqual({ type: 'piece', piece: 'myWork', pages: {} });
+    const parsed: ICardsBlock = document.pages.status.blocks[3] as ICardsBlock;
+    expect(parsed.type).toBe('cards');
+    expect(parsed.items[0].route).toBe('assistant');
+    expect(parsed.items[0].asOf).toBeUndefined();
+    expect(parsed.items[1].state).toBe('notSupported');
+    // StatusDate is a text parameter: an ISO value dates the card, anything else leaves it awaiting its source rather than inventing a date.
+    expect(parsed.items[1].asOf).toBeUndefined();
+    expect(parsed.items[1].source).toBe('AI CoE check');
+  });
+
   it('shows one illustrative case card on Status, labelled as an example, with its state out of the user-plane lint (decision 14)', () => {
     const cases: IRawBlock = blockOf('status', 'caseCards');
-    expect(blocksOf('status')[1]).toBe(cases);
+    expect(blocksOf('status')[2]).toBe(cases);
     expect(itemsOf(cases)).toHaveLength(1);
     expect(itemsOf(cases)[0]).toEqual({
       id: 'EXAMPLE-01',
@@ -559,7 +657,7 @@ describe('front door page definition', () => {
     expect(offending(leak, (entry: IUserPlaneText): boolean => UPPER_SNAKE_CODE.test(entry.text))).toHaveLength(1);
     // The parsed document keeps the card with its example flag and its dated source, so the page draws the example pill and never a current fact.
     const document: IPageDocument = parsePageDocument(resolveDocument({})) as IPageDocument;
-    const parsed: ICaseCardsBlock = document.pages.status.blocks[1] as ICaseCardsBlock;
+    const parsed: ICaseCardsBlock = document.pages.status.blocks[2] as ICaseCardsBlock;
     expect(parsed.type).toBe('caseCards');
     expect(parsed.items).toEqual([itemsOf(cases)[0]]);
   });
@@ -585,14 +683,20 @@ describe('front door page definition', () => {
       expect(item.href).toBeUndefined();
       expect(typeof item.description).toBe('string');
     }
-    const statusRow: IRawBlock = blockOf('startHere', 'statusRow');
-    expect(itemsOf(statusRow).map((item: IRawItem): unknown => item.label)).toEqual(['{AssistantName}', 'Requests']);
-    expect(itemsOf(statusRow)[0].route).toBe('assistant');
-    expect(itemsOf(statusRow)[0].asOf).toBe('{AssistantVerifiedDate}');
-    expect(itemsOf(statusRow)[0].source).toBe('AI CoE check');
-    expect(itemsOf(statusRow)[1].state).toBe('availableNow');
-    expect(itemsOf(statusRow)[1].href).toBeUndefined();
-    expect(itemsOf(statusRow)[1].route).toBeUndefined();
+    // The status strip: the assistant line, the Requests line and the person's own request count, linked to Status (1.0.0.13).
+    const strip: IRawBlock = blockOf('startHere', 'statusStrip');
+    expect(itemsOf(strip).map((item: IRawItem): unknown => item.label)).toEqual(['{AssistantName}', 'Requests', 'My requests']);
+    expect(itemsOf(strip)[0].route).toBe('assistant');
+    expect(itemsOf(strip)[0].asOf).toBe('{AssistantVerifiedDate}');
+    expect(itemsOf(strip)[0].source).toBe('AI CoE check');
+    expect(itemsOf(strip)[0].kind).toBeUndefined();
+    expect(itemsOf(strip)[1].state).toBe('availableNow');
+    expect(itemsOf(strip)[1].href).toBeUndefined();
+    expect(itemsOf(strip)[1].route).toBeUndefined();
+    expect(itemsOf(strip)[2]).toEqual({ kind: 'myRequests', label: 'My requests', href: '{Page:status}' });
+    expect(strip.emptyText).toBeUndefined();
+    expect(strip.unavailableText).toBeUndefined();
+    expect(blocksOf('startHere').filter((block: IRawBlock): boolean => block.type === 'statusRow')).toEqual([]);
     // The three rules, verbatim from the quick start, numbered.
     const rules: IRawBlock = blockOf('startHere', 'rules');
     expect(rules.ordered).toBeUndefined();
@@ -621,7 +725,7 @@ describe('front door page definition', () => {
     // Learn's orientation list is unnumbered; nothing else names a parameter to skip on.
     expect(blockOf('learn', 'rules').ordered).toBe(false);
     expect(itemsOf(blockOf('learn', 'rules'))).toHaveLength(4);
-    for (const key of NAVIGATION_PAGES) {
+    for (const key of CONTENT_PAGES) {
       for (const block of blocksOf(key)) {
         if (block.skipWhenBlank !== undefined) {
           expect(block).toBe(pilot);
@@ -697,38 +801,46 @@ describe('front door page definition', () => {
     }
   });
 
-  it('embeds the home tiles once on Requests and the telemetry strip once on Status', () => {
+  it('embeds the home tiles once on Requests, my work once on Status and the telemetry strip once on Operations', () => {
     const pieces: { key: string; block: IRawBlock }[] = [];
-    for (const key of NAVIGATION_PAGES) {
+    for (const key of CONTENT_PAGES) {
       for (const block of blocksOf(key)) {
         if (block.type === 'piece') {
           pieces.push({ key, block });
         }
       }
     }
-    expect(pieces.map((piece: { key: string; block: IRawBlock }): string => `${piece.key}:${String(piece.block.piece)}`)).toEqual(['requests:home', 'status:telemetry']);
+    expect(pieces.map((piece: { key: string; block: IRawBlock }): string => `${piece.key}:${String(piece.block.piece)}`)).toEqual(['requests:home', 'status:myWork', 'operations:telemetry']);
     const pages: { [target: string]: string } = pieces[0].block.pages as { [target: string]: string };
     expect(Object.keys(pages).sort()).toEqual(PAGE_TARGETS.slice().sort());
     for (const id of WORKFLOW_ORDER) {
       expect(pages[id]).toBe(`{Page:${id}}`);
     }
-    expect(pages.telemetry).toBe('{Page:status}');
+    // The snapshot sits on the owners-only Operations page now, so the resource strip on Requests (everyone) offers no link to it.
+    expect(pages.telemetry).toBe('');
     expect(pages.admin).toBe('{Page:admin}');
     expect(pages.policy).toBe('');
+    // The kicker is the only piece field besides `piece` and `pages`; my work carries neither.
+    expect(Object.keys(pieces[1].block).sort()).toEqual(['piece', 'type']);
+    expect(Object.keys(pieces[2].block).sort()).toEqual(['kicker', 'piece', 'type']);
   });
 
-  it('keeps the admin page owners-only and out of navigation and links', () => {
+  it('keeps the admin and Operations pages owners-only and out of navigation and links; every other page inherits', () => {
     expect(page('admin').permissions).toBe('owners');
+    expect(page('operations').permissions).toBe('owners');
     for (const target of definition.pages) {
-      if (target.key !== 'admin') {
-        expect(target.permissions).toBe('inherit');
-      }
+      expect({ page: target.key, permissions: target.permissions }).toEqual({ page: target.key, permissions: target.key === 'admin' || target.key === 'operations' ? 'owners' : 'inherit' });
     }
     const navigated: string[] = [];
     for (const entry of definition.navigation) {
       navigated.push(entry.page, ...(entry.children ?? []).map((child: INavigationEntry): string => child.page));
     }
     expect(navigated).not.toContain('admin');
+    expect(navigated).not.toContain('operations');
+    // No user-plane page links to either: they are reached by their owners directly.
+    for (const target of linkTargets()) {
+      expect(target).not.toBe('{Page:operations}');
+    }
   });
 
   it('resolves every link target to a page or a URL parameter, and carries no HTML', () => {
@@ -741,7 +853,7 @@ describe('front door page definition', () => {
       }
       expectLinkTarget(target);
     }
-    for (const key of NAVIGATION_PAGES) {
+    for (const key of CONTENT_PAGES) {
       for (const text of stringsIn(blocksOf(key))) {
         expect(text).not.toMatch(/<[a-z]+[\s>]|&[a-z]+;/i);
       }
@@ -807,7 +919,8 @@ describe('front door page definition', () => {
     expect(definition.parameters.GovernanceBodyExecutive.default).toBe('a named approver (not yet named)');
     // The draft flow is named for what it does, not for a provider.
     expect(definition.parameters.DraftServiceUrl.description).toBe('HTTP trigger URL of the AI draft flow for the idea page; blank keeps plain summaries.');
-    expect(definition.parameters.TelemetryProvider.description).toBe('Usage feed for the Status page: claude, openai or both.');
+    // The feed codes stay; the page the strip sits on is Operations from 1.0.0.13 (decision 7).
+    expect(definition.parameters.TelemetryProvider.description).toBe('Usage feed for the Operations page: claude, openai or both.');
     // Every prompt-library parameter is still read by the Prompts page.
     for (const name of Object.keys(definition.parameters)) {
       if (name.indexOf('Prompt') === 0) {
@@ -845,11 +958,13 @@ describe('front door page definition', () => {
     for (const urlValues of [filled, {}]) {
       const document: IPageDocument | undefined = parsePageDocument(resolveDocument(urlValues));
       expect(document).toBeDefined();
-      expect(Object.keys((document as IPageDocument).pages)).toEqual(NAVIGATION_PAGES);
-      for (const key of NAVIGATION_PAGES) {
+      expect(Object.keys((document as IPageDocument).pages)).toEqual(CONTENT_PAGES);
+      for (const key of CONTENT_PAGES) {
         const parsed: IPageDocument['pages'][string] = (document as IPageDocument).pages[key];
         expect(parsed.title).toBe(page(key).title);
-        expect(parsed.blocks.map((block): string => block.type)).toEqual(renderedTypes(key, {}));
+        expect({ key, blocks: parsed.blocks.map((block): string => block.type) }).toEqual({ key, blocks: renderedTypes(key, {}) });
+        // The plane travels with the page: Operations parses as the operator plane, every other page as the user plane.
+        expect({ key, plane: parsed.plane }).toEqual({ key, plane: key === 'operations' ? 'operator' : undefined });
         const sources: IRawBlock[] = blocksOf(key).filter((block: IRawBlock): boolean => isKept(block, {}));
         for (let index: number = 0; index < parsed.blocks.length; index++) {
           const source: IRawBlock = sources[index];
@@ -873,6 +988,10 @@ describe('front door page definition', () => {
       const command: IWorkCommandBlock = (document as IPageDocument).pages.startHere.blocks[1] as IWorkCommandBlock;
       expect(command.type).toBe('workCommand');
       expect(command.route).toBe('work');
+      // The Operations strip keeps its kicker through the parse, so the tiles read the vocabulary labels on that page.
+      const strip: IPieceBlock = (document as IPageDocument).pages.operations.blocks[1] as IPieceBlock;
+      expect(strip).toEqual({ type: 'piece', piece: 'telemetry', pages: {}, kicker: OPERATIONS_KICKER });
+      expect((document as IPageDocument).vocabulary?.telemetry).toEqual((definition.vocabulary as { telemetry: unknown }).telemetry);
       // The shared footer parses as the support route, six rows, no owner yet.
       const footer: IPageDocument['shared'] = (document as IPageDocument).shared;
       expect(footer?.footer.map((block): string => block.type)).toEqual(['supportRoute']);
@@ -903,10 +1022,17 @@ describe('front door page definition', () => {
     const actions: (ResolvedAction | undefined)[] = tiles.items.map((item): ResolvedAction | undefined => resolveAction(item, routes, { siteUrl: SITE_URL }));
     expect(actions.map((action): string | undefined => action?.kind)).toEqual(['closed', 'link', 'link']);
     expect((actions[0] as { fallback?: { key: string } }).fallback?.key).toBe('guidedIntake');
-    const statusRow: IStatusRowBlock = document.pages.startHere.blocks[3] as IStatusRowBlock;
-    expect(statusRow.items[0].route).toBe('assistant');
-    expect(statusRow.items[0].asOf).toBeUndefined();
-    expect(resolveAction(statusRow.items[0], routes, { siteUrl: SITE_URL })?.kind).toBe('closed');
+    const strip: IStatusStripBlock = document.pages.startHere.blocks[3] as IStatusStripBlock;
+    expect(strip.type).toBe('statusStrip');
+    expect(strip.items[0].route).toBe('assistant');
+    expect(strip.items[0].asOf).toBeUndefined();
+    expect(resolveAction(strip.items[0], routes, { siteUrl: SITE_URL })?.kind).toBe('closed');
+    expect(strip.items[2]).toEqual({ kind: 'myRequests', label: 'My requests', href: `${SITE_URL}/SitePages/${page('status').file}` });
+    // The Status cards resolve the same way: the assistant card closed to the guided intake, the not-running card closed with no fallback.
+    const facts: ICardsBlock = document.pages.status.blocks[3] as ICardsBlock;
+    const running: ResolvedAction | undefined = resolveAction(facts.items[0], routes, { siteUrl: SITE_URL });
+    expect({ kind: running?.kind, fallback: (running as { fallback?: { key: string } }).fallback?.key }).toEqual({ kind: 'closed', fallback: 'guidedIntake' });
+    expect(resolveAction(facts.items[1], routes, { siteUrl: SITE_URL })).toEqual({ kind: 'closed', state: 'notSupported', pill: 'notSupported', stateLabel: 'Not supported' });
   });
 
   it('opens an off-site route only once its state, date and receipt reference are set after tenant proof', () => {
@@ -922,9 +1048,10 @@ describe('front door page definition', () => {
     // A URL alone, with the state blank, opens nothing.
     const unproved: RouteTable = (parsePageDocument(resolveDocument(urls)) as IPageDocument).routes as RouteTable;
     expect(resolveRoute(unproved, 'work', { siteUrl: SITE_URL, now }).state).toBe('needsAccess');
-    // The status item carries the assistant's date once it is set.
-    const statusRow: IStatusRowBlock = (parsePageDocument(resolveDocument(urls, proved)) as IPageDocument).pages.startHere.blocks[3] as IStatusRowBlock;
-    expect(statusRow.items[0].asOf).toBe('2026-01-15');
+    // The strip item and the Status card carry the assistant's date once it is set.
+    const proven: IPageDocument = parsePageDocument(resolveDocument(urls, proved)) as IPageDocument;
+    expect((proven.pages.startHere.blocks[3] as IStatusStripBlock).items[0].asOf).toBe('2026-01-15');
+    expect((proven.pages.status.blocks[3] as ICardsBlock).items[0].asOf).toBe('2026-01-15');
   });
 
   it('drops the pilot notice when the pilot team name is blank and keeps it when set', () => {

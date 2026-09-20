@@ -329,18 +329,19 @@ Available now, Draft only, Needs approval, Needs access, Not supported. The web 
 and the 26 canonical status codes (anything else reads "Status unavailable"), and the placeholders a measure shows
 instead of a number (`src/webparts/aiCoeFrontDoor/content/truthStates.ts`).
 
-**The twelve pages** described in `sharepoint/pages/pages.json` (six in the top navigation, five form pages under
-Requests, one owners-only admin page), each with one front-door instance and, for the navigation pages, the blocks
-of the content document:
+**The thirteen pages** described in `sharepoint/pages/pages.json` (five in the top navigation, the Prompts page linked
+from Learn and Use AI, the owners-only Operations page, five form pages under Requests, one owners-only admin page),
+each with one front-door instance and, for the seven content pages, the blocks of the content document:
 
 | Page | Instance | Blocks |
 |---|---|---|
-| Start here (site home) | `page`, key `startHere` | hero with the operating promise and no call to action, the `workCommand`, three `prominent` tiles on the `work`, `improve` and `value` routes, a status row (the assistant with its verified date, Requests), the three rules, the data-boundary `notice`, the private-pilot `notice` (dropped by the script when `PilotTeamName` is blank), three persona cards |
+| Start here (site home) | `page`, key `startHere` | hero with the operating promise and no call to action, the `workCommand`, three `prominent` tiles on the `work`, `improve` and `value` routes, a `statusStrip` (the assistant with its verified date, Requests, and the person's own request count linked to Status), the three rules, the data-boundary `notice`, the private-pilot `notice` (dropped by the script when `PilotTeamName` is blank), three persona cards |
 | Learn | `page`, key `learn` | intro, an unnumbered orientation `rules` list, four exercise cards with a duration kicker, how completion is checked, a note for team leads and the link to Prompts |
 | Use AI | `page`, key `useAi` | the one prompt pattern, prompt cards by audience with their data boundaries as meta lines, what the page does not do |
-| Requests | `page`, key `requests` | the three lanes (the governance bodies are parameters), what is not asked of you, registering AI already in use, the data-boundary `notice`, then the `home` piece (the five path cards and resource strip; return page for every form) |
-| Prompts | `page`, key `prompts` | three starter prompts, what is in the library, what Draft means |
-| Status | `page`, key `status`, with `telemetryProvider` (the only instance that uses it) | what is running and what is not, the `telemetry` piece, how to check a request, what to do when something is wrong |
+| Requests | `page`, key `requests` | the three lanes (the governance bodies are parameters), what is not asked of you, registering AI already in use, the data-boundary `notice`, then the `home` piece (the five path cards and resource strip; return page for every form; no snapshot link, since the strip sits on the owners-only Operations page) |
+| Prompts (out of the navigation since 1.0.0.13; linked from Learn and Use AI) | `page`, key `prompts` | three starter prompts, what is in the library, what Draft means |
+| Status | `page`, key `status` | the `myWork` piece (the person's own requests, trimmed by the list's item-level security), the one illustrative `caseCards` example, what is running (the assistant through its route, dated by `AssistantVerifiedDate`) and what is not (closed as *Not supported*, dated by `StatusDate`), how to check a request, what to do when something is wrong |
+| Operations (site owners only, not in the nav, operator plane) | `page`, key `operations`, with `telemetryProvider` (the only instance that uses it) and `plane` `operator` | the heading "Operations diagnostics" and the `telemetry` piece under the kicker "Diagnostics: usage and cost, not a measure of value", its tiles named from `vocabulary.telemetry` (the feed, never a provider) |
 | Explore an AI idea, Check a tool or task, Register team AI use, Get help or training, Share feedback | one wizard each, `returnUrl` Requests, `contentUrl` set so the shared footer (the support route) shows below the wizard; the idea page alone carries `draftServiceUrl` | none of their own; the document's `shared` footer |
 | AI CoE admin dashboard (site owners only, not in the nav) | `admin`, `returnUrl` Requests | none |
 
@@ -395,8 +396,9 @@ script against. That list is deliberately not tenant-neutral (it is what the sca
    communication site, whose horizontal top navigation is the QuickLaunch; on any other site the script stops unless
    `-AllowNonCommunicationSite` is given, because there the QuickLaunch is the left navigation.
    On a site that already carries the pages of 1.0.0.11, run without `-Overwrite` first: every existing page is
-   skipped and the content document is rewritten from `pages.json`, so the six navigation pages show the new
-   document at once (the first screen, the routes, the shared footer). The five form instances need `contentUrl`,
+   skipped and the content document is rewritten from `pages.json`, so the existing content pages show the new
+   document at once (the first screen, the routes, the shared footer); a page the definition adds (Operations in
+   1.0.0.13) is created on that run. The five form instances need `contentUrl`,
    and every instance the two Branding properties, which this release's script writes only when it creates a
    page: rerun with `-Overwrite` (every page is rebuilt from `pages.json`; browser edits go to the recycle bin) or
    set the values in each instance's property pane. The end-of-run summary names the bindings that are still
@@ -405,10 +407,11 @@ script against. That list is deliberately not tenant-neutral (it is what the sca
    and calls to action the script reported as shown as closed once their URL parameters are known (rerun with
    `-Overwrite`, or edit the document in Site Assets).
 
-Manual fallback: upload a hand-written `ai-coe-pages.json` to Site Assets, create the twelve pages by hand, add the
-matching toolbox entry to each (**AI CoE: Content page** with the page key for the six navigation pages), type the
+Manual fallback: upload a hand-written `ai-coe-pages.json` to Site Assets, create the thirteen pages by hand, add the
+matching toolbox entry to each (**AI CoE: Content page** with the page key for the seven content pages), type the
 return page into the form pages' property pane, paste the AI draft flow URL on the Explore an AI idea page, pick
-the usage metrics provider on Status, and edit the navigation in the site header.
+the usage metrics provider on Operations, restrict Operations and the admin page to site owners, and edit the
+navigation in the site header.
 
 ## Rebind to another tenant
 
@@ -475,7 +478,7 @@ the identity line, the site's owners group on the admin page). Bindings, the pro
 | `governanceReference` | web part property (Branding), written by the script from `GovernanceReference` | property | the shipped literal in the legacy view, "reference not yet set" in page views |
 | `reviewSystemName` | web part property (Branding), written by the script from `ReviewSystemName` | property | the shipped literal in the legacy view, "the review system" in page views |
 | `draftServiceUrl` | web part property (AI drafting) on the idea page, written by the script from `DraftServiceUrl` | property | plain summaries |
-| `telemetryProvider` | web part property (Telemetry) on Status, written by the script from `TelemetryProvider` | property | `claude` |
+| `telemetryProvider` | web part property (Telemetry) on Operations, written by the script from `TelemetryProvider` | property | `claude` |
 | AI CoE Pilot Intakes | the package feature (`sharepoint/assets/intake-schema.xml`), untouched on upgrade | list | absent: a submission fails and the visitor sees the shipped failure screen |
 | AI CoE Use Cases | the companion Power Automate solution | list | absent: the dashboard section reads as unavailable |
 | AI CoE Decisions | the companion Power Automate solution | list | absent: the dashboard section reads as unavailable |
@@ -504,7 +507,7 @@ What the built bundle still carries from its first tenant, each with an owner an
 | `OVT-AICOE-`, the intake id prefix | `services/intakeId.ts`; the `IntakeId` column of AI CoE Pilot Intakes (unique key), relied on by the companion flows | AI CoE records owner | kept as the record key; a tenant work-id prefix waits for a work-records list; existing rows keep their ids |
 | `overture-ai-coe-front-door:draft:`, the localStorage draft key prefix | `content/constants.ts` | front-door maintainers | kept: drafts are per browser and per pilot; renaming would orphan drafts in progress |
 | `overture-ai-coe-pilot`, the DOM scope id, the `.overture-*` classes and `overture-confirm-title`, the confirm dialog heading id | `content/constants.ts`; `styles/theme.global.scss` (the shipped stylesheet, reproduced rule for rule); `controls/ConfirmDialog.tsx` | front-door maintainers | kept: the stylesheet parity suite pins every rule and the legacy screens are parity-locked; changes only with a deliberate stylesheet release; with the package name, the solution name, the draft key prefix and the download file names these are the documented identifiers the verifier masks before its client-word scan of the archive |
-| The telemetry feed labels (`Claude API spend this month`, `OpenAI API spend this month` and the rest) | `content/telemetryTiles.ts`, `services/UsageMetricsService.ts` | AI CoE operations | product names of the usage feeds, not of a tenant; the legacy strip keeps them verbatim (parity); page views take labels from `vocabulary.telemetry` when the strip moves to an operators page in 1.0.0.13 |
+| The telemetry feed labels (`Claude API spend this month`, `OpenAI API spend this month` and the rest) | `content/telemetryTiles.ts`, `services/UsageMetricsService.ts` | AI CoE operations | product names of the usage feeds, not of a tenant; the legacy strip keeps them verbatim (parity); the page-view strip on the owners-only Operations page (1.0.0.13) takes its labels from `vocabulary.telemetry`, so the page names the feed and never a provider |
 | The vendor name in the shipped list schemas (site column group) and in the package publisher block | `sharepoint/assets/*.xml` (byte-identical to 1.0.0.7); the developer block of `config/package-solution.json` | package maintainers | metadata, never rendered; changing the schemas would break the in-place upgrade; with the documented identifiers above, the two are the recorded exemptions of the verifier's package scan |
 | `src/provisioning/tenantWords.json`, the tenant word list | outside `src/webparts`, imported by nothing in the web part, never packaged (the verifier asserts the archive holds neither the file nor its entries) | front-door maintainers | deliberately not tenant-neutral: it is what every scan looks for; on rebind it is replaced with the words of the new first tenant |
 

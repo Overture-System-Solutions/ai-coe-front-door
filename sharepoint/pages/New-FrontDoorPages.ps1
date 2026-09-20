@@ -6,9 +6,9 @@ front-door web part instance per page, the top navigation and the home page.
 .DESCRIPTION
 Operator tool for a site owner; the build and the tests never run it. It reads pages.json next to this script,
 resolves the tokens from a parameter file (copy parameters.sample.json, fill it in, keep it out of git) and the named
-parameters, uploads the resolved content document (the blocks of the six navigation pages and the shared footer every
-page view draws below its content, the five form pages included) to Site Assets, then creates each page with a single
-front-door instance. Pages that already exist are skipped unless -Overwrite is given,
+parameters, uploads the resolved content document (the blocks of the seven content pages, the plane of a page written
+for operators, and the shared footer every page view draws below its content, the five form pages included) to Site
+Assets, then creates each page with a single front-door instance. Pages that already exist are skipped unless -Overwrite is given,
 in which case they are sent to the site recycle bin and rebuilt from pages.json; edits made in the browser are
 recoverable from the recycle bin but are not carried over. The content document is rewritten on every run (Site
 Assets keeps its version history), and the navigation is rebuilt every time. A page whose build fails part-way is
@@ -44,14 +44,14 @@ Organization name used in the page text and set on every front-door instance.
 HTTP trigger URL of the AI draft flow for the idea page; blank keeps plain summaries.
 
 .PARAMETER TelemetryProvider
-Usage feed for the Status page: claude (default), openai or both.
+Usage feed for the Operations page: claude (default), openai or both.
 
 .PARAMETER Overwrite
 Send pages that already exist to the recycle bin and rebuild them.
 
 .PARAMETER AllowNonCommunicationSite
 Proceed on a site that is not a communication site. There the QuickLaunch is the left navigation, and every existing
-node in it is replaced by the six front-door entries.
+node in it is replaced by the five front-door entries.
 
 .PARAMETER ClientId
 Entra application (client) id registered for PnP PowerShell interactive login (Register-PnPEntraIDAppForInteractiveLogin).
@@ -263,10 +263,14 @@ foreach ($page in $definition['pages']) {
   }
   # Blocks keyed on a blank parameter (skipWhenBlank) are dropped before the token pass, so their tokens never resolve.
   $kept = @($page['blocks'] | Where-Object { Test-BlockKept $_ ([string]$page['file']) })
-  $documentPages[[string]$page['key']] = [ordered]@{
+  $documentPage = [ordered]@{
     title = Resolve-Text ([string]$page['title'])
     blocks = Resolve-Node $kept ([string]$page['file'])
   }
+  # A page written for operators names its plane (the owners-only Operations page); the web part shows codes beside
+  # the plain wording there and keeps that page out of the user plane.
+  if ($page.Contains('plane')) { $documentPage['plane'] = [string]$page['plane'] }
+  $documentPages[[string]$page['key']] = $documentPage
 }
 $document = [ordered]@{ version = 1; pages = $documentPages }
 # The route table and the shared sections (the footer below every page view, the form pages included) go through

@@ -258,6 +258,48 @@ describe('UsageTelemetryStrip', () => {
     expect(screen.getByRole('heading', { name: 'AI operations snapshot' })).toBeInTheDocument();
   });
 
+  it('names every tile after its feed from the page vocabulary, never a provider brand, when the page sets a kicker (decision 7)', async () => {
+    const telemetry: { [feedId: string]: string } = {
+      anthropic_api_spend_mtd: 'Assistant usage: spend this month',
+      anthropic_api_tokens_mtd: 'Assistant usage: tokens this month',
+      anthropic_api_output_tokens_mtd: 'Assistant usage: output tokens this month',
+      openai_api_spend_mtd: 'Second usage feed: spend this month',
+      openai_api_requests_mtd: 'Second usage feed: requests this month',
+      openai_api_tokens_mtd: 'Second usage feed: tokens this month',
+      open_coe_alerts: 'Open incidents'
+    };
+    const vocabulary: IVocabulary = { truthStates: {}, requestStatuses: {}, chrome: {}, roles: {}, telemetry };
+    const result: IUsageMetricsResult = {
+      connected: true,
+      message: 'ok',
+      alerts: [],
+      metrics: [
+        metric({ metricKey: 'anthropic_api_spend_mtd', metricLabel: 'Claude API spend this month', provider: 'anthropic', unit: 'USD', currentValue: 42.5 }),
+        metric({ metricKey: 'openai_api_spend_mtd', metricLabel: 'OpenAI API spend this month', provider: 'openai', unit: 'USD', currentValue: 3 }),
+        metric({ metricKey: 'open_coe_alerts', metricLabel: 'Open CoE alerts', source: 'AI CoE Incidents', currentValue: 0 })
+      ]
+    };
+    renderWithFrontDoor(<UsageTelemetryStrip kicker="Diagnostics: usage and cost, not a measure of value" />, { usage: createFakeUsageService(result), telemetryProvider: 'both', vocabulary });
+    await flush();
+    expect(screen.getByText('Diagnostics: usage and cost, not a measure of value')).toHaveClass('ai-usage-kicker');
+    const labels: string[] = Array.prototype.slice.call(document.querySelectorAll('.ai-metric-label')).map((label: HTMLElement): string => label.textContent ?? '');
+    expect(labels).toEqual([
+      'Assistant usage: spend this month',
+      'Assistant usage: tokens this month',
+      'Assistant usage: output tokens this month',
+      'Second usage feed: spend this month',
+      'Second usage feed: requests this month',
+      'Second usage feed: tokens this month',
+      'Open incidents'
+    ]);
+    for (const label of labels) {
+      expect(label).not.toMatch(/claude|openai|chatgpt|anthropic|copilot/i);
+    }
+    // The values still come from the feed rows: the label is renamed, the number is not.
+    expect(screen.getByText(usd.format(42.5))).toHaveClass('ai-metric-value');
+    expect(screen.getByText(usd.format(3))).toHaveClass('ai-metric-value');
+  });
+
   it('uses the singular for one alert', async () => {
     renderWithFrontDoor(<UsageTelemetryStrip />, { usage: createFakeUsageService({ connected: true, metrics: [], alerts: [alert({})], message: 'ok' }) });
     await flush();

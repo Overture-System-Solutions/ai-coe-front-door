@@ -178,6 +178,18 @@ describe('page provisioning script', () => {
     expect(summary).toBeLessThan(script.search(/^if \(\$locked\.Count -gt 0\) \{\s*throw/m));
   });
 
+  it('carries the plane of a page into the document, so the owners-only Operations page parses as the operator plane', () => {
+    // Decision 7: the telemetry strip moved to Operations, a page written for operators; the web part reads `plane` from the document.
+    expect(script).toContain("'plane'");
+    expect(script).toMatch(/if \(\$page\.Contains\('plane'\)\) \{ \$documentPage\['plane'\] = \[string\]\$page\['plane'\] \}/);
+    const definition: { pages: { key: string; permissions: string; plane?: string }[] } = JSON.parse(fs.readFileSync(path.join(PAGES_DIR, 'pages.json'), 'utf8'));
+    const planes: string[] = definition.pages.filter((page): boolean => page.plane !== undefined).map((page): string => `${page.key}:${String(page.plane)}:${page.permissions}`);
+    expect(planes).toEqual(['operations:operator:owners']);
+    // The navigation is five entries now (decision 1); the script's own words say so.
+    expect(script).not.toMatch(/six navigation pages|six front-door entries/);
+    expect(script).toMatch(/five front-door entries/);
+  });
+
   it('no longer needs the native web part templates or HTML text parts', () => {
     for (const legacy of ['Add-PnPPageTextPart', 'DefaultWebPartType', 'quicklinks.template.json', 'button.template.json', 'serverProcessedContent', 'target="_blank"', 'example.invalid']) {
       expect(script).not.toContain(legacy);
@@ -225,6 +237,12 @@ describe('README', () => {
     expect(readme).toContain('New-FrontDoorPages.ps1');
     expect(readme).toContain('parameters.sample.json');
     expect(readme).toContain('one instance per page');
+    // 1.0.0.13: thirteen pages, Prompts out of the navigation, the strip on the owners-only Operations page, my work on Status.
+    expect(readme).toContain('The thirteen pages');
+    expect(readme).not.toContain('The twelve pages');
+    expect(readme).toContain('key `operations`');
+    expect(readme).toContain('Diagnostics: usage and cost, not a measure of value');
+    expect(readme).toContain('`myWork`');
     expect(readme).toContain('-ClientId');
     expect(readme).toContain('recycle bin');
     expect(readme).toContain('AllowNonCommunicationSite');
