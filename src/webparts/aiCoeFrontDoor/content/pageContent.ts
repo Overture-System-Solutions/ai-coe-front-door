@@ -187,7 +187,30 @@ export interface IPieceBlock {
   pages: PageLinks;
 }
 
-export type PageBlock = IHeroBlock | IHeadingBlock | IParagraphBlock | ITilesBlock | ICardsBlock | ILanesBlock | IStatusRowBlock | IPieceBlock;
+/**
+ * The first screen's one command: a sentence about the work to be done, saved as the idea draft and
+ * carried to the route the block names (`work` by default) through the route list, so an unproved
+ * destination fails closed to the guided intake with the sentence already filled in.
+ */
+export interface IWorkCommandBlock {
+  type: 'workCommand';
+  /** The question above the input, such as "What do you need done?". */
+  prompt: string;
+  placeholder?: string;
+  submitLabel: string;
+  /** Key of the route the sentence is carried to. */
+  route: string;
+  /** Short line under the input; in-text markup allowed. */
+  note?: string;
+  /** Shown when the sentence is empty on submit. */
+  emptyText: string;
+}
+
+export const DEFAULT_WORK_COMMAND_SUBMIT_LABEL: string = 'Start';
+export const DEFAULT_WORK_COMMAND_ROUTE: string = 'work';
+export const DEFAULT_WORK_COMMAND_EMPTY_TEXT: string = 'Say what you need done first.';
+
+export type PageBlock = IHeroBlock | IHeadingBlock | IParagraphBlock | ITilesBlock | ICardsBlock | ILanesBlock | IStatusRowBlock | IPieceBlock | IWorkCommandBlock;
 
 export interface IContentPage {
   title: string;
@@ -382,6 +405,24 @@ function parsePiece(raw: Raw): IPieceBlock | undefined {
   return { type: 'piece', piece, pages: piece === 'home' ? readPageLinks(raw.pages) : {} };
 }
 
+/** The work command: needs a prompt; the submit label, the route and the empty-sentence text fall back to their defaults. */
+export function parseWorkCommand(raw: Raw): IWorkCommandBlock | undefined {
+  const prompt: string | undefined = readText(raw.prompt);
+  if (prompt === undefined) {
+    return undefined;
+  }
+  const block: IWorkCommandBlock = {
+    type: 'workCommand',
+    prompt,
+    submitLabel: readText(raw.submitLabel) ?? DEFAULT_WORK_COMMAND_SUBMIT_LABEL,
+    route: readText(raw.route) ?? DEFAULT_WORK_COMMAND_ROUTE,
+    emptyText: readText(raw.emptyText) ?? DEFAULT_WORK_COMMAND_EMPTY_TEXT
+  };
+  setOptional(block, 'placeholder', readText(raw.placeholder));
+  setOptional(block, 'note', readText(raw.note));
+  return block;
+}
+
 /** Reads one block; undefined for anything that is not a well-formed block of a known type. */
 export function parseBlock(value: unknown): PageBlock | undefined {
   const raw: Raw | undefined = asObject(value);
@@ -405,6 +446,8 @@ export function parseBlock(value: unknown): PageBlock | undefined {
       return parseStatusRow(raw);
     case 'piece':
       return parsePiece(raw);
+    case 'workCommand':
+      return parseWorkCommand(raw);
     default:
       return undefined;
   }

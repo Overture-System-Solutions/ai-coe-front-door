@@ -10,11 +10,12 @@ import {
   parsePageDocument,
   parseSettings,
   parseVocabulary,
+  parseWorkCommand,
   readPlane,
   readParagraphs,
   resolveContentHref
 } from './pageContent';
-import type { ICardsBlock, IContentPage, IHeroBlock, ILanesBlock, IPageDocument, IPieceBlock, ITilesBlock, IVocabulary } from './pageContent';
+import type { ICardsBlock, IContentPage, IHeroBlock, ILanesBlock, IPageDocument, IPieceBlock, ITilesBlock, IVocabulary, IWorkCommandBlock } from './pageContent';
 
 const SITE: string = 'https://contoso.sharepoint.com/sites/ai';
 
@@ -349,6 +350,36 @@ describe('blocks', () => {
         { label: 'Prompts', text: 'All draft.' }
       ]
     });
+  });
+
+  it('reads a work command, fills its defaults and drops one without a prompt', () => {
+    expect(parseWorkCommand({ prompt: ' What do you need done? ' })).toEqual({
+      type: 'workCommand',
+      prompt: 'What do you need done?',
+      submitLabel: 'Start',
+      route: 'work',
+      emptyText: 'Say what you need done first.'
+    });
+    const command: IWorkCommandBlock = parseBlock({
+      type: 'workCommand',
+      prompt: 'Tell us',
+      placeholder: ' One sentence. ',
+      submitLabel: ' Go ',
+      route: ' assistant ',
+      note: ' Saved as a **draft**. ',
+      emptyText: ' Say something. '
+    }) as IWorkCommandBlock;
+    expect(command).toEqual({ type: 'workCommand', prompt: 'Tell us', placeholder: 'One sentence.', submitLabel: 'Go', route: 'assistant', note: 'Saved as a **draft**.', emptyText: 'Say something.' });
+    expect(parseWorkCommand({ prompt: 'Tell us', placeholder: '', submitLabel: '  ', route: 3, note: 7, emptyText: ' ' })).toEqual({
+      type: 'workCommand',
+      prompt: 'Tell us',
+      submitLabel: 'Start',
+      route: 'work',
+      emptyText: 'Say what you need done first.'
+    });
+    expect(parseWorkCommand({ prompt: '  ', submitLabel: 'Go' })).toBeUndefined();
+    expect(parseWorkCommand({ submitLabel: 'Go' })).toBeUndefined();
+    expect(parseBlock({ type: 'workCommand' })).toBeUndefined();
   });
 
   it('reads the two embeddable pieces and keeps only known page targets', () => {

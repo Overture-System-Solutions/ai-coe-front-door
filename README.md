@@ -139,7 +139,7 @@ the browser back button work, and links to another origin (Teams, the Concierge)
 the browser's localStorage and are shared by every instance on the site, so a draft begun on a form page shows as
 "Resume draft" on the home tiles when that page next loads, and a form page resumes its draft on load. Place **one
 instance per page**: the DOM scope id and several heading ids are document-global, and a content page may carry one
-hero and one home piece for the same reason.
+hero and one home piece for the same reason, and one work command because it is the page's single primary control.
 
 **The content document** lives in the site's Site Assets library as `ai-coe-pages.json` (the script uploads it; a
 page owner can download it, edit it and upload it again under the same name, and Site Assets keeps the previous
@@ -161,6 +161,7 @@ copy in its version history). It is UTF-8 JSON:
 | `cards` | `columns` 2 (default) or 3; `items`, each `{ "title", "kicker", "body", "meta", "tone", "state", "route", "asOf", "source" }`; `body` is one string (a blank line starts a new paragraph) or an array of paragraphs; `meta` is the italic closing line (a data boundary, a source); `asOf` is a YYYY-MM-DD date and `source` where the fact was read from (parsed now, drawn from 1.0.0.13) |
 | `lanes` | `items`, each `{ "tone": "green" or "amber" or "red", "title", "body", "note", "badge" }` |
 | `statusRow` | `items`, each `{ "label", "text", "state", "route", "asOf", "source" }`, shown side by side as **label** — text, with the state pill after the text when `state` or `route` is set |
+| `workCommand` | `prompt` (the question above the input); `placeholder`; `submitLabel` (default `Start`); `route` (a key of the `routes` table, default `work`); `note` (the line under the input; in-text markup allowed); `emptyText` (shown when the sentence is empty, default "Say what you need done first."). One per page: the first screen's single primary control (see *The work command* below) |
 | `piece` | `piece`: `home` (the five path cards and the resource strip; `pages` maps `idea`, `toolCheck`, `teamUsage`, `helpTraining`, `feedback`, `telemetry`, `admin`, `policy` to site paths or URLs) or `telemetry` (the operations snapshot; the instance's usage metrics provider applies) |
 
 `tone` on tiles and cards is `teal` (default), `blue`, `violet`, `gold` or `cyan`. Every `text`, `body`, `note` and
@@ -180,12 +181,21 @@ labelled non-link (shown as closed, with its state pill and, when a route suppli
 `RETIRED` item is not rendered; `DESIGNED` and `QUALIFIED` read "Coming: not yet enabled", `PAUSED` reads "Paused".
 Only an item that resolves to *Available now* opens its own link, and only an off-site link opens in a new tab.
 
+**The work command.** The `workCommand` block is the first screen's one command: a question, a one-line text
+input and a button. On submit the sentence is saved on this device as the draft of the *Explore an AI idea* wizard
+(its first answer, "What work would you like to improve?"), and the route the block names is resolved against the
+`routes` table exactly as a tile is. When that route resolves to *Available now* the destination opens in a new tab
+and a status line says so (the route's `note`, or a default); anything else, including an unknown route key, opens
+the fallback (the guided intake) in the same tab, where the wizard resumes with the sentence already filled in. The
+sentence never enters a URL. An empty sentence shows `emptyText` and goes nowhere; a route with no fallback link
+shows "No fallback is configured" and saves nothing.
+
 The envelope may also carry three optional sections and a page may name its plane; each is lenient and a malformed one
 is dropped, never the document:
 
 | Key | Shape |
 |---|---|
-| `routes` | `{ "<key>": { "label", "href", "state", "verifiedOn", "receiptRef", "fallback", "note", "roles", "carriesReference", "capabilityId" } }` — the named destinations tiles, the call to action, status items and (from step 4) the work command point at. A row needs a `label`; `state` is a truth-state key or activation code; `verifiedOn` (YYYY-MM-DD) and `receiptRef` (the tenant qualification receipt reference) are what an off-site `href` needs before it opens; `fallback` names the row people are sent to while this one is closed (`guidedIntake` by default); `roles` limits the row to role ids (everyone when absent); `carriesReference` lets a hand-off card append the record reference; `capabilityId` is reserved. Resolution fails closed, in this order: an unknown key goes to the `guidedIntake` row (no such row: "No fallback is configured", no link); roles named and none held, a blank `href`, or a state other than *Available now* keep the label and link to the fallback with their own pill; an *Available now* off-site `href` without a valid, not-future `verifiedOn` or without `receiptRef` shows "Awaiting source" and links to the fallback; a site path or same-origin URL needs neither. Off-site links never carry user text |
+| `routes` | `{ "<key>": { "label", "href", "state", "verifiedOn", "receiptRef", "fallback", "note", "roles", "carriesReference", "capabilityId" } }` — the named destinations tiles, the call to action, status items and the work command point at. A row needs a `label`; `state` is a truth-state key or activation code; `verifiedOn` (YYYY-MM-DD) and `receiptRef` (the tenant qualification receipt reference) are what an off-site `href` needs before it opens; `fallback` names the row people are sent to while this one is closed (`guidedIntake` by default); `roles` limits the row to role ids (everyone when absent); `carriesReference` lets a hand-off card append the record reference; `capabilityId` is reserved. Resolution fails closed, in this order: an unknown key goes to the `guidedIntake` row (no such row: "No fallback is configured", no link); roles named and none held, a blank `href`, or a state other than *Available now* keep the label and link to the fallback with their own pill; an *Available now* off-site `href` without a valid, not-future `verifiedOn` or without `receiptRef` shows "Awaiting source" and links to the fallback; a site path or same-origin URL needs neither. Off-site links never carry user text |
 | `settings` | `{ "freshnessDays": 30, "minimumCohort": 5 }` — whole numbers (1–3650 and 1–1000); anything else keeps the default |
 | `vocabulary` | string maps only, unknown keys ignored, a blank keeps the default: `truthStates` `{ "<key>": { "label", "definition" } }` for `availableNow`, `draftOnly`, `needsApproval`, `needsAccess`, `notSupported`; `requestStatuses` `{ "<code>": "plain wording" }`; `chrome` `{ "badge", "example", "needsRefresh", "awaitingSource", "protectedPage" }`; `roles` `{ "<roleId>": "name" }`; `telemetry` `{ "<feedId>": "name" }`. `{organization}` and `{role}` in the text are filled by the web part, not by the script |
 | page `plane` | `user` (default) or `operator` |

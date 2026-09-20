@@ -1,8 +1,9 @@
-import { screen, within } from '@testing-library/react';
+import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import * as React from 'react';
 import { createFakePageContentService, createFakeUsageService, createPendingPageContentService, InMemoryDraftStore } from '../../../../testing/fakeServices';
 import { renderWithFrontDoor, TEST_SITE_URL } from '../../../../testing/renderWithFrontDoor';
 import type { FrontDoorRenderResult, ITestFrontDoorOptions } from '../../../../testing/renderWithFrontDoor';
+import type { IPageDocument } from '../../content/pageContent';
 import { CONTENT_UNAVAILABLE_TEXT, ContentPage, LOADING_PAGE_TEXT, NO_PAGE_KEY_TEXT, pageMissingText } from './ContentPage';
 
 function renderPage(pageKey: string | undefined, options: ITestFrontDoorOptions = {}): FrontDoorRenderResult {
@@ -68,6 +69,41 @@ describe('ContentPage', () => {
     expect(blockTypes(container)).toEqual(['heading', 'lanes', 'paragraph', 'piece']);
     expect(container.querySelector('.ai-page-lane--green')).not.toBeNull();
     expect(screen.queryByRole('heading', { level: 1 })).not.toBeInTheDocument();
+  });
+
+  it('renders the work command against the document route list and hands the sentence to the guided intake', async () => {
+    const document: IPageDocument = {
+      version: 1,
+      routes: {
+        guidedIntake: { key: 'guidedIntake', label: 'Start a guided request', href: 'SitePages/Explore-an-AI-idea.aspx', state: 'availableNow' },
+        work: { key: 'work', label: 'Get work done', state: 'availableNow' }
+      },
+      pages: {
+        startHere: {
+          title: 'Start here',
+          blocks: [
+            { type: 'hero', title: 'What do you need done?' },
+            { type: 'workCommand', prompt: 'Say what you need done', submitLabel: 'Start', route: 'work', emptyText: 'Say what you need done first.' },
+            { type: 'paragraph', text: 'One sentence is enough.' }
+          ]
+        }
+      }
+    };
+    const draftStore: InMemoryDraftStore = new InMemoryDraftStore();
+    const { container, navigate } = renderPage('startHere', { pageContent: createFakePageContentService({ connected: true, document, message: 'ok' }), draftStore });
+    await screen.findByRole('heading', { level: 1, name: 'What do you need done?' });
+    expect(blockTypes(container)).toEqual(['hero', 'workCommand', 'paragraph']);
+    expect(container.querySelector('.ai-page-block--workCommand > form.ai-page-command')).not.toBeNull();
+    fireEvent.change(screen.getByRole('textbox', { name: 'Say what you need done' }), { target: { value: 'prepare me for a customer meeting' } });
+    fireEvent.click(screen.getByRole('button', { name: 'Start' }));
+    await waitFor((): void => expect(navigate).toHaveBeenCalledWith(`${TEST_SITE_URL}/SitePages/Explore-an-AI-idea.aspx`));
+    expect(await draftStore.load('idea')).toEqual({
+      answers: { workToImprove: 'prepare me for a customer meeting' },
+      currentStepId: 'workToImprove',
+      phase: 'form',
+      summaryDraft: null,
+      summarySourceSnapshot: null
+    });
   });
 
   it('embeds the telemetry strip between the cards on the status page', async () => {

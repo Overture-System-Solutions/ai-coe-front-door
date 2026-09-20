@@ -415,6 +415,71 @@
   color: #10243e;
 }
 
+/* Work command: one sentence and one button on a row, the question above, the note and any message below; both controls are 44px targets. */
+#overture-ai-coe-pilot .ai-view--page .ai-page-command {
+  align-items: center;
+  display: grid;
+  gap: 10px 12px;
+  grid-template-columns: minmax(0, 1fr) auto;
+}
+
+#overture-ai-coe-pilot .ai-view--page .ai-page-command-label {
+  color: #10243e;
+  font-size: 19px;
+  font-weight: 700;
+  grid-column: 1 / -1;
+  line-height: 1.3;
+}
+
+#overture-ai-coe-pilot .ai-view--page .ai-page-command-input {
+  border-radius: 12px;
+  font-size: 17px;
+  line-height: 1.4;
+  min-height: 44px;
+  min-width: 0;
+  padding: 10px 14px;
+  width: 100%;
+}
+
+#overture-ai-coe-pilot .ai-view--page .ai-page-command-submit {
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 700;
+  min-height: 44px;
+  padding: 10px 22px;
+  white-space: nowrap;
+}
+
+#overture-ai-coe-pilot .ai-view--page .ai-page-command-note,
+#overture-ai-coe-pilot .ai-view--page .ai-page-command-alert,
+#overture-ai-coe-pilot .ai-view--page .ai-page-command-status {
+  font-size: 14px;
+  grid-column: 1 / -1;
+  line-height: 1.5;
+  margin: 0;
+}
+
+#overture-ai-coe-pilot .ai-view--page .ai-page-command-note {
+  color: #5b6878;
+}
+
+#overture-ai-coe-pilot .ai-view--page .ai-page-command-note a {
+  color: #076874;
+  font-weight: 600;
+  text-decoration: underline;
+}
+
+#overture-ai-coe-pilot .ai-view--page .ai-page-command-alert {
+  color: #9b1c1c;
+  font-weight: 600;
+}
+
+#overture-ai-coe-pilot .ai-view--page .ai-page-command-status {
+  color: #076b67;
+  font-weight: 600;
+}
+
 /* Narrow layout (a half or one-third column): the shipped phone breakpoints, keyed on the piece instead of the viewport. */
 #overture-ai-coe-pilot .ai-view--narrow .ai-workflow-shell {
   max-width: none;
@@ -483,7 +548,8 @@
 #overture-ai-coe-pilot .ai-view--narrow .ai-page-cards,
 #overture-ai-coe-pilot .ai-view--narrow .ai-page-cards--3,
 #overture-ai-coe-pilot .ai-view--narrow .ai-page-lanes,
-#overture-ai-coe-pilot .ai-view--narrow .ai-page-status {
+#overture-ai-coe-pilot .ai-view--narrow .ai-page-status,
+#overture-ai-coe-pilot .ai-view--narrow .ai-page-command {
   grid-template-columns: 1fr;
 }
 

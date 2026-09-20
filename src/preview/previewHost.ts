@@ -160,6 +160,14 @@ const SAMPLE_PAGE_DOCUMENT: { [key: string]: unknown } = {
           text: 'Ask the AI CoE in [Teams](https://teams.microsoft.com/l/channel/contoso), [learn the basics](/?page=learn) or [start a request](/?page=requests).',
           cta: { label: 'Start a request', href: previewLink('page=requests') }
         },
+        {
+          type: 'workCommand',
+          prompt: 'What do you need done?',
+          placeholder: 'Say it in one sentence, for example: prepare me for a customer meeting.',
+          submitLabel: 'Start',
+          route: 'work',
+          note: 'Your sentence is saved as a draft request on this device and is never sent anywhere else. Until the work command is proved here, the guided request opens with it filled in.'
+        },
         { type: 'heading', level: 2, text: 'What do you want to do?' },
         {
           type: 'tiles',

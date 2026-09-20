@@ -143,6 +143,22 @@ describe('Page view stylesheet', () => {
     expect(rule(table, '.ai-view--narrow .ai-page-tiles--prominent')).toEqual(['grid-template-columns:1fr']);
   });
 
+  it('lays out the work command as a grid whose controls are 44px targets', () => {
+    expect(rule(table, '.ai-view--page .ai-page-command')).toEqual(['align-items:center', 'display:grid', 'gap:10px 12px', 'grid-template-columns:minmax(0, 1fr) auto']);
+    expect(rule(table, '.ai-view--page .ai-page-command-label')).toEqual(['color:#10243e', 'font-size:19px', 'font-weight:700', 'grid-column:1/-1', 'line-height:1.3']);
+    expect(rule(table, '.ai-view--page .ai-page-command-input')).toEqual(['border-radius:12px', 'font-size:17px', 'line-height:1.4', 'min-height:44px', 'min-width:0', 'padding:10px 14px', 'width:100%']);
+    expect(rule(table, '.ai-view--page .ai-page-command-submit')).toEqual(['border-radius:12px', 'cursor:pointer', 'font-size:16px', 'font-weight:700', 'min-height:44px', 'padding:10px 22px', 'white-space:nowrap']);
+    for (const line of ['.ai-page-command-note', '.ai-page-command-alert', '.ai-page-command-status']) {
+      expect(rule(table, `.ai-view--page ${line}`)).toContain('grid-column:1/-1');
+      expect(rule(table, `.ai-view--page ${line}`)).toContain('font-size:14px');
+    }
+    expect(rule(table, '.ai-view--page .ai-page-command-note')).toContain('color:#5b6878');
+    expect(rule(table, '.ai-view--page .ai-page-command-note a')).toEqual(['color:#076874', 'font-weight:600', 'text-decoration:underline']);
+    expect(rule(table, '.ai-view--page .ai-page-command-alert')).toContain('color:#9b1c1c');
+    expect(rule(table, '.ai-view--page .ai-page-command-status')).toContain('color:#076b67');
+    expect(rule(table, '.ai-view--narrow .ai-page-command')).toEqual(['grid-template-columns:1fr']);
+  });
+
   it('draws the status pill as text plus an icon shape in every page view', () => {
     expect(rule(table, '.ai-view .ai-pill')).toEqual([
       'align-items:center',
