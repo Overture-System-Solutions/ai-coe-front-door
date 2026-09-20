@@ -22,7 +22,7 @@ import { AiCoeFrontDoor } from './components/AiCoeFrontDoor';
 import type { IAiCoeFrontDoorProps } from './components/AiCoeFrontDoor';
 import { createPageViewSettings, FRONT_DOOR_VIEWS, isWorkflowView, PAGE_TARGET_PROPERTIES, PAGE_TARGETS, parseFrontDoorView, parsePieceLayout, PIECE_LAYOUTS } from './content/pageViews';
 import type { FrontDoorView, IPageViewProperties, PageTarget, PieceLayout } from './content/pageViews';
-import { parseContentUrl } from './content/pageContent';
+import { parseContentUrl, parseOptionalContentUrl } from './content/pageContent';
 import { parseTelemetryProvider } from './content/telemetryTiles';
 import type { IFrontDoorServices, IFrontDoorUser } from './context/FrontDoorContext';
 import { createIdeaDraftService } from './services/draftService';
@@ -261,8 +261,11 @@ export default class AiCoeFrontDoorWebPart extends BaseClientSideWebPart<IAiCoeF
   /** The service bundle handed to React; rebuilt only when a property it depends on changes. */
   private _servicesFor(core: ICoreServices, branding: IBranding): IFrontDoorServices {
     const draftServiceUrl: string = this.properties.draftServiceUrl ?? '';
-    const contentUrl: string = parseContentUrl(this.properties.contentUrl);
-    const key: string = JSON.stringify([branding.organizationName, draftServiceUrl, contentUrl]);
+    // A content page always has a document (the default path when blank); any other piece reads one only when its
+    // property bag names it, so a form page shows the shared footer and an instance from before 1.0.0.12 reads nothing.
+    const contentUrl: string | undefined =
+      parseFrontDoorView(this.properties.view) === 'page' ? parseContentUrl(this.properties.contentUrl) : parseOptionalContentUrl(this.properties.contentUrl);
+    const key: string = JSON.stringify([branding.organizationName, draftServiceUrl, contentUrl ?? null]);
     if (this._services === undefined || this._servicesKey !== key) {
       this._services = {
         governance: core.governance,
@@ -271,7 +274,7 @@ export default class AiCoeFrontDoorWebPart extends BaseClientSideWebPart<IAiCoeF
         toolPolicyEvaluator: createToolPolicyEvaluator(branding),
         ideaDrafts: createIdeaDraftService(draftServiceUrl, core.flowClient),
         // Reads the document once per instance and document path; the page key alone never refetches.
-        pageContent: new PageContentService(core.serviceContext, contentUrl)
+        pageContent: contentUrl === undefined ? undefined : new PageContentService(core.serviceContext, contentUrl)
       };
       this._servicesKey = key;
     }

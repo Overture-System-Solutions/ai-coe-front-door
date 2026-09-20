@@ -8,7 +8,7 @@
  */
 import { PAGE_TARGETS } from './pageViews';
 import type { PageLinks, PageTarget } from './pageViews';
-import { asObject, readFlag, readIsoDate, readItems, readText, setOptional } from './rawJson';
+import { asObject, readFlag, readIsoDate, readItems, readStringList, readText, setOptional } from './rawJson';
 import type { Raw } from './rawJson';
 import { parseRoutes } from './routes';
 import type { RouteTable } from './routes';
@@ -240,7 +240,31 @@ export interface IRulesBlock {
   ordered: boolean;
 }
 
-export type PageBlock = IHeroBlock | IHeadingBlock | IParagraphBlock | ITilesBlock | ICardsBlock | ILanesBlock | IStatusRowBlock | IPieceBlock | IWorkCommandBlock | INoticeBlock | IRulesBlock;
+/** One row of the support routing grid: what went wrong, who it goes to, and what to do at once. */
+export interface ISupportRouteItem {
+  issue: string;
+  /** The named owner; absent means the page says "not yet named". */
+  owner?: string;
+  action?: string;
+}
+
+/**
+ * The pilot's support route, shared by every page view: where to ask, when to stop and ask, what a
+ * report should carry, and which owner each kind of issue goes to.
+ */
+export interface ISupportRouteBlock {
+  type: 'supportRoute';
+  /** The route, such as the pilot channel; a link when `href` is set, a plain label otherwise. */
+  label: string;
+  href?: string;
+  /** The situations in which to stop and ask. */
+  stopWhen: string[];
+  /** What to put in a report (the task type, the time, the status shown, what was expected). */
+  reportFields: string[];
+  routes: ISupportRouteItem[];
+}
+
+export type PageBlock = IHeroBlock | IHeadingBlock | IParagraphBlock | ITilesBlock | ICardsBlock | ILanesBlock | IStatusRowBlock | IPieceBlock | IWorkCommandBlock | INoticeBlock | IRulesBlock | ISupportRouteBlock;
 
 export interface IContentPage {
   title: string;
@@ -248,6 +272,16 @@ export interface IContentPage {
   /** Present only when the page is written for operators; absent means the user plane. */
   plane?: PagePlane;
 }
+
+/** The sections every page view shares: the footer rendered below the content, the wizards included. */
+export interface ISharedSections {
+  footer: PageBlock[];
+}
+
+export const EMPTY_SHARED: ISharedSections = { footer: [] };
+
+/** Block types that belong to one page only and are dropped from the shared sections. */
+export const SHARED_EXCLUDED_BLOCK_TYPES: readonly PageBlock['type'][] = ['hero', 'piece', 'workCommand'];
 
 export interface IPageDocument {
   version: number;
@@ -258,6 +292,8 @@ export interface IPageDocument {
   settings?: IDocumentSettings;
   /** Present when the document carries a routes object; a malformed one is dropped. */
   routes?: RouteTable;
+  /** Present when the document carries a shared object; a malformed one is dropped. */
+  shared?: ISharedSections;
 }
 
 function readTone<T extends string>(candidates: readonly T[], value: unknown): T | undefined {
@@ -485,6 +521,34 @@ export function parseRules(raw: Raw): IRulesBlock | undefined {
   return block;
 }
 
+function readSupportRouteItem(raw: Raw): ISupportRouteItem | undefined {
+  const issue: string | undefined = readText(raw.issue);
+  if (issue === undefined) {
+    return undefined;
+  }
+  const item: ISupportRouteItem = { issue };
+  setOptional(item, 'owner', readText(raw.owner));
+  setOptional(item, 'action', readText(raw.action));
+  return item;
+}
+
+/** The support route: needs a label; the link, the two lists and the routing rows are optional and rows without an issue are dropped. */
+export function parseSupportRoute(raw: Raw): ISupportRouteBlock | undefined {
+  const label: string | undefined = readText(raw.label);
+  if (label === undefined) {
+    return undefined;
+  }
+  const block: ISupportRouteBlock = {
+    type: 'supportRoute',
+    label,
+    stopWhen: readStringList(raw.stopWhen),
+    reportFields: readStringList(raw.reportFields),
+    routes: readItems(raw.routes, readSupportRouteItem)
+  };
+  setOptional(block, 'href', readText(raw.href));
+  return block;
+}
+
 /** Reads one block; undefined for anything that is not a well-formed block of a known type. */
 export function parseBlock(value: unknown): PageBlock | undefined {
   const raw: Raw | undefined = asObject(value);
@@ -514,9 +578,29 @@ export function parseBlock(value: unknown): PageBlock | undefined {
       return parseNotice(raw);
     case 'rules':
       return parseRules(raw);
+    case 'supportRoute':
+      return parseSupportRoute(raw);
     default:
       return undefined;
   }
+}
+
+/**
+ * The shared sections: the footer's blocks read like a page's, less the hero, the piece and the work
+ * command, which belong to one page each; anything malformed is left out and a missing footer is empty.
+ */
+export function parseShared(value: unknown): ISharedSections {
+  const raw: Raw | undefined = asObject(value);
+  const footer: PageBlock[] = [];
+  if (raw !== undefined && Array.isArray(raw.footer)) {
+    for (const entry of raw.footer) {
+      const block: PageBlock | undefined = parseBlock(entry);
+      if (block !== undefined && SHARED_EXCLUDED_BLOCK_TYPES.indexOf(block.type) < 0) {
+        footer.push(block);
+      }
+    }
+  }
+  return { footer };
 }
 
 /** The plane a page names; anything but `operator` is the user plane. */
@@ -622,8 +706,8 @@ function parsePage(value: unknown): IContentPage | undefined {
 
 /**
  * Parses the document text; undefined unless it is a version 1 object with a pages object. The
- * optional `vocabulary`, `settings` and `routes` sections are carried when they are objects and
- * dropped (never the document) when they are not.
+ * optional `vocabulary`, `settings`, `routes` and `shared` sections are carried when they are objects
+ * and dropped (never the document) when they are not.
  */
 export function parsePageDocument(text: string): IPageDocument | undefined {
   let parsed: unknown;
@@ -654,10 +738,18 @@ export function parsePageDocument(text: string): IPageDocument | undefined {
   if (asObject(raw.routes) !== undefined) {
     document.routes = parseRoutes(raw.routes);
   }
+  if (asObject(raw.shared) !== undefined) {
+    document.shared = parseShared(raw.shared);
+  }
   return document;
 }
 
 /** The configured document path, or the default when blank. */
 export function parseContentUrl(value: unknown): string {
   return readText(value) ?? DEFAULT_CONTENT_URL;
+}
+
+/** The configured document path as written, trimmed; undefined when blank, so an instance without one reads no document. */
+export function parseOptionalContentUrl(value: unknown): string | undefined {
+  return readText(value);
 }

@@ -478,7 +478,7 @@
       "file": "Explore-an-AI-idea.aspx",
       "commentsEnabled": false,
       "permissions": "inherit",
-      "instance": { "view": "idea", "layout": "wide", "returnUrl": "SitePages/Requests.aspx", "organizationName": "{OrganizationName}", "draftServiceUrl": "{DraftServiceUrl}" }
+      "instance": { "view": "idea", "layout": "wide", "returnUrl": "SitePages/Requests.aspx", "contentUrl": "SiteAssets/ai-coe-pages.json", "organizationName": "{OrganizationName}", "draftServiceUrl": "{DraftServiceUrl}" }
     },
     {
       "key": "toolCheck",
@@ -486,7 +486,7 @@
       "file": "Check-a-tool-or-task.aspx",
       "commentsEnabled": false,
       "permissions": "inherit",
-      "instance": { "view": "toolCheck", "layout": "wide", "returnUrl": "SitePages/Requests.aspx", "organizationName": "{OrganizationName}" }
+      "instance": { "view": "toolCheck", "layout": "wide", "returnUrl": "SitePages/Requests.aspx", "contentUrl": "SiteAssets/ai-coe-pages.json", "organizationName": "{OrganizationName}" }
     },
     {
       "key": "teamUsage",
@@ -494,7 +494,7 @@
       "file": "Register-team-AI-use.aspx",
       "commentsEnabled": false,
       "permissions": "inherit",
-      "instance": { "view": "teamUsage", "layout": "wide", "returnUrl": "SitePages/Requests.aspx", "organizationName": "{OrganizationName}" }
+      "instance": { "view": "teamUsage", "layout": "wide", "returnUrl": "SitePages/Requests.aspx", "contentUrl": "SiteAssets/ai-coe-pages.json", "organizationName": "{OrganizationName}" }
     },
     {
       "key": "helpTraining",
@@ -502,7 +502,7 @@
       "file": "Get-help-or-training.aspx",
       "commentsEnabled": false,
       "permissions": "inherit",
-      "instance": { "view": "helpTraining", "layout": "wide", "returnUrl": "SitePages/Requests.aspx", "organizationName": "{OrganizationName}" }
+      "instance": { "view": "helpTraining", "layout": "wide", "returnUrl": "SitePages/Requests.aspx", "contentUrl": "SiteAssets/ai-coe-pages.json", "organizationName": "{OrganizationName}" }
     },
     {
       "key": "feedback",
@@ -510,7 +510,7 @@
       "file": "Share-feedback.aspx",
       "commentsEnabled": false,
       "permissions": "inherit",
-      "instance": { "view": "feedback", "layout": "wide", "returnUrl": "SitePages/Requests.aspx", "organizationName": "{OrganizationName}" }
+      "instance": { "view": "feedback", "layout": "wide", "returnUrl": "SitePages/Requests.aspx", "contentUrl": "SiteAssets/ai-coe-pages.json", "organizationName": "{OrganizationName}" }
     },
     {
       "key": "admin",

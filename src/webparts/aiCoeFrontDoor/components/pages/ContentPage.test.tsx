@@ -71,7 +71,7 @@ describe('ContentPage', () => {
     expect(screen.queryByRole('heading', { level: 1 })).not.toBeInTheDocument();
   });
 
-  it('renders the work command against the document route list and hands the sentence to the guided intake', async () => {
+  it('renders the work command against the route list and hands the sentence to the guided intake', async () => {
     const document: IPageDocument = {
       version: 1,
       routes: {
@@ -90,7 +90,8 @@ describe('ContentPage', () => {
       }
     };
     const draftStore: InMemoryDraftStore = new InMemoryDraftStore();
-    const { container, navigate } = renderPage('startHere', { pageContent: createFakePageContentService({ connected: true, document, message: 'ok' }), draftStore });
+    // The page view shell provides the document's route list to the blocks; on its own the page reads the host's.
+    const { container, navigate } = renderPage('startHere', { pageContent: createFakePageContentService({ connected: true, document, message: 'ok' }), draftStore, routes: document.routes });
     await screen.findByRole('heading', { level: 1, name: 'What do you need done?' });
     expect(blockTypes(container)).toEqual(['hero', 'workCommand', 'paragraph']);
     expect(container.querySelector('.ai-page-block--workCommand > form.ai-page-command')).not.toBeNull();
@@ -131,6 +132,20 @@ describe('ContentPage', () => {
     expect(notes[0].querySelector('strong.ai-page-notice-title')?.textContent).toBe('Data boundary');
     expect(notes[1]).toHaveClass('ai-page-notice--info');
     expect(container.querySelectorAll('.ai-page-block--notice > aside.ai-page-notice')).toHaveLength(2);
+  });
+
+  it('renders no shared footer itself: the page view shell places it below every view', async () => {
+    const document: IPageDocument = {
+      version: 1,
+      shared: { footer: [{ type: 'supportRoute', label: 'Ask in the pilot channel', stopWhen: [], reportFields: [], routes: [] }] },
+      pages: { startHere: { title: 'Start here', blocks: [{ type: 'paragraph', text: 'One sentence is enough.' }] } }
+    };
+    const { container } = renderPage('startHere', { pageContent: createFakePageContentService({ connected: true, document, message: 'ok' }) });
+    await screen.findByText('One sentence is enough.');
+    expect(blockTypes(container)).toEqual(['paragraph']);
+    expect(container.querySelector('.ai-page-block--shared')).toBeNull();
+    expect(container.querySelector('section.ai-page-support')).toBeNull();
+    expect(screen.queryByRole('heading', { name: 'Support' })).not.toBeInTheDocument();
   });
 
   it('embeds the telemetry strip between the cards on the status page', async () => {

@@ -6,8 +6,9 @@ front-door web part instance per page, the top navigation and the home page.
 .DESCRIPTION
 Operator tool for a site owner; the build and the tests never run it. It reads pages.json next to this script,
 resolves the tokens from a parameter file (copy parameters.sample.json, fill it in, keep it out of git) and the named
-parameters, uploads the resolved content document (the blocks of the six navigation pages) to Site Assets, then
-creates each page with a single front-door instance. Pages that already exist are skipped unless -Overwrite is given,
+parameters, uploads the resolved content document (the blocks of the six navigation pages and the shared footer every
+page view draws below its content, the five form pages included) to Site Assets, then creates each page with a single
+front-door instance. Pages that already exist are skipped unless -Overwrite is given,
 in which case they are sent to the site recycle bin and rebuilt from pages.json; edits made in the browser are
 recoverable from the recycle bin but are not carried over. The content document is rewritten on every run (Site
 Assets keeps its version history), and the navigation is rebuilt every time. A page whose build fails part-way is
@@ -239,9 +240,11 @@ foreach ($page in $definition['pages']) {
   }
 }
 $document = [ordered]@{ version = 1; pages = $documentPages }
-# The route table goes through the same token pass as the blocks; vocabulary and settings are copied as written
-# (their {organization} and {role} tokens belong to the web part, and Resolve-Text would refuse them).
+# The route table and the shared sections (the footer below every page view, the form pages included) go through
+# the same token pass as the blocks; vocabulary and settings are copied as written (their {organization} and {role}
+# tokens belong to the web part, and Resolve-Text would refuse them).
 if ($definition.Contains('routes')) { $document['routes'] = Resolve-Node $definition['routes'] 'routes' }
+if ($definition.Contains('shared')) { $document['shared'] = Resolve-Node $definition['shared'] 'shared' }
 foreach ($section in @('vocabulary', 'settings')) {
   if ($definition.Contains($section)) { $document[$section] = $definition[$section] }
 }

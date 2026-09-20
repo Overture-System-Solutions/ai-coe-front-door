@@ -150,6 +150,30 @@ const SAMPLE_PAGE_DOCUMENT: { [key: string]: unknown } = {
     assistant: { label: 'Ask the assistant', href: 'https://assistant.example/chat', state: 'availableNow', note: 'Opens in a new tab once the tenant receipt is recorded.' },
     improve: { label: 'Improve a task', href: previewLink('view=toolCheck'), state: 'availableNow' }
   },
+  // The shared footer: the same support route below every page view, the five wizard views included (open "?view=idea").
+  shared: {
+    footer: [
+      {
+        type: 'supportRoute',
+        label: 'Ask in the pilot channel in Teams',
+        href: 'https://teams.microsoft.com/l/channel/contoso',
+        stopWhen: [
+          'the signed-in account or destination is unclear',
+          'someone else\'s information appears',
+          'a source is missing or a claim cannot be verified',
+          'the system appears ready to take an external action you did not approve'
+        ],
+        reportFields: ['the task type', 'the time', 'the status shown', 'what you expected', 'never a secret or private content you do not need to share'],
+        routes: [
+          { issue: 'Wrong identity, audience or access', owner: 'Identity owner (simulated)', action: 'Stop; do not widen access' },
+          { issue: 'Someone else\'s information appears', owner: 'Privacy owner (simulated)', action: 'Stop the affected workflow; preserve minimal evidence' },
+          { issue: 'A claim looks incorrect or unsupported', action: 'Remove or label the claim; correct the source binding' },
+          { issue: 'Send, publish or record change is proposed', owner: 'Business approver (simulated)', action: 'Keep draft-only until separately approved' },
+          { issue: 'Outcome is uncertain after an action', owner: 'Recovery owner (simulated)', action: 'Reconcile the native state before retrying' }
+        ]
+      }
+    ]
+  },
   pages: {
     startHere: {
       title: 'Start here',

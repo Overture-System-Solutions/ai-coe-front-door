@@ -1,6 +1,7 @@
 /**
- * The page document context: the route table, vocabulary, settings, plane and clock every block reads
- * from a provider (never from its props), provided by the content page from the document it loaded.
+ * The page document context: the route table, vocabulary, settings, plane, shared sections and clock
+ * every block reads from a provider (never from its props), provided by the page view shell from the
+ * document it loaded.
  */
 import { render, screen } from '@testing-library/react';
 import * as React from 'react';
@@ -8,11 +9,14 @@ import { createFakePageContentService } from '../../../../testing/fakeServices';
 import { renderWithFrontDoor, TEST_SITE_URL } from '../../../../testing/renderWithFrontDoor';
 import { DEFAULT_SETTINGS, DEFAULT_VOCABULARY, parsePageDocument } from '../../content/pageContent';
 import type { IPageDocument, ITilesBlock } from '../../content/pageContent';
+import type { IPageViewSettings } from '../../content/pageViews';
 import type { RouteTable } from '../../content/routes';
+import { PageViewShell } from '../PageViewShell';
 import { TilesBlock } from './blocks/TilesBlock';
-import { ContentPage } from './ContentPage';
 import { createPageDocumentContext, documentContext, PageDocumentProvider, usePageDocument } from './PageDocumentContext';
 import type { IPageDocumentContextValue } from './PageDocumentContext';
+
+const START_HERE: IPageViewSettings = { view: 'page', layout: 'wide', pages: {}, pageKey: 'startHere' };
 
 const OPEN_ROUTES: RouteTable = {
   guidedIntake: { key: 'guidedIntake', label: 'Start a guided request', href: 'SitePages/Explore-an-AI-idea.aspx', state: 'availableNow' },
@@ -57,13 +61,14 @@ describe('PageDocumentContext', () => {
     expect(screen.getByText(/^0 routes; plane user; now .*; freshness 30; footer 0$/)).toBeInTheDocument();
   });
 
-  it('takes the routes, vocabulary and settings from the document, the plane from the page and the clock from the host', () => {
+  it('takes the routes, vocabulary, settings and shared sections from the document, the plane from the page and the clock from the host', () => {
     const document: IPageDocument = parsePageDocument(
       JSON.stringify({
         version: 1,
         routes: { guidedIntake: { label: 'Start', href: 'SitePages/x.aspx', state: 'availableNow' } },
         vocabulary: { chrome: { example: 'Sample' } },
         settings: { freshnessDays: 7 },
+        shared: { footer: [{ type: 'paragraph', text: 'Questions? Ask the AI CoE.' }] },
         pages: { operations: { title: 'Operations', plane: 'operator', blocks: [] }, learn: { title: 'Learn', blocks: [] } }
       })
     ) as IPageDocument;
@@ -72,6 +77,7 @@ describe('PageDocumentContext', () => {
     expect(operations.routes).toEqual({ guidedIntake: { key: 'guidedIntake', label: 'Start', href: 'SitePages/x.aspx', state: 'availableNow' } });
     expect(operations.vocabulary.chrome).toEqual({ example: 'Sample' });
     expect(operations.settings).toEqual({ freshnessDays: 7, minimumCohort: 5 });
+    expect(operations.shared).toEqual({ footer: [{ type: 'paragraph', text: 'Questions? Ask the AI CoE.' }] });
     expect(operations.plane).toBe('operator');
     expect(operations.now).toBe(host.now);
     expect(operations.roles).toEqual(['operator']);
@@ -82,6 +88,7 @@ describe('PageDocumentContext', () => {
     expect(fromBare.routes).toEqual({});
     expect(fromBare.vocabulary).toEqual(DEFAULT_VOCABULARY);
     expect(fromBare.settings).toEqual(DEFAULT_SETTINGS);
+    expect(fromBare.shared).toEqual({ footer: [] });
   });
 
   it('drives the blocks from the provider: the same block opens or closes with the routes it is given', () => {
@@ -100,7 +107,7 @@ describe('PageDocumentContext', () => {
     expect(nested.getByText('Get work done').closest('a')).not.toBeNull();
   });
 
-  it('is provided by the content page from the loaded document, inheriting the host clock', async () => {
+  it('is provided by the page view shell from the loaded document, inheriting the host clock', async () => {
     const document: IPageDocument = {
       version: 1,
       routes: {
@@ -117,7 +124,7 @@ describe('PageDocumentContext', () => {
         }
       }
     };
-    const proven = renderWithFrontDoor(<ContentPage pageKey="startHere" />, {
+    const proven = renderWithFrontDoor(<PageViewShell settings={START_HERE} />, {
       pageContent: createFakePageContentService({ connected: true, message: '', document }),
       routes: CLOSED_ROUTES,
       now: new Date('2026-09-20T12:00:00Z')
@@ -127,7 +134,7 @@ describe('PageDocumentContext', () => {
     // The host routes never leak in: `work` is unknown to the document, so it falls back to the guided intake.
     expect(proven.getByText('Get work done').closest('a')).toHaveAttribute('href', `${TEST_SITE_URL}/SitePages/Explore-an-AI-idea.aspx`);
     proven.unmount();
-    const early = renderWithFrontDoor(<ContentPage pageKey="startHere" />, {
+    const early = renderWithFrontDoor(<PageViewShell settings={START_HERE} />, {
       pageContent: createFakePageContentService({ connected: true, message: '', document }),
       now: new Date('2026-01-01T12:00:00Z')
     });

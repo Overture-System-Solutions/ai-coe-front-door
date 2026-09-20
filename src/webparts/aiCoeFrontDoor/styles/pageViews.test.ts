@@ -187,6 +187,38 @@ describe('Page view stylesheet', () => {
     expect(rule(table, '.ai-view--page .ai-page-rules a')).toEqual(['color:#076874', 'font-weight:600', 'text-decoration:underline']);
   });
 
+  it('draws the shared footer and the support route in every page view, the routing grid as cards on the card surface', () => {
+    // Scoped to `.ai-view`, not `.ai-view--page`: the footer sits below the wizard views as well.
+    expect(rule(table, '.ai-view .ai-page-block--shared')).toEqual(['border-top:1px solid #dbe5ec', 'margin-top:32px', 'padding-top:24px']);
+    expect(rule(table, '.ai-view .ai-page-block--shared .ai-page-block + .ai-page-block')).toEqual(['margin-top:24px']);
+    expect(rule(table, '.ai-view .ai-page-support')).toEqual(['color:#2b3d52', 'font-size:15px', 'line-height:1.5']);
+    expect(rule(table, '.ai-view .ai-page-support-title')).toEqual(['color:#10243e', 'font-size:20px', 'font-weight:700', 'line-height:1.3', 'margin:0 0 8px']);
+    expect(rule(table, '.ai-view .ai-page-support-route')).toEqual(['font-size:16px', 'margin:0 0 16px']);
+    expect(rule(table, '.ai-view .ai-page-support a')).toEqual(['color:#076874', 'font-weight:600', 'text-decoration:underline']);
+    expect(rule(table, '.ai-view .ai-page-support-columns')).toEqual(['display:grid', 'gap:16px 24px', 'grid-template-columns:repeat(2, minmax(0, 1fr))', 'margin:0 0 16px']);
+    expect(rule(table, '.ai-view .ai-page-support-heading')).toEqual(['color:#10243e', 'font-size:15px', 'font-weight:700', 'line-height:1.3', 'margin:0 0 6px']);
+    expect(rule(table, '.ai-view .ai-page-support-list')).toEqual(['margin:0', 'padding:0 0 0 20px']);
+    expect(rule(table, '.ai-view .ai-page-support-grid')).toEqual(['display:grid', 'gap:10px', 'margin:0']);
+    expect(rule(table, '.ai-view .ai-page-support-row')).toEqual([
+      'background:#fff',
+      'border-radius:13px',
+      'border:1px solid #dbe5ec',
+      'display:grid',
+      'gap:4px 16px',
+      'grid-template-columns:minmax(0, 1.2fr) minmax(0, 1fr) minmax(0, 1.4fr)',
+      'padding:12px 16px'
+    ]);
+    expect(rule(table, '.ai-view .ai-page-support-row dt')).toEqual(['color:#10243e', 'font-weight:700']);
+    expect(rule(table, '.ai-view .ai-page-support-row dd')).toEqual(['margin:0']);
+    expect(rule(table, '.ai-view .ai-page-support-key')).toEqual(['color:#5b6878', 'display:block', 'font-size:11px', 'font-weight:800', 'letter-spacing:0.03em', 'text-transform:uppercase']);
+    // The edges, inks and link colour are the shipped ones; the body ink #2b3d52 is the page views' own, as on the notice.
+    for (const colour of ['#dbe5ec', '#10243e', '#076874', '#5b6878']) {
+      expect(shipped.indexOf(colour)).toBeGreaterThan(-1);
+    }
+    expect(rule(table, '.ai-view--narrow .ai-page-support-columns')).toEqual(['grid-template-columns:1fr']);
+    expect(rule(table, '.ai-view--narrow .ai-page-support-row')).toEqual(['grid-template-columns:1fr']);
+  });
+
   it('draws the status pill as text plus an icon shape in every page view', () => {
     expect(rule(table, '.ai-view .ai-pill')).toEqual([
       'align-items:center',

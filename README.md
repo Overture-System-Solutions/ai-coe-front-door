@@ -117,8 +117,9 @@ The shipped experience is one web part that switches screens in memory. Since 1.
 render exactly one piece (the home tiles, one wizard, the telemetry strip or the dashboard), and since 1.0.0.11 an
 instance can render a whole **content page**: the structure of a short communication site (a hero, headings,
 paragraphs, quick-link tiles, three-column cards, the three request lanes, a status row, notices, a short set of
-rules) drawn in the front door's own style, with the home tiles or the telemetry strip embedded between the blocks. The six navigation pages of the
-site are therefore front-door pages too. The wizards, drafts, list writes and downloads are unchanged; only where the
+rules) drawn in the front door's own style, with the home tiles or the telemetry strip embedded between the blocks, and
+since 1.0.0.12 every page view draws the document's shared footer (the support route) below its content. The six
+navigation pages of the site are therefore front-door pages too. The wizards, drafts, list writes and downloads are unchanged; only where the
 pieces sit and how they link to each other differs.
 
 **Properties** (group *Page layout*; *Page content* for a content page; *Page links* for the home tiles):
@@ -129,7 +130,7 @@ pieces sit and how they link to each other differs.
 | `layout` | `wide` (default), `narrow` | `narrow` stacks cards, strip, tiles and content blocks for a half or one-third column. |
 | `returnUrl` | site path (`SitePages/Requests.aspx`), root path or full URL | Where "All topics", "Back" on the first question and the dashboard's "Front Door" lead; blank returns to the site home. |
 | `pageKey` | a key of the content document: `startHere`, `learn`, `useAi`, `requests`, `prompts`, `status` as provisioned | Content page only: which page of the document this instance shows. |
-| `contentUrl` | site path or URL; blank means `SiteAssets/ai-coe-pages.json` | Content page only: the JSON document to read. The document is read once per instance and path. |
+| `contentUrl` | site path or URL; blank means `SiteAssets/ai-coe-pages.json` on a content page and no document on any other piece | The JSON document to read, once per instance and path. A content page always reads one; a wizard (or any other piece) reads one only when this is set, and then draws the document's shared footer (the support route) below its content, so the five form pages carry the same help in the same place as the content pages. An instance from before 1.0.0.12 has it blank and reads nothing. |
 | `pageIdea` … `pageFeedback`, `pageTelemetry`, `pageAdmin`, `pagePolicy` | same forms as `returnUrl` | Home tiles only: where each card, the resource strip and the admin bar link. A blank workflow page hides its card; `pageTelemetry` adds an "AI operations snapshot" entry to the resource strip; a blank `pagePolicy` keeps the policy library link. |
 
 The toolbox offers one entry per piece (**AI CoE: Home tiles**, **AI CoE: Explore an AI idea**, …, **AI CoE: Content
@@ -164,6 +165,7 @@ copy in its version history). It is UTF-8 JSON:
 | `workCommand` | `prompt` (the question above the input); `placeholder`; `submitLabel` (default `Start`); `route` (a key of the `routes` table, default `work`); `note` (the line under the input; in-text markup allowed); `emptyText` (shown when the sentence is empty, default "Say what you need done first."). One per page: the first screen's single primary control (see *The work command* below) |
 | `notice` | `text` (in-text markup allowed); `tone` `info` (default) or `caution`; `title`. A short aside set apart from the prose (a data boundary, a pilot's limits, what the site records), rendered as a note with a toned left edge and its title, never colour alone |
 | `rules` | `items`, each `{ "title", "text" }` (a rule needs a title; `text` may carry in-text markup); `title`; `ordered` (default `true`: a numbered list; `false` for bullets). A block needs at least one titled item |
+| `supportRoute` | `label` (the route: the pilot channel, a mailbox); `href` (the label becomes a link; an off-site link opens in a new tab); `stopWhen` (a list of the situations in which to stop and ask); `reportFields` (a list of what a report should carry: the task type, the time, the status shown, what was expected); `routes`, each `{ "issue", "owner", "action" }` (a row needs an issue; a blank `owner` reads "not yet named"). Rendered as a "Support" section with the two lists side by side and the routing rows as a description list, never a data grid element. Meant for the shared footer (below), so it is the same help in the same place on every page view (WCAG 2.2 3.2.6, Consistent Help) |
 | `piece` | `piece`: `home` (the five path cards and the resource strip; `pages` maps `idea`, `toolCheck`, `teamUsage`, `helpTraining`, `feedback`, `telemetry`, `admin`, `policy` to site paths or URLs) or `telemetry` (the operations snapshot; the instance's usage metrics provider applies) |
 
 `tone` on tiles and cards is `teal` (default), `blue`, `violet`, `gold` or `cyan`. Every `text`, `body`, `note` and
@@ -192,11 +194,12 @@ the fallback (the guided intake) in the same tab, where the wizard resumes with 
 sentence never enters a URL. An empty sentence shows `emptyText` and goes nowhere; a route with no fallback link
 shows "No fallback is configured" and saves nothing.
 
-The envelope may also carry three optional sections and a page may name its plane; each is lenient and a malformed one
+The envelope may also carry four optional sections and a page may name its plane; each is lenient and a malformed one
 is dropped, never the document:
 
 | Key | Shape |
 |---|---|
+| `shared` | `{ "footer": [ blocks ] }` — the `footer` blocks every page view draws below its content, in the same relative place: the content pages and the five wizard pages alike (any instance whose `contentUrl` is set). Read like a page's blocks, less `hero`, `piece` and `workCommand`, which belong to one page each and are left out here. Meant for the `supportRoute` block, so the pilot's support route is the same help in the same place everywhere |
 | `routes` | `{ "<key>": { "label", "href", "state", "verifiedOn", "receiptRef", "fallback", "note", "roles", "carriesReference", "capabilityId" } }` — the named destinations tiles, the call to action, status items and the work command point at. A row needs a `label`; `state` is a truth-state key or activation code; `verifiedOn` (YYYY-MM-DD) and `receiptRef` (the tenant qualification receipt reference) are what an off-site `href` needs before it opens; `fallback` names the row people are sent to while this one is closed (`guidedIntake` by default); `roles` limits the row to role ids (everyone when absent); `carriesReference` lets a hand-off card append the record reference; `capabilityId` is reserved. Resolution fails closed, in this order: an unknown key goes to the `guidedIntake` row (no such row: "No fallback is configured", no link); roles named and none held, a blank `href`, or a state other than *Available now* keep the label and link to the fallback with their own pill; an *Available now* off-site `href` without a valid, not-future `verifiedOn` or without `receiptRef` shows "Awaiting source" and links to the fallback; a site path or same-origin URL needs neither. Off-site links never carry user text |
 | `settings` | `{ "freshnessDays": 30, "minimumCohort": 5 }` — whole numbers (1–3650 and 1–1000); anything else keeps the default |
 | `vocabulary` | string maps only, unknown keys ignored, a blank keeps the default: `truthStates` `{ "<key>": { "label", "definition" } }` for `availableNow`, `draftOnly`, `needsApproval`, `needsAccess`, `notSupported`; `requestStatuses` `{ "<code>": "plain wording" }`; `chrome` `{ "badge", "example", "needsRefresh", "awaitingSource", "protectedPage" }`; `roles` `{ "<roleId>": "name" }`; `telemetry` `{ "<feedId>": "name" }`. `{organization}` and `{role}` in the text are filled by the web part, not by the script |
@@ -220,7 +223,7 @@ of the content document:
 | Requests | `page`, key `requests` | the three lanes, what is not asked of you, registering AI already in use, then the `home` piece (the five path cards and resource strip; return page for every form) |
 | Prompts | `page`, key `prompts` | three starter prompts, what is in the library, what Draft means |
 | Status | `page`, key `status`, with `telemetryProvider` (the only instance that uses it) | what is running and what is not, the `telemetry` piece, how to check a request, what to do when something is wrong |
-| Explore an AI idea, Check a tool or task, Register team AI use, Get help or training, Share feedback | one wizard each, `returnUrl` Requests; the idea page alone carries `draftServiceUrl` | none |
+| Explore an AI idea, Check a tool or task, Register team AI use, Get help or training, Share feedback | one wizard each, `returnUrl` Requests, `contentUrl` set so the shared footer (the support route) shows below the wizard; the idea page alone carries `draftServiceUrl` | none of their own; the document's `shared` footer |
 | AI CoE admin dashboard (site owners only, not in the nav) | `admin`, `returnUrl` Requests | none |
 
 The text is the front door's own copy of a short pilot site and carries tokens: `{OrganizationName}` and the other
@@ -228,8 +231,8 @@ The text is the front door's own copy of a short pilot site and carries tokens: 
 pages, and `{Url:Name}` for links to things outside the package (the Concierge agent, Teams, Copilot Chat, the prompt
 library). Text parameters are required; URL parameters may be blank, which turns an in-text link into its label and
 marks a tile or call to action pointing at it `needsAccess`, so it stays on the page shown as closed (a labelled
-non-link with its state; the script says which). Tokens inside the `routes` table are resolved the same way; the
-`vocabulary` and `settings` sections are copied as written. `src/provisioning/pagesDefinition.test.ts`
+non-link with its state; the script says which). Tokens inside the `routes` table and the `shared` sections are resolved
+the same way; the `vocabulary` and `settings` sections are copied as written. `src/provisioning/pagesDefinition.test.ts`
 checks the structure, the tokens, that the web part's parser accepts every block once the tokens are resolved, and
 that no client or tenant name is in the file.
 

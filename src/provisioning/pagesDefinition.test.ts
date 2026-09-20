@@ -52,6 +52,8 @@ interface IPagesDefinition {
   pages: IPage[];
   /** The route table the script copies into the document once the tokens are resolved; absent until the first screen carries one. */
   routes?: { [key: string]: IRawItem };
+  /** The shared sections (the footer below every page view), resolved like the blocks; absent until the footer is written. */
+  shared?: { footer?: IRawBlock[] };
 }
 
 const ROOT: string = process.cwd();
@@ -194,6 +196,9 @@ function resolveDocument(urlValues: { [name: string]: string }): string {
   if (definition.routes !== undefined) {
     document.routes = JSON.parse(resolveTokens(JSON.stringify(definition.routes), urlValues));
   }
+  if (definition.shared !== undefined) {
+    document.shared = JSON.parse(resolveTokens(JSON.stringify(definition.shared), urlValues));
+  }
   return JSON.stringify(document);
 }
 
@@ -263,6 +268,8 @@ describe('front door page definition', () => {
       expect(instance.returnUrl).toBe('SitePages/Requests.aspx');
       expect(instance.organizationName).toBe('{OrganizationName}');
       expect(instance.draftServiceUrl).toBe(key === 'idea' ? '{DraftServiceUrl}' : undefined);
+      // The five form pages read the document for the shared footer below the wizard; the admin page does not.
+      expect(instance.contentUrl).toBe(WORKFLOW_ORDER.indexOf(key as WorkflowId) >= 0 ? DEFAULT_CONTENT_URL : undefined);
     }
     for (const target of definition.pages) {
       for (const name of Object.keys(target.instance)) {

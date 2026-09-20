@@ -1,12 +1,9 @@
 import * as React from 'react';
-import { DEFAULT_SETTINGS, DEFAULT_VOCABULARY, pagePlane } from '../../content/pageContent';
-import type { IContentPage, IDocumentSettings, IPageDocument, IVocabulary, PageBlock, PagePlane } from '../../content/pageContent';
+import { DEFAULT_SETTINGS, DEFAULT_VOCABULARY, EMPTY_SHARED, pagePlane } from '../../content/pageContent';
+import type { IContentPage, IDocumentSettings, IPageDocument, ISharedSections, IVocabulary, PagePlane } from '../../content/pageContent';
 import type { RouteTable } from '../../content/routes';
 
-/** The sections every page view shares; the footer blocks arrive with the shared section of the document. */
-export interface ISharedSections {
-  footer: PageBlock[];
-}
+export type { ISharedSections } from '../../content/pageContent';
 
 /**
  * What every block reads from the document it sits in, rather than from its props: the route list,
@@ -30,7 +27,7 @@ export function createPageDocumentContext(overrides: Partial<IPageDocumentContex
     vocabulary: overrides.vocabulary ?? DEFAULT_VOCABULARY,
     settings: overrides.settings ?? DEFAULT_SETTINGS,
     plane: overrides.plane ?? 'user',
-    shared: overrides.shared ?? { footer: [] },
+    shared: overrides.shared ?? EMPTY_SHARED,
     now: overrides.now ?? new Date()
   };
   if (overrides.roles !== undefined) {
@@ -46,6 +43,7 @@ export function documentContext(document: IPageDocument, page: IContentPage | un
     vocabulary: document.vocabulary ?? DEFAULT_VOCABULARY,
     settings: document.settings ?? DEFAULT_SETTINGS,
     plane: page === undefined ? 'user' : pagePlane(page),
+    shared: document.shared ?? EMPTY_SHARED,
     now: host.now,
     roles: host.roles
   });

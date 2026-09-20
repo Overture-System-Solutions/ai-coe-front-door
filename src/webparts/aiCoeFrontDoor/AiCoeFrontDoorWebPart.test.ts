@@ -336,6 +336,43 @@ describe('AiCoeFrontDoorWebPart bundle', () => {
     await waitFor((): void => expect(within(root).getByRole('button', { name: 'Continue' })).toBeInTheDocument());
   });
 
+  it('renders the shared footer below a form page that names the content document, and reads nothing without one', async () => {
+    const withFooter: { [key: string]: unknown } = {
+      ...SAMPLE_PAGE_DOCUMENT,
+      shared: {
+        footer: [
+          {
+            type: 'supportRoute',
+            label: 'Ask in the pilot channel',
+            href: 'https://teams.microsoft.com/l/channel/contoso',
+            stopWhen: ['a source is missing'],
+            reportFields: ['the task type', 'the time'],
+            routes: [{ issue: 'Outcome is uncertain after an action', owner: 'Recovery owner', action: 'Reconcile the native state before retrying' }]
+          }
+        ]
+      }
+    };
+    const files: { [path: string]: string } = { '/sites/ai/SiteAssets/ai-coe-pages.json': JSON.stringify(withFooter) };
+    const named: IHostedInstance = await mount({ properties: { view: 'idea', contentUrl: 'SiteAssets/ai-coe-pages.json' }, files });
+    const root: HTMLElement = named.webPart.domElement;
+    await waitFor((): void => expect(within(root).getByRole('heading', { level: 2, name: 'Support' })).toBeInTheDocument());
+    expect(within(root).getByRole('heading', { level: 1, name: catalog.idea.title })).toBeInTheDocument();
+    expect(root.querySelector('.ai-workflow-shell > main + .ai-page-block--shared > .ai-page-block--supportRoute > section.ai-page-support')).not.toBeNull();
+    expect(within(root).getByRole('link', { name: 'Ask in the pilot channel' })).toHaveAttribute('href', 'https://teams.microsoft.com/l/channel/contoso');
+    await waitFor((): void => expect(within(root).getByRole('button', { name: 'Continue' })).toBeInTheDocument());
+    expect(fileReads(named)).toHaveLength(1);
+    expect(fileReads(named)[0].file).toBe('/sites/ai/SiteAssets/ai-coe-pages.json');
+    named.dispose();
+    instances.pop();
+
+    // A form instance whose property bag names no document (every instance built before 1.0.0.12) reads nothing.
+    const unnamed: IHostedInstance = await mount({ properties: { view: 'idea' }, files });
+    await waitFor((): void => expect(within(unnamed.webPart.domElement).getByRole('button', { name: 'Continue' })).toBeInTheDocument());
+    expect(fileReads(unnamed)).toHaveLength(0);
+    expect(unnamed.webPart.domElement.querySelector('.ai-page-block--shared')).toBeNull();
+    expect(within(unnamed.webPart.domElement).queryByRole('heading', { level: 2, name: 'Support' })).not.toBeInTheDocument();
+  });
+
   it('renders the telemetry snapshot alone', async () => {
     const { webPart } = await mount({ properties: { view: 'telemetry' } });
     const root: HTMLElement = webPart.domElement;

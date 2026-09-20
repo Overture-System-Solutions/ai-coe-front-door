@@ -1,14 +1,21 @@
 import * as React from 'react';
+import type { IContentPage, IPageDocument } from '../content/pageContent';
 import { isWorkflowView } from '../content/pageViews';
 import type { IPageViewSettings } from '../content/pageViews';
 import { useFrontDoor } from '../context/FrontDoorContext';
 import { NoticeBanner } from '../controls/NoticeBanner';
 import { browserNavigate } from '../services/navigation';
 import type { Navigate } from '../services/navigation';
+import type { IPageContentService } from '../services/pageContentService';
 import { GovernanceAdminDashboard } from './GovernanceAdminDashboard';
 import { HomePage } from './HomePage';
 import type { DraftFlags } from './LandingPage';
-import { ContentPage } from './pages/ContentPage';
+import { BlockList } from './pages/BlockList';
+import { ContentPage, findPage } from './pages/ContentPage';
+import { documentContext, PageDocumentProvider, usePageDocument } from './pages/PageDocumentContext';
+import type { IPageDocumentContextValue } from './pages/PageDocumentContext';
+import { useDocumentState } from './pages/useDocumentState';
+import type { DocumentState } from './pages/useDocumentState';
 import { UsageTelemetryStrip } from './UsageTelemetryStrip';
 import { useDraftFlags } from './useDraftFlags';
 import { FeedbackWorkflow } from './workflows/FeedbackWorkflow';
@@ -27,20 +34,39 @@ export const UNCONFIGURED_VIEW_TEXT: string = 'This web part has no page view co
 
 /** No landing page shares the tree with a workflow piece, so there is nothing to keep in sync; the home page rediscovers drafts when it loads. */
 const NO_DRAFT_TRACKING: IWorkflowProps['onDraftsChanged'] = (): void => undefined;
+/** The shared footer carries no home piece, so it never shows a draft badge. */
+const NO_DRAFTS: DraftFlags = {};
 
 /**
  * Renders exactly one piece of the front door, chosen by the instance's page view settings, so the
  * pieces can live on separate native pages. Exits leave the page for the configured return URL.
+ *
+ * The shell also reads the content document for any instance that has a content service (a content
+ * view with a page key, or a form page whose property bag names the document) and provides its route
+ * list, vocabulary, settings and shared sections to every block; the document's shared footer (the
+ * support route) is drawn below the content of every view, in the same place on each.
  */
 export function PageViewShell({ settings }: IPageViewShellProps): React.ReactElement {
   const { branding, isAdmin, siteUrl, services, navigate: contextNavigate } = useFrontDoor();
+  const host: IPageDocumentContextValue = usePageDocument();
   const draftStore: typeof services.draftStore = services.draftStore;
+  const pageContent: IPageContentService | undefined = services.pageContent;
   const navigate: Navigate = contextNavigate ?? browserNavigate;
   const view: IPageViewSettings['view'] = settings.view;
   const returnUrl: string | undefined = settings.returnUrl;
+  const pageKey: string | undefined = settings.pageKey;
   // The home piece discovers saved drafts on load, exactly as the legacy shell does; other pieces have no badges
   // (a content page runs its own discovery when it embeds the home tiles).
   const drafts: DraftFlags = useDraftFlags(draftStore, view === 'home');
+  // A content view reads nothing until it has a page key; any other view reads whenever the instance names a document.
+  const readsDocument: boolean = view === 'page' ? pageKey !== undefined : pageContent !== undefined;
+  const state: DocumentState = useDocumentState(pageContent, readsDocument);
+  const document: IPageDocument | undefined = readsDocument && state.status === 'ready' ? state.document : undefined;
+  const page: IContentPage | undefined = document !== undefined && view === 'page' && pageKey !== undefined ? findPage(document, pageKey) : undefined;
+  const context: IPageDocumentContextValue = React.useMemo(
+    (): IPageDocumentContextValue => (document === undefined ? host : documentContext(document, page, host)),
+    [document, page, host]
+  );
 
   const exit = React.useCallback((): void => navigate(returnUrl ?? siteUrl), [navigate, returnUrl, siteUrl]);
   const workflowProps: IWorkflowProps = { resumeDraft: true, onExit: exit, onDraftsChanged: NO_DRAFT_TRACKING };
@@ -77,7 +103,7 @@ export function PageViewShell({ settings }: IPageViewShellProps): React.ReactEle
       content = isAdmin ? <GovernanceAdminDashboard onExit={exit} /> : <NoticeBanner>{ADMIN_ONLY_TEXT}</NoticeBanner>;
       break;
     case 'page':
-      content = <ContentPage pageKey={settings.pageKey} />;
+      content = <ContentPage pageKey={pageKey} />;
       break;
     default:
       content = <NoticeBanner>{UNCONFIGURED_VIEW_TEXT}</NoticeBanner>;
@@ -85,22 +111,29 @@ export function PageViewShell({ settings }: IPageViewShellProps): React.ReactEle
 
   const rootClass: string = `overture-app ai-view ai-view--${view}${settings.layout === 'narrow' ? ' ai-view--narrow' : ''}`;
   return (
-    <div className={rootClass}>
-      <div className={homeLike ? 'ai-home-shell' : 'ai-workflow-shell'}>
-        {!homeLike && (
-          <>
-            <div className="mb-6 flex items-center justify-between gap-3">
-              <p className="text-sm font-semibold tracking-wide">
-                {branding.headerPrefix}
-                <span style={{ color: 'var(--color-primary)' }}>AI CoE Lab</span>
-              </p>
-              <span className="overture-badge rounded-full px-3 py-1 text-xs font-medium">Governed intake · SharePoint connected</span>
+    <PageDocumentProvider value={context}>
+      <div className={rootClass}>
+        <div className={homeLike ? 'ai-home-shell' : 'ai-workflow-shell'}>
+          {!homeLike && (
+            <>
+              <div className="mb-6 flex items-center justify-between gap-3">
+                <p className="text-sm font-semibold tracking-wide">
+                  {branding.headerPrefix}
+                  <span style={{ color: 'var(--color-primary)' }}>AI CoE Lab</span>
+                </p>
+                <span className="overture-badge rounded-full px-3 py-1 text-xs font-medium">Governed intake · SharePoint connected</span>
+              </div>
+              <div className="mb-8 h-px w-full" style={{ backgroundColor: 'var(--color-line)' }} />
+            </>
+          )}
+          <main>{content}</main>
+          {context.shared.footer.length > 0 && (
+            <div className="ai-page-block ai-page-block--shared">
+              <BlockList blocks={context.shared.footer} drafts={NO_DRAFTS} />
             </div>
-            <div className="mb-8 h-px w-full" style={{ backgroundColor: 'var(--color-line)' }} />
-          </>
-        )}
-        <main>{content}</main>
+          )}
+        </div>
       </div>
-    </div>
+    </PageDocumentProvider>
   );
 }

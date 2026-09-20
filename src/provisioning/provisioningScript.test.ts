@@ -94,6 +94,22 @@ describe('page provisioning script', () => {
     }
   });
 
+  it('carries the shared sections through the token pass and names the document on the five form instances', () => {
+    // The shared footer (the support route) renders below every page view, so the form pages read the document too.
+    expect(script).toContain("'shared'");
+    expect(script).toMatch(/Resolve-Node \$definition\['shared'\]/);
+    const definition: { pages: { key: string; instance: { [name: string]: string } }[] } = JSON.parse(fs.readFileSync(path.join(PAGES_DIR, 'pages.json'), 'utf8'));
+    const formKeys: string[] = ['idea', 'toolCheck', 'teamUsage', 'helpTraining', 'feedback'];
+    for (const key of formKeys) {
+      const instance: { [name: string]: string } | undefined = definition.pages.filter((page): boolean => page.key === key)[0]?.instance;
+      expect(instance).toBeDefined();
+      expect(instance?.view).toBe(key);
+      expect(instance?.contentUrl).toBe('SiteAssets/ai-coe-pages.json');
+    }
+    // The admin page is not a form page and keeps its property bag as before.
+    expect(definition.pages.filter((page): boolean => page.key === 'admin')[0]?.instance.contentUrl).toBeUndefined();
+  });
+
   it('no longer needs the native web part templates or HTML text parts', () => {
     for (const legacy of ['Add-PnPPageTextPart', 'DefaultWebPartType', 'quicklinks.template.json', 'button.template.json', 'serverProcessedContent', 'target="_blank"', 'example.invalid']) {
       expect(script).not.toContain(legacy);
@@ -154,9 +170,14 @@ describe('README', () => {
     expect(readme).toContain('Site Assets');
     expect(readme).toContain('version history');
     expect(readme).toContain('"version": 1');
-    for (const block of ['hero', 'heading', 'paragraph', 'tiles', 'cards', 'lanes', 'statusRow', 'piece']) {
+    for (const block of ['hero', 'heading', 'paragraph', 'tiles', 'cards', 'lanes', 'statusRow', 'piece', 'workCommand', 'notice', 'rules', 'supportRoute']) {
       expect(readme).toContain(`\`${block}\``);
     }
+    // The shared footer: the support route below every page view, the form pages included.
+    expect(readme).toContain('`shared`');
+    expect(readme).toContain('`footer`');
+    expect(readme).toContain('Consistent Help');
+    expect(readme).toContain('not yet named');
     expect(readme).toContain('[label](href)');
     expect(readme).toContain('**bold**');
     expect(readme).toContain('*italic*');

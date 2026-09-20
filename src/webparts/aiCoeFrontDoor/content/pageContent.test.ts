@@ -8,16 +8,33 @@ import {
   parseBlock,
   parseContentUrl,
   parseNotice,
+  parseOptionalContentUrl,
   parsePageDocument,
   parseRules,
   parseSettings,
+  parseShared,
+  parseSupportRoute,
   parseVocabulary,
   parseWorkCommand,
   readPlane,
   readParagraphs,
   resolveContentHref
 } from './pageContent';
-import type { ICardsBlock, IContentPage, IHeroBlock, ILanesBlock, INoticeBlock, IPageDocument, IPieceBlock, IRulesBlock, ITilesBlock, IVocabulary, IWorkCommandBlock } from './pageContent';
+import type {
+  ICardsBlock,
+  IContentPage,
+  IHeroBlock,
+  ILanesBlock,
+  INoticeBlock,
+  IPageDocument,
+  IPieceBlock,
+  IRulesBlock,
+  ISharedSections,
+  ISupportRouteBlock,
+  ITilesBlock,
+  IVocabulary,
+  IWorkCommandBlock
+} from './pageContent';
 
 const SITE: string = 'https://contoso.sharepoint.com/sites/ai';
 
@@ -142,6 +159,37 @@ describe('document envelope', () => {
       }
     });
     const damaged: IPageDocument | undefined = parsePageDocument(JSON.stringify({ version: 1, routes: ['x'], pages: { learn: { title: 'Learn', blocks: [] } } }));
+    expect(damaged).toEqual({ version: 1, pages: { learn: { title: 'Learn', blocks: [] } } });
+  });
+
+  it('carries the shared footer on the document, dropping the hero, the piece and the work command from it', () => {
+    const shared: ISharedSections = parseShared({
+      footer: [
+        { type: 'hero', title: 'Not in a footer' },
+        { type: 'piece', piece: 'home', pages: {} },
+        { type: 'workCommand', prompt: 'Not in a footer either' },
+        { type: 'paragraph', text: 'Questions? Ask the AI CoE.' },
+        { type: 'supportRoute', label: 'Ask in the pilot channel', href: 'https://teams.microsoft.com/l/channel/contoso', stopWhen: ['a source is missing'], reportFields: ['the task type'], routes: [] },
+        { type: 'bogus' },
+        'text'
+      ]
+    });
+    expect(shared.footer.map((block): string => block.type)).toEqual(['paragraph', 'supportRoute']);
+    expect(parseShared(undefined)).toEqual({ footer: [] });
+    expect(parseShared({ footer: 'soon' })).toEqual({ footer: [] });
+    const document: IPageDocument | undefined = parsePageDocument(
+      JSON.stringify({
+        version: 1,
+        shared: { footer: [{ type: 'paragraph', text: 'Questions? Ask the AI CoE.' }] },
+        pages: { learn: { title: 'Learn', blocks: [] } }
+      })
+    );
+    expect(document).toEqual({
+      version: 1,
+      pages: { learn: { title: 'Learn', blocks: [] } },
+      shared: { footer: [{ type: 'paragraph', text: 'Questions? Ask the AI CoE.' }] }
+    });
+    const damaged: IPageDocument | undefined = parsePageDocument(JSON.stringify({ version: 1, shared: ['x'], pages: { learn: { title: 'Learn', blocks: [] } } }));
     expect(damaged).toEqual({ version: 1, pages: { learn: { title: 'Learn', blocks: [] } } });
   });
 
@@ -430,6 +478,47 @@ describe('blocks', () => {
     expect(parseBlock({ type: 'rules' })).toBeUndefined();
   });
 
+  it('reads a support route with its stop list, report fields and routing rows, and drops one without a label', () => {
+    const block: ISupportRouteBlock = parseBlock({
+      type: 'supportRoute',
+      label: ' Ask in the pilot channel ',
+      href: ' https://teams.microsoft.com/l/channel/contoso ',
+      stopWhen: [' a source is missing ', '', 7, 'a claim cannot be verified'],
+      reportFields: ['the task type', ' the time '],
+      routes: [
+        { issue: ' Wrong identity or access ', owner: ' Identity owner ', action: ' Stop; do not widen access ' },
+        { issue: 'Outcome is uncertain after an action', owner: '   ', action: 'Reconcile the native state before retrying' },
+        { issue: 'A claim looks wrong' },
+        { owner: 'Nobody', action: 'No issue named' },
+        'not a row'
+      ]
+    }) as ISupportRouteBlock;
+    expect(block).toEqual({
+      type: 'supportRoute',
+      label: 'Ask in the pilot channel',
+      href: 'https://teams.microsoft.com/l/channel/contoso',
+      stopWhen: ['a source is missing', 'a claim cannot be verified'],
+      reportFields: ['the task type', 'the time'],
+      routes: [
+        { issue: 'Wrong identity or access', owner: 'Identity owner', action: 'Stop; do not widen access' },
+        { issue: 'Outcome is uncertain after an action', action: 'Reconcile the native state before retrying' },
+        { issue: 'A claim looks wrong' }
+      ]
+    });
+    // The lists and the rows are optional; the label alone makes a block, without a link.
+    expect(parseSupportRoute({ label: 'Ask the AI CoE' })).toEqual({ type: 'supportRoute', label: 'Ask the AI CoE', stopWhen: [], reportFields: [], routes: [] });
+    expect(parseSupportRoute({ label: 'Ask the AI CoE', href: '  ', stopWhen: 'not a list', reportFields: {}, routes: 'nope' })).toEqual({
+      type: 'supportRoute',
+      label: 'Ask the AI CoE',
+      stopWhen: [],
+      reportFields: [],
+      routes: []
+    });
+    expect(parseSupportRoute({ href: 'https://teams.microsoft.com/l/channel/contoso', stopWhen: ['x'] })).toBeUndefined();
+    expect(parseSupportRoute({ label: '   ' })).toBeUndefined();
+    expect(parseBlock({ type: 'supportRoute' })).toBeUndefined();
+  });
+
   it('reads the two embeddable pieces and keeps only known page targets', () => {
     const home: IPieceBlock = parseBlock({
       type: 'piece',
@@ -485,5 +574,12 @@ describe('content links', () => {
     expect(parseContentUrl(7)).toBe(DEFAULT_CONTENT_URL);
     expect(parseContentUrl(' SiteAssets/other.json ')).toBe('SiteAssets/other.json');
     expect(parseContentUrl('/sites/ai/SiteAssets/x.json')).toBe('/sites/ai/SiteAssets/x.json');
+  });
+
+  it('reads a configured document path as optional: blank means none, so a form page without one reads nothing', () => {
+    expect(parseOptionalContentUrl(undefined)).toBeUndefined();
+    expect(parseOptionalContentUrl('   ')).toBeUndefined();
+    expect(parseOptionalContentUrl(7)).toBeUndefined();
+    expect(parseOptionalContentUrl(' SiteAssets/other.json ')).toBe('SiteAssets/other.json');
   });
 });
