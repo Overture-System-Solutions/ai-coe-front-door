@@ -4,11 +4,14 @@
  */
 import * as fs from 'fs';
 import * as path from 'path';
+import { findTenantWords, PROVISIONING_SCAN, readTenantWords } from './tenantWords';
+import type { ITenantWords } from './tenantWords';
 
 const ROOT: string = process.cwd();
 const PAGES_DIR: string = path.join(ROOT, 'sharepoint/pages');
 const script: string = fs.readFileSync(path.join(PAGES_DIR, 'New-FrontDoorPages.ps1'), 'utf8');
 const readme: string = fs.readFileSync(path.join(ROOT, 'README.md'), 'utf8');
+const tenantWords: ITenantWords = readTenantWords(ROOT);
 
 describe('page provisioning script', () => {
   it('reads the page definition and pins its tooling', () => {
@@ -52,12 +55,28 @@ describe('page provisioning script', () => {
     expect(script).toContain("'text'");
   });
 
-  it('ships tenant-neutral', () => {
-    // Only the committed files: an operator's filled-in parameters.json may name the tenant.
+  it('accepts the optional kind: only a text parameter must be filled, a blank optional one takes its default', () => {
+    expect(script).toContain("-notin @('text', 'url', 'optional')");
+    expect(script).toContain("expected 'text', 'url' or 'optional'");
+    // Required-ness is decided by the kind alone, in one place, and only for text.
+    expect(script.match(/\$missing \+= \$name/g)).toHaveLength(1);
+    expect(script).toMatch(/if \(\$kinds\[\$name\] -eq 'text'\) \{ \$missing \+= \$name \}/);
+    expect(script).not.toMatch(/-eq 'url'[^\n]*\$missing/);
+    expect(script).not.toMatch(/-eq 'optional'[^\n]*\$missing/);
+    // A blank optional parameter is substituted with the default its declaration carries; no other kind may declare one.
+    expect(script).toMatch(/-eq 'optional' -and \$declaration\.Contains\('default'\)\) \{ \$values\[\$name\] = \[string\]\$declaration\['default'\] \}/);
+    expect(script).toMatch(/\$declaration\.Contains\('default'\) -and \$kinds\[\$name\] -ne 'optional'\) \{ throw/);
+    expect(script).toMatch(/Optional parameters may be blank too: a\s+blank one takes the 'default'/);
+  });
+
+  it('ships tenant-neutral: no word of the tenant list in the committed provisioning files', () => {
+    // Only the committed files: an operator's filled-in parameters.json may name the tenant. The word list itself is
+    // the single permitted home for client names and the reference roster (src/provisioning/tenantWords.json).
     for (const file of ['New-FrontDoorPages.ps1', 'pages.json', 'parameters.sample.json']) {
       const text: string = fs.readFileSync(path.join(PAGES_DIR, file), 'utf8');
-      expect(text).not.toMatch(/overture|tegria|cloudwave/i);
-      expect(text).not.toMatch(/[a-z0-9-]+\.sharepoint\.com/i);
+      for (const list of PROVISIONING_SCAN) {
+        expect({ file, list, found: findTenantWords(text, tenantWords, [list]) }).toEqual({ file, list, found: [] });
+      }
     }
     expect(script).not.toMatch(/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/i);
   });
@@ -92,6 +111,12 @@ describe('page provisioning script', () => {
     for (const section of ['vocabulary', 'settings']) {
       expect(script).toContain(`'${section}'`);
     }
+  });
+
+  it('copies the vocabulary and settings sections as written, never through the token pass', () => {
+    // Their {organization} and {role} tokens belong to the web part's renderer; Resolve-Text would refuse them.
+    expect(script).not.toMatch(/Resolve-Node \$definition\['(vocabulary|settings)'\]/);
+    expect(script).toMatch(/foreach \(\$section in @\('vocabulary', 'settings'\)\) \{[\s\S]{0,200}\$document\[\$section\] = \$definition\[\$section\]/);
   });
 
   it('carries the shared sections through the token pass and names the document on the five form instances', () => {
@@ -181,6 +206,13 @@ describe('README', () => {
     expect(readme).toContain('[label](href)');
     expect(readme).toContain('**bold**');
     expect(readme).toContain('*italic*');
+  });
+
+  it('documents the parameter kinds and the tenant word list', () => {
+    expect(readme).toContain('`optional`');
+    expect(readme).toContain('`default`');
+    expect(readme).toContain('src/provisioning/tenantWords.json');
+    expect(readme).toContain('deliberately not tenant-neutral');
   });
 
   it('documents the route table, the action states and the closed tiles', () => {

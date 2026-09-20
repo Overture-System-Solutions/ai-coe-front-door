@@ -13,10 +13,15 @@ import { FRONT_DOOR_VIEWS, PAGE_TARGETS } from '../webparts/aiCoeFrontDoor/conte
 import { WORKFLOW_ORDER } from '../webparts/aiCoeFrontDoor/content/workflows/catalog';
 import * as icons from '../webparts/aiCoeFrontDoor/icons';
 import type { WorkflowId } from '../webparts/aiCoeFrontDoor/workflows/types';
+import { findTenantWords, PROVISIONING_SCAN, readTenantWords } from './tenantWords';
+import type { ITenantWords } from './tenantWords';
 
 interface IParameter {
-  kind: 'text' | 'url';
+  /** `text` must be filled; `url` may be blank and fails closed; `optional` may be blank and takes its `default`. */
+  kind: 'text' | 'url' | 'optional';
   description: string;
+  /** Substituted when an `optional` parameter is blank; the other kinds may not declare one. */
+  default?: string;
 }
 
 interface INavigationEntry {
@@ -54,7 +59,14 @@ interface IPagesDefinition {
   routes?: { [key: string]: IRawItem };
   /** The shared sections (the footer below every page view), resolved like the blocks; absent until the footer is written. */
   shared?: { footer?: IRawBlock[] };
+  /** Label and definition overrides the script copies as written: their {role} and {organization} tokens belong to the renderer. */
+  vocabulary?: { [key: string]: unknown };
+  /** Freshness and cohort settings, copied as written like the vocabulary. */
+  settings?: { [key: string]: unknown };
 }
+
+/** The sections the script copies without the token pass, and the token check therefore leaves out. */
+const VERBATIM_SECTIONS: ('vocabulary' | 'settings')[] = ['vocabulary', 'settings'];
 
 const ROOT: string = process.cwd();
 const PAGES_DIR: string = path.join(ROOT, 'sharepoint/pages');
@@ -69,7 +81,6 @@ const EXPECTED_BLOCKS: { [key: string]: string[] } = {
   prompts: ['paragraph', 'paragraph', 'heading', 'cards', 'cards'],
   status: ['paragraph', 'cards', 'piece', 'cards']
 };
-const TOKEN: RegExp = /\{([A-Za-z]+)(?::([A-Za-z]+))?\}/g;
 const LINK_TARGET: RegExp = /\]\(([^)\s]*)\)/g;
 
 function readJson<T>(file: string): T {
@@ -78,6 +89,7 @@ function readJson<T>(file: string): T {
 
 const definitionText: string = fs.readFileSync(path.join(PAGES_DIR, 'pages.json'), 'utf8');
 const definition: IPagesDefinition = JSON.parse(definitionText) as IPagesDefinition;
+const tenantWords: ITenantWords = readTenantWords(ROOT);
 const manifest: { id: string; preconfiguredEntries: { properties: { [name: string]: unknown } }[] } = readJson(
   path.join(ROOT, 'src/webparts/aiCoeFrontDoor/AiCoeFrontDoorWebPart.manifest.json')
 );
@@ -156,13 +168,44 @@ function expectLinkTarget(target: string): void {
   }
 }
 
+/** Every token in a text, in order: `{First}` or `{First:Second}`. */
+function tokensIn(text: string): { first: string; second?: string }[] {
+  const found: { first: string; second?: string }[] = [];
+  // A fresh expression per call, so one scan's position never leaks into the next.
+  const pattern: RegExp = /\{([A-Za-z]+)(?::([A-Za-z]+))?\}/g;
+  let match: RegExpExecArray | null = pattern.exec(text);
+  while (match !== null) {
+    found.push({ first: match[1], second: match[2] });
+    match = pattern.exec(text);
+  }
+  return found;
+}
+
+/** The definition as the token check reads it: everything but the sections the script copies as written. */
+function tokenScannedText(source: IPagesDefinition): string {
+  const copy: IPagesDefinition = { ...source };
+  for (const section of VERBATIM_SECTIONS) {
+    delete copy[section];
+  }
+  return JSON.stringify(copy);
+}
+
+/** What a blank run substitutes for a plain token: a filled value for text, the declared default (else nothing) for optional. */
+function parameterValue(name: string): string {
+  const parameter: IParameter | undefined = definition.parameters[name];
+  if (parameter !== undefined && parameter.kind === 'optional') {
+    return parameter.default ?? '';
+  }
+  return 'value';
+}
+
 /** The script's token pass over one JSON-serialised node: in-text links, page links, URL parameters, then plain tokens. */
 function resolveTokens(text: string, urlValues: { [name: string]: string }): string {
   return text
     .replace(/\[([^[\]]+)\]\(\{Url:([A-Za-z]+)\}\)/g, (whole: string, label: string, name: string): string => (urlValues[name] ? whole : label))
     .replace(/\{Page:([A-Za-z]+)\}/g, (whole: string, name: string): string => `https://example.invalid/sites/ai/SitePages/${page(name).file}`)
     .replace(/\{Url:([A-Za-z]+)\}/g, (whole: string, name: string): string => urlValues[name] ?? '')
-    .replace(/\{([A-Za-z]+)\}/g, 'value');
+    .replace(/\{([A-Za-z]+)\}/g, (whole: string, name: string): string => parameterValue(name));
 }
 
 /** A tile or call to action whose link resolved to nothing and that names neither a state nor a route is shown as closed. */
@@ -198,6 +241,11 @@ function resolveDocument(urlValues: { [name: string]: string }): string {
   }
   if (definition.shared !== undefined) {
     document.shared = JSON.parse(resolveTokens(JSON.stringify(definition.shared), urlValues));
+  }
+  for (const section of VERBATIM_SECTIONS) {
+    if (definition[section] !== undefined) {
+      document[section] = definition[section];
+    }
   }
   return JSON.stringify(document);
 }
@@ -362,9 +410,8 @@ describe('front door page definition', () => {
 
   it('declares every token it uses and uses every parameter it declares', () => {
     const used: { [name: string]: boolean } = {};
-    let match: RegExpExecArray | null = TOKEN.exec(definitionText);
-    while (match !== null) {
-      const [, first, second] = match;
+    for (const token of tokensIn(tokenScannedText(definition))) {
+      const { first, second } = token;
       if (second !== undefined) {
         expect(['Page', 'Url']).toContain(first);
         if (first === 'Page') {
@@ -377,12 +424,17 @@ describe('front door page definition', () => {
         expect(Object.keys(definition.parameters)).toContain(first);
         used[first] = true;
       }
-      match = TOKEN.exec(definitionText);
     }
     for (const name of Object.keys(definition.parameters)) {
-      expect(['text', 'url']).toContain(definition.parameters[name].kind);
-      expect(definition.parameters[name].description.length).toBeGreaterThan(0);
+      const parameter: IParameter = definition.parameters[name];
+      expect(['text', 'url', 'optional']).toContain(parameter.kind);
+      expect(parameter.description.length).toBeGreaterThan(0);
       expect(used[name]).toBe(true);
+      // Only an optional parameter may carry a default, and a default is text.
+      if (parameter.default !== undefined) {
+        expect(parameter.kind).toBe('optional');
+        expect(typeof parameter.default).toBe('string');
+      }
     }
     expect(definition.parameters.OrganizationName.kind).toBe('text');
     const sample: { [name: string]: string } = JSON.parse(fs.readFileSync(path.join(PAGES_DIR, 'parameters.sample.json'), 'utf8'));
@@ -390,6 +442,25 @@ describe('front door page definition', () => {
     for (const name of Object.keys(sample)) {
       expect(sample[name]).toBe('');
     }
+  });
+
+  it('leaves the vocabulary and settings sections out of the token check, as the script copies them as written', () => {
+    // A {role} or {organization} placeholder in a vocabulary override is the renderer's, not a parameter.
+    const withOverrides: IPagesDefinition = {
+      ...definition,
+      vocabulary: { chrome: { protectedPage: 'This page is for the {role} role and is not available to you.' }, truthStates: { availableNow: { definition: 'proved in the current {organization} environment.' } } },
+      settings: { freshnessDays: 30, minimumCohort: 5 }
+    };
+    const names: string[] = tokensIn(tokenScannedText(withOverrides)).map((token: { first: string }): string => token.first);
+    expect(names).not.toContain('role');
+    expect(names).not.toContain('organization');
+    expect(names).toContain('OrganizationName');
+    // The raw text does carry them, so the exemption is what keeps the check honest rather than blind.
+    expect(tokensIn(JSON.stringify(withOverrides)).map((token: { first: string }): string => token.first)).toContain('role');
+    // And the render contract carries both sections through unchanged.
+    const parsed: { vocabulary?: unknown; settings?: unknown } = JSON.parse(resolveDocument({})) as { vocabulary?: unknown; settings?: unknown };
+    expect(parsed.vocabulary).toEqual(definition.vocabulary);
+    expect(parsed.settings).toEqual(definition.settings);
   });
 
   it('produces a document the web part parses in full, with every URL parameter filled or blank', () => {
@@ -429,12 +500,13 @@ describe('front door page definition', () => {
     expect((damaged as IPageDocument).pages.requests.blocks.map((block): string => block.type)).toEqual(EXPECTED_BLOCKS.requests.filter((type: string): boolean => type !== 'lanes'));
   });
 
-  it('contains no client names, tenant hosts or the reference roster', () => {
+  it('contains no word of the tenant list: client names, tenant hosts, the reference roster, case ids or secret shapes', () => {
+    // The list itself (src/provisioning/tenantWords.json) is the one place those words may live.
     for (const file of ['pages.json', 'parameters.sample.json']) {
       const text: string = fs.readFileSync(path.join(PAGES_DIR, file), 'utf8');
-      expect(text).not.toMatch(/overture|tegria|cloudwave/i);
-      expect(text).not.toMatch(/[a-z0-9-]+\.sharepoint\.com/i);
-      expect(text).not.toMatch(/Frerichs|Sides|Martens|Donahue/);
+      for (const list of PROVISIONING_SCAN) {
+        expect({ file, list, found: findTenantWords(text, tenantWords, [list]) }).toEqual({ file, list, found: [] });
+      }
     }
   });
 });

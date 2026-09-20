@@ -17,8 +17,9 @@ recycled again so the next run recreates it.
 Tokens in pages.json: {Name} is a parameter value; {Page:key} is the server-relative URL of a defined page;
 {Url:Name} is a URL parameter. Text parameters must have a value. URL parameters may be blank: a blank one turns an
 in-text link "[label]({Url:Name})" into its label, and a tile or call to action pointing at it is marked 'needsAccess'
-with a warning, so the web part shows it as closed rather than dropping it. Tokens inside the 'routes' table are
-resolved the same way. The web part opens links to other origins in a new tab.
+with a warning, so the web part shows it as closed rather than dropping it. Optional parameters may be blank too: a
+blank one takes the 'default' its declaration carries, or stays empty. Tokens inside the 'routes' table are resolved
+the same way. The web part opens links to other origins in a new tab.
 
 The package must already be installed on the site (upload as an update to the app catalog, then "Get it" on the site);
 the script stops before creating anything when the front-door component is not available, and verifies after each
@@ -103,10 +104,17 @@ if (-not $values.ContainsKey('TelemetryProvider') -or [string]::IsNullOrWhiteSpa
 $kinds = @{}
 $missing = @()
 foreach ($name in @($definition['parameters'].Keys)) {
-  $kinds[$name] = [string]$definition['parameters'][$name]['kind']
-  if ($kinds[$name] -notin @('text', 'url')) { throw "Parameter '$name' in pages.json has an unknown kind '$($kinds[$name])'; expected 'text' or 'url'." }
+  $declaration = $definition['parameters'][$name]
+  $kinds[$name] = [string]$declaration['kind']
+  if ($kinds[$name] -notin @('text', 'url', 'optional')) { throw "Parameter '$name' in pages.json has an unknown kind '$($kinds[$name])'; expected 'text', 'url' or 'optional'." }
+  if ($declaration.Contains('default') -and $kinds[$name] -ne 'optional') { throw "Parameter '$name' in pages.json declares a default, which only an 'optional' parameter may carry." }
   if (-not $values.ContainsKey($name)) { $values[$name] = '' }
-  if ($kinds[$name] -eq 'text' -and [string]::IsNullOrWhiteSpace($values[$name])) { $missing += $name }
+  if ([string]::IsNullOrWhiteSpace($values[$name])) {
+    # Only a text parameter must be filled. A blank url parameter fails closed further down; a blank optional one
+    # takes the default its declaration carries, or stays blank.
+    if ($kinds[$name] -eq 'text') { $missing += $name }
+    elseif ($kinds[$name] -eq 'optional' -and $declaration.Contains('default')) { $values[$name] = [string]$declaration['default'] }
+  }
 }
 if ($missing.Count -gt 0) {
   throw "These text parameters have no value (set them in $ParameterFile or by name): $($missing -join ', ')"

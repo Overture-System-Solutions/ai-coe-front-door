@@ -244,12 +244,17 @@ of the content document:
 The text is the front door's own copy of a short pilot site and carries tokens: `{OrganizationName}` and the other
 `parameters` declared at the top of `pages.json` (people, dates, counts, record ids), `{Page:key}` for links between the
 pages, and `{Url:Name}` for links to things outside the package (the Concierge agent, Teams, Copilot Chat, the prompt
-library). Text parameters are required; URL parameters may be blank, which turns an in-text link into its label and
-marks a tile or call to action pointing at it `needsAccess`, so it stays on the page shown as closed (a labelled
-non-link with its state; the script says which). Tokens inside the `routes` table and the `shared` sections are resolved
-the same way; the `vocabulary` and `settings` sections are copied as written. `src/provisioning/pagesDefinition.test.ts`
-checks the structure, the tokens, that the web part's parser accepts every block once the tokens are resolved, and
-that no client or tenant name is in the file.
+library). Each parameter declares a `kind`: `text` parameters are required; `url` parameters may be blank, which turns
+an in-text link into its label and marks a tile or call to action pointing at it `needsAccess`, so it stays on the
+page shown as closed (a labelled non-link with its state; the script says which); `optional` parameters may be blank
+too, and a blank one takes the `default` its declaration carries (only an `optional` parameter may declare one) or
+stays empty. Tokens inside the `routes` table and the `shared` sections are resolved the same way; the `vocabulary`
+and `settings` sections are copied as written. `src/provisioning/pagesDefinition.test.ts` checks the structure, the
+tokens, that the web part's parser accepts every block once the tokens are resolved, and that no word of the tenant
+list is in the file: `src/provisioning/tenantWords.json` is the one list of client names, tenant hosts, the reference
+roster, case ids and secret shapes that the provisioning tests scan `pages.json`, `parameters.sample.json` and the
+script against. That list is deliberately not tenant-neutral (it is what the scans look for), lives outside
+`src/webparts`, is imported by nothing in the web part and is never packaged.
 
 **Applying it** (site owner, outside this repository; the build and tests never touch a tenant):
 
