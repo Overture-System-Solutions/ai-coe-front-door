@@ -27,6 +27,16 @@ The package must already be installed on the site (upload as an update to the ap
 the script stops before creating anything when the front-door component is not available, and verifies after each
 placement that SharePoint bound the component to the instance.
 
+List security (since 1.0.0.13): before the upload, every list named in the 'listSecurity' section of pages.json (the
+two intake lists) is put under item-level security, so a site member reads and edits their own rows and the Status
+page shows each person exactly their own requests. SharePoint bypasses item-level security for a principal whose
+permission level holds Override List Behaviors (the Microsoft 365 permission reference lists it as Override Check-Out):
+the default Design and Full Control levels hold it, the default Edit level of the site Members group does not, so the
+script breaks the list's inheritance (keeping the existing grants), gives the site's Owners group Full Control, leaves
+the Members group at its level and sets ReadSecurity 2 / WriteSecurity 2. A list the site does not carry is skipped
+with a warning. The companion flows' connection must hold Override List Behaviors on both lists (Full Control, Design
+or a custom level); an Edit-level connection is trimmed to its own items.
+
 Every parameter must be given by name; a stray token on the command line (for example a bracket copied from an
 example) is rejected instead of becoming a value.
 
@@ -48,6 +58,12 @@ Usage feed for the Operations page: claude (default), openai or both.
 
 .PARAMETER Overwrite
 Send pages that already exist to the recycle bin and rebuild them.
+
+.PARAMETER HardenMembers
+Optional hardening of the intake lists: move the site Members group from Edit to Contribute on each secured list.
+Contribute withholds Manage Lists (the right to change the list's design and views); it is not what makes read
+security work, which rests on the Edit level withholding Override List Behaviors. Without the switch the Members
+group is left at its level.
 
 .PARAMETER AllowNonCommunicationSite
 Proceed on a site that is not a communication site. There the QuickLaunch is the left navigation, and every existing
@@ -72,6 +88,7 @@ param(
   [string]$DraftServiceUrl,
   [ValidateSet('', 'claude', 'openai', 'both')][string]$TelemetryProvider = '',
   [switch]$Overwrite,
+  [switch]$HardenMembers,
   [switch]$AllowNonCommunicationSite,
   [string]$ClientId
 )
@@ -252,6 +269,61 @@ function Resolve-Node($node, [string]$where) {
 }
 
 # ---------------------------------------------------------------------------------------------------------------
+# List security: item-level read and write security on the intake lists, made effective (decision 6)
+# ---------------------------------------------------------------------------------------------------------------
+# SharePoint bypasses item-level security (ReadSecurity 2 / WriteSecurity 2) for a principal whose permission level
+# holds Override List Behaviors (shown as Override Check-Out in the Microsoft 365 permission reference). The default
+# Design and Full Control levels hold it; the default Edit level of the site Members group does not. So: break the
+# list's inheritance keeping its grants (Set-PnPList; Set-PnPListPermission only adds or removes roles), give the Owners
+# group Full Control (they read every row, as the admin dashboard needs), leave the Members group at its level, then
+# set the two flags last, so a run that stops part-way never trims a list before the owners can read it. Rerunning
+# changes nothing: inheritance is broken once, and a role already held is not granted twice.
+# The role names are resolved by kind (Administrator, Editor, Contributor) as the admin page's grant does, so a site
+# in another language gets the same levels.
+$fullControlRole = (Get-PnPRoleDefinition | Where-Object { $_.RoleTypeKind -eq 'Administrator' } | Select-Object -First 1).Name
+$editRole = (Get-PnPRoleDefinition | Where-Object { $_.RoleTypeKind -eq 'Editor' } | Select-Object -First 1).Name
+$contributeRole = (Get-PnPRoleDefinition | Where-Object { $_.RoleTypeKind -eq 'Contributor' } | Select-Object -First 1).Name
+$securedLists = @()
+$unsecuredLists = @()
+$listSecurity = if ($definition.Contains('listSecurity')) { @($definition['listSecurity']) } else { @() }
+foreach ($entry in $listSecurity) {
+  $title = [string]$entry['title']
+  if ([string]$entry['security'] -ne 'ownItems') {
+    throw "List security for '$title' in pages.json names an unknown mode '$($entry['security'])'; expected 'ownItems'."
+  }
+  # Only a list the site already carries: the intake list comes from the package feature, the use-case list from the
+  # companion solution. Neither is created here.
+  $list = Get-PnPList -Identity $title -Includes HasUniqueRoleAssignments -ErrorAction SilentlyContinue
+  if ($null -eq $list) {
+    Write-Warning "The list '$title' is not on this site; read security not applied. Install what provisions it and rerun."
+    $unsecuredLists += $title
+    continue
+  }
+  Write-Host "Securing $title (each person reads and edits their own items; Owners: $fullControlRole) ..."
+  $owners = Get-PnPGroup -AssociatedOwnerGroup
+  if (-not $list.HasUniqueRoleAssignments) {
+    Set-PnPList -Identity $title -BreakRoleInheritance -CopyRoleAssignments
+  }
+  Set-PnPListPermission -Identity $title -Group $owners -AddRole $fullControlRole
+  if ($HardenMembers) {
+    # Hardening only: Contribute removes Manage Lists (list design and view changes) from the Members group; it is not what makes read security work.
+    # Read security rests on the Edit level withholding Override List Behaviors, which Contribute withholds as well.
+    $members = Get-PnPGroup -AssociatedMemberGroup
+    $memberRoles = @(Get-PnPListPermissions -Identity $title -PrincipalId $members.Id -ErrorAction SilentlyContinue | ForEach-Object { $_.Name })
+    if ($memberRoles -contains $editRole) {
+      Set-PnPListPermission -Identity $title -Group $members -RemoveRole $editRole -AddRole $contributeRole
+    } else {
+      Write-Host "  Members already hold no $editRole on $title; nothing to harden."
+    }
+  }
+  Set-PnPList -Identity $title -ReadSecurity 2 -WriteSecurity 2
+  $securedLists += $title
+}
+if ($securedLists.Count -gt 0) {
+  Write-Warning "The companion flows' connection must hold Override List Behaviors (Full Control, Design or a custom permission level) on the intake lists; an Edit-level connection is trimmed to its own items."
+}
+
+# ---------------------------------------------------------------------------------------------------------------
 # Content document: the blocks of every page that has them, resolved and uploaded to Site Assets
 # ---------------------------------------------------------------------------------------------------------------
 $documentPages = [ordered]@{}
@@ -377,6 +449,7 @@ Write-Host "Content document: $contentPath ($($documentPages.Count) pages; earli
 Write-Host "Created: $($created.Count) page(s)$(if ($created.Count -gt 0) { ' - ' + ($created -join ', ') })"
 Write-Host "Skipped: $($skipped.Count) page(s)$(if ($skipped.Count -gt 0) { ' - ' + ($skipped -join ', ') })"
 Write-Host "Locked: $($locked.Count) page(s)$(if ($locked.Count -gt 0) { ' - ' + ($locked -join ', ') })"
+Write-Host "List security: $($securedLists.Count) list(s) under item-level security$(if ($securedLists.Count -gt 0) { ' - ' + ($securedLists -join ', ') })$(if ($unsecuredLists.Count -gt 0) { '; not on this site: ' + ($unsecuredLists -join ', ') })"
 # Bindings the pages carry from parameters rather than from committed content. A blank GovernanceReference leaves the
 # legacy view quoting the package's own default policy reference and every page view reading "reference not yet set",
 # so the summary names it as awaiting until the parameter is filled and the script is rerun with -Overwrite.

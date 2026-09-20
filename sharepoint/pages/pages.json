@@ -119,6 +119,10 @@
       "open_coe_alerts": "Open incidents"
     }
   },
+  "listSecurity": [
+    { "title": "AI CoE Pilot Intakes", "security": "ownItems" },
+    { "title": "AI CoE Use Cases", "security": "ownItems" }
+  ],
   "pages": [
     {
       "key": "startHere",

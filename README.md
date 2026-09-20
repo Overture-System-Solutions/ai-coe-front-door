@@ -312,6 +312,48 @@ pill and the caption "Do not infer progress" can be seen without a tenant fact. 
 of the user-plane lint (it is a code, not a text) and refuses a literal date on any other item. When a cases list
 exists the block's `source` `{ "list" }` will name it; until then it is accepted and ignored.
 
+**List security (since 1.0.0.13).** The two intake lists (*AI CoE Pilot Intakes*, provisioned by the package feature,
+and *AI CoE Use Cases*, provisioned by the companion solution) carry item-level security once the 1.0.0.13 script has
+run: `ReadSecurity 2 / WriteSecurity 2`, so site members read their own items and edit their own items, and the
+`myWork` piece shows each person exactly the rows the server returns. Why it works: SharePoint bypasses item-level
+security for any principal whose permission level holds **Override List Behaviors** (the Microsoft 365 permission
+reference lists it as *Override Check-Out*). The default *Full Control* and *Design* levels hold it; the default *Edit*
+level of the site Members group does not, and neither does *Contribute*. *Manage Lists* plays no part: a level that
+holds Manage Lists without Override List Behaviors is still trimmed to its own items. So the script's "List security"
+section (run before the document upload, from the `listSecurity` entries of `pages.json`, whose titles are the constants
+of `services/lists.ts`) breaks each list's permission inheritance keeping the existing grants, gives the site's Owners
+group Full Control (they read every row, as the admin dashboard needs; the operators group joins them in 1.0.0.14),
+and sets the two flags; the Members group is left at its level. A list the site does not carry is skipped with a
+warning (the use-case list until the companion solution is installed), nothing is created, and a rerun changes nothing:
+inheritance is broken once and a role already held is not granted twice. The optional `-HardenMembers` switch moves the
+Members group from Edit to Contribute on each secured list; that removes Manage Lists (the right to change the list's
+design and views) and is a separate hardening, not what makes read security work.
+
+*Companion flows.* The connection the companion Power Automate flows use must hold Override List Behaviors on both
+intake lists (Full Control, Design or a custom permission level that holds it), because the flows read and update
+every row. An Edit-level connection keeps Manage Lists yet is trimmed to its own items: the flows would see only the
+rows their own account created.
+
+*Negative access test (tenant).* The deciding check for the item-level security decision (plan open decision 3),
+run once per tenant with two accounts after the 1.0.0.13 script: as a plain site Member (not an owner) who has
+submitted one request, open Status and confirm the piece lists that request only, then open the list in the
+SharePoint UI and through REST (`_api/web/lists/getbytitle('AI CoE Pilot Intakes')/items`) and confirm only that
+person's rows come back; then, as the flow connection's account or an owner, confirm every row is readable and the
+companion flows still write and update rows. Record the outcome on the next line before the decision is closed.
+Result: **not yet run** (replace with the date, the two accounts' roles and what each saw; if the Member sees another
+person's row, the Member level or a group the Member belongs to holds Override List Behaviors and must be corrected).
+The repository side of the same check is `src/security/negativeAccess.test.ts`: a refused read shows *Needs access*
+and zero rows on Status and on the first screen, a second person's row never reaches the piece or the strip, a read
+trimmed by the server shows no number the list did not give, and a response body with a secret shape never reaches
+the DOM. `src/webparts/aiCoeFrontDoor/AiCoeFrontDoorWebPart.test.ts` adds the all-providers-unavailable run over the
+built bundle: the draft flow down and every off-site route blank, Start here still renders, the work command keeps the
+sentence as a draft and hands off to the guided request, the closed tile reads *Needs access*, and a request saves
+and reads back.
+
+*Reverting it.* `Set-PnPList -Identity 'AI CoE Pilot Intakes' -ReadSecurity 1 -WriteSecurity 1` then
+`Set-PnPList -Identity 'AI CoE Pilot Intakes' -ResetRoleInheritance`, and the same for *AI CoE Use Cases*; the rows
+are untouched. This is the list part of the 1.0.0.13 rollback (see *Rollback* under *Deploy*).
+
 The envelope may also carry four optional sections and a page may name its plane; each is lenient and a malformed one
 is dropped, never the document:
 
@@ -382,10 +424,13 @@ script against. That list is deliberately not tenant-neutral (it is what the sca
        pwsh ./sharepoint/pages/New-FrontDoorPages.ps1 -SiteUrl https://<tenant>.sharepoint.com/sites/<site> -ParameterFile ./sharepoint/pages/parameters.json -ClientId <app id>
 
    Optional, appended to that line: `-DraftServiceUrl <flow trigger URL>` for the AI draft flow,
-   `-TelemetryProvider openai` or `both` (the default is `claude`), and `-Overwrite` to rebuild pages that already
-   exist. Every parameter is named; anything else on the line is rejected.
+   `-TelemetryProvider openai` or `both` (the default is `claude`), `-Overwrite` to rebuild pages that already
+   exist, and `-HardenMembers` to move the site Members group from Edit to Contribute on the secured intake lists
+   (see *List security*; not needed for read security). Every parameter is named; anything else on the line is rejected.
 
    The script first checks that the front-door component is available on the site (and stops if it is not), then
+   puts the two intake lists under item-level security (see *List security*; a list the site does not carry is
+   skipped with a warning), then
    resolves the tokens and uploads the content document to Site Assets (creating the library if the site has none,
    and reading the file back to make sure), then creates the pages, verifying after each one that SharePoint bound
    the component to the instance. Existing pages are skipped unless `-Overwrite` is given, which sends them

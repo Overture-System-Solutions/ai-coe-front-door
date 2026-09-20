@@ -15,6 +15,7 @@ import type { ITenantWords } from '../../provisioning/tenantWords';
 import { createBranding } from './branding/branding';
 import { CONTENT_UNAVAILABLE_TEXT, NO_PAGE_KEY_TEXT } from './components/pages/ContentPage';
 import { ADMIN_ONLY_TEXT } from './components/PageViewShell';
+import { DRAFT_KEY_PREFIX, RECEIPT_READBACK_LINE, RECEIPT_SAVED_TITLE } from './content/constants';
 import { createWorkflowCatalog } from './content/workflows/catalog';
 import { IDEA_SUMMARY_FIELDS } from './summaries/ideaSummary';
 import type { IWorkflowCatalog } from './workflows/types';
@@ -59,6 +60,25 @@ function usageReads(instance: IHostedInstance): IRecordedRequest[] {
 
 function fileReads(instance: IHostedInstance): IRecordedRequest[] {
   return instance.store.requests.filter((request: IRecordedRequest): boolean => request.file !== undefined);
+}
+
+/**
+ * jsdom cannot leave the page: a same-tab hand-off through `window.location.assign` reports
+ * "Not implemented: navigation" on the console, which is the expected outcome here, not a failure.
+ * Everything else (an act warning above all) still reaches the console as before.
+ */
+async function withoutNavigationErrors(run: () => Promise<void>): Promise<void> {
+  const forward: typeof console.error = console.error;
+  const spy: jest.SpyInstance = jest.spyOn(console, 'error').mockImplementation((...args: unknown[]): void => {
+    if (String(args[0]).indexOf('Not implemented: navigation') < 0) {
+      forward.apply(console, args);
+    }
+  });
+  try {
+    await run();
+  } finally {
+    spy.mockRestore();
+  }
 }
 
 afterEach((): void => {
@@ -595,6 +615,68 @@ describe('AiCoeFrontDoorWebPart bundle', () => {
     const intake: IRecordedRequest = instance.store.requests.filter((request: IRecordedRequest): boolean => request.method === 'POST' && request.list === 'AI CoE Pilot Intakes')[0];
     const payload: { draftSource?: unknown } = JSON.parse(String((intake.body as { PayloadJson: string }).PayloadJson));
     expect(payload.draftSource).toEqual({ provider: 'anthropic', model: 'claude-sonnet-5', responseId: 'msg_01ABC', requestId: expect.stringMatching(/^draft-/), draftOnly: true, humanReviewRequired: true });
+  });
+
+  it('stays truthful with every provider unavailable: the command falls back with its draft, the tile reads Needs access, a request saves and reads back', async () => {
+    // Every off-site route blank (the sample document's work route has no link), the draft flow answering 503; only the site's lists answer.
+    const flowDown = (): { status: number; body: string } => ({ status: 503, body: JSON.stringify({ ok: false, code: 'AI_DRAFT_UNAVAILABLE' }) });
+    const files: { [path: string]: string } = { '/sites/ai/SiteAssets/ai-coe-pages.json': JSON.stringify(SAMPLE_PAGE_DOCUMENT) };
+    const sentence: string = 'Prepare me for the Contoso customer meeting.';
+    const guidedIntake: string = 'https://contoso.sharepoint.com/sites/ai/SitePages/Explore-an-AI-idea.aspx';
+    const draftKey: string = `${DRAFT_KEY_PREFIX}idea`;
+
+    // Start here renders; the tile on the closed route is a labelled non-link that points at the guided request.
+    const first: IHostedInstance = await mount({ properties: { organizationName: '', view: 'page', pageKey: 'startHere', draftServiceUrl: FLOW_URL }, files, draftFlow: flowDown });
+    const root: HTMLElement = first.webPart.domElement;
+    await waitFor((): void => expect(within(root).getByRole('heading', { level: 1, name: 'What do you need done?' })).toBeInTheDocument());
+    const closed: HTMLElement = within(root).getByText('Get work done').closest('.ai-service-card') as HTMLElement;
+    expect(closed.tagName).toBe('DIV');
+    expect(within(closed).getByText('Needs access')).toBeInTheDocument();
+    expect(within(closed).getByRole('link', { name: /Start a guided request/ })).toHaveAttribute('href', guidedIntake);
+
+    // The command keeps the sentence as the idea draft and leaves for the guided request in the same tab: nothing opens elsewhere, the sentence enters no URL.
+    const opened: jest.SpyInstance = jest.spyOn(window, 'open').mockImplementation((): null => null);
+    fireEvent.change(within(root).getByLabelText('Say what you need done at Contoso'), { target: { value: sentence } });
+    await withoutNavigationErrors(async (): Promise<void> => {
+      fireEvent.click(within(root).getByRole('button', { name: 'Start' }));
+      await waitFor((): void => expect(window.localStorage.getItem(draftKey)).not.toBeNull());
+    });
+    const draft: { answers: { [step: string]: string }; currentStepId: string; phase: string } = JSON.parse(window.localStorage.getItem(draftKey) as string);
+    expect(draft).toMatchObject({ answers: { workToImprove: sentence }, currentStepId: 'workToImprove', phase: 'form' });
+    expect(opened).not.toHaveBeenCalled();
+    opened.mockRestore();
+    expect(root.querySelector('[role="alert"]')).toBeNull();
+    expect(first.flowRequests).toEqual([]);
+    first.dispose();
+    instances.pop();
+
+    // The guided request page resumes the sentence; the flow is down, so the plain summary stands in; the record is written and read back.
+    const idea: IHostedInstance = await mount({ properties: { organizationName: '', view: 'idea', contentUrl: 'SiteAssets/ai-coe-pages.json', draftServiceUrl: FLOW_URL }, files, draftFlow: flowDown });
+    const page: HTMLElement = idea.webPart.domElement;
+    await waitFor((): void => expect(within(page).getByRole('button', { name: 'Continue' })).toBeInTheDocument());
+    expect(page.querySelector('#workToImprove')).toHaveValue(sentence);
+    playJourney(IDEA_JOURNEY, catalog.idea, page);
+    await waitFor((): void => expect(within(page).getByRole('button', { name: 'Continue without AI help' })).toBeInTheDocument());
+    expect(idea.flowRequests).toHaveLength(1);
+    fireEvent.click(within(page).getByRole('button', { name: 'Continue without AI help' }));
+    expect(within(page).getByRole('heading', { name: 'Here is a draft summary' })).toBeInTheDocument();
+    fireEvent.click(within(page).getByRole('button', { name: 'Confirm this reflects my idea' }));
+    await waitFor((): void => expect(within(page).getByText(RECEIPT_SAVED_TITLE)).toBeInTheDocument());
+    const rows: { Id: number; IntakeId?: unknown }[] = idea.store.items('AI CoE Pilot Intakes');
+    expect(rows).toHaveLength(1);
+    expect(String(rows[0].IntakeId)).toMatch(/^OVT-AICOE-\d{8}-[A-Z0-9]{8}$/);
+    expect(page.querySelector('.ai-receipt-reference')?.textContent).toContain(String(rows[0].IntakeId));
+    expect(within(page).getByText(RECEIPT_READBACK_LINE)).toBeInTheDocument();
+    const readback: IRecordedRequest[] = idea.store.requests.filter(
+      (request: IRecordedRequest): boolean => request.method === 'GET' && request.list === 'AI CoE Pilot Intakes' && request.url.indexOf(`items(${rows[0].Id})`) >= 0
+    );
+    expect(readback).toHaveLength(1);
+    // Saved and confirmed: the draft is cleared; the sentence was never part of a URL or of the flow's traffic.
+    expect(window.localStorage.getItem(draftKey)).toBeNull();
+    expect(idea.flowRequests[0].url).toBe(FLOW_URL);
+    for (const request of idea.store.requests) {
+      expect(request.url).not.toContain('customer meeting');
+    }
   });
 
   it('falls back to the plain summary when the flow rejects the request', async () => {

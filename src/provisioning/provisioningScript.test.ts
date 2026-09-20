@@ -190,6 +190,62 @@ describe('page provisioning script', () => {
     expect(script).toMatch(/five front-door entries/);
   });
 
+  it('makes item-level security effective on the intake lists before the upload, leaves Members at their level, and warns about the flow identity', () => {
+    // Decision 6: SharePoint bypasses item-level security for a principal holding Override List Behaviors, which Design and
+    // Full Control include and the default Edit level of the Members group does not; Manage Lists is not the bypass.
+    const section: number = script.indexOf('# List security');
+    expect(section).toBeGreaterThan(script.indexOf('Get-PnPPageComponent'));
+    expect(section).toBeLessThan(script.indexOf('Add-PnPFile'));
+    expect(script).toContain("'listSecurity'");
+    expect(script).toContain("'ownItems'");
+    // A list the site does not carry is skipped with a warning; the script never creates one.
+    expect(script).toMatch(/Get-PnPList -Identity \$title[^\n]*-ErrorAction SilentlyContinue/);
+    expect(script).toContain('is not on this site; read security not applied');
+    expect(script).not.toContain('New-PnPList');
+    // Set-PnPList breaks the inheritance (once: a rerun finds it unique); Set-PnPListPermission only adds or removes roles.
+    expect(script).toMatch(/HasUniqueRoleAssignments/);
+    expect(script).toMatch(/Set-PnPList -Identity \$title -BreakRoleInheritance -CopyRoleAssignments/);
+    expect(script).toContain('-AssociatedOwnerGroup');
+    expect(script).toMatch(/RoleTypeKind -eq 'Administrator'/);
+    expect(script).toMatch(/Set-PnPListPermission -Identity \$title -Group \$owners -AddRole \$fullControlRole/);
+    expect(script).toMatch(/Set-PnPList -Identity \$title -ReadSecurity 2 -WriteSecurity 2/);
+    // Members are left at their level unless -HardenMembers is passed: a labelled hardening that removes Manage Lists, not what makes read security work.
+    expect(script).toMatch(/\[switch\]\$HardenMembers/);
+    expect(script).toMatch(/\.PARAMETER HardenMembers/);
+    expect(script).toContain('-AssociatedMemberGroup');
+    expect(script).toMatch(/RoleTypeKind -eq 'Editor'/);
+    expect(script).toMatch(/RoleTypeKind -eq 'Contributor'/);
+    expect(script).toMatch(/if \(\$HardenMembers\) \{[\s\S]*?Set-PnPListPermission -Identity \$title -Group \$members -RemoveRole \$editRole -AddRole \$contributeRole/);
+    expect(script).toMatch(/removes Manage Lists[^\n]*not what makes read security work/);
+    expect(script).not.toMatch(/Manage Lists[^\n]*bypass/i);
+    // The companion flows' connection must hold the override, else it is trimmed to its own rows.
+    expect(script).toContain('Override List Behaviors');
+    expect(script).toContain('Override Check-Out');
+    expect(script).toContain(
+      "must hold Override List Behaviors (Full Control, Design or a custom permission level) on the intake lists; an Edit-level connection is trimmed to its own items"
+    );
+    // The section's order: guard, break, grant, (harden), flags; the flags last so a partial run never trims before the owners can read.
+    const guard: number = script.indexOf('read security not applied');
+    const breakInheritance: number = script.indexOf('-BreakRoleInheritance');
+    const grant: number = script.indexOf('-AddRole $fullControlRole');
+    const harden: number = script.indexOf('if ($HardenMembers)');
+    const flags: number = script.indexOf('-ReadSecurity 2 -WriteSecurity 2');
+    expect(guard).toBeLessThan(breakInheritance);
+    expect(breakInheritance).toBeLessThan(grant);
+    expect(grant).toBeLessThan(harden);
+    expect(harden).toBeLessThan(flags);
+    // The titles come from pages.json, which names the two intake lists; the script hard-codes none.
+    const definition: { listSecurity: { title: string; security: string }[] } = JSON.parse(fs.readFileSync(path.join(PAGES_DIR, 'pages.json'), 'utf8'));
+    expect(definition.listSecurity).toEqual([
+      { title: 'AI CoE Pilot Intakes', security: 'ownItems' },
+      { title: 'AI CoE Use Cases', security: 'ownItems' }
+    ]);
+    expect(script).not.toContain('AI CoE Pilot Intakes');
+    expect(script).not.toContain('AI CoE Use Cases');
+    // The run summary reports what was secured and what was skipped.
+    expect(script).toMatch(/List security:/);
+  });
+
   it('no longer needs the native web part templates or HTML text parts', () => {
     for (const legacy of ['Add-PnPPageTextPart', 'DefaultWebPartType', 'quicklinks.template.json', 'button.template.json', 'serverProcessedContent', 'target="_blank"', 'example.invalid']) {
       expect(script).not.toContain(legacy);
@@ -300,6 +356,21 @@ describe('README', () => {
     expect(readme).not.toContain('Claude draft flow URL');
     expect(readme).not.toContain('OSS Demo');
     expect(readme).toContain('evidence/dependency-inventory.json');
+  });
+
+  it('documents the list security of 1.0.0.13: why it works, the flow identity, the tenant check and the rollback', () => {
+    expect(readme).toContain('read their own items');
+    expect(readme).toContain('Override List Behaviors');
+    expect(readme).toContain('Override Check-Out');
+    expect(readme).toContain('`-HardenMembers`');
+    expect(readme).toContain('Negative access test (tenant)');
+    expect(readme).toContain('### Rollback');
+    expect(readme).toContain('src/security/negativeAccess.test.ts');
+    expect(readme).toMatch(/-ReadSecurity 1 -WriteSecurity 1/);
+    expect(readme).toMatch(/-ResetRoleInheritance/);
+    // Manage Lists is never described as the bypass; the Members group stays at its level.
+    expect(readme).not.toMatch(/Manage Lists[^.\n]*(bypass|is why|is what makes)/i);
+    expect(readme).toMatch(/Members[^.\n]*(left|stays|stay) at (their|its) level/);
   });
 
   it('documents the route table, the action states and the closed tiles', () => {

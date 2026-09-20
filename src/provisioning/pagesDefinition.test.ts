@@ -23,6 +23,7 @@ import type { ITelemetryTile } from '../webparts/aiCoeFrontDoor/content/telemetr
 import { CANONICAL_STATUS } from '../webparts/aiCoeFrontDoor/content/truthStates';
 import { WORKFLOW_ORDER } from '../webparts/aiCoeFrontDoor/content/workflows/catalog';
 import * as icons from '../webparts/aiCoeFrontDoor/icons';
+import { INTAKES_LIST_TITLE, OWN_ITEMS_LISTS, OWN_ITEMS_SECURITY, USE_CASES_LIST_TITLE } from '../webparts/aiCoeFrontDoor/services/lists';
 import type { WorkflowId } from '../webparts/aiCoeFrontDoor/workflows/types';
 import { findTenantWords, PROVISIONING_SCAN, readTenantWords } from './tenantWords';
 import type { ITenantWords } from './tenantWords';
@@ -77,6 +78,8 @@ interface IPagesDefinition {
   vocabulary?: { [key: string]: unknown };
   /** Freshness and cohort settings, copied as written like the vocabulary. */
   settings?: { [key: string]: unknown };
+  /** The lists the script puts under item-level security (decision 6); the script's section, never part of the document. */
+  listSecurity: { title: string; security: string }[];
 }
 
 /** The sections the script copies without the token pass, and the token check therefore leaves out. */
@@ -841,6 +844,20 @@ describe('front door page definition', () => {
     for (const target of linkTargets()) {
       expect(target).not.toBe('{Page:operations}');
     }
+  });
+
+  it('names the two intake lists for item-level security by the titles the web part writes to (decision 6)', () => {
+    // The script's "List security" section reads this: each person reads and edits their own rows; owners (and, once bound,
+    // operators) read every row. The titles are the constants the services write with, so a rename cannot drift.
+    expect(definition.listSecurity).toEqual([
+      { title: INTAKES_LIST_TITLE, security: OWN_ITEMS_SECURITY },
+      { title: USE_CASES_LIST_TITLE, security: OWN_ITEMS_SECURITY }
+    ]);
+    expect(definition.listSecurity.map((entry: { title: string }): string => entry.title)).toEqual(OWN_ITEMS_LISTS.slice());
+    expect(OWN_ITEMS_LISTS).toEqual(['AI CoE Pilot Intakes', 'AI CoE Use Cases']);
+    // The section belongs to the script and never reaches the document the web part reads.
+    expect(resolveDocument({})).not.toContain('listSecurity');
+    expect(resolveDocument({})).not.toContain('ownItems');
   });
 
   it('resolves every link target to a page or a URL parameter, and carries no HTML', () => {
