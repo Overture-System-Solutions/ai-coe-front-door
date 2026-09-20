@@ -1,7 +1,7 @@
 // Offline preview entry point; never shipped to SharePoint.
 const SIMULATED_FLOW_URL = 'https://offline-preview.invalid/claude-draft';
 const TELEMETRY_PROVIDERS = ['claude', 'openai', 'both'];
-const VIEWS = ['legacy', 'home', 'idea', 'toolCheck', 'teamUsage', 'helpTraining', 'feedback', 'telemetry', 'admin', 'page'];
+const VIEWS = ['legacy', 'home', 'idea', 'toolCheck', 'teamUsage', 'helpTraining', 'feedback', 'telemetry', 'admin', 'page', 'outcome'];
 const LAYOUTS = ['wide', 'narrow'];
 // Pages of the simulated content document the host serves as SiteAssets/ai-coe-pages.json.
 const PAGE_KEYS = ['startHere', 'learn', 'useAi', 'requests', 'prompts', 'status', 'operations', 'value'];
@@ -21,7 +21,9 @@ const PAGE_PROPERTIES = {
   pageHelpTraining: 'helpTraining',
   pageFeedback: 'feedback',
   pageTelemetry: 'telemetry',
-  pageAdmin: 'admin'
+  pageAdmin: 'admin',
+  // The outcome record is a page link like the rest, so the home tiles can offer it offline too.
+  pageOutcome: 'outcome'
 };
 const params = new URLSearchParams(location.search);
 const organization = params.get('organization') ?? '';

@@ -54,6 +54,8 @@ const LEGACY_PROPERTIES: { [name: string]: unknown } = {
   pageTelemetry: '',
   pageAdmin: '',
   pagePolicy: '',
+  // The outcome record is a page link like the others, set on the home instance by the script (decision 16).
+  pageOutcome: '',
   pageKey: '',
   contentUrl: 'SiteAssets/ai-coe-pages.json'
 };
@@ -91,8 +93,10 @@ describe('AiCoeFrontDoorWebPart manifest', () => {
       'AI CoE: Share feedback',
       'AI CoE: AI operations snapshot',
       'AI CoE: Administrator dashboard',
-      'AI CoE: Content page'
+      'AI CoE: Content page',
+      'AI CoE: Record a task outcome'
     ]);
+    expect(entries).toHaveLength(11);
     for (const entry of entries) {
       expect(entry.groupId).toBe('5c03119e-3074-46fd-976b-c60198311f70');
       expect(entry.group.default).toBe('AI Center of Excellence');

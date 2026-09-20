@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { resolveContentHref } from '../../../content/pageContent';
 import type { IPieceBlock } from '../../../content/pageContent';
-import { PAGE_TARGETS } from '../../../content/pageViews';
-import type { PageLinks, PageTarget } from '../../../content/pageViews';
+import { PAGE_LINK_TARGETS } from '../../../content/pageViews';
+import type { PageLinks, PageLinkTarget } from '../../../content/pageViews';
 import { useFrontDoor } from '../../../context/FrontDoorContext';
 import { HomePage } from '../../HomePage';
 import type { DraftFlags } from '../../LandingPage';
@@ -30,10 +30,10 @@ export function PieceBlock({ block, drafts }: IPieceBlockProps): React.ReactElem
     return <MyWork />;
   }
   const pages: PageLinks = {};
-  for (const target of PAGE_TARGETS) {
-    const link: string | undefined = block.pages[target as PageTarget];
+  for (const target of PAGE_LINK_TARGETS) {
+    const link: string | undefined = block.pages[target as PageLinkTarget];
     if (link !== undefined && link.trim() !== '') {
-      pages[target as PageTarget] = resolveContentHref(siteUrl, link);
+      pages[target as PageLinkTarget] = resolveContentHref(siteUrl, link);
     }
   }
   return <HomePage drafts={drafts} pages={pages} />;

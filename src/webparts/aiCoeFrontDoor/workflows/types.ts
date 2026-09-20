@@ -47,7 +47,17 @@ export type IStep = IChoiceStep | ITextStep | INoticeStep;
 
 export type WorkflowId = 'idea' | 'toolCheck' | 'teamUsage' | 'helpTraining' | 'feedback';
 
-/** Workflow types accepted by the governance service; the tool check submits review requests under its own type. */
+/**
+ * A piece that walks someone through steps: the five shipped workflows, plus the outcome record, which
+ * exists in page views only. `WorkflowId` stays five, so the legacy landing page, the workflow catalog and
+ * the governance labels are untouched by it (decision 16).
+ */
+export type PieceWorkflowId = WorkflowId | 'outcome';
+
+/**
+ * Workflow types accepted by the governance service; the tool check submits review requests under its own type.
+ * The outcome record writes its own list through its own method, so it joins this union with that method, not here.
+ */
 export type SubmissionWorkflowType = WorkflowId | 'toolCheck-review-request';
 
 export interface IWorkflowDefinition {

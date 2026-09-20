@@ -1,8 +1,9 @@
 import { createBranding } from '../../branding/branding';
 import { isChoiceStep } from '../../workflows/types';
-import type { IAnswers, IStep, IWorkflowCatalog, WorkflowId } from '../../workflows/types';
+import type { IAnswers, IStep, IWorkflowCatalog, PieceWorkflowId, WorkflowId } from '../../workflows/types';
+import { HOME_CARDS, PAGE_HOME_CARDS } from '../homeCards';
 import { COMPANY_INFORMATION_HELP_SUFFIX, SENSITIVE_INFO_NOTICE, companyInformationHelp } from './copy';
-import { createWorkflowCatalog, WORKFLOW_ORDER } from './catalog';
+import { createWorkflowCatalog, PAGE_WORKFLOWS, WORKFLOW_ORDER } from './catalog';
 
 const overture: IWorkflowCatalog = createWorkflowCatalog(createBranding('Overture'));
 const neutral: IWorkflowCatalog = createWorkflowCatalog(createBranding(''));
@@ -23,6 +24,20 @@ function isVisible(catalog: IWorkflowCatalog, workflowId: WorkflowId, stepId: st
 describe('workflow catalog', () => {
   it('lists the five workflows in the original home-page order', () => {
     expect(WORKFLOW_ORDER).toEqual(['idea', 'toolCheck', 'teamUsage', 'helpTraining', 'feedback']);
+    expect(Object.keys(createWorkflowCatalog(createBranding('')))).toEqual(WORKFLOW_ORDER.slice());
+  });
+
+  it('adds the outcome record as a sixth piece workflow, leaving the legacy five untouched (decision 16)', () => {
+    expect(PAGE_WORKFLOWS).toEqual(['idea', 'toolCheck', 'teamUsage', 'helpTraining', 'feedback', 'outcome']);
+    // The legacy landing page keeps its five cards; only a page-view home piece can offer the sixth.
+    expect(Object.keys(HOME_CARDS)).toEqual(WORKFLOW_ORDER.slice());
+    expect(Object.keys(PAGE_HOME_CARDS)).toEqual(PAGE_WORKFLOWS.slice());
+    for (const id of WORKFLOW_ORDER) {
+      expect({ id, card: PAGE_HOME_CARDS[id] }).toEqual({ id, card: HOME_CARDS[id] });
+    }
+    const outcome: PieceWorkflowId = 'outcome';
+    expect(PAGE_HOME_CARDS[outcome].title).toBe('Record a task outcome');
+    expect(PAGE_HOME_CARDS[outcome].description.length).toBeGreaterThan(0);
   });
 
   it('carries the original titles, descriptions and versions', () => {

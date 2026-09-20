@@ -7,8 +7,8 @@
  * Wording note: this file is scanned for Tailwind utility names; keep prose free of utility words.
  */
 import { includes } from '../utils/collections';
-import { PAGE_TARGETS } from './pageViews';
-import type { PageLinks, PageTarget } from './pageViews';
+import { PAGE_LINK_TARGETS } from './pageViews';
+import type { PageLinks, PageLinkTarget } from './pageViews';
 import { asObject, ownKeys, readFlag, readIsoDate, readItems, readStringList, readText, setOptional } from './rawJson';
 import type { Raw } from './rawJson';
 import { parseRoutes } from './routes';
@@ -670,10 +670,10 @@ function readPageLinks(value: unknown): PageLinks {
   const raw: Raw | undefined = asObject(value);
   const pages: PageLinks = {};
   if (raw !== undefined) {
-    for (const target of PAGE_TARGETS) {
+    for (const target of PAGE_LINK_TARGETS) {
       const link: string | undefined = readText(raw[target]);
       if (link !== undefined) {
-        pages[target as PageTarget] = link;
+        pages[target as PageLinkTarget] = link;
       }
     }
   }

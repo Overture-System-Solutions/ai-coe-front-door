@@ -9,7 +9,7 @@ import { FRONT_DOOR_VIEWS } from '../webparts/aiCoeFrontDoor/content/pageViews';
 
 jest.setTimeout(30000);
 
-const PAGE_PROPERTY_NAMES: string[] = ['pageIdea', 'pageToolCheck', 'pageTeamUsage', 'pageHelpTraining', 'pageFeedback', 'pageTelemetry', 'pageAdmin'];
+const PAGE_PROPERTY_NAMES: string[] = ['pageIdea', 'pageToolCheck', 'pageTeamUsage', 'pageHelpTraining', 'pageFeedback', 'pageTelemetry', 'pageAdmin', 'pageOutcome'];
 
 interface IResponse {
   status: number;

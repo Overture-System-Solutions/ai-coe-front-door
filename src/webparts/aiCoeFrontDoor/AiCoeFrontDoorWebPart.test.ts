@@ -436,7 +436,8 @@ describe('AiCoeFrontDoorWebPart bundle', () => {
             { key: 'feedback', text: 'Share feedback' },
             { key: 'telemetry', text: 'AI operations snapshot' },
             { key: 'admin', text: 'Administrator dashboard' },
-            { key: 'page', text: 'Content page' }
+            { key: 'page', text: 'Content page' },
+            { key: 'outcome', text: 'Record a task outcome' }
           ],
           selectedKey: 'legacy'
         }
@@ -453,7 +454,9 @@ describe('AiCoeFrontDoorWebPart bundle', () => {
     setProperty(webPart, 'view', 'home');
     expect(groups().map((group): string => group.groupName)).toEqual(['Branding', 'AI drafting', 'Telemetry', 'Page layout', 'Page links']);
     expect(targets(3)).toEqual(['view', 'layout']);
-    expect(targets(4)).toEqual(['pageIdea', 'pageToolCheck', 'pageTeamUsage', 'pageHelpTraining', 'pageFeedback', 'pageTelemetry', 'pageAdmin', 'pagePolicy']);
+    // The outcome record joins the page links on the home view, last, without becoming a tile target (decision 16).
+    expect(targets(4)).toEqual(['pageIdea', 'pageToolCheck', 'pageTeamUsage', 'pageHelpTraining', 'pageFeedback', 'pageTelemetry', 'pageAdmin', 'pagePolicy', 'pageOutcome']);
+    expect(groups()[4].groupFields[8].properties.label).toBe('Record a task outcome page');
     expect(groups()[3].groupFields[1].properties.options).toEqual([
       { key: 'wide', text: 'Wide (full page width)' },
       { key: 'narrow', text: 'Narrow (one column)' }

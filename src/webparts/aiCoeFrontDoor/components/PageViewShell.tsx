@@ -42,7 +42,9 @@ const PIECE_LABELS: { [view: string]: string } = {
   home: 'Home tiles',
   telemetry: 'AI operations snapshot',
   admin: 'Administrator dashboard',
-  page: 'Content page'
+  page: 'Content page',
+  // The outcome record walks through steps like a wizard, but the shipped catalog does not carry it.
+  outcome: 'Record a task outcome'
 };
 
 /** The badge wording: the document's chrome override, or the default when the document sets none. */
@@ -149,7 +151,8 @@ export function PageViewShell({ settings }: IPageViewShellProps): React.ReactEle
 
   // The piece sits in a labelled region (the legacy shell keeps its own main landmark on its own page): a wizard is
   // named after its workflow, a content page after its page title once the document is read, any other piece after itself.
-  const regionLabel: string = isWorkflowView(view) ? catalog[view].title : page !== undefined ? page.title : (PIECE_LABELS[view] ?? branding.coeName);
+  const workflowTitle: string | undefined = isWorkflowView(view) && view !== 'outcome' ? catalog[view].title : undefined;
+  const regionLabel: string = workflowTitle ?? (page !== undefined ? page.title : (PIECE_LABELS[view] ?? branding.coeName));
   const rootClass: string = `overture-app ai-view ai-view--${view}${settings.layout === 'narrow' ? ' ai-view--narrow' : ''}`;
   return (
     <PageDocumentProvider value={context}>

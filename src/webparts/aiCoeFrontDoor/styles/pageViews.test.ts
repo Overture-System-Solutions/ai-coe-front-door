@@ -16,7 +16,7 @@ const SHIPPED_THEME: string = path.join(ROOT, 'parity/theme.1.0.0.7.css');
  * Root id, then the view class, plain or (for the one floor that must lose to every other rule) the whole compound
  * inside a zero-specificity `:where()`: only the class alone in `:where()` would leave the rest of the compound counted.
  */
-const SCOPED_SELECTOR: RegExp = /^#overture-ai-coe-pilot ((\.overture-app)?\.ai-view(--(home|telemetry|narrow|page))?|:where\(\.ai-view--page a\.ai-service-card\))( |$)/;
+const SCOPED_SELECTOR: RegExp = /^#overture-ai-coe-pilot ((\.overture-app)?\.ai-view(--(home|telemetry|narrow|page|outcome))?|:where\(\.ai-view--page a\.ai-service-card\))( |$)/;
 
 type DeclarationTable = { [selector: string]: string[] };
 

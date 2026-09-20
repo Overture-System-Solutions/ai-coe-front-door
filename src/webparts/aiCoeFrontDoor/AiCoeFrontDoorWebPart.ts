@@ -166,7 +166,8 @@ export default class AiCoeFrontDoorWebPart extends BaseClientSideWebPart<IAiCoeF
       feedback: strings.ViewOptionFeedback,
       telemetry: strings.ViewOptionTelemetry,
       admin: strings.ViewOptionAdmin,
-      page: strings.ViewOptionPage
+      page: strings.ViewOptionPage,
+      outcome: strings.ViewOptionOutcome
     };
     const layoutLabels: { [id in PieceLayout]: string } = { wide: strings.LayoutOptionWide, narrow: strings.LayoutOptionNarrow };
     const pageLabels: { [target in PageTarget]: string } = {
@@ -283,6 +284,7 @@ export default class AiCoeFrontDoorWebPart extends BaseClientSideWebPart<IAiCoeF
     if (view === 'home') {
       groups.push({
         groupName: strings.PageLinksGroupName,
+        // The eight tile targets, then the outcome record: a page link like the rest, without a tile of its own.
         groupFields: PAGE_TARGETS.map(
           (target: PageTarget): IPropertyPaneField<unknown> =>
             PropertyPaneTextField(PAGE_TARGET_PROPERTIES[target], {
@@ -290,7 +292,13 @@ export default class AiCoeFrontDoorWebPart extends BaseClientSideWebPart<IAiCoeF
               description: strings.PageLinkFieldDescription,
               placeholder: 'SitePages/Page-name.aspx'
             })
-        )
+        ).concat([
+          PropertyPaneTextField('pageOutcome', {
+            label: strings.PageOutcomeFieldLabel,
+            description: strings.PageLinkFieldDescription,
+            placeholder: 'SitePages/Page-name.aspx'
+          })
+        ])
       });
     }
 

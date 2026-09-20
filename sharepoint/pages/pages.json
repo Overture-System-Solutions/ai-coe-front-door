@@ -554,7 +554,8 @@
             "feedback": "{Page:feedback}",
             "telemetry": "",
             "admin": "{Page:admin}",
-            "policy": ""
+            "policy": "",
+            "outcome": ""
           }
         }
       ]

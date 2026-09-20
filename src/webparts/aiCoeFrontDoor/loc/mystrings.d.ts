@@ -31,6 +31,7 @@ declare interface IAiCoeFrontDoorWebPartStrings {
   ViewOptionTelemetry: string;
   ViewOptionAdmin: string;
   ViewOptionPage: string;
+  ViewOptionOutcome: string;
   LayoutFieldLabel: string;
   LayoutOptionWide: string;
   LayoutOptionNarrow: string;
@@ -51,6 +52,7 @@ declare interface IAiCoeFrontDoorWebPartStrings {
   PageTelemetryFieldLabel: string;
   PageAdminFieldLabel: string;
   PagePolicyFieldLabel: string;
+  PageOutcomeFieldLabel: string;
 }
 
 declare module 'AiCoeFrontDoorWebPartStrings' {

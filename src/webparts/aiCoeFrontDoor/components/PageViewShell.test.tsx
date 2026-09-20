@@ -206,6 +206,17 @@ describe('PageViewShell', () => {
     expect(screen.queryByRole('heading', { level: 1 })).not.toBeInTheDocument();
   });
 
+  it('keeps the outcome view on the wizard path, never the home shell (decision 16)', () => {
+    const { container } = renderView(settingsFor('outcome'), { user: ADA });
+    expect(container.firstChild).toHaveClass('overture-app', 'ai-view', 'ai-view--outcome');
+    expect(container.querySelector('.ai-workflow-shell')).not.toBeNull();
+    expect(container.querySelector('.ai-home-shell')).toBeNull();
+    expect(container.querySelector('.ai-home-grid')).toBeNull();
+    expect(container.querySelector('.overture-badge')?.textContent).toBe(DEFAULT_CHROME_BADGE);
+    expect(container.querySelector('div[role="region"]')).toHaveAttribute('aria-label', 'Record a task outcome');
+    expect(screen.queryByText('AI, safely put to work.')).not.toBeInTheDocument();
+  });
+
   it('shows a configuration notice for the legacy view instead of the landing page', () => {
     renderView(settingsFor('legacy'));
     expect(screen.getByText(UNCONFIGURED_VIEW_TEXT).closest('.overture-notice')).not.toBeNull();

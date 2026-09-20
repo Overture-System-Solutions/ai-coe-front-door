@@ -1217,7 +1217,10 @@ describe('front door page definition', () => {
     }
     expect(pieces.map((piece: { key: string; block: IRawBlock }): string => `${piece.key}:${String(piece.block.piece)}`)).toEqual(['requests:home', 'status:myWork', 'operations:telemetry']);
     const pages: { [target: string]: string } = pieces[0].block.pages as { [target: string]: string };
-    expect(Object.keys(pages).sort()).toEqual(PAGE_TARGETS.slice().sort());
+    // The eight tile targets plus the outcome record, whose own page arrives with its workflow (decision 16).
+    const expectedTargets: string[] = PAGE_TARGETS.map((target: string): string => target).concat('outcome');
+    expect(Object.keys(pages).sort()).toEqual(expectedTargets.sort());
+    expect(pages.outcome).toBe('');
     for (const id of WORKFLOW_ORDER) {
       expect(pages[id]).toBe(`{Page:${id}}`);
     }

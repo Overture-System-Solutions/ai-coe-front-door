@@ -610,9 +610,13 @@ describe('blocks', () => {
     const home: IPieceBlock = parseBlock({
       type: 'piece',
       piece: 'home',
-      pages: { idea: 'SitePages/Idea.aspx', policy: '', admin: ' SitePages/Admin.aspx ', bogus: 'x', toolCheck: 3 }
+      pages: { idea: 'SitePages/Idea.aspx', policy: '', admin: ' SitePages/Admin.aspx ', outcome: 'SitePages/Record-an-outcome.aspx', bogus: 'x', toolCheck: 3 }
     }) as IPieceBlock;
-    expect(home).toEqual({ type: 'piece', piece: 'home', pages: { idea: 'SitePages/Idea.aspx', admin: 'SitePages/Admin.aspx' } });
+    expect(home).toEqual({
+      type: 'piece',
+      piece: 'home',
+      pages: { idea: 'SitePages/Idea.aspx', admin: 'SitePages/Admin.aspx', outcome: 'SitePages/Record-an-outcome.aspx' }
+    });
     expect(parseBlock({ type: 'piece', piece: 'telemetry', pages: { idea: 'x' } })).toEqual({ type: 'piece', piece: 'telemetry', pages: {} });
     expect(parseBlock({ type: 'piece', piece: 'home' })).toEqual({ type: 'piece', piece: 'home', pages: {} });
     expect(parseBlock({ type: 'piece', piece: 'myWork', pages: { idea: 'x' } })).toEqual({ type: 'piece', piece: 'myWork', pages: {} });

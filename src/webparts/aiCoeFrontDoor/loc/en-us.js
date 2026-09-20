@@ -32,6 +32,7 @@ define([], function() {
     "ViewOptionTelemetry": "AI operations snapshot",
     "ViewOptionAdmin": "Administrator dashboard",
     "ViewOptionPage": "Content page",
+    "ViewOptionOutcome": "Record a task outcome",
     "LayoutFieldLabel": "Layout",
     "LayoutOptionWide": "Wide (full page width)",
     "LayoutOptionNarrow": "Narrow (one column)",
@@ -51,6 +52,7 @@ define([], function() {
     "PageFeedbackFieldLabel": "Share feedback page",
     "PageTelemetryFieldLabel": "AI operations snapshot page",
     "PageAdminFieldLabel": "Administrator dashboard page",
-    "PagePolicyFieldLabel": "AI policy page"
+    "PagePolicyFieldLabel": "AI policy page",
+    "PageOutcomeFieldLabel": "Record a task outcome page"
   }
 });

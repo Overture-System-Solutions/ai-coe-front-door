@@ -52,6 +52,23 @@ describe('HomePage', () => {
     expect(within(grid()).queryAllByRole('button')).toHaveLength(0);
   });
 
+  it('leaves the outcome record out of the grid while no outcome page is linked', () => {
+    renderHome(PAGES);
+    expect(within(grid()).getAllByRole('link')).toHaveLength(5);
+    expect(screen.queryByText('Record a task outcome')).not.toBeInTheDocument();
+  });
+
+  it('offers the outcome record as a sixth card, last, when the page is linked (decision 16)', () => {
+    const outcome: string = `${SITE}/SitePages/Record-an-outcome.aspx`;
+    renderHome({ ...PAGES, outcome });
+    const cards: HTMLElement[] = within(grid()).getAllByRole('link');
+    expect(cards).toHaveLength(6);
+    expect(cards[5].querySelector('.ai-service-title')?.textContent).toBe('Record a task outcome');
+    expect(cards[5]).toHaveAttribute('href', outcome);
+    expect(cards[5].querySelector('.ai-service-icon')).not.toBeNull();
+    expect(within(cards[5]).queryByText('Resume draft')).not.toBeInTheDocument();
+  });
+
   it('shows a notice instead of the grid when no path is linked', () => {
     const { container } = renderHome({});
     expect(screen.getByRole('heading', { name: 'How can we help?' })).toBeInTheDocument();

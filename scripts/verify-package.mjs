@@ -241,8 +241,14 @@ check(componentXml !== undefined, `No WebPart_${EXPECTED.webPartId}.xml element 
 const componentText = componentXml === undefined ? '' : componentXml.bytes.toString('utf8');
 const preconfiguredViews = (componentText.match(/&quot;view&quot;:&quot;([A-Za-z]+)&quot;/g) ?? []).map((match) => match.replace(/&quot;/g, '').split(':')[1]);
 check(preconfiguredViews[0] === 'legacy', `The first toolbox entry presets view "${preconfiguredViews[0]}", expected "legacy"`);
-check(preconfiguredViews.length === 10, `Expected ten toolbox entries (one per piece plus the content page), found ${preconfiguredViews.length}`);
-check(preconfiguredViews[preconfiguredViews.length - 1] === 'page', `The last toolbox entry presets view "${preconfiguredViews[preconfiguredViews.length - 1]}", expected "page"`);
+check(
+  preconfiguredViews.length === 11,
+  `Expected eleven toolbox entries (one per piece, the content page and the outcome record), found ${preconfiguredViews.length}`
+);
+check(
+  preconfiguredViews[preconfiguredViews.length - 1] === 'outcome',
+  `The last toolbox entry presets view "${preconfiguredViews[preconfiguredViews.length - 1]}", expected "outcome"`
+);
 check(
   componentText.includes('&quot;contentUrl&quot;:&quot;SiteAssets/ai-coe-pages.json&quot;'),
   'The toolbox entries do not preset the content document path SiteAssets/ai-coe-pages.json'

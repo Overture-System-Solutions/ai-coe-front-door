@@ -38,6 +38,7 @@
       "pageTelemetry": "",
       "pageAdmin": "",
       "pagePolicy": "",
+      "pageOutcome": "",
       "pageKey": "",
       "contentUrl": "SiteAssets/ai-coe-pages.json"
     }
@@ -66,6 +67,7 @@
       "pageTelemetry": "",
       "pageAdmin": "",
       "pagePolicy": "",
+      "pageOutcome": "",
       "pageKey": "",
       "contentUrl": "SiteAssets/ai-coe-pages.json"
     }
@@ -94,6 +96,7 @@
       "pageTelemetry": "",
       "pageAdmin": "",
       "pagePolicy": "",
+      "pageOutcome": "",
       "pageKey": "",
       "contentUrl": "SiteAssets/ai-coe-pages.json"
     }
@@ -122,6 +125,7 @@
       "pageTelemetry": "",
       "pageAdmin": "",
       "pagePolicy": "",
+      "pageOutcome": "",
       "pageKey": "",
       "contentUrl": "SiteAssets/ai-coe-pages.json"
     }
@@ -150,6 +154,7 @@
       "pageTelemetry": "",
       "pageAdmin": "",
       "pagePolicy": "",
+      "pageOutcome": "",
       "pageKey": "",
       "contentUrl": "SiteAssets/ai-coe-pages.json"
     }
@@ -178,6 +183,7 @@
       "pageTelemetry": "",
       "pageAdmin": "",
       "pagePolicy": "",
+      "pageOutcome": "",
       "pageKey": "",
       "contentUrl": "SiteAssets/ai-coe-pages.json"
     }
@@ -206,6 +212,7 @@
       "pageTelemetry": "",
       "pageAdmin": "",
       "pagePolicy": "",
+      "pageOutcome": "",
       "pageKey": "",
       "contentUrl": "SiteAssets/ai-coe-pages.json"
     }
@@ -234,6 +241,7 @@
       "pageTelemetry": "",
       "pageAdmin": "",
       "pagePolicy": "",
+      "pageOutcome": "",
       "pageKey": "",
       "contentUrl": "SiteAssets/ai-coe-pages.json"
     }
@@ -262,6 +270,7 @@
       "pageTelemetry": "",
       "pageAdmin": "",
       "pagePolicy": "",
+      "pageOutcome": "",
       "pageKey": "",
       "contentUrl": "SiteAssets/ai-coe-pages.json"
     }
@@ -290,6 +299,36 @@
       "pageTelemetry": "",
       "pageAdmin": "",
       "pagePolicy": "",
+      "pageOutcome": "",
+      "pageKey": "",
+      "contentUrl": "SiteAssets/ai-coe-pages.json"
+    }
+  }, {
+    "groupId": "5c03119e-3074-46fd-976b-c60198311f70",
+    "group": { "default": "AI Center of Excellence" },
+    "title": { "default": "AI CoE: Record a task outcome" },
+    "description": { "default": "A short record of how one AI task went: task type, outcome, review state; no prompt or answer is kept" },
+    "officeFabricIconFontName": "EntryView",
+    "properties": {
+      "organizationName": "",
+      "governanceReference": "",
+      "reviewSystemName": "",
+      "roleGroups": "",
+      "paletteOverrides": "",
+      "draftServiceUrl": "",
+      "telemetryProvider": "claude",
+      "view": "outcome",
+      "layout": "wide",
+      "returnUrl": "",
+      "pageIdea": "",
+      "pageToolCheck": "",
+      "pageTeamUsage": "",
+      "pageHelpTraining": "",
+      "pageFeedback": "",
+      "pageTelemetry": "",
+      "pageAdmin": "",
+      "pagePolicy": "",
+      "pageOutcome": "",
       "pageKey": "",
       "contentUrl": "SiteAssets/ai-coe-pages.json"
     }
