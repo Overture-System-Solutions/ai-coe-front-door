@@ -89,12 +89,15 @@ are). Both blanks are allowed and neither is an error: a blank `PilotTeamName` s
 a blank or unknown `PilotGroup` is a warning that leaves the page owners-only (see "Page permissions"). The outcome
 page and its list are built either way, because recording how a task went is not a pilot's privilege.
 
-After deployment the property pane is as in 1.0.0.14, with one new Page links field the script fills on the Requests
-home instance: **Record a task outcome page**. Existing instances keep rendering the whole front door on one page:
+After deployment the property pane is as in 1.0.0.14, with one new Page links field: **Record a task outcome page**.
+The script does not fill it. On the provisioned Requests page, which is a content page, the sixth card comes from the
+`outcome` entry of its home `piece` block in the content document; `pageOutcome` is the property to set by hand on a
+separate **AI CoE: Home tiles** instance, where there is no document to read it from. Existing instances keep
+rendering the whole front door on one page:
 the **Page layout → Piece shown on this page** dropdown defaults to that, and the page properties are ignored until
 another piece is chosen. Then apply the page definition (see "Applying it"): on a site that already carries the
 1.0.0.14 pages the script runs without `-Overwrite`; every existing page keeps its content and its instance
-properties are **updated in place** (see "Instance properties"), so `pageOutcome` arrives without rebuilding
+properties are **updated in place** (see "Instance properties"), so the Branding properties arrive without rebuilding
 anything; the outcome list is created, its inheritance broken, its two built-in person columns taken off the default
 view and `ReadSecurity 2 / WriteSecurity 2` set; the content document is rewritten (Start here gains the workflow
 cards, the records notice and the card to the pilot start; Requests' home piece gains the sixth card); and the two
@@ -573,8 +576,9 @@ targets it, each with a warning, so nothing on the site points at a page that wa
 | AI CoE admin dashboard (site owners only, not in the nav) | `admin`, `returnUrl` Requests | none |
 
 **The outcome record (since 1.0.0.15).** *Record a task outcome* is a page of its own, a child of Requests, reached
-from the sixth home card, from Status ("Used AI for a task?"), from the fourth Learn exercise and from the property
-`pageOutcome` on any home piece that sets it. It is a wizard like the other five, but every one of its questions is a
+from the sixth home card (the `outcome` entry of a home piece's `pages` map in the content document, or the property
+`pageOutcome` on a hand-placed Home tiles instance), from Status ("Used AI for a task?") and from the fourth Learn
+exercise. It is a wizard like the other five, but every one of its questions is a
 choice: there is no free-text step in it at all, so a prompt, an answer, a document name or a client name cannot be
 typed into it. What it writes is one row in *AI CoE Outcome Records*: `TaskType`, `Outcome`, `ReviewState`,
 `CorrectionCategory` (asked only after *Corrected*), `RouteAvailability`, the `OutcomeId` shown on the receipt, the
@@ -583,8 +587,14 @@ site records*:
 
 > When you record how a task went, only the task type, outcome, review state, correction category and route availability are saved, together with SharePoint's own record of who saved it, which only operators can see. Your prompt and the output are never stored. The feedback form is different: what you type there is kept as text.
 
-That last sentence is the honest part: *Share feedback* is a wizard with typed answers, and those answers are stored
-as text in the intake list, as they always were. The outcome record is the only piece in the front door that promises
+Two details of the wizard are worth knowing. Its five *route availability* options are the shipped truth-state
+labels even on a site that renames them through `vocabulary.truthStates`, because they are the Choice values of the
+`RouteAvailability` column and renaming them there would stop the row matching the list. And an unfinished outcome
+draft resumes when the page is opened again but shows no **Resume draft** badge on the home tiles, which read the
+five shipped workflows only.
+
+That last sentence of the notice is the honest part: *Share feedback* is a wizard with typed answers, and those
+answers are stored as text in the intake list, as they always were. The outcome record is the only piece in the front door that promises
 otherwise, and it keeps the promise by having nothing to type.
 
 *Who can read an outcome row.* No column of the list names the person, but SharePoint stamps **Created By** and
@@ -705,8 +715,7 @@ state are printed: a value belongs to the tenant and never goes to the console.
    rewritten from `pages.json`, so the existing content pages show the new document at once (the first screen, the
    routes, the shared footer; my work and the case card on Status); every existing page keeps its content and gets its
    instance properties updated in place, so `contentUrl` on the five form instances and the Branding properties
-   (`governanceReference`, `reviewSystemName`, `roleGroups`, `paletteOverrides`, and `pageOutcome` on the Requests
-   home instance) arrive without rebuilding anything
+   (`governanceReference`, `reviewSystemName`, `roleGroups`, `paletteOverrides`) arrive without rebuilding anything
    (see *Instance properties*); the intake lists are secured and the declared lists ensured on every run; and a page
    the definition adds — Operations, Enterprise value, the pilot start and the outcome page — is created on that run
    with the permissions its `groups:` mode names, unless a `skipWhenBlank` parameter of its own is blank. The
@@ -807,7 +816,7 @@ the identity line, the site's owners group on the admin page). Bindings, the pro
 | The Operations page (since 1.0.0.13) | created by the script, behind `OperatorsGroup` from 1.0.0.14 (owners always), with `telemetryProvider` from `TelemetryProvider`; its plane and blocks in `pages.json` | page | not created (the script not run): the strip is on no page; the legacy landing keeps its own |
 | The Enterprise value page (since 1.0.0.14) | created by the script, behind `LeadersGroup` and `OperatorsGroup` (owners always); its plane, measures and blocks in `pages.json` | page | not created (the script not run): no page reads the measures list, and the `value` route falls back to Status for everyone |
 | The pilot team's start page (since 1.0.0.15) | created by the script from `PilotTeamName` (its title and its `skipWhenBlank` key) and behind `PilotGroup` (owners always); its blocks in `pages.json` | page | not created (no pilot team named, or the script not run): the card on Start here that leads to it is dropped with it, and no other page links to it |
-| The *Record a task outcome* page (since 1.0.0.15) | created by the script as a child of Requests, with `pageOutcome` on the Requests home instance pointing at it; its piece is the outcome record, its list *AI CoE Outcome Records* | page | not created (the script not run): the sixth card is not shown, nothing writes outcome rows, and the rest of the front door is unchanged |
+| The *Record a task outcome* page (since 1.0.0.15) | created by the script as a child of Requests; the sixth card reaches it through the `outcome` entry of the Requests home `piece` block in the content document (the `pageOutcome` property does the same for a hand-placed Home tiles instance); its piece is the outcome record, its list *AI CoE Outcome Records* | page | not created (the script not run): the sixth card is not shown, nothing writes outcome rows, and the rest of the front door is unchanged |
 | `vocabulary.telemetry` (since 1.0.0.13) | the `vocabulary` section of `pages.json`, copied verbatim into the content document | document text | a missing feed label keeps the bundle's feed name for that tile (a portability exception below) |
 
 Rebinding in the contract's order: **export and package** with `npm ci`, `npm run build` and `npm run verify`

@@ -50,7 +50,11 @@ export const REVIEW_STATES: readonly string[] = ['Reviewed by me', 'Reviewed by 
 /** The six correction categories the scorecard counts (MKT-53); the correction itself is never recorded. */
 export const CORRECTION_CATEGORIES: readonly string[] = ['fact', 'source', 'audience', 'policy', 'brand', 'action boundary'];
 
-/** What the route showed when the task was done: the five truth labels (MKT-59, MKT-13). */
+/**
+ * What the route showed when the task was done: the five truth labels (MKT-59, MKT-13). These are the shipped
+ * labels, not a tenant's: they are the Choice values of the RouteAvailability column, so a `vocabulary.truthStates`
+ * override renames every pill on the page but not these options, which would otherwise stop matching the column.
+ */
 export const ROUTE_AVAILABILITY: readonly string[] = TRUTH_STATES.map((state: ITruthState): string => state.label);
 
 /** The columns one outcome row writes, in the order the service writes them. */

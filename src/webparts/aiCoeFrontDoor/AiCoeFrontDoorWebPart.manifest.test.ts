@@ -54,7 +54,8 @@ const LEGACY_PROPERTIES: { [name: string]: unknown } = {
   pageTelemetry: '',
   pageAdmin: '',
   pagePolicy: '',
-  // The outcome record is a page link like the others, set on the home instance by the script (decision 16).
+  // The outcome record is a page link like the others (decision 16). A provisioned content page carries the link in
+  // its home piece block instead; this property is for a hand-placed Home tiles instance, which reads no document.
   pageOutcome: '',
   pageKey: '',
   contentUrl: 'SiteAssets/ai-coe-pages.json'

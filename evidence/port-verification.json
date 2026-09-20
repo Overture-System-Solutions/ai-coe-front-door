@@ -1,9 +1,9 @@
 {
-  "verifiedAt": "2026-09-20T23:06:11.585Z",
+  "verifiedAt": "2026-09-20T23:26:38.598Z",
   "package": {
     "path": "sharepoint/solution/overture-ai-coe-front-door.sppkg",
-    "sha256": "6cb30c8e014585a9ef4acffaa9d18f06ad7dcddab4b8e4784ab910c80ba265f9",
-    "bytes": 94975,
+    "sha256": "8d7373f00b65c7d8af9d1d26a0c209d53f79323a77d1e1dc4da3a8633d7a1770",
+    "bytes": 94973,
     "version": "1.0.0.15",
     "productId": "f125ebdf-4a9d-4e6e-8479-3a18874e7752",
     "isDomainIsolated": "false",
@@ -18,8 +18,8 @@
       "ClientSideAssets.xml",
       "ClientSideAssets.xml.config.xml",
       "ClientSideAssets/AiCoeFrontDoorWebPartStrings_en-us_6a711c67820a16aeea22bc985afa6e90.js",
-      "ClientSideAssets/ai-coe-front-door-web-part_70418eb6dbb6b317d83e.js",
-      "ClientSideAssets/ai-coe-front-door-web-part_70418eb6dbb6b317d83e.js.LICENSE.txt",
+      "ClientSideAssets/ai-coe-front-door-web-part_8f01bf5d232e99b6f992.js",
+      "ClientSideAssets/ai-coe-front-door-web-part_8f01bf5d232e99b6f992.js.LICENSE.txt",
       "ClientSideAssets/cf2e5904-0703-4fe4-ae5a-ec012d6fa689_color.png",
       "ClientSideAssets/cf2e5904-0703-4fe4-ae5a-ec012d6fa689_outline.png",
       "[Content_Types].xml",
@@ -53,7 +53,7 @@
   "bundle": {
     "files": [
       {
-        "name": "ClientSideAssets/ai-coe-front-door-web-part_70418eb6dbb6b317d83e.js",
+        "name": "ClientSideAssets/ai-coe-front-door-web-part_8f01bf5d232e99b6f992.js",
         "sha256": "d2be5252f96c7611c03f16e0df300b1216deb0a39eb65c3b93effe9afcf53eaf",
         "bytes": 300303
       },
@@ -123,8 +123,8 @@
       "ClientSideAssets.xml",
       "_rels/ClientSideAssets.xml.rels",
       "ClientSideAssets.xml.config.xml",
-      "ClientSideAssets/ai-coe-front-door-web-part_70418eb6dbb6b317d83e.js",
-      "ClientSideAssets/ai-coe-front-door-web-part_70418eb6dbb6b317d83e.js.LICENSE.txt",
+      "ClientSideAssets/ai-coe-front-door-web-part_8f01bf5d232e99b6f992.js",
+      "ClientSideAssets/ai-coe-front-door-web-part_8f01bf5d232e99b6f992.js.LICENSE.txt",
       "ClientSideAssets/AiCoeFrontDoorWebPartStrings_en-us_6a711c67820a16aeea22bc985afa6e90.js"
     ],
     "findings": []
