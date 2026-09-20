@@ -69,6 +69,29 @@ describe('page provisioning script', () => {
     expect(script).toMatch(/Optional parameters may be blank too: a\s+blank one takes the 'default'/);
   });
 
+  it('drops a block whose skipWhenBlank parameter is blank (the pilot notice), with a warning, and never uploads the key', () => {
+    expect(script).toContain("'skipWhenBlank'");
+    expect(script).toMatch(/function Test-BlockKept/);
+    expect(script).toMatch(/Write-Warning "[^"]*is dropped because the parameter '\$name' is blank/);
+    expect(script).not.toContain('is left out');
+    // Only a declared parameter may be named; the key itself does not reach the document.
+    expect(script).toMatch(/names an undeclared parameter/);
+    expect(script).toMatch(/if \(\$key -eq 'skipWhenBlank'\) \{ continue \}/);
+    expect(script).toMatch(/Where-Object \{ Test-BlockKept \$_ /);
+    expect(script).toMatch(/skipWhenBlank[^\n]*PilotTeamName/);
+    // The definition keys the pilot notice on PilotTeamName and nothing else.
+    const definition: { pages: { key: string; blocks?: { type: string; skipWhenBlank?: string }[] }[] } = JSON.parse(fs.readFileSync(path.join(PAGES_DIR, 'pages.json'), 'utf8'));
+    const keyed: string[] = [];
+    for (const page of definition.pages) {
+      for (const block of page.blocks ?? []) {
+        if (block.skipWhenBlank !== undefined) {
+          keyed.push(`${page.key}:${block.type}:${block.skipWhenBlank}`);
+        }
+      }
+    }
+    expect(keyed).toEqual(['startHere:notice:PilotTeamName']);
+  });
+
   it('ships tenant-neutral: no word of the tenant list in the committed provisioning files', () => {
     // Only the committed files: an operator's filled-in parameters.json may name the tenant. The word list itself is
     // the single permitted home for client names and the reference roster (src/provisioning/tenantWords.json).

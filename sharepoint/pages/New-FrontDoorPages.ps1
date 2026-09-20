@@ -19,7 +19,9 @@ Tokens in pages.json: {Name} is a parameter value; {Page:key} is the server-rela
 in-text link "[label]({Url:Name})" into its label, and a tile or call to action pointing at it is marked 'needsAccess'
 with a warning, so the web part shows it as closed rather than dropping it. Optional parameters may be blank too: a
 blank one takes the 'default' its declaration carries, or stays empty. Tokens inside the 'routes' table are resolved
-the same way. The web part opens links to other origins in a new tab.
+the same way. A block that names a parameter in 'skipWhenBlank' (the private-pilot notice on Start here names
+PilotTeamName) is dropped, with a warning, when that parameter is blank; the key itself never reaches the document.
+The web part opens links to other origins in a new tab.
 
 The package must already be installed on the site (upload as an update to the app catalog, then "Get it" on the site);
 the script stops before creating anything when the front-door component is not available, and verifies after each
@@ -39,7 +41,7 @@ script. Named parameters below override values from the file.
 Organization name used in the page text and set on every front-door instance.
 
 .PARAMETER DraftServiceUrl
-HTTP trigger URL of the Claude draft flow for the idea page; blank keeps plain summaries.
+HTTP trigger URL of the AI draft flow for the idea page; blank keeps plain summaries.
 
 .PARAMETER TelemetryProvider
 Usage feed for the Status page: claude (default), openai or both.
@@ -201,6 +203,19 @@ function Test-Unlinked($item) {
   return [string]::IsNullOrWhiteSpace([string]$item['href']) -and -not $item.Contains('state') -and -not $item.Contains('route')
 }
 
+# True when a block stays in the document: it names no parameter in 'skipWhenBlank', or the one it names has a value
+# (the private-pilot notice on Start here sets skipWhenBlank to PilotTeamName, so a site without a pilot team shows none).
+function Test-BlockKept($block, [string]$where) {
+  if (-not ($block -is [System.Collections.IDictionary]) -or -not $block.Contains('skipWhenBlank')) { return $true }
+  $name = [string]$block['skipWhenBlank']
+  if (-not $kinds.ContainsKey($name)) { throw "A block on $where names an undeclared parameter '$name' in skipWhenBlank." }
+  if ([string]::IsNullOrWhiteSpace([string]$values[$name])) {
+    Write-Warning "The $($block['type']) block '$($block['title'])' on $where is dropped because the parameter '$name' is blank."
+    return $false
+  }
+  return $true
+}
+
 # Resolves every string in a block tree (and in the route table). A tile or hero call to action whose link resolves
 # to nothing (a blank URL parameter) and that names neither a state nor a route stays on the page marked
 # 'needsAccess', so the web part shows it as closed (a labelled non-link with its state) instead of dropping the
@@ -214,7 +229,11 @@ function Resolve-Node($node, [string]$where) {
   }
   if ($node -is [System.Collections.IDictionary]) {
     $resolved = [ordered]@{}
-    foreach ($key in @($node.Keys)) { $resolved[$key] = Resolve-Node $node[$key] $where }
+    foreach ($key in @($node.Keys)) {
+      # The skip rule is the script's, decided by Test-BlockKept; the web part never sees the key.
+      if ($key -eq 'skipWhenBlank') { continue }
+      $resolved[$key] = Resolve-Node $node[$key] $where
+    }
     if ($resolved.Contains('type') -and $resolved['type'] -eq 'tiles') {
       foreach ($item in @($resolved['items'])) {
         if (Test-Unlinked $item) {
@@ -242,9 +261,11 @@ foreach ($page in $definition['pages']) {
   if ($instance['view'] -ne 'page' -or $instance['pageKey'] -ne $page['key'] -or $instance['contentUrl'] -ne $contentPath) {
     throw "Page '$($page['key'])' carries blocks, so its instance must be a 'page' view with pageKey '$($page['key'])' reading $contentPath."
   }
+  # Blocks keyed on a blank parameter (skipWhenBlank) are dropped before the token pass, so their tokens never resolve.
+  $kept = @($page['blocks'] | Where-Object { Test-BlockKept $_ ([string]$page['file']) })
   $documentPages[[string]$page['key']] = [ordered]@{
     title = Resolve-Text ([string]$page['title'])
-    blocks = Resolve-Node $page['blocks'] ([string]$page['file'])
+    blocks = Resolve-Node $kept ([string]$page['file'])
   }
 }
 $document = [ordered]@{ version = 1; pages = $documentPages }

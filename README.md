@@ -145,7 +145,7 @@ content page is decoration, hidden from assistive technology, where the landing 
 The toolbox offers one entry per piece (**AI CoE: Home tiles**, **AI CoE: Explore an AI idea**, …, **AI CoE: Content
 page**) on the same component, each presetting `view`; the original **AI CoE Front Door** entry stays the single-page
 version. Exits from a piece are full page loads; tiles and in-text links are ordinary links, so the page router and
-the browser back button work, and links to another origin (Teams, the Concierge) open in a new tab. Drafts stay in
+the browser back button work, and links to another origin (Teams, the assistant) open in a new tab. Drafts stay in
 the browser's localStorage and are shared by every instance on the site, so a draft begun on a form page shows as
 "Resume draft" on the home tiles when that page next loads, and a form page resumes its draft on load. Place **one
 instance per page**: the DOM scope id and several heading ids are document-global, and a content page may carry one
@@ -232,10 +232,10 @@ of the content document:
 
 | Page | Instance | Blocks |
 |---|---|---|
-| Start here (site home) | `page`, key `startHere` | hero with a call to action, four quick-link tiles, three prompt cards, three persona cards, status and support |
-| Learn | `page`, key `learn` | intro, four exercise cards with a duration kicker, how completion is checked, a note for team leads |
-| Use AI | `page`, key `useAi` | intro, prompt cards by audience with their data boundaries as meta lines, what the page does not do |
-| Requests | `page`, key `requests` | the three lanes, what is not asked of you, registering AI already in use, then the `home` piece (the five path cards and resource strip; return page for every form) |
+| Start here (site home) | `page`, key `startHere` | hero with the operating promise and no call to action, the `workCommand`, three `prominent` tiles on the `work`, `improve` and `value` routes, a status row (the assistant with its verified date, Requests), the three rules, the data-boundary `notice`, the private-pilot `notice` (dropped by the script when `PilotTeamName` is blank), three persona cards |
+| Learn | `page`, key `learn` | intro, an unnumbered orientation `rules` list, four exercise cards with a duration kicker, how completion is checked, a note for team leads and the link to Prompts |
+| Use AI | `page`, key `useAi` | the one prompt pattern, prompt cards by audience with their data boundaries as meta lines, what the page does not do |
+| Requests | `page`, key `requests` | the three lanes (the governance bodies are parameters), what is not asked of you, registering AI already in use, the data-boundary `notice`, then the `home` piece (the five path cards and resource strip; return page for every form) |
 | Prompts | `page`, key `prompts` | three starter prompts, what is in the library, what Draft means |
 | Status | `page`, key `status`, with `telemetryProvider` (the only instance that uses it) | what is running and what is not, the `telemetry` piece, how to check a request, what to do when something is wrong |
 | Explore an AI idea, Check a tool or task, Register team AI use, Get help or training, Share feedback | one wizard each, `returnUrl` Requests, `contentUrl` set so the shared footer (the support route) shows below the wizard; the idea page alone carries `draftServiceUrl` | none of their own; the document's `shared` footer |
@@ -243,8 +243,16 @@ of the content document:
 
 The text is the front door's own copy of a short pilot site and carries tokens: `{OrganizationName}` and the other
 `parameters` declared at the top of `pages.json` (people, dates, counts, record ids), `{Page:key}` for links between the
-pages, and `{Url:Name}` for links to things outside the package (the Concierge agent, Teams, Copilot Chat, the prompt
-library). Each parameter declares a `kind`: `text` parameters are required; `url` parameters may be blank, which turns
+pages, and `{Url:Name}` for links to things outside the package (the assistant, Teams, the chat tool, the prompt
+library, the support route). No product name is committed: the assistant and the chat tool are named by the
+`AssistantName` and `ChatName` parameters, the governance bodies by the three `GovernanceBody*` parameters (blank
+reads "a named approver (not yet named)", the fast path "the AI CoE") and the support owners by the six `*OwnerLabel`
+and `BusinessApproverLabel` parameters (blank reads "not yet named"). The two off-site routes (`work`, `assistant`)
+take their `state`, `verifiedOn` and `receiptRef` from parameters and stay closed, falling back to the guided request,
+until all three are set after tenant proof; the three on-site routes (`guidedIntake`, `improve`, `value`) are
+available by content because the same script provisions their pages. A block that names a parameter in
+`skipWhenBlank` is dropped, with a warning, when that parameter is blank (the pilot notice, keyed by
+`PilotTeamName`). Each parameter declares a `kind`: `text` parameters are required; `url` parameters may be blank, which turns
 an in-text link into its label and marks a tile or call to action pointing at it `needsAccess`, so it stays on the
 page shown as closed (a labelled non-link with its state; the script says which); `optional` parameters may be blank
 too, and a blank one takes the `default` its declaration carries (only an `optional` parameter may declare one) or
@@ -266,7 +274,7 @@ script against. That list is deliberately not tenant-neutral (it is what the sca
 
        pwsh ./sharepoint/pages/New-FrontDoorPages.ps1 -SiteUrl https://<tenant>.sharepoint.com/sites/<site> -ParameterFile ./sharepoint/pages/parameters.json -ClientId <app id>
 
-   Optional, appended to that line: `-DraftServiceUrl <flow trigger URL>` for the Claude draft flow,
+   Optional, appended to that line: `-DraftServiceUrl <flow trigger URL>` for the AI draft flow,
    `-TelemetryProvider openai` or `both` (the default is `claude`), and `-Overwrite` to rebuild pages that already
    exist. Every parameter is named; anything else on the line is rejected.
 
@@ -286,7 +294,7 @@ script against. That list is deliberately not tenant-neutral (it is what the sca
 
 Manual fallback: upload a hand-written `ai-coe-pages.json` to Site Assets, create the twelve pages by hand, add the
 matching toolbox entry to each (**AI CoE: Content page** with the page key for the six navigation pages), type the
-return page into the form pages' property pane, paste the Claude draft flow URL on the Explore an AI idea page, pick
+return page into the form pages' property pane, paste the AI draft flow URL on the Explore an AI idea page, pick
 the usage metrics provider on Status, and edit the navigation in the site header.
 
 ## Layout
