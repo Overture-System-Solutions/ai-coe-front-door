@@ -276,12 +276,12 @@ content page is decoration, hidden from assistive technology, where the landing 
 
 | Property | Values | Meaning |
 |---|---|---|
-| `view` | `legacy` (default), `home`, `idea`, `toolCheck`, `teamUsage`, `helpTraining`, `feedback`, `telemetry`, `admin`, `page` | The piece this instance renders. `legacy` is the whole front door as shipped; an instance whose property bag predates 1.0.0.10 parses to it. `page` renders one page of the content document. |
+| `view` | `legacy` (default), `home`, `idea`, `toolCheck`, `teamUsage`, `helpTraining`, `feedback`, `telemetry`, `admin`, `page`, `outcome` (since 1.0.0.15) | The piece this instance renders. `legacy` is the whole front door as shipped; an instance whose property bag predates 1.0.0.10 parses to it. `page` renders one page of the content document. |
 | `layout` | `wide` (default), `narrow` | `narrow` stacks cards, strip, tiles and content blocks for a half or one-third column. |
 | `returnUrl` | site path (`SitePages/Requests.aspx`), root path or full URL | Where "All topics", "Back" on the first question and the dashboard's "Front Door" lead; blank returns to the site home. |
 | `pageKey` | a key of the content document: `startHere`, `learn`, `useAi`, `requests`, `prompts`, `status`, `operations`, `value` as provisioned | Content page only: which page of the document this instance shows. |
 | `contentUrl` | site path or URL; blank means `SiteAssets/ai-coe-pages.json` on a content page and no document on any other piece | The JSON document to read, once per instance and path. A content page always reads one; a wizard (or any other piece) reads one only when this is set, and then draws the document's shared footer (the support route) below its content, so the five form pages carry the same help in the same place as the content pages. An instance from before 1.0.0.12 has it blank and reads nothing. |
-| `pageIdea` … `pageFeedback`, `pageTelemetry`, `pageAdmin`, `pagePolicy` | same forms as `returnUrl` | Home tiles only: where each card, the resource strip and the admin bar link. A blank workflow page hides its card; `pageTelemetry` adds an "AI operations snapshot" entry to the resource strip; a blank `pagePolicy` keeps the policy library link. |
+| `pageIdea` … `pageFeedback`, `pageTelemetry`, `pageAdmin`, `pagePolicy`, `pageOutcome` | same forms as `returnUrl` | Home tiles only: where each card, the resource strip and the admin bar link. A blank workflow page hides its card; `pageTelemetry` adds an "AI operations snapshot" entry to the resource strip; a blank `pagePolicy` keeps the policy library link. `pageOutcome` (since 1.0.0.15) is the *Record a task outcome* page: it shows a sixth card, and only on a home piece inside a page view — the single-page front door keeps its five. |
 
 The toolbox offers one entry per piece (**AI CoE: Home tiles**, **AI CoE: Explore an AI idea**, …, **AI CoE: Content
 page**) on the same component, each presetting `view`; the original **AI CoE Front Door** entry stays the single-page
@@ -541,9 +541,9 @@ Available now, Draft only, Needs approval, Needs access, Not supported. The web 
 and the 26 canonical status codes (anything else reads "Status unavailable"), and the placeholders a measure shows
 instead of a number (`src/webparts/aiCoeFrontDoor/content/truthStates.ts`).
 
-**The fifteen pages** described in `sharepoint/pages/pages.json` (five in the top navigation, the Prompts page linked
+**The sixteen pages** described in `sharepoint/pages/pages.json` (five in the top navigation, the Prompts page linked
 from Learn and Use AI, the two operator pages behind their site groups — Operations and Enterprise value — the pilot
-team's start page behind its own group, five form pages under Requests, one owners-only admin page), each with one
+team's start page behind its own group, five form pages and the outcome record under Requests, one owners-only admin page), each with one
 front-door instance and, for the nine content pages, the blocks of the content document. A page may be keyed on a
 parameter with `skipWhenBlank` (since 1.0.0.15 the role start names `PilotTeamName`): a run without a value for it
 builds no page, uploads no blocks for it, adds no navigation node, and drops every tile, card and in-text link that
@@ -551,17 +551,41 @@ targets it, each with a warning, so nothing on the site points at a page that wa
 
 | Page | Instance | Blocks |
 |---|---|---|
-| Start here (site home) | `page`, key `startHere` | hero with the operating promise and no call to action, the `workCommand`, three `prominent` tiles on the `work`, `improve` and `value` routes, a `statusStrip` (the assistant with its verified date, Requests, and the person's own request count linked to Status), the leader block (`cards` with `audience` `["leader"]`, two static links: enterprise AI value through the `value` route, and Status), the three rules, the data-boundary `notice`, the private-pilot `notice` (dropped by the script when `PilotTeamName` is blank), the three illustrative `workflowCards` (unconditional: a tenant that names no pilot team still sees the three workflows), three persona cards, and a card to the pilot team's start page (dropped with that page when `PilotTeamName` is blank) |
-| Learn | `page`, key `learn` | intro, an unnumbered orientation `rules` list, four exercise cards with a duration kicker, how completion is checked, a note for team leads and the link to Prompts |
+| Start here (site home) | `page`, key `startHere` | hero with the operating promise and no call to action, the `workCommand`, three `prominent` tiles on the `work`, `improve` and `value` routes, a `statusStrip` (the assistant with its verified date, Requests, and the person's own request count linked to Status), the leader block (`cards` with `audience` `["leader"]`, two static links: enterprise AI value through the `value` route, and Status), the three rules, the data-boundary `notice`, the private-pilot `notice` (dropped by the script when `PilotTeamName` is blank), the "What this site records" `notice` (since 1.0.0.15; unconditional), the three illustrative `workflowCards` (unconditional: a tenant that names no pilot team still sees the three workflows), three persona cards, and a card to the pilot team's start page (dropped with that page when `PilotTeamName` is blank) |
+| Learn | `page`, key `learn` | intro, an unnumbered orientation `rules` list, four exercise cards with a duration kicker (the fourth ends at the outcome record since 1.0.0.15), how completion is checked, a note for team leads and the link to Prompts |
 | Use AI | `page`, key `useAi` | the one prompt pattern, prompt cards by audience with their data boundaries as meta lines, what the page does not do |
-| Requests | `page`, key `requests` | the three lanes (the governance bodies are parameters), what is not asked of you, registering AI already in use, the data-boundary `notice`, then the `home` piece (the five path cards and resource strip; return page for every form; no snapshot link, since the strip sits on the owners-only Operations page) |
+| Requests | `page`, key `requests` | the three lanes (the governance bodies are parameters), what is not asked of you, registering AI already in use, the data-boundary `notice`, then the `home` piece (the five path cards, the outcome record as a sixth since 1.0.0.15, and the resource strip; return page for every form; no snapshot link, since the strip sits on the owners-only Operations page) |
 | Prompts (out of the navigation since 1.0.0.13; linked from Learn and Use AI) | `page`, key `prompts` | three starter prompts, what is in the library, what Draft means |
-| Status | `page`, key `status` | the `myWork` piece (the person's own requests, trimmed by the list's item-level security), the one illustrative `caseCards` example, what is running (the assistant through its route, dated by `AssistantVerifiedDate`) and what is not (closed as *Not supported*, dated by `StatusDate`), how to check a request, what to do when something is wrong |
+| Status | `page`, key `status` | the `myWork` piece (the person's own requests, trimmed by the list's item-level security), the one illustrative `caseCards` example, what is running (the assistant through its route, dated by `AssistantVerifiedDate`) and what is not (closed as *Not supported*, dated by `StatusDate`), how to check a request (with the link to the outcome record since 1.0.0.15), what to do when something is wrong |
 | Operations (site owners and the operators group, not in the nav, operator plane) | `page`, key `operations`, `permissions` `groups:OperatorsGroup`, `requiredRole` `["operator"]`, with `telemetryProvider` (the only instance that uses it) and `plane` `operator` | the heading "Operations diagnostics", the `telemetry` piece under the kicker "Diagnostics: usage and cost, not a measure of value", its tiles named from `vocabulary.telemetry` (the feed, never a provider), then the `bindings` block: what this content release is and which tenant inputs the site holds |
 | Enterprise value (site owners, the leaders group and the operators group, not in the nav, operator plane; since 1.0.0.14) | `page`, key `value`, `permissions` `groups:LeadersGroup,OperatorsGroup`, `requiredRole` `["leader","operator"]`, `plane` `operator` | the heading "Enterprise AI value", the "How to read this page" `notice`, the three measure tiles (`kpi`: `useful-safe-completion-rate`, `median-time-to-useful-outcome`, `repeat-use-useful-completion-rate`, each read from the *AI CoE Program Measures* list and shown as a placeholder with its evidence note until it is measured), then the three illustrative Hypothesis / Forecast / Realised cards, which carry no figure |
 | The pilot team's start (the pilot group, not in the nav; since 1.0.0.15) | `page`, key `roleStart`, file `Pilot-start.aspx`, title `{PilotTeamName} start`, `permissions` `groups:PilotGroup`, `skipWhenBlank` `PilotTeamName` | the hero "Start with one real task.", the three illustrative `workflowCards` with their worked examples, the three rules (Start here's, word for word), the five checks before you accept a result as an unnumbered `rules` list, the ten-minute quick start and the prompt pattern as two cards, and the "Start small" `notice`. The page binds no role: the site group is what keeps it shut, and the card on Start here is its only link |
 | Explore an AI idea, Check a tool or task, Register team AI use, Get help or training, Share feedback | one wizard each, `returnUrl` Requests, `contentUrl` set so the shared footer (the support route) shows below the wizard; the idea page alone carries `draftServiceUrl` | none of their own; the document's `shared` footer |
+| Record a task outcome (a child of Requests; since 1.0.0.15) | `outcome`, key `outcome`, file `Record-a-task-outcome.aspx`, `returnUrl` Status (where the person's own work is), `contentUrl` set so the shared footer shows below it | none of its own; the piece is the outcome record, five questions that are all choices — task type, how it went, whether a person reviewed it, what kind of correction it needed (asked only after *Corrected*) and what the page said about the route — and one row in *AI CoE Outcome Records* |
 | AI CoE admin dashboard (site owners only, not in the nav) | `admin`, `returnUrl` Requests | none |
+
+**The outcome record (since 1.0.0.15).** *Record a task outcome* is a page of its own, a child of Requests, reached
+from the sixth home card, from Status ("Used AI for a task?"), from the fourth Learn exercise and from the property
+`pageOutcome` on any home piece that sets it. It is a wizard like the other five, but every one of its questions is a
+choice: there is no free-text step in it at all, so a prompt, an answer, a document name or a client name cannot be
+typed into it. What it writes is one row in *AI CoE Outcome Records*: `TaskType`, `Outcome`, `ReviewState`,
+`CorrectionCategory` (asked only after *Corrected*), `RouteAvailability`, the `OutcomeId` shown on the receipt, the
+time it was saved and the workflow version. Start here says the same thing to the person, in the notice *What this
+site records*:
+
+> When you record how a task went, only the task type, outcome, review state, correction category and route availability are saved, together with SharePoint's own record of who saved it, which only operators can see. Your prompt and the output are never stored. The feedback form is different: what you type there is kept as text.
+
+That last sentence is the honest part: *Share feedback* is a wizard with typed answers, and those answers are stored
+as text in the intake list, as they always were. The outcome record is the only piece in the front door that promises
+otherwise, and it keeps the promise by having nothing to type.
+
+*Who can read an outcome row.* No column of the list names the person, but SharePoint stamps **Created By** and
+**Modified By** on every item of every list, so the rows are pseudonymous, never anonymous. The list is therefore
+created with its own item-level security (`"security": "ownItems"` in the `lists` section): the submitter reads only
+the rows they recorded, the site owners and the operators group read them all, and the two built-in person columns
+are taken off the default view so a page owner opening the list is not shown a name the page never asked for. When a
+measure is one day derived from these rows, `minimumCohort` in the document's `settings` is what keeps it from being
+shown for a group small enough that a single person's rows could be picked out of it.
 
 The text is the front door's own copy of a short pilot site and carries tokens: `{OrganizationName}` and the other
 `parameters` declared at the top of `pages.json` (people, dates, counts, record ids), `{Page:key}` for links between the

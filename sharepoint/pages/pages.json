@@ -61,7 +61,8 @@
         { "title": "Check a tool or task", "page": "toolCheck" },
         { "title": "Register team AI use", "page": "teamUsage" },
         { "title": "Get help or training", "page": "helpTraining" },
-        { "title": "Share feedback", "page": "feedback" }
+        { "title": "Share feedback", "page": "feedback" },
+        { "title": "Record a task outcome", "page": "outcome" }
       ]
     },
     { "title": "Status", "page": "status" }
@@ -257,6 +258,12 @@
           "text": "This front door is being tried by {PilotTeamName}: {PilotMembers}. Something wrong or contradictory? Tell the AI CoE. No PHI, customer data, credentials or regulated information unless the approved environment is confirmed."
         },
         {
+          "type": "notice",
+          "tone": "info",
+          "title": "What this site records",
+          "text": "When you record how a task went, only the task type, outcome, review state, correction category and route availability are saved, together with SharePoint's own record of who saved it, which only operators can see. Your prompt and the output are never stored. The feedback form is different: what you type there is kept as text."
+        },
+        {
           "type": "workflowCards",
           "items": [
             {
@@ -373,7 +380,8 @@
               "kicker": "2 minutes",
               "body": [
                 "Three routes: submit an idea, check a tool or task, or register AI you already use. Each returns a record id, an owner and a next step.",
-                "**Do this**: send one real request from the [Requests page]({Page:requests}). Not a test one."
+                "**Do this**: send one real request from the [Requests page]({Page:requests}). Not a test one.",
+                "**Then**: once you have used AI on a real task, [record how it went]({Page:outcome}). Five choices, no free text, and it tells the AI CoE what is worth fixing."
               ],
               "tone": "gold"
             }
@@ -572,7 +580,7 @@
             "telemetry": "",
             "admin": "{Page:admin}",
             "policy": "",
-            "outcome": ""
+            "outcome": "{Page:outcome}"
           }
         }
       ]
@@ -701,7 +709,10 @@
           "items": [
             {
               "title": "Checking a request you sent",
-              "body": ["Your own requests are listed above with the status the request list holds for them. Keep the acknowledgement you received — it carries your record id. To ask about one, use [Requests]({Page:requests}) with that id and say you are following up. A person answers. There is no automated reply and no agreed response time."],
+              "body": [
+                "Your own requests are listed above with the status the request list holds for them. Keep the acknowledgement you received — it carries your record id. To ask about one, use [Requests]({Page:requests}) with that id and say you are following up. A person answers. There is no automated reply and no agreed response time.",
+                "Used AI for a task? [Record how it went]({Page:outcome}). It is five choices and takes about a minute; nothing you typed, asked or received is kept."
+              ],
               "tone": "blue"
             },
             {
@@ -933,6 +944,14 @@
       "commentsEnabled": false,
       "permissions": "inherit",
       "instance": { "view": "feedback", "layout": "wide", "returnUrl": "SitePages/Requests.aspx", "contentUrl": "SiteAssets/ai-coe-pages.json", "organizationName": "{OrganizationName}", "governanceReference": "{GovernanceReference}", "reviewSystemName": "{ReviewSystemName}", "roleGroups": "leader={LeadersGroup};operator={OperatorsGroup};designAuthority={DesignAuthorityGroup}" }
+    },
+    {
+      "key": "outcome",
+      "title": "Record a task outcome",
+      "file": "Record-a-task-outcome.aspx",
+      "commentsEnabled": false,
+      "permissions": "inherit",
+      "instance": { "view": "outcome", "layout": "wide", "returnUrl": "SitePages/Status.aspx", "contentUrl": "SiteAssets/ai-coe-pages.json", "organizationName": "{OrganizationName}", "governanceReference": "{GovernanceReference}", "reviewSystemName": "{ReviewSystemName}", "roleGroups": "leader={LeadersGroup};operator={OperatorsGroup};designAuthority={DesignAuthorityGroup}" }
     },
     {
       "key": "admin",

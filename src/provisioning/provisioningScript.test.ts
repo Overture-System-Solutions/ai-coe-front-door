@@ -755,7 +755,8 @@ describe('README', () => {
     // 1.0.0.14: fourteen pages, Prompts out of the navigation, my work on Status, and the two operator pages
     // (Operations with the strip and the bindings, Enterprise value with the measures) behind their site groups.
     // 1.0.0.15 adds the role-start page, which a site without a pilot team name never builds.
-    expect(readme).toContain('The fifteen pages');
+    expect(readme).toContain('The sixteen pages');
+    expect(readme).not.toContain('The fifteen pages');
     expect(readme).not.toContain('The fourteen pages');
     expect(readme).not.toContain('The thirteen pages');
     expect(readme).not.toContain('The twelve pages');
@@ -952,6 +953,32 @@ describe('README', () => {
     expect(readme).toContain('`ContentRelease`');
     // The 1.0.0.12 caveat is closed: an upgraded site no longer needs -Overwrite to move the instance properties.
     expect(readme).not.toMatch(/which this release's script writes only when it creates a/);
+  });
+
+  it('documents the outcome record of 1.0.0.15: its page, its property, its person column and the cohort rule', () => {
+    // Decision 16: the page a person records an outcome on, what the row holds, who reads it, and the two things a
+    // page owner cannot see from the list itself (SharePoint's own Created By, and why a small group shows no measure).
+    expect(readme).toContain('Record a task outcome');
+    expect(readme).toContain('key `outcome`');
+    expect(readme).toContain('Record-a-task-outcome.aspx');
+    expect(readme).toContain('`pageOutcome`');
+    expect(readme).toContain('AI CoE Outcome Records');
+    expect(readme).toContain('Created By');
+    expect(readme).toContain('`minimumCohort`');
+    // The promise the page makes to the person, and the one wizard it does not cover.
+    expect(readme).toMatch(/prompt[^.]*never/i);
+    expect(readme).toMatch(/feedback[\s\S]{0,200}?kept as text/i);
+    // Where the person is told: the notice on Start here carries the same sentence the page does.
+    const definition: { pages: { key: string; blocks?: { type: string; title?: string; text?: string }[] }[] } = JSON.parse(
+      fs.readFileSync(path.join(PAGES_DIR, 'pages.json'), 'utf8')
+    );
+    const startHere: { type: string; title?: string; text?: string }[] =
+      definition.pages.filter((page: { key: string }): boolean => page.key === 'startHere')[0].blocks ?? [];
+    const notice: { text?: string } | undefined = startHere.filter(
+      (block: { type: string; title?: string }): boolean => block.type === 'notice' && block.title === 'What this site records'
+    )[0];
+    expect(notice).toBeDefined();
+    expect(readme).toContain(String((notice as { text: string }).text));
   });
 
   it('documents the route table, the action states and the closed tiles', () => {

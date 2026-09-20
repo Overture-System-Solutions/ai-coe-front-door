@@ -12,7 +12,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { resolveAction } from '../webparts/aiCoeFrontDoor/content/actions';
 import type { ResolvedAction } from '../webparts/aiCoeFrontDoor/content/actions';
-import { HOME_CARDS } from '../webparts/aiCoeFrontDoor/content/homeCards';
+import { PAGE_HOME_CARDS } from '../webparts/aiCoeFrontDoor/content/homeCards';
 import { CARD_TONES, DEFAULT_CONTENT_URL, LANE_TONES, parsePageDocument } from '../webparts/aiCoeFrontDoor/content/pageContent';
 import type { ICardsBlock, ICaseCardsBlock, IPageDocument, IPieceBlock, ITilesBlock, IStatusStripBlock, IWorkCommandBlock, IWorkflowCardsBlock } from '../webparts/aiCoeFrontDoor/content/pageContent';
 import { FRONT_DOOR_VIEWS, PAGE_TARGETS } from '../webparts/aiCoeFrontDoor/content/pageViews';
@@ -22,7 +22,7 @@ import type { IResolvedRoute, RouteTable } from '../webparts/aiCoeFrontDoor/cont
 import { TELEMETRY_TILES } from '../webparts/aiCoeFrontDoor/content/telemetryTiles';
 import type { ITelemetryTile } from '../webparts/aiCoeFrontDoor/content/telemetryTiles';
 import { CANONICAL_STATUS } from '../webparts/aiCoeFrontDoor/content/truthStates';
-import { WORKFLOW_ORDER } from '../webparts/aiCoeFrontDoor/content/workflows/catalog';
+import { PAGE_WORKFLOWS, WORKFLOW_ORDER } from '../webparts/aiCoeFrontDoor/content/workflows/catalog';
 import * as icons from '../webparts/aiCoeFrontDoor/icons';
 import {
   INTAKES_LIST_TITLE,
@@ -32,7 +32,7 @@ import {
   PROGRAM_MEASURES_LIST_TITLE,
   USE_CASES_LIST_TITLE
 } from '../webparts/aiCoeFrontDoor/services/lists';
-import type { WorkflowId } from '../webparts/aiCoeFrontDoor/workflows/types';
+import type { PieceWorkflowId } from '../webparts/aiCoeFrontDoor/workflows/types';
 import { findTenantWords, PROVISIONING_SCAN, readTenantWords } from './tenantWords';
 import type { ITenantWords } from './tenantWords';
 
@@ -143,7 +143,18 @@ const NAVIGATION_TITLES: string[] = ['Start here', 'Learn', 'Use AI', 'Requests'
 const CONTENT_PAGES: string[] = [...NAVIGATION_PAGES, 'prompts', 'operations', 'value', 'roleStart'];
 /** The pages a run only builds when the parameter they are keyed on has a value (1.0.0.15, decision 15). */
 const KEYED_PAGES: { [key: string]: string } = { roleStart: 'PilotTeamName' };
-const PIECE_PAGES: string[] = ['idea', 'toolCheck', 'teamUsage', 'helpTraining', 'feedback', 'admin'];
+/**
+ * The pages that carry a piece instead of blocks: the five wizards, the outcome record of 1.0.0.15 (a sixth wizard
+ * that asks for choices alone and returns to Status) and the owners-only admin dashboard.
+ */
+const PIECE_PAGES: string[] = ['idea', 'toolCheck', 'teamUsage', 'helpTraining', 'feedback', 'outcome', 'admin'];
+/** Where a piece page sends its reader when the piece is done; everything but the outcome record returns to Requests. */
+const PIECE_RETURN: { [key: string]: string } = { outcome: 'SitePages/Status.aspx' };
+/** The measurement notice of 1.0.0.15 (decision 16): what the outcome record saves, and what it never saves. */
+const MEASUREMENT_NOTICE: string =
+  'When you record how a task went, only the task type, outcome, review state, correction category and route ' +
+  "availability are saved, together with SharePoint's own record of who saved it, which only operators can see. " +
+  'Your prompt and the output are never stored. The feedback form is different: what you type there is kept as text.';
 const BLOCK_TYPES: string[] = [
   'hero',
   'heading',
@@ -167,7 +178,8 @@ const EXPECTED_BLOCKS: { [key: string]: string[] } = {
   // The status strip carries the person's own request count beside the assistant and Requests lines (1.0.0.13);
   // the leader block sits right below it from 1.0.0.14 and is shown to a leader alone. From 1.0.0.15 the three
   // workflow cards sit below the notices for every tenant, and the last card leads to the role-start page.
-  startHere: ['hero', 'workCommand', 'tiles', 'statusStrip', 'cards', 'heading', 'rules', 'notice', 'notice', 'workflowCards', 'heading', 'cards', 'cards'],
+  // 1.0.0.15 adds a third notice below the two cautions: what the outcome record saves and what it never saves.
+  startHere: ['hero', 'workCommand', 'tiles', 'statusStrip', 'cards', 'heading', 'rules', 'notice', 'notice', 'notice', 'workflowCards', 'heading', 'cards', 'cards'],
   learn: ['paragraph', 'paragraph', 'paragraph', 'rules', 'cards', 'cards', 'heading', 'paragraph', 'paragraph', 'paragraph', 'paragraph', 'heading', 'paragraph', 'paragraph'],
   useAi: ['paragraph', 'paragraph', 'heading', 'cards', 'heading', 'cards', 'heading', 'cards', 'heading', 'cards', 'heading', 'paragraph', 'paragraph'],
   requests: ['heading', 'paragraph', 'paragraph', 'heading', 'lanes', 'cards', 'notice', 'heading', 'paragraph', 'piece'],
@@ -628,19 +640,24 @@ describe('front door page definition', () => {
     expect(JSON.stringify(blocksOf('useAi'))).toContain('{Page:prompts}');
   });
 
-  it('lists the five form pages under Requests in home-card order', () => {
+  it('lists the five form pages and the outcome record under Requests in home-card order', () => {
     const withChildren: INavigationEntry[] = definition.navigation.filter((entry: INavigationEntry): boolean => entry.children !== undefined);
     expect(withChildren.map((entry: INavigationEntry): string => entry.page)).toEqual(['requests']);
     const children: INavigationEntry[] = withChildren[0].children as INavigationEntry[];
-    expect(children.map((child: INavigationEntry): string => child.page)).toEqual(WORKFLOW_ORDER);
-    expect(children.map((child: INavigationEntry): string => child.title)).toEqual(WORKFLOW_ORDER.map((id: WorkflowId): string => HOME_CARDS[id].title));
+    // 1.0.0.15: the outcome record follows the five as a sixth child, in the order a page view shows the cards.
+    expect(children.map((child: INavigationEntry): string => child.page)).toEqual(PAGE_WORKFLOWS);
+    expect(children.map((child: INavigationEntry): string => child.title)).toEqual(
+      PAGE_WORKFLOWS.map((id: PieceWorkflowId): string => PAGE_HOME_CARDS[id].title)
+    );
+    // The legacy landing page keeps its five: the sixth is a page-view piece alone (decision 16).
+    expect(WORKFLOW_ORDER).toHaveLength(5);
   });
 
-  it('defines fifteen pages with unique keys and files, one instance each', () => {
-    // 1.0.0.15 adds the role-start page; a site whose pilot team is not named builds fourteen of the fifteen.
-    expect(definition.pages).toHaveLength(15);
-    expect(new Set(pageKeys).size).toBe(15);
-    expect(new Set(pageFiles).size).toBe(15);
+  it('defines sixteen pages with unique keys and files, one instance each', () => {
+    // 1.0.0.15 adds the role-start page and the outcome record; a site whose pilot team is not named builds fifteen of the sixteen.
+    expect(definition.pages).toHaveLength(16);
+    expect(new Set(pageKeys).size).toBe(16);
+    expect(new Set(pageFiles).size).toBe(16);
     expect(pageKeys.slice().sort()).toEqual([...CONTENT_PAGES, ...PIECE_PAGES].sort());
     for (const target of definition.pages) {
       expect(target.file).toMatch(/^[A-Za-z0-9-]+\.aspx$/);
@@ -650,8 +667,8 @@ describe('front door page definition', () => {
       expect(typeof target.instance).toBe('object');
       expect((target as { sections?: unknown }).sections).toBeUndefined();
     }
-    for (const id of WORKFLOW_ORDER) {
-      expect(page(id).title).toBe(HOME_CARDS[id].title);
+    for (const id of PAGE_WORKFLOWS) {
+      expect(page(id).title).toBe(PAGE_HOME_CARDS[id].title);
     }
   });
 
@@ -753,17 +770,18 @@ describe('front door page definition', () => {
     expect(JSON.stringify(blocksOf('value'))).not.toContain('MeasureId');
   });
 
-  it('gives every piece page its workflow or dashboard, returning to Requests', () => {
+  it('gives every piece page its workflow or dashboard, returning to Requests and the outcome record to Status', () => {
     for (const key of PIECE_PAGES) {
       const instance: { [name: string]: string } = page(key).instance;
       expect(FRONT_DOOR_VIEWS).toContain(instance.view);
       expect(instance.view).toBe(key);
       expect(instance.layout).toBe('wide');
-      expect(instance.returnUrl).toBe('SitePages/Requests.aspx');
+      // 1.0.0.15: the outcome record is reached from Status and the person's own work, so that is where it returns (decision 16).
+      expect({ key, returnUrl: instance.returnUrl }).toEqual({ key, returnUrl: PIECE_RETURN[key] ?? 'SitePages/Requests.aspx' });
       expect(instance.organizationName).toBe('{OrganizationName}');
       expect(instance.draftServiceUrl).toBe(key === 'idea' ? '{DraftServiceUrl}' : undefined);
-      // The five form pages read the document for the shared footer below the wizard; the admin page does not.
-      expect(instance.contentUrl).toBe(WORKFLOW_ORDER.indexOf(key as WorkflowId) >= 0 ? DEFAULT_CONTENT_URL : undefined);
+      // The five form pages and the outcome record read the document for the shared footer below the wizard; the admin page does not.
+      expect(instance.contentUrl).toBe(PAGE_WORKFLOWS.indexOf(key as PieceWorkflowId) >= 0 ? DEFAULT_CONTENT_URL : undefined);
     }
     for (const target of definition.pages) {
       for (const name of Object.keys(target.instance)) {
@@ -1035,7 +1053,7 @@ describe('front door page definition', () => {
     // Unconditional and for everyone: a tenant that names no pilot team still sees what the three workflows are.
     expect(workflows.skipWhenBlank).toBeUndefined();
     expect(workflows.audience).toBeUndefined();
-    expect(blocksOf('startHere')[9]).toBe(workflows);
+    expect(blocksOf('startHere')[10]).toBe(workflows);
     expect(itemsOf(workflows).map((item: IRawItem): unknown => item.title)).toEqual(['Campaign brief', 'Content and internal PR plan', 'Meeting-to-campaign follow-through']);
     // The wording is the playbook's, section by section; only the tenant's own names would be left out, and it has none.
     expect(itemsOf(workflows)[0]).toEqual({
@@ -1064,7 +1082,7 @@ describe('front door page definition', () => {
     }
     // The document carries the block parsed, with its four answers and its example flag, on both pages.
     const document: IPageDocument = parsePageDocument(resolveDocument({}, { PilotTeamName: 'Marketing' })) as IPageDocument;
-    const parsed: IWorkflowCardsBlock = document.pages.startHere.blocks[9] as IWorkflowCardsBlock;
+    const parsed: IWorkflowCardsBlock = document.pages.startHere.blocks[10] as IWorkflowCardsBlock;
     expect(parsed.type).toBe('workflowCards');
     expect(parsed.items).toEqual(itemsOf(workflows));
     expect((document.pages.roleStart.blocks[1] as IWorkflowCardsBlock).items).toHaveLength(3);
@@ -1130,6 +1148,69 @@ describe('front door page definition', () => {
       navigated.push(entry.page, ...(entry.children ?? []).map((child: INavigationEntry): string => child.page));
     }
     expect(navigated).not.toContain('roleStart');
+  });
+
+  it('gives the outcome record a page of its own under Requests, linked from Status and Learn (decision 16, 1.0.0.15)', () => {
+    const outcome: IPage = page('outcome');
+    expect(outcome.title).toBe('Record a task outcome');
+    expect(outcome.file).toBe('Record-a-task-outcome.aspx');
+    expect(outcome.permissions).toBe('inherit');
+    expect(outcome.commentsEnabled).toBe(false);
+    expect(outcome.blocks).toBeUndefined();
+    expect(outcome.skipWhenBlank).toBeUndefined();
+    expect(outcome.requiredRole).toBeUndefined();
+    expect(outcome.plane).toBeUndefined();
+    // The piece is the outcome view; it returns to Status, where the person's own work is, and reads the document so
+    // the same support footer stands below it as below the five wizards (MKT-58).
+    expect(outcome.instance.view).toBe('outcome');
+    expect(outcome.instance.returnUrl).toBe('SitePages/Status.aspx');
+    expect(outcome.instance.contentUrl).toBe(DEFAULT_CONTENT_URL);
+    expect(outcome.instance.pageKey).toBeUndefined();
+    expect(outcome.instance.draftServiceUrl).toBeUndefined();
+    // It is a child of Requests, last, under the title the home card carries.
+    const requests: INavigationEntry = definition.navigation.filter((entry: INavigationEntry): boolean => entry.page === 'requests')[0];
+    const children: INavigationEntry[] = requests.children as INavigationEntry[];
+    expect(children[children.length - 1]).toEqual({ title: 'Record a task outcome', page: 'outcome' });
+    // The home piece on Requests offers the same page as its sixth card (1.0.0.15).
+    expect((blockOf('requests', 'piece').pages as { [target: string]: string }).outcome).toBe('{Page:outcome}');
+    // Status and Learn each lead to it in their own words, so a person meets it where they check their work and where they learn.
+    expect(JSON.stringify(blocksOf('status'))).toContain('{Page:outcome}');
+    expect(JSON.stringify(blocksOf('learn'))).toContain('{Page:outcome}');
+    // Every one of those links resolves to the page this run builds.
+    const document: IPageDocument = parsePageDocument(resolveDocument({})) as IPageDocument;
+    const resolved: string = `${SITE_URL}/SitePages/${outcome.file}`;
+    expect(JSON.stringify(document.pages.status)).toContain(resolved);
+    expect(JSON.stringify(document.pages.learn)).toContain(resolved);
+    expect((document.pages.requests.blocks[9] as IPieceBlock).pages.outcome).toBe(resolved);
+  });
+
+  it('says on Start here what an outcome record keeps and what it never keeps (decision 16, 1.0.0.15)', () => {
+    const records: IRawBlock = blockOf('startHere', 'notice', 2);
+    expect(blocksOf('startHere')[9]).toBe(records);
+    expect(records.tone).toBe('info');
+    expect(records.title).toBe('What this site records');
+    expect(records.text).toBe(MEASUREMENT_NOTICE);
+    // Unconditional: it is true of every site that has the page, whether or not a pilot team is named.
+    expect(records.skipWhenBlank).toBeUndefined();
+    expect(records.audience).toBeUndefined();
+    // It names the five values the outcome list holds, the person column SharePoint writes itself, and the one
+    // wizard this promise does not cover, because that one does store what was typed.
+    for (const field of ['task type', 'outcome', 'review state', 'correction category', 'route availability']) {
+      expect({ field, named: String(records.text).indexOf(field) >= 0 }).toEqual({ field, named: true });
+    }
+    expect(records.text).toContain("SharePoint's own record of who saved it");
+    expect(records.text).toContain('only operators can see');
+    expect(records.text).toContain('Your prompt and the output are never stored');
+    expect(records.text).toContain('The feedback form is different');
+    // The notice is user-plane text and passes the same lints as every other line on the page.
+    const texts: IUserPlaneText[] = userPlaneTexts().filter((entry: IUserPlaneText): boolean => entry.text === MEASUREMENT_NOTICE);
+    expect(texts).toHaveLength(1);
+    expect(offending(texts, (entry: IUserPlaneText): boolean => UPPER_SNAKE_CODE.test(entry.text))).toEqual([]);
+    // And it parses onto the page above the three workflow cards, on a run that names no pilot team as well.
+    const document: IPageDocument = parsePageDocument(resolveDocument({})) as IPageDocument;
+    const blocks: { type: string; text?: string }[] = document.pages.startHere.blocks as { type: string; text?: string }[];
+    const notices: { type: string; text?: string }[] = blocks.filter((block: { type: string }): boolean => block.type === 'notice');
+    expect(notices[notices.length - 1].text).toBe(MEASUREMENT_NOTICE);
   });
 
   it('declares the six routes with the on-site rows open by content and the off-site rows proved by parameters', () => {
@@ -1230,11 +1311,10 @@ describe('front door page definition', () => {
     }
     expect(pieces.map((piece: { key: string; block: IRawBlock }): string => `${piece.key}:${String(piece.block.piece)}`)).toEqual(['requests:home', 'status:myWork', 'operations:telemetry']);
     const pages: { [target: string]: string } = pieces[0].block.pages as { [target: string]: string };
-    // The eight tile targets plus the outcome record, whose own page arrives with its workflow (decision 16).
+    // The eight tile targets plus the outcome record, whose own page arrives with the content of 1.0.0.15 (decision 16).
     const expectedTargets: string[] = PAGE_TARGETS.map((target: string): string => target).concat('outcome');
     expect(Object.keys(pages).sort()).toEqual(expectedTargets.sort());
-    expect(pages.outcome).toBe('');
-    for (const id of WORKFLOW_ORDER) {
+    for (const id of PAGE_WORKFLOWS) {
       expect(pages[id]).toBe(`{Page:${id}}`);
     }
     // The snapshot sits on the owners-only Operations page now, so the resource strip on Requests (everyone) offers no link to it.
@@ -1670,7 +1750,8 @@ describe('front door page definition', () => {
     expect(blank.pages.startHere.blocks.map((block): string => block.type)).toEqual(
       EXPECTED_BLOCKS.startHere.filter((type: string, index: number): boolean => index !== 8 && index !== EXPECTED_BLOCKS.startHere.length - 1)
     );
-    expect(blank.pages.startHere.blocks.filter((block): boolean => block.type === 'notice')).toHaveLength(1);
+    // Two notices survive a blank pilot team: the data boundary and what this site records (1.0.0.15).
+    expect(blank.pages.startHere.blocks.filter((block): boolean => block.type === 'notice')).toHaveLength(2);
     expect(JSON.stringify(blank)).not.toContain('Private pilot');
     expect(Object.keys(blank.pages)).not.toContain('roleStart');
     expect(JSON.stringify(blank)).not.toContain('Pilot-start.aspx');

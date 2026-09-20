@@ -363,6 +363,14 @@ const SAMPLE_PAGE_DOCUMENT: { [key: string]: unknown } = {
           title: 'Data boundary',
           text: 'Keep **personal data**, contracts and anything regulated out of every prompt. If you are not sure, [check the tool or task](/?view=toolCheck) first.'
         },
+        {
+          // What the outcome record keeps, in the words the shipped Start here page uses (1.0.0.15, decision 16).
+          type: 'notice',
+          tone: 'info',
+          title: 'What this site records',
+          text:
+            'When you record how a task went, only the task type, outcome, review state, correction category and route availability are saved, together with SharePoint\'s own record of who saved it, which only operators can see. Your prompt and the output are never stored. The feedback form is different: what you type there is kept as text.'
+        },
         { type: 'heading', level: 2, text: 'Three prompts to try today' },
         {
           type: 'cards',
@@ -464,6 +472,8 @@ const SAMPLE_PAGE_DOCUMENT: { [key: string]: unknown } = {
             teamUsage: previewLink('view=teamUsage'),
             helpTraining: previewLink('view=helpTraining'),
             feedback: previewLink('view=feedback'),
+            // The sixth card since 1.0.0.15: the outcome record, a page of its own that asks for choices alone.
+            outcome: previewLink('view=outcome'),
             // No snapshot link: the telemetry strip sits on the operator-plane Operations page since 1.0.0.13.
             admin: previewLink('view=admin')
           }
