@@ -217,8 +217,10 @@ describe('page provisioning script', () => {
 
 describe('README', () => {
   it('documents the current package and the page layout', () => {
-    expect(readme).toContain('## Deploy 1.0.0.11');
+    expect(readme).toContain('## Deploy 1.0.0.12');
+    expect(readme).not.toContain('Deploy 1.0.0.11');
     expect(readme).not.toContain('Deploy 1.0.0.10');
+    expect(readme).toContain('### Rollback');
     expect(readme).toContain('## Lay out the front door across pages');
     expect(readme).toContain('New-FrontDoorPages.ps1');
     expect(readme).toContain('parameters.sample.json');
@@ -256,6 +258,30 @@ describe('README', () => {
     expect(readme).toContain('`default`');
     expect(readme).toContain('src/provisioning/tenantWords.json');
     expect(readme).toContain('deliberately not tenant-neutral');
+  });
+
+  it('documents the release close of 1.0.0.12: the document sections, the truth states, the ledger, the properties and the portability sections', () => {
+    for (const key of ['vocabulary', 'plane', 'settings']) {
+      expect(readme).toContain(`\`${key}\``);
+    }
+    for (const label of ['Available now', 'Draft only', 'Needs approval', 'Needs access', 'Not supported']) {
+      expect(readme).toContain(label);
+    }
+    expect(readme).toContain('docs/content-claims.md');
+    for (const property of ['governanceReference', 'reviewSystemName']) {
+      expect(readme).toContain(`\`${property}\``);
+    }
+    expect(readme).toContain('## Rebind to another tenant');
+    expect(readme).toContain('## Portability exceptions');
+    expect(readme).toContain('## Implementation route');
+    // The upgrade path: no -Overwrite on an existing site; the pages are skipped, the document is rewritten.
+    expect(readme).toMatch(/without `-Overwrite`/);
+    expect(readme).toContain('rewritten');
+    // The renamed pane label; the first tenant's flow name is gone.
+    expect(readme).toContain('AI draft flow URL');
+    expect(readme).not.toContain('Claude draft flow URL');
+    expect(readme).not.toContain('OSS Demo');
+    expect(readme).toContain('evidence/dependency-inventory.json');
   });
 
   it('documents the route table, the action states and the closed tiles', () => {

@@ -6,10 +6,12 @@ feedback), a telemetry snapshot and an administrator dashboard, all writing to S
 
 This project is the maintainable source for the web part that shipped as package **1.0.0.7** (`original/`). The
 shipped package was reverse-engineered (see `docs/RECOVERY.md`) and then ported to idiomatic TypeScript with a
-test-first approach. It builds the next in-place upgrade, **1.0.0.11**, with the same solution, feature and web part
+test-first approach. It builds the next in-place upgrade, **1.0.0.12**, with the same solution, feature and web part
 identities, and it is tenant neutral: the organization name is a web part property. Since 1.0.0.10 the front door can
-also be spread over several native pages, one piece per page, and since 1.0.0.11 it renders whole content pages from a
-document in Site Assets, in its own style (see "Lay out the front door across pages").
+also be spread over several native pages, one piece per page, since 1.0.0.11 it renders whole content pages from a
+document in Site Assets, in its own style (see "Lay out the front door across pages"), and since 1.0.0.12 the first
+screen tells the truth: one work command, a route table that fails closed, a shared support footer, and a recorded
+answer to what a move to another tenant would throw away (see "Rebind to another tenant").
 
 ## Work with it
 
@@ -32,25 +34,44 @@ Use Node.js 22.14 or newer (below 23) and npm.
   `npm run preview -- --bundle <path>` previews another bundle, for example the shipped one under
   `recovered/package/ClientSideAssets/`.
 - `npm start` runs `heft start` for the SharePoint hosted workbench (requires a tenant; not needed for local work).
+- `npm run verify -- --tests "<summary of the test run>"` checks the package the build wrote (identity, version, the
+  shipped list schemas byte for byte, the bundle's data contracts, no word of the tenant list anywhere in the
+  archive, every dependency pinned exactly) and writes `evidence/port-verification.json` and
+  `evidence/dependency-inventory.json` (one row per runtime component of `package-lock.json`, with the sixteen
+  inventory fields; what the lock file cannot say reads `AWAITING_TENANT_INVENTORY` until the tenant inventory
+  fills it). Both files are committed with each release.
 
-## Deploy 1.0.0.11
+## Deploy 1.0.0.12
 
 Upload `sharepoint/solution/overture-ai-coe-front-door.sppkg` to the app catalog as an update of the existing app.
 The solution id (`f125ebdf-4a9d-4e6e-8479-3a18874e7752`), feature id (`69ab84b7-608c-47ee-9623-af8ebaf2cb10`,
 version 1.0.0.2) and web part id (`cf2e5904-0703-4fe4-ae5a-ec012d6fa689`) are unchanged, so the three provisioned
-lists (AI CoE Pilot Intakes and its two schemas under `sharepoint/assets/`) are left untouched. The other four lists
-the web part reads (AI CoE Use Cases, AI CoE Decisions, AI Usage Daily, AI CoE Incidents) are provisioned by the
-companion Power Automate demo solution, exactly as before.
+lists (AI CoE Pilot Intakes and its two schemas under `sharepoint/assets/`) are left untouched; 1.0.0.12 changes no
+list, column or permission. The other four lists the web part reads (AI CoE Use Cases, AI CoE Decisions, AI Usage
+Daily, AI CoE Incidents) are provisioned by the companion Power Automate solutions, exactly as before.
 
-After deployment, open the web part's property pane and set **Organization name**. The **Telemetry → Usage metrics
-provider** dropdown defaults to Claude (see below). Existing instances keep rendering the whole front door on one
-page: the new **Page layout → Piece shown on this page** dropdown defaults to that, and the new properties are
-ignored until another piece is chosen.
+After deployment, open the web part's property pane and set **Branding → Organization name**; **Governance
+reference** and **Review system name** may stay blank (see "Branding"). The **Telemetry → Usage metrics provider**
+dropdown defaults to Claude (see below). Existing instances keep rendering the whole front door on one page: the
+**Page layout → Piece shown on this page** dropdown defaults to that, and the page properties are ignored until
+another piece is chosen. Then apply the page definition (see "Applying it"): on a site that already carries the
+1.0.0.11 pages the script runs without `-Overwrite` first, and the tenant acceptance for this release is to submit
+the work command with every URL blank and see the idea wizard resume the sentence, tab through Start here and see
+the focus rings, open a form page and see the support footer below the wizard, and confirm the property pane has no
+provider-named draft-flow label.
 
-### Enable Claude drafting of idea summaries
+### Rollback
 
-The idea workflow can ask the "OSS Demo - Claude Intake Draft" Power Automate flow (the organization's Claude
-custom connector) for the summary draft. The browser never holds a model key: the web part calls the flow's HTTP
+Redeploy the 1.0.0.11 package from that release's build and rerun that version's `New-FrontDoorPages.ps1`: the
+content document is rewritten from that version's `pages.json` (Site Assets keeps every version, so the 1.0.0.12
+document stays in its history), the older bundle ignores the two Branding properties it does not know, and because
+1.0.0.12 changes no list, column or permission there is nothing else to revert. Pages are additive: a page created
+by a later run remains until an owner removes it.
+
+### Enable AI drafting of idea summaries
+
+The idea workflow can ask a Power Automate flow (the organization's AI draft flow, behind its own model connector)
+for the summary draft. The browser never holds a model key: the web part calls the flow's HTTP
 trigger with a Microsoft Entra token for the Power Automate service, issued by the framework for the signed-in user.
 Three one-time steps, all outside this repository:
 
@@ -60,7 +81,8 @@ Three one-time steps, all outside this repository:
    **Microsoft Flow Service / User**. If the page reports that scope as unavailable on your tenant, change the
    `scope` in `config/package-solution.json` to a delegated permission the tenant exposes (for example
    `Flows.Read.All`), rebuild and re-upload; the flow only checks the token's audience and the caller's identity.
-3. In the web part's property pane, **AI drafting → Claude draft flow URL**, paste the trigger URL.
+3. In the web part's property pane, **AI drafting → AI draft flow URL**, paste the trigger URL (the script sets it
+   on the idea page from `-DraftServiceUrl` or the `DraftServiceUrl` parameter).
 
 Leave the URL blank to keep the deterministic summaries; the behaviour is then identical to 1.0.0.7. When the flow
 cannot answer (not configured yet, permission not approved, flow off, invalid input, or the model call failing), the
@@ -108,9 +130,24 @@ value `Overture` the web part reproduces the 1.0.0.7 wording verbatim; blank kee
 | External-sharing question | Would the output be shared outside Contoso? | Would the output be shared outside the organization? |
 | Team AI-use disclosure | …helps Contoso provide better guidance… / …real AI use at Contoso. | …helps the organization… / …real AI use at the organization. |
 
+Two more Branding properties (since 1.0.0.12) stand in for the two literals the shipped package carried from its
+first tenant. Blank keeps the shipped wording in the legacy view only, so the parity suites hold byte for byte; a
+page view reads neutral wording; a filled value is quoted in either view:
+
+| Property | Pane label | Blank, legacy view | Blank, page view | Set |
+|---|---|---|---|---|
+| `organizationName` | Organization name | neutral wording (table above) | the same | the name, as above |
+| `governanceReference` | Governance reference | *CoE name* governance controls, version 1.1, August 26, 2026 | *CoE name* governance controls (reference not yet set) | quoted as given on review requests and in the guidance export |
+| `reviewSystemName` | Review system name | TESS | the review system | quoted as given in tool guidance and team-usage summaries |
+
+The script writes both on every instance from the `GovernanceReference` and `ReviewSystemName` parameters and
+reports a blank `GovernanceReference` as AWAITING in its end-of-run summary; both default literals are rows of
+`docs/content-claims.md` (class `binding`) and of "Portability exceptions" below.
+
 Data contracts never change: intake ids (`OVT-AICOE-…`), list titles and field names, the localStorage draft keys
 (`overture-ai-coe-front-door:draft:*`), download file names (`overture-ai-coe-*.txt`) and the DOM scope id
-(`overture-ai-coe-pilot`). The word "Overture" does not appear in the built bundle (a test enforces this).
+(`overture-ai-coe-pilot`). No phrase, tenant host, roster surname or secret shape of the tenant word list appears in
+the built bundle, its strings chunk or the packaged manifest (a test and the verifier enforce this).
 
 ## Lay out the front door across pages
 
@@ -220,8 +257,8 @@ is dropped, never the document:
 | `vocabulary` | string maps only, unknown keys ignored, a blank keeps the default: `truthStates` `{ "<key>": { "label", "definition" } }` for `availableNow`, `draftOnly`, `needsApproval`, `needsAccess`, `notSupported`; `requestStatuses` `{ "<code>": "plain wording" }`; `chrome` `{ "badge", "example", "needsRefresh", "awaitingSource", "protectedPage" }` (`badge` is the wizard-page header badge, default "Governed intake"); `roles` `{ "<roleId>": "name" }`; `telemetry` `{ "<feedId>": "name" }`. `{organization}` and `{role}` in the text are filled by the web part, not by the script |
 | page `plane` | `user` (default) or `operator` |
 
-The truth states are the five plain-language states of the activation playbook (Available now, Draft only, Needs
-approval, Needs access, Not supported) with their definitions; the web part also knows the six activation codes
+The truth states are the five plain-language states of the activation playbook, with their definitions:
+Available now, Draft only, Needs approval, Needs access, Not supported. The web part also knows the six activation codes
 (`DESIGNED`, `QUALIFIED`, `AVAILABLE`, `ACTIVE`, `PAUSED`, `RETIRED`), the plain wording of the four pilot statuses
 and the 26 canonical status codes (anything else reads "Status unavailable"), and the placeholders a measure shows
 instead of a number (`src/webparts/aiCoeFrontDoor/content/truthStates.ts`).
@@ -252,7 +289,10 @@ take their `state`, `verifiedOn` and `receiptRef` from parameters and stay close
 until all three are set after tenant proof; the three on-site routes (`guidedIntake`, `improve`, `value`) are
 available by content because the same script provisions their pages. A block that names a parameter in
 `skipWhenBlank` is dropped, with a warning, when that parameter is blank (the pilot notice, keyed by
-`PilotTeamName`). Each parameter declares a `kind`: `text` parameters are required; `url` parameters may be blank, which turns
+`PilotTeamName`). Every claim the pages make that rests on something outside the committed text (a verified date, a
+truth state, a route whose proof comes from the tenant, a default literal the bundle still carries) has a row in
+`docs/content-claims.md` with its state, class, owner and what the pages may say until it is proved;
+`src/provisioning/contentClaims.test.ts` keeps the ledger complete against `pages.json` and the bundle. Each parameter declares a `kind`: `text` parameters are required; `url` parameters may be blank, which turns
 an in-text link into its label and marks a tile or call to action pointing at it `needsAccess`, so it stays on the
 page shown as closed (a labelled non-link with its state; the script says which); `optional` parameters may be blank
 too, and a blank one takes the `default` its declaration carries (only an `optional` parameter may declare one) or
@@ -266,7 +306,7 @@ script against. That list is deliberately not tenant-neutral (it is what the sca
 
 **Applying it** (site owner, outside this repository; the build and tests never touch a tenant):
 
-1. Deploy 1.0.0.11 and "Get it" on the site, so the component is available to the script.
+1. Deploy 1.0.0.12 and "Get it" on the site, so the component is available to the script.
 2. Copy `sharepoint/pages/parameters.sample.json` to `sharepoint/pages/parameters.json` (ignored by git), fill in the values.
 3. Run, with PowerShell 7.4 and the pinned PnP.PowerShell version from the script header. Interactive login needs
    your own Entra app registration once (`Register-PnPEntraIDAppForInteractiveLogin`); pass its id with `-ClientId`,
@@ -288,6 +328,13 @@ script against. That list is deliberately not tenant-neutral (it is what the sca
    feature adds and the template defaults. The admin page gets owners-only item permissions. This needs a
    communication site, whose horizontal top navigation is the QuickLaunch; on any other site the script stops unless
    `-AllowNonCommunicationSite` is given, because there the QuickLaunch is the left navigation.
+   On a site that already carries the pages of 1.0.0.11, run without `-Overwrite` first: every existing page is
+   skipped and the content document is rewritten from `pages.json`, so the six navigation pages show the new
+   document at once (the first screen, the routes, the shared footer). The five form instances need `contentUrl`,
+   and every instance the two Branding properties, which this release's script writes only when it creates a
+   page: rerun with `-Overwrite` (every page is rebuilt from `pages.json`; browser edits go to the recycle bin) or
+   set the values in each instance's property pane. The end-of-run summary names the bindings that are still
+   awaiting a value.
 4. Open each page once: check the narrow layout where a piece sits in a column, and add the links behind the tiles
    and calls to action the script reported as shown as closed once their URL parameters are known (rerun with
    `-Overwrite`, or edit the document in Site Assets).
@@ -296,6 +343,118 @@ Manual fallback: upload a hand-written `ai-coe-pages.json` to Site Assets, creat
 matching toolbox entry to each (**AI CoE: Content page** with the page key for the six navigation pages), type the
 return page into the form pages' property pane, paste the AI draft flow URL on the Explore an AI idea page, pick
 the usage metrics provider on Status, and edit the navigation in the site header.
+
+## Rebind to another tenant
+
+The portability and migration contract (reference document 24, v3.3) sets one acceptance rule (§ 8): if the first
+tenant disappeared tomorrow and this component had to be deployed elsewhere, what would be thrown away? The target
+answer is "tenant configuration, credentials, identities, bindings and branding only". Its migration pattern (§ 9),
+never a rebuild, is:
+
+    EXPORT / PACKAGE -> REBIND TENANT CONFIG -> REAUTHORIZE CONNECTIONS -> REMAP IDENTITIES / SOURCES -> REQUALIFY -> ACTIVATE
+
+This section is the front door's answer: every tenant-bound input it takes, where
+that input lives, its kind and what blank means. `src/portability/thrownAway.test.ts` builds the same inventory from
+`pages.json`, the web part manifest and the services and fails when a row is missing here.
+
+No credential lives in the repository or the package: the AI draft flow is reached with an Entra token the framework
+issues for the signed-in user, the lists with that user's SharePoint session, and the script signs in interactively
+with the operator's own app registration (`-ClientId`). Identities are resolved at run time (the signed-in user on
+the identity line, the site's owners group on the admin page). Bindings, the proof behind an off-site route
+(`state`, `verifiedOn`, `receiptRef`), come from parameters and never from committed content.
+
+| Input | Home | Kind | Blank means |
+|---|---|---|---|
+| `OrganizationName` | `parameters.json` (from the sample) | text | must be filled; written to `organizationName` on every instance |
+| `DraftServiceUrl` | `parameters.json`, or `-DraftServiceUrl` on the command line | url | no AI drafting: plain summaries on the idea page |
+| `TelemetryProvider` | `parameters.json`, or `-TelemetryProvider` on the command line | text | must be filled: `claude`, `openai` or `both` |
+| `AssistantName` | `parameters.json` | text | must be filled, for example `the assistant` |
+| `AssistantUrl` | `parameters.json` | url | route `assistant` closed: label kept, "Needs access", fallback to the guided request |
+| `AssistantState` | `parameters.json` | optional | route `assistant` closed |
+| `AssistantVerifiedDate` | `parameters.json` | optional | route `assistant` reads "Awaiting source" until the date and the receipt reference are set |
+| `AssistantReceiptRef` | `parameters.json` | optional | route `assistant` reads "Awaiting source" |
+| `ChatName` | `parameters.json` | text | must be filled, for example `the chat tool` |
+| `ChatUrl` | `parameters.json` | url | the link on Prompts becomes its label |
+| `WorkCommandUrl` | `parameters.json` | url | every sentence of the work command opens the guided request |
+| `WorkCommandState` | `parameters.json` | optional | the guided request |
+| `WorkCommandVerifiedDate` | `parameters.json` | optional | route `work` reads "Awaiting source" |
+| `WorkCommandReceiptRef` | `parameters.json` | optional | route `work` reads "Awaiting source" |
+| `SupportUrl` | `parameters.json` | url | the support route keeps its label without a link |
+| `SupportOwnerLabel` | `parameters.json` | optional | "not yet named" |
+| `IdentityOwnerLabel` | `parameters.json` | optional | "not yet named" |
+| `PrivacyOwnerLabel` | `parameters.json` | optional | "not yet named" |
+| `BusinessApproverLabel` | `parameters.json` | optional | "not yet named" |
+| `ClaimsOwnerLabel` | `parameters.json` | optional | "not yet named" |
+| `RecoveryOwnerLabel` | `parameters.json` | optional | "not yet named" |
+| `GovernanceBodyFastPath` | `parameters.json` | optional | "the AI CoE" (the declared default) |
+| `GovernanceBodyArchitecture` | `parameters.json` | optional | "a named approver (not yet named)" |
+| `GovernanceBodyExecutive` | `parameters.json` | optional | "a named approver (not yet named)" |
+| `PilotTeamName` | `parameters.json` | optional | the private-pilot notice is dropped from Start here |
+| `PilotMembers` | `parameters.json` | text | must be filled (shown only while the pilot notice is kept) |
+| `GovernanceReference` | `parameters.json` | optional | default wording (see "Branding"); reported AWAITING in the run summary |
+| `ReviewSystemName` | `parameters.json` | optional | default wording (see "Branding") |
+| `TeamsUrl` | `parameters.json` | url | the sentence stays, the link is dropped |
+| `PromptLibraryUrl` | `parameters.json` | url | the sentence stays, the link is dropped |
+| `StatusDate` | `parameters.json` | text | must be filled |
+| `PromptCount` | `parameters.json` | text | must be filled |
+| `PromptsAddedCount` | `parameters.json` | text | must be filled |
+| `PromptsAddedDate` | `parameters.json` | text | must be filled |
+| `PromptTestRecordCount` | `parameters.json` | text | must be filled |
+| `PromptStatusCounts` | `parameters.json` | text | must be filled |
+| `PromptIdAdminQueue` | `parameters.json` | text | must be filled |
+| `PromptIdMorningBrief` | `parameters.json` | text | must be filled |
+| `PromptIdRepeatableWork` | `parameters.json` | text | must be filled |
+| `LeadTeamContinuation` | `parameters.json` | text | must be filled |
+| `organizationName` | web part property (Branding), written by the script from `OrganizationName` | property | neutral wording |
+| `governanceReference` | web part property (Branding), written by the script from `GovernanceReference` | property | the shipped literal in the legacy view, "reference not yet set" in page views |
+| `reviewSystemName` | web part property (Branding), written by the script from `ReviewSystemName` | property | the shipped literal in the legacy view, "the review system" in page views |
+| `draftServiceUrl` | web part property (AI drafting) on the idea page, written by the script from `DraftServiceUrl` | property | plain summaries |
+| `telemetryProvider` | web part property (Telemetry) on Status, written by the script from `TelemetryProvider` | property | `claude` |
+| AI CoE Pilot Intakes | the package feature (`sharepoint/assets/intake-schema.xml`), untouched on upgrade | list | absent: a submission fails and the visitor sees the shipped failure screen |
+| AI CoE Use Cases | the companion Power Automate solution | list | absent: the dashboard section reads as unavailable |
+| AI CoE Decisions | the companion Power Automate solution | list | absent: the dashboard section reads as unavailable |
+| AI Usage Daily | the companion telemetry solution | list | absent: every usage tile keeps "Awaiting data" |
+| AI CoE Incidents | the companion telemetry solution | list | absent: no alerts are shown |
+
+Rebinding in the contract's order: **export and package** with `npm ci`, `npm run build` and `npm run verify`
+(the `.sppkg` and the two evidence files); **rebind the tenant configuration** with a new `parameters.json` from the
+sample and the property pane values above; **reauthorize the connections** (approve the package's Microsoft Flow
+Service / User request, point `DraftServiceUrl` at the new tenant's flow, reconnect the companion solutions);
+**remap identities and sources** (the site's owners group, the four companion lists, the usage rows); **requalify**
+(the tenant acceptance steps under "Deploy", a qualification receipt for each off-site route, the tenant inventory
+that fills the `AWAITING_TENANT_INVENTORY` fields of `evidence/dependency-inventory.json`); then **activate** by
+setting the route states, dates and receipt references and rerunning the script. Workflow logic, schemas, the
+content document's structure and the tests travel unchanged.
+
+## Portability exceptions
+
+What the built bundle still carries from its first tenant, each with an owner and how it moves (GOV-113). A test
+(`src/portability/thrownAway.test.ts`) holds this table to the list:
+
+| Exception | Where | Owner | Migration treatment |
+|---|---|---|---|
+| `TESS`, the review-system name | the blank value of `reviewSystemName` in `branding/branding.ts`; rendered in the legacy view only, read by `services/toolPolicyEvaluator.ts` and `summaries/teamUsageSummary.ts` | AI CoE | set `ReviewSystemName` on rebind and the literal is never rendered; the literal leaves the bundle when the legacy view's parity pin is retired |
+| The governance reference, "version 1.1, August 26, 2026" | the blank value of `governanceReference` in `branding/branding.ts`; rendered in the legacy view only | AI CoE policy owner | set `GovernanceReference` on rebind; the script reports it AWAITING until then |
+| `OVT-AICOE-`, the intake id prefix | `services/intakeId.ts`; the `IntakeId` column of AI CoE Pilot Intakes (unique key), relied on by the companion flows | AI CoE records owner | kept as the record key; a tenant work-id prefix waits for a work-records list; existing rows keep their ids |
+| `overture-ai-coe-front-door:draft:`, the localStorage draft key prefix | `content/constants.ts` | front-door maintainers | kept: drafts are per browser and per pilot; renaming would orphan drafts in progress |
+| `overture-ai-coe-pilot`, the DOM scope id, and the `.overture-*` classes | `content/constants.ts`; `styles/frontDoor.global.scss` (the shipped stylesheet, reproduced rule for rule) | front-door maintainers | kept: the stylesheet parity suite pins every rule; changes only with a deliberate stylesheet release |
+| The telemetry feed labels (`Claude API spend this month`, `OpenAI API spend this month` and the rest) | `content/telemetryTiles.ts`, `services/UsageMetricsService.ts` | AI CoE operations | product names of the usage feeds, not of a tenant; the legacy strip keeps them verbatim (parity); page views take labels from `vocabulary.telemetry` when the strip moves to an operators page in 1.0.0.13 |
+| The vendor name in the shipped list schemas (site column group) and in the package publisher block | `sharepoint/assets/*.xml` (byte-identical to 1.0.0.7); the developer block of `config/package-solution.json` | package maintainers | metadata, never rendered; changing the schemas would break the in-place upgrade; the two are the recorded exemptions of the verifier's package scan |
+| `src/provisioning/tenantWords.json`, the tenant word list | outside `src/webparts`, imported by nothing in the web part, never packaged (the verifier asserts the archive holds neither the file nor its entries) | front-door maintainers | deliberately not tenant-neutral: it is what every scan looks for; on rebind it is replaced with the words of the new first tenant |
+
+## Implementation route
+
+The design authority's decision, recorded here: route 1, the SharePoint Framework shell plus SharePoint lists (this
+web part, its content document and the lists it writes), is the front door's implementation, rather than a rebuilt
+native-page or portal route. The evidence this release train produces for it: the keyboard focus, reduced-motion and
+reflow tests over the page-view stylesheets (`styles/pageViews.test.ts`, `styles/pageResponsive.test.ts`), the
+hostile-document test, the route table that fails closed, the two verifier evidence files
+(`evidence/port-verification.json`, `evidence/dependency-inventory.json`), and from 1.0.0.13 the negative-access
+suite over item-level list security. The tenant checks still owed before the route is confirmed: accessibility
+evidence on a real site (an assistive-technology pass over the six pages and a wizard), performance (page load with
+the bundle on a communication site) and support evidence (the support route staffed; the two-account list-security
+test of 1.0.0.13). Sources: the front-door specification's implementation options and the governance register's
+accessibility and support requirements (FD-41, FD-42, GOV-13, GOV-37).
 
 ## Layout
 
@@ -315,7 +474,10 @@ the usage metrics provider on Status, and edit the navigation in the site header
     src/testing/                      fakes: SharePoint list store, services, AMD bundle host, journeys
     src/parity/                       journey parity suite against the shipped bundle
     src/preview/                      offline preview host and its server test
-    src/provisioning/                 checks on the page definition and the provisioning script
+    src/provisioning/                 checks on the page definition, the provisioning script, the tenant word list,
+                                      the claims ledger and the release verifier
+    src/portability/                  the thrown-away test: the rebind inventory and the portability exceptions
+    scripts/verify-package.mjs        the release verifier (package checks, tenant word scan, dependency inventory)
     sharepoint/assets/                list schemas provisioned by the package feature
     sharepoint/pages/                 page definition, parameter sample and PnP PowerShell script (operator tools)
     parity/                           stylesheet fixtures extracted from 1.0.0.7
@@ -342,15 +504,18 @@ The shipped stylesheet is reproduced exactly (`styles/cssParity.test.ts` proves 
 
 ## Tests
 
-`npm test` runs 351 tests in seven layers: pure modules (branding, definitions, page views, the content document
+`npm test` runs 532 tests in seven layers: pure modules (branding, definitions, page views, the content document
 parser and markup, form engine, services, summaries), React Testing Library component and journey tests with fake
 services (including every content block), bundle-level lifecycle tests that
 load the built AMD bundle in a simulated SPFx host, a journey parity suite that plays every workflow through the
 shipped 1.0.0.7 bundle and the port side by side (screens, drafts, downloads and posted list items must match), the
 stylesheet parity test plus the page view and responsive stylesheet guards, a preview-server test, a hostile-document test (script
 tags, executable link schemes, a 200 kB string, arrays nested fifty deep and `__proto__` keys render as text and dead
-anchors), and static checks on the page definition, the provisioning script and the lint configuration (`react/no-danger`
-is an error and no source under the web part uses `dangerouslySetInnerHTML`). Any React `act()` warning fails the suite.
+anchors), and static checks on the page definition, the provisioning script, the tenant word list, the claims
+ledger, the release verifier and its evidence (`src/provisioning/verifyPackage.test.ts`: the version, the exact
+pins, the sixteen inventory fields on every row), the thrown-away inventory (`src/portability/thrownAway.test.ts`)
+and the lint configuration (`react/no-danger` is an error and no source under the web part uses
+`dangerouslySetInnerHTML`). Any React `act()` warning fails the suite.
 
 ## Behaviour notes
 
@@ -362,7 +527,7 @@ The port preserves the shipped behaviour, including these traits inherited from 
   record was created; the wording is pinned by the parity suite.
 - "Answers that shaped this result" on the guidance page is always empty (the shipped build lost the list to an ES5
   `Set` spread); the parity suite pins this.
-- The disclosure summary draft is deterministic, and so is the idea draft until a Claude draft flow URL is configured.
+- The disclosure summary draft is deterministic, and so is the idea draft until an AI draft flow URL is configured.
   The shipped code contained dormant calls to a model provider that were never reached; the idea path now goes through
   the governed flow instead, the feedback-theme path stays deterministic.
 - Drafts live in the browser's localStorage and are shared by every front-door instance on the site, which is what
