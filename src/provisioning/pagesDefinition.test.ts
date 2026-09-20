@@ -143,11 +143,17 @@ const EXPECTED_PARAMETERS: { [kind: string]: string[] } = {
   text: ['OrganizationName', 'TelemetryProvider', 'AssistantName', 'ChatName', 'StatusDate', 'PromptCount', 'PromptsAddedCount', 'PromptsAddedDate', 'PromptTestRecordCount', 'PromptStatusCounts', 'PromptIdAdminQueue', 'PromptIdMorningBrief', 'PromptIdRepeatableWork', 'LeadTeamContinuation'],
   url: ['DraftServiceUrl', 'AssistantUrl', 'ChatUrl', 'WorkCommandUrl', 'SupportUrl', 'TeamsUrl', 'PromptLibraryUrl'],
   // PilotMembers is optional (a 1.0.0.12 verifier finding): it feeds only the private-pilot notice, which the script drops when PilotTeamName is blank.
-  optional: ['AssistantState', 'AssistantVerifiedDate', 'AssistantReceiptRef', 'WorkCommandState', 'WorkCommandVerifiedDate', 'WorkCommandReceiptRef', 'SupportOwnerLabel', 'IdentityOwnerLabel', 'PrivacyOwnerLabel', 'BusinessApproverLabel', 'ClaimsOwnerLabel', 'RecoveryOwnerLabel', 'GovernanceBodyFastPath', 'GovernanceBodyArchitecture', 'GovernanceBodyExecutive', 'PilotTeamName', 'PilotMembers', 'GovernanceReference', 'ReviewSystemName'],
-  // The script reads the kind from 1.0.0.14; the group parameters themselves arrive with the instance properties and
-  // the protected pages that name them, so the definition declares none yet.
-  group: []
+  optional: ['AssistantState', 'AssistantVerifiedDate', 'AssistantReceiptRef', 'WorkCommandState', 'WorkCommandVerifiedDate', 'WorkCommandReceiptRef', 'SupportOwnerLabel', 'IdentityOwnerLabel', 'PrivacyOwnerLabel', 'BusinessApproverLabel', 'ClaimsOwnerLabel', 'RecoveryOwnerLabel', 'GovernanceBodyFastPath', 'GovernanceBodyArchitecture', 'GovernanceBodyExecutive', 'PilotTeamName', 'PilotMembers', 'GovernanceReference', 'ReviewSystemName', 'ContentRelease', 'Palette'],
+  // 1.0.0.14: one group parameter per bindable role (decision 8). The pilot group of 1.0.0.15 joins them with the
+  // role-start page.
+  group: ['LeadersGroup', 'OperatorsGroup', 'DesignAuthorityGroup']
 };
+/**
+ * The parameters the script applies itself instead of through a `{token}` in the definition: the palette it writes to
+ * `paletteOverrides` on every instance, and the release id it names in the end-of-run summary. Each is pinned in
+ * `provisioningScript.test.ts`, so the exemption is not a hole.
+ */
+const SCRIPT_APPLIED_PARAMETERS: string[] = ['ContentRelease', 'Palette'];
 /**
  * What a page may declare as its `permissions`: inherited, the site's owners group alone, or Read for one or more
  * site groups named by `group` parameters (1.0.0.14), each of which the script looks up on the site.
@@ -158,7 +164,14 @@ const FIELD_NAME: RegExp = /^[A-Za-z][A-Za-z0-9]{0,31}$/;
 /** The column types the script may create (Contracts § SharePoint lists); anything else is refused rather than guessed. */
 const FIELD_TYPES: string[] = ['Text', 'Note', 'Number', 'DateTime', 'Choice', 'Boolean'];
 /** The Branding properties the script writes on every instance from a parameter (Contracts § Property pane; decision 21). */
-const INSTANCE_BRANDING_TOKENS: { [property: string]: string } = { organizationName: '{OrganizationName}', governanceReference: '{GovernanceReference}', reviewSystemName: '{ReviewSystemName}' };
+const INSTANCE_BRANDING_TOKENS: { [property: string]: string } = {
+  organizationName: '{OrganizationName}',
+  governanceReference: '{GovernanceReference}',
+  reviewSystemName: '{ReviewSystemName}',
+  // 1.0.0.14: the definition binds each role id to a group parameter; the script keeps only the pairs whose site group
+  // the site carries, so an unfilled or unknown group leaves its role unbound (decision 8).
+  roleGroups: 'leader={LeadersGroup};operator={OperatorsGroup};designAuthority={DesignAuthorityGroup}'
+};
 const REMOVED_PARAMETERS: string[] = ['ConciergeUrl', 'CopilotChatUrl', 'ConciergeSourceCount', 'ConciergeNewestSourceDate', 'VerifiedDate'];
 const LINK_TARGET: RegExp = /\]\(([^)\s]*)\)/g;
 
@@ -1018,7 +1031,8 @@ describe('front door page definition', () => {
       const parameter: IParameter = definition.parameters[name];
       expect(['text', 'url', 'optional', 'group']).toContain(parameter.kind);
       expect(parameter.description.length).toBeGreaterThan(0);
-      expect(used[name]).toBe(true);
+      // Every parameter is read somewhere: through a token here, or by the script itself (the palette and the release id).
+      expect({ name, used: used[name] === true || SCRIPT_APPLIED_PARAMETERS.indexOf(name) >= 0 }).toEqual({ name, used: true });
       // Only an optional parameter may carry a default, and a default is text.
       if (parameter.default !== undefined) {
         expect(parameter.kind).toBe('optional');

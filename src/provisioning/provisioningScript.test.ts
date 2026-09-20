@@ -176,7 +176,8 @@ describe('page provisioning script', () => {
     // 1.0.0.14: a `group` parameter carries a site group title. The script looks it up; a blank or unknown title is a
     // warning, so a site whose groups do not exist yet still provisions: the page that names the group stays
     // owners-only and the role it would bind stays unbound.
-    const section: string = script.slice(script.indexOf('# Site groups'), script.indexOf('# List security'));
+    // The section ends where the instance properties it feeds begin (1.0.0.14).
+    const section: string = script.slice(script.indexOf('# Site groups'), script.indexOf('# Instance properties'));
     expect(section.length).toBeGreaterThan(200);
     expect(section).toMatch(/if \(\$kinds\[\$name\] -ne 'group'\) \{ continue \}/);
     expect(section).toMatch(/try \{ \$group = Get-PnPGroup -Identity \$title -ErrorAction SilentlyContinue \} catch \{ \$group = \$null \}/);
@@ -327,6 +328,91 @@ describe('page provisioning script', () => {
     const summary: number = script.search(/GovernanceReference[^\n]*AWAITING/);
     expect(summary).toBeGreaterThan(script.indexOf('Set-PnPHomePage'));
     expect(summary).toBeLessThan(script.search(/^if \(\$locked\.Count -gt 0\) \{\s*throw/m));
+  });
+
+  it('composes roleGroups from the group parameters and writes the Branding properties on every instance', () => {
+    // Decision 8: the roles come from site group membership through one property the script sets on every instance.
+    // pages.json binds each role id to a group parameter; the script keeps only the pairs whose site group this site
+    // carries, so an unfilled or unknown group leaves that role unbound rather than naming a group that is not there.
+    const section: string = script.slice(script.indexOf('# Instance properties'), script.indexOf('# List security'));
+    expect(section.length).toBeGreaterThan(600);
+    expect(section).toMatch(/function Format-RoleGroups/);
+    expect(section).toMatch(/function Get-InstanceProperties/);
+    expect(section).toMatch(/\$properties\[\$name\] = Resolve-Text \(\[string\]\$page\['instance'\]\[\$name\]\)/);
+    expect(section).toMatch(/\$properties\['roleGroups'\] = Format-RoleGroups \$properties\['roleGroups'\]/);
+    // The palette is a parameter, never code, and a blank one clears the override so the shipped colours stand.
+    expect(section).toMatch(/\$properties\['paletteOverrides'\] = \[string\]\$values\['Palette'\]/);
+    // Only a group the site carries is kept, and a malformed pair is dropped on its own; nothing here stops the run.
+    expect(section).toMatch(/\$siteGroups\.Values/);
+    expect(section).not.toContain('throw');
+    // One bag per page, built once and used both for the page the script creates and for the page it updates in place.
+    expect(script).toMatch(/\$properties = Get-InstanceProperties \$page/);
+    expect(script.match(/Resolve-Text \(\[string\]\$page\['instance'\]/g)).toHaveLength(1);
+    const definition: { pages: { key: string; instance: { [name: string]: string } }[]; parameters: { [name: string]: { kind: string } } } = JSON.parse(
+      fs.readFileSync(path.join(PAGES_DIR, 'pages.json'), 'utf8')
+    );
+    for (const page of definition.pages) {
+      expect({ page: page.key, roleGroups: page.instance.roleGroups }).toEqual({
+        page: page.key,
+        roleGroups: 'leader={LeadersGroup};operator={OperatorsGroup};designAuthority={DesignAuthorityGroup}'
+      });
+    }
+    // The binding lives in the definition: the script names neither a group parameter nor the site group behind it.
+    for (const name of ['LeadersGroup', 'OperatorsGroup', 'DesignAuthorityGroup']) {
+      expect({ name, kind: definition.parameters[name]?.kind }).toEqual({ name, kind: 'group' });
+      expect({ name, inScript: script.indexOf(name) }).toEqual({ name, inScript: -1 });
+    }
+  });
+
+  it('updates the instance properties of a page that already exists in place, and asks for -Overwrite only when it cannot', () => {
+    // 1.0.0.12 left an upgraded site needing -Overwrite (which recycles every page) for contentUrl and the Branding
+    // properties. Now a page that exists keeps its content and its browser edits: only the front-door instance's
+    // properties are rewritten, and the page is republished.
+    expect(pnpParameters.cmdlets['Set-PnPPageWebPart']).toContain('PropertiesJson');
+    const branch: string = script.slice(
+      script.indexOf('if ($null -ne $existing -and -not $Overwrite)'),
+      script.indexOf('# A page open in the browser')
+    );
+    expect(branch.length).toBeGreaterThan(400);
+    expect(branch).toMatch(/Set-PnPPageWebPart -Page \$pageName -Identity \$control\[0\]\.InstanceId -PropertiesJson/);
+    expect(branch).toMatch(/ConvertTo-Json -Depth \d+ -Compress/);
+    expect(branch).toMatch(/Set-PnPPage -Identity \$pageName -Publish/);
+    // Nothing is recycled on this path, and the page's own permissions are reapplied from the definition.
+    expect(branch).not.toContain('Remove-PnPPage');
+    expect(branch).toMatch(/Set-PagePermission \$file \(\[string\]\$page\['permissions'\]\)/);
+    // A page the update cannot reach (no front-door instance, a locked or otherwise refused write) is reported with
+    // the way out, and the run goes on.
+    expect(branch).toMatch(/Write-Warning "Skipping \$file[^"]*could not be updated[^"]*Rerun with -Overwrite/);
+    expect(branch).toMatch(/\$updated \+= \$file/);
+    expect(branch).toMatch(/\$skipped \+= \$file/);
+    expect(script).toMatch(/Updated:/);
+    expect(script).toMatch(/\$updated = @\(\)/);
+    // The update comes before the create branch, and only -Overwrite recycles.
+    expect(script.indexOf('Set-PnPPageWebPart')).toBeLessThan(script.indexOf('Add-PnPPageWebPart -Page'));
+  });
+
+  it('ends with the release and the bindings: every url, optional and group parameter BOUND or AWAITING, never a value', () => {
+    // The summary says what this site still owes rather than what it holds: a parameter the operator left blank is
+    // AWAITING even where a declared default stands in for it, and a group title the site does not carry is AWAITING
+    // because the role behind it stays unbound.
+    expect(script).toMatch(/\$releaseId = \[string\]\$values\['ContentRelease'\]/);
+    expect(script).toMatch(/Content release: \$releaseId/);
+    const summary: string = script.slice(script.indexOf("Write-Host 'Bindings"));
+    expect(summary.length).toBeGreaterThan(300);
+    expect(summary).toMatch(/Bindings \(every url, optional and group parameter; a value is never printed\)/);
+    expect(summary).toMatch(/-notin @\('url', 'optional', 'group'\)/);
+    expect(summary).toContain("'BOUND'");
+    expect(summary).toContain("'AWAITING'");
+    expect(summary).toMatch(/\$siteGroups\.ContainsKey\(\$name\)/);
+    expect(summary).toMatch(/\$supplied\[\$name\]/);
+    expect(summary).toMatch(/the declared default stands in/);
+    // A value never reaches the console: only the name, the kind and the state.
+    expect(summary).not.toMatch(/\$values\[\$name\]/);
+    // Blankness is recorded before a default is substituted, so a defaulted parameter still reads as awaiting.
+    expect(script).toMatch(/\$supplied\[\$name\] = -not \[string\]::IsNullOrWhiteSpace\(\$values\[\$name\]\)/);
+    const bindings: number = script.indexOf("Write-Host 'Bindings");
+    expect(bindings).toBeGreaterThan(script.indexOf('Set-PnPHomePage'));
+    expect(bindings).toBeLessThan(script.search(/^if \(\$locked\.Count -gt 0\) \{\s*throw/m));
   });
 
   it('carries the plane of a page into the document, so the owners-only Operations page parses as the operator plane', () => {
@@ -622,6 +708,26 @@ describe('README', () => {
     // What -Overwrite touches: pages, never a list, a column, a row or a list permission.
     expect(readme).toMatch(/`-Overwrite` recycles pages and nothing else/);
     expect(readme).toMatch(/no list, column, row or list permission is touched by\s+it/);
+  });
+
+  it('documents the instance-property update of 1.0.0.14, the bindings summary and what -Overwrite recycles', () => {
+    expect(readme).toContain('**Instance properties (since 1.0.0.14).**');
+    expect(readme).toContain('`Set-PnPPageWebPart -PropertiesJson`');
+    expect(readme).toMatch(/updated in place/);
+    expect(readme).toMatch(/republish(ed|es)/);
+    for (const property of ['`roleGroups`', '`paletteOverrides`', '`contentUrl`']) {
+      expect(readme).toContain(property);
+    }
+    // What the switch costs, so nobody reaches for it to move a property: it recycles every page the definition declares.
+    expect(readme).toMatch(/`-Overwrite` recycles pages and nothing else/);
+    expect(readme).toContain('the five form pages and the admin page included');
+    expect(readme).toMatch(/recycle bin/);
+    // The bindings summary: what the site still owes, by name and kind, never a value.
+    expect(readme).toContain('BOUND');
+    expect(readme).toContain('AWAITING');
+    expect(readme).toContain('`ContentRelease`');
+    // The 1.0.0.12 caveat is closed: an upgraded site no longer needs -Overwrite to move the instance properties.
+    expect(readme).not.toMatch(/which this release's script writes only when it creates a/);
   });
 
   it('documents the route table, the action states and the closed tiles', () => {

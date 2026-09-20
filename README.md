@@ -496,6 +496,32 @@ the role a page asks for in the document decides only what the web part offers a
 group parameter that is blank, or that names a group the site does not carry, grants nobody, which leaves that page
 owners-only rather than open.
 
+**Instance properties (since 1.0.0.14).** Every front-door instance carries the properties `pages.json` declares for
+it (`view`, `pageKey`, `contentUrl`, `layout`, the Branding properties from their parameters), and two the script
+composes. `roleGroups` pairs each role id with the site group of a `group` parameter
+(`leader=…;operator=…;designAuthority=…`): the definition binds the roles, the parameters carry the titles, and only
+the pairs whose group this site carries are kept, so a group that is blank or not there leaves its role unbound.
+`paletteOverrides` carries the `Palette` parameter, so a tenant's colours are a parameter and never code; blank keeps
+the shipped colours.
+
+*On a page that already exists* the properties are **updated in place**: the script reads the page's front-door
+instance, writes the bag with `Set-PnPPageWebPart -PropertiesJson` and republishes the page. The page itself, its
+sections and any edit made to it in the browser are left as they are, so a site upgraded from an earlier version takes
+this version's properties without `-Overwrite`. If the update fails (no front-door instance on the page, a page locked
+by an open editor, a refused write) the script says so, names the page and goes on, and the way out is to rerun with
+`-Overwrite` or to set the values in that instance's property pane.
+
+*What `-Overwrite` costs.* `-Overwrite` recycles pages and nothing else: **every page `pages.json` declares** that
+already exists, the five form pages and the admin page included, is sent to the site recycle bin and rebuilt from the
+definition; browser edits are recoverable from the recycle bin but are not carried over. No list, column, row or list
+permission is touched by it (see *Lists*). Reach for it to rebuild a page's layout, not to move a property.
+
+*The bindings summary.* Each run ends by naming the content release (the `ContentRelease` parameter, or the date and
+time of the run) and then every `url`, `optional` and `group` parameter as `BOUND` or `AWAITING`, with its kind. A
+parameter this run was not given reads `AWAITING` even where a declared default stands in for it, and a group title
+the site does not carry reads `AWAITING` because the role behind it stays unbound. Only the name, the kind and the
+state are printed: a value belongs to the tenant and never goes to the console.
+
 **Applying it** (site owner, outside this repository; the build and tests never touch a tenant):
 
 1. Deploy 1.0.0.13 and "Get it" on the site, so the component is available to the script.
@@ -521,8 +547,10 @@ owners-only rather than open.
    is given only the columns it lacks and keeps its rows), then
    resolves the tokens and uploads the content document to Site Assets (creating the library if the site has none,
    and reading the file back to make sure), then creates the pages, verifying after each one that SharePoint bound
-   the component to the instance. Existing pages are skipped unless `-Overwrite` is given, which sends them
-   to the site recycle bin and rebuilds them from `pages.json`: edits made in the browser are recoverable from the
+   the component to the instance. A page that already exists is not rebuilt: its front-door instance's properties are
+   updated in place and the page is republished (see *Instance properties*), so the page keeps its content and its
+   browser edits. `-Overwrite` instead sends every existing page
+   to the site recycle bin and rebuilds it from `pages.json`: edits made in the browser are recoverable from the
    recycle bin, not carried over. `-Overwrite` recycles pages and nothing else: every page `pages.json` declares,
    the five form pages and the admin page included, is rebuilt; no list, column, row or list permission is touched by
    it, and the lists stay additive on every run (see *Lists*).
@@ -532,15 +560,14 @@ owners-only rather than open.
    (see *Page permissions*). This needs a
    communication site, whose horizontal top navigation is the QuickLaunch; on any other site the script stops unless
    `-AllowNonCommunicationSite` is given, because there the QuickLaunch is the left navigation.
-   On a site that already carries the pages of 1.0.0.11 or 1.0.0.12, run without `-Overwrite` first: every existing
-   page is skipped and the content document is rewritten from `pages.json`, so the existing content pages show the
-   new document at once (the first screen, the routes, the shared footer; my work and the case card on Status); the
-   intake lists are secured on every run, and a page the definition adds (Operations in 1.0.0.13, owners-only, with
-   the telemetry provider of the run) is created on that run. The five form instances need `contentUrl`,
-   and every instance the two Branding properties, which this release's script writes only when it creates a
-   page: rerun with `-Overwrite` (every page is rebuilt from `pages.json`; browser edits go to the recycle bin) or
-   set the values in each instance's property pane. The end-of-run summary names the bindings that are still
-   awaiting a value.
+   On a site that already carries the pages of an earlier version, run without `-Overwrite`: the content document is
+   rewritten from `pages.json`, so the existing content pages show the new document at once (the first screen, the
+   routes, the shared footer; my work and the case card on Status); every existing page keeps its content and gets its
+   instance properties updated in place, so `contentUrl` on the five form instances and the Branding properties
+   (`governanceReference`, `reviewSystemName`, `roleGroups`, `paletteOverrides`) arrive without rebuilding anything
+   (see *Instance properties*); the intake lists are secured on every run; and a page the definition adds (Operations
+   in 1.0.0.13, owners-only, with the telemetry provider of the run) is created on that run. The end-of-run summary
+   names the release and every binding that is still `AWAITING` a value.
 4. Open each page once: check the narrow layout where a piece sits in a column, and add the links behind the tiles
    and calls to action the script reported as shown as closed once their URL parameters are known (rerun with
    `-Overwrite`, or edit the document in Site Assets).
@@ -600,6 +627,11 @@ the identity line, the site's owners group on the admin page). Bindings, the pro
 | `PilotMembers` | `parameters.json` | optional | "the named pilot members" (the declared default; the notice itself is dropped when `PilotTeamName` is blank) |
 | `GovernanceReference` | `parameters.json` | optional | default wording (see "Branding"); reported AWAITING in the run summary |
 | `ReviewSystemName` | `parameters.json` | optional | default wording (see "Branding") |
+| `LeadersGroup` | `parameters.json` (a site group title) | group | the leader role stays unbound and a page that names the group stays owners-only |
+| `OperatorsGroup` | `parameters.json` (a site group title) | group | the operator role is held only by site owners, and a page that names the group stays owners-only |
+| `DesignAuthorityGroup` | `parameters.json` (a site group title) | group | the design authority role stays unbound |
+| `ContentRelease` | `parameters.json` | optional | the run names the release by its own date and time in the summary |
+| `Palette` | `parameters.json` | optional | `paletteOverrides` is cleared on every instance and the shipped colours stand |
 | `TeamsUrl` | `parameters.json` | url | the sentence stays, the link is dropped |
 | `PromptLibraryUrl` | `parameters.json` | url | the sentence stays, the link is dropped |
 | `StatusDate` | `parameters.json` | text | must be filled |

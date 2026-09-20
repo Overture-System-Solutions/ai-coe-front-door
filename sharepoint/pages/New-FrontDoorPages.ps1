@@ -8,9 +8,11 @@ Operator tool for a site owner; the build and the tests never run it. It reads p
 resolves the tokens from a parameter file (copy parameters.sample.json, fill it in, keep it out of git) and the named
 parameters, uploads the resolved content document (the blocks of the seven content pages, the plane of a page written
 for operators, and the shared footer every page view draws below its content, the five form pages included) to Site
-Assets, then creates each page with a single front-door instance. Pages that already exist are skipped unless -Overwrite is given,
-in which case they are sent to the site recycle bin and rebuilt from pages.json; edits made in the browser are
-recoverable from the recycle bin but are not carried over. The content document is rewritten on every run (Site
+Assets, then creates each page with a single front-door instance. A page that already exists keeps its content and its
+browser edits: only the properties of its front-door instance are rewritten from pages.json and the page is
+republished, so a site upgraded from an earlier version takes this version's properties without -Overwrite. With
+-Overwrite every existing page is sent to the site recycle bin and rebuilt from pages.json; edits made in the browser
+are recoverable from the recycle bin but are not carried over. The content document is rewritten on every run (Site
 Assets keeps its version history), and the navigation is rebuilt every time. A page whose build fails part-way is
 recycled again so the next run recreates it.
 
@@ -53,6 +55,16 @@ Owners group Full Control and each named site group Read, so SharePoint itself r
 group parameter that is blank, or that names a group the site does not carry, grants nobody: that page stays
 owners-only and the role the group would bind stays unbound.
 
+Instance properties (since 1.0.0.14): every front-door instance carries the properties pages.json declares for it, and
+two the script composes. 'roleGroups' pairs each role with the site group of a 'group' parameter, and only the pairs
+whose group this site carries are kept, so a group that is blank or not there leaves its role unbound.
+'paletteOverrides' carries the Palette parameter, so a tenant's colours are a parameter and never code. Both are
+written when a page is created and when an existing page's instance is updated in place.
+
+The run ends with a summary: the pages created, updated, skipped and locked, the lists ensured and secured, the name
+of the content release (the ContentRelease parameter, or the date and time of the run), and the bindings - every url,
+optional and group parameter as BOUND or AWAITING, by name and kind, never by value.
+
 Every parameter must be given by name; a stray token on the command line (for example a bracket copied from an
 example) is rejected instead of becoming a value.
 
@@ -73,7 +85,8 @@ HTTP trigger URL of the AI draft flow for the idea page; blank keeps plain summa
 Usage feed for the Operations page: claude (default), openai or both.
 
 .PARAMETER Overwrite
-Send pages that already exist to the recycle bin and rebuild them.
+Send every page pages.json declares that already exists to the recycle bin and rebuild it, the five form pages and the
+admin dashboard included. Without it an existing page keeps its content and only its instance properties are updated.
 
 .PARAMETER HardenMembers
 Optional hardening of the intake lists: move the site Members group from Edit to Contribute on each secured list.
@@ -138,12 +151,16 @@ if (-not $values.ContainsKey('TelemetryProvider') -or [string]::IsNullOrWhiteSpa
 
 $kinds = @{}
 $missing = @()
+# What this run was actually given, recorded before a declared default is substituted, so the bindings summary at the
+# end can say what the site still owes rather than what a default is standing in for.
+$supplied = @{}
 foreach ($name in @($definition['parameters'].Keys)) {
   $declaration = $definition['parameters'][$name]
   $kinds[$name] = [string]$declaration['kind']
   if ($kinds[$name] -notin @('text', 'url', 'optional', 'group')) { throw "Parameter '$name' in pages.json has an unknown kind '$($kinds[$name])'; expected 'text', 'url', 'optional' or 'group'." }
   if ($declaration.Contains('default') -and $kinds[$name] -ne 'optional') { throw "Parameter '$name' in pages.json declares a default, which only an 'optional' parameter may carry." }
   if (-not $values.ContainsKey($name)) { $values[$name] = '' }
+  $supplied[$name] = -not [string]::IsNullOrWhiteSpace($values[$name])
   if ([string]::IsNullOrWhiteSpace($values[$name])) {
     # Only a text parameter must be filled. A blank url parameter fails closed further down; a blank optional one
     # takes the default its declaration carries, or stays blank.
@@ -313,6 +330,46 @@ foreach ($name in @($kinds.Keys)) {
   $siteGroups[$name] = $group
   Write-Host "Site group for ${name}: $title"
 }
+
+# ---------------------------------------------------------------------------------------------------------------
+# Instance properties: what every front-door instance carries from the parameters (1.0.0.14)
+# ---------------------------------------------------------------------------------------------------------------
+# pages.json gives each instance its properties and this composes the two that are not a plain token. 'roleGroups'
+# binds a role id to a site group: the definition pairs each role with a group parameter, the token pass fills in the
+# titles, and only the pairs whose group this site carries are kept, so a group that is blank or not there leaves its
+# role unbound instead of naming a group nobody holds. 'paletteOverrides' carries the Palette parameter, so a tenant's
+# colours are a parameter and never code; blank clears the override and the shipped colours stand.
+function Format-RoleGroups([string]$value) {
+  $bound = @()
+  foreach ($pair in ($value -split ';')) {
+    $separator = $pair.IndexOf('=')
+    if ($separator -lt 0) { continue }
+    $roleId = $pair.Substring(0, $separator).Trim()
+    $title = $pair.Substring($separator + 1).Trim()
+    if ($roleId -eq '' -or $title -eq '') { continue }
+    if (@($siteGroups.Values | Where-Object { [string]$_.Title -eq $title }).Count -eq 0) { continue }
+    $bound += "${roleId}=${title}"
+  }
+  return ($bound -join ';')
+}
+
+# The property bag of one page: every property pages.json declares, tokens resolved, plus the composed ones. The page
+# the script creates and the page it updates in place get the same bag, so an upgraded site ends up where a new one
+# starts.
+function Get-InstanceProperties($page) {
+  $properties = @{}
+  foreach ($name in @($page['instance'].Keys)) {
+    $properties[$name] = Resolve-Text ([string]$page['instance'][$name])
+  }
+  if ($properties.ContainsKey('roleGroups')) { $properties['roleGroups'] = Format-RoleGroups $properties['roleGroups'] }
+  $properties['paletteOverrides'] = [string]$values['Palette']
+  return $properties
+}
+
+# What this run calls the content it uploads. Blank names the run by its own date and time, so a summary always says
+# which content a page is showing.
+$releaseId = [string]$values['ContentRelease']
+if ([string]::IsNullOrWhiteSpace($releaseId)) { $releaseId = [System.DateTime]::UtcNow.ToString('yyyy-MM-ddTHH:mm:ssZ') }
 
 # ---------------------------------------------------------------------------------------------------------------
 # List security: item-level read and write security on the intake lists, made effective (decision 6)
@@ -518,15 +575,32 @@ function Set-PagePermission([string]$file, [string]$permissions) {
 # Pages: one section, one front-door instance each
 # ---------------------------------------------------------------------------------------------------------------
 $created = @()
+$updated = @()
 $skipped = @()
 $locked = @()
 foreach ($page in $definition['pages']) {
   $file = [string]$page['file']
   $pageName = $file -replace '\.aspx$', ''
+  $properties = Get-InstanceProperties $page
   $existing = Find-PageItem $file
   if ($null -ne $existing -and -not $Overwrite) {
-    Write-Host "Skipping $file (exists; use -Overwrite to recycle and rebuild it)."
-    $skipped += $file
+    # The page itself, and every edit made to it in the browser, is left as it is: only the properties of its
+    # front-door instance are rewritten from pages.json and the page is republished, so a site upgraded from an
+    # earlier version takes this version's properties without -Overwrite, which would recycle every page.
+    Write-Host "Updating the front-door instance on $file in place (the page keeps its content; -Overwrite rebuilds it) ..."
+    try {
+      $control = @(Get-PnPPageComponent -Page $pageName | Where-Object { $_.PSObject.Properties['WebPartId'] -and (ConvertTo-GuidText ([string]$_.WebPartId)) -eq $wantedId })
+      if ($control.Count -ne 1) {
+        throw "the page carries $($control.Count) front-door instance(s); one was expected"
+      }
+      Set-PnPPageWebPart -Page $pageName -Identity $control[0].InstanceId -PropertiesJson ($properties | ConvertTo-Json -Depth 5 -Compress)
+      Set-PnPPage -Identity $pageName -Publish | Out-Null
+      Set-PagePermission $file ([string]$page['permissions'])
+      $updated += $file
+    } catch {
+      Write-Warning "Skipping $file - its instance properties could not be updated ($($_.Exception.Message.Trim())). Rerun with -Overwrite to recycle the page and rebuild it from pages.json, or set the values in the instance's property pane."
+      $skipped += $file
+    }
     continue
   }
   if ($null -ne $existing) {
@@ -544,10 +618,6 @@ foreach ($page in $definition['pages']) {
     Add-PnPPage -Name $pageName -Title (Resolve-Text ([string]$page['title'])) -LayoutType Article -HeaderLayoutType NoImage -CommentsEnabled:([bool]$page['commentsEnabled']) | Out-Null
     Add-PnPPageSection -Page $pageName -SectionTemplate OneColumn -Order 1 | Out-Null
     # A hashtable merges over the component's manifest defaults, so "view" overrides the legacy default.
-    $properties = @{}
-    foreach ($name in @($page['instance'].Keys)) {
-      $properties[$name] = Resolve-Text ([string]$page['instance'][$name])
-    }
     Add-PnPPageWebPart -Page $pageName -Component $component -Section 1 -Column 1 -Order 1 -WebPartProperties $properties | Out-Null
     # Read the control back: a web part without its component id would be saved silently and never render.
     $placed = @(Get-PnPPageComponent -Page $pageName | Where-Object { $_.PSObject.Properties['WebPartId'] -and (ConvertTo-GuidText ([string]$_.WebPartId)) -eq $wantedId })
@@ -582,16 +652,32 @@ Set-PnPHomePage -RootFolderRelativeUrl "SitePages/$(Get-PageFile 'startHere')"
 Write-Host ''
 Write-Host "Content document: $contentPath ($($documentPages.Count) pages; earlier versions stay in its version history)"
 Write-Host "Created: $($created.Count) page(s)$(if ($created.Count -gt 0) { ' - ' + ($created -join ', ') })"
+Write-Host "Updated: $($updated.Count) page(s) whose instance properties were rewritten in place$(if ($updated.Count -gt 0) { ' - ' + ($updated -join ', ') })"
 Write-Host "Skipped: $($skipped.Count) page(s)$(if ($skipped.Count -gt 0) { ' - ' + ($skipped -join ', ') })"
 Write-Host "Locked: $($locked.Count) page(s)$(if ($locked.Count -gt 0) { ' - ' + ($locked -join ', ') })"
 Write-Host "Lists: $($ensuredLists.Count) declared list(s) created or extended$(if ($ensuredLists.Count -gt 0) { ' - ' + ($ensuredLists -join ', ') }); a column an earlier version created is never removed or renamed"
 Write-Host "List security: $($securedLists.Count) list(s) under item-level security$(if ($securedLists.Count -gt 0) { ' - ' + ($securedLists -join ', ') })$(if ($unsecuredLists.Count -gt 0) { '; not on this site: ' + ($unsecuredLists -join ', ') })"
-# Bindings the pages carry from parameters rather than from committed content. A blank GovernanceReference leaves the
-# legacy view quoting the package's own default policy reference and every page view reading "reference not yet set",
-# so the summary names it as awaiting until the parameter is filled and the script is rerun with -Overwrite.
+# Bindings: what the pages carry from the tenant's own parameters rather than from committed content. A parameter this
+# run was not given reads AWAITING, even where a declared default stands in for it, so the summary says what the site
+# still owes and not what a default is covering; a group title this site does not carry reads AWAITING too, because
+# the role behind it stays unbound. Only the name, the kind and the state are printed: a value belongs to the tenant
+# and never goes to the console or to a log.
+Write-Host "Content release: $releaseId$(if (-not $supplied['ContentRelease']) { ' (named by this run; set ContentRelease to name it yourself)' })"
+Write-Host 'Bindings (every url, optional and group parameter; a value is never printed):'
+foreach ($name in @($kinds.Keys | Sort-Object)) {
+  $kind = $kinds[$name]
+  if ($kind -notin @('url', 'optional', 'group')) { continue }
+  $bound = if ($kind -eq 'group') { $siteGroups.ContainsKey($name) } else { [bool]$supplied[$name] }
+  $note = ''
+  if (-not $bound -and $kind -eq 'group') { $note = ' - no site group of that title, so the role stays unbound and a page that names it stays owners-only' }
+  elseif (-not $bound -and $definition['parameters'][$name].Contains('default')) { $note = ' - the declared default stands in' }
+  Write-Host "  ${name} (${kind}): $(if ($bound) { 'BOUND' } else { 'AWAITING' })$note"
+}
+# A blank GovernanceReference leaves the legacy view quoting the package's own default policy reference and every page
+# view reading "reference not yet set"; fill the parameter and rerun, and the instance properties are updated in place.
 $governanceBinding = if ([string]::IsNullOrWhiteSpace([string]$values['GovernanceReference'])) { 'AWAITING (blank: review requests quote the default wording until GovernanceReference is set)' } else { 'set' }
 $reviewSystemBinding = if ([string]::IsNullOrWhiteSpace([string]$values['ReviewSystemName'])) { 'default wording (blank: tool guidance names the review system generically until ReviewSystemName is set)' } else { 'set' }
-Write-Host "Bindings: GovernanceReference $governanceBinding; ReviewSystemName $reviewSystemBinding"
+Write-Host "Wording: GovernanceReference $governanceBinding; ReviewSystemName $reviewSystemBinding"
 Write-Host 'Navigation and home page set. Open each page once in the browser; a warning above names any tile or call to action shown as closed because its URL parameter was blank.'
 if ($locked.Count -gt 0) {
   throw "$($locked.Count) page(s) were left as they were because they are locked for editing: $($locked -join ', '). Close the browser tabs that have them open, wait a few minutes, and rerun with -Overwrite."
