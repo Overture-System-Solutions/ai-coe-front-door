@@ -92,8 +92,12 @@ describe('Palette tokens', () => {
   const allSheets: string[] = cssFiles('.css');
   const reads: ITokenRead[] = tokenReads(globalSheets);
 
-  it('compiles the five global stylesheets the web part imports', () => {
+  it('compiles the six global stylesheets the web part imports', () => {
+    // appShell.global.scss arrives with the consolidated view. It is a sixth file rather than rules added to the
+    // shipped stylesheet on purpose: frontDoor.global.scss and theme.global.scss are reproduced rule for rule
+    // against package 1.0.0.7 and may gain nothing, so every new rule lives in an additive scoped sheet.
     expect(globalSheets.map((file: string): string => path.basename(file))).toEqual([
+      'appShell.global.scss.css',
       'frontDoor.global.scss.css',
       'pageResponsive.global.scss.css',
       'pageViews.global.scss.css',
@@ -172,7 +176,32 @@ describe('Palette tokens', () => {
       '.ai-view--page .ai-page-binding-kind': ['--fd-ink'],
       '.ai-view--page .ai-page-binding-receipt': ['--fd-muted'],
       '.ai-view--page .ai-page-bindings-empty': ['--fd-muted'],
-      '.ai-view .ai-route-card--closed': ['--fd-bg']
+      '.ai-view .ai-route-card--closed': ['--fd-bg'],
+      // The consolidated view. It carries no colour of its own beyond hairlines and shadows: the tabs, the entry
+      // panel, the cards and the measure tiles all read tokens, so a tenant palette repaints the whole view. The
+      // entry panel is built from ink and accent rather than from the prototype's navy, which is why the reference
+      // palette can stay out of the repository while the prototype's look remains reachable by configuration.
+      '.ai-view--app': ['--fd-ink'],
+      '.ai-view--app .ai-page-identity': ['--fd-muted'],
+      '.ai-view--app .ai-app-tab': ['--fd-muted'],
+      '.ai-view--app .ai-app-tab[aria-selected=true]': ['--fd-accent'],
+      '.ai-view--app .ai-app-heading': ['--fd-ink'],
+      '.ai-view--app .ai-app-heading:focus-visible': ['--fd-focus'],
+      '.ai-view--app .ai-app-summary': ['--fd-muted'],
+      '.ai-view--app .ai-app-note': ['--fd-muted'],
+      '.ai-view--app .ai-app-hero': ['--fd-accent', '--fd-ink'],
+      '.ai-view--app .ai-app-choice-button': ['--fd-paper'],
+      '.ai-view--app .ai-app-starter-button': ['--fd-paper'],
+      '.ai-view--app .ai-app-choice-step': ['--fd-accent'],
+      '.ai-view--app .ai-app-choice-title': ['--fd-ink'],
+      '.ai-view--app .ai-app-starter-title': ['--fd-ink'],
+      '.ai-view--app .ai-app-choice-text': ['--fd-muted'],
+      '.ai-view--app .ai-app-starter-text': ['--fd-muted'],
+      '.ai-view--app .ai-app-measure': ['--fd-paper'],
+      '.ai-view--app .ai-app-measure-label': ['--fd-muted'],
+      '.ai-view--app .ai-app-measure-value': ['--fd-ink'],
+      '.ai-view--app .ai-app-measure-evidence': ['--fd-muted'],
+      '.ai-view--app .ai-app-measure-period': ['--fd-muted']
     });
   });
 

@@ -15,6 +15,7 @@ import './styles/tailwind.generated.global.scss';
 import './styles/frontDoor.global.scss';
 import './styles/theme.global.scss';
 import './styles/pageViews.global.scss';
+import './styles/appShell.global.scss';
 import './styles/pageResponsive.global.scss';
 
 import { createBranding } from './branding/branding';
@@ -158,6 +159,7 @@ export default class AiCoeFrontDoorWebPart extends BaseClientSideWebPart<IAiCoeF
     const view: FrontDoorView = parseFrontDoorView(this.properties.view);
     const viewLabels: { [id in FrontDoorView]: string } = {
       legacy: strings.ViewOptionLegacy,
+      app: strings.ViewOptionApp,
       home: strings.ViewOptionHome,
       idea: strings.ViewOptionIdea,
       toolCheck: strings.ViewOptionToolCheck,

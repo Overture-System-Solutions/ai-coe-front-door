@@ -74,10 +74,18 @@ describe('AiCoeFrontDoorWebPart manifest', () => {
     expect(source.supportsThemeVariants).toBe(true);
   });
 
-  it('presets the legacy view with blank page properties on the default entry', () => {
+  it('presets the consolidated view with blank page properties on the default entry', () => {
+    // The first entry is what an author gets when they add the part, so the consolidated application is the normal
+    // experience. Its property bag is otherwise the legacy one: only `view` differs, so nothing else changed shape.
     const entry: IManifestEntry = source.preconfiguredEntries[0];
     expect(entry.title.default).toBe('AI CoE Front Door');
     expect(entry.groupId).toBe('5c03119e-3074-46fd-976b-c60198311f70');
+    expect(entry.properties).toEqual({ ...LEGACY_PROPERTIES, view: 'app' });
+  });
+
+  it('keeps the single-page view on its own entry, so an author can still place it deliberately', () => {
+    const entry: IManifestEntry = source.preconfiguredEntries[1];
+    expect(entry.title.default).toBe('AI CoE Front Door (single page, as shipped)');
     expect(entry.properties).toEqual(LEGACY_PROPERTIES);
   });
 
@@ -86,6 +94,7 @@ describe('AiCoeFrontDoorWebPart manifest', () => {
     expect(entries.map((entry: IManifestEntry): unknown => entry.properties.view)).toEqual(FRONT_DOOR_VIEWS);
     expect(entries.map((entry: IManifestEntry): string => entry.title.default)).toEqual([
       'AI CoE Front Door',
+      'AI CoE Front Door (single page, as shipped)',
       'AI CoE: Home tiles',
       'AI CoE: Explore an AI idea',
       'AI CoE: Check a tool or task',
@@ -97,7 +106,7 @@ describe('AiCoeFrontDoorWebPart manifest', () => {
       'AI CoE: Content page',
       'AI CoE: Record a task outcome'
     ]);
-    expect(entries).toHaveLength(11);
+    expect(entries).toHaveLength(12);
     for (const entry of entries) {
       expect(entry.groupId).toBe('5c03119e-3074-46fd-976b-c60198311f70');
       expect(entry.group.default).toBe('AI Center of Excellence');

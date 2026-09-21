@@ -427,6 +427,7 @@ describe('AiCoeFrontDoorWebPart bundle', () => {
         properties: {
           label: 'Piece shown on this page',
           options: [
+            { key: 'app', text: 'Consolidated application with tabs' },
             { key: 'legacy', text: 'Whole front door on one page (default)' },
             { key: 'home', text: 'Home tiles' },
             { key: 'idea', text: 'Explore an AI idea' },

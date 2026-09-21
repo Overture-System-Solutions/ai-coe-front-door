@@ -22,6 +22,7 @@ declare interface IAiCoeFrontDoorWebPartStrings {
   PageLayoutGroupName: string;
   ViewFieldLabel: string;
   ViewOptionLegacy: string;
+  ViewOptionApp: string;
   ViewOptionHome: string;
   ViewOptionIdea: string;
   ViewOptionToolCheck: string;

@@ -8,6 +8,7 @@ import { FrontDoorProvider } from '../context/FrontDoorContext';
 import type { IFrontDoorContextValue, IFrontDoorServices, IFrontDoorUser } from '../context/FrontDoorContext';
 import { SubmissionProvider } from '../context/SubmissionContext';
 import type { Navigate } from '../services/navigation';
+import { AppShell } from './app/AppShell';
 import { FrontDoorShell } from './FrontDoorShell';
 import { PageViewShell } from './PageViewShell';
 
@@ -43,7 +44,7 @@ export function AiCoeFrontDoor({ isDarkTheme, branding, siteUrl, user, isAdmin, 
       {settings === undefined && <span className={styles.signedInUser}>{`Signed in as ${user.displayName}`}</span>}
       <FrontDoorProvider value={value}>
         <SubmissionProvider governanceService={services.governance}>
-          {settings === undefined ? <FrontDoorShell /> : <PageViewShell key={settings.view} settings={settings} />}
+          {settings === undefined ? <FrontDoorShell /> : settings.view === 'app' ? <AppShell settings={settings} /> : <PageViewShell key={settings.view} settings={settings} />}
         </SubmissionProvider>
       </FrontDoorProvider>
     </section>

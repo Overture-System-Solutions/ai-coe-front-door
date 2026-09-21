@@ -17,8 +17,13 @@ import type { IPageViewSettings } from './pageViews';
 const SITE: string = 'https://contoso.sharepoint.com/sites/ai';
 
 describe('front door views', () => {
-  it('defaults to legacy and accepts the eleven views case-insensitively', () => {
-    expect(FRONT_DOOR_VIEWS).toEqual(['legacy', 'home', 'idea', 'toolCheck', 'teamUsage', 'helpTraining', 'feedback', 'telemetry', 'admin', 'page', 'outcome']);
+  it('defaults to legacy and accepts the twelve views case-insensitively', () => {
+    // 'app' is the consolidated view. The default stays 'legacy' on purpose: this is what an absent or unrecognised
+    // property parses to, so it governs instances already on a site. What a NEW instance gets is decided by the
+    // first toolbox entry of the manifest, which presets 'app'.
+    expect(FRONT_DOOR_VIEWS).toEqual(['app', 'legacy', 'home', 'idea', 'toolCheck', 'teamUsage', 'helpTraining', 'feedback', 'telemetry', 'admin', 'page', 'outcome']);
+    expect(parseFrontDoorView(' App ')).toBe('app');
+    expect(parseFrontDoorView('APP')).toBe('app');
     expect(DEFAULT_FRONT_DOOR_VIEW).toBe('legacy');
     expect(parseFrontDoorView(undefined)).toBe('legacy');
     expect(parseFrontDoorView('')).toBe('legacy');

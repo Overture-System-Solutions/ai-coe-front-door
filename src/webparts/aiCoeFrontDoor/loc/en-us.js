@@ -23,6 +23,7 @@ define([], function() {
     "PageLayoutGroupName": "Page layout",
     "ViewFieldLabel": "Piece shown on this page",
     "ViewOptionLegacy": "Whole front door on one page (default)",
+    "ViewOptionApp": "Consolidated application with tabs",
     "ViewOptionHome": "Home tiles",
     "ViewOptionIdea": "Explore an AI idea",
     "ViewOptionToolCheck": "Check a tool or task",

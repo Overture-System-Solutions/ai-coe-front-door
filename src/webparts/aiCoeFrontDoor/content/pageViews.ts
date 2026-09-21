@@ -12,10 +12,24 @@ import type { PieceWorkflowId, WorkflowId } from '../workflows/types';
 // The six ids that render a step-by-step piece: the five shipped workflows and the outcome record.
 import { PAGE_WORKFLOWS as PIECE_WORKFLOW_IDS } from './workflows/catalog';
 
-/** `page` renders one page of the content document (see pageContent.ts) chosen by `pageKey`. */
-export type FrontDoorView = 'legacy' | 'home' | PieceWorkflowId | 'telemetry' | 'admin' | 'page';
+/**
+ * `page` renders one page of the content document (see pageContent.ts) chosen by `pageKey`.
+ *
+ * `app` is the consolidated view: the whole experience in one instance with its sections reached by tabs inside
+ * the part, so an ordinary journey needs no second page. It is what a newly added instance gets, and it is a
+ * separate view rather than a change to `legacy` on purpose - `legacy` is pinned screen for screen against the
+ * shipped bundle by the journey parity suite, so it keeps rendering exactly as it always has, and every property
+ * bag written before this release still parses to it.
+ */
+export type FrontDoorView = 'legacy' | 'app' | 'home' | PieceWorkflowId | 'telemetry' | 'admin' | 'page';
 
-export const FRONT_DOOR_VIEWS: readonly FrontDoorView[] = ['legacy', 'home', 'idea', 'toolCheck', 'teamUsage', 'helpTraining', 'feedback', 'telemetry', 'admin', 'page', 'outcome'];
+export const FRONT_DOOR_VIEWS: readonly FrontDoorView[] = ['app', 'legacy', 'home', 'idea', 'toolCheck', 'teamUsage', 'helpTraining', 'feedback', 'telemetry', 'admin', 'page', 'outcome'];
+
+/**
+ * Still `legacy`, and deliberately. This is what an unrecognised or absent property parses to, so it governs old
+ * instances rather than new ones; what a new instance gets is decided by the first toolbox entry, which presets
+ * `app`. Changing this would silently restyle every instance already on a site.
+ */
 export const DEFAULT_FRONT_DOOR_VIEW: FrontDoorView = 'legacy';
 
 function matchIgnoringCase<T extends string>(candidates: readonly T[], value: unknown): T | undefined {
