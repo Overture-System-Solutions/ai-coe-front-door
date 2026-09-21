@@ -6,6 +6,55 @@ Branch `feature/rc2-single-webpart-marketing`, worktree
 
 Nothing here is deployed, imported, merged or pushed. No tenant was contacted. The package version is unchanged.
 
+## Local implementation baseline (recorded 2026-09-21)
+
+Seven decisions supplied by Brian as the baseline for local work on this branch. They govern what is built here.
+They are **not** business approvals, and none of them binds a production identity, source or site. The immutable
+RC2 and Marketing reference packages are unchanged and must stay so; these decisions live here, not there.
+
+1. **The approved-source register is a controlled INPUT to each workflow.** Preparing and approving it is a
+   pilot-preparation deliverable; retaining the approved snapshot is pilot evidence. Every run cites the register id
+   and version and lists the sources actually used plus any evidence gaps. **Generated output can never approve a
+   new source.** `09_SOURCE_REGISTER.md` records the activation package's own provenance and is explicitly *not*
+   the runtime allowlist for Marketing business content. Until a real register is approved, this branch uses a
+   separate, clearly labelled **synthetic fixture** register.
+
+2. **The Marketing owner and the copy approver are unbound.** The reviewed package names neither. It assigns
+   strategy and voice validation to the Marketing owner and copy and channel approval to Marketing/communications;
+   those may be one person, and this branch does not assume it. No production identity is defaulted to Samuel,
+   Brian, Jordan or Clay — routing a decision does not make someone the approver. Local tests use fictional,
+   labelled reviewers. Real approval and routing stay blocked until the appropriate owner confirms identity and
+   authority.
+
+3. **Workflow 1's output definition for v1 is the playbook's list**: audience, pain points, message, channel plan,
+   content calendar, evidence gaps, review needs. The quick start is supplementary guidance, not a replacement; its
+   owners and dependencies are carried as optional proposed/planning fields that **must not create assignments**.
+   Source citations and version/provenance metadata are preserved, and unknowns are represented explicitly. This is
+   a local schema baseline and does not claim an approved machine-readable schema already existed.
+
+4. **`contentCalendar` is one shared concept, two distinct versioned outputs.** Workflow 1 carries the high-level
+   campaign schedule; workflow 2 elaborates it into asset- and channel-specific entries linked to the accepted
+   brief's version, and must not silently overwrite that accepted brief. Entries use **relative weeks or phases**
+   until an approved start date exists. Neither field creates an Outlook event or schedules publication.
+
+5. **Initial generated-copy policy** is the campaign brief's message-house guidance plus the copy deck's
+   prohibited-claims guidance. Avoided words: *transform*, *unlock*, *revolutionize/revolutionise*,
+   *best in class*. Invented ROI or adoption figures and unsupported availability, security or capability claims are
+   prohibited. **Passing a word check is not proof that a claim is true.** `docs/content-claims.md`'s additional
+   restrictions stay scoped to the user interface and are not applied to schema keys, citations or technical
+   documentation. Any further CloudWave brand or legal vocabulary policy is an explicit **pending input**.
+
+6. **Site is unbound.** The first slice is local and fixture-backed. `CloudWaveDashboardDemo` is an existing OSS
+   demo site, not CloudWave production; this branch neither creates a site nor assumes permission to deploy to that
+   one. The live destination stays configurable and unbound until the existing controller or an authorized owner
+   confirms site, environment and test scope, preferring an approved existing sandbox over provisioning another.
+
+7. **Local work proceeds ahead of the real register**, using independent contracts, drafting adapters, review-flow
+   definitions, simulated persistence and clearly labelled fixtures. This is **not** blanket approval of later
+   numbered steps: any tenant binding, permission change, live test, flow activation or invitation remains gated.
+   Fixtures must never be usable as production approvals, sources or identities, and every missing live dependency
+   stays explicit with its live route failing closed.
+
 ## What is built and exercised
 
 | Area | State | Evidence |
@@ -15,7 +64,10 @@ Nothing here is deployed, imported, merged or pushed. No tenant was contacted. T
 | Work identity mapping (tenant record key ↔ canonical Work ID) | Locally implemented and tested | `content/workIdentity.ts`, 7 cases |
 | Idempotency key, payload hash, outcome classes | Locally implemented and tested | `content/actionEnvelope.ts`, 15 cases |
 | Existing intake, my work, outcome record, telemetry, admin queue | Reused unchanged inside the new shell | shipped services, existing suites |
-| Marketing drafting operations (brief, content plan, follow-through) | **Not built** | see below |
+| Approved-source register contract + synthetic fixture | Locally implemented and tested | `content/marketing/sourceRegister.ts`, 5 cases |
+| `CampaignBrief.v1` schema and validator | Locally implemented and tested | `content/marketing/campaignBrief.ts`, 10 cases |
+| Generated-copy policy (avoided words, uncited figures) | Locally implemented and tested | `content/marketing/copyPolicy.ts`, 5 cases |
+| Marketing drafting operations (brief, content plan, follow-through) | **Not built** — no provider adapter, no operation, nothing calls the capabilities | see below |
 | Power Automate review flows for Marketing | **Not built** | see below |
 | Runtime/connector boundary to CORE | **Not built** | see below |
 
