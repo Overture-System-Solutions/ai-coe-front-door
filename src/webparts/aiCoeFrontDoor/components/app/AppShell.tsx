@@ -9,7 +9,6 @@ import type { IDecision } from '../../services/authorization';
 import { browserNavigate } from '../../services/navigation';
 import type { Navigate } from '../../services/navigation';
 import { GovernanceAdminDashboard } from '../GovernanceAdminDashboard';
-import { UsageTelemetryStrip } from '../UsageTelemetryStrip';
 import { unresolvedRoles, useRoles } from '../useRoles';
 import type { RoleLoadState } from '../useRoles';
 import type { IRoleResolution } from '../../services/roleResolver';
@@ -21,8 +20,8 @@ import { IdeaWorkflow } from '../workflows/IdeaWorkflow';
 import type { IWorkflowProps } from '../workflows/shared';
 import { TeamUsageWorkflow } from '../workflows/TeamUsageWorkflow';
 import { ToolCheckWorkflow } from '../workflows/ToolCheckWorkflow';
-import { AppCases } from './AppCases';
 import { AppFooter, AppTopbar } from './AppChrome';
+import { AppCases, AppEngineering, AppImprovement, AppSystemMap } from './AppSections';
 import { AppMarketing } from './AppMarketing';
 import { AppValue } from './AppValue';
 import { AppHero } from './AppHero';
@@ -141,24 +140,19 @@ export function AppShell({ settings }: IAppShellProps): React.ReactElement {
         body = <AppCases />;
         break;
       case 'engineering':
-        body = <AppStarters kind="engineering" onStart={setWorkflow} />;
+        body = <AppEngineering starters={<AppStarters kind="engineering" onStart={setWorkflow} />} />;
         break;
       case 'marketing':
         body = <AppMarketing />;
         break;
       case 'improvement':
-        body = <AppStarters kind="improvement" onStart={setWorkflow} />;
+        body = <AppImprovement starters={<AppStarters kind="improvement" onStart={setWorkflow} />} />;
         break;
       case 'value':
         body = <AppValue />;
         break;
       case 'map':
-        body = (
-          <div className="ai-app-map">
-            <UsageTelemetryStrip />
-            {isAdmin ? <GovernanceAdminDashboard onExit={(): void => navigate(siteUrl)} /> : undefined}
-          </div>
-        );
+        body = <AppSystemMap admin={isAdmin ? <GovernanceAdminDashboard onExit={(): void => navigate(siteUrl)} /> : undefined} />;
         break;
       default:
         body = <NoticeBanner>{'That part of the front door is not available.'}</NoticeBanner>;
