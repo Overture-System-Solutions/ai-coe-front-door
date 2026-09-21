@@ -533,10 +533,10 @@ function Test-OwnItemsDeclaration {
   }
 }
 
-$listSecurity = if ($definition.Contains('listSecurity')) { @($definition['listSecurity']) } else { @() }
+$listSecurity = @(if ($definition.Contains('listSecurity')) { $definition['listSecurity'] })
 foreach ($entry in $listSecurity) {
   $title = [string]$entry['title']
-  $fullControlGroups = if ($entry.Contains('fullControlGroups')) { @($entry['fullControlGroups']) } else { @() }
+  $fullControlGroups = @(if ($entry.Contains('fullControlGroups')) { $entry['fullControlGroups'] })
   Test-OwnItemsDeclaration $title ([string]$entry['security']) $fullControlGroups
   Set-OwnItemsSecurity $title $fullControlGroups
 }
@@ -557,7 +557,7 @@ if ($securedLists.Count -gt 0) {
 # site is still missing. The titles and column names come from pages.json; this script names none of them.
 $ensuredLists = @()
 $listTypes = @('Text', 'Note', 'Number', 'DateTime', 'Choice', 'Boolean')
-$listDefinitions = if ($definition.Contains('lists')) { @($definition['lists']) } else { @() }
+$listDefinitions = @(if ($definition.Contains('lists')) { $definition['lists'] })
 # The whole declaration is checked before anything is created, so a typo in the second list cannot leave the first
 # one half-built.
 foreach ($entry in $listDefinitions) {
@@ -566,7 +566,7 @@ foreach ($entry in $listDefinitions) {
   # row). It is checked here, in the pass that creates nothing, so a mistyped mode or an unknown group parameter is
   # found before a list exists to be left open.
   if ($entry.Contains('security')) {
-    $declaredGroups = if ($entry.Contains('fullControlGroups')) { @($entry['fullControlGroups']) } else { @() }
+    $declaredGroups = @(if ($entry.Contains('fullControlGroups')) { $entry['fullControlGroups'] })
     Test-OwnItemsDeclaration $title ([string]$entry['security']) $declaredGroups
   }
   foreach ($field in @($entry['fields'])) {
@@ -622,7 +622,7 @@ foreach ($entry in $listDefinitions) {
   # built-in columns taken off its default view: the columns and the rows are untouched (nothing is removed and
   # nothing is renamed), the list simply does not put them in front of whoever opens it. A column already off the
   # view is left alone, so rerunning changes nothing.
-  $hiddenColumns = if ($entry.Contains('hideFromDefaultView')) { @($entry['hideFromDefaultView']) } else { @() }
+  $hiddenColumns = @(if ($entry.Contains('hideFromDefaultView')) { $entry['hideFromDefaultView'] })
   $viewOwner = if ($hiddenColumns.Count -gt 0) { Get-PnPList -Identity $title -Includes DefaultView } else { $null }
   if ($null -ne $viewOwner -and $null -eq $viewOwner.DefaultView) {
     Write-Warning "The list '$title' has no default view; its built-in person columns were left where they are."
@@ -647,7 +647,7 @@ foreach ($entry in $listDefinitions) {
   # A list that declares its own security is put under it here, where it exists: the same rules, the same wording and
   # the same summary as the lists the package feature provisions (decision 16). The flags go on last, as they do there.
   if ($entry.Contains('security')) {
-    $entryGroups = if ($entry.Contains('fullControlGroups')) { @($entry['fullControlGroups']) } else { @() }
+    $entryGroups = @(if ($entry.Contains('fullControlGroups')) { $entry['fullControlGroups'] })
     Set-OwnItemsSecurity $title $entryGroups
   }
   $ensuredLists += $title

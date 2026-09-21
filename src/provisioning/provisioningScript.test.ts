@@ -569,6 +569,19 @@ describe('page provisioning script', () => {
     expect(script).toMatch(/List security:/);
   });
 
+  it('never lets an absent optional collection collapse to $null, which strict mode turns into a throw mid-run', () => {
+    // `$x = if ($c) { @(...) } else { @() }` assigns **$null** when the else branch is taken: an empty array written
+    // through `if` is enumerated to nothing on its way to the variable. Under `Set-StrictMode -Version Latest` the
+    // next `$x.Count` then throws "The property 'Count' cannot be found on this object" - part-way through a run, on a
+    // site the script has already begun to change. A list declaring no `hideFromDefaultView` did exactly that.
+    // Wrapping the whole conditional instead, `$x = @(if ($c) { ... })`, yields an empty array either way, and yields
+    // a one-element array when the value is a bare string rather than a list.
+    expect(script).not.toMatch(/=\s*if\s*\([^\n]*\)\s*\{[^\n]*\}\s*else\s*\{\s*@\(\)\s*\}/);
+    // Every optional collection the definition may omit is read through the wrapped form.
+    const wrapped: string[] = script.match(/\$\w+ = @\(if \(\$\w+\.Contains\('[A-Za-z]+'\)\)/g) ?? [];
+    expect(wrapped.length).toBeGreaterThanOrEqual(6);
+  });
+
   it('grants every site group a listSecurity entry names Full Control on that list, after the owners grant (1.0.0.14)', () => {
     // The 1.0.0.14 provisioning bullet and the README both say an operator reads every request row. ReadSecurity 2
     // trims every principal whose permission level withholds Override List Behaviors, so the grant has to be made on
