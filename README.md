@@ -440,7 +440,17 @@ of `services/lists.ts`) breaks each list's permission inheritance keeping the ex
 group Full Control (they read every row, as the admin dashboard needs), gives the same to every site group the entry's
 `fullControlGroups` names (since 1.0.0.14 that is `OperatorsGroup` on both lists, so a person in the operators group
 holds Full Control there and, without being a site owner, reads every request row and not only the rows they sent),
-and sets the two flags; the Members group is left at its level. Each name in `fullControlGroups` is a parameter of kind `group`, never a
+clears unique-value enforcement on any column that carries it, and sets the two flags; the Members group is left at their level.
+*Why a secured list can carry no unique column:* SharePoint refuses the combination outright, with
+`A list for which users can only view their own items cannot have fields that enforce unique values` — it will not
+report a collision against a row it will not show. The feature's own `IntakeId` ships with
+`EnforceUniqueValues="TRUE"` (`sharepoint/assets/intake-schema.xml`, which this package never rewrites), so the script
+clears the flag on the site before it secures each list, and names every column it clears. The column keeps its index
+and its Required flag: the id stays the record's identity and stays fast to look up, and nothing rests on the
+database-level guard, because a retry finds its own row by reading the key back (`services/GovernanceService.ts`) and
+a generated id already carries a random suffix. For the same reason no list the script creates declares a unique
+column alongside `"security": "ownItems"` — `src/provisioning/listsDefinition.test.ts` refuses the pairing, since a run
+that declared it would stop part-way with the list already stripped of its inheritance. Each name in `fullControlGroups` is a parameter of kind `group`, never a
 group title, so nothing tenant-bound is committed; a group that is blank or that the site does not carry is reported
 with a warning and granted nothing, the list is still secured, and that role then reads only its own rows until the
 group exists and the script is rerun. A list the site does not carry is skipped with a
@@ -480,8 +490,8 @@ names), `Value` (number), `Unit` (text), `State` (choice: `MEASURED`, `NOT_ESTAB
 is not an error: every measure then reads *Not available*.
 
 1.0.0.15 declares a second one: *AI CoE Outcome Records*, one row per task outcome recorded on the
-*Record a task outcome* page. Its columns are `OutcomeId` (text, indexed, unique, required: the record's key, shown
-as *Reference* on the receipt), `RecordedAt` (date), `TaskType` (text), `Outcome` (choice: `Accepted`, `Corrected`,
+*Record a task outcome* page. Its columns are `OutcomeId` (text, indexed, required: the record's key, shown
+as *Reference* on the receipt; **not** unique, see *List security*), `RecordedAt` (date), `TaskType` (text), `Outcome` (choice: `Accepted`, `Corrected`,
 `Unavailable`, `Stopped`), `ReviewState` (choice: `Reviewed by me`, `Reviewed by someone else`, `Not reviewed`),
 `CorrectionCategory` (choice: `fact`, `source`, `audience`, `policy`, `brand`, `action boundary`),
 `RouteAvailability` (choice: the five truth labels) and `WorkflowVersion` (text). Every one of them is a choice from

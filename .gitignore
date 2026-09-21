@@ -42,8 +42,13 @@ __pycache__/
 .vs/
 .ntvs_analysis.dat
 
-# Operator-filled page provisioning parameters (site-specific; copy parameters.sample.json)
+# Operator-filled page provisioning parameters (site-specific; copy parameters.sample.json).
+# One file per site, so two sites' values never sit in the same file: parameters.json is the
+# default the script reads, parameters.<site>.json is passed with -ParameterFile. The sample is
+# the only one committed, and it carries no value.
 sharepoint/pages/parameters.json
+sharepoint/pages/parameters.*.json
+!sharepoint/pages/parameters.sample.json
 
 # Local editor and preview tooling
 .claude/

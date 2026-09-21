@@ -519,6 +519,17 @@ describe('page provisioning script', () => {
     expect(script).toMatch(/RoleTypeKind -eq 'Administrator'/);
     expect(script).toMatch(/Set-PnPListPermission -Identity \$title -Group \$owners -AddRole \$fullControlRole/);
     expect(script).toMatch(/Set-PnPList -Identity \$title -ReadSecurity 2 -WriteSecurity 2/);
+    // SharePoint refuses read security on a list carrying a field that enforces unique values, because it cannot tell
+    // someone their value collides with a row it will not show them. The feature's own intake key ships that way
+    // (`sharepoint/assets/intake-schema.xml`, which this package never rewrites), so the flag is cleared on the site
+    // before the list is secured, and every column it clears is named. The key stays indexed and required.
+    const clearsUnique: number = script.indexOf('EnforceUniqueValues = $false');
+    expect(clearsUnique).toBeGreaterThan(section);
+    expect(clearsUnique).toBeLessThan(script.indexOf('Set-PnPList -Identity $title -ReadSecurity 2'));
+    expect(script).toMatch(/Get-PnPField -List \$title[\s\S]*?EnforceUniqueValues/);
+    expect(script).toMatch(/Set-PnPField -List \$title -Identity [^\n]*-Values @\{ ?EnforceUniqueValues = \$false ?\}/);
+    expect(script).toContain('no longer enforces unique values');
+    expect(script).toMatch(/item-level read security[^\n]*forbids|forbids[^\n]*unique values/i);
     // Members are left at their level unless -HardenMembers is passed: a labelled hardening that removes Manage Lists, not what makes read security work.
     expect(script).toMatch(/\[switch\]\$HardenMembers/);
     expect(script).toMatch(/\.PARAMETER HardenMembers/);

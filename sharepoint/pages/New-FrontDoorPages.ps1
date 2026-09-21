@@ -498,6 +498,17 @@ function Set-OwnItemsSecurity {
       Write-Host "  Members already hold no $editRole on $title; nothing to harden."
     }
   }
+  # SharePoint refuses item-level read security on a list carrying a field that enforces unique values: it cannot
+  # tell someone their value collides without naming a row it will not show them. The feature's own intake key ships
+  # that way (sharepoint/assets/intake-schema.xml, which this package never rewrites), so the flag is cleared here,
+  # on the site, before the list is secured. The column keeps its index and its Required flag, so the id is still the
+  # record's identity and still fast to look up; what goes is the database-level duplicate guard, which nothing
+  # depends on - a retry finds its own row by reading the key back (services/GovernanceService.ts) and the generated
+  # id already carries a random suffix. Every column cleared is named, because it is a real change to a shipped list.
+  foreach ($unique in @(Get-PnPField -List $title | Where-Object { $_.EnforceUniqueValues })) {
+    Set-PnPField -List $title -Identity $unique.InternalName -Values @{ EnforceUniqueValues = $false }
+    Write-Host "  $($unique.InternalName) no longer enforces unique values, which item-level read security forbids; it stays indexed and required."
+  }
   Set-PnPList -Identity $title -ReadSecurity 2 -WriteSecurity 2
   $script:securedLists += $title
 }

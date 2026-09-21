@@ -165,7 +165,7 @@
       "fullControlGroups": ["OperatorsGroup"],
       "hideFromDefaultView": ["Author", "Editor"],
       "fields": [
-        { "name": "OutcomeId", "type": "Text", "required": true, "indexed": true, "unique": true },
+        { "name": "OutcomeId", "type": "Text", "required": true, "indexed": true },
         { "name": "RecordedAt", "type": "DateTime" },
         { "name": "TaskType", "type": "Text" },
         { "name": "Outcome", "type": "Choice", "choices": ["Accepted", "Corrected", "Unavailable", "Stopped"] },

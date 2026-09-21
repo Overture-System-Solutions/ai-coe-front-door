@@ -1,9 +1,9 @@
 {
-  "verifiedAt": "2026-09-20T23:26:38.598Z",
+  "verifiedAt": "2026-09-21T00:48:03.536Z",
   "package": {
     "path": "sharepoint/solution/overture-ai-coe-front-door.sppkg",
-    "sha256": "8d7373f00b65c7d8af9d1d26a0c209d53f79323a77d1e1dc4da3a8633d7a1770",
-    "bytes": 94973,
+    "sha256": "3d22f40fbab3283502e5e4ffc3a7ee0cae442c759ad583ccaa2b42632dd0f333",
+    "bytes": 94975,
     "version": "1.0.0.15",
     "productId": "f125ebdf-4a9d-4e6e-8479-3a18874e7752",
     "isDomainIsolated": "false",
@@ -137,7 +137,7 @@
     "awaitingToken": "AWAITING_TENANT_INVENTORY",
     "fieldsSource": "13_SECURITY_AND_THREAT_MODEL/secrets-supply-chain.yaml required_inventory_fields"
   },
-  "tests": "901 passed (npm run build on 2026-09-20)",
+  "tests": "902 passed (npm run build on 2026-09-20)",
   "scope": "Local build verification only: no tenant upload, deployment, SharePoint change or model call.",
   "failures": []
 }

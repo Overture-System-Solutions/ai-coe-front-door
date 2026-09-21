@@ -113,13 +113,17 @@ describe('declared lists and the services that read them', () => {
     for (const column of declared) {
       expect(OUTCOME_COLUMNS).toContain(column);
     }
-    // The key is the row's identity, as the measure key and the intake key are.
+    // The key is the row's identity, as the measure key is: indexed and required. It is deliberately NOT unique.
+    // SharePoint refuses item-level read security on a list carrying a field that enforces unique values, because
+    // telling someone their value collides would name a row it will not show them, so a list secured 'ownItems'
+    // cannot have one. Nothing rests on the database guard: a retry finds its own row by reading the key back
+    // (`services/GovernanceService.ts`), and the generated id already carries a random suffix.
     const key: IListField = outcomes.fields[0];
     expect({ name: key.name, indexed: key.indexed, required: key.required, unique: key.unique }).toEqual({
       name: 'OutcomeId',
       indexed: true,
       required: true,
-      unique: true
+      unique: undefined
     });
     // No person column is declared: the submitter is only in SharePoint's own Created By, which the list hides.
     expect(JSON.stringify(outcomes).toLowerCase()).not.toContain('email');
@@ -143,6 +147,23 @@ describe('declared lists and the services that read them', () => {
     expect(outcomes.fullControlGroups).toEqual(['OperatorsGroup']);
     // The measures list is read-only for everyone and carries no security declaration of its own.
     expect(listOf(PROGRAM_MEASURES_LIST_TITLE).security).toBeUndefined();
+  });
+
+  it('never declares a unique column on a list it secures, which SharePoint refuses outright', () => {
+    // `Set-PnPList -ReadSecurity 2` fails with "A list for which users can only view their own items cannot have
+    // fields that enforce unique values": SharePoint will not report a collision against a row it will not show.
+    // The combination is therefore unbuildable, not merely unwise, and a run that declared it would stop part-way
+    // with the list already stripped of its inheritance. A secured list keeps `indexed` and `required` on its key.
+    for (const list of definition.lists) {
+      const unique: string[] = list.fields.filter((field: IListField): boolean => field.unique === true).map((field: IListField): string => field.name);
+      expect({ title: list.title, secured: list.security === OWN_ITEMS_SECURITY, unique }).toEqual({
+        title: list.title,
+        secured: list.security === OWN_ITEMS_SECURITY,
+        unique: list.security === OWN_ITEMS_SECURITY ? [] : unique
+      });
+    }
+    // The measures list is not secured, so its key keeps the guard: the rule is about the combination, not the flag.
+    expect(listOf(PROGRAM_MEASURES_LIST_TITLE).fields.filter((field: IListField): boolean => field.unique === true).map((field: IListField): string => field.name)).toEqual(['MeasureId']);
   });
 
   it('gives each Choice column the vocabulary the web part maps, in the same order', () => {
