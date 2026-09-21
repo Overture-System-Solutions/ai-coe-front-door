@@ -222,6 +222,19 @@
       grid-template-columns: minmax(0, 1fr);
     }
 
+    // Wrapped over several rows a pill outline reads as one large rounded shape, so the row squares off.
+    .ai-app-tabrow {
+      border-radius: 14px;
+    }
+
+    .ai-app-tab {
+      padding: 9px 12px;
+    }
+
+    .ai-app-actions button {
+      flex: 1 1 100%;
+    }
+
     .ai-app-hero {
       padding: 26px;
     }
@@ -238,5 +251,243 @@
     .ai-app-starter-button {
       transition: none;
     }
+  }
+}
+
+// The demonstration surface. Same token discipline as above: colour that carries meaning reads an --fd- token with
+// the shipped fallback, and the reference palette stays out of the repository.
+.ai-view--app {
+  .ai-app-demo-banner {
+    align-items: baseline;
+    background: #fff8e9;
+    border: 1px solid #e6d6b0;
+    border-radius: 12px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 0 0 18px;
+    padding: 12px 14px;
+  }
+
+  .ai-app-demo-flag {
+    background: #664316;
+    border-radius: 999px;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 750;
+    letter-spacing: 0.06em;
+    padding: 3px 10px;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .ai-app-demo-text {
+    color: #664316;
+    flex: 1 1 320px;
+    font-size: 13px;
+    line-height: 1.45;
+  }
+
+  .ai-app-panel {
+    background: var(--fd-paper, #fff);
+    border: 1px solid #dbe3ea;
+    border-radius: 16px;
+    margin: 0 0 16px;
+    padding: 20px;
+  }
+
+  .ai-app-panel--review {
+    border-color: #c8d8e4;
+  }
+
+  .ai-app-panel--caution {
+    background: #fff8e9;
+    border-color: #e6d6b0;
+  }
+
+  .ai-app-subheading {
+    color: var(--fd-ink, #10243e);
+    font-size: 15px;
+    font-weight: 700;
+    margin: 18px 0 8px;
+  }
+
+  .ai-app-subheading:first-child {
+    margin-top: 0;
+  }
+
+  .ai-app-field-label {
+    color: var(--fd-muted, #5b6878);
+    display: block;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    margin: 12px 0 4px;
+    text-transform: uppercase;
+  }
+
+  .ai-app-quote {
+    border-left: 3px solid #dbe3ea;
+    color: var(--fd-ink, #10243e);
+    margin: 0 0 8px;
+    padding: 2px 0 2px 12px;
+  }
+
+  .ai-app-list,
+  .ai-app-sources,
+  .ai-app-claims,
+  .ai-app-variants {
+    list-style: none;
+    margin: 0 0 8px;
+    padding: 0;
+  }
+
+  .ai-app-list li {
+    border-bottom: 1px solid #eef3f6;
+    color: var(--fd-ink, #10243e);
+    padding: 7px 0;
+  }
+
+  .ai-app-list li:last-child {
+    border-bottom: 0;
+  }
+
+  .ai-app-source,
+  .ai-app-claim,
+  .ai-app-variant {
+    border: 1px solid #eef3f6;
+    border-radius: 12px;
+    margin: 0 0 8px;
+    padding: 12px;
+  }
+
+  .ai-app-source-id,
+  .ai-app-variant-headline {
+    color: var(--fd-ink, #10243e);
+    display: block;
+    font-weight: 700;
+  }
+
+  .ai-app-source-note,
+  .ai-app-cite {
+    color: var(--fd-muted, #5b6878);
+    display: block;
+    font-size: 12px;
+    margin: 4px 0 0;
+  }
+
+  .ai-app-claim-text {
+    color: var(--fd-ink, #10243e);
+    display: block;
+  }
+
+  .ai-app-cite--gap {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .ai-app-finding {
+    color: #8a4b00;
+    display: block;
+    font-size: 12px;
+    margin: 6px 0 0;
+  }
+
+  .ai-app-empty {
+    color: var(--fd-muted, #5b6878);
+    font-style: italic;
+    margin: 0;
+  }
+
+  .ai-app-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 16px 0 0;
+  }
+
+  .ai-app-primary,
+  .ai-app-secondary,
+  .ai-app-back {
+    border-radius: 11px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 700;
+    padding: 11px 18px;
+  }
+
+  .ai-app-primary {
+    background: var(--fd-accent, #087f83);
+    border: 1px solid var(--fd-accent, #087f83);
+    color: #fff;
+  }
+
+  .ai-app-secondary,
+  .ai-app-back {
+    background: transparent;
+    border: 1px solid #dbe3ea;
+    color: var(--fd-ink, #10243e);
+  }
+
+  .ai-app-back {
+    margin: 0 0 14px;
+    padding: 8px 14px;
+  }
+
+  .ai-app-primary:disabled,
+  .ai-app-starter-button:disabled {
+    cursor: not-allowed;
+    opacity: 0.55;
+  }
+
+  .ai-app-detail-title {
+    color: var(--fd-ink, #10243e);
+    font-size: 20px;
+    font-weight: 700;
+    margin: 0 0 8px;
+  }
+
+  .ai-app-detail-title:focus-visible {
+    outline: 3px solid var(--fd-focus, #0b66d4);
+    outline-offset: 3px;
+  }
+
+  .ai-app-contract {
+    border: 1px solid #eef3f6;
+    border-radius: 12px;
+    margin: 14px 0 18px;
+    padding: 14px;
+  }
+
+  .ai-app-contract dt {
+    color: var(--fd-muted, #5b6878);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .ai-app-contract dd {
+    color: var(--fd-ink, #10243e);
+    margin: 3px 0 10px;
+  }
+
+  .ai-app-contract dd:last-child {
+    margin-bottom: 0;
+  }
+
+  .ai-app-stage {
+    display: block;
+    margin: 0 0 8px;
+  }
+
+  .ai-app-lock,
+  .ai-app-reference {
+    color: var(--fd-muted, #5b6878);
+    display: block;
+    font-size: 12px;
+    margin: 8px 0 0;
   }
 }

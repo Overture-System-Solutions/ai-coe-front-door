@@ -20,6 +20,7 @@ import type { IWorkflowProps } from '../workflows/shared';
 import { TeamUsageWorkflow } from '../workflows/TeamUsageWorkflow';
 import { ToolCheckWorkflow } from '../workflows/ToolCheckWorkflow';
 import { AppCases } from './AppCases';
+import { AppMarketing } from './AppMarketing';
 import { AppValue } from './AppValue';
 import { AppHero } from './AppHero';
 
@@ -127,6 +128,9 @@ export function AppShell({ settings }: IAppShellProps): React.ReactElement {
         break;
       case 'engineering':
         body = <AppStarters kind="engineering" onStart={setWorkflow} />;
+        break;
+      case 'marketing':
+        body = <AppMarketing />;
         break;
       case 'improvement':
         body = <AppStarters kind="improvement" onStart={setWorkflow} />;

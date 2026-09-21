@@ -2,7 +2,7 @@
  * The initial generated-copy policy: the words a draft may not use, and the claim classes it may not make.
  *
  * Decision 5 of the local baseline. The word list is the campaign brief's message-house guidance plus the copy
- * deck's prohibited-claims guidance, as the baseline states them. Any further CloudWave brand or legal vocabulary
+ * deck's prohibited-claims guidance, as the baseline states them. Any further brand or legal vocabulary the organization sets
  * is a **pending input**, so this list is a starting point and is written to be extended, not a finished policy.
  *
  * The honest limit, stated here because it is easy to forget once a check goes green: **passing this check is not

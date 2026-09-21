@@ -14,9 +14,9 @@
  */
 import type { Capability } from '../services/authorization';
 
-export type AppSectionId = 'home' | 'cases' | 'engineering' | 'improvement' | 'value' | 'map';
+export type AppSectionId = 'home' | 'cases' | 'engineering' | 'marketing' | 'improvement' | 'value' | 'map';
 
-export const APP_SECTION_IDS: readonly AppSectionId[] = ['home', 'cases', 'engineering', 'improvement', 'value', 'map'];
+export const APP_SECTION_IDS: readonly AppSectionId[] = ['home', 'cases', 'engineering', 'marketing', 'improvement', 'value', 'map'];
 
 export const DEFAULT_APP_SECTION: AppSectionId = 'home';
 
@@ -53,6 +53,12 @@ export const APP_SECTIONS: readonly IAppSection[] = [
     id: 'engineering',
     label: 'Engineering',
     summary: 'The guided requests: an idea, a tool or task check, a team disclosure, help or training.'
+  },
+  {
+    id: 'marketing',
+    label: 'Marketing',
+    summary: 'The three Marketing workflows, walked end to end with invented material so the safeguards can be seen.',
+    capability: 'draftCampaignBrief'
   },
   {
     id: 'improvement',
