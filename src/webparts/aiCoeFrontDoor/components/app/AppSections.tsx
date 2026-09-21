@@ -64,11 +64,16 @@ const LAYERS: readonly ILayer[] = [
   { layer: 'Control', title: 'A person', note: 'Sending, publishing, assigning and scheduling stay outside this part, behind their own authority.' }
 ];
 
-/** A person's own requests, plus the controls that decide what they see. */
+/**
+ * A person's own requests, plus the controls that decide what they see.
+ *
+ * No head of its own: the shell already names the section and the reused list names itself, so a third heading here
+ * said the same thing a third time. What it carried - that only your own rows are read - is a control rather than a
+ * caption, and the panel beside it states it as one.
+ */
 export function AppCases(): React.ReactElement {
   return (
     <React.Fragment>
-      <AppSectionHead title="Your requests" note="What you have sent, and where each one stands. Only your own rows are read." />
       <div className="ai-app-cases">
         <MyWork />
       </div>

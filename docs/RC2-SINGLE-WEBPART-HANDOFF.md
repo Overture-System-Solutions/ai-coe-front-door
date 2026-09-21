@@ -61,7 +61,9 @@ RC2 and Marketing reference packages are unchanged and must stay so; these decis
 |---|---|---|
 | Consolidated view (`view: app`), seven sections, rebuilt to the RC2 reference | Locally implemented and tested | `components/app/`, 11 shell tests, rendered in the offline preview |
 | RC2 component kit (pill, panel, status card, metric, case card, steps, flow, layer, aside, buttons) | Locally implemented and tested | `components/app/kit/`, 17 tests |
-| Five extra palette keys so the reference colours arrive by configuration | Locally implemented and tested | `content/palette.ts`, README preset |
+| Seven extra palette keys so the reference colours arrive by configuration | Locally implemented and tested | `content/palette.ts`, README preset |
+| The palette carried into the reused parts, so one page has one accent | Locally implemented and tested | `appShell.global.scss` theme bridge, `styles/palette.test.ts`, seen in the preview |
+| The reused requests list given the kit's surface inside this view | Locally implemented and tested | `appShell.global.scss`, seen in the preview |
 | Capability gate over the sections and their services | Locally implemented and tested | `services/authorization.ts`, 8 cases + 4 shell cases, proved in preview at three roles |
 | Work identity mapping (tenant record key ↔ canonical Work ID) | Locally implemented and tested | `content/workIdentity.ts`, 7 cases |
 | Idempotency key, payload hash, outcome classes | Locally implemented and tested | `content/actionEnvelope.ts`, 15 cases |
@@ -91,6 +93,16 @@ reference-palette colours and fails the build if one appears in a stylesheet: th
 The shell therefore reads `--fd-*` tokens with the front door's own shipped fallbacks, and a CloudWave tenant
 reaches the prototype's navy/blue/cyan through the `Palette` provisioning parameter. This is a deliberate
 difference from the demo and it is what keeps the view portable to another tenant.
+
+That decision had a hole in it, found by looking at the rendered page rather than at the tests. The parts this view
+reuses — the guided requests, the requests list, the usage strip, the operator dashboard — colour themselves from
+the theme variables of the shipped bundle (`--color-*`), not from the palette tokens, so a site that set a palette
+got a repainted shell wrapped around reused buttons in the shipped teal: one page, two accents. The view now points
+those theme variables at the matching token for its own subtree, which is why `accentDark` and `accentSoft` exist —
+a button needs a pressed and a tinted state, and the accent alone has no word for either. Seven of the twelve fall
+back to the literal the variable already held; five (the muted ink, the page backing, and the three of an
+information notice) fall back to the front door's own token instead, a deliberate small change reaching this view
+alone. The shipped declarations and every legacy screen are untouched.
 
 ## The security consequence of consolidating, and what was done
 
@@ -146,27 +158,63 @@ the corrected interface.
 
 ```
 npm ci
-npm test            # 934 passing, 0 failures; one pre-existing lint warning
+npm test            # 992 passing, 0 failures; one pre-existing lint warning
 npx heft build      # writes dist/ for the preview and the bundle tests
 npm run preview     # offline host on 127.0.0.1:4173; ?view=app&role=employee|leader|operator
 npm run build       # production build and package
 npm run verify      # package verifier
 ```
 
+The preview takes `--port`, which is worth using: a stale host will happily serve the previous bundle's HTML.
+The reference-palette preset for `?palette=` is in the README under "Palette override".
+
 ## Baseline and new failures
 
-Baseline in this worktree before any change: 934 total, 0 failures — recorded as 903 at the base commit, plus the 31
-added here. No test was weakened. Intentional expectation updates, all structural: twelve views rather than eleven,
-twelve toolbox entries, the new default entry, the preview chooser, the property-pane dropdown, and the six-file
-stylesheet list.
+At the base commit: 903 total, 0 failures. On this branch: **992 total, 0 failures** — 89 added, none weakened,
+none skipped. Most of them are in seven new files: the capability gate (8), work identity (7), the action envelope
+(15), the Marketing contracts (20), the demo journey (9), the component kit (17) and the shell itself (11), which
+had no tests at all before this branch. The remainder are cases added to suites that already existed.
+
+Intentional expectation updates, all structural: twelve views rather than eleven, twelve toolbox entries, the new
+default entry, the preview chooser, the property-pane dropdown, the six-file stylesheet list, the palette key list
+and the token-read map.
 
 One pre-existing lint warning at `src/provisioning/provisioningScript.test.ts:151` predates this branch.
 
 ## Verified in the offline preview
 
-Mounted at `?view=app`: six tabs, the entry panel, the three choices, the section heading taking focus on a change.
-The guided idea request opens inside the same instance with no page load. The gate was exercised at three roles —
-an employee sees four tabs, a leader five (Enterprise value appears, System map does not), a site owner all six.
-Selected-tab background resolves to the accent token `rgb(8, 127, 131)`, cards to a three-column grid.
+Mounted at `?view=app` with the reference palette, at a site owner's membership: seven tabs, the entry panel, the
+three ways in, "What matters now" drawn from the resolved role, and the section heading taking focus on a change.
+
+- **Every section opened.** Home, Cases, Engineering, Marketing, Improvement, Enterprise value, System map.
+- **The Marketing journey walked end to end.** Campaign brief → drafting → draft, version 1 → waiting for review →
+  changes requested (a fictional reviewer asking that an availability claim be held until it has an approved
+  source) → redrafted → accepted → saved as `DEMO-BRIEF-002, version 2`. The content plan, refused until then
+  because it needs an accepted brief, became available at exactly that point. Every screen carried
+  **Demo — no live actions**.
+- **The guided request opens inside the same instance**, with no page load, and its primary button now resolves to
+  the tenant accent (`rgb(8, 120, 209)`) rather than the shipped teal.
+- **The gate at three roles.** An employee sees four tabs, a leader five (Enterprise value appears, System map does
+  not), a site owner all seven.
+- **Keyboard.** Arrow keys move along the tab list and wrap, Home and End jump to the ends, focus follows the
+  selection, and exactly one tab is in the tab order.
+- **Responsive.** At 1050 the entry panel's two columns become one; at 720 the choices, starters and measures
+  become one column and the pinned nav goes static; at 400 the chips and tabs wrap to two rows with no horizontal
+  overflow of the document (`scrollWidth` equals `clientWidth`).
+- **Reduced motion** is already honoured by the shipped theme sheet, which turns off the 120ms colour transition on
+  everything inside `.overture-app` under `prefers-reduced-motion: reduce`. This view adds no animation of its own,
+  so there is nothing further to disable. The block in `appShell.global.scss` that names two buttons is therefore
+  redundant rather than load-bearing.
 
 These are local, mock-backed results against a simulated host. They are not tenant acceptance.
+
+## Known rough edges in this view
+
+Honest list, none of them blocking, none of them hidden:
+
+1. `AppMarketing.tsx` draws its own `.ai-app-panel` surfaces instead of the kit's `.ai-app-surface`. It matches
+   visually; it is not literally sharing the components.
+2. Reused components emit their own `h2` inside a section the shell has already headed with an `h2`, so on Cases
+   and System map the document outline goes `h2 → h3 → h2`. Correcting it means retagging shipped components,
+   which the parity suites pin, so it is left alone and recorded here.
+3. The usage strip keeps colours of its own and does not follow the palette bridge.

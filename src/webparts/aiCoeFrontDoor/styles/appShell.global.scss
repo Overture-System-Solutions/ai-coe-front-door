@@ -10,7 +10,34 @@
 // is that this view repaints completely from configuration, which is what makes it portable to another tenant.
 // No rule declares a token; each only reads one, so an override set on the element above always wins.
 
+// Carrying the palette into the parts this view reuses. The consolidated view mounts the front door's own guided
+// requests, its requests list, its usage strip and its operator dashboard, and every one of those colours itself
+// from the theme variables the shipped bundle declares (--color-*), not from the palette tokens (--fd-*). Left
+// alone, a site that sets a palette gets a repainted shell around reused buttons in the shipped teal: one page,
+// two accents. So this view points the theme variables at the matching token, for its own subtree only. The
+// shipped declarations on the element above are untouched and every legacy screen keeps exactly the colours it
+// shipped with.
+//
+// Seven of these fall back to the literal the variable already held, so with no palette set they are the same
+// colour. Five do not: the muted ink, the page backing and the three of an information notice fall back to the
+// front door's own token instead, because a notice or a grey that stayed on the shipped theme's value would sit a
+// shade off every other one on the screen. That is a deliberate, small change and it reaches this view alone.
 .ai-view--app {
+  --color-primary: var(--fd-accent, #087f83);
+  --color-primary-dark: var(--fd-accent-dark, #055d66);
+  --color-primary-soft: var(--fd-accent-soft, #e8f7f6);
+  --color-ink: var(--fd-ink, #10243e);
+  --color-ink-muted: var(--fd-muted, #5b6878);
+  --color-bg: var(--fd-bg, #f7fafc);
+  --color-surface: var(--fd-paper, #fff);
+  --color-line: var(--fd-line, #d6e0e8);
+  --color-focus: var(--fd-focus, #0b66d4);
+  // An information notice is the one place a reused part carries a colour of its own. It follows the kit's aside,
+  // which is the same notice drawn in the same place, rather than staying the shipped teal beside it.
+  --color-info-bg: var(--fd-state-blue, #e7f0fb);
+  --color-info-border: var(--fd-line, #d6e0e8);
+  --color-info-text: var(--fd-ink, #10243e);
+
   color: var(--fd-ink, #10243e);
 
   .ai-page-identity {
@@ -1165,6 +1192,72 @@
 
   .ai-app-tabs {
     position: static;
+  }
+}
+
+// A person's own requests. The list is the front door's own, reused unchanged, but the rules that made each row a
+// card are scoped to the page view it was written for, so inside this view it arrived as bare lines of text - the
+// one screen holding real records looking the least finished of the seven. These give it the kit's surface. They
+// are scoped to the section rather than to the class, so the legacy screens are untouched.
+.ai-view--app {
+  .ai-app-cases .ai-page-mywork-title {
+    color: var(--fd-ink, #10243e);
+    font-size: 18px;
+    font-weight: 700;
+    margin: 0 0 10px;
+  }
+
+  .ai-app-cases .ai-page-mywork-list {
+    display: grid;
+    gap: 12px;
+    margin: 0;
+  }
+
+  .ai-app-cases .ai-mywork-row {
+    background: var(--fd-paper, #fff);
+    border: 1px solid var(--fd-line, #d6e0e8);
+    border-radius: 14px;
+    box-shadow: 0 1px 2px rgba(16, 36, 62, 0.05);
+    padding: 16px 18px;
+  }
+
+  .ai-app-cases .ai-mywork-head {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 12px;
+    margin: 0 0 6px;
+  }
+
+  .ai-app-cases .ai-mywork-label {
+    color: var(--fd-ink, #10243e);
+    font-size: 16px;
+    font-weight: 600;
+  }
+
+  .ai-app-cases .ai-mywork-reference,
+  .ai-app-cases .ai-mywork-dates {
+    color: var(--fd-muted, #5b6878);
+    font-size: 13px;
+    margin: 2px 0 0;
+  }
+
+  .ai-app-cases .ai-mywork-key {
+    margin: 0 6px 0 0;
+  }
+
+  .ai-app-cases .ai-mywork-row code {
+    background: var(--fd-soft, #e5ebf0);
+    border-radius: 6px;
+    color: var(--fd-ink, #10243e);
+    font-family: consolas, menlo, monospace;
+    font-size: 13px;
+    padding: 1px 6px;
+  }
+
+  .ai-app-cases .ai-mywork-note {
+    color: var(--fd-muted, #5b6878);
+    margin: 0;
   }
 }
 

@@ -2,7 +2,7 @@ import { PALETTE_KEYS, paletteCustomProperty, parsePaletteOverrides } from './pa
 import type { PaletteKey, PaletteOverrides } from './palette';
 
 describe('PALETTE_KEYS', () => {
-  it('names the ten colours a tenant may override, in the order the README documents', () => {
+  it('names the colours a tenant may override, in the order the README documents', () => {
     expect(PALETTE_KEYS).toEqual([
       'accent',
       'ink',
@@ -18,7 +18,9 @@ describe('PALETTE_KEYS', () => {
       'soft',
       'heroFrom',
       'heroTo',
-      'heroGlow'
+      'heroGlow',
+      'accentDark',
+      'accentSoft'
     ]);
   });
 
@@ -39,7 +41,9 @@ describe('PALETTE_KEYS', () => {
       '--fd-soft',
       '--fd-hero-from',
       '--fd-hero-to',
-      '--fd-hero-glow'
+      '--fd-hero-glow',
+      '--fd-accent-dark',
+      '--fd-accent-soft'
     ]);
     for (const name of names) {
       expect(name).toBe(name.toLowerCase());

@@ -248,6 +248,8 @@ dead (`styles/palette.test.ts` reads every compiled stylesheet and fails on one)
 | `heroFrom` | `--fd-hero-from` | `#10243e` | the first stop of the entry panel's wash on the consolidated view |
 | `heroTo` | `--fd-hero-to` | `#087f83` | the last stop of that wash |
 | `heroGlow` | `--fd-hero-glow` | `#edf8f8` | the light bloom over the top right of that wash |
+| `accentDark` | `--fd-accent-dark` | `#055d66` | the pressed accent: a primary button under the pointer, in the parts the consolidated view reuses |
+| `accentSoft` | `--fd-accent-soft` | `#e8f7f6` | the tinted accent: the quiet brand surface those same parts draw |
 
 Everything else keeps the shipped colours, including the legacy single-page view, which carries no `.ai-view` class
 and reads no token. A state colour sets the background a pill is read against and never its ink, so check the
@@ -260,11 +262,16 @@ Cyan `#21B5D8`, Teal `#008B83`, Ink `#102B3D`, Muted `#5B7180`, Background `#EDF
 
     accent=#008B83;ink=#102B3D;muted=#5B7180;bg=#EDF5F9;paper=#FFFFFF;focus=#0878D1
 
-The consolidated view adds five keys so the same reference palette can reach its hairlines, its quiet surfaces and
-its entry panel, which the shipped ten had no word for. The preset below paints that view in the reference colours
-and is what the offline preview's `?palette=` carries:
+The consolidated view adds seven keys. Five reach its hairlines, its quiet surfaces and its entry panel, which the
+shipped ten had no word for. The other two, `accentDark` and `accentSoft`, exist because that view mounts the front
+door's own guided requests, requests list, usage strip and operator dashboard, and those parts colour themselves
+from the theme variables of the shipped bundle rather than from these tokens. Inside the consolidated view alone,
+those variables are pointed at the matching token, so a reused button follows the tenant's accent instead of
+standing in the shipped teal next to a repainted shell; the two extra keys are the pressed and tinted states such a
+button needs. Every legacy screen keeps the shipped colours exactly. The preset below paints the consolidated view
+in the reference colours and is what the offline preview's `?palette=` carries:
 
-    accent=#0878D1;ink=#062A46;muted=#5B7180;bg=#EDF5F9;paper=#FFFFFF;focus=#21B5D8;line=#D7E2E9;soft=#F6FAFC;heroFrom=#052A46;heroTo=#075D81;heroGlow=#21B5D8
+    accent=#0878D1;ink=#062A46;muted=#5B7180;bg=#EDF5F9;paper=#FFFFFF;focus=#21B5D8;line=#D7E2E9;soft=#F6FAFC;heroFrom=#052A46;heroTo=#075D81;heroGlow=#21B5D8;accentDark=#0B4267;accentSoft=#EDF5F9
 
 Keeping those colours a parameter rather than code is what lets the same build serve another tenant unchanged; a
 test refuses any of them as a literal in a stylesheet.

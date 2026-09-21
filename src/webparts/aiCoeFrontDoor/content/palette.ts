@@ -17,9 +17,12 @@ import { includes } from '../utils/collections';
 /**
  * The colour each key stands for is documented in the README under "Palette override".
  *
- * The last five arrived with the consolidated view. Each names a role the shipped ten had no word for - a hairline,
- * a soft surface, and the three stops of the entry panel's wash - and each falls back to a colour the front door
- * already draws, so a site that sets no palette is unchanged.
+ * The last seven arrived with the consolidated view. Five name roles the shipped ten had no word for - a hairline,
+ * a soft surface, and the three stops of the entry panel's wash. The other two are the pressed and tinted states of
+ * the accent, which the parts the consolidated view reuses need: those parts colour themselves from the theme
+ * variables of the shipped bundle, and without a word for the darker and softer accent the view would carry one
+ * accent in its own chrome and another in every reused button. Each falls back to a colour the front door already
+ * draws, so a site that sets no palette is unchanged.
  */
 export type PaletteKey =
   | 'accent'
@@ -37,7 +40,10 @@ export type PaletteKey =
   | 'soft'
   | 'heroFrom'
   | 'heroTo'
-  | 'heroGlow';
+  | 'heroGlow'
+  // The two states of the accent the reused parts of the front door draw themselves with.
+  | 'accentDark'
+  | 'accentSoft';
 
 export const PALETTE_KEYS: readonly PaletteKey[] = [
   'accent',
@@ -54,7 +60,9 @@ export const PALETTE_KEYS: readonly PaletteKey[] = [
   'soft',
   'heroFrom',
   'heroTo',
-  'heroGlow'
+  'heroGlow',
+  'accentDark',
+  'accentSoft'
 ];
 
 /** The colours a tenant set, by key; a key nobody set is absent and its fallback stands. */
