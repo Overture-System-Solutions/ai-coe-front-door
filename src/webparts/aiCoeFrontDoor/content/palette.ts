@@ -14,10 +14,48 @@
  */
 import { includes } from '../utils/collections';
 
-/** The colour each key stands for is documented in the README under "Palette override". */
-export type PaletteKey = 'accent' | 'ink' | 'muted' | 'bg' | 'paper' | 'focus' | 'stateGreen' | 'stateBlue' | 'stateAmber' | 'stateRed';
+/**
+ * The colour each key stands for is documented in the README under "Palette override".
+ *
+ * The last five arrived with the consolidated view. Each names a role the shipped ten had no word for - a hairline,
+ * a soft surface, and the three stops of the entry panel's wash - and each falls back to a colour the front door
+ * already draws, so a site that sets no palette is unchanged.
+ */
+export type PaletteKey =
+  | 'accent'
+  | 'ink'
+  | 'muted'
+  | 'bg'
+  | 'paper'
+  | 'focus'
+  | 'stateGreen'
+  | 'stateBlue'
+  | 'stateAmber'
+  | 'stateRed'
+  // Added for the consolidated view: the roles its component kit needs that the shipped ten do not cover.
+  | 'line'
+  | 'soft'
+  | 'heroFrom'
+  | 'heroTo'
+  | 'heroGlow';
 
-export const PALETTE_KEYS: readonly PaletteKey[] = ['accent', 'ink', 'muted', 'bg', 'paper', 'focus', 'stateGreen', 'stateBlue', 'stateAmber', 'stateRed'];
+export const PALETTE_KEYS: readonly PaletteKey[] = [
+  'accent',
+  'ink',
+  'muted',
+  'bg',
+  'paper',
+  'focus',
+  'stateGreen',
+  'stateBlue',
+  'stateAmber',
+  'stateRed',
+  'line',
+  'soft',
+  'heroFrom',
+  'heroTo',
+  'heroGlow'
+];
 
 /** The colours a tenant set, by key; a key nobody set is absent and its fallback stands. */
 export type PaletteOverrides = { [key in PaletteKey]?: string };

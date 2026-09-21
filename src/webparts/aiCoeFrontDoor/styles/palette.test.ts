@@ -29,7 +29,14 @@ const FALLBACKS: { [name: string]: string } = {
   '--fd-state-green': '#ddf6f0',
   '--fd-state-blue': '#e7f0fb',
   '--fd-state-amber': '#fff4cf',
-  '--fd-state-red': '#fde8e8'
+  '--fd-state-red': '#fde8e8',
+  // Added with the consolidated view. Each fallback is a colour the shipped stylesheet already draws, so the rule
+  // below still holds without an exception: a site that sets no palette sees the front door's own colours.
+  '--fd-line': '#d6e0e8',
+  '--fd-soft': '#e5ebf0',
+  '--fd-hero-from': '#10243e',
+  '--fd-hero-to': '#087f83',
+  '--fd-hero-glow': '#edf8f8'
 };
 
 /**
@@ -177,19 +184,20 @@ describe('Palette tokens', () => {
       '.ai-view--page .ai-page-binding-receipt': ['--fd-muted'],
       '.ai-view--page .ai-page-bindings-empty': ['--fd-muted'],
       '.ai-view .ai-route-card--closed': ['--fd-bg'],
-      // The consolidated view and its demonstration surface. Neither carries colour of its own beyond hairlines and
-      // shadows: tabs, entry panel, cards, panels, buttons and measure tiles all read tokens, so a tenant palette
-      // repaints the whole view. The entry panel is built from ink and accent rather than from the prototype's navy,
-      // which is why the reference palette can stay out of the repository while the prototype's look stays reachable
-      // by configuration. This list is generated from the compiled stylesheet, not hand-maintained.
+      // The consolidated view and its demonstration surface. Neither carries colour of its own beyond shadows:
+      // every hairline, surface, tab, panel, card, button and entry-panel stop reads a token, so a tenant palette
+      // repaints the whole view and the reference palette can stay out of the repository. This list is generated
+      // from the compiled stylesheet by the recipe in the README, not maintained by hand.
       '.ai-view--app': ['--fd-ink'],
-      '.ai-view--app .ai-app-back': ['--fd-ink'],
-      '.ai-view--app .ai-app-choice-button': ['--fd-paper'],
+      '.ai-view--app .ai-app-back': ['--fd-ink', '--fd-line'],
+      '.ai-view--app .ai-app-choice-button': ['--fd-line', '--fd-paper'],
       '.ai-view--app .ai-app-choice-step': ['--fd-accent'],
       '.ai-view--app .ai-app-choice-text': ['--fd-muted'],
       '.ai-view--app .ai-app-choice-title': ['--fd-ink'],
       '.ai-view--app .ai-app-cite': ['--fd-muted'],
+      '.ai-view--app .ai-app-claim': ['--fd-soft'],
       '.ai-view--app .ai-app-claim-text': ['--fd-ink'],
+      '.ai-view--app .ai-app-contract': ['--fd-soft'],
       '.ai-view--app .ai-app-contract dd': ['--fd-ink'],
       '.ai-view--app .ai-app-contract dt': ['--fd-muted'],
       '.ai-view--app .ai-app-detail-title': ['--fd-ink'],
@@ -198,29 +206,32 @@ describe('Palette tokens', () => {
       '.ai-view--app .ai-app-field-label': ['--fd-muted'],
       '.ai-view--app .ai-app-heading': ['--fd-ink'],
       '.ai-view--app .ai-app-heading:focus-visible': ['--fd-focus'],
-      '.ai-view--app .ai-app-hero': ['--fd-accent', '--fd-ink'],
-      '.ai-view--app .ai-app-list li': ['--fd-ink'],
+      '.ai-view--app .ai-app-hero': ['--fd-hero-from', '--fd-hero-glow', '--fd-hero-to'],
+      '.ai-view--app .ai-app-list li': ['--fd-ink', '--fd-soft'],
       '.ai-view--app .ai-app-lock': ['--fd-muted'],
-      '.ai-view--app .ai-app-measure': ['--fd-paper'],
+      '.ai-view--app .ai-app-measure': ['--fd-line', '--fd-paper'],
       '.ai-view--app .ai-app-measure-evidence': ['--fd-muted'],
       '.ai-view--app .ai-app-measure-label': ['--fd-muted'],
       '.ai-view--app .ai-app-measure-period': ['--fd-muted'],
       '.ai-view--app .ai-app-measure-value': ['--fd-ink'],
       '.ai-view--app .ai-app-note': ['--fd-muted'],
-      '.ai-view--app .ai-app-panel': ['--fd-paper'],
+      '.ai-view--app .ai-app-panel': ['--fd-line', '--fd-paper'],
       '.ai-view--app .ai-app-primary': ['--fd-accent', '--fd-accent'],
-      '.ai-view--app .ai-app-quote': ['--fd-ink'],
+      '.ai-view--app .ai-app-quote': ['--fd-ink', '--fd-line'],
       '.ai-view--app .ai-app-reference': ['--fd-muted'],
-      '.ai-view--app .ai-app-secondary': ['--fd-ink'],
+      '.ai-view--app .ai-app-secondary': ['--fd-ink', '--fd-line'],
+      '.ai-view--app .ai-app-source': ['--fd-soft'],
       '.ai-view--app .ai-app-source-id': ['--fd-ink'],
       '.ai-view--app .ai-app-source-note': ['--fd-muted'],
-      '.ai-view--app .ai-app-starter-button': ['--fd-paper'],
+      '.ai-view--app .ai-app-starter-button': ['--fd-line', '--fd-paper'],
       '.ai-view--app .ai-app-starter-text': ['--fd-muted'],
       '.ai-view--app .ai-app-starter-title': ['--fd-ink'],
       '.ai-view--app .ai-app-subheading': ['--fd-ink'],
       '.ai-view--app .ai-app-summary': ['--fd-muted'],
       '.ai-view--app .ai-app-tab': ['--fd-muted'],
       '.ai-view--app .ai-app-tab[aria-selected=true]': ['--fd-accent'],
+      '.ai-view--app .ai-app-tabrow': ['--fd-line'],
+      '.ai-view--app .ai-app-variant': ['--fd-soft'],
       '.ai-view--app .ai-app-variant-headline': ['--fd-ink'],
       '.ai-view--app .ai-page-identity': ['--fd-muted'],
     });

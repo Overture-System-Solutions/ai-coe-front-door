@@ -24,7 +24,7 @@
   }
 
   .ai-app-tabrow {
-    border: 1px solid #dbe3ea;
+    border: 1px solid var(--fd-line, #d6e0e8);
     border-radius: 999px;
     display: inline-flex;
     flex-wrap: wrap;
@@ -75,7 +75,9 @@
   // The deep entry panel. Built from the ink and accent tokens rather than from the prototype's own navy, so a
   // tenant palette repaints it whole.
   .ai-app-hero {
-    background: linear-gradient(135deg, var(--fd-ink, #10243e) 0%, var(--fd-accent, #087f83) 100%);
+    background:
+      radial-gradient(circle at 82% 20%, var(--fd-hero-glow, #edf8f8) 0%, rgba(255, 255, 255, 0) 30%),
+      linear-gradient(135deg, var(--fd-hero-from, #10243e) 0%, var(--fd-hero-to, #087f83) 100%);
     border-radius: 24px;
     color: #fff;
     margin: 0 0 22px;
@@ -124,7 +126,7 @@
   .ai-app-choice-button,
   .ai-app-starter-button {
     background: var(--fd-paper, #fff);
-    border: 1px solid #dbe3ea;
+    border: 1px solid var(--fd-line, #d6e0e8);
     border-radius: 16px;
     box-shadow: 0 8px 24px rgba(16, 36, 62, 0.09);
     cursor: pointer;
@@ -168,7 +170,7 @@
 
   .ai-app-measure {
     background: var(--fd-paper, #fff);
-    border: 1px solid #dbe3ea;
+    border: 1px solid var(--fd-line, #d6e0e8);
     border-radius: 14px;
     box-shadow: 0 8px 24px rgba(16, 36, 62, 0.09);
     padding: 18px;
@@ -290,7 +292,7 @@
 
   .ai-app-panel {
     background: var(--fd-paper, #fff);
-    border: 1px solid #dbe3ea;
+    border: 1px solid var(--fd-line, #d6e0e8);
     border-radius: 16px;
     margin: 0 0 16px;
     padding: 20px;
@@ -327,7 +329,7 @@
   }
 
   .ai-app-quote {
-    border-left: 3px solid #dbe3ea;
+    border-left: 3px solid var(--fd-line, #d6e0e8);
     color: var(--fd-ink, #10243e);
     margin: 0 0 8px;
     padding: 2px 0 2px 12px;
@@ -343,7 +345,7 @@
   }
 
   .ai-app-list li {
-    border-bottom: 1px solid #eef3f6;
+    border-bottom: 1px solid var(--fd-soft, #e5ebf0);
     color: var(--fd-ink, #10243e);
     padding: 7px 0;
   }
@@ -355,7 +357,7 @@
   .ai-app-source,
   .ai-app-claim,
   .ai-app-variant {
-    border: 1px solid #eef3f6;
+    border: 1px solid var(--fd-soft, #e5ebf0);
     border-radius: 12px;
     margin: 0 0 8px;
     padding: 12px;
@@ -427,7 +429,7 @@
   .ai-app-secondary,
   .ai-app-back {
     background: transparent;
-    border: 1px solid #dbe3ea;
+    border: 1px solid var(--fd-line, #d6e0e8);
     color: var(--fd-ink, #10243e);
   }
 
@@ -455,7 +457,7 @@
   }
 
   .ai-app-contract {
-    border: 1px solid #eef3f6;
+    border: 1px solid var(--fd-soft, #e5ebf0);
     border-radius: 12px;
     margin: 14px 0 18px;
     padding: 14px;

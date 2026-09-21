@@ -3,7 +3,23 @@ import type { PaletteKey, PaletteOverrides } from './palette';
 
 describe('PALETTE_KEYS', () => {
   it('names the ten colours a tenant may override, in the order the README documents', () => {
-    expect(PALETTE_KEYS).toEqual(['accent', 'ink', 'muted', 'bg', 'paper', 'focus', 'stateGreen', 'stateBlue', 'stateAmber', 'stateRed']);
+    expect(PALETTE_KEYS).toEqual([
+      'accent',
+      'ink',
+      'muted',
+      'bg',
+      'paper',
+      'focus',
+      'stateGreen',
+      'stateBlue',
+      'stateAmber',
+      'stateRed',
+      'line',
+      'soft',
+      'heroFrom',
+      'heroTo',
+      'heroGlow'
+    ]);
   });
 
   it('gives every key a lower-case custom property name, so no step that lower-cases a name can break the pair', () => {
@@ -18,7 +34,12 @@ describe('PALETTE_KEYS', () => {
       '--fd-state-green',
       '--fd-state-blue',
       '--fd-state-amber',
-      '--fd-state-red'
+      '--fd-state-red',
+      '--fd-line',
+      '--fd-soft',
+      '--fd-hero-from',
+      '--fd-hero-to',
+      '--fd-hero-glow'
     ]);
     for (const name of names) {
       expect(name).toBe(name.toLowerCase());

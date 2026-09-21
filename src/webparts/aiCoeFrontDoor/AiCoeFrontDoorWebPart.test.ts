@@ -317,7 +317,7 @@ describe('AiCoeFrontDoorWebPart bundle', () => {
         properties: {
           label: 'Palette overrides',
           description:
-            'Colours of this organization as key=#hex pairs separated by semicolons, for example accent=#008B83;ink=#102B3D. Keys: accent, ink, muted, bg, paper, focus, stateGreen, stateBlue, stateAmber, stateRed. Leave blank to keep the shipped colours.',
+            'Colours of this organization as key=#hex pairs separated by semicolons, for example accent=#008B83;ink=#102B3D. Keys: accent, ink, muted, bg, paper, focus, stateGreen, stateBlue, stateAmber, stateRed, line, soft, heroFrom, heroTo, heroGlow. Leave blank to keep the shipped colours.',
           placeholder: 'accent=#008B83;ink=#102B3D'
         }
       }

@@ -11,7 +11,7 @@ define([], function() {
     "RoleGroupsFieldLabel": "Role groups",
     "RoleGroupsFieldDescription": "Site groups that map to roles, as role=Group title pairs separated by semicolons: leader=…; operator=…; designAuthority=…. Site owners always count as operators.",
     "PaletteOverridesFieldLabel": "Palette overrides",
-    "PaletteOverridesFieldDescription": "Colours of this organization as key=#hex pairs separated by semicolons, for example accent=#008B83;ink=#102B3D. Keys: accent, ink, muted, bg, paper, focus, stateGreen, stateBlue, stateAmber, stateRed. Leave blank to keep the shipped colours.",
+    "PaletteOverridesFieldDescription": "Colours of this organization as key=#hex pairs separated by semicolons, for example accent=#008B83;ink=#102B3D. Keys: accent, ink, muted, bg, paper, focus, stateGreen, stateBlue, stateAmber, stateRed, line, soft, heroFrom, heroTo, heroGlow. Leave blank to keep the shipped colours.",
     "DraftingGroupName": "AI drafting",
     "DraftServiceUrlFieldLabel": "AI draft flow URL",
     "DraftServiceUrlFieldDescription": "HTTP trigger URL of the drafting flow. The flow must allow any user in the tenant, and the Microsoft Flow Service API permission must be approved. Leave blank to keep plain summaries.",

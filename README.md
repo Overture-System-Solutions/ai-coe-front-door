@@ -243,6 +243,11 @@ dead (`styles/palette.test.ts` reads every compiled stylesheet and fails on one)
 | `stateBlue` | `--fd-state-blue` | `#e7f0fb` | the background of a blue (draft) status pill |
 | `stateAmber` | `--fd-state-amber` | `#fff4cf` | the background of an amber status pill and case tag |
 | `stateRed` | `--fd-state-red` | `#fde8e8` | the background of a red status pill and case tag |
+| `line` | `--fd-line` | `#d6e0e8` | every hairline of the consolidated view: the tab row, card and panel borders, the quote edge |
+| `soft` | `--fd-soft` | `#e5ebf0` | the quieter inner borders of the consolidated view: list separators, source, claim and variant blocks |
+| `heroFrom` | `--fd-hero-from` | `#10243e` | the first stop of the entry panel's wash on the consolidated view |
+| `heroTo` | `--fd-hero-to` | `#087f83` | the last stop of that wash |
+| `heroGlow` | `--fd-hero-glow` | `#edf8f8` | the light bloom over the top right of that wash |
 
 Everything else keeps the shipped colours, including the legacy single-page view, which carries no `.ai-view` class
 and reads no token. A state colour sets the background a pill is read against and never its ink, so check the
@@ -254,6 +259,19 @@ Cyan `#21B5D8`, Teal `#008B83`, Ink `#102B3D`, Muted `#5B7180`, Background `#EDF
 `Palette` value, five of them land on keys directly and the rest are a choice the page owner makes:
 
     accent=#008B83;ink=#102B3D;muted=#5B7180;bg=#EDF5F9;paper=#FFFFFF;focus=#0878D1
+
+The consolidated view adds five keys so the same reference palette can reach its hairlines, its quiet surfaces and
+its entry panel, which the shipped ten had no word for. The preset below paints that view in the reference colours
+and is what the offline preview's `?palette=` carries:
+
+    accent=#0878D1;ink=#062A46;muted=#5B7180;bg=#EDF5F9;paper=#FFFFFF;focus=#21B5D8;line=#D7E2E9;soft=#F6FAFC;heroFrom=#052A46;heroTo=#075D81;heroGlow=#21B5D8
+
+Keeping those colours a parameter rather than code is what lets the same build serve another tenant unchanged; a
+test refuses any of them as a literal in a stylesheet.
+
+*Regenerating the token-read map.* `styles/palette.test.ts` pins which selector reads which token. It is generated,
+not hand-written: after changing `appShell.global.scss`, rebuild and read the pairs back out of the compiled sheet
+with postcss, then paste the block into the test. Hand-editing it is how the list drifts from the stylesheet.
 
 Data contracts never change: intake ids (`OVT-AICOE-…`), list titles and field names, the localStorage draft keys
 (`overture-ai-coe-front-door:draft:*`), download file names (`overture-ai-coe-*.txt`), the DOM scope id
