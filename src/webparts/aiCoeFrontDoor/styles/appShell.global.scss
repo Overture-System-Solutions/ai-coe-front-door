@@ -493,3 +493,406 @@
     margin: 8px 0 0;
   }
 }
+
+// The component kit. Measurements follow the reference prototype: 20px panel radius, 16px case radius, 14px metric
+// radius, 999px pills, and the soft-depth value the reference uses throughout. Colour that carries meaning reads a
+// token; the pill inks stay literal because a tone's text must remain legible whatever an organization sets behind
+// it, and none of them is a reference-palette colour.
+.ai-view--app {
+  .ai-app-surface {
+    background: var(--fd-paper, #fff);
+    border: 1px solid var(--fd-line, #d6e0e8);
+    border-radius: 20px;
+    box-shadow: 0 8px 24px rgba(4, 42, 70, 0.09);
+    padding: 22px;
+  }
+
+  .ai-app-pill {
+    align-items: center;
+    border: 1px solid;
+    border-radius: 999px;
+    display: inline-flex;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.03em;
+    padding: 5px 8px;
+    white-space: nowrap;
+  }
+
+  .ai-app-pill--good {
+    background: var(--fd-state-green, #ddf6f0);
+    border-color: #bce8d6;
+    color: #0c6f4a;
+  }
+
+  .ai-app-pill--wait {
+    background: var(--fd-state-amber, #fff4cf);
+    border-color: #f3d097;
+    color: #8a4e00;
+  }
+
+  .ai-app-pill--design {
+    background: var(--fd-soft, #e5ebf0);
+    border-color: #cedcea;
+    color: #435b77;
+  }
+
+  .ai-app-pill--block {
+    background: var(--fd-state-red, #fde8e8);
+    border-color: #f3c0c0;
+    color: #942c2c;
+  }
+
+  .ai-app-pill--info {
+    background: var(--fd-state-blue, #e7f0fb);
+    border-color: #b8e6f3;
+    color: #075f88;
+  }
+
+  .ai-app-head {
+    align-items: flex-end;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    justify-content: space-between;
+    margin: 0 0 12px;
+  }
+
+  .ai-app-head-title {
+    color: var(--fd-ink, #10243e);
+    font-size: 23px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin: 0;
+  }
+
+  .ai-app-head-note {
+    color: var(--fd-muted, #5b6878);
+    font-size: 13px;
+    margin: 4px 0 0;
+    max-width: 70ch;
+  }
+
+  .ai-app-status-title {
+    color: var(--fd-ink, #10243e);
+    font-size: 14px;
+    font-weight: 700;
+    margin: 0 0 15px;
+  }
+
+  .ai-app-status-rows {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .ai-app-status-row {
+    align-items: center;
+    border-top: 1px solid var(--fd-soft, #e5ebf0);
+    display: flex;
+    gap: 10px;
+    justify-content: space-between;
+    padding: 12px 0;
+  }
+
+  .ai-app-status-row:first-child {
+    border-top: 0;
+  }
+
+  .ai-app-status-label {
+    color: var(--fd-ink, #10243e);
+    display: block;
+    font-size: 13px;
+  }
+
+  .ai-app-status-note {
+    color: var(--fd-muted, #5b6878);
+    display: block;
+    font-size: 12px;
+    margin: 2px 0 0;
+  }
+
+  .ai-app-metric {
+    border-radius: 14px;
+    padding: 16px;
+  }
+
+  .ai-app-metric-label {
+    color: var(--fd-muted, #5b6878);
+    display: block;
+    font-size: 11px;
+    font-weight: 750;
+  }
+
+  .ai-app-metric-value {
+    color: var(--fd-ink, #10243e);
+    display: block;
+    font-size: 27px;
+    font-weight: 850;
+    letter-spacing: -0.035em;
+    margin: 4px 0 0;
+  }
+
+  .ai-app-metric-value--placeholder {
+    color: var(--fd-muted, #5b6878);
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 0;
+  }
+
+  .ai-app-metric-note {
+    color: var(--fd-muted, #5b6878);
+    display: block;
+    font-size: 11px;
+    margin: 3px 0 0;
+  }
+
+  .ai-app-case {
+    border-radius: 16px;
+    padding: 18px;
+  }
+
+  .ai-app-case-top {
+    display: flex;
+    gap: 10px;
+    justify-content: space-between;
+  }
+
+  .ai-app-case-ref {
+    color: var(--fd-muted, #5b6878);
+    font-size: 10px;
+    font-weight: 850;
+    letter-spacing: 0.08em;
+  }
+
+  .ai-app-case-title {
+    color: var(--fd-ink, #10243e);
+    font-size: 17px;
+    font-weight: 700;
+    margin: 7px 0 5px;
+  }
+
+  .ai-app-case-summary {
+    color: var(--fd-muted, #5b6878);
+    font-size: 12px;
+    margin: 0 0 12px;
+  }
+
+  .ai-app-case-facts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+  }
+
+  .ai-app-chip {
+    background: var(--fd-soft, #e5ebf0);
+    border-radius: 7px;
+    color: #486576;
+    font-size: 10px;
+    padding: 5px 7px;
+  }
+
+  .ai-app-case-foot {
+    border-top: 1px solid var(--fd-soft, #e5ebf0);
+    color: var(--fd-muted, #5b6878);
+    display: flex;
+    flex-wrap: wrap;
+    font-size: 11px;
+    gap: 8px;
+    justify-content: space-between;
+    margin: 14px 0 0;
+    padding: 12px 0 0;
+  }
+
+  .ai-app-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .ai-app-step {
+    align-items: flex-start;
+    border: 1px solid var(--fd-line, #d6e0e8);
+    border-radius: 13px;
+    display: flex;
+    gap: 12px;
+    padding: 14px;
+  }
+
+  .ai-app-step-marker {
+    align-items: center;
+    background: var(--fd-state-blue, #e7f0fb);
+    border-radius: 10px;
+    color: var(--fd-accent, #087f83);
+    display: flex;
+    font-weight: 850;
+    height: 34px;
+    justify-content: center;
+    width: 34px;
+  }
+
+  .ai-app-step-text {
+    flex: 1 1 auto;
+  }
+
+  .ai-app-step-title {
+    color: var(--fd-ink, #10243e);
+    display: block;
+    font-size: 13px;
+    margin: 1px 0 3px;
+  }
+
+  .ai-app-step-note {
+    color: var(--fd-muted, #5b6878);
+    display: block;
+    font-size: 11px;
+  }
+
+  .ai-app-flow {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    list-style: none;
+    margin: 16px 0;
+    padding: 0;
+  }
+
+  .ai-app-flow-step {
+    align-items: center;
+    display: flex;
+    gap: 8px;
+  }
+
+  .ai-app-flow-name {
+    background: var(--fd-soft, #e5ebf0);
+    border: 1px solid var(--fd-line, #d6e0e8);
+    border-radius: 9px;
+    color: var(--fd-ink, #10243e);
+    font-size: 11px;
+    font-weight: 700;
+    padding: 8px 10px;
+  }
+
+  .ai-app-flow-sep {
+    color: var(--fd-muted, #5b6878);
+  }
+
+  .ai-app-layer {
+    border-radius: 14px;
+    min-height: 150px;
+    padding: 16px;
+  }
+
+  .ai-app-layer-kind {
+    color: var(--fd-accent, #087f83);
+    display: block;
+    font-size: 10px;
+    font-weight: 850;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+  }
+
+  .ai-app-layer-title {
+    color: var(--fd-ink, #10243e);
+    font-size: 15px;
+    font-weight: 700;
+    margin: 8px 0;
+  }
+
+  .ai-app-layer-note {
+    color: var(--fd-muted, #5b6878);
+    font-size: 11px;
+    margin: 0;
+  }
+
+  .ai-app-aside {
+    border-radius: 10px;
+    font-size: 12px;
+    margin: 15px 0;
+    padding: 13px 15px;
+  }
+
+  .ai-app-aside--caution {
+    background: #fff8e9;
+    border-left: 4px solid #a55c00;
+    color: #664316;
+  }
+
+  .ai-app-aside--info {
+    background: var(--fd-state-blue, #e7f0fb);
+    border-left: 4px solid var(--fd-focus, #0b66d4);
+    color: var(--fd-ink, #10243e);
+  }
+
+  .ai-app-ghost {
+    background: var(--fd-paper, #fff);
+    border: 1px solid var(--fd-line, #d6e0e8);
+    border-radius: 10px;
+    color: var(--fd-ink, #10243e);
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 8px 11px;
+  }
+
+  .ai-app-threes,
+  .ai-app-fours {
+    display: grid;
+    gap: 15px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .ai-app-threes {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .ai-app-fours {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .ai-app-split {
+    display: grid;
+    gap: 16px;
+    grid-template-columns: 1.1fr 0.9fr;
+  }
+}
+
+@media (max-width: 1050px) {
+  .ai-view--app {
+    .ai-app-threes,
+    .ai-app-fours {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .ai-app-split {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+}
+
+@media (max-width: 720px) {
+  .ai-view--app {
+    .ai-app-threes,
+    .ai-app-fours {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .ai-app-head-title {
+      font-size: 19px;
+    }
+  }
+}
+
+.ai-view--app.ai-view--narrow {
+  .ai-app-threes,
+  .ai-app-fours,
+  .ai-app-split {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
