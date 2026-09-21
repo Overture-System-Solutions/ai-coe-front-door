@@ -13,6 +13,8 @@ import { UsageTelemetryStrip } from '../UsageTelemetryStrip';
 import { unresolvedRoles, useRoles } from '../useRoles';
 import type { RoleLoadState } from '../useRoles';
 import type { IRoleResolution } from '../../services/roleResolver';
+import type { RoleId } from '../../content/roles';
+import type { IStatusRow } from './kit';
 import { FeedbackWorkflow } from '../workflows/FeedbackWorkflow';
 import { GenericWorkflow } from '../workflows/GenericWorkflow';
 import { IdeaWorkflow } from '../workflows/IdeaWorkflow';
@@ -20,6 +22,7 @@ import type { IWorkflowProps } from '../workflows/shared';
 import { TeamUsageWorkflow } from '../workflows/TeamUsageWorkflow';
 import { ToolCheckWorkflow } from '../workflows/ToolCheckWorkflow';
 import { AppCases } from './AppCases';
+import { AppFooter, AppTopbar } from './AppChrome';
 import { AppMarketing } from './AppMarketing';
 import { AppValue } from './AppValue';
 import { AppHero } from './AppHero';
@@ -121,7 +124,18 @@ export function AppShell({ settings }: IAppShellProps): React.ReactElement {
   } else {
     switch (section) {
       case 'home':
-        body = <AppHero organizationName={branding.organizationLabel} choices={ENTRY_CHOICES} onChoose={open} />;
+        body = (
+          <AppHero
+            organizationName={branding.organizationLabel}
+            choices={ENTRY_CHOICES}
+            onChoose={open}
+            onCommand={(): void => open('engineering')}
+            commandLabel={`Ask the ${branding.coeName}`}
+            role={widestRole(resolution.roles)}
+            status={viewStatus(resolution, roleState.status === 'loading')}
+            pending={roleState.status === 'loading'}
+          />
+        );
         break;
       case 'cases':
         body = <AppCases />;
@@ -154,7 +168,12 @@ export function AppShell({ settings }: IAppShellProps): React.ReactElement {
 
   return (
     <div className={`overture-app ai-view ai-view--app${settings.layout === 'narrow' ? ' ai-view--narrow' : ''}`}>
-      <p className="ai-page-identity">{`Signed in as ${user.displayName}`}</p>
+      <AppTopbar
+        organizationName={branding.organizationLabel}
+        displayName={user.displayName}
+        resolution={resolution}
+        pending={roleState.status === 'loading'}
+      />
       <nav className="ai-app-tabs" aria-label="AI Center of Excellence sections">
         <div role="tablist" aria-label="AI Center of Excellence sections" className="ai-app-tabrow">
           {visible.map((candidate: IAppSection): React.ReactElement => (
@@ -180,14 +199,49 @@ export function AppShell({ settings }: IAppShellProps): React.ReactElement {
         aria-labelledby={`ai-app-tab-${section}`}
         className="ai-app-panel"
       >
-        <h2 className="ai-app-heading" tabIndex={-1} ref={headingRef}>
+        <h2 className={`ai-app-heading${section === 'home' ? ' ai-app-heading--quiet' : ''}`} tabIndex={-1} ref={headingRef}>
           {current.label}
         </h2>
-        <p className="ai-app-summary">{current.summary}</p>
+        {section !== 'home' && <p className="ai-app-summary">{current.summary}</p>}
         {body}
       </section>
+      <AppFooter organizationName={branding.organizationLabel} />
     </div>
   );
+}
+
+/** The widest role held, so the first screen describes the person by what opens the most. */
+function widestRole(roles: readonly RoleId[]): RoleId {
+  const order: RoleId[] = ['designAuthority', 'operator', 'leader', 'employee'];
+  return order.filter((role: RoleId): boolean => roles.indexOf(role) >= 0)[0] ?? 'employee';
+}
+
+/**
+ * What the view can honestly say about itself, down the side of the first screen. Every row is read from state this
+ * build holds rather than asserted: whether the membership resolved, and what that means for what is shown.
+ */
+function viewStatus(resolution: IRoleResolution, pending: boolean): IStatusRow[] {
+  const confirmed: boolean = resolution.resolution === 'resolved';
+  return [
+    {
+      label: 'Your access',
+      note: pending ? 'Reading your site groups' : confirmed ? 'Resolved from your site groups' : 'Could not be confirmed, so less is shown',
+      tone: pending ? 'design' : confirmed ? 'good' : 'wait',
+      state: pending ? 'Checking' : confirmed ? 'Confirmed' : 'Not confirmed'
+    },
+    {
+      label: 'What this page can do',
+      note: 'It drafts, records and shows. It sends nothing and publishes nothing.',
+      tone: 'good',
+      state: 'Bounded'
+    },
+    {
+      label: 'Marketing workflows',
+      note: 'Invented material, so the safeguards can be seen before real sources exist',
+      tone: 'design',
+      state: 'Demo only'
+    }
+  ];
 }
 
 /** The starters of a section: the requests it can begin, each opening inside this instance. */

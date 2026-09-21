@@ -896,3 +896,287 @@
     grid-template-columns: minmax(0, 1fr);
   }
 }
+
+// Chrome and the first screen. The nav is pinned to the top of the scroll with a frosted backing, as the reference
+// draws it; the offset keeps it clear of the host page's own command bar rather than fighting it for z-index.
+.ai-view--app {
+  .ai-app-top {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    justify-content: space-between;
+    min-height: 68px;
+    padding: 8px 0 14px;
+  }
+
+  .ai-app-brand {
+    align-items: center;
+    display: flex;
+    gap: 14px;
+  }
+
+  // Drawn rather than loaded: a gradient square with an arc cut from it, so there is no image request.
+  .ai-app-mark {
+    background: linear-gradient(135deg, var(--fd-hero-glow, #edf8f8), var(--fd-accent, #087f83) 52%, var(--fd-ink, #10243e));
+    border-radius: 12px;
+    box-shadow: 0 8px 18px rgba(4, 42, 70, 0.23);
+    display: block;
+    height: 38px;
+    position: relative;
+    width: 38px;
+  }
+
+  .ai-app-mark::after {
+    border: 2px solid #fff;
+    border-left-color: transparent;
+    border-radius: 50%;
+    content: "";
+    inset: 9px 8px;
+    position: absolute;
+    transform: rotate(-18deg);
+  }
+
+  .ai-app-brand-name {
+    color: var(--fd-ink, #10243e);
+    display: block;
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+  }
+
+  .ai-app-brand-note {
+    color: var(--fd-muted, #5b6878);
+    display: block;
+    font-size: 12px;
+    margin: 1px 0 0;
+  }
+
+  .ai-app-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .ai-app-chip-line {
+    align-items: center;
+    background: var(--fd-paper, #fff);
+    border: 1px solid var(--fd-line, #d6e0e8);
+    border-radius: 999px;
+    color: var(--fd-muted, #5b6878);
+    display: inline-flex;
+    font-size: 12px;
+    gap: 7px;
+    padding: 7px 12px;
+    white-space: nowrap;
+  }
+
+  .ai-app-dot {
+    background: #16845b;
+    border-radius: 50%;
+    height: 8px;
+    width: 8px;
+  }
+
+  .ai-app-dot--wait {
+    background: #a55c00;
+  }
+
+  .ai-app-tabs {
+    backdrop-filter: blur(14px);
+    background: rgba(255, 255, 255, 0.82);
+    border: 1px solid var(--fd-line, #d6e0e8);
+    border-radius: 14px;
+    box-shadow: 0 8px 20px rgba(4, 42, 70, 0.05);
+    margin: 0 0 20px;
+    padding: 6px;
+    position: sticky;
+    top: 8px;
+    z-index: 3;
+  }
+
+  .ai-app-tabrow {
+    border: 0;
+    border-radius: 0;
+    padding: 0;
+  }
+
+  .ai-app-tab {
+    border-radius: 9px;
+    font-size: 13px;
+    font-weight: 650;
+    padding: 9px 14px;
+  }
+
+  .ai-app-tab[aria-selected="true"] {
+    box-shadow: 0 4px 10px rgba(6, 42, 70, 0.15);
+  }
+
+  .ai-app-first {
+    display: grid;
+    gap: 20px;
+    grid-template-columns: minmax(0, 1.45fr) minmax(320px, 0.55fr);
+    margin: 0 0 18px;
+  }
+
+  .ai-app-hero {
+    margin: 0;
+    min-height: 380px;
+    overflow: hidden;
+    padding: 46px;
+    position: relative;
+  }
+
+  // The halo the reference sets behind the panel's lower right.
+  .ai-app-hero::after {
+    border: 1px solid rgba(255, 255, 255, 0.13);
+    border-radius: 50%;
+    bottom: -180px;
+    box-shadow: 0 0 0 38px rgba(255, 255, 255, 0.025), 0 0 0 78px rgba(255, 255, 255, 0.02);
+    content: "";
+    height: 430px;
+    position: absolute;
+    right: -120px;
+    width: 430px;
+  }
+
+  .ai-app-hero-eyebrow {
+    letter-spacing: 0.16em;
+    position: relative;
+    z-index: 2;
+  }
+
+  .ai-app-hero-title {
+    font-size: clamp(38px, 4.4vw, 64px);
+    letter-spacing: -0.045em;
+    line-height: 0.99;
+    margin: 12px 0 16px;
+    max-width: 14ch;
+    position: relative;
+    z-index: 2;
+  }
+
+  .ai-app-hero-text {
+    font-size: 17px;
+    margin: 0 0 24px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .ai-app-command {
+    display: block;
+    margin: 0;
+    max-width: 780px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .ai-app-command-label {
+    clip: rect(0, 0, 0, 0);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    white-space: nowrap;
+    width: 1px;
+  }
+
+  .ai-app-command-row {
+    background: var(--fd-paper, #fff);
+    border-radius: 16px;
+    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.16);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 8px;
+  }
+
+  .ai-app-command-input {
+    border: 0;
+    border-radius: 11px;
+    color: var(--fd-ink, #10243e);
+    flex: 1 1 260px;
+    font-size: 16px;
+    min-width: 0;
+    padding: 13px 14px;
+  }
+
+  .ai-app-hero-micro {
+    color: rgba(255, 255, 255, 0.82);
+    font-size: 12px;
+    margin: 12px 0 0;
+    position: relative;
+    z-index: 2;
+  }
+
+  .ai-app-first-side {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .ai-app-choices {
+    margin: 0 0 26px;
+  }
+
+  .ai-app-foot {
+    border-top: 1px solid var(--fd-line, #d6e0e8);
+    color: var(--fd-muted, #5b6878);
+    display: flex;
+    flex-wrap: wrap;
+    font-size: 11px;
+    gap: 16px;
+    justify-content: space-between;
+    margin: 32px 0 0;
+    padding: 18px 0 0;
+  }
+}
+
+@media (max-width: 1050px) {
+  .ai-view--app {
+    .ai-app-first {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+}
+
+@media (max-width: 720px) {
+  .ai-view--app {
+    .ai-app-hero {
+      padding: 30px 22px;
+      min-height: 340px;
+    }
+
+    .ai-app-top {
+      padding: 6px 0 12px;
+    }
+
+    .ai-app-tabs {
+      position: static;
+    }
+  }
+}
+
+.ai-view--app.ai-view--narrow {
+  .ai-app-first {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .ai-app-tabs {
+    position: static;
+  }
+}
+
+// The first screen names itself inside the entry panel, so its section heading is there for a reader and a focus
+// target only. It still takes focus on a section change, which is why it is offset rather than removed.
+.ai-view--app .ai-app-heading--quiet {
+  clip: rect(0, 0, 0, 0);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  white-space: nowrap;
+  width: 1px;
+}
