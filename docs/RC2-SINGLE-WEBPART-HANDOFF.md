@@ -59,8 +59,10 @@ RC2 and Marketing reference packages are unchanged and must stay so; these decis
 
 | Area | State | Evidence |
 |---|---|---|
-| Consolidated view (`view: app`) with six internal sections | Locally implemented and tested | `components/app/`, 934 tests, rendered in the offline preview |
-| Capability gate over the sections and their services | Locally implemented and tested | `services/authorization.ts`, 8 cases, proved in preview at three roles |
+| Consolidated view (`view: app`), seven sections, rebuilt to the RC2 reference | Locally implemented and tested | `components/app/`, 11 shell tests, rendered in the offline preview |
+| RC2 component kit (pill, panel, status card, metric, case card, steps, flow, layer, aside, buttons) | Locally implemented and tested | `components/app/kit/`, 17 tests |
+| Five extra palette keys so the reference colours arrive by configuration | Locally implemented and tested | `content/palette.ts`, README preset |
+| Capability gate over the sections and their services | Locally implemented and tested | `services/authorization.ts`, 8 cases + 4 shell cases, proved in preview at three roles |
 | Work identity mapping (tenant record key ↔ canonical Work ID) | Locally implemented and tested | `content/workIdentity.ts`, 7 cases |
 | Idempotency key, payload hash, outcome classes | Locally implemented and tested | `content/actionEnvelope.ts`, 15 cases |
 | Existing intake, my work, outcome record, telemetry, admin queue | Reused unchanged inside the new shell | shipped services, existing suites |

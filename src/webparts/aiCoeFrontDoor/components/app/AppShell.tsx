@@ -97,6 +97,38 @@ export function AppShell({ settings }: IAppShellProps): React.ReactElement {
     setSection(next);
   }, []);
 
+  /**
+   * Arrow keys move along the tabs, Home and End jump to the ends. A tab list that can only be reached by pointer
+   * or by tabbing through every tab is not a tab list; this is the behaviour the role promises.
+   */
+  const onTabKey = React.useCallback(
+    (event: React.KeyboardEvent<HTMLDivElement>): void => {
+      const keys: string[] = ['ArrowRight', 'ArrowLeft', 'Home', 'End'];
+      if (keys.indexOf(event.key) < 0 || visible.length === 0) {
+        return;
+      }
+      event.preventDefault();
+      const at: number = visible.map((candidate: IAppSection): AppSectionId => candidate.id).indexOf(section);
+      const last: number = visible.length - 1;
+      let next: number;
+      if (event.key === 'Home') {
+        next = 0;
+      } else if (event.key === 'End') {
+        next = last;
+      } else if (event.key === 'ArrowRight') {
+        next = at >= last ? 0 : at + 1;
+      } else {
+        next = at <= 0 ? last : at - 1;
+      }
+      open(visible[next].id);
+      const button: HTMLElement | null = document.getElementById(`ai-app-tab-${visible[next].id}`);
+      if (button !== null) {
+        button.focus();
+      }
+    },
+    [visible, section, open]
+  );
+
   const current: IAppSection = sectionOf(section);
   const exit = React.useCallback((): void => setWorkflow(undefined), []);
   const workflowProps: IWorkflowProps = { resumeDraft: true, onExit: exit, onDraftsChanged: NO_DRAFT_TRACKING };
@@ -169,7 +201,7 @@ export function AppShell({ settings }: IAppShellProps): React.ReactElement {
         pending={roleState.status === 'loading'}
       />
       <nav className="ai-app-tabs" aria-label="AI Center of Excellence sections">
-        <div role="tablist" aria-label="AI Center of Excellence sections" className="ai-app-tabrow">
+        <div role="tablist" aria-label="AI Center of Excellence sections" className="ai-app-tabrow" onKeyDown={onTabKey}>
           {visible.map((candidate: IAppSection): React.ReactElement => (
             <button
               key={candidate.id}
