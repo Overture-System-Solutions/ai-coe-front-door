@@ -1,6 +1,7 @@
 import * as React from 'react';
 import type { IBranding } from '../branding/branding';
 import type { TelemetryProvider } from '../content/telemetryTiles';
+import type { ICaseAnalysisService } from '../services/caseAnalysisService';
 import type { IIdeaDraftService } from '../services/draftService';
 import type { IDraftStore } from '../services/draftStorage';
 import type { IMyWorkService } from '../services/myWorkService';
@@ -38,6 +39,8 @@ export interface IFrontDoorServices {
   marketing?: IMarketingServices;
   /** The CORE Binding A case service (disabled until a command list is bound); absent in the legacy-only test setups. */
   coreWork?: ICoreWorkService;
+  /** Claude's analysis of the open business cases, through the case analysis flow; present only when a flow URL is bound. */
+  caseAnalysis?: ICaseAnalysisService;
 }
 
 /** Everything the pages need from the host: who is looking, where they are, and the services to talk to. */

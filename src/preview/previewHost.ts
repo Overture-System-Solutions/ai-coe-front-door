@@ -53,6 +53,8 @@ interface IPreviewApi {
   setOrganizationName(name: string): void;
   /** Points the web part at the simulated draft flow (any non-empty URL) or back to plain summaries. */
   setDraftServiceUrl(url: string): void;
+  /** Points the web part at the simulated case analysis flow (any non-empty URL) or leaves the Cases panel unbound. */
+  setCaseAnalysisUrl(url: string): void;
   /** Switches the telemetry strip between the Claude, OpenAI and combined tile sets. */
   setTelemetryProvider(mode: string): void;
   /** Switches the piece this instance renders (the view property) without reloading. */
@@ -183,6 +185,41 @@ function seedIntakes(): void {
   });
 }
 seedIntakes();
+
+/**
+ * Fictional governance records, so the leaders' case analysis has open business cases to rank offline. Their business
+ * problem text is kept here only to show that the analysis never reads it.
+ */
+function seedUseCases(): void {
+  const useCases: IPreviewItem[] = lists['AI CoE Use Cases'];
+  const day: number = 86400000;
+  const rows: { suffix: string; title: string; status: string; risk: string; sensitivity: string; external: boolean; autonomous: boolean; cost: number; age: number; review?: number }[] = [
+    { suffix: 'PREVCASE1', title: 'Draft replies to hospital service tickets (fictional)', status: 'Ready for Review', risk: 'High', sensitivity: 'Restricted', external: true, autonomous: false, cost: 1200, age: 12, review: -2 },
+    { suffix: 'PREVCASE2', title: 'Summarize weekly change-advisory notes (fictional)', status: 'Needs Information', risk: 'Medium', sensitivity: 'Confidential', external: false, autonomous: false, cost: 300, age: 20 },
+    { suffix: 'PREVCASE3', title: 'Tag knowledge articles by product line (fictional)', status: 'Under Review', risk: 'Low', sensitivity: 'Internal', external: false, autonomous: false, cost: 60, age: 5, review: 3 },
+    { suffix: 'PREVCASE4', title: 'Route after-hours alerts to on-call (fictional)', status: 'Submitted', risk: '', sensitivity: 'Confidential', external: false, autonomous: true, cost: 450, age: 1 }
+  ];
+  for (const row of rows) {
+    const created: Date = new Date(Date.now() - row.age * day);
+    useCases.push({
+      Id: nextId++,
+      Title: row.title,
+      CoEID: `OVT-AICOE-${created.toISOString().slice(0, 10).replace(/-/g, '')}-${row.suffix}`,
+      Status: row.status,
+      RiskTier: row.risk,
+      DataSensitivity: row.sensitivity,
+      ExternalUsers: row.external,
+      AutonomousActions: row.autonomous,
+      EstimatedMonthlyCost: row.cost,
+      NextReviewDate: row.review === undefined ? null : new Date(Date.now() + row.review * day).toISOString(),
+      BusinessProblem: 'Fictional business problem text. The case analysis never sends this field.',
+      SubmitterEmail: 'someone.else@example.invalid',
+      Created: created.toISOString(),
+      Modified: new Date(created.getTime() + day).toISOString()
+    });
+  }
+}
+seedUseCases();
 
 /**
  * Fictional rows of the measures list an operator fills in by hand, so the Enterprise value page shows
@@ -789,6 +826,71 @@ function simulatedDraft(url: string, options: { body?: string } | undefined): Pr
   });
 }
 
+/** The fields the case analysis flow selects; nothing a submitter wrote beyond the title. */
+const CASE_ANALYSIS_FIELDS: string[] = ['CoEID', 'Title', 'Status', 'RiskTier', 'DataSensitivity', 'ExternalUsers', 'AutonomousActions', 'EstimatedMonthlyCost', 'NextReviewDate', 'Created', 'Modified'];
+
+/**
+ * Stands in for the case analysis flow: reads the open simulated records by the same fields the flow selects and ranks
+ * them by a fixed rule (risk tier, then estimated cost). No model is called; the answer says so.
+ */
+function simulatedCaseAnalysis(url: string, analysisRequest: { requestId?: string; question?: string }): Promise<IPreviewResponse> {
+  requests.push({ method: 'POST', list: `simulated case analysis flow (${url})`, body: analysisRequest, simulated: true });
+  const weight: { [tier: string]: number } = { high: 3, medium: 2, low: 1 };
+  type Picked = { [field: string]: unknown };
+  const open: Picked[] = lists['AI CoE Use Cases']
+    .filter((item: IPreviewItem): boolean => ['closed', 'declined'].indexOf(String(item.Status || '').toLowerCase()) < 0)
+    .map((item: IPreviewItem): Picked => {
+      const picked: Picked = {};
+      for (const field of CASE_ANALYSIS_FIELDS) {
+        picked[field] = item[field];
+      }
+      return picked;
+    });
+  const tier = (item: Picked): number => weight[String(item.RiskTier || '').toLowerCase()] ?? 0;
+  const ranked: Picked[] = open.slice().sort((a: Picked, b: Picked): number => tier(b) - tier(a) || Number(b.EstimatedMonthlyCost || 0) - Number(a.EstimatedMonthlyCost || 0));
+  const unrated: number = open.filter((item: Picked): boolean => tier(item) === 0).length;
+  const plural: string = unrated === 1 ? ' has' : 's have';
+  const envelope: unknown = {
+    ok: true,
+    schemaVersion: '1.0',
+    requestId: analysisRequest.requestId,
+    draftOnly: true,
+    humanReviewRequired: true,
+    provider: 'offline-preview-simulation',
+    model: open.length === 0 ? '' : 'none',
+    responseId: open.length === 0 ? '' : `preview-${Date.now()}`,
+    caseCount: open.length,
+    truncated: false,
+    asOf: new Date().toISOString(),
+    analysis:
+      open.length === 0
+        ? null
+        : {
+            summary: `Simulated ranking of ${open.length} open business cases by risk tier, then estimated monthly cost. The offline preview called no model, so this does not answer your question.`,
+            priorities: ranked.slice(0, 5).map((item: Picked) => ({
+              coeId: String(item.CoEID || 'Not recorded'),
+              title: String(item.Title || 'Not recorded'),
+              whyItMatters: `Risk tier ${String(item.RiskTier || 'not recorded')}, ${String(item.DataSensitivity || 'sensitivity not recorded')} data, estimated $${String(item.EstimatedMonthlyCost ?? 'not recorded')} a month, status ${String(item.Status || 'not recorded')}.`,
+              suggestedNextStep: 'Confirm the status with the AI CoE reviewer (simulated).'
+            })),
+            patterns: [`${ranked.filter((item: Picked): boolean => tier(item) === 3).length} of ${open.length} open cases are rated High risk (simulated).`],
+            gaps: unrated === 0 ? [] : [`${unrated} open case${plural} no risk tier yet (simulated).`]
+          }
+  };
+  return Promise.resolve({
+    ok: true,
+    status: 200,
+    json: (): Promise<unknown> => Promise.resolve(envelope),
+    text: (): Promise<string> => Promise.resolve(JSON.stringify(envelope))
+  });
+}
+
+/** Both simulated flows sit behind the one flow-service client, told apart by the contract each request names. */
+function simulatedFlow(url: string, options: { body?: string } | undefined): Promise<IPreviewResponse> {
+  const body: { workflowId?: string; requestId?: string; question?: string } = options !== undefined && options.body ? JSON.parse(options.body) : {};
+  return body.workflowId === 'caseAnalysis' ? simulatedCaseAnalysis(url, body) : simulatedDraft(url, options);
+}
+
 const context: unknown = {
   pageContext: {
     user: { displayName: 'Local Preview (fictional)', email: 'preview@example.invalid' },
@@ -801,7 +903,7 @@ const context: unknown = {
   aadHttpClientFactory: {
     getClient: (): Promise<unknown> =>
       Promise.resolve({
-        post: (url: string, _configuration: unknown, options?: { body?: string }): Promise<IPreviewResponse> => simulatedDraft(url, options)
+        post: (url: string, _configuration: unknown, options?: { body?: string }): Promise<IPreviewResponse> => simulatedFlow(url, options)
       })
   }
 };
@@ -885,6 +987,13 @@ previewWindow.FrontDoorPreview = {
       throw new Error('Mount the web part first.');
     }
     mounted.properties.draftServiceUrl = url;
+    mounted.render();
+  },
+  setCaseAnalysisUrl: (url: string): void => {
+    if (mounted === undefined) {
+      throw new Error('Mount the web part first.');
+    }
+    mounted.properties.caseAnalysisUrl = url;
     mounted.render();
   },
   setTelemetryProvider: (mode: string): void => {

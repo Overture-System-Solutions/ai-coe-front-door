@@ -1,3 +1,4 @@
+import { applyReviewPriority } from './executivePriority';
 import { createFakeListClient, InMemoryListStore } from '../../../testing/listStore';
 import type { IRecordedRequest } from '../../../testing/listStore';
 import { CORRECTION_CATEGORIES, OUTCOME_COLUMNS, OUTCOME_WORKFLOW_VERSION } from '../content/workflows/outcome';
@@ -168,6 +169,31 @@ describe('GovernanceService.submitWorkflow', () => {
     expect(result.governanceItemId).toBe(2);
     expect(result.governanceItemUrl).toBe('https://example.sharepoint.com/sites/demo/Lists/AI%20CoE%20Use%20Cases/DispForm.aspx?ID=2');
     expect(result.message).toBe('Submission received and queued for AI CoE intake and triage.');
+  });
+
+  it('gives a leader business case the High priority and a review date two working days out', async () => {
+    const plain: { originalAnswers: { [key: string]: unknown } } = { originalAnswers: { workToImprove: 'Weekly notes', informationCategories: ['public'] } };
+    const baseline = createHarness();
+    await baseline.service.submitWorkflow('idea', plain);
+    const [baselineIntake, baselineUseCase] = posts(baseline.store).map((request: IRecordedRequest): { [field: string]: unknown } => request.body as { [field: string]: unknown });
+    expect(baselineIntake.Priority).toBe('Normal');
+    expect(baselineUseCase).not.toHaveProperty('NextReviewDate');
+
+    const { store, service } = createHarness();
+    await service.submitWorkflow('idea', applyReviewPriority(plain, true));
+    const [intake, useCase] = posts(store).map((request: IRecordedRequest): { [field: string]: unknown } => request.body as { [field: string]: unknown });
+    expect(intake.Priority).toBe('High');
+    expect(JSON.parse(String(intake.PayloadJson)).reviewPriority).toEqual({ level: 'executive', reason: expect.any(String) });
+    // Friday 2026-09-11 14:30 plus two working days is Tuesday 2026-09-15 14:30.
+    expect(useCase.NextReviewDate).toBe('2026-09-15T14:30:00.000Z');
+  });
+
+  it('ignores the mark on a service-queue request, which has no governance record to date', async () => {
+    const { store, service } = createHarness();
+    await service.submitWorkflow('helpTraining', applyReviewPriority({ originalAnswers: { helpTopic: 'x' } }, true));
+    const requests: IRecordedRequest[] = posts(store);
+    expect(requests.map((request: IRecordedRequest): string | undefined => request.list)).toEqual([INTAKES_LIST_TITLE]);
+    expect((requests[0].body as { [field: string]: unknown }).Priority).toBe('Normal');
   });
 
   it('falls back to the page user, the outcome routing and a default business problem', async () => {

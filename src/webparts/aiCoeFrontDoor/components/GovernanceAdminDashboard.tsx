@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { useFrontDoor } from '../context/FrontDoorContext';
 import { ChevronLeft, ChevronRight, CircleCheck, Clock3, ExternalLink, Inbox, LayoutDashboard, RefreshCw, Search, ShieldAlert, X } from '../icons';
+import { readReviewPriority } from '../services/executivePriority';
 import type { IAdminDashboardData, IListItem } from '../services/types';
 import { includes } from '../utils/collections';
 
@@ -22,6 +23,10 @@ export interface IDashboardRecord {
   risk: string;
   /** True for records that have (or are) a governance use case. */
   governance: boolean;
+  /** True when a leader submitted it, so it is reviewed sooner (see services/executivePriority.ts). */
+  executive: boolean;
+  /** The review date its governance record carries, when it is an executive case. */
+  reviewBy: string | undefined;
 }
 
 type QueueFilter = 'all' | 'governance' | 'service' | 'attention';
@@ -101,6 +106,11 @@ function idOf(item: IListItem | undefined): number | undefined {
   return typeof value === 'number' ? value : undefined;
 }
 
+/** An executive case that is still open: it goes to the top of the queue and counts as needing attention. */
+export function expedited(record: IDashboardRecord): boolean {
+  return record.executive && !includes(CLOSED_STATUSES, record.status.toLowerCase());
+}
+
 /** Pairs each intake with the use case carrying its intake id, then appends the unpaired use cases. */
 export function buildRecords(intakes: IListItem[], useCases: IListItem[]): IDashboardRecord[] {
   const pairedUseCases: { [id: string]: true } = {};
@@ -113,6 +123,7 @@ export function buildRecords(intakes: IListItem[], useCases: IListItem[]): IDash
       }
       return paired;
     })[0];
+    const executive: boolean = readReviewPriority(intake.PayloadJson) !== undefined;
     return {
       key: `intake-${text(intake, 'Id')}`,
       intake,
@@ -124,7 +135,9 @@ export function buildRecords(intakes: IListItem[], useCases: IListItem[]): IDash
       submittedAt: text(intake, 'SubmittedAt') || text(intake, 'Created') || text(useCase, 'Created') || undefined,
       status: text(useCase, 'Status') || text(intake, 'Status') || 'Submitted',
       risk: text(useCase, 'RiskTier') || text(intake, 'Priority') || 'Unrated',
-      governance: useCase !== undefined || intake.PilotOnly === false
+      governance: useCase !== undefined || intake.PilotOnly === false,
+      executive,
+      reviewBy: executive ? text(useCase, 'NextReviewDate') || undefined : undefined
     };
   });
   const standalone: IDashboardRecord[] = useCases
@@ -140,11 +153,15 @@ export function buildRecords(intakes: IListItem[], useCases: IListItem[]): IDash
         submittedAt: text(useCase, 'Created') || undefined,
         status: text(useCase, 'Status') || 'Submitted',
         risk: text(useCase, 'RiskTier') || 'Unrated',
-        governance: true
+        governance: true,
+        executive: false,
+        reviewBy: undefined
       })
     );
+  // Open executive cases first, then everything newest first.
   return fromIntakes.concat(standalone).sort(
-    (a: IDashboardRecord, b: IDashboardRecord): number => new Date(b.submittedAt || 0).getTime() - new Date(a.submittedAt || 0).getTime()
+    (a: IDashboardRecord, b: IDashboardRecord): number =>
+      Number(expedited(b)) - Number(expedited(a)) || new Date(b.submittedAt || 0).getTime() - new Date(a.submittedAt || 0).getTime()
   );
 }
 
@@ -157,7 +174,7 @@ function matchesFilter(record: IDashboardRecord, filter: QueueFilter): boolean {
     case 'service':
       return !record.governance;
     case 'attention':
-      return risk === 'high' || status.indexOf('information') >= 0 || status.indexOf('rejected') >= 0;
+      return risk === 'high' || status.indexOf('information') >= 0 || status.indexOf('rejected') >= 0 || expedited(record);
     default:
       return true;
   }
@@ -253,7 +270,7 @@ export function GovernanceAdminDashboard({ onExit }: IGovernanceAdminDashboardPr
   const query: string = search.trim().toLowerCase();
   const visible: IDashboardRecord[] = records.filter((record: IDashboardRecord): boolean => matchesFilter(record, filter) && matchesSearch(record, query));
   const openGovernanceItems: number = data.useCases.filter((useCase: IListItem): boolean => !includes(CLOSED_STATUSES, text(useCase, 'Status').toLowerCase())).length;
-  const highPriorityItems: number = records.filter((record: IDashboardRecord): boolean => record.risk.toLowerCase() === 'high').length;
+  const highPriorityItems: number = records.filter((record: IDashboardRecord): boolean => record.risk.toLowerCase() === 'high' || expedited(record)).length;
   const sections: [string, PayloadObject][] = answerSections(selected);
   const siteRoot: string = String(siteUrl || '').replace(/\/$/, '');
   const selectedIntakeId: number | undefined = idOf(selected?.intake);
@@ -356,6 +373,7 @@ export function GovernanceAdminDashboard({ onExit }: IGovernanceAdminDashboardPr
                     </span>
                     <span className="ai-admin-record-date">{formatDateTime(record.submittedAt)}</span>
                     <span className={`ai-admin-pill is-${record.risk.toLowerCase().replace(/\s+/g, '-')}`}>{record.risk}</span>
+                    {record.executive && <span className="ai-admin-pill is-high">Executive</span>}
                     <span className="ai-admin-status">{record.status}</span>
                     <ChevronRight aria-hidden="true" />
                   </button>
@@ -393,6 +411,12 @@ export function GovernanceAdminDashboard({ onExit }: IGovernanceAdminDashboardPr
                   <dt>Submitted</dt>
                   <dd>{formatDateTime(selected.submittedAt)}</dd>
                 </div>
+                {selected.executive && (
+                  <div>
+                    <dt>Executive case, review by</dt>
+                    <dd>{selected.reviewBy === undefined ? 'Not yet set' : formatDateTime(selected.reviewBy)}</dd>
+                  </div>
+                )}
               </dl>
               {businessProblem && (
                 <section className="ai-admin-detail-section">

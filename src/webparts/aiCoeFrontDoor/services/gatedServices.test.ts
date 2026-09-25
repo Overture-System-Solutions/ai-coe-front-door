@@ -7,6 +7,8 @@ import type { IFakeGovernanceService, IFakeProgramMeasuresService, IFakeUsageMet
 import { createTestFrontDoor } from '../../../testing/renderWithFrontDoor';
 import type { RoleId } from '../content/roles';
 import type { IFrontDoorServices } from '../context/FrontDoorContext';
+import type { ICaseAnalysisResult } from './caseAnalysisService';
+import { readReviewPriority } from './executivePriority';
 import { GATED_MESSAGE, gateServices } from './gatedServices';
 import type { IGatedServices } from './gatedServices';
 import type { IProgramMeasuresResult } from './programMeasuresService';
@@ -107,4 +109,46 @@ describe('gated service facades', () => {
     }
   });
 
+  it('marks a confirmed leader business case for sooner review and strips the mark from anyone else', async () => {
+    const payload: { [key: string]: unknown } = { originalAnswers: { workToImprove: 'x' } };
+    const leader: IGatedServices & IFakes = build(resolved('leader'));
+    await leader.services.governance.submitWorkflow('idea', payload);
+    expect(readReviewPriority(leader.governance.submissions[0].payload)).toBeDefined();
+
+    const forged: { [key: string]: unknown } = { ...payload, reviewPriority: { level: 'executive', reason: 'forged' } };
+    for (const resolution of [resolved(), resolved('operator'), unresolved('leader')]) {
+      const other: IGatedServices & IFakes = build(resolution);
+      await other.services.governance.submitWorkflow('idea', forged);
+      expect(readReviewPriority(other.governance.submissions[0].payload)).toBeUndefined();
+    }
+
+    const service: IGatedServices & IFakes = build(resolved('leader'));
+    await service.services.governance.submitWorkflow('helpTraining', payload);
+    expect(service.governance.submissions[0].payload).toBe(payload);
+  });
+
+  it('refuses the case analysis to an employee before a request is built, and lets a leader and an operator ask', async () => {
+    const analyze: jest.Mock = jest.fn(async (): Promise<ICaseAnalysisResult> => ({
+      analysis: undefined,
+      caseCount: 0,
+      truncated: false,
+      asOf: '2026-09-25T00:00:00Z',
+      provenance: { provider: 'anthropic', model: '', responseId: '', requestId: 'r', draftOnly: true, humanReviewRequired: true }
+    }));
+    const bundle = (resolution: IRoleResolution): IGatedServices =>
+      gateServices({ ...createTestFrontDoor({ caseAnalysis: { analyze } }).value.services }, resolution);
+
+    const employee: IGatedServices = bundle(resolved());
+    await expect(employee.services.caseAnalysis!.analyze('q')).rejects.toMatchObject({ kind: 'not-permitted' });
+    expect(analyze).not.toHaveBeenCalled();
+    expect(employee.counters.refused.analyzeCasePortfolio).toBe(1);
+    await expect(bundle(unresolved('leader')).services.caseAnalysis!.analyze('q')).rejects.toMatchObject({ kind: 'not-permitted' });
+    expect(analyze).not.toHaveBeenCalled();
+
+    await bundle(resolved('leader')).services.caseAnalysis!.analyze('q');
+    await bundle(resolved('operator')).services.caseAnalysis!.analyze('q');
+    expect(analyze).toHaveBeenCalledTimes(2);
+    expect(gateServices(createTestFrontDoor().value.services, resolved('leader')).services.caseAnalysis).toBeUndefined();
+  });
 });
+

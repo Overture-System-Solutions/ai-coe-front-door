@@ -22,7 +22,11 @@
 import type { IFrontDoorServices } from '../context/FrontDoorContext';
 import { decide } from './authorization';
 import type { Capability, IDecision } from './authorization';
+import { CaseAnalysisError } from './caseAnalysisService';
+import type { ICaseAnalysisResult, ICaseAnalysisService } from './caseAnalysisService';
+import { applyReviewPriority, holdsLeaderRole } from './executivePriority';
 import { failureUserMessage } from './failureClass';
+import { isGovernanceWorkflow } from './GovernanceService';
 import type { IProgramMeasuresResult, IProgramMeasuresService } from './programMeasuresService';
 import type { IRoleResolution } from './roleResolver';
 import type { IAdminDashboardData, IGovernanceService, ISubmissionResult, ISubmitOptions, IUsageMetricsResult, IUsageMetricsService } from './types';
@@ -88,12 +92,15 @@ export function gateUsage(service: IUsageMetricsService, resolution: IRoleResolu
 
 /**
  * The governance service with its one protected read, the administrator queue, behind `readAdminQueue`. The two
- * writes are a person's own and pass through: the server decides what it accepts, exactly as before.
+ * writes are a person's own and pass through: the server decides what it accepts, exactly as before. The one thing
+ * added on the way is the review priority of a business case: a leader's governance submission is marked to be
+ * reviewed sooner, and anyone else's never carries that mark (see executivePriority.ts). It orders the review queue
+ * and grants nothing.
  */
 export function gateGovernance(service: IGovernanceService, resolution: IRoleResolution, counters: IGateCounters): IGovernanceService {
   return {
     submitWorkflow: (workflowType: SubmissionWorkflowType, payload: unknown, options?: ISubmitOptions): Promise<ISubmissionResult> =>
-      service.submitWorkflow(workflowType, payload, options),
+      service.submitWorkflow(workflowType, isGovernanceWorkflow(workflowType) ? applyReviewPriority(payload, holdsLeaderRole(resolution)) : payload, options),
     submitOutcome: (payload: unknown, options?: ISubmitOptions): Promise<ISubmissionResult> => service.submitOutcome(payload, options),
     getAdminDashboardData: async (): Promise<IAdminDashboardData> => {
       const decision: IDecision = decide('readAdminQueue', resolution);
@@ -102,6 +109,26 @@ export function gateGovernance(service: IGovernanceService, resolution: IRoleRes
         return refusedDashboard();
       }
       return service.getAdminDashboardData();
+    }
+  };
+}
+
+/**
+ * The case analysis behind `analyzeCasePortfolio`. Absent stays absent: a site with no analysis flow bound has no
+ * service. A refused call is rejected before any request is built, with the error the panel already handles.
+ */
+export function gateCaseAnalysis(service: ICaseAnalysisService | undefined, resolution: IRoleResolution, counters: IGateCounters): ICaseAnalysisService | undefined {
+  if (service === undefined) {
+    return undefined;
+  }
+  return {
+    analyze: async (question: string): Promise<ICaseAnalysisResult> => {
+      const decision: IDecision = decide('analyzeCasePortfolio', resolution);
+      if (!decision.allowed) {
+        count(counters, 'analyzeCasePortfolio');
+        throw new CaseAnalysisError('not-permitted', GATED_MESSAGE);
+      }
+      return service.analyze(question);
     }
   };
 }
@@ -124,7 +151,8 @@ export function gateServices(services: IFrontDoorServices, resolution: IRoleReso
       ...services,
       governance: gateGovernance(services.governance, resolution, counters),
       usage: gateUsage(services.usage, resolution, counters),
-      programMeasures: gateProgramMeasures(services.programMeasures, resolution, counters)
+      programMeasures: gateProgramMeasures(services.programMeasures, resolution, counters),
+      caseAnalysis: gateCaseAnalysis(services.caseAnalysis, resolution, counters)
     }
   };
 }

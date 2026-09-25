@@ -1,6 +1,7 @@
 import { OUTCOME_WORKFLOW_VERSION, outcomeRecordFields } from '../content/workflows/outcome';
 import type { IOutcomeRecordFields } from '../content/workflows/outcome';
 import { includes } from '../utils/collections';
+import { executiveReviewBy, readReviewPriority } from './executivePriority';
 import type { SubmissionWorkflowType } from '../workflows/types';
 import { classifyError, failureLogDetail, failureUserMessage, statusError } from './failureClass';
 import type { FailureClass } from './failureClass';
@@ -117,6 +118,9 @@ export class GovernanceService implements IGovernanceService {
     const site: string = siteRoot(this._context.siteUrl);
     const governance: boolean = isGovernanceWorkflow(workflowType);
     const version: string = String(record.workflowVersion || '2.1');
+    // A leader's business case is reviewed sooner: the request takes the High priority and the governance record a
+    // review date. Both are existing fields; nothing is added to an ordinary submission (see executivePriority.ts).
+    const executive: boolean = governance && readReviewPriority(record) !== undefined;
 
     try {
       // A retry looks for the row first; finding it is itself a native readback of that row.
@@ -130,7 +134,7 @@ export class GovernanceService implements IGovernanceService {
               WorkflowType: workflowType,
               PilotWorkflowVersion: version,
               Status: 'Submitted - Pilot',
-              Priority: flags.requiresReview ? 'High' : 'Normal',
+              Priority: executive || flags.requiresReview ? 'High' : 'Normal',
               RequestorName: requestorName,
               RequestorEmail: requestorEmail,
               SubmittedAt: submittedAt,
@@ -165,7 +169,8 @@ export class GovernanceService implements IGovernanceService {
                 TriageComplete: false,
                 ApprovalRequested: false,
                 LastStatusChanged: submittedAt,
-                PilotMeasure: this._pilotMeasure(record, answers)
+                PilotMeasure: this._pilotMeasure(record, answers),
+                ...(executive ? { NextReviewDate: executiveReviewBy(submittedAt) } : {})
               });
         governanceItemId = itemId(useCase);
         governanceItemUrl = governanceItemId ? `${site}/Lists/AI%20CoE%20Use%20Cases/DispForm.aspx?ID=${governanceItemId}` : undefined;

@@ -1,5 +1,6 @@
 // Offline preview entry point; never shipped to SharePoint.
 const SIMULATED_FLOW_URL = 'https://offline-preview.invalid/claude-draft';
+const SIMULATED_ANALYSIS_URL = 'https://offline-preview.invalid/claude-case-analysis';
 const TELEMETRY_PROVIDERS = ['claude', 'openai', 'both'];
 const VIEWS = ['app', 'legacy', 'home', 'idea', 'toolCheck', 'teamUsage', 'helpTraining', 'feedback', 'telemetry', 'admin', 'page', 'outcome'];
 const LAYOUTS = ['wide', 'narrow'];
@@ -28,6 +29,7 @@ const PAGE_PROPERTIES = {
 const params = new URLSearchParams(location.search);
 const organization = params.get('organization') ?? '';
 const simulateDraft = params.get('draft') === 'simulated';
+const simulateAnalysis = params.get('analysis') === 'simulated';
 const requestedProvider = (params.get('provider') ?? '').toLowerCase();
 const provider = TELEMETRY_PROVIDERS.includes(requestedProvider) ? requestedProvider : 'claude';
 const requestedPage = params.get('page') ?? '';
@@ -47,6 +49,7 @@ const role = ROLES.includes(requestedRole) ? requestedRole : 'owner';
 const palette = params.get('palette') ?? '';
 const input = document.getElementById('organization-name');
 const draftToggle = document.getElementById('simulate-draft');
+const analysisToggle = document.getElementById('simulate-analysis');
 const providerSelect = document.getElementById('telemetry-provider');
 const viewSelect = document.getElementById('view');
 const layoutSelect = document.getElementById('layout');
@@ -57,6 +60,7 @@ const roleSelect = document.getElementById('simulate-role');
 const paletteInput = document.getElementById('simulate-palette');
 input.value = organization;
 draftToggle.checked = simulateDraft;
+analysisToggle.checked = simulateAnalysis;
 providerSelect.value = provider;
 viewSelect.value = view;
 layoutSelect.value = layout;
@@ -80,6 +84,7 @@ function viewLink(target) {
 const properties = {
   organizationName: organization,
   draftServiceUrl: simulateDraft ? SIMULATED_FLOW_URL : '',
+  caseAnalysisUrl: simulateAnalysis ? SIMULATED_ANALYSIS_URL : '',
   telemetryProvider: provider,
   view,
   layout,
@@ -114,6 +119,11 @@ function syncUrl() {
     url.searchParams.set('draft', 'simulated');
   } else {
     url.searchParams.delete('draft');
+  }
+  if (analysisToggle.checked) {
+    url.searchParams.set('analysis', 'simulated');
+  } else {
+    url.searchParams.delete('analysis');
   }
   if (providerSelect.value === 'claude') {
     url.searchParams.delete('provider');
@@ -168,6 +178,11 @@ document.getElementById('organization-form').addEventListener('submit', (event) 
 draftToggle.addEventListener('change', () => {
   syncUrl();
   window.FrontDoorPreview.setDraftServiceUrl(draftToggle.checked ? SIMULATED_FLOW_URL : '');
+});
+
+analysisToggle.addEventListener('change', () => {
+  syncUrl();
+  window.FrontDoorPreview.setCaseAnalysisUrl(analysisToggle.checked ? SIMULATED_ANALYSIS_URL : '');
 });
 
 providerSelect.addEventListener('change', () => {

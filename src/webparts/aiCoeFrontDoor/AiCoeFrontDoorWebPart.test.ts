@@ -333,6 +333,15 @@ describe('AiCoeFrontDoorWebPart bundle', () => {
           placeholder: 'https://…/triggers/manual/paths/invoke?api-version=1'
         }
       },
+      {
+        targetProperty: 'caseAnalysisUrl',
+        properties: {
+          label: 'Case analysis flow URL',
+          description:
+            'HTTP trigger URL of the flow that asks Claude to rank the open business cases for leaders, from their structured fields only. It uses the same Microsoft Flow Service permission as the drafting flow; keep its caller restriction to the named leaders. Leave blank to leave the Cases panel unbound.',
+          placeholder: 'https://…/triggers/manual/paths/invoke?api-version=1'
+        }
+      },
       { targetProperty: 'draftListId', properties: { label: 'Server draft list ID', description: 'Unsubmitted work stays on the server, never in browser storage. Blank disables saved business drafts.' } },
       { targetProperty: 'draftPolicyJson', properties: { label: 'Qualified server draft policy (JSON)', multiline: true, description: 'Supply accepted access/retention references, retention period and qualification expiry. Server policy commissioning is required; this field does not enforce tenant retention.' } },
       { targetProperty: 'coreBindingJson', properties: { label: 'Qualified native CORE binding (JSON)', multiline: true, description: 'Use the exact accepted v0.2.0 binding receipt and separate request/result GUIDs. Never enter secrets. A property cannot grant server permissions.' } },

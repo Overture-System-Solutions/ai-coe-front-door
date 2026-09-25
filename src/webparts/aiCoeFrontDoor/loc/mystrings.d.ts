@@ -14,6 +14,8 @@ declare interface IAiCoeFrontDoorWebPartStrings {
   DraftingGroupName: string;
   DraftServiceUrlFieldLabel: string;
   DraftServiceUrlFieldDescription: string;
+  CaseAnalysisUrlFieldLabel: string;
+  CaseAnalysisUrlFieldDescription: string;
   TelemetryGroupName: string;
   TelemetryProviderFieldLabel: string;
   TelemetryProviderOptionClaude: string;

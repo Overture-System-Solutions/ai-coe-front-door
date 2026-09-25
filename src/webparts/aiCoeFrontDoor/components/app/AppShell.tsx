@@ -35,6 +35,7 @@ import { AppCases, AppEngineering, AppImprovement, AppUsage } from './AppSection
 import { AppMarketing } from './AppMarketing';
 import type { ISyntheticMarketingInputs } from './AppMarketingWorkspace';
 import { AppValue } from './AppValue';
+import { AppCaseAnalysis } from './AppCaseAnalysis';
 import { AppHero, SAVE_FAILED_TEXT } from './AppHero';
 
 /**
@@ -326,7 +327,7 @@ export function AppShell({ settings }: IAppShellProps): React.ReactElement {
         );
         break;
       case 'cases':
-        body = <AppCases onDirtyChange={onBusinessDirtyChange} />;
+        body = <AppCases onDirtyChange={onBusinessDirtyChange} analysis={decide('analyzeCasePortfolio', resolution).allowed ? <AppCaseAnalysis /> : undefined} />;
         break;
       case 'engineering':
         body = <AppEngineering starters={<AppStarters kind="engineering" onStart={setWorkflow} />} />;

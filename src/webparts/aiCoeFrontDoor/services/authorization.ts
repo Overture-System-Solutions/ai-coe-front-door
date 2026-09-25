@@ -31,6 +31,7 @@ export type Capability =
   | 'readAdminQueue'
   | 'readUsageTelemetry'
   | 'readProgramMeasures'
+  | 'analyzeCasePortfolio'
   | 'draftCampaignBrief'
   | 'draftContentPlan'
   | 'draftMeetingFollowThrough'
@@ -43,6 +44,7 @@ export const CAPABILITIES: readonly Capability[] = [
   'readAdminQueue',
   'readUsageTelemetry',
   'readProgramMeasures',
+  'analyzeCasePortfolio',
   'draftCampaignBrief',
   'draftContentPlan',
   'draftMeetingFollowThrough',
@@ -55,6 +57,10 @@ export const CAPABILITIES: readonly Capability[] = [
  *
  * `readAdminQueue` deliberately does not accept `leader`: the queue carries other people's request text, and a
  * leader is given the measured view instead.
+ *
+ * `analyzeCasePortfolio` is the leader's way into the open business cases without that text: the flow behind it
+ * reads only their structured fields and returns Claude's ranked analysis. An operator may use it too, since an
+ * operator already reads the whole queue.
  *
  * The Marketing capabilities are held to the two bounded Marketing roles. Drafting is open to a Marketing
  * participant, and to the two platform roles that run the local walkthrough (an operator, a design authority) so
@@ -70,6 +76,7 @@ const ALLOWED: { [capability in Capability]: readonly RoleId[] } = {
   readAdminQueue: ['operator'],
   readUsageTelemetry: ['operator'],
   readProgramMeasures: ['leader', 'operator'],
+  analyzeCasePortfolio: ['leader', 'operator'],
   draftCampaignBrief: ['marketingParticipant', 'operator', 'designAuthority'],
   draftContentPlan: ['marketingParticipant', 'operator', 'designAuthority'],
   draftMeetingFollowThrough: ['marketingParticipant', 'operator', 'designAuthority'],

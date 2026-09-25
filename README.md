@@ -128,6 +128,32 @@ submissions carry a `draftSource` object in `PayloadJson` (provider, model, resp
 humanReviewRequired); records built without the flow are unchanged. `npm run preview` can simulate the flow with the
 banner's checkbox (it only echoes the answers; no model is called).
 
+### Executive case analysis and review priority
+
+Two additions for leaders, both in the consolidated view.
+
+**Case analysis.** A leader (and an operator, who already reads the whole queue) sees *Analyze the most important
+cases* at the top of the Cases tab. It starts from a suggested question they may edit and sends only that question to
+the case analysis flow (`caseAnalysisUrl`), with the same Entra token for the Power Automate service the idea draft
+uses. The flow reads the open governance records of **AI CoE Use Cases** with its own SharePoint connection, hands
+Claude their structured fields alone (reference, title, status, risk tier, data sensitivity, external users,
+autonomous actions, estimated monthly cost, review date, created and modified) and returns a ranked analysis the
+panel checks field by field before drawing it. No request text a submitter wrote beyond the title is read, which keeps
+the rule that a leader is given a measured view rather than other people's words; the administrator queue stays
+operator-only. The answer is labelled as a draft for discussion and changes no record. The flow is a separate
+Power Automate solution; its caller restriction names the leaders who may use it, and its SharePoint connection must
+read every row of the list (Override List Behaviors when item-level security is on). Blank leaves the panel saying it
+is not connected. `npm run preview` with `?analysis=simulated` (or the banner's checkbox) ranks four fictional
+open cases by a fixed rule; no model is called.
+
+**Review priority.** A governance submission (an idea, a tool review request, a team disclosure) from someone whose
+confirmed membership includes the leader role is marked to be reviewed sooner. No schema changes: the payload carries a
+`reviewPriority` object, the request row takes the existing `High` priority, and the governance record's
+`NextReviewDate` is set two working days after submission, which the weekly portfolio digest already calls out once
+reached. The administrator queue lists open executive cases first, with an *Executive* pill, counts them as needing
+attention and shows the review date. The mark is set in the browser from the resolved membership, like every other
+role decision here: it orders a queue and grants nothing, and anyone else's payload never carries it.
+
 ### Usage telemetry
 
 The "AI operations snapshot" strip on the landing page reads the **AI Usage Daily** and **AI CoE Incidents** lists.
@@ -816,6 +842,8 @@ the identity line, the site's owners group on the admin page). Bindings, the pro
 | `roleGroups` | web part property (Branding), written by the script from the group parameters (1.0.0.14) | property | no site group is bound: everyone holds the employee role, a site owner also the operator role, and a page that asks for another role is not offered |
 | `paletteOverrides` | web part property (Branding), written by the script from `Palette` (1.0.0.14) | property | no palette token is set and the shipped colours stand |
 | `draftServiceUrl` | web part property (AI drafting) on the idea page, written by the script from `DraftServiceUrl` | property | plain summaries |
+| `caseAnalysisUrl` | web part property (AI drafting) on the one-page `view:app` instance, written by the one-page script from `CaseAnalysisUrl` | property | the leaders' case analysis panel says it is not connected |
+| `CaseAnalysisUrl` | the one-page `parameters.json` (from its sample) | url | `caseAnalysisUrl` left as it is on the instance (blank on a new one) |
 | `telemetryProvider` | web part property (Telemetry) on Operations, written by the script from `TelemetryProvider` | property | `claude` |
 | AI CoE Pilot Intakes | the package feature (`sharepoint/assets/intake-schema.xml`), untouched on upgrade | list | absent: a submission fails and the visitor sees the shipped failure screen |
 | AI CoE Use Cases | the companion Power Automate solution | list | absent: the dashboard section reads as unavailable |

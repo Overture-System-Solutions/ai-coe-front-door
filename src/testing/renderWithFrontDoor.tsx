@@ -1,3 +1,4 @@
+import type { ICaseAnalysisService } from '../webparts/aiCoeFrontDoor/services/caseAnalysisService';
 import { render } from '@testing-library/react';
 import type { RenderResult } from '@testing-library/react';
 import * as React from 'react';
@@ -54,6 +55,8 @@ export interface ITestFrontDoorOptions {
   marketing?: IMarketingServices;
   /** Absent by default; the Cases section then omits the Binding A workspace. */
   coreWork?: ICoreWorkService;
+  /** Absent by default, like a web part without a case analysis flow bound. */
+  caseAnalysis?: ICaseAnalysisService;
   /** The document's wording overrides the blocks read; the defaults unless given. */
   vocabulary?: IVocabulary;
   /** Records where page views navigate to; a fresh mock unless given. */
@@ -111,7 +114,8 @@ export function createTestFrontDoor(options: ITestFrontDoorOptions = {}): ITestF
       roles: options.roleResolver,
       programMeasures: options.programMeasures,
       marketing: options.marketing,
-      coreWork: options.coreWork
+      coreWork: options.coreWork,
+      caseAnalysis: options.caseAnalysis
     },
     navigate,
     pageView: options.pageView ?? false

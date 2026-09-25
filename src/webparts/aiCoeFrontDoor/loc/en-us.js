@@ -15,6 +15,8 @@ define([], function() {
     "DraftingGroupName": "AI drafting",
     "DraftServiceUrlFieldLabel": "AI draft flow URL",
     "DraftServiceUrlFieldDescription": "HTTP trigger URL of the drafting flow. Keep its approved authenticated caller restriction and approve only the required Microsoft Flow Service API permission. Leave blank to keep plain summaries.",
+    "CaseAnalysisUrlFieldLabel": "Case analysis flow URL",
+    "CaseAnalysisUrlFieldDescription": "HTTP trigger URL of the flow that asks Claude to rank the open business cases for leaders, from their structured fields only. It uses the same Microsoft Flow Service permission as the drafting flow; keep its caller restriction to the named leaders. Leave blank to leave the Cases panel unbound.",
     "TelemetryGroupName": "Telemetry",
     "TelemetryProviderFieldLabel": "Usage metrics provider",
     "TelemetryProviderOptionClaude": "Claude (Anthropic API)",

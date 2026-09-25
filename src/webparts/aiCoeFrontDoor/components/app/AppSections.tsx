@@ -67,16 +67,18 @@ const LAYERS: readonly ILayer[] = [
 ];
 
 /**
- * A person's own requests, plus the controls that decide what they see.
+ * A person's own requests, plus the controls that decide what they see. A leader also gets the case analysis panel
+ * above them, handed in by the shell only when the role holds it.
  *
  * No head of its own: the shell already names the section and the reused list names itself, so a third heading here
  * said the same thing a third time. What it carried - that only your own rows are read - is a control rather than a
  * caption, and the panel beside it states it as one.
  */
-export function AppCases({ onDirtyChange }: { onDirtyChange?: (dirty: boolean) => void }): React.ReactElement {
+export function AppCases({ onDirtyChange, analysis }: { onDirtyChange?: (dirty: boolean) => void; analysis?: React.ReactNode }): React.ReactElement {
   const { services } = useFrontDoor();
   return (
     <React.Fragment>
+      {analysis}
       {services.coreWork !== undefined && <AppCoreWorkspace coreWork={services.coreWork} onDirtyChange={onDirtyChange} />}
       <div className="ai-app-cases">
         <MyWork />

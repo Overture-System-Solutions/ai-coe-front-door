@@ -30,6 +30,7 @@ import type { PaletteOverrides } from './content/palette';
 import { parseRoleGroups } from './content/roles';
 import { parseTelemetryProvider } from './content/telemetryTiles';
 import type { IFrontDoorServices, IFrontDoorUser } from './context/FrontDoorContext';
+import { createCaseAnalysisService } from './services/caseAnalysisService';
 import { createIdeaDraftService } from './services/draftService';
 import type { IDraftHttpClient } from './services/draftService';
 import { browserLocalStorage, LocalStorageDraftStore } from './services/draftStorage';
@@ -69,6 +70,8 @@ export interface IAiCoeFrontDoorWebPartProps extends IPageViewProperties {
   paletteOverrides: string;
   /** HTTP trigger URL of the AI draft flow; blank keeps the deterministic summaries. */
   draftServiceUrl: string;
+  /** HTTP trigger URL of the case analysis flow behind the leaders' Cases panel; blank leaves the panel unbound. */
+  caseAnalysisUrl?: string;
   /** Server-owned, caller-secured list for unsubmitted business drafts. Blank fails closed. */
   draftListId?: string;
   /** Accepted server retention/access policy references; no secret values. */
@@ -268,6 +271,11 @@ export default class AiCoeFrontDoorWebPart extends BaseClientSideWebPart<IAiCoeF
             description: strings.DraftServiceUrlFieldDescription,
             placeholder: 'https://…/triggers/manual/paths/invoke?api-version=1'
           }),
+          PropertyPaneTextField('caseAnalysisUrl', {
+            label: strings.CaseAnalysisUrlFieldLabel,
+            description: strings.CaseAnalysisUrlFieldDescription,
+            placeholder: 'https://…/triggers/manual/paths/invoke?api-version=1'
+          }),
           PropertyPaneTextField('draftListId', {
             label: 'Server draft list ID',
             description: 'Unsubmitted work stays on the server, never in browser storage. Blank disables saved business drafts.'
@@ -374,6 +382,7 @@ export default class AiCoeFrontDoorWebPart extends BaseClientSideWebPart<IAiCoeF
   /** The service bundle handed to React; rebuilt only when a property it depends on changes. */
   private _servicesFor(core: ICoreServices, branding: IBranding): IFrontDoorServices {
     const draftServiceUrl: string = this.properties.draftServiceUrl ?? '';
+    const caseAnalysisUrl: string = this.properties.caseAnalysisUrl ?? '';
     // Which site group stands for which role; the resolver reads the membership once per bundle.
     const roleGroups: string = this.properties.roleGroups ?? '';
     // A content page always has a document (the default path when blank); any other piece reads one only when its
@@ -381,7 +390,7 @@ export default class AiCoeFrontDoorWebPart extends BaseClientSideWebPart<IAiCoeF
     const contentUrl: string | undefined =
       parseFrontDoorView(this.properties.view) === 'page' ? parseContentUrl(this.properties.contentUrl) : parseOptionalContentUrl(this.properties.contentUrl);
     // The tool policy evaluator reads the branding, so every branding input joins the key.
-    const key: string = JSON.stringify([branding.organizationName, branding.governanceReference, branding.reviewSystemName, draftServiceUrl, contentUrl ?? null, roleGroups, this.properties.draftListId ?? '', this.properties.draftPolicyJson ?? '', this.properties.coreBindingJson ?? '', this.properties.marketingBindingJson ?? '', core.serviceContext.siteUrl, core.user.email]);
+    const key: string = JSON.stringify([branding.organizationName, branding.governanceReference, branding.reviewSystemName, draftServiceUrl, caseAnalysisUrl, contentUrl ?? null, roleGroups, this.properties.draftListId ?? '', this.properties.draftPolicyJson ?? '', this.properties.coreBindingJson ?? '', this.properties.marketingBindingJson ?? '', core.serviceContext.siteUrl, core.user.email]);
     if (this._services === undefined || this._servicesKey !== key) {
       const synthetic: boolean = this._isSyntheticHost(core.serviceContext.siteUrl);
       const draftStore: IDraftStore = synthetic
@@ -397,6 +406,7 @@ export default class AiCoeFrontDoorWebPart extends BaseClientSideWebPart<IAiCoeF
         draftStore,
         toolPolicyEvaluator: createToolPolicyEvaluator(branding),
         ideaDrafts: createIdeaDraftService(draftServiceUrl, core.flowClient),
+        caseAnalysis: createCaseAnalysisService(caseAnalysisUrl, core.flowClient),
         // Reads the document once per instance and document path; the page key alone never refetches.
         pageContent: contentUrl === undefined ? undefined : new PageContentService(core.serviceContext, contentUrl),
         marketing: this._marketingServices(core),
