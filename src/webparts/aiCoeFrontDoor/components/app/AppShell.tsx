@@ -354,7 +354,6 @@ export function AppShell({ settings }: IAppShellProps): React.ReactElement {
   return (
     <div className={`overture-app ai-view ai-view--app${settings.layout === 'narrow' ? ' ai-view--narrow' : ''}`}>
       <AppTopbar
-        organizationName={branding.organizationLabel}
         displayName={user.displayName}
         resolution={resolution}
         pending={roleState.status === 'loading'}

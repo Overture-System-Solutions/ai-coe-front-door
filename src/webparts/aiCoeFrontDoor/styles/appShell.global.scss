@@ -964,51 +964,9 @@
     display: flex;
     flex-wrap: wrap;
     gap: 16px;
-    justify-content: space-between;
+    justify-content: flex-end;
     min-height: 68px;
     padding: 8px 0 14px;
-  }
-
-  .ai-app-brand {
-    align-items: center;
-    display: flex;
-    gap: 14px;
-  }
-
-  // Drawn rather than loaded: a gradient square with an arc cut from it, so there is no image request.
-  .ai-app-mark {
-    background: linear-gradient(135deg, var(--fd-hero-glow, #edf8f8), var(--fd-accent, #087f83) 52%, var(--fd-ink, #10243e));
-    border-radius: 12px;
-    box-shadow: 0 8px 18px rgba(4, 42, 70, 0.23);
-    display: block;
-    height: 38px;
-    position: relative;
-    width: 38px;
-  }
-
-  .ai-app-mark::after {
-    border: 2px solid #fff;
-    border-left-color: transparent;
-    border-radius: 50%;
-    content: "";
-    inset: 9px 8px;
-    position: absolute;
-    transform: rotate(-18deg);
-  }
-
-  .ai-app-brand-name {
-    color: var(--fd-ink, #10243e);
-    display: block;
-    font-size: 18px;
-    font-weight: 700;
-    letter-spacing: 0.01em;
-  }
-
-  .ai-app-brand-note {
-    color: var(--fd-muted, #5b6878);
-    display: block;
-    font-size: 12px;
-    margin: 1px 0 0;
   }
 
   .ai-app-chips {
