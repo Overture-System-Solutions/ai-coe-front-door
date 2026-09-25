@@ -1,0 +1,1790 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_sharepointonline": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "aicoe_sharepointonline"
+        },
+        "api": {
+          "name": "shared_sharepointonline"
+        }
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        },
+        "aicoe_SiteUrl (aicoe_SiteUrl)": {
+          "defaultValue": "https://parkplace.sharepoint.com/sites/AICoE-PrivatePilot",
+          "type": "String",
+          "metadata": {
+            "schemaName": "aicoe_SiteUrl",
+            "description": "SharePoint site that hosts the AI CoE lists. Set per environment."
+          }
+        },
+        "aicoe_NotificationEmail (aicoe_NotificationEmail)": {
+          "defaultValue": "REPLACE-BEFORE-ENABLING.invalid",
+          "type": "String",
+          "metadata": {
+            "schemaName": "aicoe_NotificationEmail",
+            "description": "Alert address. Invalid on purpose until set."
+          }
+        },
+        "aicoe_EnvironmentLabel (aicoe_EnvironmentLabel)": {
+          "defaultValue": "Pilot",
+          "type": "String",
+          "metadata": {
+            "schemaName": "aicoe_EnvironmentLabel",
+            "description": "Appears in log rows and outbox subjects."
+          }
+        }
+      },
+      "triggers": {
+        "Trigger": {
+          "type": "Request",
+          "kind": "Button",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "properties": {},
+              "required": []
+            }
+          }
+        }
+      },
+      "actions": {
+        "Model": {
+          "type": "Compose",
+          "inputs": [
+            {
+              "Key": "Log",
+              "Title": "AI Automation Log",
+              "BaseTemplate": 100,
+              "TitleMeans": "LogID (unique, required)",
+              "Fields": [
+                {
+                  "Name": "Flow",
+                  "Type": "Text",
+                  "SchemaXml": "<Field Name=\"Flow\" DisplayName=\"Flow\" StaticName=\"Flow\" Type=\"Text\" MaxLength=\"255\" Indexed=\"TRUE\" />"
+                },
+                {
+                  "Name": "RunId",
+                  "Type": "Text",
+                  "SchemaXml": "<Field Name=\"RunId\" DisplayName=\"RunId\" StaticName=\"RunId\" Type=\"Text\" MaxLength=\"255\" />"
+                },
+                {
+                  "Name": "Level",
+                  "Type": "Choice",
+                  "SchemaXml": "<Field Name=\"Level\" DisplayName=\"Log Level\" StaticName=\"Level\" Type=\"Choice\" Format=\"Dropdown\" FillInChoice=\"FALSE\" Indexed=\"TRUE\"><CHOICES><CHOICE>Info</CHOICE><CHOICE>Warning</CHOICE><CHOICE>Error</CHOICE><CHOICE>Succeeded</CHOICE><CHOICE>Skipped</CHOICE></CHOICES></Field>"
+                },
+                {
+                  "Name": "Message",
+                  "Type": "Note",
+                  "SchemaXml": "<Field Name=\"Message\" DisplayName=\"Message\" StaticName=\"Message\" Type=\"Note\" NumLines=\"6\" RichText=\"FALSE\" AppendOnly=\"FALSE\" />"
+                },
+                {
+                  "Name": "CorrelationID",
+                  "Type": "Text",
+                  "SchemaXml": "<Field Name=\"CorrelationID\" DisplayName=\"CorrelationID\" StaticName=\"CorrelationID\" Type=\"Text\" MaxLength=\"255\" />"
+                },
+                {
+                  "Name": "WorkID",
+                  "Type": "Text",
+                  "SchemaXml": "<Field Name=\"WorkID\" DisplayName=\"WorkID\" StaticName=\"WorkID\" Type=\"Text\" MaxLength=\"255\" />"
+                },
+                {
+                  "Name": "LoggedAt",
+                  "Type": "DateTime",
+                  "SchemaXml": "<Field Name=\"LoggedAt\" DisplayName=\"LoggedAt\" StaticName=\"LoggedAt\" Type=\"DateTime\" Format=\"DateTime\" />"
+                }
+              ]
+            },
+            {
+              "Key": "Definitions",
+              "Title": "AI CoE Definitions",
+              "BaseTemplate": 100,
+              "TitleMeans": "Key (unique, required) \u2014 bootstrap list, the ONLY list addressed by title",
+              "Fields": [
+                {
+                  "Name": "Value",
+                  "Type": "Note",
+                  "SchemaXml": "<Field Name=\"Value\" DisplayName=\"Value\" StaticName=\"Value\" Type=\"Note\" NumLines=\"6\" RichText=\"FALSE\" AppendOnly=\"FALSE\" Required=\"TRUE\" />"
+                },
+                {
+                  "Name": "Category",
+                  "Type": "Text",
+                  "SchemaXml": "<Field Name=\"Category\" DisplayName=\"Category\" StaticName=\"Category\" Type=\"Text\" MaxLength=\"255\" Indexed=\"TRUE\" />"
+                },
+                {
+                  "Name": "Version",
+                  "Type": "Text",
+                  "SchemaXml": "<Field Name=\"Version\" DisplayName=\"Record Version\" StaticName=\"Version\" Type=\"Text\" MaxLength=\"255\" />"
+                },
+                {
+                  "Name": "Provisional",
+                  "Type": "Boolean",
+                  "SchemaXml": "<Field Name=\"Provisional\" DisplayName=\"Provisional\" StaticName=\"Provisional\" Type=\"Boolean\"><Default>0</Default></Field>"
+                },
+                {
+                  "Name": "Note",
+                  "Type": "Note",
+                  "SchemaXml": "<Field Name=\"Note\" DisplayName=\"Note\" StaticName=\"Note\" Type=\"Note\" NumLines=\"6\" RichText=\"FALSE\" AppendOnly=\"FALSE\" />"
+                }
+              ]
+            },
+            {
+              "Key": "Command",
+              "Title": "AI CoE Case Command",
+              "BaseTemplate": 100,
+              "TitleMeans": "IdempotencyKey (unique, required)",
+              "Fields": [
+                {
+                  "Name": "Operation",
+                  "Type": "Choice",
+                  "SchemaXml": "<Field Name=\"Operation\" DisplayName=\"Operation\" StaticName=\"Operation\" Type=\"Choice\" Format=\"Dropdown\" FillInChoice=\"FALSE\" Required=\"TRUE\"><CHOICES><CHOICE>CreateOrResumeWork</CHOICE><CHOICE>GetWorkStatus</CHOICE><CHOICE>ListMyWork</CHOICE><CHOICE>SubmitEvidenceResponse</CHOICE><CHOICE>RequestDecisionReadiness</CHOICE></CHOICES></Field>"
+                },
+                {
+                  "Name": "WorkID",
+                  "Type": "Text",
+                  "SchemaXml": "<Field Name=\"WorkID\" DisplayName=\"WorkID\" StaticName=\"WorkID\" Type=\"Text\" MaxLength=\"255\" Indexed=\"TRUE\" />"
+                },
+                {
+                  "Name": "RequestJson",
+                  "Type": "Note",
+                  "SchemaXml": "<Field Name=\"RequestJson\" DisplayName=\"RequestJson\" StaticName=\"RequestJson\" Type=\"Note\" NumLines=\"6\" RichText=\"FALSE\" AppendOnly=\"FALSE\" Required=\"TRUE\" />"
+                },
+                {
+                  "Name": "ResponseJson",
+                  "Type": "Note",
+                  "SchemaXml": "<Field Name=\"ResponseJson\" DisplayName=\"ResponseJson\" StaticName=\"ResponseJson\" Type=\"Note\" NumLines=\"6\" RichText=\"FALSE\" AppendOnly=\"FALSE\" />"
+                },
+                {
+                  "Name": "Result",
+                  "Type": "Choice",
+                  "SchemaXml": "<Field Name=\"Result\" DisplayName=\"Result\" StaticName=\"Result\" Type=\"Choice\" Format=\"Dropdown\" FillInChoice=\"FALSE\" Indexed=\"TRUE\"><Default>PENDING</Default><CHOICES><CHOICE>PENDING</CHOICE><CHOICE>PASS</CHOICE><CHOICE>FAIL</CHOICE><CHOICE>DENIED</CHOICE><CHOICE>INCONCLUSIVE</CHOICE><CHOICE>RECONCILIATION_REQUIRED</CHOICE></CHOICES></Field>"
+                },
+                {
+                  "Name": "ReceiptID",
+                  "Type": "Text",
+                  "SchemaXml": "<Field Name=\"ReceiptID\" DisplayName=\"ReceiptID\" StaticName=\"ReceiptID\" Type=\"Text\" MaxLength=\"255\" />"
+                },
+                {
+                  "Name": "CorrelationID",
+                  "Type": "Text",
+                  "SchemaXml": "<Field Name=\"CorrelationID\" DisplayName=\"CorrelationID\" StaticName=\"CorrelationID\" Type=\"Text\" MaxLength=\"255\" />"
+                },
+                {
+                  "Name": "Claimed",
+                  "Type": "Boolean",
+                  "SchemaXml": "<Field Name=\"Claimed\" DisplayName=\"Claimed\" StaticName=\"Claimed\" Type=\"Boolean\" Indexed=\"TRUE\"><Default>0</Default></Field>"
+                },
+                {
+                  "Name": "ClaimToken",
+                  "Type": "Text",
+                  "SchemaXml": "<Field Name=\"ClaimToken\" DisplayName=\"ClaimToken\" StaticName=\"ClaimToken\" Type=\"Text\" MaxLength=\"255\" />"
+                },
+                {
+                  "Name": "ClaimedAt",
+                  "Type": "DateTime",
+                  "SchemaXml": "<Field Name=\"ClaimedAt\" DisplayName=\"ClaimedAt\" StaticName=\"ClaimedAt\" Type=\"DateTime\" Format=\"DateTime\" />"
+                },
+                {
+                  "Name": "CompletedAt",
+                  "Type": "DateTime",
+                  "SchemaXml": "<Field Name=\"CompletedAt\" DisplayName=\"CompletedAt\" StaticName=\"CompletedAt\" Type=\"DateTime\" Format=\"DateTime\" />"
+                },
+                {
+                  "Name": "ErrorClass",
+                  "Type": "Text",
+                  "SchemaXml": "<Field Name=\"ErrorClass\" DisplayName=\"ErrorClass\" StaticName=\"ErrorClass\" Type=\"Text\" MaxLength=\"255\" />"
+                },
+                {
+                  "Name": "TestRecord",
+                  "Type": "Boolean",
+                  "SchemaXml": "<Field Name=\"TestRecord\" DisplayName=\"TestRecord\" StaticName=\"TestRecord\" Type=\"Boolean\"><Default>0</Default></Field>"
+                }
+              ]
+            },
+            {
+              "Key": "Cases",
+              "Title": "AI CoE Cases",
+              "BaseTemplate": 100,
+              "TitleMeans": "WorkID (unique, required)",
+              "Fields": [
+                {
+                  "Name": "WorkTitle",
+                  "Type": "Text",
+                  "SchemaXml": "<Field Name=\"WorkTitle\" DisplayName=\"WorkTitle\" StaticName=\"WorkTitle\" Type=\"Text\" MaxLength=\"255\" Required=\"TRUE\" />"
+                },
+                {
+                  "Name": "WorkType",
+                  "Type": "Choice",
+                  "SchemaXml": "<Field Name=\"WorkType\" DisplayName=\"WorkType\" StaticName=\"WorkType\" Type=\"Choice\" Format=\"Dropdown\" FillInChoice=\"FALSE\"><CHOICES><CHOICE>IDEA</CHOICE><CHOICE>CASE</CHOICE><CHOICE>DECISION</CHOICE><CHOICE>PROJECT</CHOICE><CHOICE>IMPROVEMENT</CHOICE><CHOICE>ADMIN_WORK</CHOICE><CHOICE>STRATEGIC_CASE</CHOICE></CHOICES></Field>"
+                },
+                {
+                  "Name": "Stage",
+                  "Type": "Choice",
+                  "SchemaXml": "<Field Name=\"Stage\" DisplayName=\"Stage\" StaticName=\"Stage\" Type=\"Choice\" Format=\"Dropdown\" FillInChoice=\"FALSE\" Indexed=\"TRUE\"><CHOICES><CHOICE>INTAKE</CHOICE><CHOICE>EVIDENCE</CHOICE><CHOICE>DECISION</CHOICE><CHOICE>DELIVERY</CHOICE><CHOICE>VALUE</CHOICE><CHOICE>IMPROVEMENT</CHOICE><CHOICE>CLOSED</CHOICE></CHOICES></Field>"
+                },
+                {
+                  "Name": "State",
+                  "Type": "Choice",
+                  "SchemaXml": "<Field Name=\"State\" DisplayName=\"State\" StaticName=\"State\" Type=\"Choice\" Format=\"Dropdown\" FillInChoice=\"FALSE\" Indexed=\"TRUE\"><CHOICES><CHOICE>DRAFT</CHOICE><CHOICE>CLARIFYING</CHOICE><CHOICE>READY_FOR_TRIAGE</CHOICE><CHOICE>EVIDENCE_BUILDING</CHOICE><CHOICE>AWAITING_SME</CHOICE><CHOICE>NOT_DECISION_READY</CHOICE><CHOICE>DECISION_READY</CHOICE><CHOICE>READY_FOR_AI_COE</CHOICE><CHOICE>READY_FOR_ARB</CHOICE><CHOICE>READY_FOR_ELT</CHOICE><CHOICE>APPROVED</CHOICE><CHOICE>APPROVED_WITH_CONDITIONS</CHOICE><CHOICE>DEFERRED</CHOICE><CHOICE>REJECTED</CHOICE><CHOICE>PROJECT_ACTIVATING</CHOICE><CHOICE>IN_DELIVERY</CHOICE><CHOICE>AT_RISK</CHOICE><CHOICE>BLOCKED</CHOICE><CHOICE>VALUE_REVIEW</CHOICE><CHOICE>OPERATING</CHOICE><CHOICE>IMPROVEMENT_PROPOSED</CHOICE><CHOICE>REVALIDATION_REQUIRED</CHOICE><CHOICE>RETIRED</CHOICE></CHOICES></Field>"
+                },
+                {
+                  "Name": "EmployeeStatus",
+                  "Type": "Text",
+                  "SchemaXml": "<Field Name=\"EmployeeStatus\" DisplayName=\"EmployeeStatus\" StaticName=\"EmployeeStatus\" Type=\"Text\" MaxLength=\"255\" />"
+                },
+                {
+                  "Name": "ProblemStatement",
+                  "Type": "Note",
+                  "SchemaXml": "<Field Name=\"ProblemStatement\" DisplayName=\"ProblemStatement\" StaticName=\"ProblemStatement\" Type=\"Note\" NumLines=\"6\" RichText=\"FALSE\" AppendOnly=\"FALSE\" />"
+                },
+                {
+                  "Name": "DesiredOutcome",
+                  "Type": "Note",
+                  "SchemaXml": "<Field Name=\"DesiredOutcome\" DisplayName=\"DesiredOutcome\" StaticName=\"DesiredOutcome\" Type=\"Note\" NumLines=\"6\" RichText=\"FALSE\" AppendOnly=\"FALSE\" />"
+                },
+                {
+                  "Name": "Requester",
+                  "Type": "Text",
+                  "SchemaXml": "<Field Name=\"Requester\" DisplayName=\"Requester\" StaticName=\"Requester\" Type=\"Text\" MaxLength=\"255\" Indexed=\"TRUE\" />"
+                },
+                {
+                  "Name": "Department",
+                  "Type": "Text",
+                  "SchemaXml": "<Field Name=\"Department\" DisplayName=\"Department\" StaticName=\"Department\" Type=\"Text\" MaxLength=\"255\" />"
+                },
+                {
+                  "Name": "Sponsor",
+                  "Type": "Text",
+                  "SchemaXml": "<Field Name=\"Sponsor\" DisplayName=\"Sponsor\" StaticName=\"Sponsor\" Type=\"Text\" MaxLength=\"255\" />"
+                },
+                {
+                  "Name": "AccountableOwner",
+                  "Type": "Text",
+                  "SchemaXml": "<Field Name=\"AccountableOwner\" DisplayName=\"AccountableOwner\" StaticName=\"AccountableOwner\" Type=\"Text\" MaxLength=\"255\" Indexed=\"TRUE\" />"
+                },
+                {
+                  "Name": "ResponsibleLead",
+                  "Type": "Text",
+                  "SchemaXml": "<Field Name=\"ResponsibleLead\" DisplayName=\"ResponsibleLead\" StaticName=\"ResponsibleLead\" Type=\"Text\" MaxLength=\"255\" />"
+                },
+                {
+                  "Name": "CreatedAt",
+                  "Type": "DateTime",
+                  "SchemaXml": "<Field Name=\"CreatedAt\" DisplayName=\"CreatedAt\" StaticName=\"CreatedAt\" Type=\"DateTime\" Format=\"DateTime\" />"
+                },
+                {
+                  "Name": "SourceChannel",
+                  "Type": "Text",
+                  "SchemaXml": "<Field Name=\"SourceChannel\" DisplayName=\"SourceChannel\" StaticName=\"SourceChannel\" Type=\"Text\" MaxLength=\"255\" />"
+                },
+                {
+                  "Name": "SourceRefs",
+                  "Type": "Note",
+                  "SchemaXml": "<Field Name=\"SourceRefs\" DisplayName=\"SourceRefs\" StaticName=\"SourceRefs\" Type=\"Note\" NumLines=\"6\" RichText=\"FALSE\" AppendOnly=\"FALSE\" />"
+                },
+                {
+                  "Name": "RelatedWorkIDs",
+                  "Type": "Note",
+                  "SchemaXml": "<Field Name=\"RelatedWorkIDs\" DisplayName=\"RelatedWorkIDs\" StaticName=\"RelatedWorkIDs\" Type=\"Note\" NumLines=\"6\" RichText=\"FALSE\" AppendOnly=\"FALSE\" />"
+                },
+                {
+                  "Name": "DuplicateStatus",
+                  "Type": "Choice",
+                  "SchemaXml": "<Field Name=\"DuplicateStatus\" DisplayName=\"DuplicateStatus\" StaticName=\"DuplicateStatus\" Type=\"Choice\" Format=\"Dropdown\" FillInChoice=\"FALSE\"><CHOICES><CHOICE>NOT_CHECKED</CHOICE><CHOICE>UNIQUE</CHOICE><CHOICE>POSSIBLE_DUPLICATE</CHOICE><CHOICE>CONFIRMED_DUPLICATE</CHOICE><CHOICE>RELATED_NOT_DUPLICATE</CHOICE></CHOICES></Field>"
+                },
+                {
+                  "Name": "Lane",
+                  "Type": "Choice",
+                  "SchemaXml": "<Field Name=\"Lane\" DisplayName=\"Lane\" StaticName=\"Lane\" Type=\"Choice\" Format=\"Dropdown\" FillInChoice=\"FALSE\"><CHOICES><CHOICE>PREPARATION</CHOICE><CHOICE>AI_COE_FAST_PATH</CHOICE><CHOICE>ARB</CHOICE><CHOICE>ELT</CHOICE></CHOICES></Field>"
+                },
+                {
+                  "Name": "ARBTier",
+                  "Type": "Text",
+                  "SchemaXml": "<Field Name=\"ARBTier\" DisplayName=\"ARBTier\" StaticName=\"ARBTier\" Type=\"Text\" MaxLength=\"255\" />"
+                },
+                {
+                  "Name": "AgentRiskTier",
+                  "Type": "Text",
+                  "SchemaXml": "<Field Name=\"AgentRiskTier\" DisplayName=\"AgentRiskTier\" StaticName=\"AgentRiskTier\" Type=\"Text\" MaxLength=\"255\" />"
+                },
+                {
+                  "Name": "PScoreLegacy",
+                  "Type": "Text",
+                  "SchemaXml": "<Field Name=\"PScoreLegacy\" DisplayName=\"PScoreLegacy\" StaticName=\"PScoreLegacy\" Type=\"Text\" MaxLength=\"255\" />"
+                },
+                {
+                  "Name": "PScoreCandidate",
+                  "Type": "Text",
+                  "SchemaXml": "<Field Name=\"PScoreCandidate\" DisplayName=\"PScoreCandidate\" StaticName=\"PScoreCandidate\" Type=\"Text\" MaxLength=\"255\" />"
+                },
+                {
+                  "Name": "PScoreVersion",
+                  "Type": "Text",
+                  "SchemaXml": "<Field Name=\"PScoreVersion\" DisplayName=\"PScoreVersion\" StaticName=\"PScoreVersion\" Type=\"Text\" MaxLength=\"255\" />"
+                },
+                {
+                  "Name": "PScoreConfidence",
+                  "Type": "Text",
+                  "SchemaXml": "<Field Name=\"PScoreConfidence\" DisplayName=\"PScoreConfidence\" StaticName=\"PScoreConfidence\" Type=\"Text\" MaxLength=\"255\" />"
+                },
+                {
+                  "Name": "Lift",
+                  "Type": "Text",
+                  "SchemaXml": "<Field Name=\"Lift\" DisplayName=\"Lift\" StaticName=\"Lift\" Type=\"Text\" MaxLength=\"255\" />"
+                },
+                {
+                  "Name": "LiftVersion",
+                  "Type": "Text",
+                  "SchemaXml": "<Field Name=\"LiftVersion\" DisplayName=\"LiftVersion\" StaticName=\"LiftVersion\" Type=\"Text\" MaxLength=\"255\" />"
+                },
+                {
+                  "Name": "DecisionReadiness",
+                  "Type": "Text",
+                  "SchemaXml": "<Field Name=\"DecisionReadiness\" DisplayName=\"DecisionReadiness\" StaticName=\"DecisionReadiness\" Type=\"Text\" MaxLength=\"255\" />"
+                },
+                {
+                  "Name": "ReadinessVersion",
+                  "Type": "Text",
+                  "SchemaXml": "<Field Name=\"ReadinessVersion\" DisplayName=\"ReadinessVersion\" StaticName=\"ReadinessVersion\" Type=\"Text\" MaxLength=\"255\" />"
+                },
+                {
+                  "Name": "DecisionReadinessState",
+                  "Type": "Choice",
+                  "SchemaXml": "<Field Name=\"DecisionReadinessState\" DisplayName=\"DecisionReadinessState\" StaticName=\"DecisionReadinessState\" Type=\"Choice\" Format=\"Dropdown\" FillInChoice=\"FALSE\"><CHOICES><CHOICE>NOT_READY</CHOICE><CHOICE>READY</CHOICE><CHOICE>REVALIDATION_REQUIRED</CHOICE><CHOICE>NOT_APPLICABLE</CHOICE></CHOICES></Field>"
+                },
+                {
+                  "Name": "DecisionRequested",
+                  "Type": "Note",
+                  "SchemaXml": "<Field Name=\"DecisionRequested\" DisplayName=\"DecisionRequested\" StaticName=\"DecisionRequested\" Type=\"Note\" NumLines=\"6\" RichText=\"FALSE\" AppendOnly=\"FALSE\" />"
+                },
+                {
+                  "Name": "DecisionAuthority",
+                  "Type": "Text",
+                  "SchemaXml": "<Field Name=\"DecisionAuthority\" DisplayName=\"DecisionAuthority\" StaticName=\"DecisionAuthority\" Type=\"Text\" MaxLength=\"255\" />"
+                },
+                {
+                  "Name": "RequiredValidators",
+                  "Type": "Note",
+                  "SchemaXml": "<Field Name=\"RequiredValidators\" DisplayName=\"RequiredValidators\" StaticName=\"RequiredValidators\" Type=\"Note\" NumLines=\"6\" RichText=\"FALSE\" AppendOnly=\"FALSE\" />"
+                },
+                {
+                  "Name": "ValidationState",
+                  "Type": "Choice",
+                  "SchemaXml": "<Field Name=\"ValidationState\" DisplayName=\"ValidationState\" StaticName=\"ValidationState\" Type=\"Choice\" Format=\"Dropdown\" FillInChoice=\"FALSE\"><CHOICES><CHOICE>NOT_STARTED</CHOICE><CHOICE>IN_PROGRESS</CHOICE><CHOICE>COMPLETE</CHOICE><CHOICE>FAILED</CHOICE><CHOICE>NOT_APPLICABLE</CHOICE></CHOICES></Field>"
+                },
+                {
+                  "Name": "OpenEvidenceGaps",
+                  "Type": "Note",
+                  "SchemaXml": "<Field Name=\"OpenEvidenceGaps\" DisplayName=\"OpenEvidenceGaps\" StaticName=\"OpenEvidenceGaps\" Type=\"Note\" NumLines=\"6\" RichText=\"FALSE\" AppendOnly=\"FALSE\" />"
+                },
+                {
+                  "Name": "Dependencies",
+                  "Type": "Note",
+                  "SchemaXml": "<Field Name=\"Dependencies\" DisplayName=\"Dependencies\" StaticName=\"Dependencies\" Type=\"Note\" NumLines=\"6\" RichText=\"FALSE\" AppendOnly=\"FALSE\" />"
+                },
+                {
+                  "Name": "Risks",
+                  "Type": "Note",
+                  "SchemaXml": "<Field Name=\"Risks\" DisplayName=\"Risks\" StaticName=\"Risks\" Type=\"Note\" NumLines=\"6\" RichText=\"FALSE\" AppendOnly=\"FALSE\" />"
+                },
+                {
+                  "Name": "TaskSystem",
+                  "Type": "Text",
+                  "SchemaXml": "<Field Name=\"TaskSystem\" DisplayName=\"TaskSystem\" StaticName=\"TaskSystem\" Type=\"Text\" MaxLength=\"255\" />"
+                },
+                {
+                  "Name": "CollaborationSurface",
+                  "Type": "Text",
+                  "SchemaXml": "<Field Name=\"CollaborationSurface\" DisplayName=\"CollaborationSurface\" StaticName=\"CollaborationSurface\" Type=\"Text\" MaxLength=\"255\" />"
+                },
+                {
+                  "Name": "CurrentRelease",
+                  "Type": "Text",
+                  "SchemaXml": "<Field Name=\"CurrentRelease\" DisplayName=\"CurrentRelease\" StaticName=\"CurrentRelease\" Type=\"Text\" MaxLength=\"255\" />"
+                },
+                {
+                  "Name": "LastValidatedAt",
+                  "Type": "DateTime",
+                  "SchemaXml": "<Field Name=\"LastValidatedAt\" DisplayName=\"LastValidatedAt\" StaticName=\"LastValidatedAt\" Type=\"DateTime\" Format=\"DateTime\" />"
+                },
+                {
+                  "Name": "NextAction",
+                  "Type": "Note",
+                  "SchemaXml": "<Field Name=\"NextAction\" DisplayName=\"NextAction\" StaticName=\"NextAction\" Type=\"Note\" NumLines=\"6\" RichText=\"FALSE\" AppendOnly=\"FALSE\" />"
+                },
+                {
+                  "Name": "NextOwner",
+                  "Type": "Text",
+                  "SchemaXml": "<Field Name=\"NextOwner\" DisplayName=\"NextOwner\" StaticName=\"NextOwner\" Type=\"Text\" MaxLength=\"255\" />"
+                },
+                {
+                  "Name": "NextDate",
+                  "Type": "Text",
+                  "SchemaXml": "<Field Name=\"NextDate\" DisplayName=\"NextDate\" StaticName=\"NextDate\" Type=\"Text\" MaxLength=\"255\" />"
+                },
+                {
+                  "Name": "ValueBaselineID",
+                  "Type": "Text",
+                  "SchemaXml": "<Field Name=\"ValueBaselineID\" DisplayName=\"ValueBaselineID\" StaticName=\"ValueBaselineID\" Type=\"Text\" MaxLength=\"255\" />"
+                },
+                {
+                  "Name": "ActualValueID",
+                  "Type": "Text",
+                  "SchemaXml": "<Field Name=\"ActualValueID\" DisplayName=\"ActualValueID\" StaticName=\"ActualValueID\" Type=\"Text\" MaxLength=\"255\" />"
+                },
+                {
+                  "Name": "RetentionClass",
+                  "Type": "Text",
+                  "SchemaXml": "<Field Name=\"RetentionClass\" DisplayName=\"RetentionClass\" StaticName=\"RetentionClass\" Type=\"Text\" MaxLength=\"255\" />"
+                },
+                {
+                  "Name": "DataClassification",
+                  "Type": "Choice",
+                  "SchemaXml": "<Field Name=\"DataClassification\" DisplayName=\"DataClassification\" StaticName=\"DataClassification\" Type=\"Choice\" Format=\"Dropdown\" FillInChoice=\"FALSE\"><CHOICES><CHOICE>PUBLIC</CHOICE><CHOICE>INTERNAL</CHOICE><CHOICE>CONFIDENTIAL</CHOICE><CHOICE>RESTRICTED</CHOICE></CHOICES></Field>"
+                },
+                {
+                  "Name": "Version",
+                  "Type": "Number",
+                  "SchemaXml": "<Field Name=\"Version\" DisplayName=\"Record Version\" StaticName=\"Version\" Type=\"Number\" Decimals=\"0\" />"
+                },
+                {
+                  "Name": "RecordJson",
+                  "Type": "Note",
+                  "SchemaXml": "<Field Name=\"RecordJson\" DisplayName=\"RecordJson\" StaticName=\"RecordJson\" Type=\"Note\" NumLines=\"6\" RichText=\"FALSE\" AppendOnly=\"FALSE\" />"
+                },
+                {
+                  "Name": "TestRecord",
+                  "Type": "Boolean",
+                  "SchemaXml": "<Field Name=\"TestRecord\" DisplayName=\"TestRecord\" StaticName=\"TestRecord\" Type=\"Boolean\"><Default>0</Default></Field>"
+                }
+              ]
+            },
+            {
+              "Key": "Evidence",
+              "Title": "AI CoE Evidence Value",
+              "BaseTemplate": 100,
+              "TitleMeans": "EvidencePacketID / ValueRecordID (unique, required)",
+              "Fields": [
+                {
+                  "Name": "WorkID",
+                  "Type": "Text",
+                  "SchemaXml": "<Field Name=\"WorkID\" DisplayName=\"WorkID\" StaticName=\"WorkID\" Type=\"Text\" MaxLength=\"255\" Required=\"TRUE\" Indexed=\"TRUE\" />"
+                },
+                {
+                  "Name": "RecordKind",
+                  "Type": "Choice",
+                  "SchemaXml": "<Field Name=\"RecordKind\" DisplayName=\"RecordKind\" StaticName=\"RecordKind\" Type=\"Choice\" Format=\"Dropdown\" FillInChoice=\"FALSE\"><CHOICES><CHOICE>EVIDENCE_PACKET</CHOICE><CHOICE>VALUE_RECORD</CHOICE></CHOICES></Field>"
+                },
+                {
+                  "Name": "EvidenceType",
+                  "Type": "Text",
+                  "SchemaXml": "<Field Name=\"EvidenceType\" DisplayName=\"EvidenceType\" StaticName=\"EvidenceType\" Type=\"Text\" MaxLength=\"255\" Indexed=\"TRUE\" />"
+                },
+                {
+                  "Name": "ReasonRequired",
+                  "Type": "Note",
+                  "SchemaXml": "<Field Name=\"ReasonRequired\" DisplayName=\"ReasonRequired\" StaticName=\"ReasonRequired\" Type=\"Note\" NumLines=\"6\" RichText=\"FALSE\" AppendOnly=\"FALSE\" />"
+                },
+                {
+                  "Name": "Questions",
+                  "Type": "Note",
+                  "SchemaXml": "<Field Name=\"Questions\" DisplayName=\"Questions\" StaticName=\"Questions\" Type=\"Note\" NumLines=\"6\" RichText=\"FALSE\" AppendOnly=\"FALSE\" />"
+                },
+                {
+                  "Name": "AssignedRole",
+                  "Type": "Text",
+                  "SchemaXml": "<Field Name=\"AssignedRole\" DisplayName=\"AssignedRole\" StaticName=\"AssignedRole\" Type=\"Text\" MaxLength=\"255\" />"
+                },
+                {
+                  "Name": "AssignedPerson",
+                  "Type": "Text",
+                  "SchemaXml": "<Field Name=\"AssignedPerson\" DisplayName=\"AssignedPerson\" StaticName=\"AssignedPerson\" Type=\"Text\" MaxLength=\"255\" Indexed=\"TRUE\" />"
+                },
+                {
+                  "Name": "SourceRefs",
+                  "Type": "Note",
+                  "SchemaXml": "<Field Name=\"SourceRefs\" DisplayName=\"SourceRefs\" StaticName=\"SourceRefs\" Type=\"Note\" NumLines=\"6\" RichText=\"FALSE\" AppendOnly=\"FALSE\" />"
+                },
+                {
+                  "Name": "DueAt",
+                  "Type": "DateTime",
+                  "SchemaXml": "<Field Name=\"DueAt\" DisplayName=\"DueAt\" StaticName=\"DueAt\" Type=\"DateTime\" Format=\"DateTime\" />"
+                },
+                {
+                  "Name": "Status",
+                  "Type": "Choice",
+                  "SchemaXml": "<Field Name=\"Status\" DisplayName=\"Status\" StaticName=\"Status\" Type=\"Choice\" Format=\"Dropdown\" FillInChoice=\"FALSE\" Indexed=\"TRUE\"><CHOICES><CHOICE>OPEN</CHOICE><CHOICE>ASSIGNED</CHOICE><CHOICE>AWAITING_RESPONSE</CHOICE><CHOICE>RETURNED</CHOICE><CHOICE>VALIDATED</CHOICE><CHOICE>REJECTED</CHOICE><CHOICE>EXPIRED</CHOICE><CHOICE>NOT_APPLICABLE</CHOICE></CHOICES></Field>"
+                },
+                {
+                  "Name": "Applicability",
+                  "Type": "Choice",
+                  "SchemaXml": "<Field Name=\"Applicability\" DisplayName=\"Applicability\" StaticName=\"Applicability\" Type=\"Choice\" Format=\"Dropdown\" FillInChoice=\"FALSE\"><CHOICES><CHOICE>REQUIRED</CHOICE><CHOICE>CONDITIONAL</CHOICE><CHOICE>NOT_APPLICABLE</CHOICE></CHOICES></Field>"
+                },
+                {
+                  "Name": "Response",
+                  "Type": "Note",
+                  "SchemaXml": "<Field Name=\"Response\" DisplayName=\"Response\" StaticName=\"Response\" Type=\"Note\" NumLines=\"6\" RichText=\"FALSE\" AppendOnly=\"FALSE\" />"
+                },
+                {
+                  "Name": "ValidatorAssertion",
+                  "Type": "Note",
+                  "SchemaXml": "<Field Name=\"ValidatorAssertion\" DisplayName=\"ValidatorAssertion\" StaticName=\"ValidatorAssertion\" Type=\"Note\" NumLines=\"6\" RichText=\"FALSE\" AppendOnly=\"FALSE\" />"
+                },
+                {
+                  "Name": "Confidence",
+                  "Type": "Text",
+                  "SchemaXml": "<Field Name=\"Confidence\" DisplayName=\"Confidence\" StaticName=\"Confidence\" Type=\"Text\" MaxLength=\"255\" />"
+                },
+                {
+                  "Name": "KnownAssumedUnknown",
+                  "Type": "Choice",
+                  "SchemaXml": "<Field Name=\"KnownAssumedUnknown\" DisplayName=\"KnownAssumedUnknown\" StaticName=\"KnownAssumedUnknown\" Type=\"Choice\" Format=\"Dropdown\" FillInChoice=\"FALSE\"><CHOICES><CHOICE>KNOWN</CHOICE><CHOICE>ASSUMED</CHOICE><CHOICE>UNKNOWN</CHOICE><CHOICE>MIXED</CHOICE></CHOICES></Field>"
+                },
+                {
+                  "Name": "FreshnessState",
+                  "Type": "Choice",
+                  "SchemaXml": "<Field Name=\"FreshnessState\" DisplayName=\"FreshnessState\" StaticName=\"FreshnessState\" Type=\"Choice\" Format=\"Dropdown\" FillInChoice=\"FALSE\"><CHOICES><CHOICE>CURRENT</CHOICE><CHOICE>STALE</CHOICE><CHOICE>UNPROVED</CHOICE><CHOICE>NOT_APPLICABLE</CHOICE></CHOICES></Field>"
+                },
+                {
+                  "Name": "ReturnedAt",
+                  "Type": "DateTime",
+                  "SchemaXml": "<Field Name=\"ReturnedAt\" DisplayName=\"ReturnedAt\" StaticName=\"ReturnedAt\" Type=\"DateTime\" Format=\"DateTime\" />"
+                },
+                {
+                  "Name": "LastReminderAt",
+                  "Type": "DateTime",
+                  "SchemaXml": "<Field Name=\"LastReminderAt\" DisplayName=\"LastReminderAt\" StaticName=\"LastReminderAt\" Type=\"DateTime\" Format=\"DateTime\" />"
+                },
+                {
+                  "Name": "EscalationAt",
+                  "Type": "DateTime",
+                  "SchemaXml": "<Field Name=\"EscalationAt\" DisplayName=\"EscalationAt\" StaticName=\"EscalationAt\" Type=\"DateTime\" Format=\"DateTime\" />"
+                },
+                {
+                  "Name": "Version",
+                  "Type": "Number",
+                  "SchemaXml": "<Field Name=\"Version\" DisplayName=\"Record Version\" StaticName=\"Version\" Type=\"Number\" Decimals=\"0\" />"
+                },
+                {
+                  "Name": "RecordJson",
+                  "Type": "Note",
+                  "SchemaXml": "<Field Name=\"RecordJson\" DisplayName=\"RecordJson\" StaticName=\"RecordJson\" Type=\"Note\" NumLines=\"6\" RichText=\"FALSE\" AppendOnly=\"FALSE\" />"
+                },
+                {
+                  "Name": "TestRecord",
+                  "Type": "Boolean",
+                  "SchemaXml": "<Field Name=\"TestRecord\" DisplayName=\"TestRecord\" StaticName=\"TestRecord\" Type=\"Boolean\"><Default>0</Default></Field>"
+                }
+              ]
+            },
+            {
+              "Key": "Decisions",
+              "Title": "AI CoE Decisions Changes",
+              "BaseTemplate": 100,
+              "TitleMeans": "DecisionPacketID / ApprovalID (unique, required)",
+              "Fields": [
+                {
+                  "Name": "WorkID",
+                  "Type": "Text",
+                  "SchemaXml": "<Field Name=\"WorkID\" DisplayName=\"WorkID\" StaticName=\"WorkID\" Type=\"Text\" MaxLength=\"255\" Required=\"TRUE\" Indexed=\"TRUE\" />"
+                },
+                {
+                  "Name": "RecordKind",
+                  "Type": "Choice",
+                  "SchemaXml": "<Field Name=\"RecordKind\" DisplayName=\"RecordKind\" StaticName=\"RecordKind\" Type=\"Choice\" Format=\"Dropdown\" FillInChoice=\"FALSE\"><CHOICES><CHOICE>DECISION_PACKET</CHOICE><CHOICE>APPROVAL</CHOICE><CHOICE>CHANGE</CHOICE></CHOICES></Field>"
+                },
+                {
+                  "Name": "Status",
+                  "Type": "Choice",
+                  "SchemaXml": "<Field Name=\"Status\" DisplayName=\"Status\" StaticName=\"Status\" Type=\"Choice\" Format=\"Dropdown\" FillInChoice=\"FALSE\" Indexed=\"TRUE\"><CHOICES><CHOICE>DRAFT</CHOICE><CHOICE>READY_FOR_DECISION</CHOICE><CHOICE>APPROVED</CHOICE><CHOICE>APPROVED_WITH_CONDITIONS</CHOICE><CHOICE>DEFERRED</CHOICE><CHOICE>REJECTED</CHOICE><CHOICE>INVALIDATED</CHOICE></CHOICES></Field>"
+                },
+                {
+                  "Name": "ReadinessState",
+                  "Type": "Choice",
+                  "SchemaXml": "<Field Name=\"ReadinessState\" DisplayName=\"ReadinessState\" StaticName=\"ReadinessState\" Type=\"Choice\" Format=\"Dropdown\" FillInChoice=\"FALSE\"><CHOICES><CHOICE>READY</CHOICE><CHOICE>NOT_READY</CHOICE><CHOICE>REVALIDATION_REQUIRED</CHOICE></CHOICES></Field>"
+                },
+                {
+                  "Name": "ReadinessGates",
+                  "Type": "Note",
+                  "SchemaXml": "<Field Name=\"ReadinessGates\" DisplayName=\"ReadinessGates\" StaticName=\"ReadinessGates\" Type=\"Note\" NumLines=\"6\" RichText=\"FALSE\" AppendOnly=\"FALSE\" />"
+                },
+                {
+                  "Name": "BlockingGates",
+                  "Type": "Note",
+                  "SchemaXml": "<Field Name=\"BlockingGates\" DisplayName=\"BlockingGates\" StaticName=\"BlockingGates\" Type=\"Note\" NumLines=\"6\" RichText=\"FALSE\" AppendOnly=\"FALSE\" />"
+                },
+                {
+                  "Name": "Lane",
+                  "Type": "Text",
+                  "SchemaXml": "<Field Name=\"Lane\" DisplayName=\"Lane\" StaticName=\"Lane\" Type=\"Text\" MaxLength=\"255\" />"
+                },
+                {
+                  "Name": "RuleFired",
+                  "Type": "Text",
+                  "SchemaXml": "<Field Name=\"RuleFired\" DisplayName=\"RuleFired\" StaticName=\"RuleFired\" Type=\"Text\" MaxLength=\"255\" />"
+                },
+                {
+                  "Name": "PayloadHash",
+                  "Type": "Text",
+                  "SchemaXml": "<Field Name=\"PayloadHash\" DisplayName=\"PayloadHash\" StaticName=\"PayloadHash\" Type=\"Text\" MaxLength=\"255\" />"
+                },
+                {
+                  "Name": "EvidenceSetHash",
+                  "Type": "Text",
+                  "SchemaXml": "<Field Name=\"EvidenceSetHash\" DisplayName=\"EvidenceSetHash\" StaticName=\"EvidenceSetHash\" Type=\"Text\" MaxLength=\"255\" />"
+                },
+                {
+                  "Name": "HashProvenance",
+                  "Type": "Choice",
+                  "SchemaXml": "<Field Name=\"HashProvenance\" DisplayName=\"HashProvenance\" StaticName=\"HashProvenance\" Type=\"Choice\" Format=\"Dropdown\" FillInChoice=\"FALSE\"><CHOICES><CHOICE>CLIENT_COMPUTED</CHOICE><CHOICE>NOT_PROVIDED</CHOICE></CHOICES></Field>"
+                },
+                {
+                  "Name": "BusinessCaseVersion",
+                  "Type": "Text",
+                  "SchemaXml": "<Field Name=\"BusinessCaseVersion\" DisplayName=\"BusinessCaseVersion\" StaticName=\"BusinessCaseVersion\" Type=\"Text\" MaxLength=\"255\" />"
+                },
+                {
+                  "Name": "DecisionRequested",
+                  "Type": "Note",
+                  "SchemaXml": "<Field Name=\"DecisionRequested\" DisplayName=\"DecisionRequested\" StaticName=\"DecisionRequested\" Type=\"Note\" NumLines=\"6\" RichText=\"FALSE\" AppendOnly=\"FALSE\" />"
+                },
+                {
+                  "Name": "DecisionAuthority",
+                  "Type": "Text",
+                  "SchemaXml": "<Field Name=\"DecisionAuthority\" DisplayName=\"DecisionAuthority\" StaticName=\"DecisionAuthority\" Type=\"Text\" MaxLength=\"255\" />"
+                },
+                {
+                  "Name": "DecisionAuthoritySource",
+                  "Type": "Text",
+                  "SchemaXml": "<Field Name=\"DecisionAuthoritySource\" DisplayName=\"DecisionAuthoritySource\" StaticName=\"DecisionAuthoritySource\" Type=\"Text\" MaxLength=\"255\" />"
+                },
+                {
+                  "Name": "ExpiresAt",
+                  "Type": "DateTime",
+                  "SchemaXml": "<Field Name=\"ExpiresAt\" DisplayName=\"ExpiresAt\" StaticName=\"ExpiresAt\" Type=\"DateTime\" Format=\"DateTime\" />"
+                },
+                {
+                  "Name": "ApprovalID",
+                  "Type": "Text",
+                  "SchemaXml": "<Field Name=\"ApprovalID\" DisplayName=\"ApprovalID\" StaticName=\"ApprovalID\" Type=\"Text\" MaxLength=\"255\" />"
+                },
+                {
+                  "Name": "Version",
+                  "Type": "Number",
+                  "SchemaXml": "<Field Name=\"Version\" DisplayName=\"Record Version\" StaticName=\"Version\" Type=\"Number\" Decimals=\"0\" />"
+                },
+                {
+                  "Name": "RecordJson",
+                  "Type": "Note",
+                  "SchemaXml": "<Field Name=\"RecordJson\" DisplayName=\"RecordJson\" StaticName=\"RecordJson\" Type=\"Note\" NumLines=\"6\" RichText=\"FALSE\" AppendOnly=\"FALSE\" />"
+                },
+                {
+                  "Name": "TestRecord",
+                  "Type": "Boolean",
+                  "SchemaXml": "<Field Name=\"TestRecord\" DisplayName=\"TestRecord\" StaticName=\"TestRecord\" Type=\"Boolean\"><Default>0</Default></Field>"
+                }
+              ]
+            },
+            {
+              "Key": "Events",
+              "Title": "AI CoE Lifecycle Events",
+              "BaseTemplate": 100,
+              "TitleMeans": "EventID (unique, required) \u2014 append-only",
+              "Fields": [
+                {
+                  "Name": "WorkID",
+                  "Type": "Text",
+                  "SchemaXml": "<Field Name=\"WorkID\" DisplayName=\"WorkID\" StaticName=\"WorkID\" Type=\"Text\" MaxLength=\"255\" Required=\"TRUE\" Indexed=\"TRUE\" />"
+                },
+                {
+                  "Name": "EventType",
+                  "Type": "Text",
+                  "SchemaXml": "<Field Name=\"EventType\" DisplayName=\"EventType\" StaticName=\"EventType\" Type=\"Text\" MaxLength=\"255\" Indexed=\"TRUE\" />"
+                },
+                {
+                  "Name": "OccurredAt",
+                  "Type": "DateTime",
+                  "SchemaXml": "<Field Name=\"OccurredAt\" DisplayName=\"OccurredAt\" StaticName=\"OccurredAt\" Type=\"DateTime\" Format=\"DateTime\" />"
+                },
+                {
+                  "Name": "ActorType",
+                  "Type": "Choice",
+                  "SchemaXml": "<Field Name=\"ActorType\" DisplayName=\"ActorType\" StaticName=\"ActorType\" Type=\"Choice\" Format=\"Dropdown\" FillInChoice=\"FALSE\"><CHOICES><CHOICE>HUMAN</CHOICE><CHOICE>AI</CHOICE><CHOICE>SERVICE</CHOICE><CHOICE>SYSTEM</CHOICE></CHOICES></Field>"
+                },
+                {
+                  "Name": "ActorID",
+                  "Type": "Text",
+                  "SchemaXml": "<Field Name=\"ActorID\" DisplayName=\"ActorID\" StaticName=\"ActorID\" Type=\"Text\" MaxLength=\"255\" />"
+                },
+                {
+                  "Name": "CorrelationID",
+                  "Type": "Text",
+                  "SchemaXml": "<Field Name=\"CorrelationID\" DisplayName=\"CorrelationID\" StaticName=\"CorrelationID\" Type=\"Text\" MaxLength=\"255\" />"
+                },
+                {
+                  "Name": "IdempotencyKey",
+                  "Type": "Text",
+                  "SchemaXml": "<Field Name=\"IdempotencyKey\" DisplayName=\"IdempotencyKey\" StaticName=\"IdempotencyKey\" Type=\"Text\" MaxLength=\"255\" Required=\"TRUE\" EnforceUniqueValues=\"TRUE\" Indexed=\"TRUE\" />"
+                },
+                {
+                  "Name": "AuthorityClass",
+                  "Type": "Text",
+                  "SchemaXml": "<Field Name=\"AuthorityClass\" DisplayName=\"AuthorityClass\" StaticName=\"AuthorityClass\" Type=\"Text\" MaxLength=\"255\" />"
+                },
+                {
+                  "Name": "ReceiptID",
+                  "Type": "Text",
+                  "SchemaXml": "<Field Name=\"ReceiptID\" DisplayName=\"ReceiptID\" StaticName=\"ReceiptID\" Type=\"Text\" MaxLength=\"255\" />"
+                },
+                {
+                  "Name": "SourceVersion",
+                  "Type": "Text",
+                  "SchemaXml": "<Field Name=\"SourceVersion\" DisplayName=\"SourceVersion\" StaticName=\"SourceVersion\" Type=\"Text\" MaxLength=\"255\" />"
+                },
+                {
+                  "Name": "Payload",
+                  "Type": "Note",
+                  "SchemaXml": "<Field Name=\"Payload\" DisplayName=\"Payload\" StaticName=\"Payload\" Type=\"Note\" NumLines=\"6\" RichText=\"FALSE\" AppendOnly=\"FALSE\" />"
+                },
+                {
+                  "Name": "TestRecord",
+                  "Type": "Boolean",
+                  "SchemaXml": "<Field Name=\"TestRecord\" DisplayName=\"TestRecord\" StaticName=\"TestRecord\" Type=\"Boolean\"><Default>0</Default></Field>"
+                }
+              ]
+            },
+            {
+              "Key": "Receipts",
+              "Title": "AI CoE Audit Receipts",
+              "BaseTemplate": 100,
+              "TitleMeans": "ReceiptID (unique, required) \u2014 never overwritten",
+              "Fields": [
+                {
+                  "Name": "OperationID",
+                  "Type": "Text",
+                  "SchemaXml": "<Field Name=\"OperationID\" DisplayName=\"OperationID\" StaticName=\"OperationID\" Type=\"Text\" MaxLength=\"255\" Required=\"TRUE\" />"
+                },
+                {
+                  "Name": "OperationClass",
+                  "Type": "Text",
+                  "SchemaXml": "<Field Name=\"OperationClass\" DisplayName=\"OperationClass\" StaticName=\"OperationClass\" Type=\"Text\" MaxLength=\"255\" />"
+                },
+                {
+                  "Name": "ActorID",
+                  "Type": "Text",
+                  "SchemaXml": "<Field Name=\"ActorID\" DisplayName=\"ActorID\" StaticName=\"ActorID\" Type=\"Text\" MaxLength=\"255\" />"
+                },
+                {
+                  "Name": "TargetRef",
+                  "Type": "Text",
+                  "SchemaXml": "<Field Name=\"TargetRef\" DisplayName=\"TargetRef\" StaticName=\"TargetRef\" Type=\"Text\" MaxLength=\"255\" Indexed=\"TRUE\" />"
+                },
+                {
+                  "Name": "BeforeVersion",
+                  "Type": "Text",
+                  "SchemaXml": "<Field Name=\"BeforeVersion\" DisplayName=\"BeforeVersion\" StaticName=\"BeforeVersion\" Type=\"Text\" MaxLength=\"255\" />"
+                },
+                {
+                  "Name": "AfterVersion",
+                  "Type": "Text",
+                  "SchemaXml": "<Field Name=\"AfterVersion\" DisplayName=\"AfterVersion\" StaticName=\"AfterVersion\" Type=\"Text\" MaxLength=\"255\" />"
+                },
+                {
+                  "Name": "PayloadHash",
+                  "Type": "Text",
+                  "SchemaXml": "<Field Name=\"PayloadHash\" DisplayName=\"PayloadHash\" StaticName=\"PayloadHash\" Type=\"Text\" MaxLength=\"255\" />"
+                },
+                {
+                  "Name": "ReadbackHash",
+                  "Type": "Text",
+                  "SchemaXml": "<Field Name=\"ReadbackHash\" DisplayName=\"ReadbackHash\" StaticName=\"ReadbackHash\" Type=\"Text\" MaxLength=\"255\" />"
+                },
+                {
+                  "Name": "Result",
+                  "Type": "Choice",
+                  "SchemaXml": "<Field Name=\"Result\" DisplayName=\"Result\" StaticName=\"Result\" Type=\"Choice\" Format=\"Dropdown\" FillInChoice=\"FALSE\"><CHOICES><CHOICE>PASS</CHOICE><CHOICE>FAIL</CHOICE><CHOICE>INCONCLUSIVE</CHOICE><CHOICE>DENIED</CHOICE><CHOICE>RECONCILIATION_REQUIRED</CHOICE></CHOICES></Field>"
+                },
+                {
+                  "Name": "ObservedAt",
+                  "Type": "DateTime",
+                  "SchemaXml": "<Field Name=\"ObservedAt\" DisplayName=\"ObservedAt\" StaticName=\"ObservedAt\" Type=\"DateTime\" Format=\"DateTime\" />"
+                },
+                {
+                  "Name": "EvidenceRefs",
+                  "Type": "Note",
+                  "SchemaXml": "<Field Name=\"EvidenceRefs\" DisplayName=\"EvidenceRefs\" StaticName=\"EvidenceRefs\" Type=\"Note\" NumLines=\"6\" RichText=\"FALSE\" AppendOnly=\"FALSE\" />"
+                },
+                {
+                  "Name": "ErrorClass",
+                  "Type": "Text",
+                  "SchemaXml": "<Field Name=\"ErrorClass\" DisplayName=\"ErrorClass\" StaticName=\"ErrorClass\" Type=\"Text\" MaxLength=\"255\" />"
+                },
+                {
+                  "Name": "RecordJson",
+                  "Type": "Note",
+                  "SchemaXml": "<Field Name=\"RecordJson\" DisplayName=\"RecordJson\" StaticName=\"RecordJson\" Type=\"Note\" NumLines=\"6\" RichText=\"FALSE\" AppendOnly=\"FALSE\" />"
+                },
+                {
+                  "Name": "TestRecord",
+                  "Type": "Boolean",
+                  "SchemaXml": "<Field Name=\"TestRecord\" DisplayName=\"TestRecord\" StaticName=\"TestRecord\" Type=\"Boolean\"><Default>0</Default></Field>"
+                }
+              ]
+            },
+            {
+              "Key": "Outbox",
+              "Title": "AI CoE Notification Outbox",
+              "BaseTemplate": 100,
+              "TitleMeans": "OutboxID (unique, required)",
+              "Fields": [
+                {
+                  "Name": "WorkID",
+                  "Type": "Text",
+                  "SchemaXml": "<Field Name=\"WorkID\" DisplayName=\"WorkID\" StaticName=\"WorkID\" Type=\"Text\" MaxLength=\"255\" Indexed=\"TRUE\" />"
+                },
+                {
+                  "Name": "Recipient",
+                  "Type": "Text",
+                  "SchemaXml": "<Field Name=\"Recipient\" DisplayName=\"Recipient\" StaticName=\"Recipient\" Type=\"Text\" MaxLength=\"255\" />"
+                },
+                {
+                  "Name": "Subject",
+                  "Type": "Text",
+                  "SchemaXml": "<Field Name=\"Subject\" DisplayName=\"Subject\" StaticName=\"Subject\" Type=\"Text\" MaxLength=\"255\" />"
+                },
+                {
+                  "Name": "Body",
+                  "Type": "Note",
+                  "SchemaXml": "<Field Name=\"Body\" DisplayName=\"Body\" StaticName=\"Body\" Type=\"Note\" NumLines=\"6\" RichText=\"FALSE\" AppendOnly=\"FALSE\" />"
+                },
+                {
+                  "Name": "State",
+                  "Type": "Choice",
+                  "SchemaXml": "<Field Name=\"State\" DisplayName=\"State\" StaticName=\"State\" Type=\"Choice\" Format=\"Dropdown\" FillInChoice=\"FALSE\" Indexed=\"TRUE\"><Default>QUEUED</Default><CHOICES><CHOICE>QUEUED</CHOICE><CHOICE>SUPPRESSED</CHOICE><CHOICE>SENT</CHOICE><CHOICE>FAILED</CHOICE></CHOICES></Field>"
+                },
+                {
+                  "Name": "Attempts",
+                  "Type": "Number",
+                  "SchemaXml": "<Field Name=\"Attempts\" DisplayName=\"Attempts\" StaticName=\"Attempts\" Type=\"Number\" Decimals=\"0\"><Default>0</Default></Field>"
+                },
+                {
+                  "Name": "ReceiptID",
+                  "Type": "Text",
+                  "SchemaXml": "<Field Name=\"ReceiptID\" DisplayName=\"ReceiptID\" StaticName=\"ReceiptID\" Type=\"Text\" MaxLength=\"255\" />"
+                },
+                {
+                  "Name": "SuppressionReason",
+                  "Type": "Text",
+                  "SchemaXml": "<Field Name=\"SuppressionReason\" DisplayName=\"SuppressionReason\" StaticName=\"SuppressionReason\" Type=\"Text\" MaxLength=\"255\" />"
+                },
+                {
+                  "Name": "TestRecord",
+                  "Type": "Boolean",
+                  "SchemaXml": "<Field Name=\"TestRecord\" DisplayName=\"TestRecord\" StaticName=\"TestRecord\" Type=\"Boolean\"><Default>0</Default></Field>"
+                }
+              ]
+            },
+            {
+              "Key": "Packets",
+              "Title": "AI CoE Work Packets",
+              "BaseTemplate": 101,
+              "TitleMeans": "document library \u2014 <WorkID>.md Markdown companions",
+              "Fields": []
+            }
+          ],
+          "runAfter": {}
+        },
+        "Seed": {
+          "type": "Compose",
+          "inputs": [
+            {
+              "Key": "PolicyVersion",
+              "Value": "\"uat-transcribed-v3.4-s10\"",
+              "Category": "Policy",
+              "Provisional": true,
+              "Note": "Transcribed from v3.4 design s9-11; reconcile against 04_POLICIES_AND_DECISION_RIGHTS YAML."
+            },
+            {
+              "Key": "GatesVersion",
+              "Value": "\"readiness-gates-v1\"",
+              "Category": "Policy",
+              "Provisional": true,
+              "Note": "Readiness = passing applicable gates / applicable gates * 100. Not the weighted model."
+            },
+            {
+              "Key": "ARB_TRIGGERS",
+              "Value": "[\"new_vendor\",\"new_tool\",\"incremental_cost\",\"contract_commitment\",\"sensitive_data\",\"customer_impact\",\"external_action\",\"production_architecture_change\",\"security_exception\",\"regulated_process\"]",
+              "Category": "Policy",
+              "Provisional": true,
+              "Note": "v3.4 s11"
+            },
+            {
+              "Key": "ELT_TRIGGERS",
+              "Value": "[\"multi_department_impact\",\"material_investment\"]",
+              "Category": "Policy",
+              "Provisional": true,
+              "Note": "v3.4 s11; ELT precedence over ARB"
+            },
+            {
+              "Key": "DelegatedFastPathEnabled",
+              "Value": "false",
+              "Category": "Policy",
+              "Provisional": true,
+              "Note": "false until a delegated AI CoE authority is bound; no trigger + false => PREPARATION lane"
+            },
+            {
+              "Key": "Authority_AI_COE_FAST_PATH",
+              "Value": "\"\"",
+              "Category": "Authority",
+              "Provisional": true,
+              "Note": "Named delegated approver principal. Blank => DECISION_AUTHORITY_KNOWN gate cannot pass."
+            },
+            {
+              "Key": "Authority_ARB",
+              "Value": "\"\"",
+              "Category": "Authority",
+              "Provisional": true,
+              "Note": "ARB owner principal (Kelli/Clay path). Blank => gate cannot pass. ARB integration is NOT in MVP."
+            },
+            {
+              "Key": "Authority_ELT",
+              "Value": "\"\"",
+              "Category": "Authority",
+              "Provisional": true,
+              "Note": "ELT decision body. Blank => gate cannot pass."
+            },
+            {
+              "Key": "ThresholdsRatified",
+              "Value": "false",
+              "Category": "Policy",
+              "Provisional": true,
+              "Note": "Set true only by ELT decision 2."
+            },
+            {
+              "Key": "FreshnessDays",
+              "Value": "30",
+              "Category": "Policy",
+              "Provisional": true,
+              "Note": "EVIDENCE_FRESHNESS gate: validated packets older than this fail."
+            },
+            {
+              "Key": "PacketDueDays",
+              "Value": "5",
+              "Category": "Operations",
+              "Provisional": false,
+              "Note": "DueAt offset for S2-S5 packets."
+            },
+            {
+              "Key": "ReminderAfterDays",
+              "Value": "2",
+              "Category": "Operations",
+              "Provisional": false,
+              "Note": "Overdue days before a reminder outbox row is written."
+            },
+            {
+              "Key": "EscalationAfterDays",
+              "Value": "5",
+              "Category": "Operations",
+              "Provisional": false,
+              "Note": "Overdue days before ESCALATION_REQUIRED event."
+            },
+            {
+              "Key": "AutoValidateReturnedPackets",
+              "Value": "true",
+              "Category": "UAT",
+              "Provisional": true,
+              "Note": "UAT only: RETURNED packets become VALIDATED with a provisional assertion. Set false before any real use."
+            },
+            {
+              "Key": "SendEnabled",
+              "Value": "false",
+              "Category": "Operations",
+              "Provisional": false,
+              "Note": "Outbox: false => every QUEUED row is SUPPRESSED. Nothing is sent in UAT."
+            },
+            {
+              "Key": "EvidenceValidators",
+              "Value": "[]",
+              "Category": "Authority",
+              "Provisional": true,
+              "Note": "UPNs allowed to SubmitEvidenceResponse for any packet (in addition to AssignedPerson)."
+            },
+            {
+              "Key": "OperatorPrincipals",
+              "Value": "[]",
+              "Category": "Authority",
+              "Provisional": true,
+              "Note": "UPNs allowed to RequestDecisionReadiness / read any case (AI CoE operators). Empty => requester/owner/sponsor only."
+            },
+            {
+              "Key": "CommandBatchSize",
+              "Value": "20",
+              "Category": "Operations",
+              "Provisional": false,
+              "Note": "Rows claimed per Case Command cycle."
+            },
+            {
+              "Key": "HealthMonitor_SilenceHours",
+              "Value": "26",
+              "Category": "Operations",
+              "Provisional": false,
+              "Note": "A flow with no heartbeat inside this window is reported silent."
+            },
+            {
+              "Key": "HealthMonitor_StalePendingMinutes",
+              "Value": "30",
+              "Category": "Operations",
+              "Provisional": false,
+              "Note": "PENDING command rows older than this are reported."
+            },
+            {
+              "Key": "PacketDefaults",
+              "Value": "{\"S2_CUSTOMER_MARKET\":{\"role\":\"Product/Customer owner\",\"q\":\"Which customers or internal users are affected and how?\"},\"S3_FINANCIAL\":{\"role\":\"Finance\",\"q\":\"What is the validated baseline cost and expected saving?\"},\"S4_TECHNICAL\":{\"role\":\"Architecture/IT\",\"q\":\"Does this stay inside an approved tool and data boundary?\"},\"S5_RISK_COMPLIANCE\":{\"role\":\"Security/Compliance\",\"q\":\"Does any sensitive or regulated data enter the workflow?\"}}",
+              "Category": "Policy",
+              "Provisional": true,
+              "Note": "S2-S5 packet templates (v3.4 s9.2)."
+            },
+            {
+              "Key": "CurrentRelease",
+              "Value": "\"3.4.0-rc2\"",
+              "Category": "Package",
+              "Provisional": false,
+              "Note": "RC2 release the records are bound to."
+            },
+            {
+              "Key": "RetentionClass_Default",
+              "Value": "\"PILOT_STANDARD\"",
+              "Category": "Policy",
+              "Provisional": true,
+              "Note": "RetentionClass written on new records."
+            },
+            {
+              "Key": "Projector_LastRun",
+              "Value": "\"1970-01-01T00:00:00Z\"",
+              "Category": "State",
+              "Provisional": false,
+              "Note": "Markdown projector watermark (flow-maintained)."
+            },
+            {
+              "Key": "Heartbeat_01_CaseCommand",
+              "Value": "\"never\"",
+              "Category": "State",
+              "Provisional": false,
+              "Note": "flow-maintained"
+            },
+            {
+              "Key": "Heartbeat_02_Evidence",
+              "Value": "\"never\"",
+              "Category": "State",
+              "Provisional": false,
+              "Note": "flow-maintained"
+            },
+            {
+              "Key": "Heartbeat_03_Projector",
+              "Value": "\"never\"",
+              "Category": "State",
+              "Provisional": false,
+              "Note": "flow-maintained"
+            },
+            {
+              "Key": "Heartbeat_04_Outbox",
+              "Value": "\"never\"",
+              "Category": "State",
+              "Provisional": false,
+              "Note": "flow-maintained"
+            },
+            {
+              "Key": "EmployeeStatusMap",
+              "Value": "{\"DRAFT\":\"Started\",\"CLARIFYING\":\"Need one answer\",\"READY_FOR_TRIAGE\":\"Working\",\"EVIDENCE_BUILDING\":\"Working\",\"AWAITING_SME\":\"With the right reviewer\",\"NOT_DECISION_READY\":\"Working\",\"DECISION_READY\":\"With the right reviewer\",\"READY_FOR_AI_COE\":\"With the right reviewer\",\"READY_FOR_ARB\":\"With the right reviewer\",\"READY_FOR_ELT\":\"With the right reviewer\",\"APPROVED\":\"Ready for you\",\"APPROVED_WITH_CONDITIONS\":\"Ready for you\",\"DEFERRED\":\"Ready for you\",\"REJECTED\":\"Done\",\"PROJECT_ACTIVATING\":\"Working\",\"IN_DELIVERY\":\"Working\",\"AT_RISK\":\"Working\",\"BLOCKED\":\"Working\",\"VALUE_REVIEW\":\"Ready for you\",\"OPERATING\":\"Done\",\"IMPROVEMENT_PROPOSED\":\"Ready for you\",\"REVALIDATION_REQUIRED\":\"Working\",\"RETIRED\":\"Done\"}",
+              "Category": "Policy",
+              "Provisional": false,
+              "Note": "State -> employee wording"
+            }
+          ],
+          "runAfter": {
+            "Model": [
+              "Succeeded"
+            ]
+          }
+        },
+        "SiteRel": {
+          "type": "Compose",
+          "inputs": "@uriPath(parameters('aicoe_SiteUrl (aicoe_SiteUrl)'))",
+          "runAfter": {
+            "Seed": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Warnings": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Warnings",
+                "type": "integer",
+                "value": 0
+              }
+            ]
+          },
+          "runAfter": {
+            "SiteRel": [
+              "Succeeded"
+            ]
+          }
+        },
+        "ListsEnsured": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "ListsEnsured",
+                "type": "integer",
+                "value": 0
+              }
+            ]
+          },
+          "runAfter": {
+            "Warnings": [
+              "Succeeded"
+            ]
+          }
+        },
+        "FieldsEnsured": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "FieldsEnsured",
+                "type": "integer",
+                "value": 0
+              }
+            ]
+          },
+          "runAfter": {
+            "ListsEnsured": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Scope_Lists": {
+          "type": "Scope",
+          "actions": {
+            "For_each_list": {
+              "type": "Foreach",
+              "foreach": "@outputs('Model')",
+              "actions": {
+                "Get_List": {
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "host": {
+                      "connectionName": "shared_sharepointonline",
+                      "operationId": "HttpRequest",
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+                    },
+                    "parameters": {
+                      "dataset": "@parameters('aicoe_SiteUrl (aicoe_SiteUrl)')",
+                      "parameters/method": "GET",
+                      "parameters/uri": "@concat('_api/web/lists/getbytitle(''', replace(items('For_each_list')?['Title'], '''', ''''''), ''')?$select=Id,Title,BaseTemplate')",
+                      "parameters/headers": {
+                        "Accept": "application/json;odata=nometadata",
+                        "Content-Type": "application/json;odata=verbose"
+                      }
+                    },
+                    "authentication": "@parameters('$authentication')"
+                  },
+                  "runAfter": {}
+                },
+                "Create_List": {
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "host": {
+                      "connectionName": "shared_sharepointonline",
+                      "operationId": "HttpRequest",
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+                    },
+                    "parameters": {
+                      "dataset": "@parameters('aicoe_SiteUrl (aicoe_SiteUrl)')",
+                      "parameters/method": "POST",
+                      "parameters/uri": "_api/web/lists",
+                      "parameters/headers": {
+                        "Accept": "application/json;odata=nometadata",
+                        "Content-Type": "application/json;odata=verbose"
+                      },
+                      "parameters/body": "@concat('{\"__metadata\":{\"type\":\"SP.List\"},\"Title\":\"', items('For_each_list')?['Title'], '\",\"BaseTemplate\":', items('For_each_list')?['BaseTemplate'], ',\"AllowContentTypes\":false,\"ContentTypesEnabled\":false,\"EnableVersioning\":true}')"
+                    },
+                    "authentication": "@parameters('$authentication')"
+                  },
+                  "runAfter": {
+                    "Get_List": [
+                      "Failed"
+                    ]
+                  }
+                },
+                "Read_List": {
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "host": {
+                      "connectionName": "shared_sharepointonline",
+                      "operationId": "HttpRequest",
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+                    },
+                    "parameters": {
+                      "dataset": "@parameters('aicoe_SiteUrl (aicoe_SiteUrl)')",
+                      "parameters/method": "GET",
+                      "parameters/uri": "@concat('_api/web/lists/getbytitle(''', replace(items('For_each_list')?['Title'], '''', ''''''), ''')?$select=Id,Title,BaseTemplate')",
+                      "parameters/headers": {
+                        "Accept": "application/json;odata=nometadata",
+                        "Content-Type": "application/json;odata=verbose"
+                      }
+                    },
+                    "authentication": "@parameters('$authentication')"
+                  },
+                  "runAfter": {
+                    "Create_List": [
+                      "Succeeded",
+                      "Skipped"
+                    ]
+                  }
+                },
+                "ListId": {
+                  "type": "Compose",
+                  "inputs": "@body('Read_List')?['Id']",
+                  "runAfter": {
+                    "Read_List": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "Count_List": {
+                  "type": "IncrementVariable",
+                  "inputs": {
+                    "name": "ListsEnsured",
+                    "value": 1
+                  },
+                  "runAfter": {
+                    "ListId": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "If_List_Not_Library": {
+                  "type": "If",
+                  "expression": {
+                    "and": [
+                      {
+                        "equals": [
+                          "@items('For_each_list')?['BaseTemplate']",
+                          100
+                        ]
+                      }
+                    ]
+                  },
+                  "actions": {
+                    "Title_Unique": {
+                      "type": "OpenApiConnection",
+                      "inputs": {
+                        "host": {
+                          "connectionName": "shared_sharepointonline",
+                          "operationId": "HttpRequest",
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+                        },
+                        "parameters": {
+                          "dataset": "@parameters('aicoe_SiteUrl (aicoe_SiteUrl)')",
+                          "parameters/method": "POST",
+                          "parameters/uri": "@concat('_api/web/lists(guid''', outputs('ListId'), ''')/fields/getbyinternalnameortitle(''Title'')')",
+                          "parameters/headers": {
+                            "Accept": "application/json;odata=nometadata",
+                            "Content-Type": "application/json;odata=verbose",
+                            "IF-MATCH": "*",
+                            "X-HTTP-Method": "MERGE"
+                          },
+                          "parameters/body": "{\"__metadata\":{\"type\":\"SP.Field\"},\"Indexed\":true,\"EnforceUniqueValues\":true}"
+                        },
+                        "authentication": "@parameters('$authentication')"
+                      },
+                      "runAfter": {}
+                    }
+                  },
+                  "runAfter": {
+                    "Count_List": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "For_each_field": {
+                  "type": "Foreach",
+                  "foreach": "@items('For_each_list')?['Fields']",
+                  "actions": {
+                    "Get_Field": {
+                      "type": "OpenApiConnection",
+                      "inputs": {
+                        "host": {
+                          "connectionName": "shared_sharepointonline",
+                          "operationId": "HttpRequest",
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+                        },
+                        "parameters": {
+                          "dataset": "@parameters('aicoe_SiteUrl (aicoe_SiteUrl)')",
+                          "parameters/method": "GET",
+                          "parameters/uri": "@concat('_api/web/lists(guid''', outputs('ListId'), ''')/fields?$filter=InternalName eq ''', items('For_each_field')?['Name'], '''&$select=InternalName,TypeAsString')",
+                          "parameters/headers": {
+                            "Accept": "application/json;odata=nometadata",
+                            "Content-Type": "application/json;odata=verbose"
+                          }
+                        },
+                        "authentication": "@parameters('$authentication')"
+                      },
+                      "runAfter": {}
+                    },
+                    "If_Field_Missing": {
+                      "type": "If",
+                      "expression": {
+                        "and": [
+                          {
+                            "equals": [
+                              "@empty(body('Get_Field')?['value'])",
+                              true
+                            ]
+                          }
+                        ]
+                      },
+                      "actions": {
+                        "Create_Field": {
+                          "type": "OpenApiConnection",
+                          "inputs": {
+                            "host": {
+                              "connectionName": "shared_sharepointonline",
+                              "operationId": "HttpRequest",
+                              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+                            },
+                            "parameters": {
+                              "dataset": "@parameters('aicoe_SiteUrl (aicoe_SiteUrl)')",
+                              "parameters/method": "POST",
+                              "parameters/uri": "@concat('_api/web/lists(guid''', outputs('ListId'), ''')/fields/createfieldasxml')",
+                              "parameters/headers": {
+                                "Accept": "application/json;odata=nometadata",
+                                "Content-Type": "application/json;odata=verbose"
+                              },
+                              "parameters/body": "@concat('{\"parameters\":{\"__metadata\":{\"type\":\"SP.XmlSchemaFieldCreationInformation\"},\"SchemaXml\":', substring(string(createArray(items('For_each_field')?['SchemaXml'])), 1, sub(length(string(createArray(items('For_each_field')?['SchemaXml']))), 2)), ',\"Options\":12}}')"
+                            },
+                            "authentication": "@parameters('$authentication')"
+                          },
+                          "runAfter": {}
+                        }
+                      },
+                      "else": {
+                        "actions": {
+                          "If_Type_Drift": {
+                            "type": "If",
+                            "expression": {
+                              "and": [
+                                {
+                                  "not": {
+                                    "equals": [
+                                      "@first(body('Get_Field')?['value'])?['TypeAsString']",
+                                      "@items('For_each_field')?['Type']"
+                                    ]
+                                  }
+                                }
+                              ]
+                            },
+                            "actions": {
+                              "Log_Type_Drift": {
+                                "type": "OpenApiConnection",
+                                "inputs": {
+                                  "host": {
+                                    "connectionName": "shared_sharepointonline",
+                                    "operationId": "PostItem",
+                                    "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+                                  },
+                                  "parameters": {
+                                    "dataset": "@parameters('aicoe_SiteUrl (aicoe_SiteUrl)')",
+                                    "table": "AI Automation Log",
+                                    "item": {
+                                      "Title": "@concat('LOG-', formatDateTime(utcNow(),'yyyyMMddHHmmss'), '-', toUpper(substring(replace(guid(),'-',''),0,6)))",
+                                      "Flow": "AI CoE 00 Provisioning",
+                                      "RunId": "@workflow()?['run']?['name']",
+                                      "Level": {
+                                        "Value": "Warning"
+                                      },
+                                      "Message": "@concat('Field type drift: list ', items('For_each_list')?['Title'], ' column ', items('For_each_field')?['Name'], ' exists as ', first(body('Get_Field')?['value'])?['TypeAsString'], ' but model says ', items('For_each_field')?['Type'], '. Not converted in place.')",
+                                      "CorrelationID": "",
+                                      "WorkID": "",
+                                      "LoggedAt": "@utcNow()"
+                                    }
+                                  },
+                                  "authentication": "@parameters('$authentication')"
+                                },
+                                "runAfter": {}
+                              },
+                              "Count_Drift": {
+                                "type": "IncrementVariable",
+                                "inputs": {
+                                  "name": "Warnings",
+                                  "value": 1
+                                },
+                                "runAfter": {
+                                  "Log_Type_Drift": [
+                                    "Succeeded"
+                                  ]
+                                }
+                              }
+                            },
+                            "runAfter": {}
+                          }
+                        }
+                      },
+                      "runAfter": {
+                        "Get_Field": [
+                          "Succeeded"
+                        ]
+                      }
+                    },
+                    "Count_Field": {
+                      "type": "IncrementVariable",
+                      "inputs": {
+                        "name": "FieldsEnsured",
+                        "value": 1
+                      },
+                      "runAfter": {
+                        "If_Field_Missing": [
+                          "Succeeded"
+                        ]
+                      }
+                    }
+                  },
+                  "runtimeConfiguration": {
+                    "concurrency": {
+                      "repetitions": 1
+                    }
+                  },
+                  "runAfter": {
+                    "If_List_Not_Library": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "If_Command_List": {
+                  "type": "If",
+                  "expression": {
+                    "and": [
+                      {
+                        "equals": [
+                          "@items('For_each_list')?['Key']",
+                          "Command"
+                        ]
+                      }
+                    ]
+                  },
+                  "actions": {
+                    "Set_Item_Security": {
+                      "type": "OpenApiConnection",
+                      "inputs": {
+                        "host": {
+                          "connectionName": "shared_sharepointonline",
+                          "operationId": "HttpRequest",
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+                        },
+                        "parameters": {
+                          "dataset": "@parameters('aicoe_SiteUrl (aicoe_SiteUrl)')",
+                          "parameters/method": "POST",
+                          "parameters/uri": "@concat('_api/web/lists(guid''', outputs('ListId'), ''')')",
+                          "parameters/headers": {
+                            "Accept": "application/json;odata=nometadata",
+                            "Content-Type": "application/json;odata=verbose",
+                            "IF-MATCH": "*",
+                            "X-HTTP-Method": "MERGE"
+                          },
+                          "parameters/body": "{\"__metadata\":{\"type\":\"SP.List\"},\"ReadSecurity\":2,\"WriteSecurity\":2}"
+                        },
+                        "authentication": "@parameters('$authentication')"
+                      },
+                      "runAfter": {}
+                    }
+                  },
+                  "runAfter": {
+                    "For_each_field": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "Find_ListId_Row": {
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "host": {
+                      "connectionName": "shared_sharepointonline",
+                      "operationId": "GetItems",
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+                    },
+                    "parameters": {
+                      "dataset": "@parameters('aicoe_SiteUrl (aicoe_SiteUrl)')",
+                      "table": "AI CoE Definitions",
+                      "$top": 1,
+                      "$filter": "@concat('Title eq ''ListId_', items('For_each_list')?['Key'], '''')"
+                    },
+                    "authentication": "@parameters('$authentication')"
+                  },
+                  "runAfter": {
+                    "If_Command_List": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "If_ListId_Row_Missing": {
+                  "type": "If",
+                  "expression": {
+                    "and": [
+                      {
+                        "equals": [
+                          "@length(body('Find_ListId_Row')?['value'])",
+                          0
+                        ]
+                      }
+                    ]
+                  },
+                  "actions": {
+                    "Create_ListId_Row": {
+                      "type": "OpenApiConnection",
+                      "inputs": {
+                        "host": {
+                          "connectionName": "shared_sharepointonline",
+                          "operationId": "PostItem",
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+                        },
+                        "parameters": {
+                          "dataset": "@parameters('aicoe_SiteUrl (aicoe_SiteUrl)')",
+                          "table": "AI CoE Definitions",
+                          "item": {
+                            "Title": "@concat('ListId_', items('For_each_list')?['Key'])",
+                            "Value": "@concat('\"', outputs('ListId'), '\"')",
+                            "Category": "Binding",
+                            "Version": "3.0.0.0",
+                            "Provisional": false,
+                            "Note": "@concat('GUID of list ', items('For_each_list')?['Title'], ' read back after provisioning')"
+                          }
+                        },
+                        "authentication": "@parameters('$authentication')"
+                      },
+                      "runAfter": {}
+                    }
+                  },
+                  "else": {
+                    "actions": {
+                      "Update_ListId_Row": {
+                        "type": "OpenApiConnection",
+                        "inputs": {
+                          "host": {
+                            "connectionName": "shared_sharepointonline",
+                            "operationId": "PatchItem",
+                            "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+                          },
+                          "parameters": {
+                            "dataset": "@parameters('aicoe_SiteUrl (aicoe_SiteUrl)')",
+                            "table": "AI CoE Definitions",
+                            "id": "@first(body('Find_ListId_Row')?['value'])?['ID']",
+                            "item": {
+                              "Value": "@concat('\"', outputs('ListId'), '\"')"
+                            }
+                          },
+                          "authentication": "@parameters('$authentication')"
+                        },
+                        "runAfter": {}
+                      }
+                    }
+                  },
+                  "runAfter": {
+                    "Find_ListId_Row": [
+                      "Succeeded"
+                    ]
+                  }
+                }
+              },
+              "runtimeConfiguration": {
+                "concurrency": {
+                  "repetitions": 1
+                }
+              },
+              "runAfter": {}
+            }
+          },
+          "runAfter": {
+            "FieldsEnsured": [
+              "Succeeded"
+            ]
+          }
+        },
+        "For_each_seed": {
+          "type": "Foreach",
+          "foreach": "@outputs('Seed')",
+          "actions": {
+            "Find_Seed_Row": {
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_sharepointonline",
+                  "operationId": "GetItems",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+                },
+                "parameters": {
+                  "dataset": "@parameters('aicoe_SiteUrl (aicoe_SiteUrl)')",
+                  "table": "AI CoE Definitions",
+                  "$top": 1,
+                  "$filter": "@concat('Title eq ''', items('For_each_seed')?['Key'], '''')"
+                },
+                "authentication": "@parameters('$authentication')"
+              },
+              "runAfter": {}
+            },
+            "If_Seed_Missing": {
+              "type": "If",
+              "expression": {
+                "and": [
+                  {
+                    "equals": [
+                      "@length(body('Find_Seed_Row')?['value'])",
+                      0
+                    ]
+                  }
+                ]
+              },
+              "actions": {
+                "Create_Seed_Row": {
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "host": {
+                      "connectionName": "shared_sharepointonline",
+                      "operationId": "PostItem",
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+                    },
+                    "parameters": {
+                      "dataset": "@parameters('aicoe_SiteUrl (aicoe_SiteUrl)')",
+                      "table": "AI CoE Definitions",
+                      "item": {
+                        "Title": "@items('For_each_seed')?['Key']",
+                        "Value": "@items('For_each_seed')?['Value']",
+                        "Category": "@items('For_each_seed')?['Category']",
+                        "Version": "3.0.0.0",
+                        "Provisional": "@items('For_each_seed')?['Provisional']",
+                        "Note": "@items('For_each_seed')?['Note']"
+                      }
+                    },
+                    "authentication": "@parameters('$authentication')"
+                  },
+                  "runAfter": {}
+                }
+              },
+              "runAfter": {
+                "Find_Seed_Row": [
+                  "Succeeded"
+                ]
+              }
+            }
+          },
+          "runtimeConfiguration": {
+            "concurrency": {
+              "repetitions": 1
+            }
+          },
+          "runAfter": {
+            "Scope_Lists": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Log_Provisioning_Result": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_sharepointonline",
+              "operationId": "PostItem",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+            },
+            "parameters": {
+              "dataset": "@parameters('aicoe_SiteUrl (aicoe_SiteUrl)')",
+              "table": "AI Automation Log",
+              "item": {
+                "Title": "@concat('LOG-', formatDateTime(utcNow(),'yyyyMMddHHmmss'), '-', toUpper(substring(replace(guid(),'-',''),0,6)))",
+                "Flow": "AI CoE 00 Provisioning",
+                "RunId": "@workflow()?['run']?['name']",
+                "Level": {
+                  "Value": "Succeeded"
+                },
+                "Message": "@concat('Provisioning complete: ', string(variables('ListsEnsured')), ' lists ensured, ', string(variables('FieldsEnsured')), ' fields ensured, ', string(variables('Warnings')), ' type-drift warnings. List GUIDs written to AI CoE Definitions as ListId_*.')",
+                "LoggedAt": "@utcNow()"
+              }
+            },
+            "authentication": "@parameters('$authentication')"
+          },
+          "runAfter": {
+            "For_each_seed": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Log_Provisioning_Failure": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_sharepointonline",
+              "operationId": "PostItem",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+            },
+            "parameters": {
+              "dataset": "@parameters('aicoe_SiteUrl (aicoe_SiteUrl)')",
+              "table": "AI Automation Log",
+              "item": {
+                "Title": "@concat('LOG-', formatDateTime(utcNow(),'yyyyMMddHHmmss'), '-', toUpper(substring(replace(guid(),'-',''),0,6)))",
+                "Flow": "AI CoE 00 Provisioning",
+                "RunId": "@workflow()?['run']?['name']",
+                "Level": {
+                  "Value": "Error"
+                },
+                "Message": "@concat('Provisioning failed inside Scope_Lists: ', string(result('Scope_Lists')), '. Re-run after fixing; the flow is additive and idempotent.')",
+                "LoggedAt": "@utcNow()"
+              }
+            },
+            "authentication": "@parameters('$authentication')"
+          },
+          "runAfter": {
+            "Scope_Lists": [
+              "Failed",
+              "TimedOut"
+            ]
+          }
+        },
+        "Terminate_Provisioning": {
+          "type": "Terminate",
+          "inputs": {
+            "runStatus": "Failed",
+            "runError": {
+              "code": "PROVISIONING_FAILED",
+              "message": "See AI Automation Log."
+            }
+          },
+          "runAfter": {
+            "Log_Provisioning_Failure": [
+              "Succeeded"
+            ]
+          }
+        }
+      },
+      "description": "Creates/verifies the AI CoE lists and columns (additive, idempotent), writes list GUIDs and the configuration seed into AI CoE Definitions, sets read-own/edit-own on the command list. Manual trigger only."
+    },
+    "templateName": null
+  },
+  "schemaVersion": "1.0.0.0"
+}

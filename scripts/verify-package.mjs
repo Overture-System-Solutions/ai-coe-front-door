@@ -37,7 +37,7 @@ const CASE_INSENSITIVE_LISTS = ['clientWords', 'hosts'];
 
 const EXPECTED = {
   productId: 'f125ebdf-4a9d-4e6e-8479-3a18874e7752',
-  version: '1.0.0.15',
+  version: '1.0.0.17',
   featureId: '69ab84b7-608c-47ee-9623-af8ebaf2cb10',
   webPartId: 'cf2e5904-0703-4fe4-ae5a-ec012d6fa689',
   provisioningFiles: ['elements.xml', 'intake-schema.xml', 'decision-schema.xml'],
@@ -234,16 +234,17 @@ check(bundleText.includes(`define("${EXPECTED.webPartId}_1.0.0"`), 'The bundle d
 const featureManifest = entries.find((entry) => /feature.*\.xml$|manifest\.xml$/i.test(entry.name) && entry.bytes.toString('utf8').includes(EXPECTED.featureId));
 check(featureManifest !== undefined, `No manifest references feature ${EXPECTED.featureId}`);
 
-// The packaged component manifest (HTML-escaped JSON inside the feature's WebPart element) must keep the shipped
-// toolbox entry first, presetting the legacy view, so an upgraded instance without a view renders as before.
+// The packaged component manifest (HTML-escaped JSON inside the feature's WebPart element) must keep the
+// consolidated app first so a new instance opens as one page. An absent view on an existing instance still
+// parses to legacy. The outcome record stays last.
 const componentXml = entries.find((entry) => new RegExp(`WebPart_${EXPECTED.webPartId}\\.xml$`, 'i').test(entry.name));
 check(componentXml !== undefined, `No WebPart_${EXPECTED.webPartId}.xml element manifest in the package`);
 const componentText = componentXml === undefined ? '' : componentXml.bytes.toString('utf8');
 const preconfiguredViews = (componentText.match(/&quot;view&quot;:&quot;([A-Za-z]+)&quot;/g) ?? []).map((match) => match.replace(/&quot;/g, '').split(':')[1]);
-check(preconfiguredViews[0] === 'legacy', `The first toolbox entry presets view "${preconfiguredViews[0]}", expected "legacy"`);
+check(preconfiguredViews[0] === 'app', `The first toolbox entry presets view "${preconfiguredViews[0]}", expected "app"`);
 check(
-  preconfiguredViews.length === 11,
-  `Expected eleven toolbox entries (one per piece, the content page and the outcome record), found ${preconfiguredViews.length}`
+  preconfiguredViews.length === 12,
+  `Expected twelve toolbox entries (consolidated app, legacy, one per piece, the content page and the outcome record), found ${preconfiguredViews.length}`
 );
 check(
   preconfiguredViews[preconfiguredViews.length - 1] === 'outcome',

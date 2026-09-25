@@ -1,0 +1,86 @@
+{
+  "capturedAt": "2026-09-24T13:32:54.385277+00:00",
+  "archiveSha256": "09068b396a0251f62891f1677d69d75b9c266de3174046e2e70ed1f3c793f48c",
+  "files": {
+    "generator/build.py": {
+      "sha256": "5e8340bd0c14618ef9299f7295d0de617d7336a03be2995b62d972a88490eb89",
+      "bytes": 6243
+    },
+    "generator/marketing_actions.py": {
+      "sha256": "a952095084392f6434b91a425510d42ba886bb2aae78a9f6fa8dac92fac512b0",
+      "bytes": 9330
+    },
+    "generator/marketing_flow.py": {
+      "sha256": "2019c9710186a2dd3914d749e4fa1ba8aaec4d828cb785b254d2f3e4664a4ad3",
+      "bytes": 5007
+    },
+    "generator/marketing_package.py": {
+      "sha256": "5a2a7e599e64a875fbbd3e49549234b4472809d57bd286a64dcf23d5934c57f1",
+      "bytes": 5037
+    },
+    "generator/marketing_pipeline.py": {
+      "sha256": "3e6bbd4eeaa884db14c867c9c754ff6a913939b3a1117b45acbad59333c2f19a",
+      "bytes": 12041
+    },
+    "generator/marketing_validate.py": {
+      "sha256": "e704d4dc154909772235a91c60e0dce372b7344311e6a3686abe5bf3c9725bbc",
+      "bytes": 6120
+    },
+    "generator/packing_donor.py": {
+      "sha256": "bb39ae86413b684eba5f05b90b1c9876b20e5b5a28d74285e74e82bb8ac0a430",
+      "bytes": 8784
+    },
+    "generator/roundtrip.py": {
+      "sha256": "63334e1ddf7db1f9de40e27f190f7fa1a51d3a7856b26abd1b43b76798f7a19b",
+      "bytes": 4600
+    },
+    "generator/wdl.py": {
+      "sha256": "e4a1bd55c5402dee025170551113010ae481580dd9372036b047bd9ba9e9df92",
+      "bytes": 10481
+    },
+    "generator/wdl_parser_donor.py": {
+      "sha256": "86e0519b40944efdadd0b42640bb7086697101956f6b305f242e480efffcf3c9",
+      "bytes": 13097
+    },
+    "out/AICoEMarketingAutomation_1_0_0_0_UNBOUND_REVIEW_ONLY.zip": {
+      "sha256": "8b7e72df3c72a2fa06016bd92595075ad75f0107766141f38c3b6dc34e16d39a",
+      "bytes": 22122
+    },
+    "out/build-manifest.json": {
+      "sha256": "8d933d7e44398f2d043743c03dc8c4b9cd2130dd807bd6e1233fc6e58a52b172",
+      "bytes": 4816
+    },
+    "out/deployment-settings-template.json": {
+      "sha256": "2e676a1daae5d4aa63050acdffcf82a20fee29d822c70e2d9e7fb9e0de2948da",
+      "bytes": 620
+    },
+    "out/flow-definitions/AICoEMarketing01Command.json": {
+      "sha256": "30a5eac44ba3c434f356c948e2b16047712973b4da9542b55d95c4a7b8cdfe32",
+      "bytes": 416335
+    },
+    "out/native-status.json": {
+      "sha256": "27c2fa059df41f8380d3a40587154b6feeb1cf20a441cc7171300bb789e5d9c2",
+      "bytes": 735
+    },
+    "out/pac-roundtrip/AICoEMarketingAutomation_1_0_0_0.zip": {
+      "sha256": "b202d93bd74679ccb63e3f468e5f89dbd6f101e912b58d4d3c72e4a05aa4c6eb",
+      "bytes": 20472
+    },
+    "tests/flow/test_flow.py": {
+      "sha256": "a3ea7984b4d142e21d2388ac3544e4bf7a684f7b76620f463d5aeb1c78b056f9",
+      "bytes": 5462
+    },
+    "tests/flow/test_packaging.py": {
+      "sha256": "578735b6860a2d779e383566bc42cd7181e17509d5ba341d5aad17c93ccabde9",
+      "bytes": 2380
+    },
+    "tests/flow/test_wdl_safety.py": {
+      "sha256": "c9400755f4a3663ab3a432483d365e9336aacf073b1b32674fac7b4afa843e37",
+      "bytes": 7141
+    },
+    "connector-binding.template.json": {
+      "sha256": "4cc79ad9268acdb98f279abe386d4a695ad9c8c07cf20015b71e3e5f8f45b647",
+      "bytes": 1990
+    }
+  }
+}

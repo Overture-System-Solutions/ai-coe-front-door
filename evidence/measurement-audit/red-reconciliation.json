@@ -1,0 +1,948 @@
+{
+  "numFailedTestSuites": 1,
+  "numFailedTests": 19,
+  "numPassedTestSuites": 0,
+  "numPassedTests": 0,
+  "numPendingTestSuites": 0,
+  "numPendingTests": 19,
+  "numRuntimeErrorTestSuites": 0,
+  "numTodoTests": 0,
+  "numTotalTestSuites": 1,
+  "numTotalTests": 38,
+  "openHandles": [],
+  "snapshot": {
+    "added": 0,
+    "didUpdate": false,
+    "failure": false,
+    "filesAdded": 0,
+    "filesRemoved": 0,
+    "filesRemovedList": [],
+    "filesUnmatched": 0,
+    "filesUpdated": 0,
+    "matched": 0,
+    "total": 0,
+    "unchecked": 0,
+    "uncheckedKeysByFile": [],
+    "unmatched": 0,
+    "updated": 0
+  },
+  "startTime": 1790172151358,
+  "success": false,
+  "testResults": [
+    {
+      "leaks": false,
+      "numFailingTests": 19,
+      "numPassingTests": 0,
+      "numPendingTests": 19,
+      "numTodoTests": 0,
+      "openHandles": [],
+      "perfStats": {
+        "end": 1790172152717,
+        "loadTestEnvironmentEnd": 1790172152144,
+        "loadTestEnvironmentStart": 1790172151505,
+        "runtime": 572,
+        "setupAfterEnvEnd": 1790172152490,
+        "setupAfterEnvStart": 1790172152309,
+        "setupFilesEnd": 1790172152157,
+        "setupFilesStart": 1790172152145,
+        "slow": false,
+        "start": 1790172152145
+      },
+      "skipped": false,
+      "snapshot": {
+        "added": 0,
+        "fileDeleted": false,
+        "matched": 0,
+        "unchecked": 0,
+        "uncheckedKeys": [],
+        "unmatched": 0,
+        "updated": 0
+      },
+      "testFilePath": "C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-audit-fixes\\src\\webparts\\aiCoeFrontDoor\\services\\workflowOutcomeAggregation.test.ts",
+      "testResults": [
+        {
+          "ancestorTitles": [
+            "content-free offline outcome aggregation"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "content-free offline outcome aggregation blocks missing qualification without publishing counts or reflecting input",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790172152646,
+          "status": "pending",
+          "title": "blocks missing qualification without publishing counts or reflecting input"
+        },
+        {
+          "ancestorTitles": [
+            "content-free offline outcome aggregation"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "content-free offline outcome aggregation blocks missing receipt without publishing counts or reflecting input",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790172152646,
+          "status": "pending",
+          "title": "blocks missing receipt without publishing counts or reflecting input"
+        },
+        {
+          "ancestorTitles": [
+            "content-free offline outcome aggregation"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "content-free offline outcome aggregation blocks untrusted receipt bytes without publishing counts or reflecting input",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790172152647,
+          "status": "pending",
+          "title": "blocks untrusted receipt bytes without publishing counts or reflecting input"
+        },
+        {
+          "ancestorTitles": [
+            "content-free offline outcome aggregation"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "content-free offline outcome aggregation blocks incomplete export without publishing counts or reflecting input",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790172152647,
+          "status": "pending",
+          "title": "blocks incomplete export without publishing counts or reflecting input"
+        },
+        {
+          "ancestorTitles": [
+            "content-free offline outcome aggregation"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "content-free offline outcome aggregation blocks string boolean without publishing counts or reflecting input",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790172152647,
+          "status": "pending",
+          "title": "blocks string boolean without publishing counts or reflecting input"
+        },
+        {
+          "ancestorTitles": [
+            "content-free offline outcome aggregation"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "content-free offline outcome aggregation blocks missing method approval without publishing counts or reflecting input",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790172152647,
+          "status": "pending",
+          "title": "blocks missing method approval without publishing counts or reflecting input"
+        },
+        {
+          "ancestorTitles": [
+            "content-free offline outcome aggregation"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "content-free offline outcome aggregation blocks unrecognized method without publishing counts or reflecting input",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790172152647,
+          "status": "pending",
+          "title": "blocks unrecognized method without publishing counts or reflecting input"
+        },
+        {
+          "ancestorTitles": [
+            "content-free offline outcome aggregation"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "content-free offline outcome aggregation blocks cross-scope export without publishing counts or reflecting input",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790172152647,
+          "status": "pending",
+          "title": "blocks cross-scope export without publishing counts or reflecting input"
+        },
+        {
+          "ancestorTitles": [
+            "content-free offline outcome aggregation"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "content-free offline outcome aggregation blocks cross-scope receipt without publishing counts or reflecting input",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790172152647,
+          "status": "pending",
+          "title": "blocks cross-scope receipt without publishing counts or reflecting input"
+        },
+        {
+          "ancestorTitles": [
+            "content-free offline outcome aggregation"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "content-free offline outcome aggregation blocks invalid date without publishing counts or reflecting input",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790172152647,
+          "status": "pending",
+          "title": "blocks invalid date without publishing counts or reflecting input"
+        },
+        {
+          "ancestorTitles": [
+            "content-free offline outcome aggregation"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "content-free offline outcome aggregation blocks reversed period without publishing counts or reflecting input",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790172152647,
+          "status": "pending",
+          "title": "blocks reversed period without publishing counts or reflecting input"
+        },
+        {
+          "ancestorTitles": [
+            "content-free offline outcome aggregation"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "content-free offline outcome aggregation blocks future period without publishing counts or reflecting input",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790172152647,
+          "status": "pending",
+          "title": "blocks future period without publishing counts or reflecting input"
+        },
+        {
+          "ancestorTitles": [
+            "content-free offline outcome aggregation"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "content-free offline outcome aggregation blocks stale period without publishing counts or reflecting input",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790172152647,
+          "status": "pending",
+          "title": "blocks stale period without publishing counts or reflecting input"
+        },
+        {
+          "ancestorTitles": [
+            "content-free offline outcome aggregation"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "content-free offline outcome aggregation blocks privacy approval absent without publishing counts or reflecting input",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790172152647,
+          "status": "pending",
+          "title": "blocks privacy approval absent without publishing counts or reflecting input"
+        },
+        {
+          "ancestorTitles": [
+            "content-free offline outcome aggregation"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "content-free offline outcome aggregation blocks cohort unknown without publishing counts or reflecting input",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790172152647,
+          "status": "pending",
+          "title": "blocks cohort unknown without publishing counts or reflecting input"
+        },
+        {
+          "ancestorTitles": [
+            "content-free offline outcome aggregation"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "content-free offline outcome aggregation blocks non-person exemption for task outcomes without publishing counts or reflecting input",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790172152647,
+          "status": "pending",
+          "title": "blocks non-person exemption for task outcomes without publishing counts or reflecting input"
+        },
+        {
+          "ancestorTitles": [
+            "content-free offline outcome aggregation"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "content-free offline outcome aggregation blocks unexpected raw content without publishing counts or reflecting input",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790172152647,
+          "status": "pending",
+          "title": "blocks unexpected raw content without publishing counts or reflecting input"
+        },
+        {
+          "ancestorTitles": [
+            "content-free offline outcome aggregation"
+          ],
+          "duration": 5,
+          "failing": false,
+          "failureDetails": [
+            {
+              "matcherResult": {
+                "actual": "review-required",
+                "expected": "blocked",
+                "message": "expect(received).toBe(expected) // Object.is equality\n\nExpected: \"blocked\"\nReceived: \"review-required\"",
+                "name": "toBe",
+                "pass": false
+              }
+            }
+          ],
+          "failureMessages": [
+            "Error: expect(received).toBe(expected) // Object.is equality\n\nExpected: \"blocked\"\nReceived: \"review-required\"\n    at C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-audit-fixes\\src\\webparts\\aiCoeFrontDoor\\services\\workflowOutcomeAggregation.test.ts:72:27\n    at Object.<anonymous> (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-each\\build\\index.js:80:140)\n    at Promise.finally.completed (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1557:28)\n    at new Promise (<anonymous>)\n    at callAsyncCircusFn (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1497:10)\n    at _callCircusTest (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1007:40)\n    at _runTest (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:947:3)\n    at C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:849:7\n    at _runTestsForDescribeBlock (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:862:11)\n    at _runTestsForDescribeBlock (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:857:11)\n    at run (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:761:3)\n    at runAndTransformResultsToJestFormat (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1918:21)\n    at jestAdapter (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\runner.js:101:19)\n    at runTestInternal (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-runner\\build\\index.js:275:16)\n    at runTest (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-runner\\build\\index.js:343:7)"
+          ],
+          "fullName": "content-free offline outcome aggregation rejects the entire export for invalid choice rather than hiding invalid rows",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 1,
+          "retryReasons": [],
+          "startAt": 1790172152647,
+          "status": "failed",
+          "title": "rejects the entire export for invalid choice rather than hiding invalid rows"
+        },
+        {
+          "ancestorTitles": [
+            "content-free offline outcome aggregation"
+          ],
+          "duration": 1,
+          "failing": false,
+          "failureDetails": [
+            {
+              "matcherResult": {
+                "actual": "review-required",
+                "expected": "blocked",
+                "message": "expect(received).toBe(expected) // Object.is equality\n\nExpected: \"blocked\"\nReceived: \"review-required\"",
+                "name": "toBe",
+                "pass": false
+              }
+            }
+          ],
+          "failureMessages": [
+            "Error: expect(received).toBe(expected) // Object.is equality\n\nExpected: \"blocked\"\nReceived: \"review-required\"\n    at C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-audit-fixes\\src\\webparts\\aiCoeFrontDoor\\services\\workflowOutcomeAggregation.test.ts:72:27\n    at Object.<anonymous> (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-each\\build\\index.js:80:140)\n    at Promise.finally.completed (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1557:28)\n    at new Promise (<anonymous>)\n    at callAsyncCircusFn (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1497:10)\n    at _callCircusTest (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1007:40)\n    at _runTest (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:947:3)\n    at C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:849:7\n    at _runTestsForDescribeBlock (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:862:11)\n    at _runTestsForDescribeBlock (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:857:11)\n    at run (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:761:3)\n    at runAndTransformResultsToJestFormat (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1918:21)\n    at jestAdapter (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\runner.js:101:19)\n    at runTestInternal (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-runner\\build\\index.js:275:16)\n    at runTest (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-runner\\build\\index.js:343:7)"
+          ],
+          "fullName": "content-free offline outcome aggregation rejects the entire export for missing choice rather than hiding invalid rows",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 1,
+          "retryReasons": [],
+          "startAt": 1790172152660,
+          "status": "failed",
+          "title": "rejects the entire export for missing choice rather than hiding invalid rows"
+        },
+        {
+          "ancestorTitles": [
+            "content-free offline outcome aggregation"
+          ],
+          "duration": 1,
+          "failing": false,
+          "failureDetails": [
+            {
+              "matcherResult": {
+                "actual": "review-required",
+                "expected": "blocked",
+                "message": "expect(received).toBe(expected) // Object.is equality\n\nExpected: \"blocked\"\nReceived: \"review-required\"",
+                "name": "toBe",
+                "pass": false
+              }
+            }
+          ],
+          "failureMessages": [
+            "Error: expect(received).toBe(expected) // Object.is equality\n\nExpected: \"blocked\"\nReceived: \"review-required\"\n    at C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-audit-fixes\\src\\webparts\\aiCoeFrontDoor\\services\\workflowOutcomeAggregation.test.ts:72:27\n    at Object.<anonymous> (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-each\\build\\index.js:80:140)\n    at Promise.finally.completed (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1557:28)\n    at new Promise (<anonymous>)\n    at callAsyncCircusFn (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1497:10)\n    at _callCircusTest (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1007:40)\n    at _runTest (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:947:3)\n    at C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:849:7\n    at _runTestsForDescribeBlock (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:862:11)\n    at _runTestsForDescribeBlock (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:857:11)\n    at run (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:761:3)\n    at runAndTransformResultsToJestFormat (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1918:21)\n    at jestAdapter (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\runner.js:101:19)\n    at runTestInternal (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-runner\\build\\index.js:275:16)\n    at runTest (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-runner\\build\\index.js:343:7)"
+          ],
+          "fullName": "content-free offline outcome aggregation rejects the entire export for raw work content rather than hiding invalid rows",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 1,
+          "retryReasons": [],
+          "startAt": 1790172152661,
+          "status": "failed",
+          "title": "rejects the entire export for raw work content rather than hiding invalid rows"
+        },
+        {
+          "ancestorTitles": [
+            "content-free offline outcome aggregation"
+          ],
+          "duration": 0,
+          "failing": false,
+          "failureDetails": [
+            {
+              "matcherResult": {
+                "actual": "review-required",
+                "expected": "blocked",
+                "message": "expect(received).toBe(expected) // Object.is equality\n\nExpected: \"blocked\"\nReceived: \"review-required\"",
+                "name": "toBe",
+                "pass": false
+              }
+            }
+          ],
+          "failureMessages": [
+            "Error: expect(received).toBe(expected) // Object.is equality\n\nExpected: \"blocked\"\nReceived: \"review-required\"\n    at C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-audit-fixes\\src\\webparts\\aiCoeFrontDoor\\services\\workflowOutcomeAggregation.test.ts:72:27\n    at Object.<anonymous> (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-each\\build\\index.js:80:140)\n    at Promise.finally.completed (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1557:28)\n    at new Promise (<anonymous>)\n    at callAsyncCircusFn (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1497:10)\n    at _callCircusTest (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1007:40)\n    at _runTest (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:947:3)\n    at C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:849:7\n    at _runTestsForDescribeBlock (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:862:11)\n    at _runTestsForDescribeBlock (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:857:11)\n    at run (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:761:3)\n    at runAndTransformResultsToJestFormat (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1918:21)\n    at jestAdapter (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\runner.js:101:19)\n    at runTestInternal (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-runner\\build\\index.js:275:16)\n    at runTest (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-runner\\build\\index.js:343:7)"
+          ],
+          "fullName": "content-free offline outcome aggregation rejects the entire export for author data rather than hiding invalid rows",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 1,
+          "retryReasons": [],
+          "startAt": 1790172152663,
+          "status": "failed",
+          "title": "rejects the entire export for author data rather than hiding invalid rows"
+        },
+        {
+          "ancestorTitles": [
+            "content-free offline outcome aggregation"
+          ],
+          "duration": 1,
+          "failing": false,
+          "failureDetails": [
+            {
+              "matcherResult": {
+                "actual": "review-required",
+                "expected": "blocked",
+                "message": "expect(received).toBe(expected) // Object.is equality\n\nExpected: \"blocked\"\nReceived: \"review-required\"",
+                "name": "toBe",
+                "pass": false
+              }
+            }
+          ],
+          "failureMessages": [
+            "Error: expect(received).toBe(expected) // Object.is equality\n\nExpected: \"blocked\"\nReceived: \"review-required\"\n    at C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-audit-fixes\\src\\webparts\\aiCoeFrontDoor\\services\\workflowOutcomeAggregation.test.ts:72:27\n    at Object.<anonymous> (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-each\\build\\index.js:80:140)\n    at Promise.finally.completed (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1557:28)\n    at new Promise (<anonymous>)\n    at callAsyncCircusFn (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1497:10)\n    at _callCircusTest (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1007:40)\n    at _runTest (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:947:3)\n    at C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:849:7\n    at _runTestsForDescribeBlock (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:862:11)\n    at _runTestsForDescribeBlock (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:857:11)\n    at run (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:761:3)\n    at runAndTransformResultsToJestFormat (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1918:21)\n    at jestAdapter (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\runner.js:101:19)\n    at runTestInternal (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-runner\\build\\index.js:275:16)\n    at runTest (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-runner\\build\\index.js:343:7)"
+          ],
+          "fullName": "content-free offline outcome aggregation rejects the entire export for unknown version rather than hiding invalid rows",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 1,
+          "retryReasons": [],
+          "startAt": 1790172152663,
+          "status": "failed",
+          "title": "rejects the entire export for unknown version rather than hiding invalid rows"
+        },
+        {
+          "ancestorTitles": [
+            "content-free offline outcome aggregation"
+          ],
+          "duration": 0,
+          "failing": false,
+          "failureDetails": [
+            {
+              "matcherResult": {
+                "actual": "review-required",
+                "expected": "blocked",
+                "message": "expect(received).toBe(expected) // Object.is equality\n\nExpected: \"blocked\"\nReceived: \"review-required\"",
+                "name": "toBe",
+                "pass": false
+              }
+            }
+          ],
+          "failureMessages": [
+            "Error: expect(received).toBe(expected) // Object.is equality\n\nExpected: \"blocked\"\nReceived: \"review-required\"\n    at C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-audit-fixes\\src\\webparts\\aiCoeFrontDoor\\services\\workflowOutcomeAggregation.test.ts:72:27\n    at Object.<anonymous> (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-each\\build\\index.js:80:140)\n    at Promise.finally.completed (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1557:28)\n    at new Promise (<anonymous>)\n    at callAsyncCircusFn (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1497:10)\n    at _callCircusTest (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1007:40)\n    at _runTest (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:947:3)\n    at C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:849:7\n    at _runTestsForDescribeBlock (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:862:11)\n    at _runTestsForDescribeBlock (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:857:11)\n    at run (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:761:3)\n    at runAndTransformResultsToJestFormat (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1918:21)\n    at jestAdapter (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\runner.js:101:19)\n    at runTestInternal (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-runner\\build\\index.js:275:16)\n    at runTest (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-runner\\build\\index.js:343:7)"
+          ],
+          "fullName": "content-free offline outcome aggregation rejects the entire export for invalid recorded day rather than hiding invalid rows",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 1,
+          "retryReasons": [],
+          "startAt": 1790172152665,
+          "status": "failed",
+          "title": "rejects the entire export for invalid recorded day rather than hiding invalid rows"
+        },
+        {
+          "ancestorTitles": [
+            "content-free offline outcome aggregation"
+          ],
+          "duration": 1,
+          "failing": false,
+          "failureDetails": [
+            {
+              "matcherResult": {
+                "actual": "review-required",
+                "expected": "blocked",
+                "message": "expect(received).toBe(expected) // Object.is equality\n\nExpected: \"blocked\"\nReceived: \"review-required\"",
+                "name": "toBe",
+                "pass": false
+              }
+            }
+          ],
+          "failureMessages": [
+            "Error: expect(received).toBe(expected) // Object.is equality\n\nExpected: \"blocked\"\nReceived: \"review-required\"\n    at C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-audit-fixes\\src\\webparts\\aiCoeFrontDoor\\services\\workflowOutcomeAggregation.test.ts:72:27\n    at Object.<anonymous> (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-each\\build\\index.js:80:140)\n    at Promise.finally.completed (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1557:28)\n    at new Promise (<anonymous>)\n    at callAsyncCircusFn (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1497:10)\n    at _callCircusTest (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1007:40)\n    at _runTest (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:947:3)\n    at C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:849:7\n    at _runTestsForDescribeBlock (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:862:11)\n    at _runTestsForDescribeBlock (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:857:11)\n    at run (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:761:3)\n    at runAndTransformResultsToJestFormat (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1918:21)\n    at jestAdapter (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\runner.js:101:19)\n    at runTestInternal (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-runner\\build\\index.js:275:16)\n    at runTest (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-runner\\build\\index.js:343:7)"
+          ],
+          "fullName": "content-free offline outcome aggregation rejects the entire export for before period rather than hiding invalid rows",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 1,
+          "retryReasons": [],
+          "startAt": 1790172152665,
+          "status": "failed",
+          "title": "rejects the entire export for before period rather than hiding invalid rows"
+        },
+        {
+          "ancestorTitles": [
+            "content-free offline outcome aggregation"
+          ],
+          "duration": 0,
+          "failing": false,
+          "failureDetails": [
+            {
+              "matcherResult": {
+                "actual": "review-required",
+                "expected": "blocked",
+                "message": "expect(received).toBe(expected) // Object.is equality\n\nExpected: \"blocked\"\nReceived: \"review-required\"",
+                "name": "toBe",
+                "pass": false
+              }
+            }
+          ],
+          "failureMessages": [
+            "Error: expect(received).toBe(expected) // Object.is equality\n\nExpected: \"blocked\"\nReceived: \"review-required\"\n    at C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-audit-fixes\\src\\webparts\\aiCoeFrontDoor\\services\\workflowOutcomeAggregation.test.ts:72:27\n    at Object.<anonymous> (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-each\\build\\index.js:80:140)\n    at Promise.finally.completed (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1557:28)\n    at new Promise (<anonymous>)\n    at callAsyncCircusFn (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1497:10)\n    at _callCircusTest (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1007:40)\n    at _runTest (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:947:3)\n    at C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:849:7\n    at _runTestsForDescribeBlock (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:862:11)\n    at _runTestsForDescribeBlock (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:857:11)\n    at run (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:761:3)\n    at runAndTransformResultsToJestFormat (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1918:21)\n    at jestAdapter (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\runner.js:101:19)\n    at runTestInternal (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-runner\\build\\index.js:275:16)\n    at runTest (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-runner\\build\\index.js:343:7)"
+          ],
+          "fullName": "content-free offline outcome aggregation rejects the entire export for after period rather than hiding invalid rows",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 1,
+          "retryReasons": [],
+          "startAt": 1790172152666,
+          "status": "failed",
+          "title": "rejects the entire export for after period rather than hiding invalid rows"
+        },
+        {
+          "ancestorTitles": [
+            "content-free offline outcome aggregation"
+          ],
+          "duration": 1,
+          "failing": false,
+          "failureDetails": [
+            {
+              "matcherResult": {
+                "actual": "review-required",
+                "expected": "blocked",
+                "message": "expect(received).toBe(expected) // Object.is equality\n\nExpected: \"blocked\"\nReceived: \"review-required\"",
+                "name": "toBe",
+                "pass": false
+              }
+            }
+          ],
+          "failureMessages": [
+            "Error: expect(received).toBe(expected) // Object.is equality\n\nExpected: \"blocked\"\nReceived: \"review-required\"\n    at C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-audit-fixes\\src\\webparts\\aiCoeFrontDoor\\services\\workflowOutcomeAggregation.test.ts:72:27\n    at Object.<anonymous> (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-each\\build\\index.js:80:140)\n    at Promise.finally.completed (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1557:28)\n    at new Promise (<anonymous>)\n    at callAsyncCircusFn (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1497:10)\n    at _callCircusTest (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1007:40)\n    at _runTest (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:947:3)\n    at C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:849:7\n    at _runTestsForDescribeBlock (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:862:11)\n    at _runTestsForDescribeBlock (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:857:11)\n    at run (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:761:3)\n    at runAndTransformResultsToJestFormat (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1918:21)\n    at jestAdapter (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\runner.js:101:19)\n    at runTestInternal (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-runner\\build\\index.js:275:16)\n    at runTest (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-runner\\build\\index.js:343:7)"
+          ],
+          "fullName": "content-free offline outcome aggregation rejects the entire export for unreviewed acceptance rather than hiding invalid rows",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 1,
+          "retryReasons": [],
+          "startAt": 1790172152667,
+          "status": "failed",
+          "title": "rejects the entire export for unreviewed acceptance rather than hiding invalid rows"
+        },
+        {
+          "ancestorTitles": [
+            "content-free offline outcome aggregation"
+          ],
+          "duration": 1,
+          "failing": false,
+          "failureDetails": [
+            {
+              "matcherResult": {
+                "actual": "review-required",
+                "expected": "blocked",
+                "message": "expect(received).toBe(expected) // Object.is equality\n\nExpected: \"blocked\"\nReceived: \"review-required\"",
+                "name": "toBe",
+                "pass": false
+              }
+            }
+          ],
+          "failureMessages": [
+            "Error: expect(received).toBe(expected) // Object.is equality\n\nExpected: \"blocked\"\nReceived: \"review-required\"\n    at C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-audit-fixes\\src\\webparts\\aiCoeFrontDoor\\services\\workflowOutcomeAggregation.test.ts:72:27\n    at Object.<anonymous> (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-each\\build\\index.js:80:140)\n    at Promise.finally.completed (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1557:28)\n    at new Promise (<anonymous>)\n    at callAsyncCircusFn (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1497:10)\n    at _callCircusTest (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1007:40)\n    at _runTest (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:947:3)\n    at C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:849:7\n    at _runTestsForDescribeBlock (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:862:11)\n    at _runTestsForDescribeBlock (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:857:11)\n    at run (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:761:3)\n    at runAndTransformResultsToJestFormat (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1918:21)\n    at jestAdapter (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\runner.js:101:19)\n    at runTestInternal (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-runner\\build\\index.js:275:16)\n    at runTest (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-runner\\build\\index.js:343:7)"
+          ],
+          "fullName": "content-free offline outcome aggregation rejects the entire export for unexpected category rather than hiding invalid rows",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 1,
+          "retryReasons": [],
+          "startAt": 1790172152668,
+          "status": "failed",
+          "title": "rejects the entire export for unexpected category rather than hiding invalid rows"
+        },
+        {
+          "ancestorTitles": [
+            "content-free offline outcome aggregation"
+          ],
+          "duration": 0,
+          "failing": false,
+          "failureDetails": [
+            {
+              "matcherResult": {
+                "actual": "review-required",
+                "expected": "blocked",
+                "message": "expect(received).toBe(expected) // Object.is equality\n\nExpected: \"blocked\"\nReceived: \"review-required\"",
+                "name": "toBe",
+                "pass": false
+              }
+            }
+          ],
+          "failureMessages": [
+            "Error: expect(received).toBe(expected) // Object.is equality\n\nExpected: \"blocked\"\nReceived: \"review-required\"\n    at C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-audit-fixes\\src\\webparts\\aiCoeFrontDoor\\services\\workflowOutcomeAggregation.test.ts:72:27\n    at Object.<anonymous> (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-each\\build\\index.js:80:140)\n    at Promise.finally.completed (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1557:28)\n    at new Promise (<anonymous>)\n    at callAsyncCircusFn (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1497:10)\n    at _callCircusTest (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1007:40)\n    at _runTest (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:947:3)\n    at C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:849:7\n    at _runTestsForDescribeBlock (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:862:11)\n    at _runTestsForDescribeBlock (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:857:11)\n    at run (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:761:3)\n    at runAndTransformResultsToJestFormat (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1918:21)\n    at jestAdapter (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\runner.js:101:19)\n    at runTestInternal (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-runner\\build\\index.js:275:16)\n    at runTest (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-runner\\build\\index.js:343:7)"
+          ],
+          "fullName": "content-free offline outcome aggregation rejects the entire export for missing correction category rather than hiding invalid rows",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 1,
+          "retryReasons": [],
+          "startAt": 1790172152669,
+          "status": "failed",
+          "title": "rejects the entire export for missing correction category rather than hiding invalid rows"
+        },
+        {
+          "ancestorTitles": [
+            "content-free offline outcome aggregation"
+          ],
+          "duration": 0,
+          "failing": false,
+          "failureDetails": [
+            {
+              "matcherResult": {
+                "actual": "review-required",
+                "expected": "blocked",
+                "message": "expect(received).toBe(expected) // Object.is equality\n\nExpected: \"blocked\"\nReceived: \"review-required\"",
+                "name": "toBe",
+                "pass": false
+              }
+            }
+          ],
+          "failureMessages": [
+            "Error: expect(received).toBe(expected) // Object.is equality\n\nExpected: \"blocked\"\nReceived: \"review-required\"\n    at C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-audit-fixes\\src\\webparts\\aiCoeFrontDoor\\services\\workflowOutcomeAggregation.test.ts:72:27\n    at Object.<anonymous> (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-each\\build\\index.js:80:140)\n    at Promise.finally.completed (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1557:28)\n    at new Promise (<anonymous>)\n    at callAsyncCircusFn (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1497:10)\n    at _callCircusTest (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1007:40)\n    at _runTest (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:947:3)\n    at C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:849:7\n    at _runTestsForDescribeBlock (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:862:11)\n    at _runTestsForDescribeBlock (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:857:11)\n    at run (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:761:3)\n    at runAndTransformResultsToJestFormat (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1918:21)\n    at jestAdapter (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\runner.js:101:19)\n    at runTestInternal (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-runner\\build\\index.js:275:16)\n    at runTest (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-runner\\build\\index.js:343:7)"
+          ],
+          "fullName": "content-free offline outcome aggregation rejects the entire export for wrong identity format rather than hiding invalid rows",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 1,
+          "retryReasons": [],
+          "startAt": 1790172152670,
+          "status": "failed",
+          "title": "rejects the entire export for wrong identity format rather than hiding invalid rows"
+        },
+        {
+          "ancestorTitles": [
+            "content-free offline outcome aggregation"
+          ],
+          "duration": 1,
+          "failing": false,
+          "failureDetails": [
+            {
+              "matcherResult": {
+                "actual": 6,
+                "expected": 5,
+                "message": "expect(received).toBe(expected) // Object.is equality\n\nExpected: 5\nReceived: 6",
+                "name": "toBe",
+                "pass": false
+              }
+            }
+          ],
+          "failureMessages": [
+            "Error: expect(received).toBe(expected) // Object.is equality\n\nExpected: 5\nReceived: 6\n    at Object.<anonymous> (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-audit-fixes\\src\\webparts\\aiCoeFrontDoor\\services\\workflowOutcomeAggregation.test.ts:82:48)\n    at Promise.finally.completed (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1557:28)\n    at new Promise (<anonymous>)\n    at callAsyncCircusFn (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1497:10)\n    at _callCircusTest (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1007:40)\n    at _runTest (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:947:3)\n    at C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:849:7\n    at _runTestsForDescribeBlock (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:862:11)\n    at _runTestsForDescribeBlock (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:857:11)\n    at run (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:761:3)\n    at runAndTransformResultsToJestFormat (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1918:21)\n    at jestAdapter (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\runner.js:101:19)\n    at runTestInternal (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-runner\\build\\index.js:275:16)\n    at runTest (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-runner\\build\\index.js:343:7)"
+          ],
+          "fullName": "content-free offline outcome aggregation deduplicates identical ids regardless of key order and refuses conflicting duplicates",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 1,
+          "retryReasons": [],
+          "startAt": 1790172152670,
+          "status": "failed",
+          "title": "deduplicates identical ids regardless of key order and refuses conflicting duplicates"
+        },
+        {
+          "ancestorTitles": [
+            "content-free offline outcome aggregation"
+          ],
+          "duration": 1,
+          "failing": false,
+          "failureDetails": [
+            {
+              "matcherResult": {
+                "actual": "review-required",
+                "expected": "suppressed",
+                "message": "expect(received).toBe(expected) // Object.is equality\n\nExpected: \"suppressed\"\nReceived: \"review-required\"",
+                "name": "toBe",
+                "pass": false
+              }
+            }
+          ],
+          "failureMessages": [
+            "Error: expect(received).toBe(expected) // Object.is equality\n\nExpected: \"suppressed\"\nReceived: \"review-required\"\n    at C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-audit-fixes\\src\\webparts\\aiCoeFrontDoor\\services\\workflowOutcomeAggregation.test.ts:98:27\n    at Object.<anonymous> (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-each\\build\\index.js:80:140)\n    at Promise.finally.completed (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1557:28)\n    at new Promise (<anonymous>)\n    at callAsyncCircusFn (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1497:10)\n    at _callCircusTest (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1007:40)\n    at _runTest (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:947:3)\n    at C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:849:7\n    at _runTestsForDescribeBlock (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:862:11)\n    at _runTestsForDescribeBlock (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:857:11)\n    at run (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:761:3)\n    at runAndTransformResultsToJestFormat (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1918:21)\n    at jestAdapter (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\runner.js:101:19)\n    at runTestInternal (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-runner\\build\\index.js:275:16)\n    at runTest (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-runner\\build\\index.js:343:7)"
+          ],
+          "fullName": "content-free offline outcome aggregation withholds the whole report for a small or unsafely partitioned cohort {\"cohortSize\":4,\"minimumCellCohort\":4}",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 1,
+          "retryReasons": [],
+          "startAt": 1790172152671,
+          "status": "failed",
+          "title": "withholds the whole report for a small or unsafely partitioned cohort {\"cohortSize\":4,\"minimumCellCohort\":4}"
+        },
+        {
+          "ancestorTitles": [
+            "content-free offline outcome aggregation"
+          ],
+          "duration": 3,
+          "failing": false,
+          "failureDetails": [
+            {
+              "matcherResult": {
+                "actual": "review-required",
+                "expected": "suppressed",
+                "message": "expect(received).toBe(expected) // Object.is equality\n\nExpected: \"suppressed\"\nReceived: \"review-required\"",
+                "name": "toBe",
+                "pass": false
+              }
+            }
+          ],
+          "failureMessages": [
+            "Error: expect(received).toBe(expected) // Object.is equality\n\nExpected: \"suppressed\"\nReceived: \"review-required\"\n    at C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-audit-fixes\\src\\webparts\\aiCoeFrontDoor\\services\\workflowOutcomeAggregation.test.ts:98:27\n    at Object.<anonymous> (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-each\\build\\index.js:80:140)\n    at Promise.finally.completed (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1557:28)\n    at new Promise (<anonymous>)\n    at callAsyncCircusFn (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1497:10)\n    at _callCircusTest (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1007:40)\n    at _runTest (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:947:3)\n    at C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:849:7\n    at _runTestsForDescribeBlock (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:862:11)\n    at _runTestsForDescribeBlock (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:857:11)\n    at run (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:761:3)\n    at runAndTransformResultsToJestFormat (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1918:21)\n    at jestAdapter (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\runner.js:101:19)\n    at runTestInternal (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-runner\\build\\index.js:275:16)\n    at runTest (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-runner\\build\\index.js:343:7)"
+          ],
+          "fullName": "content-free offline outcome aggregation withholds the whole report for a small or unsafely partitioned cohort {\"minimumCellCohort\":4}",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 1,
+          "retryReasons": [],
+          "startAt": 1790172152672,
+          "status": "failed",
+          "title": "withholds the whole report for a small or unsafely partitioned cohort {\"minimumCellCohort\":4}"
+        },
+        {
+          "ancestorTitles": [
+            "content-free offline outcome aggregation"
+          ],
+          "duration": 0,
+          "failing": false,
+          "failureDetails": [
+            {
+              "matcherResult": {
+                "actual": "review-required",
+                "expected": "suppressed",
+                "message": "expect(received).toBe(expected) // Object.is equality\n\nExpected: \"suppressed\"\nReceived: \"review-required\"",
+                "name": "toBe",
+                "pass": false
+              }
+            }
+          ],
+          "failureMessages": [
+            "Error: expect(received).toBe(expected) // Object.is equality\n\nExpected: \"suppressed\"\nReceived: \"review-required\"\n    at C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-audit-fixes\\src\\webparts\\aiCoeFrontDoor\\services\\workflowOutcomeAggregation.test.ts:98:27\n    at Object.<anonymous> (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-each\\build\\index.js:80:140)\n    at Promise.finally.completed (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1557:28)\n    at new Promise (<anonymous>)\n    at callAsyncCircusFn (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1497:10)\n    at _callCircusTest (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1007:40)\n    at _runTest (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:947:3)\n    at C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:849:7\n    at _runTestsForDescribeBlock (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:862:11)\n    at _runTestsForDescribeBlock (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:857:11)\n    at run (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:761:3)\n    at runAndTransformResultsToJestFormat (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1918:21)\n    at jestAdapter (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\runner.js:101:19)\n    at runTestInternal (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-runner\\build\\index.js:275:16)\n    at runTest (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-runner\\build\\index.js:343:7)"
+          ],
+          "fullName": "content-free offline outcome aggregation withholds the whole report for a small or unsafely partitioned cohort {\"minimumCohort\":6}",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 1,
+          "retryReasons": [],
+          "startAt": 1790172152675,
+          "status": "failed",
+          "title": "withholds the whole report for a small or unsafely partitioned cohort {\"minimumCohort\":6}"
+        },
+        {
+          "ancestorTitles": [
+            "content-free offline outcome aggregation"
+          ],
+          "duration": 0,
+          "failing": false,
+          "failureDetails": [
+            {
+              "matcherResult": {
+                "actual": "review-required",
+                "expected": "suppressed",
+                "message": "expect(received).toBe(expected) // Object.is equality\n\nExpected: \"suppressed\"\nReceived: \"review-required\"",
+                "name": "toBe",
+                "pass": false
+              }
+            }
+          ],
+          "failureMessages": [
+            "Error: expect(received).toBe(expected) // Object.is equality\n\nExpected: \"suppressed\"\nReceived: \"review-required\"\n    at C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-audit-fixes\\src\\webparts\\aiCoeFrontDoor\\services\\workflowOutcomeAggregation.test.ts:98:27\n    at Object.<anonymous> (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-each\\build\\index.js:80:140)\n    at Promise.finally.completed (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1557:28)\n    at new Promise (<anonymous>)\n    at callAsyncCircusFn (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1497:10)\n    at _callCircusTest (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1007:40)\n    at _runTest (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:947:3)\n    at C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:849:7\n    at _runTestsForDescribeBlock (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:862:11)\n    at _runTestsForDescribeBlock (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:857:11)\n    at run (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:761:3)\n    at runAndTransformResultsToJestFormat (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1918:21)\n    at jestAdapter (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\runner.js:101:19)\n    at runTestInternal (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-runner\\build\\index.js:275:16)\n    at runTest (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-runner\\build\\index.js:343:7)"
+          ],
+          "fullName": "content-free offline outcome aggregation withholds the whole report for a small or unsafely partitioned cohort {\"cohortSize\":1,\"minimumCellCohort\":1,\"minimumCohort\":1}",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 1,
+          "retryReasons": [],
+          "startAt": 1790172152676,
+          "status": "failed",
+          "title": "withholds the whole report for a small or unsafely partitioned cohort {\"cohortSize\":1,\"minimumCellCohort\":1,\"minimumCohort\":1}"
+        },
+        {
+          "ancestorTitles": [
+            "content-free offline outcome aggregation"
+          ],
+          "duration": 1,
+          "failing": false,
+          "failureDetails": [
+            {
+              "matcherResult": {
+                "actual": "review-required",
+                "expected": "blocked",
+                "message": "expect(received).toBe(expected) // Object.is equality\n\nExpected: \"blocked\"\nReceived: \"review-required\"",
+                "name": "toBe",
+                "pass": false
+              }
+            }
+          ],
+          "failureMessages": [
+            "Error: expect(received).toBe(expected) // Object.is equality\n\nExpected: \"blocked\"\nReceived: \"review-required\"\n    at Object.<anonymous> (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-audit-fixes\\src\\webparts\\aiCoeFrontDoor\\services\\workflowOutcomeAggregation.test.ts:105:84)\n    at Promise.finally.completed (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1557:28)\n    at new Promise (<anonymous>)\n    at callAsyncCircusFn (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1497:10)\n    at _callCircusTest (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1007:40)\n    at _runTest (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:947:3)\n    at C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:849:7\n    at _runTestsForDescribeBlock (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:862:11)\n    at _runTestsForDescribeBlock (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:857:11)\n    at run (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:761:3)\n    at runAndTransformResultsToJestFormat (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1918:21)\n    at jestAdapter (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\runner.js:101:19)\n    at runTestInternal (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-runner\\build\\index.js:275:16)\n    at runTest (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-runner\\build\\index.js:343:7)"
+          ],
+          "fullName": "content-free offline outcome aggregation blocks impossible people attestations and suppresses a tiny correction cell",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 1,
+          "retryReasons": [],
+          "startAt": 1790172152676,
+          "status": "failed",
+          "title": "blocks impossible people attestations and suppresses a tiny correction cell"
+        },
+        {
+          "ancestorTitles": [
+            "content-free offline outcome aggregation"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "content-free offline outcome aggregation keeps unavailable reports distinct from tested fallback and omits zero-denominator rates",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790172152677,
+          "status": "pending",
+          "title": "keeps unavailable reports distinct from tested fallback and omits zero-denominator rates"
+        },
+        {
+          "ancestorTitles": [
+            "content-free offline outcome aggregation"
+          ],
+          "duration": 1,
+          "failing": false,
+          "failureDetails": [
+            {
+              "matcherResult": {
+                "expected": {
+                  "sourceReceipt": "fixture-source",
+                  "sourceSha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                  "methodApproval": "fixture-method-only",
+                  "privacyApproval": "fixture-privacy-only",
+                  "periodStart": "2026-09-01",
+                  "periodEnd": "2026-09-20"
+                },
+                "message": "expect(received).toEqual(expected) // deep equality\n\nExpected: {\"methodApproval\": \"fixture-method-only\", \"periodEnd\": \"2026-09-20\", \"periodStart\": \"2026-09-01\", \"privacyApproval\": \"fixture-privacy-only\", \"sourceReceipt\": \"fixture-source\", \"sourceSha256\": \"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"}\nReceived: undefined",
+                "name": "toEqual",
+                "pass": false
+              }
+            }
+          ],
+          "failureMessages": [
+            "Error: expect(received).toEqual(expected) // deep equality\n\nExpected: {\"methodApproval\": \"fixture-method-only\", \"periodEnd\": \"2026-09-20\", \"periodStart\": \"2026-09-01\", \"privacyApproval\": \"fixture-privacy-only\", \"sourceReceipt\": \"fixture-source\", \"sourceSha256\": \"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"}\nReceived: undefined\n    at Object.<anonymous> (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-audit-fixes\\src\\webparts\\aiCoeFrontDoor\\services\\workflowOutcomeAggregation.test.ts:126:29)\n    at Promise.finally.completed (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1557:28)\n    at new Promise (<anonymous>)\n    at callAsyncCircusFn (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1497:10)\n    at _callCircusTest (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1007:40)\n    at _runTest (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:947:3)\n    at C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:849:7\n    at _runTestsForDescribeBlock (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:862:11)\n    at _runTestsForDescribeBlock (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:857:11)\n    at run (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:761:3)\n    at runAndTransformResultsToJestFormat (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1918:21)\n    at jestAdapter (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\runner.js:101:19)\n    at runTestInternal (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-runner\\build\\index.js:275:16)\n    at runTest (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-runner\\build\\index.js:343:7)"
+          ],
+          "fullName": "content-free offline outcome aggregation accepts timestamps through the inclusive end day and binds output evidence without raw rows",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 2,
+          "retryReasons": [],
+          "startAt": 1790172152677,
+          "status": "failed",
+          "title": "accepts timestamps through the inclusive end day and binds output evidence without raw rows"
+        },
+        {
+          "ancestorTitles": [
+            "content-free offline outcome aggregation"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "content-free offline outcome aggregation computes only qualified observed task statistics and keeps unsupported scorecard claims unknown",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790172152678,
+          "status": "pending",
+          "title": "computes only qualified observed task statistics and keeps unsupported scorecard claims unknown"
+        }
+      ],
+      "failureMessage": "  ● content-free offline outcome aggregation › rejects the entire export for invalid choice rather than hiding invalid rows\n\n    expect(received).toBe(expected) // Object.is equality\n\n    Expected: \"blocked\"\n    Received: \"review-required\"\n\n    \u001b[0m \u001b[90m 70 |\u001b[39m     \u001b[36mconst\u001b[39m f \u001b[33m=\u001b[39m fixture()\u001b[33m;\u001b[39m (f\u001b[33m.\u001b[39msource\u001b[33m.\u001b[39mrows \u001b[36mas\u001b[39m unknown[])[\u001b[35m0\u001b[39m] \u001b[33m=\u001b[39m { \u001b[33m...\u001b[39mrow(\u001b[35m0\u001b[39m)\u001b[33m,\u001b[39m \u001b[33m...\u001b[39mchanges }\u001b[33m;\u001b[39m\n     \u001b[90m 71 |\u001b[39m     \u001b[36mconst\u001b[39m result \u001b[33m=\u001b[39m aggregateWorkflowOutcomes(f\u001b[33m.\u001b[39msource\u001b[33m,\u001b[39m f\u001b[33m.\u001b[39mqualification\u001b[33m,\u001b[39m f\u001b[33m.\u001b[39moptions)\u001b[33m;\u001b[39m\n    \u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 72 |\u001b[39m     expect(result\u001b[33m.\u001b[39mstatus)\u001b[33m.\u001b[39mtoBe(\u001b[32m'blocked'\u001b[39m)\u001b[33m;\u001b[39m\n     \u001b[90m    |\u001b[39m                           \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n     \u001b[90m 73 |\u001b[39m     expect(result\u001b[33m.\u001b[39mobserved)\u001b[33m.\u001b[39mtoBeUndefined()\u001b[33m;\u001b[39m\n     \u001b[90m 74 |\u001b[39m     expect(\u001b[33mJSON\u001b[39m\u001b[33m.\u001b[39mstringify(result))\u001b[33m.\u001b[39mnot\u001b[33m.\u001b[39mtoContain(\u001b[32m'PRIVATE-CONTENT-CANARY'\u001b[39m)\u001b[33m;\u001b[39m\n     \u001b[90m 75 |\u001b[39m   })\u001b[33m;\u001b[39m\u001b[0m\n\n      at src/webparts/aiCoeFrontDoor/services/workflowOutcomeAggregation.test.ts:72:27\n\n  ● content-free offline outcome aggregation › rejects the entire export for missing choice rather than hiding invalid rows\n\n    expect(received).toBe(expected) // Object.is equality\n\n    Expected: \"blocked\"\n    Received: \"review-required\"\n\n    \u001b[0m \u001b[90m 70 |\u001b[39m     \u001b[36mconst\u001b[39m f \u001b[33m=\u001b[39m fixture()\u001b[33m;\u001b[39m (f\u001b[33m.\u001b[39msource\u001b[33m.\u001b[39mrows \u001b[36mas\u001b[39m unknown[])[\u001b[35m0\u001b[39m] \u001b[33m=\u001b[39m { \u001b[33m...\u001b[39mrow(\u001b[35m0\u001b[39m)\u001b[33m,\u001b[39m \u001b[33m...\u001b[39mchanges }\u001b[33m;\u001b[39m\n     \u001b[90m 71 |\u001b[39m     \u001b[36mconst\u001b[39m result \u001b[33m=\u001b[39m aggregateWorkflowOutcomes(f\u001b[33m.\u001b[39msource\u001b[33m,\u001b[39m f\u001b[33m.\u001b[39mqualification\u001b[33m,\u001b[39m f\u001b[33m.\u001b[39moptions)\u001b[33m;\u001b[39m\n    \u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 72 |\u001b[39m     expect(result\u001b[33m.\u001b[39mstatus)\u001b[33m.\u001b[39mtoBe(\u001b[32m'blocked'\u001b[39m)\u001b[33m;\u001b[39m\n     \u001b[90m    |\u001b[39m                           \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n     \u001b[90m 73 |\u001b[39m     expect(result\u001b[33m.\u001b[39mobserved)\u001b[33m.\u001b[39mtoBeUndefined()\u001b[33m;\u001b[39m\n     \u001b[90m 74 |\u001b[39m     expect(\u001b[33mJSON\u001b[39m\u001b[33m.\u001b[39mstringify(result))\u001b[33m.\u001b[39mnot\u001b[33m.\u001b[39mtoContain(\u001b[32m'PRIVATE-CONTENT-CANARY'\u001b[39m)\u001b[33m;\u001b[39m\n     \u001b[90m 75 |\u001b[39m   })\u001b[33m;\u001b[39m\u001b[0m\n\n      at src/webparts/aiCoeFrontDoor/services/workflowOutcomeAggregation.test.ts:72:27\n\n  ● content-free offline outcome aggregation › rejects the entire export for raw work content rather than hiding invalid rows\n\n    expect(received).toBe(expected) // Object.is equality\n\n    Expected: \"blocked\"\n    Received: \"review-required\"\n\n    \u001b[0m \u001b[90m 70 |\u001b[39m     \u001b[36mconst\u001b[39m f \u001b[33m=\u001b[39m fixture()\u001b[33m;\u001b[39m (f\u001b[33m.\u001b[39msource\u001b[33m.\u001b[39mrows \u001b[36mas\u001b[39m unknown[])[\u001b[35m0\u001b[39m] \u001b[33m=\u001b[39m { \u001b[33m...\u001b[39mrow(\u001b[35m0\u001b[39m)\u001b[33m,\u001b[39m \u001b[33m...\u001b[39mchanges }\u001b[33m;\u001b[39m\n     \u001b[90m 71 |\u001b[39m     \u001b[36mconst\u001b[39m result \u001b[33m=\u001b[39m aggregateWorkflowOutcomes(f\u001b[33m.\u001b[39msource\u001b[33m,\u001b[39m f\u001b[33m.\u001b[39mqualification\u001b[33m,\u001b[39m f\u001b[33m.\u001b[39moptions)\u001b[33m;\u001b[39m\n    \u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 72 |\u001b[39m     expect(result\u001b[33m.\u001b[39mstatus)\u001b[33m.\u001b[39mtoBe(\u001b[32m'blocked'\u001b[39m)\u001b[33m;\u001b[39m\n     \u001b[90m    |\u001b[39m                           \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n     \u001b[90m 73 |\u001b[39m     expect(result\u001b[33m.\u001b[39mobserved)\u001b[33m.\u001b[39mtoBeUndefined()\u001b[33m;\u001b[39m\n     \u001b[90m 74 |\u001b[39m     expect(\u001b[33mJSON\u001b[39m\u001b[33m.\u001b[39mstringify(result))\u001b[33m.\u001b[39mnot\u001b[33m.\u001b[39mtoContain(\u001b[32m'PRIVATE-CONTENT-CANARY'\u001b[39m)\u001b[33m;\u001b[39m\n     \u001b[90m 75 |\u001b[39m   })\u001b[33m;\u001b[39m\u001b[0m\n\n      at src/webparts/aiCoeFrontDoor/services/workflowOutcomeAggregation.test.ts:72:27\n\n  ● content-free offline outcome aggregation › rejects the entire export for author data rather than hiding invalid rows\n\n    expect(received).toBe(expected) // Object.is equality\n\n    Expected: \"blocked\"\n    Received: \"review-required\"\n\n    \u001b[0m \u001b[90m 70 |\u001b[39m     \u001b[36mconst\u001b[39m f \u001b[33m=\u001b[39m fixture()\u001b[33m;\u001b[39m (f\u001b[33m.\u001b[39msource\u001b[33m.\u001b[39mrows \u001b[36mas\u001b[39m unknown[])[\u001b[35m0\u001b[39m] \u001b[33m=\u001b[39m { \u001b[33m...\u001b[39mrow(\u001b[35m0\u001b[39m)\u001b[33m,\u001b[39m \u001b[33m...\u001b[39mchanges }\u001b[33m;\u001b[39m\n     \u001b[90m 71 |\u001b[39m     \u001b[36mconst\u001b[39m result \u001b[33m=\u001b[39m aggregateWorkflowOutcomes(f\u001b[33m.\u001b[39msource\u001b[33m,\u001b[39m f\u001b[33m.\u001b[39mqualification\u001b[33m,\u001b[39m f\u001b[33m.\u001b[39moptions)\u001b[33m;\u001b[39m\n    \u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 72 |\u001b[39m     expect(result\u001b[33m.\u001b[39mstatus)\u001b[33m.\u001b[39mtoBe(\u001b[32m'blocked'\u001b[39m)\u001b[33m;\u001b[39m\n     \u001b[90m    |\u001b[39m                           \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n     \u001b[90m 73 |\u001b[39m     expect(result\u001b[33m.\u001b[39mobserved)\u001b[33m.\u001b[39mtoBeUndefined()\u001b[33m;\u001b[39m\n     \u001b[90m 74 |\u001b[39m     expect(\u001b[33mJSON\u001b[39m\u001b[33m.\u001b[39mstringify(result))\u001b[33m.\u001b[39mnot\u001b[33m.\u001b[39mtoContain(\u001b[32m'PRIVATE-CONTENT-CANARY'\u001b[39m)\u001b[33m;\u001b[39m\n     \u001b[90m 75 |\u001b[39m   })\u001b[33m;\u001b[39m\u001b[0m\n\n      at src/webparts/aiCoeFrontDoor/services/workflowOutcomeAggregation.test.ts:72:27\n\n  ● content-free offline outcome aggregation › rejects the entire export for unknown version rather than hiding invalid rows\n\n    expect(received).toBe(expected) // Object.is equality\n\n    Expected: \"blocked\"\n    Received: \"review-required\"\n\n    \u001b[0m \u001b[90m 70 |\u001b[39m     \u001b[36mconst\u001b[39m f \u001b[33m=\u001b[39m fixture()\u001b[33m;\u001b[39m (f\u001b[33m.\u001b[39msource\u001b[33m.\u001b[39mrows \u001b[36mas\u001b[39m unknown[])[\u001b[35m0\u001b[39m] \u001b[33m=\u001b[39m { \u001b[33m...\u001b[39mrow(\u001b[35m0\u001b[39m)\u001b[33m,\u001b[39m \u001b[33m...\u001b[39mchanges }\u001b[33m;\u001b[39m\n     \u001b[90m 71 |\u001b[39m     \u001b[36mconst\u001b[39m result \u001b[33m=\u001b[39m aggregateWorkflowOutcomes(f\u001b[33m.\u001b[39msource\u001b[33m,\u001b[39m f\u001b[33m.\u001b[39mqualification\u001b[33m,\u001b[39m f\u001b[33m.\u001b[39moptions)\u001b[33m;\u001b[39m\n    \u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 72 |\u001b[39m     expect(result\u001b[33m.\u001b[39mstatus)\u001b[33m.\u001b[39mtoBe(\u001b[32m'blocked'\u001b[39m)\u001b[33m;\u001b[39m\n     \u001b[90m    |\u001b[39m                           \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n     \u001b[90m 73 |\u001b[39m     expect(result\u001b[33m.\u001b[39mobserved)\u001b[33m.\u001b[39mtoBeUndefined()\u001b[33m;\u001b[39m\n     \u001b[90m 74 |\u001b[39m     expect(\u001b[33mJSON\u001b[39m\u001b[33m.\u001b[39mstringify(result))\u001b[33m.\u001b[39mnot\u001b[33m.\u001b[39mtoContain(\u001b[32m'PRIVATE-CONTENT-CANARY'\u001b[39m)\u001b[33m;\u001b[39m\n     \u001b[90m 75 |\u001b[39m   })\u001b[33m;\u001b[39m\u001b[0m\n\n      at src/webparts/aiCoeFrontDoor/services/workflowOutcomeAggregation.test.ts:72:27\n\n  ● content-free offline outcome aggregation › rejects the entire export for invalid recorded day rather than hiding invalid rows\n\n    expect(received).toBe(expected) // Object.is equality\n\n    Expected: \"blocked\"\n    Received: \"review-required\"\n\n    \u001b[0m \u001b[90m 70 |\u001b[39m     \u001b[36mconst\u001b[39m f \u001b[33m=\u001b[39m fixture()\u001b[33m;\u001b[39m (f\u001b[33m.\u001b[39msource\u001b[33m.\u001b[39mrows \u001b[36mas\u001b[39m unknown[])[\u001b[35m0\u001b[39m] \u001b[33m=\u001b[39m { \u001b[33m...\u001b[39mrow(\u001b[35m0\u001b[39m)\u001b[33m,\u001b[39m \u001b[33m...\u001b[39mchanges }\u001b[33m;\u001b[39m\n     \u001b[90m 71 |\u001b[39m     \u001b[36mconst\u001b[39m result \u001b[33m=\u001b[39m aggregateWorkflowOutcomes(f\u001b[33m.\u001b[39msource\u001b[33m,\u001b[39m f\u001b[33m.\u001b[39mqualification\u001b[33m,\u001b[39m f\u001b[33m.\u001b[39moptions)\u001b[33m;\u001b[39m\n    \u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 72 |\u001b[39m     expect(result\u001b[33m.\u001b[39mstatus)\u001b[33m.\u001b[39mtoBe(\u001b[32m'blocked'\u001b[39m)\u001b[33m;\u001b[39m\n     \u001b[90m    |\u001b[39m                           \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n     \u001b[90m 73 |\u001b[39m     expect(result\u001b[33m.\u001b[39mobserved)\u001b[33m.\u001b[39mtoBeUndefined()\u001b[33m;\u001b[39m\n     \u001b[90m 74 |\u001b[39m     expect(\u001b[33mJSON\u001b[39m\u001b[33m.\u001b[39mstringify(result))\u001b[33m.\u001b[39mnot\u001b[33m.\u001b[39mtoContain(\u001b[32m'PRIVATE-CONTENT-CANARY'\u001b[39m)\u001b[33m;\u001b[39m\n     \u001b[90m 75 |\u001b[39m   })\u001b[33m;\u001b[39m\u001b[0m\n\n      at src/webparts/aiCoeFrontDoor/services/workflowOutcomeAggregation.test.ts:72:27\n\n  ● content-free offline outcome aggregation › rejects the entire export for before period rather than hiding invalid rows\n\n    expect(received).toBe(expected) // Object.is equality\n\n    Expected: \"blocked\"\n    Received: \"review-required\"\n\n    \u001b[0m \u001b[90m 70 |\u001b[39m     \u001b[36mconst\u001b[39m f \u001b[33m=\u001b[39m fixture()\u001b[33m;\u001b[39m (f\u001b[33m.\u001b[39msource\u001b[33m.\u001b[39mrows \u001b[36mas\u001b[39m unknown[])[\u001b[35m0\u001b[39m] \u001b[33m=\u001b[39m { \u001b[33m...\u001b[39mrow(\u001b[35m0\u001b[39m)\u001b[33m,\u001b[39m \u001b[33m...\u001b[39mchanges }\u001b[33m;\u001b[39m\n     \u001b[90m 71 |\u001b[39m     \u001b[36mconst\u001b[39m result \u001b[33m=\u001b[39m aggregateWorkflowOutcomes(f\u001b[33m.\u001b[39msource\u001b[33m,\u001b[39m f\u001b[33m.\u001b[39mqualification\u001b[33m,\u001b[39m f\u001b[33m.\u001b[39moptions)\u001b[33m;\u001b[39m\n    \u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 72 |\u001b[39m     expect(result\u001b[33m.\u001b[39mstatus)\u001b[33m.\u001b[39mtoBe(\u001b[32m'blocked'\u001b[39m)\u001b[33m;\u001b[39m\n     \u001b[90m    |\u001b[39m                           \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n     \u001b[90m 73 |\u001b[39m     expect(result\u001b[33m.\u001b[39mobserved)\u001b[33m.\u001b[39mtoBeUndefined()\u001b[33m;\u001b[39m\n     \u001b[90m 74 |\u001b[39m     expect(\u001b[33mJSON\u001b[39m\u001b[33m.\u001b[39mstringify(result))\u001b[33m.\u001b[39mnot\u001b[33m.\u001b[39mtoContain(\u001b[32m'PRIVATE-CONTENT-CANARY'\u001b[39m)\u001b[33m;\u001b[39m\n     \u001b[90m 75 |\u001b[39m   })\u001b[33m;\u001b[39m\u001b[0m\n\n      at src/webparts/aiCoeFrontDoor/services/workflowOutcomeAggregation.test.ts:72:27\n\n  ● content-free offline outcome aggregation › rejects the entire export for after period rather than hiding invalid rows\n\n    expect(received).toBe(expected) // Object.is equality\n\n    Expected: \"blocked\"\n    Received: \"review-required\"\n\n    \u001b[0m \u001b[90m 70 |\u001b[39m     \u001b[36mconst\u001b[39m f \u001b[33m=\u001b[39m fixture()\u001b[33m;\u001b[39m (f\u001b[33m.\u001b[39msource\u001b[33m.\u001b[39mrows \u001b[36mas\u001b[39m unknown[])[\u001b[35m0\u001b[39m] \u001b[33m=\u001b[39m { \u001b[33m...\u001b[39mrow(\u001b[35m0\u001b[39m)\u001b[33m,\u001b[39m \u001b[33m...\u001b[39mchanges }\u001b[33m;\u001b[39m\n     \u001b[90m 71 |\u001b[39m     \u001b[36mconst\u001b[39m result \u001b[33m=\u001b[39m aggregateWorkflowOutcomes(f\u001b[33m.\u001b[39msource\u001b[33m,\u001b[39m f\u001b[33m.\u001b[39mqualification\u001b[33m,\u001b[39m f\u001b[33m.\u001b[39moptions)\u001b[33m;\u001b[39m\n    \u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 72 |\u001b[39m     expect(result\u001b[33m.\u001b[39mstatus)\u001b[33m.\u001b[39mtoBe(\u001b[32m'blocked'\u001b[39m)\u001b[33m;\u001b[39m\n     \u001b[90m    |\u001b[39m                           \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n     \u001b[90m 73 |\u001b[39m     expect(result\u001b[33m.\u001b[39mobserved)\u001b[33m.\u001b[39mtoBeUndefined()\u001b[33m;\u001b[39m\n     \u001b[90m 74 |\u001b[39m     expect(\u001b[33mJSON\u001b[39m\u001b[33m.\u001b[39mstringify(result))\u001b[33m.\u001b[39mnot\u001b[33m.\u001b[39mtoContain(\u001b[32m'PRIVATE-CONTENT-CANARY'\u001b[39m)\u001b[33m;\u001b[39m\n     \u001b[90m 75 |\u001b[39m   })\u001b[33m;\u001b[39m\u001b[0m\n\n      at src/webparts/aiCoeFrontDoor/services/workflowOutcomeAggregation.test.ts:72:27\n\n  ● content-free offline outcome aggregation › rejects the entire export for unreviewed acceptance rather than hiding invalid rows\n\n    expect(received).toBe(expected) // Object.is equality\n\n    Expected: \"blocked\"\n    Received: \"review-required\"\n\n    \u001b[0m \u001b[90m 70 |\u001b[39m     \u001b[36mconst\u001b[39m f \u001b[33m=\u001b[39m fixture()\u001b[33m;\u001b[39m (f\u001b[33m.\u001b[39msource\u001b[33m.\u001b[39mrows \u001b[36mas\u001b[39m unknown[])[\u001b[35m0\u001b[39m] \u001b[33m=\u001b[39m { \u001b[33m...\u001b[39mrow(\u001b[35m0\u001b[39m)\u001b[33m,\u001b[39m \u001b[33m...\u001b[39mchanges }\u001b[33m;\u001b[39m\n     \u001b[90m 71 |\u001b[39m     \u001b[36mconst\u001b[39m result \u001b[33m=\u001b[39m aggregateWorkflowOutcomes(f\u001b[33m.\u001b[39msource\u001b[33m,\u001b[39m f\u001b[33m.\u001b[39mqualification\u001b[33m,\u001b[39m f\u001b[33m.\u001b[39moptions)\u001b[33m;\u001b[39m\n    \u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 72 |\u001b[39m     expect(result\u001b[33m.\u001b[39mstatus)\u001b[33m.\u001b[39mtoBe(\u001b[32m'blocked'\u001b[39m)\u001b[33m;\u001b[39m\n     \u001b[90m    |\u001b[39m                           \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n     \u001b[90m 73 |\u001b[39m     expect(result\u001b[33m.\u001b[39mobserved)\u001b[33m.\u001b[39mtoBeUndefined()\u001b[33m;\u001b[39m\n     \u001b[90m 74 |\u001b[39m     expect(\u001b[33mJSON\u001b[39m\u001b[33m.\u001b[39mstringify(result))\u001b[33m.\u001b[39mnot\u001b[33m.\u001b[39mtoContain(\u001b[32m'PRIVATE-CONTENT-CANARY'\u001b[39m)\u001b[33m;\u001b[39m\n     \u001b[90m 75 |\u001b[39m   })\u001b[33m;\u001b[39m\u001b[0m\n\n      at src/webparts/aiCoeFrontDoor/services/workflowOutcomeAggregation.test.ts:72:27\n\n  ● content-free offline outcome aggregation › rejects the entire export for unexpected category rather than hiding invalid rows\n\n    expect(received).toBe(expected) // Object.is equality\n\n    Expected: \"blocked\"\n    Received: \"review-required\"\n\n    \u001b[0m \u001b[90m 70 |\u001b[39m     \u001b[36mconst\u001b[39m f \u001b[33m=\u001b[39m fixture()\u001b[33m;\u001b[39m (f\u001b[33m.\u001b[39msource\u001b[33m.\u001b[39mrows \u001b[36mas\u001b[39m unknown[])[\u001b[35m0\u001b[39m] \u001b[33m=\u001b[39m { \u001b[33m...\u001b[39mrow(\u001b[35m0\u001b[39m)\u001b[33m,\u001b[39m \u001b[33m...\u001b[39mchanges }\u001b[33m;\u001b[39m\n     \u001b[90m 71 |\u001b[39m     \u001b[36mconst\u001b[39m result \u001b[33m=\u001b[39m aggregateWorkflowOutcomes(f\u001b[33m.\u001b[39msource\u001b[33m,\u001b[39m f\u001b[33m.\u001b[39mqualification\u001b[33m,\u001b[39m f\u001b[33m.\u001b[39moptions)\u001b[33m;\u001b[39m\n    \u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 72 |\u001b[39m     expect(result\u001b[33m.\u001b[39mstatus)\u001b[33m.\u001b[39mtoBe(\u001b[32m'blocked'\u001b[39m)\u001b[33m;\u001b[39m\n     \u001b[90m    |\u001b[39m                           \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n     \u001b[90m 73 |\u001b[39m     expect(result\u001b[33m.\u001b[39mobserved)\u001b[33m.\u001b[39mtoBeUndefined()\u001b[33m;\u001b[39m\n     \u001b[90m 74 |\u001b[39m     expect(\u001b[33mJSON\u001b[39m\u001b[33m.\u001b[39mstringify(result))\u001b[33m.\u001b[39mnot\u001b[33m.\u001b[39mtoContain(\u001b[32m'PRIVATE-CONTENT-CANARY'\u001b[39m)\u001b[33m;\u001b[39m\n     \u001b[90m 75 |\u001b[39m   })\u001b[33m;\u001b[39m\u001b[0m\n\n      at src/webparts/aiCoeFrontDoor/services/workflowOutcomeAggregation.test.ts:72:27\n\n  ● content-free offline outcome aggregation › rejects the entire export for missing correction category rather than hiding invalid rows\n\n    expect(received).toBe(expected) // Object.is equality\n\n    Expected: \"blocked\"\n    Received: \"review-required\"\n\n    \u001b[0m \u001b[90m 70 |\u001b[39m     \u001b[36mconst\u001b[39m f \u001b[33m=\u001b[39m fixture()\u001b[33m;\u001b[39m (f\u001b[33m.\u001b[39msource\u001b[33m.\u001b[39mrows \u001b[36mas\u001b[39m unknown[])[\u001b[35m0\u001b[39m] \u001b[33m=\u001b[39m { \u001b[33m...\u001b[39mrow(\u001b[35m0\u001b[39m)\u001b[33m,\u001b[39m \u001b[33m...\u001b[39mchanges }\u001b[33m;\u001b[39m\n     \u001b[90m 71 |\u001b[39m     \u001b[36mconst\u001b[39m result \u001b[33m=\u001b[39m aggregateWorkflowOutcomes(f\u001b[33m.\u001b[39msource\u001b[33m,\u001b[39m f\u001b[33m.\u001b[39mqualification\u001b[33m,\u001b[39m f\u001b[33m.\u001b[39moptions)\u001b[33m;\u001b[39m\n    \u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 72 |\u001b[39m     expect(result\u001b[33m.\u001b[39mstatus)\u001b[33m.\u001b[39mtoBe(\u001b[32m'blocked'\u001b[39m)\u001b[33m;\u001b[39m\n     \u001b[90m    |\u001b[39m                           \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n     \u001b[90m 73 |\u001b[39m     expect(result\u001b[33m.\u001b[39mobserved)\u001b[33m.\u001b[39mtoBeUndefined()\u001b[33m;\u001b[39m\n     \u001b[90m 74 |\u001b[39m     expect(\u001b[33mJSON\u001b[39m\u001b[33m.\u001b[39mstringify(result))\u001b[33m.\u001b[39mnot\u001b[33m.\u001b[39mtoContain(\u001b[32m'PRIVATE-CONTENT-CANARY'\u001b[39m)\u001b[33m;\u001b[39m\n     \u001b[90m 75 |\u001b[39m   })\u001b[33m;\u001b[39m\u001b[0m\n\n      at src/webparts/aiCoeFrontDoor/services/workflowOutcomeAggregation.test.ts:72:27\n\n  ● content-free offline outcome aggregation › rejects the entire export for wrong identity format rather than hiding invalid rows\n\n    expect(received).toBe(expected) // Object.is equality\n\n    Expected: \"blocked\"\n    Received: \"review-required\"\n\n    \u001b[0m \u001b[90m 70 |\u001b[39m     \u001b[36mconst\u001b[39m f \u001b[33m=\u001b[39m fixture()\u001b[33m;\u001b[39m (f\u001b[33m.\u001b[39msource\u001b[33m.\u001b[39mrows \u001b[36mas\u001b[39m unknown[])[\u001b[35m0\u001b[39m] \u001b[33m=\u001b[39m { \u001b[33m...\u001b[39mrow(\u001b[35m0\u001b[39m)\u001b[33m,\u001b[39m \u001b[33m...\u001b[39mchanges }\u001b[33m;\u001b[39m\n     \u001b[90m 71 |\u001b[39m     \u001b[36mconst\u001b[39m result \u001b[33m=\u001b[39m aggregateWorkflowOutcomes(f\u001b[33m.\u001b[39msource\u001b[33m,\u001b[39m f\u001b[33m.\u001b[39mqualification\u001b[33m,\u001b[39m f\u001b[33m.\u001b[39moptions)\u001b[33m;\u001b[39m\n    \u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 72 |\u001b[39m     expect(result\u001b[33m.\u001b[39mstatus)\u001b[33m.\u001b[39mtoBe(\u001b[32m'blocked'\u001b[39m)\u001b[33m;\u001b[39m\n     \u001b[90m    |\u001b[39m                           \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n     \u001b[90m 73 |\u001b[39m     expect(result\u001b[33m.\u001b[39mobserved)\u001b[33m.\u001b[39mtoBeUndefined()\u001b[33m;\u001b[39m\n     \u001b[90m 74 |\u001b[39m     expect(\u001b[33mJSON\u001b[39m\u001b[33m.\u001b[39mstringify(result))\u001b[33m.\u001b[39mnot\u001b[33m.\u001b[39mtoContain(\u001b[32m'PRIVATE-CONTENT-CANARY'\u001b[39m)\u001b[33m;\u001b[39m\n     \u001b[90m 75 |\u001b[39m   })\u001b[33m;\u001b[39m\u001b[0m\n\n      at src/webparts/aiCoeFrontDoor/services/workflowOutcomeAggregation.test.ts:72:27\n\n  ● content-free offline outcome aggregation › deduplicates identical ids regardless of key order and refuses conflicting duplicates\n\n    expect(received).toBe(expected) // Object.is equality\n\n    Expected: 5\n    Received: 6\n\n    \u001b[0m \u001b[90m 80 |\u001b[39m     rows\u001b[33m.\u001b[39mpush(\u001b[33mObject\u001b[39m\u001b[33m.\u001b[39mfromEntries(\u001b[33mObject\u001b[39m\u001b[33m.\u001b[39mentries(rows[\u001b[35m0\u001b[39m])\u001b[33m.\u001b[39mreverse()))\u001b[33m;\u001b[39m\n     \u001b[90m 81 |\u001b[39m     \u001b[36mlet\u001b[39m result \u001b[33m=\u001b[39m aggregateWorkflowOutcomes(f\u001b[33m.\u001b[39msource\u001b[33m,\u001b[39m f\u001b[33m.\u001b[39mqualification\u001b[33m,\u001b[39m f\u001b[33m.\u001b[39moptions)\u001b[33m;\u001b[39m\n    \u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 82 |\u001b[39m     expect(result\u001b[33m.\u001b[39mobserved\u001b[33m?\u001b[39m\u001b[33m.\u001b[39moutcomes\u001b[33m.\u001b[39m\u001b[33mAccepted\u001b[39m)\u001b[33m.\u001b[39mtoBe(\u001b[35m5\u001b[39m)\u001b[33m;\u001b[39m\n     \u001b[90m    |\u001b[39m                                                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n     \u001b[90m 83 |\u001b[39m     expect(result\u001b[33m.\u001b[39mreconciliation)\u001b[33m.\u001b[39mtoEqual({ input\u001b[33m:\u001b[39m \u001b[35m11\u001b[39m\u001b[33m,\u001b[39m unique\u001b[33m:\u001b[39m \u001b[35m10\u001b[39m\u001b[33m,\u001b[39m duplicates\u001b[33m:\u001b[39m \u001b[35m1\u001b[39m })\u001b[33m;\u001b[39m\n     \u001b[90m 84 |\u001b[39m     rows\u001b[33m.\u001b[39mpush({ \u001b[33m...\u001b[39mrow(\u001b[35m0\u001b[39m)\u001b[33m,\u001b[39m \u001b[33mOutcome\u001b[39m\u001b[33m:\u001b[39m \u001b[32m'Stopped'\u001b[39m\u001b[33m,\u001b[39m \u001b[33mReviewState\u001b[39m\u001b[33m:\u001b[39m \u001b[32m'Not reviewed'\u001b[39m })\u001b[33m;\u001b[39m\n     \u001b[90m 85 |\u001b[39m     result \u001b[33m=\u001b[39m aggregateWorkflowOutcomes(f\u001b[33m.\u001b[39msource\u001b[33m,\u001b[39m f\u001b[33m.\u001b[39mqualification\u001b[33m,\u001b[39m f\u001b[33m.\u001b[39moptions)\u001b[33m;\u001b[39m\u001b[0m\n\n      at Object.<anonymous> (src/webparts/aiCoeFrontDoor/services/workflowOutcomeAggregation.test.ts:82:48)\n\n  ● content-free offline outcome aggregation › withholds the whole report for a small or unsafely partitioned cohort {\"cohortSize\":4,\"minimumCellCohort\":4}\n\n    expect(received).toBe(expected) // Object.is equality\n\n    Expected: \"suppressed\"\n    Received: \"review-required\"\n\n    \u001b[0m \u001b[90m  96 |\u001b[39m     \u001b[36mconst\u001b[39m f \u001b[33m=\u001b[39m fixture()\u001b[33m;\u001b[39m \u001b[33mObject\u001b[39m\u001b[33m.\u001b[39massign(f\u001b[33m.\u001b[39mqualification\u001b[33m.\u001b[39mprivacy\u001b[33m,\u001b[39m privacy)\u001b[33m;\u001b[39m\n     \u001b[90m  97 |\u001b[39m     \u001b[36mconst\u001b[39m result \u001b[33m=\u001b[39m aggregateWorkflowOutcomes(f\u001b[33m.\u001b[39msource\u001b[33m,\u001b[39m f\u001b[33m.\u001b[39mqualification\u001b[33m,\u001b[39m f\u001b[33m.\u001b[39moptions)\u001b[33m;\u001b[39m\n    \u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m  98 |\u001b[39m     expect(result\u001b[33m.\u001b[39mstatus)\u001b[33m.\u001b[39mtoBe(\u001b[32m'suppressed'\u001b[39m)\u001b[33m;\u001b[39m\n     \u001b[90m     |\u001b[39m                           \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n     \u001b[90m  99 |\u001b[39m     expect(result\u001b[33m.\u001b[39mobserved)\u001b[33m.\u001b[39mtoBeUndefined()\u001b[33m;\u001b[39m\n     \u001b[90m 100 |\u001b[39m     expect(result\u001b[33m.\u001b[39mreconciliation)\u001b[33m.\u001b[39mtoBeUndefined()\u001b[33m;\u001b[39m\n     \u001b[90m 101 |\u001b[39m   })\u001b[33m;\u001b[39m\u001b[0m\n\n      at src/webparts/aiCoeFrontDoor/services/workflowOutcomeAggregation.test.ts:98:27\n\n  ● content-free offline outcome aggregation › withholds the whole report for a small or unsafely partitioned cohort {\"minimumCellCohort\":4}\n\n    expect(received).toBe(expected) // Object.is equality\n\n    Expected: \"suppressed\"\n    Received: \"review-required\"\n\n    \u001b[0m \u001b[90m  96 |\u001b[39m     \u001b[36mconst\u001b[39m f \u001b[33m=\u001b[39m fixture()\u001b[33m;\u001b[39m \u001b[33mObject\u001b[39m\u001b[33m.\u001b[39massign(f\u001b[33m.\u001b[39mqualification\u001b[33m.\u001b[39mprivacy\u001b[33m,\u001b[39m privacy)\u001b[33m;\u001b[39m\n     \u001b[90m  97 |\u001b[39m     \u001b[36mconst\u001b[39m result \u001b[33m=\u001b[39m aggregateWorkflowOutcomes(f\u001b[33m.\u001b[39msource\u001b[33m,\u001b[39m f\u001b[33m.\u001b[39mqualification\u001b[33m,\u001b[39m f\u001b[33m.\u001b[39moptions)\u001b[33m;\u001b[39m\n    \u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m  98 |\u001b[39m     expect(result\u001b[33m.\u001b[39mstatus)\u001b[33m.\u001b[39mtoBe(\u001b[32m'suppressed'\u001b[39m)\u001b[33m;\u001b[39m\n     \u001b[90m     |\u001b[39m                           \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n     \u001b[90m  99 |\u001b[39m     expect(result\u001b[33m.\u001b[39mobserved)\u001b[33m.\u001b[39mtoBeUndefined()\u001b[33m;\u001b[39m\n     \u001b[90m 100 |\u001b[39m     expect(result\u001b[33m.\u001b[39mreconciliation)\u001b[33m.\u001b[39mtoBeUndefined()\u001b[33m;\u001b[39m\n     \u001b[90m 101 |\u001b[39m   })\u001b[33m;\u001b[39m\u001b[0m\n\n      at src/webparts/aiCoeFrontDoor/services/workflowOutcomeAggregation.test.ts:98:27\n\n  ● content-free offline outcome aggregation › withholds the whole report for a small or unsafely partitioned cohort {\"minimumCohort\":6}\n\n    expect(received).toBe(expected) // Object.is equality\n\n    Expected: \"suppressed\"\n    Received: \"review-required\"\n\n    \u001b[0m \u001b[90m  96 |\u001b[39m     \u001b[36mconst\u001b[39m f \u001b[33m=\u001b[39m fixture()\u001b[33m;\u001b[39m \u001b[33mObject\u001b[39m\u001b[33m.\u001b[39massign(f\u001b[33m.\u001b[39mqualification\u001b[33m.\u001b[39mprivacy\u001b[33m,\u001b[39m privacy)\u001b[33m;\u001b[39m\n     \u001b[90m  97 |\u001b[39m     \u001b[36mconst\u001b[39m result \u001b[33m=\u001b[39m aggregateWorkflowOutcomes(f\u001b[33m.\u001b[39msource\u001b[33m,\u001b[39m f\u001b[33m.\u001b[39mqualification\u001b[33m,\u001b[39m f\u001b[33m.\u001b[39moptions)\u001b[33m;\u001b[39m\n    \u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m  98 |\u001b[39m     expect(result\u001b[33m.\u001b[39mstatus)\u001b[33m.\u001b[39mtoBe(\u001b[32m'suppressed'\u001b[39m)\u001b[33m;\u001b[39m\n     \u001b[90m     |\u001b[39m                           \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n     \u001b[90m  99 |\u001b[39m     expect(result\u001b[33m.\u001b[39mobserved)\u001b[33m.\u001b[39mtoBeUndefined()\u001b[33m;\u001b[39m\n     \u001b[90m 100 |\u001b[39m     expect(result\u001b[33m.\u001b[39mreconciliation)\u001b[33m.\u001b[39mtoBeUndefined()\u001b[33m;\u001b[39m\n     \u001b[90m 101 |\u001b[39m   })\u001b[33m;\u001b[39m\u001b[0m\n\n      at src/webparts/aiCoeFrontDoor/services/workflowOutcomeAggregation.test.ts:98:27\n\n  ● content-free offline outcome aggregation › withholds the whole report for a small or unsafely partitioned cohort {\"cohortSize\":1,\"minimumCellCohort\":1,\"minimumCohort\":1}\n\n    expect(received).toBe(expected) // Object.is equality\n\n    Expected: \"suppressed\"\n    Received: \"review-required\"\n\n    \u001b[0m \u001b[90m  96 |\u001b[39m     \u001b[36mconst\u001b[39m f \u001b[33m=\u001b[39m fixture()\u001b[33m;\u001b[39m \u001b[33mObject\u001b[39m\u001b[33m.\u001b[39massign(f\u001b[33m.\u001b[39mqualification\u001b[33m.\u001b[39mprivacy\u001b[33m,\u001b[39m privacy)\u001b[33m;\u001b[39m\n     \u001b[90m  97 |\u001b[39m     \u001b[36mconst\u001b[39m result \u001b[33m=\u001b[39m aggregateWorkflowOutcomes(f\u001b[33m.\u001b[39msource\u001b[33m,\u001b[39m f\u001b[33m.\u001b[39mqualification\u001b[33m,\u001b[39m f\u001b[33m.\u001b[39moptions)\u001b[33m;\u001b[39m\n    \u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m  98 |\u001b[39m     expect(result\u001b[33m.\u001b[39mstatus)\u001b[33m.\u001b[39mtoBe(\u001b[32m'suppressed'\u001b[39m)\u001b[33m;\u001b[39m\n     \u001b[90m     |\u001b[39m                           \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n     \u001b[90m  99 |\u001b[39m     expect(result\u001b[33m.\u001b[39mobserved)\u001b[33m.\u001b[39mtoBeUndefined()\u001b[33m;\u001b[39m\n     \u001b[90m 100 |\u001b[39m     expect(result\u001b[33m.\u001b[39mreconciliation)\u001b[33m.\u001b[39mtoBeUndefined()\u001b[33m;\u001b[39m\n     \u001b[90m 101 |\u001b[39m   })\u001b[33m;\u001b[39m\u001b[0m\n\n      at src/webparts/aiCoeFrontDoor/services/workflowOutcomeAggregation.test.ts:98:27\n\n  ● content-free offline outcome aggregation › blocks impossible people attestations and suppresses a tiny correction cell\n\n    expect(received).toBe(expected) // Object.is equality\n\n    Expected: \"blocked\"\n    Received: \"review-required\"\n\n    \u001b[0m \u001b[90m 103 |\u001b[39m   it(\u001b[32m'blocks impossible people attestations and suppresses a tiny correction cell'\u001b[39m\u001b[33m,\u001b[39m () \u001b[33m=>\u001b[39m {\n     \u001b[90m 104 |\u001b[39m     \u001b[36mconst\u001b[39m f \u001b[33m=\u001b[39m fixture()\u001b[33m;\u001b[39m f\u001b[33m.\u001b[39mqualification\u001b[33m.\u001b[39mprivacy\u001b[33m.\u001b[39mcohortSize \u001b[33m=\u001b[39m \u001b[35m11\u001b[39m\u001b[33m;\u001b[39m\n    \u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 105 |\u001b[39m     expect(aggregateWorkflowOutcomes(f\u001b[33m.\u001b[39msource\u001b[33m,\u001b[39m f\u001b[33m.\u001b[39mqualification\u001b[33m,\u001b[39m f\u001b[33m.\u001b[39moptions)\u001b[33m.\u001b[39mstatus)\u001b[33m.\u001b[39mtoBe(\u001b[32m'blocked'\u001b[39m)\u001b[33m;\u001b[39m\n     \u001b[90m     |\u001b[39m                                                                                    \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n     \u001b[90m 106 |\u001b[39m     f\u001b[33m.\u001b[39mqualification\u001b[33m.\u001b[39mprivacy\u001b[33m.\u001b[39mcohortSize \u001b[33m=\u001b[39m \u001b[35m5\u001b[39m\u001b[33m;\u001b[39m\n     \u001b[90m 107 |\u001b[39m     (f\u001b[33m.\u001b[39msource\u001b[33m.\u001b[39mrows \u001b[36mas\u001b[39m unknown[])[\u001b[35m0\u001b[39m] \u001b[33m=\u001b[39m { \u001b[33m...\u001b[39mrow(\u001b[35m0\u001b[39m\u001b[33m,\u001b[39m \u001b[32m'Corrected'\u001b[39m)\u001b[33m,\u001b[39m \u001b[33mCorrectionCategory\u001b[39m\u001b[33m:\u001b[39m \u001b[32m'brand'\u001b[39m }\u001b[33m;\u001b[39m\n     \u001b[90m 108 |\u001b[39m     expect(aggregateWorkflowOutcomes(f\u001b[33m.\u001b[39msource\u001b[33m,\u001b[39m f\u001b[33m.\u001b[39mqualification\u001b[33m,\u001b[39m f\u001b[33m.\u001b[39moptions)\u001b[33m.\u001b[39mstatus)\u001b[33m.\u001b[39mtoBe(\u001b[32m'suppressed'\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m\n\n      at Object.<anonymous> (src/webparts/aiCoeFrontDoor/services/workflowOutcomeAggregation.test.ts:105:84)\n\n  ● content-free offline outcome aggregation › accepts timestamps through the inclusive end day and binds output evidence without raw rows\n\n    expect(received).toEqual(expected) // deep equality\n\n    Expected: {\"methodApproval\": \"fixture-method-only\", \"periodEnd\": \"2026-09-20\", \"periodStart\": \"2026-09-01\", \"privacyApproval\": \"fixture-privacy-only\", \"sourceReceipt\": \"fixture-source\", \"sourceSha256\": \"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"}\n    Received: undefined\n\n    \u001b[0m \u001b[90m 124 |\u001b[39m     \u001b[36mconst\u001b[39m result \u001b[33m=\u001b[39m aggregateWorkflowOutcomes(f\u001b[33m.\u001b[39msource\u001b[33m,\u001b[39m f\u001b[33m.\u001b[39mqualification\u001b[33m,\u001b[39m f\u001b[33m.\u001b[39moptions)\u001b[33m;\u001b[39m\n     \u001b[90m 125 |\u001b[39m     expect(result\u001b[33m.\u001b[39mstatus)\u001b[33m.\u001b[39mtoBe(\u001b[32m'review-required'\u001b[39m)\u001b[33m;\u001b[39m\n    \u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 126 |\u001b[39m     expect(result\u001b[33m.\u001b[39mevidence)\u001b[33m.\u001b[39mtoEqual({ sourceReceipt\u001b[33m:\u001b[39m \u001b[32m'fixture-source'\u001b[39m\u001b[33m,\u001b[39m sourceSha256\u001b[33m:\u001b[39m digest\u001b[33m,\u001b[39m methodApproval\u001b[33m:\u001b[39m \u001b[32m'fixture-method-only'\u001b[39m\u001b[33m,\u001b[39m privacyApproval\u001b[33m:\u001b[39m \u001b[32m'fixture-privacy-only'\u001b[39m\u001b[33m,\u001b[39m periodStart\u001b[33m:\u001b[39m period\u001b[33m.\u001b[39mstart\u001b[33m,\u001b[39m periodEnd\u001b[33m:\u001b[39m period\u001b[33m.\u001b[39mend })\u001b[33m;\u001b[39m\n     \u001b[90m     |\u001b[39m                             \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n     \u001b[90m 127 |\u001b[39m   })\u001b[33m;\u001b[39m\n     \u001b[90m 128 |\u001b[39m\n     \u001b[90m 129 |\u001b[39m   it(\u001b[32m'computes only qualified observed task statistics and keeps unsupported scorecard claims unknown'\u001b[39m\u001b[33m,\u001b[39m () \u001b[33m=>\u001b[39m {\u001b[0m\n\n      at Object.<anonymous> (src/webparts/aiCoeFrontDoor/services/workflowOutcomeAggregation.test.ts:126:29)\n"
+    }
+  ],
+  "wasInterrupted": false
+}

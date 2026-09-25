@@ -1,0 +1,13 @@
+{
+  "schemaVersion": "1.0-unbound",
+  "name": "AI CoE Marketing Artifact Review (candidate, not importable)",
+  "status": "unbound",
+  "sendEnabled": false,
+  "operations": ["SaveDraft", "SubmitForReview", "RecordReviewDecision", "ReadArtifact"],
+  "kinds": ["campaignBrief", "contentPlan", "meetingFollowThrough"],
+  "forbidden": ["send", "publish", "assign", "schedule", "campaignMutation"],
+  "connection": null,
+  "environment": null,
+  "listId": null,
+  "note": "Shape only. Import, publish and enable are not authorized from this local work."
+}

@@ -1,6 +1,8 @@
 import * as React from 'react';
+import { useFrontDoor } from '../../context/FrontDoorContext';
 import { MyWork } from '../pages/MyWork';
 import { UsageTelemetryStrip } from '../UsageTelemetryStrip';
+import { AppCoreWorkspace } from './AppCoreWorkspace';
 import { AppFlow, AppLayerCard, AppNotice, AppPanel, AppSectionHead, AppSteps } from './kit';
 import type { IAppStep } from './kit';
 
@@ -60,7 +62,7 @@ const LAYERS: readonly ILayer[] = [
   { layer: 'Drafting', title: 'A flow you configure', note: 'The idea page can call a flow when a URL is set. Blank keeps plain summaries, which is the default.' },
   { layer: 'Provisioning', title: 'A script an owner runs', note: 'Pages, lists, permissions and the content document. It runs outside this code, against a site you name.' },
   { layer: 'Telemetry', title: 'Usage lists', note: 'The operator view reads them. Nothing in this package writes them; a companion solution does.' },
-  { layer: 'Not connected', title: 'The wider system', note: 'Case records, work units and a canonical store are described in the engineering package and are not built here.' },
+  { layer: 'CORE Binding A', title: 'Command list + polling', note: 'Typed client, validators and a synthetic local engine are built. Live SharePoint writes stay gated until native defects and bindings are independently verified.' },
   { layer: 'Control', title: 'A person', note: 'Sending, publishing, assigning and scheduling stay outside this part, behind their own authority.' }
 ];
 
@@ -71,13 +73,15 @@ const LAYERS: readonly ILayer[] = [
  * said the same thing a third time. What it carried - that only your own rows are read - is a control rather than a
  * caption, and the panel beside it states it as one.
  */
-export function AppCases(): React.ReactElement {
+export function AppCases({ onDirtyChange }: { onDirtyChange?: (dirty: boolean) => void }): React.ReactElement {
+  const { services } = useFrontDoor();
   return (
     <React.Fragment>
+      {services.coreWork !== undefined && <AppCoreWorkspace coreWork={services.coreWork} onDirtyChange={onDirtyChange} />}
       <div className="ai-app-cases">
         <MyWork />
       </div>
-      <div className="ai-app-split">
+      <div className="ai-app-split ai-app-cases-explanation">
         <AppPanel>
           <AppSectionHead title="What happens to a request" />
           <AppFlow label="What happens to a request" steps={REQUEST_FLOW} />
@@ -100,6 +104,7 @@ export function AppEngineering({ starters }: { starters: React.ReactNode }): Rea
         title="Start a guided request"
         note="Four short questions and a summary a person can act on. Nothing is submitted until you confirm it."
       />
+      <AppGettingStarted section="engineering" />
       {starters}
       <div className="ai-app-split">
         <AppPanel>
@@ -126,12 +131,20 @@ export function AppImprovement({ starters }: { starters: React.ReactNode }): Rea
         title="Tell the AI CoE what happened"
         note="How a task turned out, how your team is using AI, or what is not working."
       />
+      <AppGettingStarted section="improvement" />
       {starters}
       <div className="ai-app-split">
         <AppPanel>
-          <AppSectionHead title="What happens to what you record" />
-          <AppFlow label="What happens to what you record" steps={IMPROVEMENT_FLOW} />
-          <p className="ai-app-note">A proposal is not a policy. Nothing you record here changes what anyone is told is allowed.</p>
+          <AppSectionHead title="What happens to what you record" note="Proposed manual improvement path — not automatic promotion." />
+          <AppFlow label="Proposed manual improvement path" steps={IMPROVEMENT_FLOW} />
+          <p className="ai-app-note">No automatic policy change or enterprise learning loop is implemented here. A proposal is not a policy.</p>
+          <ol>
+            <li>Record a task outcome above: fixed choices only, not prompts or output.</li>
+            <li>Use Share feedback above to propose the smallest correction. Name the confusing step or correction category, not private work. Save its receipt.</li>
+            <li>An authorized owner links that feedback reference to the existing decision record, permitted evidence, proposed change, approver and retest scope. This is manual follow-through, not automatic assignment.</li>
+            <li>After an approved repair, repeat the same permitted task and a failure/recovery case. Keep the retest receipt with the original feedback reference; report another outcome only for a distinct task attempt.</li>
+            <li>The decision authority reviews evidence before any change is approved. An operator reconciles measurement separately; no click here promotes feedback or expands permissions.</li>
+          </ol>
         </AppPanel>
         <AppPanel>
           <AppSectionHead title="What an outcome keeps" />
@@ -144,6 +157,42 @@ export function AppImprovement({ starters }: { starters: React.ReactNode }): Rea
     </React.Fragment>
   );
 }
+
+/** Client-neutral adaptation; source provenance stays in the operator document, outside the bundle. */
+function AppGettingStarted({ section }: { section: 'engineering' | 'improvement' }): React.ReactElement {
+  const [open, setOpen] = React.useState(false);
+  const id = `ai-${section}-quick-start`;
+  const title = 'Getting started: safe task and review';
+  return (
+    <AppPanel>
+      <button type="button" className="ai-app-starter-button" aria-expanded={open} aria-controls={id} onClick={(): void => setOpen(!open)}>{title}</button>
+      {open && <section id={id} role="region" aria-label={title}>
+        <p>Start with one small permitted task, not a product. A demonstration uses invented material and is not live acceptance.</p>
+        <ol>
+          <li>Minutes 0–2: confirm your own identity, intended audience and approved destination. Use Check a tool or task in Engineering if permission is unclear.</li>
+          <li>Minutes 2–4: identify current permitted sources and their versions. Supply only the minimum allowed context; label missing facts. Do not paste secrets, personal information or restricted client material.</li>
+          <li>Minutes 4–7: use the permitted draft route. In Marketing, if your role permits it, start with a campaign brief, then an accepted brief for a content plan, or permitted meeting notes for draft follow-through. The labelled synthetic workspace is practice only.</li>
+          <li>Minutes 7–9: verify claims, numbers, dates, sources, audience, voice and proposed commitments. Correct or stop if they cannot be supported. A draft is not permission to send, publish, assign, schedule or change production records.</li>
+          <li>Minutes 9–10: in Improvement choose Record a task outcome: Accepted after review, Corrected after material correction, Unavailable for missing source/access, or Stopped for unsafe or unclear work. Never copy prompt or output text into measurement.</li>
+        </ol>
+        <h4>Role start</h4>
+        <ul>
+          <li>Employee: use only your approved sources and scope; retain the save/readback reference.</li>
+          <li>Reviewer: use your own authorized review entry; check the exact artifact version and required review kind. Request corrections rather than accepting unsupported work.</li>
+          <li>Champion: teach one permitted task and its fallback. You are not another person’s approver and cannot grant access. Use synthetic material when the audience’s access is uncertain.</li>
+          <li>Operator: reconcile receipts and privacy before reporting counts. Participation, repeated use, safety, time saved and cost are not established by task volume.</li>
+        </ul>
+        <h4>Stop and recover</h4>
+        <p>Stop for wrong identity, audience, missing sources, someone else’s information, an unsupported claim or an unexpected external action. Do not widen access. Use the named support route in the footer; if it is unbound, business commissioning remains incomplete. Get help or training in Engineering records a request, not an emergency response.</p>
+        <p>If a save is pending or an action is uncertain, retain its reference and reconcile the source-native state with the recovery owner before retrying the same intent. Do not create a new submission merely because confirmation is missing. Use the approved manual draft fallback only; do not bypass a refused route.</p>
+        <h4>Teach-back and office hours</h4>
+        <p>Explain permitted information, human review and the human decision. Demonstrate one safe task and one missing-source fallback. Ask a colleague to start, review, identify the stop condition and find help using their own identity. Keep content-free correction themes and outcome choices. A named champion, support owner and authorized two-user/no-builder exercise are still required; local tests are not that acceptance.</p>
+        <p>{section === 'improvement' ? 'Use the Record a task outcome and Share feedback controls immediately below. The proposal and retest steps follow them.' : 'Use the Check a tool or task and Get help or training controls immediately below. For feedback and outcomes, choose the Improvement tab.'}</p>
+      </section>}
+    </AppPanel>
+  );
+}
+
 
 /** What is connected, what it may do, and what is honestly not built. */
 export function AppSystemMap({ admin }: { admin?: React.ReactNode }): React.ReactElement {
@@ -162,11 +211,17 @@ export function AppSystemMap({ admin }: { admin?: React.ReactNode }): React.Reac
         A connection existing is not permission to use it, and a list being readable is not proof a figure in it was
         measured. Each route is qualified on its own.
       </AppNotice>
-      <AppPanel>
-        <AppSectionHead title="Usage" note="Read from the usage lists. Nothing in this package writes them." />
-        <UsageTelemetryStrip />
-      </AppPanel>
       {admin}
     </React.Fragment>
+  );
+}
+
+/** The usage lists, shown on Enterprise value when the person already holds that read. */
+export function AppUsage(): React.ReactElement {
+  return (
+    <AppPanel>
+      <AppSectionHead title="Usage" note="Read from the usage lists. Nothing in this package writes them." />
+      <UsageTelemetryStrip />
+    </AppPanel>
   );
 }

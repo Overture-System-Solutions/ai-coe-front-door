@@ -378,7 +378,7 @@ describe('ResultPanel in a page view', () => {
     expect(within(notice).getByText('Needs access.')).toBeInTheDocument();
     expect(notice).toHaveTextContent('Identity owner');
     expect(notice).toHaveTextContent('after access is granted');
-    expect(notice).toHaveTextContent('Your answers are kept as a draft on this device.');
+    expect(notice).toHaveTextContent('Your answers remain on this screen. Save the draft before leaving.');
     expect(notice.textContent).not.toContain('secret body');
     expect(notice.textContent).not.toContain('403');
     expect(screen.queryByText(DENIED.message)).not.toBeInTheDocument();

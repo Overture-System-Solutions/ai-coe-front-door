@@ -1,0 +1,45 @@
+{
+  "verifiedAt": "2026-09-24T14:34:45.010353+00:00",
+  "scope": "LOCAL_STEPS_1_TO_4_ONLY",
+  "nativeAcceptance": false,
+  "tenantActions": 0,
+  "liveModelCalls": 0,
+  "enabled": false,
+  "registered": false,
+  "bound": false,
+  "counts": {
+    "flowTests": 20,
+    "helperTests": 31,
+    "integrationTests": 14,
+    "provisioningGroupedChecks": 85
+  },
+  "operationCount": 16,
+  "referenceScenarios": 22,
+  "crashBoundaries": 43,
+  "protectedFiles": 600,
+  "preserved": true,
+  "scriptSha256": "9dead8bb1670f64a517dee06d685ea1c789fed6ac0bef4a6cf9e644661f397f6",
+  "exactPackageCompiledDllSha256": "e64f8bb78bf1180c4d0bfb28f5e3d524a33a5bdb3f9d759eeb14820b158d6c22",
+  "flowActions": 434,
+  "packages": {
+    "AICoEMarketingAutomation_1_0_0_0_UNBOUND_REVIEW_ONLY.zip": {
+      "sha256": "629dde403c49cadfece35af92197ac559a1d2989f5139bd26a7f35729a4bfd74",
+      "bytes": 23315
+    },
+    "AICoEMarketingIntegrity_1_0_0_0_REGISTRATION_CANDIDATE.zip": {
+      "sha256": "0ece03b79b7c72a31c486a09afacf71f687bfe08ffe3a483cab89a9f7ed24b6b",
+      "bytes": 56394
+    },
+    "AICoEMarketingAutomation_1_0_0_0.zip": {
+      "sha256": "592476af4e32c1969e63ff8dd67677daded5e4a3e3412bfef2b3a6e68f578165",
+      "bytes": 21639
+    }
+  },
+  "evidence": "backend/marketing-native/evidence/integration/final-exact-package",
+  "qualificationGates": "NATIVE_GATES.md",
+  "limits": [
+    "Exact production script compiled as C#7.3 using a local .NET10 ScriptBase shim, not the hosted compiler.",
+    "Actual packaged WDL executed by a bounded offline interpreter; external SharePoint and Claude are explicit fixtures.",
+    "Helper registration and metadata binding, native import/Save, permissions, provider and lifecycle acceptance remain unperformed."
+  ]
+}

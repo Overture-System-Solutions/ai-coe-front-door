@@ -1,0 +1,15 @@
+{
+  "exitCode": 0,
+  "command": [
+    "/mnt/c/Program Files/nodejs/node.exe",
+    "--test",
+    "backend/power-automate/marketing-runtime/tests/business.test.cjs",
+    "backend/power-automate/marketing-runtime/tests/integrity.test.cjs",
+    "backend/power-automate/marketing-runtime/tests/journey.test.cjs",
+    "backend/power-automate/marketing-runtime/tests/package.test.cjs",
+    "backend/power-automate/marketing-runtime/tests/provider-source.test.cjs",
+    "backend/power-automate/marketing-runtime/tests/runtime.test.cjs",
+    "backend/power-automate/marketing-runtime/tests/server.test.cjs"
+  ],
+  "log": "marketing-source.log"
+}

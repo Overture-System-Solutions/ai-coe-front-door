@@ -4,7 +4,8 @@
  * Both bundles run in the same simulated SharePoint host with the organization name "Overture", and
  * every journey is played step by step through the DOM. What the visitor reads on each screen, what
  * gets written to localStorage, the download file names and the list items posted to SharePoint
- * must be identical once ids and timestamps are masked.
+ * must be identical once ids/timestamps and the explicit 1.0.0.17 draft-location copy correction are normalized.
+ * Local persistence parity is a synthetic-loopback exercise; production now requires server-side drafts.
  */
 import { act, fireEvent, waitFor, within } from '@testing-library/react';
 import { loadWebPartBundle, newestDistBundle, newestStringsChunk, originalBundle } from '../testing/amdHost';
@@ -73,6 +74,8 @@ function visibleText(root: HTMLElement): string {
     .replace(/ ?\n ?/g, '\n')
     .replace(/\n{2,}/g, '\n')
     .replace(INTAKE_ID, '<intake-id>')
+    // Exact documented copy change only; do not hide other screen differences.
+    .replace('Draft saved on this device.', 'Draft saved.')
     .replace(/^Created: .*$/gm, 'Created: <time>')
     .trim();
 }
@@ -113,7 +116,7 @@ function localDrafts(): { [key: string]: unknown } {
 async function runJourney(bundle: IWebPartBundle, script: IJourneyScript): Promise<ITrace> {
   const definition: IWorkflowDefinition = catalog[script.journey.workflowId];
   const downloads: IDownloadSpy = spyOnDownloads();
-  const instance: IHostedInstance = bundle.create({ properties: { organizationName: ORGANIZATION, telemetryProvider: 'openai' } });
+  const instance: IHostedInstance = bundle.create({ siteUrl: 'http://localhost/simulated-site', properties: { organizationName: ORGANIZATION, telemetryProvider: 'openai' } });
   const root: HTMLElement = instance.webPart.domElement;
   const screens: string[] = [];
   let draft: { [key: string]: unknown } = {};
@@ -145,7 +148,7 @@ async function runJourney(bundle: IWebPartBundle, script: IJourneyScript): Promi
         answers[step.id] = answer.value;
         if (index === 0) {
           fireEvent.click(within(root).getByRole('button', { name: 'Save draft' }));
-          await waitFor((): void => expect(within(root).getByText('Draft saved on this device.')).toBeInTheDocument());
+          await waitFor((): void => expect(within(root).getByText(bundle === original ? 'Draft saved on this device.' : 'Draft saved.')).toBeInTheDocument());
           draft = localDrafts();
         }
       }

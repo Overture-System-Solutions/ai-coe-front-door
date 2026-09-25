@@ -631,7 +631,9 @@ document.addEventListener('click', (event: MouseEvent): void => {
 const PREVIEW_ROLE_GROUPS: { role: string; title: string }[] = [
   { role: 'leader', title: 'Preview Leaders' },
   { role: 'operator', title: 'Preview Operators' },
-  { role: 'designAuthority', title: 'Preview Design Authority' }
+  { role: 'designAuthority', title: 'Preview Design Authority' },
+  { role: 'marketingParticipant', title: 'Preview Marketing Participants' },
+  { role: 'marketingReviewer', title: 'Preview Marketing Reviewers' }
 ];
 
 /** The simulated role named in the address (`?role=leader`); blank for the site owner this preview signs in as. */
@@ -652,10 +654,10 @@ function previewGroupTitles(): string[] {
   return titles;
 }
 
-/** The simulated answer to the web part's one `manageWeb` check: the site owner, and the operator role, unless another role is named. */
+/** The simulated answer to the web part's one `manageWeb` check: only the site owner. An operator without that permission is not an owner. */
 function previewIsAdmin(): boolean {
   const role: string = previewRole();
-  return role === '' || role === 'operator';
+  return role === '' || role === 'owner';
 }
 
 /** The simulated site groups behind `_api/web/currentuser/groups`. */

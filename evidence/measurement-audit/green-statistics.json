@@ -1,0 +1,85 @@
+{
+  "numFailedTestSuites": 0,
+  "numFailedTests": 0,
+  "numPassedTestSuites": 1,
+  "numPassedTests": 1,
+  "numPendingTestSuites": 0,
+  "numPendingTests": 0,
+  "numRuntimeErrorTestSuites": 0,
+  "numTodoTests": 0,
+  "numTotalTestSuites": 1,
+  "numTotalTests": 1,
+  "openHandles": [],
+  "snapshot": {
+    "added": 0,
+    "didUpdate": false,
+    "failure": false,
+    "filesAdded": 0,
+    "filesRemoved": 0,
+    "filesRemovedList": [],
+    "filesUnmatched": 0,
+    "filesUpdated": 0,
+    "matched": 0,
+    "total": 0,
+    "unchecked": 0,
+    "uncheckedKeysByFile": [],
+    "unmatched": 0,
+    "updated": 0
+  },
+  "startTime": 1790171974431,
+  "success": true,
+  "testResults": [
+    {
+      "leaks": false,
+      "numFailingTests": 0,
+      "numPassingTests": 1,
+      "numPendingTests": 0,
+      "numTodoTests": 0,
+      "openHandles": [],
+      "perfStats": {
+        "end": 1790171975684,
+        "loadTestEnvironmentEnd": 1790171975194,
+        "loadTestEnvironmentStart": 1790171974580,
+        "runtime": 488,
+        "setupAfterEnvEnd": 1790171975537,
+        "setupAfterEnvStart": 1790171975350,
+        "setupFilesEnd": 1790171975208,
+        "setupFilesStart": 1790171975196,
+        "slow": false,
+        "start": 1790171975196
+      },
+      "skipped": false,
+      "snapshot": {
+        "added": 0,
+        "fileDeleted": false,
+        "matched": 0,
+        "unchecked": 0,
+        "uncheckedKeys": [],
+        "unmatched": 0,
+        "updated": 0
+      },
+      "testFilePath": "C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-audit-fixes\\src\\webparts\\aiCoeFrontDoor\\services\\workflowOutcomeAggregation.test.ts",
+      "testResults": [
+        {
+          "ancestorTitles": [
+            "content-free offline outcome aggregation"
+          ],
+          "duration": 5,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "content-free offline outcome aggregation computes only qualified observed task statistics and keeps unsupported scorecard claims unknown",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 7,
+          "retryReasons": [],
+          "startAt": 1790171975675,
+          "status": "passed",
+          "title": "computes only qualified observed task statistics and keeps unsupported scorecard claims unknown"
+        }
+      ],
+      "failureMessage": null
+    }
+  ],
+  "wasInterrupted": false
+}

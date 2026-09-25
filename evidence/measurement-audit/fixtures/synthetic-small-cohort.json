@@ -1,0 +1,30 @@
+{
+  "schemaVersion": "workflow-outcomes-qualification.v1",
+  "mode": "synthetic",
+  "scope": {
+    "tenant": "synthetic-tenant",
+    "site": "synthetic-site",
+    "list": "synthetic-outcome-list",
+    "cohort": "synthetic-cohort"
+  },
+  "period": {
+    "start": "2026-09-01",
+    "end": "2026-09-20"
+  },
+  "sourceReceipt": {
+    "reference": "SYNTHETIC-fixture-receipt",
+    "sha256": "c18c70eb377c69cde5570117e7c31be17858741ded3e1ef64fcfabb9bb2c52b4",
+    "complete": true
+  },
+  "method": {
+    "id": "content-free-outcomes-v1",
+    "approvalRef": "SYNTHETIC-NOT-A-BUSINESS-APPROVAL"
+  },
+  "privacy": {
+    "approvalRef": "SYNTHETIC-NOT-A-PRIVACY-APPROVAL",
+    "cohortSize": 4,
+    "minimumCohort": 5,
+    "minimumCellCohort": 4
+  },
+  "freshnessDays": 30
+}

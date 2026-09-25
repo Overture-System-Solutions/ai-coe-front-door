@@ -133,7 +133,7 @@ describe('offline preview server', () => {
     const page: IResponse = await get(`${base}/`);
     const roleSelect: RegExpExecArray | null = /<select id="simulate-role">([\s\S]*?)<\/select>/.exec(page.body);
     expect(roleSelect).not.toBeNull();
-    for (const role of ['owner', 'employee', 'leader', 'operator', 'designAuthority']) {
+    for (const role of ['owner', 'employee', 'leader', 'operator', 'designAuthority', 'marketingParticipant', 'marketingReviewer']) {
       expect((roleSelect as RegExpExecArray)[1]).toContain(`option value="${role}"`);
     }
     expect(page.body).toContain('Preview role simulation; production resolves the role from identity.');

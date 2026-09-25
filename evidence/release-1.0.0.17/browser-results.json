@@ -1,0 +1,158 @@
+{
+  "boundary": "OFFLINE_SIMULATED_SHAREPOINT_HOST_ACTUAL_BUILT_AMD",
+  "roles": [
+    {
+      "role": "employee",
+      "tabs": [
+        "Home",
+        "Cases",
+        "Engineering",
+        "Improvement"
+      ],
+      "visited": [
+        "Home",
+        "Cases",
+        "Engineering",
+        "Improvement"
+      ],
+      "mobileNoAppOverflow": true,
+      "nativeRequests": 0
+    },
+    {
+      "role": "leader",
+      "tabs": [
+        "Home",
+        "Cases",
+        "Engineering",
+        "Improvement",
+        "Enterprise value"
+      ],
+      "visited": [
+        "Home",
+        "Cases",
+        "Engineering",
+        "Improvement",
+        "Enterprise value"
+      ],
+      "mobileNoAppOverflow": true,
+      "nativeRequests": 0
+    },
+    {
+      "role": "operator",
+      "tabs": [
+        "Home",
+        "Cases",
+        "Engineering",
+        "Marketing",
+        "Improvement",
+        "Enterprise value",
+        "System map"
+      ],
+      "visited": [
+        "Home",
+        "Cases",
+        "Engineering",
+        "Marketing",
+        "Improvement",
+        "Enterprise value",
+        "System map"
+      ],
+      "mobileNoAppOverflow": true,
+      "nativeRequests": 0
+    },
+    {
+      "role": "owner",
+      "tabs": [
+        "Home",
+        "Cases",
+        "Engineering",
+        "Marketing",
+        "Improvement",
+        "Enterprise value",
+        "System map",
+        "Admin"
+      ],
+      "visited": [
+        "Home",
+        "Cases",
+        "Engineering",
+        "Marketing",
+        "Improvement",
+        "Enterprise value",
+        "System map",
+        "Admin"
+      ],
+      "mobileNoAppOverflow": true,
+      "nativeRequests": 0
+    },
+    {
+      "role": "designAuthority",
+      "tabs": [
+        "Home",
+        "Cases",
+        "Engineering",
+        "Marketing",
+        "Improvement"
+      ],
+      "visited": [
+        "Home",
+        "Cases",
+        "Engineering",
+        "Marketing",
+        "Improvement"
+      ],
+      "mobileNoAppOverflow": true,
+      "nativeRequests": 0
+    },
+    {
+      "role": "marketingParticipant",
+      "tabs": [
+        "Home",
+        "Cases",
+        "Engineering",
+        "Marketing",
+        "Improvement"
+      ],
+      "visited": [
+        "Home",
+        "Cases",
+        "Engineering",
+        "Marketing",
+        "Improvement"
+      ],
+      "mobileNoAppOverflow": true,
+      "nativeRequests": 0
+    },
+    {
+      "role": "marketingReviewer",
+      "tabs": [
+        "Home",
+        "Cases",
+        "Engineering",
+        "Marketing",
+        "Improvement"
+      ],
+      "visited": [
+        "Home",
+        "Cases",
+        "Engineering",
+        "Marketing",
+        "Improvement"
+      ],
+      "mobileNoAppOverflow": true,
+      "nativeRequests": 0
+    }
+  ],
+  "journeys": [
+    "Synthetic CORE create, edited clarification and fresh status preserve the correction",
+    "Synthetic Marketing brief saves/readbacks and survives tab changes"
+  ],
+  "externalRequests": [],
+  "pageErrors": [],
+  "webLocksAvailable": true,
+  "capturedAt": "2026-09-23T18:05:43.660733+00:00",
+  "pass": true,
+  "bundleCandidates": {
+    "dist/ai-coe-front-door-web-part_0edf93c63752fbdd3365.js": "00b720d342cd6cf980ac93dffd132293511d06f261fd2cada9755abd3b540076"
+  }
+}

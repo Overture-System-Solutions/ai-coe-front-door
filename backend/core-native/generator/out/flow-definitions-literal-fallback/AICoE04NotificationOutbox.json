@@ -1,0 +1,1146 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_sharepointonline": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "aicoe_sharepointonline"
+        },
+        "api": {
+          "name": "shared_sharepointonline"
+        }
+      },
+      "core_integrity": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "aicoe_coreintegrity"
+        },
+        "api": {
+          "name": "UNBOUND_CORE_INTEGRITY",
+          "logicalName": "aicoe_coreintegrity"
+        }
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        }
+      },
+      "triggers": {
+        "Trigger": {
+          "type": "Recurrence",
+          "recurrence": {
+            "frequency": "Minute",
+            "interval": 15,
+            "timeZone": "Eastern Standard Time"
+          },
+          "runtimeConfiguration": {
+            "concurrency": {
+              "runs": 1
+            }
+          }
+        }
+      },
+      "actions": {
+        "Init_Rows": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Rows",
+                "type": "array",
+                "value": []
+              }
+            ]
+          },
+          "runAfter": {}
+        },
+        "Init_Next": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Next",
+                "type": "string",
+                "value": ""
+              }
+            ]
+          },
+          "runAfter": {
+            "Init_Rows": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Init_Data": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Data",
+                "type": "object",
+                "value": {}
+              }
+            ]
+          },
+          "runAfter": {
+            "Init_Next": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Init_Prepared": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Prepared",
+                "type": "object",
+                "value": {}
+              }
+            ]
+          },
+          "runAfter": {
+            "Init_Data": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Init_Readbacks": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Readbacks",
+                "type": "array",
+                "value": []
+              }
+            ]
+          },
+          "runAfter": {
+            "Init_Prepared": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Definitions_ResetRows": {
+          "type": "SetVariable",
+          "inputs": {
+            "name": "Rows",
+            "value": []
+          },
+          "runtimeConfiguration": {
+            "secureData": {
+              "properties": [
+                "inputs",
+                "outputs"
+              ]
+            }
+          },
+          "runAfter": {
+            "Init_Readbacks": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Definitions_SetNext": {
+          "type": "SetVariable",
+          "inputs": {
+            "name": "Next",
+            "value": "_api/web/lists/getbytitle('AI CoE Definitions')/items?$top=200&$orderby=Id"
+          },
+          "runtimeConfiguration": {
+            "secureData": {
+              "properties": [
+                "inputs",
+                "outputs"
+              ]
+            }
+          },
+          "runAfter": {
+            "Definitions_ResetRows": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Definitions_Until": {
+          "type": "Until",
+          "expression": "@equals(variables('Next'), '')",
+          "limit": {
+            "count": 5000,
+            "timeout": "PT1H"
+          },
+          "actions": {
+            "Definitions_GetPage": {
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_sharepointonline",
+                  "operationId": "HttpRequest",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+                },
+                "parameters": {
+                  "dataset": "https://parkplace.sharepoint.com/sites/AICoE-PrivatePilot",
+                  "parameters/method": "GET",
+                  "parameters/uri": "@variables('Next')",
+                  "parameters/headers": {
+                    "Accept": "application/json;odata=nometadata",
+                    "Content-Type": "application/json;odata=nometadata"
+                  }
+                },
+                "authentication": "@parameters('$authentication')",
+                "retryPolicy": {
+                  "type": "none"
+                }
+              },
+              "runtimeConfiguration": {
+                "secureData": {
+                  "properties": [
+                    "inputs",
+                    "outputs"
+                  ]
+                }
+              },
+              "runAfter": {}
+            },
+            "Definitions_Page_Input": {
+              "type": "Compose",
+              "inputs": {
+                "Page": "@body('Definitions_GetPage')",
+                "SiteUrl": "https://parkplace.sharepoint.com/sites/AICoE-PrivatePilot"
+              },
+              "runtimeConfiguration": {
+                "secureData": {
+                  "properties": [
+                    "inputs",
+                    "outputs"
+                  ]
+                }
+              },
+              "runAfter": {
+                "Definitions_GetPage": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Definitions_Page": {
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "core_integrity",
+                  "operationId": "Evaluate",
+                  "apiId": ""
+                },
+                "parameters": {
+                  "body/Mode": "Page",
+                  "body/Payload": "@string(outputs('Definitions_Page_Input'))"
+                },
+                "authentication": "@parameters('$authentication')",
+                "retryPolicy": {
+                  "type": "none"
+                }
+              },
+              "runtimeConfiguration": {
+                "secureData": {
+                  "properties": [
+                    "inputs",
+                    "outputs"
+                  ]
+                }
+              },
+              "runAfter": {
+                "Definitions_Page_Input": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Definitions_Page_Assert": {
+              "type": "Compose",
+              "inputs": "@if(equals(body('Definitions_Page')?['Valid'], true), true, int('CORE_Definitions_Page_FAILED_CLOSED'))",
+              "runtimeConfiguration": {
+                "secureData": {
+                  "properties": [
+                    "inputs",
+                    "outputs"
+                  ]
+                }
+              },
+              "runAfter": {
+                "Definitions_Page": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Definitions_AppendRows": {
+              "type": "Compose",
+              "inputs": "@union(variables('Rows'), body('Definitions_Page')?['Rows'])",
+              "runtimeConfiguration": {
+                "secureData": {
+                  "properties": [
+                    "inputs",
+                    "outputs"
+                  ]
+                }
+              },
+              "runAfter": {
+                "Definitions_Page_Assert": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Definitions_SetRows": {
+              "type": "SetVariable",
+              "inputs": {
+                "name": "Rows",
+                "value": "@outputs('Definitions_AppendRows')"
+              },
+              "runtimeConfiguration": {
+                "secureData": {
+                  "properties": [
+                    "inputs",
+                    "outputs"
+                  ]
+                }
+              },
+              "runAfter": {
+                "Definitions_AppendRows": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Definitions_Advance": {
+              "type": "SetVariable",
+              "inputs": {
+                "name": "Next",
+                "value": "@body('Definitions_Page')?['Next']"
+              },
+              "runtimeConfiguration": {
+                "secureData": {
+                  "properties": [
+                    "inputs",
+                    "outputs"
+                  ]
+                }
+              },
+              "runAfter": {
+                "Definitions_SetRows": [
+                  "Succeeded"
+                ]
+              }
+            }
+          },
+          "runtimeConfiguration": {
+            "secureData": {
+              "properties": [
+                "inputs",
+                "outputs"
+              ]
+            }
+          },
+          "runAfter": {
+            "Definitions_SetNext": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Parse_Config_Input": {
+          "type": "Compose",
+          "inputs": {
+            "Rows": "@variables('Rows')",
+            "SiteUrl": "https://parkplace.sharepoint.com/sites/AICoE-PrivatePilot"
+          },
+          "runtimeConfiguration": {
+            "secureData": {
+              "properties": [
+                "inputs",
+                "outputs"
+              ]
+            }
+          },
+          "runAfter": {
+            "Definitions_Until": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Parse_Config": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "core_integrity",
+              "operationId": "Evaluate",
+              "apiId": ""
+            },
+            "parameters": {
+              "body/Mode": "Config",
+              "body/Payload": "@string(outputs('Parse_Config_Input'))"
+            },
+            "authentication": "@parameters('$authentication')",
+            "retryPolicy": {
+              "type": "none"
+            }
+          },
+          "runtimeConfiguration": {
+            "secureData": {
+              "properties": [
+                "inputs",
+                "outputs"
+              ]
+            }
+          },
+          "runAfter": {
+            "Parse_Config_Input": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Parse_Config_Assert": {
+          "type": "Compose",
+          "inputs": "@if(equals(body('Parse_Config')?['Valid'], true), true, int('CORE_Parse_Config_FAILED_CLOSED'))",
+          "runtimeConfiguration": {
+            "secureData": {
+              "properties": [
+                "inputs",
+                "outputs"
+              ]
+            }
+          },
+          "runAfter": {
+            "Parse_Config": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Cfg": {
+          "type": "Compose",
+          "inputs": "@body('Parse_Config')?['Config']",
+          "runtimeConfiguration": {
+            "secureData": {
+              "properties": [
+                "inputs",
+                "outputs"
+              ]
+            }
+          },
+          "runAfter": {
+            "Parse_Config_Assert": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Configuration_Qualified": {
+          "type": "Compose",
+          "inputs": "@if(and(equals(outputs('Cfg')?['NativeQualified'], true), equals(outputs('Cfg')?['SecurityQualified'], true), equals(outputs('Cfg')?['SendEnabled'], false)), true, int('CORE_UNQUALIFIED'))",
+          "runtimeConfiguration": {
+            "secureData": {
+              "properties": [
+                "inputs",
+                "outputs"
+              ]
+            }
+          },
+          "runAfter": {
+            "Cfg": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Tables": {
+          "type": "Compose",
+          "inputs": [
+            "Requests",
+            "Results",
+            "Journal",
+            "Cases",
+            "Evidence",
+            "Decisions",
+            "Outbox",
+            "Receipts",
+            "Events",
+            "Authority",
+            "SystemRequests"
+          ],
+          "runAfter": {
+            "Configuration_Qualified": [
+              "Succeeded"
+            ]
+          }
+        },
+        "For_each_table": {
+          "type": "Foreach",
+          "foreach": "@outputs('Tables')",
+          "actions": {
+            "Snapshot_ResetRows": {
+              "type": "SetVariable",
+              "inputs": {
+                "name": "Rows",
+                "value": []
+              },
+              "runtimeConfiguration": {
+                "secureData": {
+                  "properties": [
+                    "inputs",
+                    "outputs"
+                  ]
+                }
+              },
+              "runAfter": {}
+            },
+            "Snapshot_SetNext": {
+              "type": "SetVariable",
+              "inputs": {
+                "name": "Next",
+                "value": "@concat('_api/web/lists(guid''', outputs('Cfg')?[concat('ListId_', items('For_each_table'))], ''')/items?$top=200&$orderby=Id', if(or(equals(items('For_each_table'), 'Requests'), equals(items('For_each_table'), 'SystemRequests')), '&$select=*,Author/Id,Author/EMail&$expand=Author', ''))"
+              },
+              "runtimeConfiguration": {
+                "secureData": {
+                  "properties": [
+                    "inputs",
+                    "outputs"
+                  ]
+                }
+              },
+              "runAfter": {
+                "Snapshot_ResetRows": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Snapshot_Until": {
+              "type": "Until",
+              "expression": "@equals(variables('Next'), '')",
+              "limit": {
+                "count": 5000,
+                "timeout": "PT1H"
+              },
+              "actions": {
+                "Snapshot_GetPage": {
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "host": {
+                      "connectionName": "shared_sharepointonline",
+                      "operationId": "HttpRequest",
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+                    },
+                    "parameters": {
+                      "dataset": "https://parkplace.sharepoint.com/sites/AICoE-PrivatePilot",
+                      "parameters/method": "GET",
+                      "parameters/uri": "@variables('Next')",
+                      "parameters/headers": {
+                        "Accept": "application/json;odata=nometadata",
+                        "Content-Type": "application/json;odata=nometadata"
+                      }
+                    },
+                    "authentication": "@parameters('$authentication')",
+                    "retryPolicy": {
+                      "type": "none"
+                    }
+                  },
+                  "runtimeConfiguration": {
+                    "secureData": {
+                      "properties": [
+                        "inputs",
+                        "outputs"
+                      ]
+                    }
+                  },
+                  "runAfter": {}
+                },
+                "Snapshot_Page_Input": {
+                  "type": "Compose",
+                  "inputs": {
+                    "Page": "@body('Snapshot_GetPage')",
+                    "SiteUrl": "https://parkplace.sharepoint.com/sites/AICoE-PrivatePilot"
+                  },
+                  "runtimeConfiguration": {
+                    "secureData": {
+                      "properties": [
+                        "inputs",
+                        "outputs"
+                      ]
+                    }
+                  },
+                  "runAfter": {
+                    "Snapshot_GetPage": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "Snapshot_Page": {
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "host": {
+                      "connectionName": "core_integrity",
+                      "operationId": "Evaluate",
+                      "apiId": ""
+                    },
+                    "parameters": {
+                      "body/Mode": "Page",
+                      "body/Payload": "@string(outputs('Snapshot_Page_Input'))"
+                    },
+                    "authentication": "@parameters('$authentication')",
+                    "retryPolicy": {
+                      "type": "none"
+                    }
+                  },
+                  "runtimeConfiguration": {
+                    "secureData": {
+                      "properties": [
+                        "inputs",
+                        "outputs"
+                      ]
+                    }
+                  },
+                  "runAfter": {
+                    "Snapshot_Page_Input": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "Snapshot_Page_Assert": {
+                  "type": "Compose",
+                  "inputs": "@if(equals(body('Snapshot_Page')?['Valid'], true), true, int('CORE_Snapshot_Page_FAILED_CLOSED'))",
+                  "runtimeConfiguration": {
+                    "secureData": {
+                      "properties": [
+                        "inputs",
+                        "outputs"
+                      ]
+                    }
+                  },
+                  "runAfter": {
+                    "Snapshot_Page": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "Snapshot_AppendRows": {
+                  "type": "Compose",
+                  "inputs": "@union(variables('Rows'), body('Snapshot_Page')?['Rows'])",
+                  "runtimeConfiguration": {
+                    "secureData": {
+                      "properties": [
+                        "inputs",
+                        "outputs"
+                      ]
+                    }
+                  },
+                  "runAfter": {
+                    "Snapshot_Page_Assert": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "Snapshot_SetRows": {
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "Rows",
+                    "value": "@outputs('Snapshot_AppendRows')"
+                  },
+                  "runtimeConfiguration": {
+                    "secureData": {
+                      "properties": [
+                        "inputs",
+                        "outputs"
+                      ]
+                    }
+                  },
+                  "runAfter": {
+                    "Snapshot_AppendRows": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "Snapshot_Advance": {
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "Next",
+                    "value": "@body('Snapshot_Page')?['Next']"
+                  },
+                  "runtimeConfiguration": {
+                    "secureData": {
+                      "properties": [
+                        "inputs",
+                        "outputs"
+                      ]
+                    }
+                  },
+                  "runAfter": {
+                    "Snapshot_SetRows": [
+                      "Succeeded"
+                    ]
+                  }
+                }
+              },
+              "runtimeConfiguration": {
+                "secureData": {
+                  "properties": [
+                    "inputs",
+                    "outputs"
+                  ]
+                }
+              },
+              "runAfter": {
+                "Snapshot_SetNext": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Next_Data": {
+              "type": "Compose",
+              "inputs": "@setProperty(variables('Data'), items('For_each_table'), variables('Rows'))",
+              "runtimeConfiguration": {
+                "secureData": {
+                  "properties": [
+                    "inputs",
+                    "outputs"
+                  ]
+                }
+              },
+              "runAfter": {
+                "Snapshot_Until": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Store_Data": {
+              "type": "SetVariable",
+              "inputs": {
+                "name": "Data",
+                "value": "@outputs('Next_Data')"
+              },
+              "runtimeConfiguration": {
+                "secureData": {
+                  "properties": [
+                    "inputs",
+                    "outputs"
+                  ]
+                }
+              },
+              "runAfter": {
+                "Next_Data": [
+                  "Succeeded"
+                ]
+              }
+            }
+          },
+          "runtimeConfiguration": {
+            "concurrency": {
+              "repetitions": 1
+            }
+          },
+          "runAfter": {
+            "Tables": [
+              "Succeeded"
+            ]
+          }
+        },
+        "RunStart": {
+          "type": "Compose",
+          "inputs": "@utcNow()",
+          "runAfter": {
+            "For_each_table": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Maintenance_Requests_Input": {
+          "type": "Compose",
+          "inputs": {
+            "Data": "@variables('Data')",
+            "Config": "@outputs('Cfg')",
+            "Now": "@outputs('RunStart')",
+            "Mode": "Suppress"
+          },
+          "runtimeConfiguration": {
+            "secureData": {
+              "properties": [
+                "inputs",
+                "outputs"
+              ]
+            }
+          },
+          "runAfter": {
+            "RunStart": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Maintenance_Requests": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "core_integrity",
+              "operationId": "Evaluate",
+              "apiId": ""
+            },
+            "parameters": {
+              "body/Mode": "Schedule",
+              "body/Payload": "@string(outputs('Maintenance_Requests_Input'))"
+            },
+            "authentication": "@parameters('$authentication')",
+            "retryPolicy": {
+              "type": "none"
+            }
+          },
+          "runtimeConfiguration": {
+            "secureData": {
+              "properties": [
+                "inputs",
+                "outputs"
+              ]
+            }
+          },
+          "runAfter": {
+            "Maintenance_Requests_Input": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Maintenance_Requests_Assert": {
+          "type": "Compose",
+          "inputs": "@if(equals(body('Maintenance_Requests')?['Valid'], true), true, int('CORE_Maintenance_Requests_FAILED_CLOSED'))",
+          "runtimeConfiguration": {
+            "secureData": {
+              "properties": [
+                "inputs",
+                "outputs"
+              ]
+            }
+          },
+          "runAfter": {
+            "Maintenance_Requests": [
+              "Succeeded"
+            ]
+          }
+        },
+        "For_each_maintenance": {
+          "type": "Foreach",
+          "foreach": "@body('Maintenance_Requests')?['Writes']",
+          "actions": {
+            "Find_Maintenance": {
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_sharepointonline",
+                  "operationId": "HttpRequest",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+                },
+                "parameters": {
+                  "dataset": "https://parkplace.sharepoint.com/sites/AICoE-PrivatePilot",
+                  "parameters/method": "GET",
+                  "parameters/uri": "@concat('_api/web/lists(guid''', outputs('Cfg')?[concat('ListId_', items('For_each_maintenance')?['List'])], ''')/items?$filter=Title eq ''', replace(items('For_each_maintenance')?['Key'], '''', ''''''), '''&$top=2')",
+                  "parameters/headers": {
+                    "Accept": "application/json;odata=nometadata",
+                    "Content-Type": "application/json;odata=nometadata"
+                  }
+                },
+                "authentication": "@parameters('$authentication')",
+                "retryPolicy": {
+                  "type": "none"
+                }
+              },
+              "runtimeConfiguration": {
+                "secureData": {
+                  "properties": [
+                    "inputs",
+                    "outputs"
+                  ]
+                }
+              },
+              "runAfter": {}
+            },
+            "Inspect_Maintenance_Input": {
+              "type": "Compose",
+              "inputs": {
+                "Write": "@items('For_each_maintenance')",
+                "Rows": "@body('Find_Maintenance')?['value']"
+              },
+              "runtimeConfiguration": {
+                "secureData": {
+                  "properties": [
+                    "inputs",
+                    "outputs"
+                  ]
+                }
+              },
+              "runAfter": {
+                "Find_Maintenance": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Inspect_Maintenance": {
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "core_integrity",
+                  "operationId": "Evaluate",
+                  "apiId": ""
+                },
+                "parameters": {
+                  "body/Mode": "InspectWrite",
+                  "body/Payload": "@string(outputs('Inspect_Maintenance_Input'))"
+                },
+                "authentication": "@parameters('$authentication')",
+                "retryPolicy": {
+                  "type": "none"
+                }
+              },
+              "runtimeConfiguration": {
+                "secureData": {
+                  "properties": [
+                    "inputs",
+                    "outputs"
+                  ]
+                }
+              },
+              "runAfter": {
+                "Inspect_Maintenance_Input": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Inspect_Maintenance_Assert": {
+              "type": "Compose",
+              "inputs": "@if(equals(body('Inspect_Maintenance')?['Valid'], true), true, int('CORE_Inspect_Maintenance_FAILED_CLOSED'))",
+              "runtimeConfiguration": {
+                "secureData": {
+                  "properties": [
+                    "inputs",
+                    "outputs"
+                  ]
+                }
+              },
+              "runAfter": {
+                "Inspect_Maintenance": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "If_Maintenance_NeedsWrite": {
+              "type": "If",
+              "expression": {
+                "equals": [
+                  "@body('Inspect_Maintenance')?['AlreadyApplied']",
+                  false
+                ]
+              },
+              "actions": {
+                "Create_Maintenance": {
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "host": {
+                      "connectionName": "shared_sharepointonline",
+                      "operationId": "HttpRequest",
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+                    },
+                    "parameters": {
+                      "dataset": "https://parkplace.sharepoint.com/sites/AICoE-PrivatePilot",
+                      "parameters/method": "POST",
+                      "parameters/uri": "@concat('_api/web/lists(guid''', outputs('Cfg')?[concat('ListId_', items('For_each_maintenance')?['List'])], ''')/items')",
+                      "parameters/headers": {
+                        "Accept": "application/json;odata=nometadata",
+                        "Content-Type": "application/json;odata=nometadata"
+                      },
+                      "parameters/body": "@items('For_each_maintenance')?['Fields']"
+                    },
+                    "authentication": "@parameters('$authentication')",
+                    "retryPolicy": {
+                      "type": "none"
+                    }
+                  },
+                  "runtimeConfiguration": {
+                    "secureData": {
+                      "properties": [
+                        "inputs",
+                        "outputs"
+                      ]
+                    }
+                  },
+                  "runAfter": {}
+                }
+              },
+              "runtimeConfiguration": {
+                "secureData": {
+                  "properties": [
+                    "inputs",
+                    "outputs"
+                  ]
+                }
+              },
+              "runAfter": {
+                "Inspect_Maintenance_Assert": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Readback_Maintenance": {
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_sharepointonline",
+                  "operationId": "HttpRequest",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+                },
+                "parameters": {
+                  "dataset": "https://parkplace.sharepoint.com/sites/AICoE-PrivatePilot",
+                  "parameters/method": "GET",
+                  "parameters/uri": "@concat('_api/web/lists(guid''', outputs('Cfg')?[concat('ListId_', items('For_each_maintenance')?['List'])], ''')/items?$filter=Title eq ''', replace(items('For_each_maintenance')?['Key'], '''', ''''''), '''&$top=2')",
+                  "parameters/headers": {
+                    "Accept": "application/json;odata=nometadata",
+                    "Content-Type": "application/json;odata=nometadata"
+                  }
+                },
+                "authentication": "@parameters('$authentication')",
+                "retryPolicy": {
+                  "type": "none"
+                }
+              },
+              "runtimeConfiguration": {
+                "secureData": {
+                  "properties": [
+                    "inputs",
+                    "outputs"
+                  ]
+                }
+              },
+              "runAfter": {
+                "If_Maintenance_NeedsWrite": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Verify_Maintenance_Input": {
+              "type": "Compose",
+              "inputs": {
+                "Write": "@items('For_each_maintenance')",
+                "Rows": "@body('Readback_Maintenance')?['value']"
+              },
+              "runtimeConfiguration": {
+                "secureData": {
+                  "properties": [
+                    "inputs",
+                    "outputs"
+                  ]
+                }
+              },
+              "runAfter": {
+                "Readback_Maintenance": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Verify_Maintenance": {
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "core_integrity",
+                  "operationId": "Evaluate",
+                  "apiId": ""
+                },
+                "parameters": {
+                  "body/Mode": "VerifyRecord",
+                  "body/Payload": "@string(outputs('Verify_Maintenance_Input'))"
+                },
+                "authentication": "@parameters('$authentication')",
+                "retryPolicy": {
+                  "type": "none"
+                }
+              },
+              "runtimeConfiguration": {
+                "secureData": {
+                  "properties": [
+                    "inputs",
+                    "outputs"
+                  ]
+                }
+              },
+              "runAfter": {
+                "Verify_Maintenance_Input": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Verify_Maintenance_Assert": {
+              "type": "Compose",
+              "inputs": "@if(equals(body('Verify_Maintenance')?['Valid'], true), true, int('CORE_Verify_Maintenance_FAILED_CLOSED'))",
+              "runtimeConfiguration": {
+                "secureData": {
+                  "properties": [
+                    "inputs",
+                    "outputs"
+                  ]
+                }
+              },
+              "runAfter": {
+                "Verify_Maintenance": [
+                  "Succeeded"
+                ]
+              }
+            }
+          },
+          "runtimeConfiguration": {
+            "concurrency": {
+              "repetitions": 1
+            }
+          },
+          "runAfter": {
+            "Maintenance_Requests_Assert": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Failure_ContentFree": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_sharepointonline",
+              "operationId": "HttpRequest",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+            },
+            "parameters": {
+              "dataset": "https://parkplace.sharepoint.com/sites/AICoE-PrivatePilot",
+              "parameters/method": "POST",
+              "parameters/uri": "@concat('_api/web/lists(guid''', outputs('Cfg')?['ListId_Log'], ''')/items')",
+              "parameters/headers": {
+                "Accept": "application/json;odata=nometadata",
+                "Content-Type": "application/json;odata=nometadata"
+              },
+              "parameters/body": "@string(setProperty(setProperty(setProperty(setProperty(setProperty(setProperty(json('{}'), 'Title', concat('LOG-',guid())), 'Flow', json('\"AI CoE 04 Notification Outbox\"')), 'RunId', workflow()?['run']?['name']), 'Level', json('\"Error\"')), 'Message', json('\"Native operation interrupted. Existing intent retained. Inspect private journal; never resubmit under a new mutation key.\"')), 'LoggedAt', utcNow()))"
+            },
+            "authentication": "@parameters('$authentication')",
+            "retryPolicy": {
+              "type": "none"
+            }
+          },
+          "runtimeConfiguration": {
+            "secureData": {
+              "properties": [
+                "inputs",
+                "outputs"
+              ]
+            }
+          },
+          "runAfter": {
+            "For_each_maintenance": [
+              "Failed",
+              "TimedOut"
+            ]
+          }
+        }
+      },
+      "description": "Private idempotent maintenance ingress; canonical state changes execute only in flow 01. Disabled until qualification."
+    },
+    "templateName": null
+  },
+  "schemaVersion": "1.0.0.0"
+}

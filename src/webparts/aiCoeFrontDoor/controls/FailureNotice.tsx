@@ -21,7 +21,7 @@ export const NEXT_ACTIONS: { [failureClass in FailureClass]: string } = {
   SOURCE: 'Report it to the owner named here: the AI CoE request list was not found on this site.',
   TRANSIENT: 'Try again now. If it fails again, report it to the owner named here with the time and the status shown.',
   IMPLEMENTATION: 'Report it to the owner named here with the time and the status shown; do not change your answers to work around it.',
-  INCONCLUSIVE: 'Confirm again with the same reference; nothing is duplicated.'
+  INCONCLUSIVE: 'Confirm again using the same reference. Do not submit a new request.'
 };
 
 /** When trying again makes sense, per class. */
@@ -33,7 +33,7 @@ export const RERUN_CONDITIONS: { [failureClass in FailureClass]: string } = {
   INCONCLUSIVE: 'now, with the same reference'
 };
 
-export const DRAFT_KEPT_TEXT: string = 'Your answers are kept as a draft on this device.';
+export const DRAFT_KEPT_TEXT: string = 'Your answers remain on this screen. Save the draft before leaving.';
 export const TRY_AGAIN_LABEL: string = 'Try again';
 export const NEXT_ACTION_KEY: string = 'What to do';
 export const OWNER_KEY: string = 'Who owns it';

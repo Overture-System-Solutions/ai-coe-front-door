@@ -1,0 +1,115 @@
+{
+  "solution": "AICoEMarketingAutomation",
+  "version": "1.0.0.0",
+  "publisherPrefix": "aicoe",
+  "workflowId": "1d53f3a8-7e14-5a4a-b224-a7b0bf9eaa99",
+  "plannedHelperComponentId": "99a944b8-fb6d-5cce-90a2-00dcb701a414",
+  "helperIdIsNotRegisteredRuntimeApiName": true,
+  "flowCount": 1,
+  "flowState": "OFF",
+  "definitionSha256": "5bacd59e02a472f200cb2152519f6e89b7ab7534f219a392bf5c1d6e24fdc116",
+  "actionCount": 434,
+  "actionTypes": {
+    "Compose": 136,
+    "InitializeVariable": 7,
+    "OpenApiConnection": 168,
+    "SetVariable": 46,
+    "Until": 10,
+    "AppendToArrayVariable": 23,
+    "Foreach": 15,
+    "Query": 3,
+    "Select": 1,
+    "If": 25
+  },
+  "helperModes": [
+    "InspectWrite",
+    "Page",
+    "Plan",
+    "Preflight",
+    "Projection",
+    "VerifyProjection",
+    "VerifyWrite"
+  ],
+  "connectorOperations": [
+    "Evaluate",
+    "GenerateIntakeDraft",
+    "HttpRequest"
+  ],
+  "packages": {
+    "AICoEMarketingAutomation_1_0_0_0_UNBOUND_REVIEW_ONLY.zip": {
+      "sha256": "629dde403c49cadfece35af92197ac559a1d2989f5139bd26a7f35729a4bfd74",
+      "bytes": 23315,
+      "role": "OFF_UNBOUND_FLOW_SOLUTION"
+    },
+    "AICoEMarketingIntegrity_1_0_0_0_REGISTRATION_CANDIDATE.zip": {
+      "sha256": "7a162f6d235574c3eeb8eb47873d1a9736055769f1ed662184913e4d7d6ceff2",
+      "bytes": 57207,
+      "role": "REGISTRATION_FILES_NOT_REGISTERED"
+    }
+  },
+  "helperPackagingMissingFiles": [],
+  "sourcePins": [
+    {
+      "original": "/mnt/c/Users/scfre/JuliannaAI/OSS-AI-CoE/development/overture-ai-coe-front-door-audit-fixes/backend/core-native/generator/wdl.py",
+      "copy": "generator/wdl.py",
+      "sha256": "e4a1bd55c5402dee025170551113010ae481580dd9372036b047bd9ba9e9df92"
+    },
+    {
+      "original": "/mnt/c/Users/scfre/JuliannaAI/OSS-AI-CoE/development/overture-ai-coe-front-door-audit-fixes/backend/core-native/generator/package.py",
+      "copy": "generator/packing_donor.py",
+      "sha256": "bb39ae86413b684eba5f05b90b1c9876b20e5b5a28d74285e74e82bb8ac0a430"
+    },
+    {
+      "original": "/mnt/c/Users/scfre/JuliannaAI/OSS-AI-CoE/development/overture-ai-coe-front-door-audit-fixes/backend/core-native/tests/wdl_harness.py",
+      "copy": "generator/wdl_parser_donor.py",
+      "sha256": "86e0519b40944efdadd0b42640bb7086697101956f6b305f242e480efffcf3c9"
+    },
+    {
+      "original": "/mnt/c/Users/scfre/JuliannaAI/OSS-AI-CoE/development/overture-ai-coe-front-door-audit-fixes/backend/power-automate/marketing-runtime/connector-binding.json",
+      "sha256": "32ce6e86bd38fffcf75fc3877817e273ac1da061cb6960a306f1a9cfcd812312"
+    }
+  ],
+  "sourceHashes": {
+    "generator/build.py": "5e8340bd0c14618ef9299f7295d0de617d7336a03be2995b62d972a88490eb89",
+    "generator/marketing_actions.py": "587c45260e7e119742878638b30b25cc4f7708573fe440021a3507d5182400c6",
+    "generator/marketing_flow.py": "2019c9710186a2dd3914d749e4fa1ba8aaec4d828cb785b254d2f3e4664a4ad3",
+    "generator/marketing_package.py": "5a2a7e599e64a875fbbd3e49549234b4472809d57bd286a64dcf23d5934c57f1",
+    "generator/marketing_pipeline.py": "aff73843ddcec0ea5834b0e7b858b09224d54a07a94fe2f0566d26ecabda1fa5",
+    "generator/marketing_validate.py": "d953322d78046a41c744f7301259cd9d7508889f9f3e199b838a3910e9406cce",
+    "generator/packing_donor.py": "bb39ae86413b684eba5f05b90b1c9876b20e5b5a28d74285e74e82bb8ac0a430",
+    "generator/roundtrip.py": "63334e1ddf7db1f9de40e27f190f7fa1a51d3a7856b26abd1b43b76798f7a19b",
+    "generator/wdl.py": "e4a1bd55c5402dee025170551113010ae481580dd9372036b047bd9ba9e9df92",
+    "generator/wdl_parser_donor.py": "86e0519b40944efdadd0b42640bb7086697101956f6b305f242e480efffcf3c9",
+    "tests/flow/test_finalization.py": "7b7c1024c9b82a279396f30332e0a793b79f0bd4cc615c4306ca6c058d2c999d",
+    "tests/flow/test_flow.py": "a3ea7984b4d142e21d2388ac3544e4bf7a684f7b76620f463d5aeb1c78b056f9",
+    "tests/flow/test_interoperability.py": "b5ff75c46a2a430dbba9fb2f7c04054af73e83e95556cac4f36ed5bf57e09841",
+    "tests/flow/test_packaging.py": "578735b6860a2d779e383566bc42cd7181e17509d5ba341d5aad17c93ccabde9",
+    "tests/flow/test_wdl_safety.py": "64b1aa0eb326e4f48214910f1cf491fb5574f641d8266cd661d6c0c0f3a02517"
+  },
+  "validationErrors": [],
+  "boundary": {
+    "scope": "OFFLINE_REVIEW_ONLY",
+    "enabled": false,
+    "controllerQualified": false,
+    "securityQualified": false,
+    "helperRuntimeApiName": "UNBOUND_MARKETING_INTEGRITY",
+    "registered": false,
+    "nativeExecuted": false,
+    "status": "BLOCKED_UNBOUND_UNQUALIFIED",
+    "unperformed": [
+      "helper native registration/Save and C# hosted limits",
+      "flow native designer Save/import",
+      "approved writer/controller commissioning",
+      "two-account list/item/source permission tests",
+      "actual Claude response/size/timeout/cost qualification",
+      "native crash/replay acceptance"
+    ],
+    "prohibited": [
+      "send",
+      "external publication",
+      "model invocation by local tooling",
+      "tenant actions by local tooling"
+    ]
+  },
+  "integrationGate": "Parent must execute this exact packaged graph against the compiled helper and labeled local transports; these generator tests are not tenant evidence."
+}

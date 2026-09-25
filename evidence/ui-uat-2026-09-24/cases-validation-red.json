@@ -1,0 +1,451 @@
+{
+  "numFailedTestSuites": 1,
+  "numFailedTests": 1,
+  "numPassedTestSuites": 0,
+  "numPassedTests": 0,
+  "numPendingTestSuites": 1,
+  "numPendingTests": 19,
+  "numRuntimeErrorTestSuites": 0,
+  "numTodoTests": 0,
+  "numTotalTestSuites": 2,
+  "numTotalTests": 20,
+  "openHandles": [],
+  "snapshot": {
+    "added": 0,
+    "didUpdate": false,
+    "failure": false,
+    "filesAdded": 0,
+    "filesRemoved": 0,
+    "filesRemovedList": [],
+    "filesUnmatched": 0,
+    "filesUpdated": 0,
+    "matched": 0,
+    "total": 0,
+    "unchecked": 0,
+    "uncheckedKeysByFile": [],
+    "unmatched": 0,
+    "updated": 0
+  },
+  "startTime": 1790272226746,
+  "success": false,
+  "testResults": [
+    {
+      "leaks": false,
+      "numFailingTests": 1,
+      "numPassingTests": 0,
+      "numPendingTests": 14,
+      "numTodoTests": 0,
+      "openHandles": [],
+      "perfStats": {
+        "end": 1790272228997,
+        "loadTestEnvironmentEnd": 1790272227485,
+        "loadTestEnvironmentStart": 1790272226890,
+        "runtime": 1510,
+        "setupAfterEnvEnd": 1790272227825,
+        "setupAfterEnvStart": 1790272227648,
+        "setupFilesEnd": 1790272227499,
+        "setupFilesStart": 1790272227487,
+        "slow": false,
+        "start": 1790272227487
+      },
+      "skipped": false,
+      "snapshot": {
+        "added": 0,
+        "fileDeleted": false,
+        "matched": 0,
+        "unchecked": 0,
+        "uncheckedKeys": [],
+        "unmatched": 0,
+        "updated": 0
+      },
+      "testFilePath": "C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-audit-fixes\\src\\webparts\\aiCoeFrontDoor\\components\\app\\AppCoreWorkspace.test.tsx",
+      "testResults": [
+        {
+          "ancestorTitles": [
+            "AppCoreWorkspace case journey"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppCoreWorkspace case journey saves only edited clarification fields instead of clearing unseen S1 values",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790272228782,
+          "status": "pending",
+          "title": "saves only edited clarification fields instead of clearing unseen S1 values"
+        },
+        {
+          "ancestorTitles": [
+            "AppCoreWorkspace case journey"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppCoreWorkspace case journey renders unvalidated native work without a fabricated date or synthetic write notice",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790272228783,
+          "status": "pending",
+          "title": "renders unvalidated native work without a fabricated date or synthetic write notice"
+        },
+        {
+          "ancestorTitles": [
+            "AppCoreWorkspace case journey"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppCoreWorkspace case journey does not call human validation for an unauthorized or unresolved reviewer context {\"roles\":[\"employee\"],\"rolesState\":\"resolved\"}",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790272228783,
+          "status": "pending",
+          "title": "does not call human validation for an unauthorized or unresolved reviewer context {\"roles\":[\"employee\"],\"rolesState\":\"resolved\"}"
+        },
+        {
+          "ancestorTitles": [
+            "AppCoreWorkspace case journey"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppCoreWorkspace case journey does not call human validation for an unauthorized or unresolved reviewer context {\"roles\":[\"operator\"],\"rolesState\":\"resolved\",\"isAdmin\":true}",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790272228783,
+          "status": "pending",
+          "title": "does not call human validation for an unauthorized or unresolved reviewer context {\"roles\":[\"operator\"],\"rolesState\":\"resolved\",\"isAdmin\":true}"
+        },
+        {
+          "ancestorTitles": [
+            "AppCoreWorkspace case journey"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppCoreWorkspace case journey does not call human validation for an unauthorized or unresolved reviewer context {\"roles\":[\"marketingReviewer\"],\"rolesState\":\"resolved\"}",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790272228783,
+          "status": "pending",
+          "title": "does not call human validation for an unauthorized or unresolved reviewer context {\"roles\":[\"marketingReviewer\"],\"rolesState\":\"resolved\"}"
+        },
+        {
+          "ancestorTitles": [
+            "AppCoreWorkspace case journey"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppCoreWorkspace case journey does not call human validation for an unauthorized or unresolved reviewer context {\"roles\":[\"designAuthority\"],\"rolesState\":\"pending\"}",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790272228783,
+          "status": "pending",
+          "title": "does not call human validation for an unauthorized or unresolved reviewer context {\"roles\":[\"designAuthority\"],\"rolesState\":\"pending\"}"
+        },
+        {
+          "ancestorTitles": [
+            "AppCoreWorkspace case journey"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppCoreWorkspace case journey does not call human validation for an unauthorized or unresolved reviewer context {\"roles\":[\"designAuthority\"],\"rolesState\":\"unresolved\"}",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790272228783,
+          "status": "pending",
+          "title": "does not call human validation for an unauthorized or unresolved reviewer context {\"roles\":[\"designAuthority\"],\"rolesState\":\"unresolved\"}"
+        },
+        {
+          "ancestorTitles": [
+            "AppCoreWorkspace case journey"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppCoreWorkspace case journey explains unavailable synthetic human validation instead of inventing authority",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790272228783,
+          "status": "pending",
+          "title": "explains unavailable synthetic human validation instead of inventing authority"
+        },
+        {
+          "ancestorTitles": [
+            "AppCoreWorkspace case journey"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppCoreWorkspace case journey keeps recovery failure fail-closed and makes no follow-up call after unmount",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790272228783,
+          "status": "pending",
+          "title": "keeps recovery failure fail-closed and makes no follow-up call after unmount"
+        },
+        {
+          "ancestorTitles": [
+            "AppCoreWorkspace case journey"
+          ],
+          "duration": 188,
+          "failing": false,
+          "failureDetails": [
+            {
+              "matcherResult": {
+                "pass": false,
+                "message": "expect(element).toHaveValue()\n\nExpected the element to have value:\n\nReceived:\n  I checked the supporting receipt and confirmed this response."
+              }
+            }
+          ],
+          "failureMessages": [
+            "Error: expect(element).toHaveValue()\n\nExpected the element to have value:\n\nReceived:\n  I checked the supporting receipt and confirmed this response.\n    at Object.<anonymous> (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-audit-fixes\\src\\webparts\\aiCoeFrontDoor\\components\\app\\AppCoreWorkspace.test.tsx:134:63)"
+          ],
+          "fullName": "AppCoreWorkspace case journey offers explicit human validation only to resolved design authority and refreshes the original packet after saving",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 9,
+          "retryReasons": [],
+          "startAt": 1790272228783,
+          "status": "failed",
+          "title": "offers explicit human validation only to resolved design authority and refreshes the original packet after saving"
+        },
+        {
+          "ancestorTitles": [
+            "AppCoreWorkspace case journey"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppCoreWorkspace case journey recovers the original pending command before fresh reads and never resubmits an unknown mutation",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790272228982,
+          "status": "pending",
+          "title": "recovers the original pending command before fresh reads and never resubmits an unknown mutation"
+        },
+        {
+          "ancestorTitles": [
+            "AppCoreWorkspace case journey"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppCoreWorkspace case journey lets the person select a packet, read its questions and submit their own classified answer",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790272228982,
+          "status": "pending",
+          "title": "lets the person select a packet, read its questions and submit their own classified answer"
+        },
+        {
+          "ancestorTitles": [
+            "AppCoreWorkspace case journey"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppCoreWorkspace case journey restores only a scoped opaque selection by reading the service after remount",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790272228982,
+          "status": "pending",
+          "title": "restores only a scoped opaque selection by reading the service after remount"
+        },
+        {
+          "ancestorTitles": [
+            "AppCoreWorkspace case journey"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppCoreWorkspace case journey saves entered clarification against the selected WorkID rather than creating a second case",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790272228982,
+          "status": "pending",
+          "title": "saves entered clarification against the selected WorkID rather than creating a second case"
+        },
+        {
+          "ancestorTitles": [
+            "AppCoreWorkspace case journey"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppCoreWorkspace case journey renders public ListMyWork Items as selectable cases and reads status on selection",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790272228982,
+          "status": "pending",
+          "title": "renders public ListMyWork Items as selectable cases and reads status on selection"
+        }
+      ],
+      "failureMessage": "  ● AppCoreWorkspace case journey › offers explicit human validation only to resolved design authority and refreshes the original packet after saving\n\n    expect(element).toHaveValue()\n\n    Expected the element to have value:\n\n    Received:\n      I checked the supporting receipt and confirmed this response.\n\n    \u001b[0m \u001b[90m 132 |\u001b[39m     expect(packetReads)\u001b[33m.\u001b[39mtoHaveBeenCalledWith(session\u001b[33m,\u001b[39m workId)\u001b[33m;\u001b[39m\n     \u001b[90m 133 |\u001b[39m     expect(view\u001b[33m.\u001b[39mgetByText(\u001b[35m/server authorizes each validation/i\u001b[39m))\u001b[33m.\u001b[39mtoBeInTheDocument()\u001b[33m;\u001b[39m\n    \u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 134 |\u001b[39m     expect(view\u001b[33m.\u001b[39mgetByLabelText(\u001b[32m'Human validation assertion'\u001b[39m))\u001b[33m.\u001b[39mtoHaveValue(\u001b[32m''\u001b[39m)\u001b[33m;\u001b[39m\n     \u001b[90m     |\u001b[39m                                                               \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n     \u001b[90m 135 |\u001b[39m     expect(view\u001b[33m.\u001b[39mgetByLabelText(\u001b[32m'Supporting source references (one per line)'\u001b[39m))\u001b[33m.\u001b[39mtoHaveValue(\u001b[32m''\u001b[39m)\u001b[33m;\u001b[39m\n     \u001b[90m 136 |\u001b[39m   })\u001b[33m;\u001b[39m\n     \u001b[90m 137 |\u001b[39m\u001b[0m\n\n      at Object.<anonymous> (src/webparts/aiCoeFrontDoor/components/app/AppCoreWorkspace.test.tsx:134:63)\n"
+    },
+    {
+      "leaks": false,
+      "numFailingTests": 0,
+      "numPassingTests": 0,
+      "numPendingTests": 5,
+      "numTodoTests": 0,
+      "openHandles": [],
+      "perfStats": {
+        "end": 1790272229166,
+        "loadTestEnvironmentEnd": 1790272229007,
+        "loadTestEnvironmentStart": 1790272229000,
+        "runtime": 159,
+        "setupAfterEnvEnd": 1790272229078,
+        "setupAfterEnvStart": 1790272229038,
+        "setupFilesEnd": 1790272229008,
+        "setupFilesStart": 1790272229007,
+        "slow": false,
+        "start": 1790272229007
+      },
+      "skipped": true,
+      "snapshot": {
+        "added": 0,
+        "fileDeleted": false,
+        "matched": 0,
+        "unchecked": 0,
+        "uncheckedKeys": [],
+        "unmatched": 0,
+        "updated": 0
+      },
+      "testFilePath": "C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-audit-fixes\\src\\webparts\\aiCoeFrontDoor\\components\\app\\AppCoreWorkspace.uat.test.tsx",
+      "testResults": [
+        {
+          "ancestorTitles": [
+            "Cases UAT clarity"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "Cases UAT clarity starts with an empty, labelled case form rather than pre-entered fictional business text",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790272229165,
+          "status": "pending",
+          "title": "starts with an empty, labelled case form rather than pre-entered fictional business text"
+        },
+        {
+          "ancestorTitles": [
+            "Cases UAT clarity"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "Cases UAT clarity creates only the entered case and reports readable confirmed feedback",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790272229165,
+          "status": "pending",
+          "title": "creates only the entered case and reports readable confirmed feedback"
+        },
+        {
+          "ancestorTitles": [
+            "Cases UAT clarity"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "Cases UAT clarity can start a separate blank case without changing an existing one",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790272229165,
+          "status": "pending",
+          "title": "can start a separate blank case without changing an existing one"
+        },
+        {
+          "ancestorTitles": [
+            "Cases UAT clarity"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "Cases UAT clarity reports unsaved case edits to the shell and protects them from a fresh selection",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790272229165,
+          "status": "pending",
+          "title": "reports unsaved case edits to the shell and protects them from a fresh selection"
+        },
+        {
+          "ancestorTitles": [
+            "Cases UAT clarity"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "Cases UAT clarity names information requests plainly and keeps certainty choices explained",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790272229165,
+          "status": "pending",
+          "title": "names information requests plainly and keeps certainty choices explained"
+        }
+      ],
+      "failureMessage": null
+    }
+  ],
+  "wasInterrupted": false
+}

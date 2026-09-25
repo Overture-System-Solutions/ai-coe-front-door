@@ -137,7 +137,7 @@ describe('GenericWorkflow', () => {
       fireEvent.click(screen.getByRole('button', { name: 'Confirm' }));
       const notice: HTMLElement = await screen.findByRole('alert');
       expect(notice).toHaveTextContent('Not available right now; try again');
-      expect(notice).toHaveTextContent('Your answers are kept as a draft on this device.');
+      expect(notice).toHaveTextContent('Your answers remain on this screen. Save the draft before leaving.');
       expect(screen.queryByText(/boom/)).not.toBeInTheDocument();
       expect(screen.queryByText('The AI CoE record was not created.')).not.toBeInTheDocument();
       expect(screen.getByRole('heading', { name: 'Thanks for reaching out.' })).toBeInTheDocument();
@@ -183,7 +183,7 @@ describe('GenericWorkflow', () => {
     enterAnswer(helpTraining.steps[0], 'new');
     fireEvent.click(continueButton());
     fireEvent.click(screen.getByRole('button', { name: 'Save draft' }));
-    await screen.findByText('Draft saved on this device.');
+    await screen.findByText('Draft saved.');
     expect(JSON.parse(draftStore.drafts.helpTraining)).toEqual({ answers: { helpCategory: 'new' }, currentStepId: 'newToAiFocus', phase: 'form' });
     expect(first.onDraftsChanged).toHaveBeenCalledWith('helpTraining', true);
     first.unmount();
@@ -213,7 +213,7 @@ describe('GenericWorkflow', () => {
     enterAnswer(helpTraining.steps[0], 'new');
     fireEvent.click(continueButton());
     fireEvent.click(screen.getByRole('button', { name: 'Save draft' }));
-    await screen.findByText('Draft saved on this device.');
+    await screen.findByText('Draft saved.');
     fireEvent.click(screen.getByRole('button', { name: 'Start over' }));
     expect(screen.getByRole('alertdialog', { name: 'Start over?' })).toBeInTheDocument();
     fireEvent.click(screen.getByRole('button', { name: 'Keep my answers' }));

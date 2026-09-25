@@ -3,7 +3,7 @@
   "solution": {
     "name": "overture-ai-coe-front-door-client-side-solution",
     "id": "f125ebdf-4a9d-4e6e-8479-3a18874e7752",
-    "version": "1.0.0.15",
+    "version": "1.0.0.17",
     "includeClientSideAssets": true,
     "skipFeatureDeployment": false,
     "isDomainIsolated": false,

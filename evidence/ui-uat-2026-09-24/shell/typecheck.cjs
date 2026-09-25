@@ -1,0 +1,12 @@
+const fs = require('fs'), path = require('path');
+const root = path.resolve(__dirname, '../../..');
+const ts = require(require.resolve('typescript', { paths: [root] }));
+const inputs = ['AppShell.tsx', 'AppShell.test.tsx', 'AppSections.tsx', 'AppSections.test.tsx', 'AppShell.cases.test.tsx'].map(name => path.join(root, 'src/webparts/aiCoeFrontDoor/components/app', name));
+inputs.push(path.join(root, 'src/webparts/aiCoeFrontDoor/content/appSections.test.ts'));
+const options = { target: ts.ScriptTarget.ES2020, module: ts.ModuleKind.CommonJS, moduleResolution: ts.ModuleResolutionKind.Node10, strict: true, skipLibCheck: true, noEmit: true, esModuleInterop: true, resolveJsonModule: true, jsx: ts.JsxEmit.React, types: ['node', 'jest', '@testing-library/jest-dom'], typeRoots: [path.join(root, 'node_modules/@types'), path.join(root, 'node_modules')] };
+const program = ts.createProgram(inputs, options);
+const diagnostics = ts.getPreEmitDiagnostics(program).map(d => ({ file: d.file ? path.relative(root, d.file.fileName) : null, line: d.file && d.start !== undefined ? d.file.getLineAndCharacterOfPosition(d.start).line + 1 : null, code: d.code, message: ts.flattenDiagnosticMessageText(d.messageText, '\n') }));
+const result = { scope: 'Owned shell/sections/routes source/tests and imported graph; strict noEmit; no Heft build', compiler: ts.version, diagnostics };
+fs.writeFileSync(path.join(__dirname, 'typecheck.json'), JSON.stringify(result, null, 2));
+console.log(JSON.stringify(result, null, 2));
+process.exitCode = diagnostics.length ? 1 : 0;

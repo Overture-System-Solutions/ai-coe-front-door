@@ -1,0 +1,123 @@
+// Cases-only form layout. All color and spacing overrides remain inside the consolidated view.
+.ai-view--app .ai-case-workspace {
+  min-width: 0;
+  margin-bottom: 28px;
+
+  .ai-case-toolbar,
+  .ai-case-overview {
+    align-items: flex-start;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 18px 28px;
+    justify-content: space-between;
+    margin: 20px 0;
+  }
+
+  .ai-case-toolbar .ai-app-actions { margin-top: 0; }
+  .ai-case-overview {
+    background: var(--fd-bg, #f7fafc);
+    border: 1px solid var(--fd-line, #d6e0e8);
+    border-radius: 14px;
+    padding: 20px;
+  }
+  .ai-case-overview > div { flex: 1 1 250px; min-width: 0; }
+  .ai-case-overview p { line-height: 1.5; margin: 8px 0 0; overflow-wrap: anywhere; }
+  .ai-case-status {
+    background: var(--fd-soft, #e5ebf0);
+    border-radius: 999px;
+    display: inline-flex;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 6px 12px;
+  }
+
+  .ai-case-fields {
+    display: grid;
+    gap: 20px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    margin: 24px 0 16px;
+  }
+  .ai-case-field { min-width: 0; }
+  .ai-case-field--wide { grid-column: 1 / -1; }
+  .ai-case-field label,
+  .ai-case-validation label {
+    color: var(--fd-ink, #10243e);
+    display: block;
+    font-size: 14px;
+    font-weight: 650;
+    letter-spacing: normal;
+    margin: 0 0 8px;
+    text-transform: none;
+  }
+  input, textarea, select {
+    background: var(--fd-paper, #fff);
+    border: 1px solid var(--fd-line, #d6e0e8);
+    border-radius: 10px;
+    box-sizing: border-box;
+    color: var(--fd-ink, #10243e);
+    display: block;
+    font-family: inherit;
+    font-size: 15px;
+    line-height: 1.5;
+    max-width: 100%;
+    min-height: 46px;
+    min-width: 0;
+    padding: 11px 12px;
+    width: 100%;
+  }
+  textarea { min-height: 126px; resize: vertical; }
+  #ai-core-response { min-height: 180px; }
+  input::placeholder, textarea::placeholder { color: var(--fd-muted, #5b6878); opacity: 1; }
+  input:focus-visible, textarea:focus-visible, select:focus-visible, button:focus-visible, summary:focus-visible {
+    outline: 3px solid var(--fd-focus, #0b66d4);
+    outline-offset: 3px;
+  }
+  button:disabled, input:disabled, textarea:disabled, select:disabled { cursor: not-allowed; opacity: 0.65; }
+  .ai-case-help { color: var(--fd-muted, #5b6878); font-size: 13px; line-height: 1.5; margin: 8px 0 0; }
+  .ai-case-feedback { color: var(--fd-ink, #10243e); font-size: 14px; line-height: 1.5; margin: 12px 0 20px; }
+  .ai-case-feedback:empty { display: none; }
+
+  .ai-case-library { margin: 20px 0; }
+  .ai-case-list { display: grid; gap: 12px; grid-template-columns: repeat(2, minmax(0, 1fr)); list-style: none; margin: 0; padding: 0; }
+  .ai-case-choice {
+    background: var(--fd-paper, #fff);
+    border: 1px solid var(--fd-line, #d6e0e8);
+    border-radius: 12px;
+    color: var(--fd-ink, #10243e);
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    height: 100%;
+    overflow-wrap: anywhere;
+    padding: 16px;
+    text-align: left;
+    width: 100%;
+  }
+  .ai-case-choice[aria-pressed='true'] { border-color: var(--fd-accent, #087f83); background: var(--fd-accent-soft, #e8f7f6); }
+  .ai-case-choice small { color: var(--fd-muted, #5b6878); }
+  .ai-case-evidence > .ai-case-field { margin-top: 22px; }
+  .ai-case-request { background: var(--fd-bg, #f7fafc); border-radius: 12px; margin: 20px 0; padding: 16px 20px; }
+  .ai-case-request ul { line-height: 1.5; padding-left: 20px; }
+  .ai-case-validation { border: 1px solid var(--fd-line, #d6e0e8); border-radius: 12px; margin: 24px 0 0; min-width: 0; padding: 18px; }
+  .ai-case-validation legend { font-size: 15px; font-weight: 700; padding: 0 6px; }
+  .ai-case-validation label { margin-top: 18px; }
+  .ai-case-validation button { margin-top: 18px; }
+  .ai-case-technical { border-top: 1px solid var(--fd-line, #d6e0e8); color: var(--fd-muted, #5b6878); font-size: 13px; padding: 16px 0; }
+  .ai-case-technical summary { cursor: pointer; font-weight: 600; }
+  .ai-case-metadata { display: grid; gap: 12px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .ai-case-metadata dt { font-weight: 650; }
+  .ai-case-metadata dd { margin: 4px 0 0; overflow-wrap: anywhere; }
+}
+
+@media (max-width: 720px) {
+  .ai-view--app .ai-case-workspace {
+    .ai-case-fields, .ai-case-list, .ai-case-metadata { grid-template-columns: minmax(0, 1fr); }
+    .ai-case-toolbar .ai-app-actions { width: 100%; }
+    .ai-case-overview, .ai-case-details, .ai-case-evidence { padding: 16px; }
+    input, textarea, select { font-size: 16px; }
+  }
+}
+.ai-view--app.ai-view--narrow .ai-case-workspace {
+  .ai-case-fields, .ai-case-list, .ai-case-metadata { grid-template-columns: minmax(0, 1fr); }
+}

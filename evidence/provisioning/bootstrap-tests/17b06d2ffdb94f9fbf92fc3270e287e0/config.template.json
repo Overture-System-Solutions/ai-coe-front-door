@@ -1,0 +1,16 @@
+{
+  "enabled": false,
+  "siteUrl": "https://osscontact.sharepoint.com/sites/CloudWaveDashboardDemo",
+  "canonicalListId": "",
+  "requestListId": "",
+  "resultListId": "",
+  "writerPrincipalId": null,
+  "readRoleDefinitionId": 1073741826,
+  "qualificationReceiptRef": "",
+  "controllerQualified": false,
+  "securityQualified": false,
+  "provider": {
+    "model": "",
+    "qualificationReceiptRef": ""
+  }
+}

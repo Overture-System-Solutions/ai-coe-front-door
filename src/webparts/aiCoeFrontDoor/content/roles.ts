@@ -9,16 +9,27 @@
 import type { IVocabulary } from './pageContent';
 import { includes } from '../utils/collections';
 
-/** `employee` is everyone; `designAuthority` stays unheld until a site group is bound to it. */
-export type RoleId = 'employee' | 'leader' | 'operator' | 'designAuthority';
-export const ROLE_IDS: readonly RoleId[] = ['employee', 'leader', 'operator', 'designAuthority'];
+/**
+ * `employee` is everyone; `designAuthority` stays unheld until a site group is bound to it.
+ *
+ * The two Marketing roles are bounded participant roles, deliberately separate from the platform roles: an
+ * ordinary Marketing participant may draft against permitted sources and save revisions; a Marketing reviewer
+ * may record a review decision within the authority scope the review service binds to them. Neither is an
+ * operator, a site owner or a design authority, and holding a platform role grants neither. Both stay unheld
+ * until a site group is bound (`roleGroups`), and the real strategy/voice owner and copy/channel approver stay
+ * unbound until the business confirms them; the ids exist so that binding is configuration, never code.
+ */
+export type RoleId = 'employee' | 'leader' | 'operator' | 'designAuthority' | 'marketingParticipant' | 'marketingReviewer';
+export const ROLE_IDS: readonly RoleId[] = ['employee', 'leader', 'operator', 'designAuthority', 'marketingParticipant', 'marketingReviewer'];
 
 /** The name each role carries in a sentence ("This page is for the ... role"); overridable per document. */
 export const DEFAULT_ROLE_LABELS: { [id in RoleId]: string } = {
   employee: 'Employee',
   leader: 'Leader',
   operator: 'AI CoE operator',
-  designAuthority: 'Design authority'
+  designAuthority: 'Design authority',
+  marketingParticipant: 'Marketing participant',
+  marketingReviewer: 'Marketing reviewer'
 };
 
 /** Which site group title stands for which role, as the `roleGroups` property binds them. */

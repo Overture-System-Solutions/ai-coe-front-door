@@ -1,0 +1,289 @@
+[
+ {
+  "Key": "PolicyVersion",
+  "Value": "\"uat-transcribed-v3.4-s10\"",
+  "Category": "Policy",
+  "Provisional": true,
+  "Note": "Transcribed from v3.4 design s9-11; reconcile against 04_POLICIES_AND_DECISION_RIGHTS YAML."
+ },
+ {
+  "Key": "GatesVersion",
+  "Value": "\"readiness-gates-v1\"",
+  "Category": "Policy",
+  "Provisional": true,
+  "Note": "Readiness = passing applicable gates / applicable gates * 100. Not the weighted model."
+ },
+ {
+  "Key": "ARB_TRIGGERS",
+  "Value": "[\"new_vendor\",\"new_tool\",\"incremental_cost\",\"contract_commitment\",\"sensitive_data\",\"customer_impact\",\"external_action\",\"production_architecture_change\",\"security_exception\",\"regulated_process\"]",
+  "Category": "Policy",
+  "Provisional": true,
+  "Note": "v3.4 s11"
+ },
+ {
+  "Key": "ELT_TRIGGERS",
+  "Value": "[\"multi_department_impact\",\"material_investment\"]",
+  "Category": "Policy",
+  "Provisional": true,
+  "Note": "v3.4 s11; ELT precedence over ARB"
+ },
+ {
+  "Key": "DelegatedFastPathEnabled",
+  "Value": "false",
+  "Category": "Policy",
+  "Provisional": true,
+  "Note": "false until a delegated AI CoE authority is bound; no trigger + false => PREPARATION lane"
+ },
+ {
+  "Key": "Authority_AI_COE_FAST_PATH",
+  "Value": "\"\"",
+  "Category": "Authority",
+  "Provisional": true,
+  "Note": "Named delegated approver principal. Blank => DECISION_AUTHORITY_KNOWN gate cannot pass."
+ },
+ {
+  "Key": "Authority_ARB",
+  "Value": "\"\"",
+  "Category": "Authority",
+  "Provisional": true,
+  "Note": "ARB owner principal (Kelli/Clay path). Blank => gate cannot pass. ARB integration is NOT in MVP."
+ },
+ {
+  "Key": "Authority_ELT",
+  "Value": "\"\"",
+  "Category": "Authority",
+  "Provisional": true,
+  "Note": "ELT decision body. Blank => gate cannot pass."
+ },
+ {
+  "Key": "ThresholdsRatified",
+  "Value": "false",
+  "Category": "Policy",
+  "Provisional": true,
+  "Note": "Set true only by ELT decision 2."
+ },
+ {
+  "Key": "FreshnessDays",
+  "Value": "30",
+  "Category": "Policy",
+  "Provisional": true,
+  "Note": "EVIDENCE_FRESHNESS gate: validated packets older than this fail."
+ },
+ {
+  "Key": "PacketDueDays",
+  "Value": "5",
+  "Category": "Operations",
+  "Provisional": false,
+  "Note": "DueAt offset for S2-S5 packets."
+ },
+ {
+  "Key": "ReminderAfterDays",
+  "Value": "2",
+  "Category": "Operations",
+  "Provisional": false,
+  "Note": "Overdue days before a reminder outbox row is written."
+ },
+ {
+  "Key": "EscalationAfterDays",
+  "Value": "5",
+  "Category": "Operations",
+  "Provisional": false,
+  "Note": "Overdue days before ESCALATION_REQUIRED event."
+ },
+ {
+  "Key": "AutoValidateReturnedPackets",
+  "Value": "false",
+  "Category": "UAT",
+  "Provisional": true,
+  "Note": "UAT only: RETURNED packets become VALIDATED with a provisional assertion. Set false before any real use."
+ },
+ {
+  "Key": "SendEnabled",
+  "Value": "false",
+  "Category": "Operations",
+  "Provisional": false,
+  "Note": "Outbox: false => every QUEUED row is SUPPRESSED. Nothing is sent in UAT."
+ },
+ {
+  "Key": "EvidenceValidators",
+  "Value": "[]",
+  "Category": "Authority",
+  "Provisional": true,
+  "Note": "UPNs allowed to SubmitEvidenceResponse for any packet (in addition to AssignedPerson)."
+ },
+ {
+  "Key": "OperatorPrincipals",
+  "Value": "[]",
+  "Category": "Authority",
+  "Provisional": true,
+  "Note": "UPNs allowed to RequestDecisionReadiness / read any case (AI CoE operators). Empty => requester/owner/sponsor only."
+ },
+ {
+  "Key": "CommandBatchSize",
+  "Value": "20",
+  "Category": "Operations",
+  "Provisional": false,
+  "Note": "Rows claimed per Case Command cycle."
+ },
+ {
+  "Key": "HealthMonitor_SilenceHours",
+  "Value": "26",
+  "Category": "Operations",
+  "Provisional": false,
+  "Note": "A flow with no heartbeat inside this window is reported silent."
+ },
+ {
+  "Key": "HealthMonitor_StalePendingMinutes",
+  "Value": "30",
+  "Category": "Operations",
+  "Provisional": false,
+  "Note": "PENDING command rows older than this are reported."
+ },
+ {
+  "Key": "PacketDefaults",
+  "Value": "{\"S2_CUSTOMER_MARKET\":{\"role\":\"Product/Customer owner\",\"q\":\"Which customers or internal users are affected and how?\"},\"S3_FINANCIAL\":{\"role\":\"Finance\",\"q\":\"What is the validated baseline cost and expected saving?\"},\"S4_TECHNICAL\":{\"role\":\"Architecture/IT\",\"q\":\"Does this stay inside an approved tool and data boundary?\"},\"S5_RISK_COMPLIANCE\":{\"role\":\"Security/Compliance\",\"q\":\"Does any sensitive or regulated data enter the workflow?\"}}",
+  "Category": "Policy",
+  "Provisional": true,
+  "Note": "S2-S5 packet templates (v3.4 s9.2)."
+ },
+ {
+  "Key": "CurrentRelease",
+  "Value": "\"3.4.0-rc2\"",
+  "Category": "Package",
+  "Provisional": false,
+  "Note": "RC2 release the records are bound to."
+ },
+ {
+  "Key": "RetentionClass_Default",
+  "Value": "\"PILOT_STANDARD\"",
+  "Category": "Policy",
+  "Provisional": true,
+  "Note": "RetentionClass written on new records."
+ },
+ {
+  "Key": "Projector_LastRun",
+  "Value": "\"1970-01-01T00:00:00Z\"",
+  "Category": "State",
+  "Provisional": false,
+  "Note": "Markdown projector watermark (flow-maintained)."
+ },
+ {
+  "Key": "Heartbeat_01_CaseCommand",
+  "Value": "\"never\"",
+  "Category": "State",
+  "Provisional": false,
+  "Note": "flow-maintained"
+ },
+ {
+  "Key": "Heartbeat_02_Evidence",
+  "Value": "\"never\"",
+  "Category": "State",
+  "Provisional": false,
+  "Note": "flow-maintained"
+ },
+ {
+  "Key": "Heartbeat_03_Projector",
+  "Value": "\"never\"",
+  "Category": "State",
+  "Provisional": false,
+  "Note": "flow-maintained"
+ },
+ {
+  "Key": "Heartbeat_04_Outbox",
+  "Value": "\"never\"",
+  "Category": "State",
+  "Provisional": false,
+  "Note": "flow-maintained"
+ },
+ {
+  "Key": "NativeQualified",
+  "Value": "false",
+  "Category": "Qualification",
+  "Provisional": true,
+  "Note": "Separately accepted native binding required; never enabled by this package."
+ },
+ {
+  "Key": "SecurityQualified",
+  "Value": "false",
+  "Category": "Qualification",
+  "Provisional": true,
+  "Note": "Separately accepted native binding required; never enabled by this package."
+ },
+ {
+  "Key": "RuntimeMode",
+  "Value": "\"DISABLED\"",
+  "Category": "Qualification",
+  "Provisional": true,
+  "Note": "Separately accepted native binding required; never enabled by this package."
+ },
+ {
+  "Key": "TenantLabel",
+  "Value": "\"UNBOUND\"",
+  "Category": "Qualification",
+  "Provisional": true,
+  "Note": "Separately accepted native binding required; never enabled by this package."
+ },
+ {
+  "Key": "UatSiteUrl",
+  "Value": "\"\"",
+  "Category": "Qualification",
+  "Provisional": true,
+  "Note": "Separately accepted native binding required; never enabled by this package."
+ },
+ {
+  "Key": "UatPrincipals",
+  "Value": "[]",
+  "Category": "Qualification",
+  "Provisional": true,
+  "Note": "Separately accepted native binding required; never enabled by this package."
+ },
+ {
+  "Key": "ServicePrincipalID",
+  "Value": "0",
+  "Category": "Qualification",
+  "Provisional": true,
+  "Note": "Separately accepted native binding required; never enabled by this package."
+ },
+ {
+  "Key": "PolicyAccepted",
+  "Value": "false",
+  "Category": "Qualification",
+  "Provisional": true,
+  "Note": "Separately accepted native binding required; never enabled by this package."
+ },
+ {
+  "Key": "PolicySourceHash",
+  "Value": "\"51210529f823b1571e737c40f21a97921e498c60f8e132374171634138ccf736\"",
+  "Category": "Qualification",
+  "Provisional": true,
+  "Note": "Separately accepted native binding required; never enabled by this package."
+ },
+ {
+  "Key": "PolicyAcceptanceReceipt",
+  "Value": "\"\"",
+  "Category": "Qualification",
+  "Provisional": true,
+  "Note": "Separately accepted native binding required; never enabled by this package."
+ },
+ {
+  "Key": "PolicyBindingVersion",
+  "Value": "\"\"",
+  "Category": "Qualification",
+  "Provisional": true,
+  "Note": "Separately accepted native binding required; never enabled by this package."
+ },
+ {
+  "Key": "FlowEnabled",
+  "Value": "{\"01\": false, \"02\": false, \"03\": false, \"04\": false, \"05\": false}",
+  "Category": "Qualification",
+  "Provisional": true,
+  "Note": "Separately accepted native binding required; never enabled by this package."
+ },
+ {
+  "Key": "EmployeeStatusMap",
+  "Value": "{\"DRAFT\": \"Started\", \"CLARIFYING\": \"Need one answer\", \"READY_FOR_TRIAGE\": \"Working\", \"EVIDENCE_BUILDING\": \"Working\", \"AWAITING_SME\": \"With the right reviewer\", \"NOT_DECISION_READY\": \"Working\", \"DECISION_READY\": \"With the right reviewer\", \"READY_FOR_AI_COE\": \"With the right reviewer\", \"READY_FOR_ARB\": \"With the right reviewer\", \"READY_FOR_ELT\": \"With the right reviewer\", \"APPROVED\": \"Ready for you\", \"APPROVED_WITH_CONDITIONS\": \"Ready for you\", \"DEFERRED\": \"Ready for you\", \"REJECTED\": \"Done\", \"PROJECT_ACTIVATING\": \"Working\", \"IN_DELIVERY\": \"Working\", \"AT_RISK\": \"Working\", \"BLOCKED\": \"Working\", \"VALUE_REVIEW\": \"Ready for you\", \"OPERATING\": \"Done\", \"IMPROVEMENT_PROPOSED\": \"Ready for you\", \"REVALIDATION_REQUIRED\": \"Working\", \"RETIRED\": \"Done\"}",
+  "Category": "Policy",
+  "Provisional": false,
+  "Note": "State -> employee wording"
+ }
+]

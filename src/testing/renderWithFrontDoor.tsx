@@ -19,6 +19,8 @@ import type { IProgramMeasuresService } from '../webparts/aiCoeFrontDoor/service
 import type { IRoleResolver } from '../webparts/aiCoeFrontDoor/services/roleResolver';
 import type { IToolPolicyEvaluator } from '../webparts/aiCoeFrontDoor/services/toolPolicyEvaluator';
 import type { IUsageMetricsService } from '../webparts/aiCoeFrontDoor/services/types';
+import type { IMarketingServices } from '../webparts/aiCoeFrontDoor/services/marketing/marketingServices';
+import type { ICoreWorkService } from '../webparts/aiCoeFrontDoor/services/core/coreWorkService';
 import { createFakeGovernanceService, createImmediateEvaluator, createPendingUsageService, InMemoryDraftStore } from './fakeServices';
 import type { IFakeGovernanceService } from './fakeServices';
 
@@ -48,6 +50,10 @@ export interface ITestFrontDoorOptions {
   roleResolver?: IRoleResolver;
   /** Absent by default; the measure tiles then read every measure as not available. */
   programMeasures?: IProgramMeasuresService;
+  /** Absent by default; the Marketing section then offers only the labelled demonstration. */
+  marketing?: IMarketingServices;
+  /** Absent by default; the Cases section then omits the Binding A workspace. */
+  coreWork?: ICoreWorkService;
   /** The document's wording overrides the blocks read; the defaults unless given. */
   vocabulary?: IVocabulary;
   /** Records where page views navigate to; a fresh mock unless given. */
@@ -103,7 +109,9 @@ export function createTestFrontDoor(options: ITestFrontDoorOptions = {}): ITestF
       pageContent: options.pageContent,
       myWork: options.myWork,
       roles: options.roleResolver,
-      programMeasures: options.programMeasures
+      programMeasures: options.programMeasures,
+      marketing: options.marketing,
+      coreWork: options.coreWork
     },
     navigate,
     pageView: options.pageView ?? false

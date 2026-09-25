@@ -1,0 +1,1918 @@
+{
+  "numFailedTestSuites": 1,
+  "numFailedTests": 2,
+  "numPassedTestSuites": 0,
+  "numPassedTests": 0,
+  "numPendingTestSuites": 7,
+  "numPendingTests": 94,
+  "numRuntimeErrorTestSuites": 0,
+  "numTodoTests": 0,
+  "numTotalTestSuites": 8,
+  "numTotalTests": 96,
+  "openHandles": [],
+  "snapshot": {
+    "added": 0,
+    "didUpdate": false,
+    "failure": false,
+    "filesAdded": 0,
+    "filesRemoved": 0,
+    "filesRemovedList": [],
+    "filesUnmatched": 0,
+    "filesUpdated": 0,
+    "matched": 0,
+    "total": 0,
+    "unchecked": 0,
+    "uncheckedKeysByFile": [],
+    "unmatched": 0,
+    "updated": 0
+  },
+  "startTime": 1790185447116,
+  "success": false,
+  "testResults": [
+    {
+      "leaks": false,
+      "numFailingTests": 2,
+      "numPassingTests": 0,
+      "numPendingTests": 36,
+      "numTodoTests": 0,
+      "openHandles": [],
+      "perfStats": {
+        "end": 1790185451768,
+        "loadTestEnvironmentEnd": 1790185447878,
+        "loadTestEnvironmentStart": 1790185447267,
+        "runtime": 3888,
+        "setupAfterEnvEnd": 1790185448246,
+        "setupAfterEnvStart": 1790185448055,
+        "setupFilesEnd": 1790185447933,
+        "setupFilesStart": 1790185447880,
+        "slow": false,
+        "start": 1790185447880
+      },
+      "skipped": false,
+      "snapshot": {
+        "added": 0,
+        "fileDeleted": false,
+        "matched": 0,
+        "unchecked": 0,
+        "uncheckedKeys": [],
+        "unmatched": 0,
+        "updated": 0
+      },
+      "testFilePath": "C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-audit-fixes\\src\\webparts\\aiCoeFrontDoor\\components\\app\\AppShell.test.tsx",
+      "testResults": [
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": 234,
+          "failing": false,
+          "failureDetails": [
+            {},
+            {}
+          ],
+          "failureMessages": [
+            "TypeError: Cannot read properties of undefined (reading 'mode')\n    at onChangeCapture (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-audit-fixes\\src\\webparts\\aiCoeFrontDoor\\components\\app\\AppShell.tsx:410:73)\n    at HTMLUnknownElement.callCallback (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\react-dom\\cjs\\react-dom.development.js:3945:14)\n    at HTMLUnknownElement.callTheUserObjectsOperation (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jsdom\\lib\\jsdom\\living\\generated\\EventListener.js:26:30)\n    at innerInvokeEventListeners (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jsdom\\lib\\jsdom\\living\\events\\EventTarget-impl.js:350:25)\n    at invokeEventListeners (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jsdom\\lib\\jsdom\\living\\events\\EventTarget-impl.js:286:3)\n    at HTMLUnknownElementImpl._dispatch (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jsdom\\lib\\jsdom\\living\\events\\EventTarget-impl.js:233:9)\n    at HTMLUnknownElementImpl.dispatchEvent (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jsdom\\lib\\jsdom\\living\\events\\EventTarget-impl.js:104:17)\n    at HTMLUnknownElement.dispatchEvent (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jsdom\\lib\\jsdom\\living\\generated\\EventTarget.js:241:34)\n    at Object.invokeGuardedCallbackDev (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\react-dom\\cjs\\react-dom.development.js:3994:16)\n    at invokeGuardedCallback (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\react-dom\\cjs\\react-dom.development.js:4056:31)\n    at invokeGuardedCallbackAndCatchFirstError (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\react-dom\\cjs\\react-dom.development.js:4070:25)\n    at executeDispatch (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\react-dom\\cjs\\react-dom.development.js:8243:3)\n    at processDispatchQueueItemsInOrder (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\react-dom\\cjs\\react-dom.development.js:8275:7)\n    at processDispatchQueue (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\react-dom\\cjs\\react-dom.development.js:8288:5)\n    at dispatchEventsForPlugins (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\react-dom\\cjs\\react-dom.development.js:8299:3)\n    at C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\react-dom\\cjs\\react-dom.development.js:8508:12\n    at batchedEventUpdates$1 (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\react-dom\\cjs\\react-dom.development.js:22396:12)\n    at batchedEventUpdates (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\react-dom\\cjs\\react-dom.development.js:3745:12)\n    at dispatchEventForPluginEventSystem (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\react-dom\\cjs\\react-dom.development.js:8507:3)\n    at attemptToDispatchEvent (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\react-dom\\cjs\\react-dom.development.js:6005:3)\n    at dispatchEvent (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\react-dom\\cjs\\react-dom.development.js:5924:19)\n    at unstable_runWithPriority (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\scheduler\\cjs\\scheduler.development.js:468:12)\n    at runWithPriority$1 (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\react-dom\\cjs\\react-dom.development.js:11276:10)\n    at discreteUpdates$1 (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\react-dom\\cjs\\react-dom.development.js:22413:14)\n    at discreteUpdates (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\react-dom\\cjs\\react-dom.development.js:3756:12)\n    at dispatchDiscreteEvent (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\react-dom\\cjs\\react-dom.development.js:5889:3)\n    at HTMLDivElement.callTheUserObjectsOperation (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jsdom\\lib\\jsdom\\living\\generated\\EventListener.js:26:30)\n    at innerInvokeEventListeners (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jsdom\\lib\\jsdom\\living\\events\\EventTarget-impl.js:350:25)\n    at invokeEventListeners (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jsdom\\lib\\jsdom\\living\\events\\EventTarget-impl.js:286:3)\n    at HTMLTextAreaElementImpl._dispatch (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jsdom\\lib\\jsdom\\living\\events\\EventTarget-impl.js:233:9)\n    at HTMLTextAreaElementImpl.dispatchEvent (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jsdom\\lib\\jsdom\\living\\events\\EventTarget-impl.js:104:17)\n    at HTMLTextAreaElement.dispatchEvent (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jsdom\\lib\\jsdom\\living\\generated\\EventTarget.js:241:34)\n    at C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\@testing-library\\react\\node_modules\\@testing-library\\dom\\dist\\events.js:19:20\n    at C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\@testing-library\\react\\dist\\pure.js:66:16\n    at batchedUpdates$1 (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\react-dom\\cjs\\react-dom.development.js:22380:12)\n    at act (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\react-dom\\cjs\\react-dom-test-utils.development.js:1042:14)\n    at Object.eventWrapper (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\@testing-library\\react\\dist\\pure.js:65:28)\n    at fireEvent (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\@testing-library\\react\\node_modules\\@testing-library\\dom\\dist\\events.js:12:35)\n    at Function.fireEvent.<computed> [as change] (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\@testing-library\\react\\node_modules\\@testing-library\\dom\\dist\\events.js:110:36)\n    at Function.fireEvent.<computed> [as change] (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\@testing-library\\react\\dist\\fire-event.js:18:52)\n    at Object.<anonymous> (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-audit-fixes\\src\\webparts\\aiCoeFrontDoor\\components\\app\\AppShell.test.tsx:58:15)",
+            "TypeError: Cannot read properties of undefined (reading 'mode')\n    at onChangeCapture (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-audit-fixes\\src\\webparts\\aiCoeFrontDoor\\components\\app\\AppShell.tsx:410:73)\n    at HTMLUnknownElement.callCallback (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\react-dom\\cjs\\react-dom.development.js:3945:14)\n    at HTMLUnknownElement.callTheUserObjectsOperation (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jsdom\\lib\\jsdom\\living\\generated\\EventListener.js:26:30)\n    at innerInvokeEventListeners (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jsdom\\lib\\jsdom\\living\\events\\EventTarget-impl.js:350:25)\n    at invokeEventListeners (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jsdom\\lib\\jsdom\\living\\events\\EventTarget-impl.js:286:3)\n    at HTMLUnknownElementImpl._dispatch (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jsdom\\lib\\jsdom\\living\\events\\EventTarget-impl.js:233:9)\n    at HTMLUnknownElementImpl.dispatchEvent (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jsdom\\lib\\jsdom\\living\\events\\EventTarget-impl.js:104:17)\n    at HTMLUnknownElement.dispatchEvent (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jsdom\\lib\\jsdom\\living\\generated\\EventTarget.js:241:34)\n    at Object.invokeGuardedCallbackDev (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\react-dom\\cjs\\react-dom.development.js:3994:16)\n    at invokeGuardedCallback (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\react-dom\\cjs\\react-dom.development.js:4056:31)\n    at invokeGuardedCallbackAndCatchFirstError (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\react-dom\\cjs\\react-dom.development.js:4070:25)\n    at executeDispatch (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\react-dom\\cjs\\react-dom.development.js:8243:3)\n    at processDispatchQueueItemsInOrder (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\react-dom\\cjs\\react-dom.development.js:8275:7)\n    at processDispatchQueue (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\react-dom\\cjs\\react-dom.development.js:8288:5)\n    at dispatchEventsForPlugins (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\react-dom\\cjs\\react-dom.development.js:8299:3)\n    at C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\react-dom\\cjs\\react-dom.development.js:8508:12\n    at batchedEventUpdates$1 (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\react-dom\\cjs\\react-dom.development.js:22396:12)\n    at batchedEventUpdates (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\react-dom\\cjs\\react-dom.development.js:3745:12)\n    at dispatchEventForPluginEventSystem (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\react-dom\\cjs\\react-dom.development.js:8507:3)\n    at attemptToDispatchEvent (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\react-dom\\cjs\\react-dom.development.js:6005:3)\n    at dispatchEvent (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\react-dom\\cjs\\react-dom.development.js:5924:19)\n    at unstable_runWithPriority (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\scheduler\\cjs\\scheduler.development.js:468:12)\n    at runWithPriority$1 (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\react-dom\\cjs\\react-dom.development.js:11276:10)\n    at discreteUpdates$1 (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\react-dom\\cjs\\react-dom.development.js:22413:14)\n    at discreteUpdates (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\react-dom\\cjs\\react-dom.development.js:3756:12)\n    at dispatchDiscreteEvent (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\react-dom\\cjs\\react-dom.development.js:5889:3)\n    at HTMLDivElement.callTheUserObjectsOperation (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jsdom\\lib\\jsdom\\living\\generated\\EventListener.js:26:30)\n    at innerInvokeEventListeners (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jsdom\\lib\\jsdom\\living\\events\\EventTarget-impl.js:350:25)\n    at invokeEventListeners (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jsdom\\lib\\jsdom\\living\\events\\EventTarget-impl.js:286:3)\n    at HTMLTextAreaElementImpl._dispatch (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jsdom\\lib\\jsdom\\living\\events\\EventTarget-impl.js:233:9)\n    at HTMLTextAreaElementImpl.dispatchEvent (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jsdom\\lib\\jsdom\\living\\events\\EventTarget-impl.js:104:17)\n    at HTMLTextAreaElement.dispatchEvent (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jsdom\\lib\\jsdom\\living\\generated\\EventTarget.js:241:34)\n    at C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\@testing-library\\react\\node_modules\\@testing-library\\dom\\dist\\events.js:19:20\n    at C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\@testing-library\\react\\dist\\pure.js:66:16\n    at batchedUpdates$1 (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\react-dom\\cjs\\react-dom.development.js:22380:12)\n    at act (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\react-dom\\cjs\\react-dom-test-utils.development.js:1042:14)\n    at Object.eventWrapper (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\@testing-library\\react\\dist\\pure.js:65:28)\n    at fireEvent (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\@testing-library\\react\\node_modules\\@testing-library\\dom\\dist\\events.js:12:35)\n    at Function.fireEvent.<computed> [as change] (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\@testing-library\\react\\node_modules\\@testing-library\\dom\\dist\\events.js:110:36)\n    at Function.fireEvent.<computed> [as change] (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\@testing-library\\react\\dist\\fire-event.js:18:52)\n    at Object.<anonymous> (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-audit-fixes\\src\\webparts\\aiCoeFrontDoor\\components\\app\\AppShell.test.tsx:59:15)"
+          ],
+          "fullName": "AppShell preserves transient synthetic objective and notes across section changes without a browser-text write",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 4,
+          "retryReasons": [],
+          "startAt": 1790185450387,
+          "status": "failed",
+          "title": "preserves transient synthetic objective and notes across section changes without a browser-text write"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": 1104,
+          "failing": false,
+          "failureDetails": [
+            {},
+            {},
+            {
+              "name": "TestingLibraryElementError"
+            }
+          ],
+          "failureMessages": [
+            "TypeError: Cannot read properties of undefined (reading 'mode')\n    at onChangeCapture (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-audit-fixes\\src\\webparts\\aiCoeFrontDoor\\components\\app\\AppShell.tsx:410:73)\n    at HTMLUnknownElement.callCallback (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\react-dom\\cjs\\react-dom.development.js:3945:14)\n    at HTMLUnknownElement.callTheUserObjectsOperation (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jsdom\\lib\\jsdom\\living\\generated\\EventListener.js:26:30)\n    at innerInvokeEventListeners (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jsdom\\lib\\jsdom\\living\\events\\EventTarget-impl.js:350:25)\n    at invokeEventListeners (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jsdom\\lib\\jsdom\\living\\events\\EventTarget-impl.js:286:3)\n    at HTMLUnknownElementImpl._dispatch (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jsdom\\lib\\jsdom\\living\\events\\EventTarget-impl.js:233:9)\n    at HTMLUnknownElementImpl.dispatchEvent (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jsdom\\lib\\jsdom\\living\\events\\EventTarget-impl.js:104:17)\n    at HTMLUnknownElement.dispatchEvent (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jsdom\\lib\\jsdom\\living\\generated\\EventTarget.js:241:34)\n    at Object.invokeGuardedCallbackDev (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\react-dom\\cjs\\react-dom.development.js:3994:16)\n    at invokeGuardedCallback (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\react-dom\\cjs\\react-dom.development.js:4056:31)\n    at invokeGuardedCallbackAndCatchFirstError (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\react-dom\\cjs\\react-dom.development.js:4070:25)\n    at executeDispatch (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\react-dom\\cjs\\react-dom.development.js:8243:3)\n    at processDispatchQueueItemsInOrder (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\react-dom\\cjs\\react-dom.development.js:8275:7)\n    at processDispatchQueue (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\react-dom\\cjs\\react-dom.development.js:8288:5)\n    at dispatchEventsForPlugins (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\react-dom\\cjs\\react-dom.development.js:8299:3)\n    at C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\react-dom\\cjs\\react-dom.development.js:8508:12\n    at batchedEventUpdates$1 (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\react-dom\\cjs\\react-dom.development.js:22396:12)\n    at batchedEventUpdates (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\react-dom\\cjs\\react-dom.development.js:3745:12)\n    at dispatchEventForPluginEventSystem (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\react-dom\\cjs\\react-dom.development.js:8507:3)\n    at attemptToDispatchEvent (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\react-dom\\cjs\\react-dom.development.js:6005:3)\n    at dispatchEvent (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\react-dom\\cjs\\react-dom.development.js:5924:19)\n    at unstable_runWithPriority (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\scheduler\\cjs\\scheduler.development.js:468:12)\n    at runWithPriority$1 (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\react-dom\\cjs\\react-dom.development.js:11276:10)\n    at discreteUpdates$1 (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\react-dom\\cjs\\react-dom.development.js:22413:14)\n    at discreteUpdates (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\react-dom\\cjs\\react-dom.development.js:3756:12)\n    at dispatchDiscreteEvent (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\react-dom\\cjs\\react-dom.development.js:5889:3)\n    at HTMLDivElement.callTheUserObjectsOperation (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jsdom\\lib\\jsdom\\living\\generated\\EventListener.js:26:30)\n    at innerInvokeEventListeners (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jsdom\\lib\\jsdom\\living\\events\\EventTarget-impl.js:350:25)\n    at invokeEventListeners (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jsdom\\lib\\jsdom\\living\\events\\EventTarget-impl.js:286:3)\n    at HTMLSelectElementImpl._dispatch (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jsdom\\lib\\jsdom\\living\\events\\EventTarget-impl.js:233:9)\n    at HTMLSelectElementImpl.dispatchEvent (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jsdom\\lib\\jsdom\\living\\events\\EventTarget-impl.js:104:17)\n    at Proxy.dispatchEvent (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jsdom\\lib\\jsdom\\living\\generated\\EventTarget.js:241:34)\n    at C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\@testing-library\\react\\node_modules\\@testing-library\\dom\\dist\\events.js:19:20\n    at C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\@testing-library\\react\\dist\\pure.js:66:16\n    at batchedUpdates$1 (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\react-dom\\cjs\\react-dom.development.js:22380:12)\n    at act (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\react-dom\\cjs\\react-dom-test-utils.development.js:1042:14)\n    at Object.eventWrapper (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\@testing-library\\react\\dist\\pure.js:65:28)\n    at fireEvent (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\@testing-library\\react\\node_modules\\@testing-library\\dom\\dist\\events.js:12:35)\n    at Function.fireEvent.<computed> [as change] (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\@testing-library\\react\\node_modules\\@testing-library\\dom\\dist\\events.js:110:36)\n    at Function.fireEvent.<computed> [as change] (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\@testing-library\\react\\dist\\fire-event.js:18:52)\n    at Object.<anonymous> (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-audit-fixes\\src\\webparts\\aiCoeFrontDoor\\components\\app\\AppShell.test.tsx:73:15)",
+            "TypeError: Cannot read properties of undefined (reading 'mode')\n    at onChangeCapture (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-audit-fixes\\src\\webparts\\aiCoeFrontDoor\\components\\app\\AppShell.tsx:410:73)\n    at HTMLUnknownElement.callCallback (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\react-dom\\cjs\\react-dom.development.js:3945:14)\n    at HTMLUnknownElement.callTheUserObjectsOperation (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jsdom\\lib\\jsdom\\living\\generated\\EventListener.js:26:30)\n    at innerInvokeEventListeners (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jsdom\\lib\\jsdom\\living\\events\\EventTarget-impl.js:350:25)\n    at invokeEventListeners (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jsdom\\lib\\jsdom\\living\\events\\EventTarget-impl.js:286:3)\n    at HTMLUnknownElementImpl._dispatch (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jsdom\\lib\\jsdom\\living\\events\\EventTarget-impl.js:233:9)\n    at HTMLUnknownElementImpl.dispatchEvent (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jsdom\\lib\\jsdom\\living\\events\\EventTarget-impl.js:104:17)\n    at HTMLUnknownElement.dispatchEvent (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jsdom\\lib\\jsdom\\living\\generated\\EventTarget.js:241:34)\n    at Object.invokeGuardedCallbackDev (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\react-dom\\cjs\\react-dom.development.js:3994:16)\n    at invokeGuardedCallback (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\react-dom\\cjs\\react-dom.development.js:4056:31)\n    at invokeGuardedCallbackAndCatchFirstError (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\react-dom\\cjs\\react-dom.development.js:4070:25)\n    at executeDispatch (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\react-dom\\cjs\\react-dom.development.js:8243:3)\n    at processDispatchQueueItemsInOrder (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\react-dom\\cjs\\react-dom.development.js:8275:7)\n    at processDispatchQueue (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\react-dom\\cjs\\react-dom.development.js:8288:5)\n    at dispatchEventsForPlugins (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\react-dom\\cjs\\react-dom.development.js:8299:3)\n    at C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\react-dom\\cjs\\react-dom.development.js:8508:12\n    at batchedEventUpdates$1 (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\react-dom\\cjs\\react-dom.development.js:22396:12)\n    at batchedEventUpdates (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\react-dom\\cjs\\react-dom.development.js:3745:12)\n    at dispatchEventForPluginEventSystem (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\react-dom\\cjs\\react-dom.development.js:8507:3)\n    at attemptToDispatchEvent (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\react-dom\\cjs\\react-dom.development.js:6005:3)\n    at dispatchEvent (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\react-dom\\cjs\\react-dom.development.js:5924:19)\n    at unstable_runWithPriority (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\scheduler\\cjs\\scheduler.development.js:468:12)\n    at runWithPriority$1 (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\react-dom\\cjs\\react-dom.development.js:11276:10)\n    at discreteUpdates$1 (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\react-dom\\cjs\\react-dom.development.js:22413:14)\n    at discreteUpdates (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\react-dom\\cjs\\react-dom.development.js:3756:12)\n    at dispatchDiscreteEvent (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\react-dom\\cjs\\react-dom.development.js:5889:3)\n    at HTMLDivElement.callTheUserObjectsOperation (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jsdom\\lib\\jsdom\\living\\generated\\EventListener.js:26:30)\n    at innerInvokeEventListeners (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jsdom\\lib\\jsdom\\living\\events\\EventTarget-impl.js:350:25)\n    at invokeEventListeners (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jsdom\\lib\\jsdom\\living\\events\\EventTarget-impl.js:286:3)\n    at HTMLTextAreaElementImpl._dispatch (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jsdom\\lib\\jsdom\\living\\events\\EventTarget-impl.js:233:9)\n    at HTMLTextAreaElementImpl.dispatchEvent (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jsdom\\lib\\jsdom\\living\\events\\EventTarget-impl.js:104:17)\n    at HTMLTextAreaElement.dispatchEvent (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jsdom\\lib\\jsdom\\living\\generated\\EventTarget.js:241:34)\n    at C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\@testing-library\\react\\node_modules\\@testing-library\\dom\\dist\\events.js:19:20\n    at C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\@testing-library\\react\\dist\\pure.js:66:16\n    at batchedUpdates$1 (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\react-dom\\cjs\\react-dom.development.js:22380:12)\n    at act (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\react-dom\\cjs\\react-dom-test-utils.development.js:1042:14)\n    at Object.eventWrapper (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\@testing-library\\react\\dist\\pure.js:65:28)\n    at fireEvent (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\@testing-library\\react\\node_modules\\@testing-library\\dom\\dist\\events.js:12:35)\n    at Function.fireEvent.<computed> [as change] (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\@testing-library\\react\\node_modules\\@testing-library\\dom\\dist\\events.js:110:36)\n    at Function.fireEvent.<computed> [as change] (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\@testing-library\\react\\dist\\fire-event.js:18:52)\n    at Object.<anonymous> (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-audit-fixes\\src\\webparts\\aiCoeFrontDoor\\components\\app\\AppShell.test.tsx:75:15)",
+            "Error: Unable to find an element with the text: /Unsaved changes/. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.\n\nIgnored nodes: comments, script, style\n\u001b[36m<body>\u001b[39m\n  \u001b[36m<div>\u001b[39m\n    \u001b[36m<div\u001b[39m\n      \u001b[33mclass\u001b[39m=\u001b[32m\"overture-app ai-view ai-view--app\"\u001b[39m\n    \u001b[36m>\u001b[39m\n      \u001b[36m<header\u001b[39m\n        \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-top\"\u001b[39m\n      \u001b[36m>\u001b[39m\n        \u001b[36m<div\u001b[39m\n          \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-brand\"\u001b[39m\n        \u001b[36m>\u001b[39m\n          \u001b[36m<span\u001b[39m\n            \u001b[33maria-hidden\u001b[39m=\u001b[32m\"true\"\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-mark\"\u001b[39m\n          \u001b[36m/>\u001b[39m\n          \u001b[36m<span\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-brand-text\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[36m<strong\u001b[39m\n              \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-brand-name\"\u001b[39m\n            \u001b[36m>\u001b[39m\n              \u001b[0mOverture\u001b[0m\n            \u001b[36m</strong>\u001b[39m\n            \u001b[36m<small\u001b[39m\n              \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-brand-note\"\u001b[39m\n            \u001b[36m>\u001b[39m\n              \u001b[0mAI Center of Excellence\u001b[0m\n            \u001b[36m</small>\u001b[39m\n          \u001b[36m</span>\u001b[39m\n        \u001b[36m</div>\u001b[39m\n        \u001b[36m<div\u001b[39m\n          \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-chips\"\u001b[39m\n        \u001b[36m>\u001b[39m\n          \u001b[36m<span\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-chip-line\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[36m<span\u001b[39m\n              \u001b[33maria-hidden\u001b[39m=\u001b[32m\"true\"\u001b[39m\n              \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-dot\"\u001b[39m\n            \u001b[36m/>\u001b[39m\n            \u001b[0mMarketing participant\u001b[0m\n          \u001b[36m</span>\u001b[39m\n          \u001b[36m<span\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-chip-line\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[36m<span\u001b[39m\n              \u001b[33maria-hidden\u001b[39m=\u001b[32m\"true\"\u001b[39m\n              \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-dot\"\u001b[39m\n            \u001b[36m/>\u001b[39m\n            \u001b[0mAccess confirmed\u001b[0m\n          \u001b[36m</span>\u001b[39m\n          \u001b[36m<span\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-chip-line ai-app-chip-line--who\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[0mSigned in as Pat Example\u001b[0m\n          \u001b[36m</span>\u001b[39m\n        \u001b[36m</div>\u001b[39m\n      \u001b[36m</header>\u001b[39m\n      \u001b[36m<nav\u001b[39m\n        \u001b[33maria-label\u001b[39m=\u001b[32m\"AI Center of Excellence sections\"\u001b[39m\n        \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-tabs\"\u001b[39m\n      \u001b[36m>\u001b[39m\n        \u001b[36m<div\u001b[39m\n          \u001b[33maria-label\u001b[39m=\u001b[32m\"AI Center of Excellence sections\"\u001b[39m\n          \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-tabrow\"\u001b[39m\n          \u001b[33mrole\u001b[39m=\u001b[32m\"tablist\"\u001b[39m\n        \u001b[36m>\u001b[39m\n          \u001b[36m<button\u001b[39m\n            \u001b[33maria-controls\u001b[39m=\u001b[32m\"ai-app-panel-home\"\u001b[39m\n            \u001b[33maria-selected\u001b[39m=\u001b[32m\"true\"\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-tab\"\u001b[39m\n            \u001b[33mid\u001b[39m=\u001b[32m\"ai-app-tab-home\"\u001b[39m\n            \u001b[33mrole\u001b[39m=\u001b[32m\"tab\"\u001b[39m\n            \u001b[33mtabindex\u001b[39m=\u001b[32m\"0\"\u001b[39m\n            \u001b[33mtype\u001b[39m=\u001b[32m\"button\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[0mHome\u001b[0m\n          \u001b[36m</button>\u001b[39m\n          \u001b[36m<button\u001b[39m\n            \u001b[33maria-controls\u001b[39m=\u001b[32m\"ai-app-panel-cases\"\u001b[39m\n            \u001b[33maria-selected\u001b[39m=\u001b[32m\"false\"\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-tab\"\u001b[39m\n            \u001b[33mid\u001b[39m=\u001b[32m\"ai-app-tab-cases\"\u001b[39m\n            \u001b[33mrole\u001b[39m=\u001b[32m\"tab\"\u001b[39m\n            \u001b[33mtabindex\u001b[39m=\u001b[32m\"-1\"\u001b[39m\n            \u001b[33mtype\u001b[39m=\u001b[32m\"button\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[0mCases\u001b[0m\n          \u001b[36m</button>\u001b[39m\n          \u001b[36m<button\u001b[39m\n            \u001b[33maria-controls\u001b[39m=\u001b[32m\"ai-app-panel-engineering\"\u001b[39m\n            \u001b[33maria-selected\u001b[39m=\u001b[32m\"false\"\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-tab\"\u001b[39m\n            \u001b[33mid\u001b[39m=\u001b[32m\"ai-app-tab-engineering\"\u001b[39m\n            \u001b[33mrole\u001b[39m=\u001b[32m\"tab\"\u001b[39m\n            \u001b[33mtabindex\u001b[39m=\u001b[32m\"-1\"\u001b[39m\n            \u001b[33mtype\u001b[39m=\u001b[32m\"button\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[0mEngineering\u001b[0m\n          \u001b[36m</button>\u001b[39m\n          \u001b[36m<button\u001b[39m\n            \u001b[33maria-controls\u001b[39m=\u001b[32m\"ai-app-panel-marketing\"\u001b[39m\n            \u001b[33maria-selected\u001b[39m=\u001b[32m\"false\"\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-tab\"\u001b[39m\n            \u001b[33mid\u001b[39m=\u001b[32m\"ai-app-tab-marketing\"\u001b[39m\n            \u001b[33mrole\u001b[39m=\u001b[32m\"tab\"\u001b[39m\n            \u001b[33mtabindex\u001b[39m=\u001b[32m\"-1\"\u001b[39m\n            \u001b[33mtype\u001b[39m=\u001b[32m\"button\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[0mMarketing\u001b[0m\n          \u001b[36m</button>\u001b[39m\n          \u001b[36m<button\u001b[39m\n            \u001b[33maria-controls\u001b[39m=\u001b[32m\"ai-app-panel-improvement\"\u001b[39m\n            \u001b[33maria-selected\u001b[39m=\u001b[32m\"false\"\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-tab\"\u001b[39m\n            \u001b[33mid\u001b[39m=\u001b[32m\"ai-app-tab-improvement\"\u001b[39m\n            \u001b[33mrole\u001b[39m=\u001b[32m\"tab\"\u001b[39m\n            \u001b[33mtabindex\u001b[39m=\u001b[32m\"-1\"\u001b[39m\n            \u001b[33mtype\u001b[39m=\u001b[32m\"button\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[0mImprovement\u001b[0m\n          \u001b[36m</button>\u001b[39m\n        \u001b[36m</div>\u001b[39m\n      \u001b[36m</nav>\u001b[39m\n      \u001b[36m<section\u001b[39m\n        \u001b[33maria-labelledby\u001b[39m=\u001b[32m\"ai-app-tab-home\"\u001b[39m\n        \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-panel\"\u001b[39m\n        \u001b[33mid\u001b[39m=\u001b[32m\"ai-app-panel-home\"\u001b[39m\n        \u001b[33mrole\u001b[39m=\u001b[32m\"tabpanel\"\u001b[39m\n      \u001b[36m>\u001b[39m\n        \u001b[36m<h2\u001b[39m\n          \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-heading ai-app-heading--quiet\"\u001b[39m\n          \u001b[33mtabindex\u001b[39m=\u001b[32m\"-1\"\u001b[39m\n        \u001b[36m>\u001b[39m\n          \u001b[0mHome\u001b[0m\n        \u001b[36m</h2>\u001b[39m\n        \u001b[36m<div>\u001b[39m\n          \u001b[36m<div\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-first\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[36m<div\u001b[39m\n              \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-hero\"\u001b[39m\n            \u001b[36m>\u001b[39m\n              \u001b[36m<p\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-hero-eyebrow\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[0mOverture AI Center of Excellence\u001b[0m\n              \u001b[36m</p>\u001b[39m\n              \u001b[36m<p\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-hero-title\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[0mMake the next move.\u001b[0m\n              \u001b[36m</p>\u001b[39m\n              \u001b[36m<p\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-hero-text\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[0mStart with the work. A person reads every request, and every answer says what it rests on.\u001b[0m\n              \u001b[36m</p>\u001b[39m\n              \u001b[36m<form\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-command\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[36m<label\u001b[39m\n                  \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-command-label\"\u001b[39m\n                  \u001b[33mfor\u001b[39m=\u001b[32m\"ai-app-command-input\"\u001b[39m\n                \u001b[36m>\u001b[39m\n                  \u001b[0mWhat are you trying to get done?\u001b[0m\n                \u001b[36m</label>\u001b[39m\n                \u001b[36m<span\u001b[39m\n                  \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-command-row\"\u001b[39m\n                \u001b[36m>\u001b[39m\n                  \u001b[36m<input\u001b[39m\n                    \u001b[33mautocomplete\u001b[39m=\u001b[32m\"off\"\u001b[39m\n                    \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-command-input\"\u001b[39m\n                    \u001b[33mid\u001b[39m=\u001b[32m\"ai-app-command-input\"\u001b[39m\n                    \u001b[33mplaceholder\u001b[39m=\u001b[32m\"What are you trying to get done?\"\u001b[39m\n                    \u001b[33mvalue\u001b[39m=\u001b[32m\"\"\u001b[39m\n                  \u001b[36m/>\u001b[39m\n                  \u001b[36m<button\u001b[39m\n                    \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-primary\"\u001b[39m\n                    \u001b[33mtype\u001b[39m=\u001b[32m\"submit\"\u001b[39m\n                  \u001b[36m>\u001b[39m\n                    \u001b[0mAsk the Overture AI CoE\u001b[0m\n                  \u001b[36m</button>\u001b[39m\n                \u001b[36m</span>\u001b[39m\n              \u001b[36m</form>\u001b[39m\n              \u001b[36m<p\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-hero-micro\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[0mYour sentence is saved as a draft in the configured store and opens the guided request here. It is not submitted for review from this box.\u001b[0m\n              \u001b[36m</p>\u001b[39m\n            \u001b[36m</div>\u001b[39m\n            \u001b[36m<div\u001b[39m\n              \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-first-side\"\u001b[39m\n            \u001b[36m>\u001b[39m\n              \u001b[36m<section\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-surface ai-app-status\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[36m<h3\u001b[39m\n                  \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-status-title\"\u001b[39m\n                \u001b[36m>\u001b[39m\n                  \u001b[0mWhat this view can say\u001b[0m\n                \u001b[36m</h3>\u001b[39m\n                \u001b[36m<ul\u001b[39m\n                  \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-status-rows\"\u001b[39m\n                \u001b[36m>\u001b[39m\n                  \u001b[36m<li\u001b[39m\n                    \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-status-row\"\u001b[39m\n                  \u001b[36m>\u001b[39m\n                    \u001b[36m<span\u001b[39m\n                      \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-status-text\"\u001b[39m\n                    \u001b[36m>\u001b[39m\n                      \u001b[36m<strong\u001b[39m\n                        \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-status-label\"\u001b[39m\n                      \u001b[36m>\u001b[39m\n                        \u001b[0mYour access\u001b[0m\n                      \u001b[36m</strong>\u001b[39m\n                      \u001b[36m<small\u001b[39m\n                        \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-status-note\"\u001b[39m\n                      \u001b[36m>\u001b[39m\n                        \u001b[0mResolved from your site groups\u001b[0m\n                      \u001b[36m</small>\u001b[39m\n                    \u001b[36m</span>\u001b[39m\n                    \u001b[36m<span\u001b[39m\n                      \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-pill ai-app-pill--good\"\u001b[39m\n                    \u001b[36m>\u001b[39m\n                      \u001b[0mConfirmed\u001b[0m\n                    \u001b[36m</span>\u001b[39m\n                  \u001b[36m</li>\u001b[39m\n                  \u001b[36m<li\u001b[39m\n                    \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-status-row\"\u001b[39m\n                  \u001b[36m>\u001b[39m\n                    \u001b[36m<span\u001b[39m\n                      \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-status-text\"\u001b[39m\n                    \u001b[36m>\u001b[39m\n                      \u001b[36m<strong\u001b[39m\n                        \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-status-label\"\u001b[39m\n                      \u001b[36m>\u001b[39m\n                        \u001b[0mWhat this page can do\u001b[0m\n                      \u001b[36m</strong>\u001b[39m\n                      \u001b[36m<small\u001b[39m\n                        \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-status-note\"\u001b[39m\n                      \u001b[36m>\u001b[39m\n                        \u001b[0mIt drafts, records and shows. It sends nothing and publishes nothing.\u001b[0m\n                      \u001b[36m</small>\u001b[39m\n                    \u001b[36m</span>\u001b[39m\n                    \u001b[36m<span\u001b[39m\n                      \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-pill ai-app-pill--good\"\u001b[39m\n                    \u001b[36m>\u001b[39m\n                      \u001b[0mBounded\u001b[0m\n                    \u001b[36m</span>\u001b[39m\n                  \u001b[36m</li>\u001b[39m\n                  \u001b[36m<li\u001b[39m\n                    \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-status-row\"\u001b[39m\n                  \u001b[36m>\u001b[39m\n                    \u001b[36m<span\u001b[39m\n                      \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-status-text\"\u001b[39m\n                    \u001b[36m>\u001b[39m\n                      \u001b[36m<strong\u001b[39m\n                        \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-status-label\"\u001b[39m\n                      \u001b[36m>\u001b[39m\n                        \u001b[0mMarketing workflows\u001b[0m\n                      \u001b[36m</strong>\u001b[39m\n                      \u001b[36m<small\u001b[39m\n                        \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-status-note\"\u001b[39m\n                      \u001b[36m>\u001b[39m\n                        \u001b[0mA labelled demonstration, and a synthetic workspace with real validation, review and persistence over invented sources\u001b[0m\n                      \u001b[36m</small>\u001b[39m\n                    \u001b[36m</span>\u001b[39m\n                    \u001b[36m<span\u001b[39m\n                      \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-pill ai-app-pill--design\"\u001b[39m\n                    \u001b[36m>\u001b[39m\n                      \u001b[0mSynthetic only\u001b[0m\n                    \u001b[36m</span>\u001b[39m\n                  \u001b[36m</li>\u001b[39m\n                \u001b[36m</ul>\u001b[39m\n              \u001b[36m</section>\u001b[39m\n            \u001b[36m</div>\u001b[39m\n          \u001b[36m</div>\u001b[39m\n          \u001b[36m<ul\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-choices\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[36m<li\u001b[39m\n              \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-choice\"\u001b[39m\n            \u001b[36m>\u001b[39m\n              \u001b[36m<button\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-choice-button\"\u001b[39m\n                \u001b[33mtype\u001b[39m=\u001b[32m\"button\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[36m<span\u001b[39m\n                  \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-choice-step\"\u001b[39m\n                \u001b[36m>\u001b[39m\n                  \u001b[0m01\u001b[0m\n                \u001b[36m</span>\u001b[39m\n                \u001b[36m<span\u001b[39m\n                  \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-choice-title\"\u001b[39m\n                \u001b[36m>\u001b[39m\n                  \u001b[0mGet my work done\u001b[0m\n                \u001b[36m</span>\u001b[39m\n                \u001b[36m<span\u001b[39m\n                  \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-choice-text\"\u001b[39m\n                \u001b[36m>\u001b[39m\n                  \u001b[0mAsk for a draft, check whether a tool is allowed, or get help with something you are stuck on.\u001b[0m\n                \u001b[36m</span>\u001b[39m\n              \u001b[36m</button>\u001b[39m\n            \u001b[36m</li>\u001b[39m\n            \u001b[36m<li\u001b[39m\n              \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-choice\"\u001b[39m\n            \u001b[36m>\u001b[39m\n              \u001b[36m<button\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-choice-button\"\u001b[39m\n                \u001b[33mtype\u001b[39m=\u001b[32m\"button\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[36m<span\u001b[39m\n                  \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-choice-step\"\u001b[39m\n                \u001b[36m>\u001b[39m\n                  \u001b[0m02\u001b[0m\n                \u001b[36m</span>\u001b[39m\n                \u001b[36m<span\u001b[39m\n                  \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-choice-title\"\u001b[39m\n                \u001b[36m>\u001b[39m\n                  \u001b[0mRun or improve the business\u001b[0m\n                \u001b[36m</span>\u001b[39m\n                \u001b[36m<span\u001b[39m\n                  \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-choice-text\"\u001b[39m\n                \u001b[36m>\u001b[39m\n                  \u001b[0mRegister how your team is using AI, record how a task turned out, or raise something that is not working.\u001b[0m\n                \u001b[36m</span>\u001b[39m\n              \u001b[36m</button>\u001b[39m\n            \u001b[36m</li>\u001b[39m\n            \u001b[36m<li\u001b[39m\n              \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-choice\"\u001b[39m\n            \u001b[36m>\u001b[39m\n              \u001b[36m<button\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-choice-button\"\u001b[39m\n                \u001b[33mtype\u001b[39m=\u001b[32m\"button\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[36m<span\u001b[39m\n                  \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-choice-step\"\u001b[39m\n                \u001b[36m>\u001b[39m\n                  \u001b[0m03\u001b[0m\n                \u001b[36m</span>\u001b[39m\n                \u001b[36m<span\u001b[39m\n                  \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-choice-title\"\u001b[39m\n                \u001b[36m>\u001b[39m\n                  \u001b[0mReview enterprise AI value\u001b[0m\n                \u001b[36m</span>\u001b[39m\n                \u001b[36m<span\u001b[39m\n                  \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-choice-text\"\u001b[39m\n                \u001b[36m>\u001b[39m\n                  \u001b[0mSee what has actually been measured, with the evidence behind each number.\u001b[0m\n                \u001b[36m</span>\u001b[39m\n              \u001b[36m</button>\u001b[39m\n            \u001b[36m</li>\u001b[39m\n          \u001b[36m</ul>\u001b[39m\n          \u001b[36m<div\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-head\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[36m<div\u001b[39m\n              \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-head-text\"\u001b[39m\n            \u001b[36m>\u001b[39m\n              \u001b[36m<h3\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-head-title\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[0mWhat matters now\u001b[0m\n              \u001b[36m</h3>\u001b[39m\n              \u001b[36m<p\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-head-note\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[0mDrawn from the role your site groups resolved, not from anything this page can change.\u001b[0m\n              \u001b[36m</p>\u001b[39m\n            \u001b[36m</div>\u001b[39m\n          \u001b[36m</div>\u001b[39m\n          \u001b[36m<ul\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-threes\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[36m<li\u001b[39m\n              \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-surface ai-app-case\"\u001b[39m\n            \u001b[36m>\u001b[39m\n              \u001b[36m<span\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-case-top\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[36m<span\u001b[39m\n                  \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-case-ref\"\u001b[39m\n                \u001b[36m>\u001b[39m\n                  \u001b[0m01\u001b[0m\n                \u001b[36m</span>\u001b[39m\n                \u001b[36m<span\u001b[39m\n                  \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-pill ai-app-pill--design\"\u001b[39m\n                \u001b[36m>\u001b[39m\n                  \u001b[0mSynthetic only\u001b[0m\n                \u001b[36m</span>\u001b[39m\n              \u001b[36m</span>\u001b[39m\n              \u001b[36m<h4\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-case-title\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[0mDraft against permitted sources\u001b[0m\n              \u001b[36m</h4>\u001b[39m\n              \u001b[36m<p\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-case-summary\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[0mA brief, a plan or a follow-through drafted from the fixture register until a real one is approved.\u001b[0m\n              \u001b[36m</p>\u001b[39m\n            \u001b[36m</li>\u001b[39m\n            \u001b[36m<li\u001b[39m\n              \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-surface ai-app-case\"\u001b[39m\n            \u001b[36m>\u001b[39m\n              \u001b[36m<span\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-case-top\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[36m<span\u001b[39m\n                  \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-case-ref\"\u001b[39m\n                \u001b[36m>\u001b[39m\n                  \u001b[0m02\u001b[0m\n                \u001b[36m</span>\u001b[39m\n                \u001b[36m<span\u001b[39m\n                  \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-pill ai-app-pill--wait\"\u001b[39m\n                \u001b[36m>\u001b[39m\n                  \u001b[0mReviewer unbound\u001b[0m\n                \u001b[36m</span>\u001b[39m\n              \u001b[36m</span>\u001b[39m\n              \u001b[36m<h4\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-case-title\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[0mSend a draft for review\u001b[0m\n              \u001b[36m</h4>\u001b[39m\n              \u001b[36m<p\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-case-summary\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[0mA review is requested of a role; the real owner and approver are not bound yet.\u001b[0m\n              \u001b[36m</p>\u001b[39m\n            \u001b[36m</li>\u001b[39m\n            \u001b[36m<li\u001b[39m\n              \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-surface ai-app-case\"\u001b[39m\n            \u001b[36m>\u001b[39m\n              \u001b[36m<span\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-case-top\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[36m<span\u001b[39m\n                  \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-case-ref\"\u001b[39m\n                \u001b[36m>\u001b[39m\n                  \u001b[0m03\u001b[0m\n                \u001b[36m</span>\u001b[39m\n                \u001b[36m<span\u001b[39m\n                  \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-pill ai-app-pill--info\"\u001b[39m\n                \u001b[36m>\u001b[39m\n                  \u001b[0mOpen to you\u001b[0m\n                \u001b[36m</span>\u001b[39m\n              \u001b[36m</span>\u001b[39m\n              \u001b[36m<h4\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-case-title\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[0mYour own drafts\u001b[0m\n              \u001b[36m</h4>\u001b[39m\n              \u001b[36m<p\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-case-summary\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[0mEvery revision you saved, with its state as the store derives it.\u001b[0m\n              \u001b[36m</p>\u001b[39m\n            \u001b[36m</li>\u001b[39m\n          \u001b[36m</ul>\u001b[39m\n        \u001b[36m</div>\u001b[39m\n      \u001b[36m</section>\u001b[39m\n      \u001b[36m<footer\u001b[39m\n        \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-foot\"\u001b[39m\n      \u001b[36m>\u001b[39m\n        \u001b[36m<span>\u001b[39m\n          \u001b[0mOverture AI Center of Excellence\u001b[0m\n        \u001b[36m</span>\u001b[39m\n        \u001b[36m<span>\u001b[39m\n          \u001b[0mNothing on this page is sent or published without a person deciding it.\u001b[0m\n        \u001b[36m</span>\u001b[39m\n        \u001b[36m<span\u001b[39m\n          \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-foot-support\"\u001b[39m\n        \u001b[36m>\u001b[39m\n          \u001b[0mSupport route: not bound on this site yet.\u001b[0m\n        \u001b[36m</span>\u001b[39m\n      \u001b[36m</footer>\u001b[39m\n    \u001b[36m</div>\u001b[39m\n  \u001b[36m</div>\u001b[39m\n\u001b[36m</body>\u001b[39m\n    at waitForWrapper (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\@testing-library\\react\\node_modules\\@testing-library\\dom\\dist\\wait-for.js:166:27)\n    at C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\@testing-library\\react\\node_modules\\@testing-library\\dom\\dist\\query-helpers.js:86:33\n    at Object.<anonymous> (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-audit-fixes\\src\\webparts\\aiCoeFrontDoor\\components\\app\\AppShell.test.tsx:77:16)"
+          ],
+          "fullName": "AppShell blocks leaving unsaved business Marketing input until the server draft seam confirms it",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 2,
+          "retryReasons": [],
+          "startAt": 1790185450623,
+          "status": "failed",
+          "title": "blocks leaving unsaved business Marketing input until the server draft seam confirms it"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell opens on the first screen with the entry panel and the three ways in",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790185451727,
+          "status": "pending",
+          "title": "opens on the first screen with the entry panel and the three ways in"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell keeps a section a person may not use out of the tab list entirely",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790185451727,
+          "status": "pending",
+          "title": "keeps a section a person may not use out of the tab list entirely"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell opens the measured view to a leader but still not the operator surface",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790185451727,
+          "status": "pending",
+          "title": "opens the measured view to a leader but still not the operator surface"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell shows nothing narrowed while the membership is unresolved, rather than guessing",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790185451727,
+          "status": "pending",
+          "title": "shows nothing narrowed while the membership is unresolved, rather than guessing"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell moves along the tabs with the arrow keys, and wraps at both ends",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790185451727,
+          "status": "pending",
+          "title": "moves along the tabs with the arrow keys, and wraps at both ends"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell keeps sequential keyboard navigation on the actual focused tab, but pointer entry focuses the heading",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790185451728,
+          "status": "pending",
+          "title": "keeps sequential keyboard navigation on the actual focused tab, but pointer entry focuses the heading"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell ignores a key the tab list does not own, so typing is not swallowed",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790185451728,
+          "status": "pending",
+          "title": "ignores a key the tab list does not own, so typing is not swallowed"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell keeps one tab in the tab order and points each panel at its tab",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790185451728,
+          "status": "pending",
+          "title": "keeps one tab in the tab order and points each panel at its tab"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell gives the section a heading that can take focus, so a change is announced",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790185451728,
+          "status": "pending",
+          "title": "gives the section a heading that can take focus, so a change is announced"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell names the person and what the view can say about their access",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790185451728,
+          "status": "pending",
+          "title": "names the person and what the view can say about their access"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell says so when the membership could not be confirmed, rather than staying quiet about it",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790185451728,
+          "status": "pending",
+          "title": "says so when the membership could not be confirmed, rather than staying quiet about it"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell supplies the configured document route to the actual submission receipt",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790185451728,
+          "status": "pending",
+          "title": "supplies the configured document route to the actual submission receipt"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell carries the footer promise on every section",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790185451728,
+          "status": "pending",
+          "title": "carries the footer promise on every section"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell does not mount Enterprise value or call getMeasures when an employee clicks the Home card",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790185451728,
+          "status": "pending",
+          "title": "does not mount Enterprise value or call getMeasures when an employee clicks the Home card"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell does not fetch measures or usage while membership is unresolved, including from the Home card",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790185451728,
+          "status": "pending",
+          "title": "does not fetch measures or usage while membership is unresolved, including from the Home card"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell shows Usage on Enterprise value for an operator and not on System map",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790185451728,
+          "status": "pending",
+          "title": "shows Usage on Enterprise value for an operator and not on System map"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell lets a leader open Enterprise value without mounting usage or calling getMetrics",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790185451728,
+          "status": "pending",
+          "title": "lets a leader open Enterprise value without mounting usage or calling getMetrics"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell keeps the Home sentence as the idea draft and opens the guided request with the same wording",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790185451728,
+          "status": "pending",
+          "title": "keeps the Home sentence as the idea draft and opens the guided request with the same wording"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell keeps guided edits mounted when navigation needs an unsaved draft and saving is refused",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790185451728,
+          "status": "pending",
+          "title": "keeps guided edits mounted when navigation needs an unsaved draft and saving is refused"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell keeps guided edits mounted when navigation needs an unsaved draft and saving is rejected",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790185451728,
+          "status": "pending",
+          "title": "keeps guided edits mounted when navigation needs an unsaved draft and saving is rejected"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell keeps the sentence in the box and opens nothing when the draft cannot be saved",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790185451728,
+          "status": "pending",
+          "title": "keeps the sentence in the box and opens nothing when the draft cannot be saved"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell opens Marketing for a reviewer without granting drafting controls",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790185451728,
+          "status": "pending",
+          "title": "opens Marketing for a reviewer without granting drafting controls"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell shows Marketing to a bounded participant and keeps the synthetic workspace across a Home round-trip",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790185451728,
+          "status": "pending",
+          "title": "shows Marketing to a bounded participant and keeps the synthetic workspace across a Home round-trip"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell tells an operator without site-owner permission that the queue was not read",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790185451728,
+          "status": "pending",
+          "title": "tells an operator without site-owner permission that the queue was not read"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell says the support route is unbound when the content document does not name one",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790185451728,
+          "status": "pending",
+          "title": "says the support route is unbound when the content document does not name one"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell does not expose an unsafe support link: javascript:void(0)",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790185451728,
+          "status": "pending",
+          "title": "does not expose an unsafe support link: javascript:void(0)"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell does not expose an unsafe support link: data:text/html,unsafe",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790185451728,
+          "status": "pending",
+          "title": "does not expose an unsafe support link: data:text/html,unsafe"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell does not expose an unsafe support link: //untrusted.invalid/path",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790185451729,
+          "status": "pending",
+          "title": "does not expose an unsafe support link: //untrusted.invalid/path"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell resolves site-relative support links against the site rather than the hosting page",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790185451729,
+          "status": "pending",
+          "title": "resolves site-relative support links against the site rather than the hosting page"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell renders a configured support route from the page content document",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790185451729,
+          "status": "pending",
+          "title": "renders a configured support route from the page content document"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell places the administrator control last, apart from the section tabs, for a site owner",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790185451729,
+          "status": "pending",
+          "title": "places the administrator control last, apart from the section tabs, for a site owner"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell opens the administrator queue from that control and still opens a section tab",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790185451729,
+          "status": "pending",
+          "title": "opens the administrator queue from that control and still opens a section tab"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell does not keep the administrator queue on System map once it has its own control",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790185451729,
+          "status": "pending",
+          "title": "does not keep the administrator queue on System map once it has its own control"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell moves to the administrator control with End when the person may open it",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790185451729,
+          "status": "pending",
+          "title": "moves to the administrator control with End when the person may open it"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell spaces Register team AI use from the other Improvement cards and keeps the larger panels below",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790185451729,
+          "status": "pending",
+          "title": "spaces Register team AI use from the other Improvement cards and keeps the larger panels below"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell does not mount the administrator queue or read it for an employee",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790185451729,
+          "status": "pending",
+          "title": "does not mount the administrator queue or read it for an employee"
+        }
+      ],
+      "failureMessage": "  ● AppShell › preserves transient synthetic objective and notes across section changes without a browser-text write\n\n    TypeError: Cannot read properties of undefined (reading 'mode')\n\n    \u001b[0m \u001b[90m 408 |\u001b[39m         \u001b[33m<\u001b[39m\u001b[33mdiv\u001b[39m onChangeCapture\u001b[33m=\u001b[39m{(event)\u001b[33m:\u001b[39m \u001b[36mvoid\u001b[39m \u001b[33m=>\u001b[39m {\n     \u001b[90m 409 |\u001b[39m           \u001b[36mconst\u001b[39m target \u001b[33m=\u001b[39m event\u001b[33m.\u001b[39mtarget\u001b[33m;\u001b[39m\n    \u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 410 |\u001b[39m           \u001b[36mconst\u001b[39m businessText \u001b[33m=\u001b[39m shown \u001b[33m===\u001b[39m \u001b[32m'marketing'\u001b[39m \u001b[33m&&\u001b[39m gated\u001b[33m.\u001b[39mmarketing\u001b[33m.\u001b[39mmode \u001b[33m===\u001b[39m \u001b[32m'live'\u001b[39m \u001b[33m&&\u001b[39m (target \u001b[36minstanceof\u001b[39m \u001b[33mHTMLTextAreaElement\u001b[39m \u001b[33m||\u001b[39m (target \u001b[36minstanceof\u001b[39m \u001b[33mHTMLInputElement\u001b[39m \u001b[33m&&\u001b[39m target\u001b[33m.\u001b[39mtype \u001b[33m===\u001b[39m \u001b[32m'text'\u001b[39m))\u001b[33m;\u001b[39m\n     \u001b[90m     |\u001b[39m                                                                         \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n     \u001b[90m 411 |\u001b[39m           \u001b[36mif\u001b[39m (workflow \u001b[33m!==\u001b[39m undefined \u001b[33m||\u001b[39m businessText) { edits\u001b[33m.\u001b[39mcurrent \u001b[33m+=\u001b[39m \u001b[35m1\u001b[39m\u001b[33m;\u001b[39m unsaved\u001b[33m.\u001b[39mcurrent \u001b[33m=\u001b[39m \u001b[36mtrue\u001b[39m\u001b[33m;\u001b[39m }\n     \u001b[90m 412 |\u001b[39m         }}\u001b[33m>\u001b[39m\n     \u001b[90m 413 |\u001b[39m           \u001b[33m<\u001b[39m\u001b[33mFrontDoorProvider\u001b[39m value\u001b[33m=\u001b[39m{sectionContext}\u001b[33m>\u001b[39m\u001b[33m<\u001b[39m\u001b[33mPageDocumentProvider\u001b[39m value\u001b[33m=\u001b[39m{childDocument}\u001b[33m>\u001b[39m{body}\u001b[33m<\u001b[39m\u001b[33m/\u001b[39m\u001b[33mPageDocumentProvider\u001b[39m\u001b[33m>\u001b[39m\u001b[33m<\u001b[39m\u001b[33m/\u001b[39m\u001b[33mFrontDoorProvider\u001b[39m\u001b[33m>\u001b[39m\u001b[0m\n\n      at onChangeCapture (src/webparts/aiCoeFrontDoor/components/app/AppShell.tsx:410:73)\n      at HTMLUnknownElement.callCallback (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/react-dom/cjs/react-dom.development.js:3945:14)\n      at HTMLUnknownElement.callTheUserObjectsOperation (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/jsdom/lib/jsdom/living/generated/EventListener.js:26:30)\n      at innerInvokeEventListeners (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:350:25)\n      at invokeEventListeners (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:286:3)\n      at HTMLUnknownElementImpl._dispatch (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:233:9)\n      at HTMLUnknownElementImpl.dispatchEvent (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:104:17)\n      at HTMLUnknownElement.dispatchEvent (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/jsdom/lib/jsdom/living/generated/EventTarget.js:241:34)\n      at Object.invokeGuardedCallbackDev (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/react-dom/cjs/react-dom.development.js:3994:16)\n      at invokeGuardedCallback (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/react-dom/cjs/react-dom.development.js:4056:31)\n      at invokeGuardedCallbackAndCatchFirstError (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/react-dom/cjs/react-dom.development.js:4070:25)\n      at executeDispatch (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/react-dom/cjs/react-dom.development.js:8243:3)\n      at processDispatchQueueItemsInOrder (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/react-dom/cjs/react-dom.development.js:8275:7)\n      at processDispatchQueue (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/react-dom/cjs/react-dom.development.js:8288:5)\n      at dispatchEventsForPlugins (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/react-dom/cjs/react-dom.development.js:8299:3)\n      at ../overture-ai-coe-front-door-rc2-single-webpart/node_modules/react-dom/cjs/react-dom.development.js:8508:12\n      at batchedEventUpdates$1 (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/react-dom/cjs/react-dom.development.js:22396:12)\n      at batchedEventUpdates (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/react-dom/cjs/react-dom.development.js:3745:12)\n      at dispatchEventForPluginEventSystem (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/react-dom/cjs/react-dom.development.js:8507:3)\n      at attemptToDispatchEvent (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/react-dom/cjs/react-dom.development.js:6005:3)\n      at dispatchEvent (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/react-dom/cjs/react-dom.development.js:5924:19)\n      at unstable_runWithPriority (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/scheduler/cjs/scheduler.development.js:468:12)\n      at runWithPriority$1 (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/react-dom/cjs/react-dom.development.js:11276:10)\n      at discreteUpdates$1 (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/react-dom/cjs/react-dom.development.js:22413:14)\n      at discreteUpdates (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/react-dom/cjs/react-dom.development.js:3756:12)\n      at dispatchDiscreteEvent (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/react-dom/cjs/react-dom.development.js:5889:3)\n      at HTMLDivElement.callTheUserObjectsOperation (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/jsdom/lib/jsdom/living/generated/EventListener.js:26:30)\n      at innerInvokeEventListeners (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:350:25)\n      at invokeEventListeners (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:286:3)\n      at HTMLTextAreaElementImpl._dispatch (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:233:9)\n      at HTMLTextAreaElementImpl.dispatchEvent (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:104:17)\n      at HTMLTextAreaElement.dispatchEvent (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/jsdom/lib/jsdom/living/generated/EventTarget.js:241:34)\n      at ../overture-ai-coe-front-door-rc2-single-webpart/node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/events.js:19:20\n      at ../overture-ai-coe-front-door-rc2-single-webpart/node_modules/@testing-library/react/dist/pure.js:66:16\n      at batchedUpdates$1 (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/react-dom/cjs/react-dom.development.js:22380:12)\n      at act (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/react-dom/cjs/react-dom-test-utils.development.js:1042:14)\n      at Object.eventWrapper (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/@testing-library/react/dist/pure.js:65:28)\n      at fireEvent (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/events.js:12:35)\n      at Function.fireEvent.<computed> [as change] (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/events.js:110:36)\n      at Function.fireEvent.<computed> [as change] (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/@testing-library/react/dist/fire-event.js:18:52)\n      at Object.<anonymous> (src/webparts/aiCoeFrontDoor/components/app/AppShell.test.tsx:58:15)\n\n  ● AppShell › preserves transient synthetic objective and notes across section changes without a browser-text write\n\n    TypeError: Cannot read properties of undefined (reading 'mode')\n\n    \u001b[0m \u001b[90m 408 |\u001b[39m         \u001b[33m<\u001b[39m\u001b[33mdiv\u001b[39m onChangeCapture\u001b[33m=\u001b[39m{(event)\u001b[33m:\u001b[39m \u001b[36mvoid\u001b[39m \u001b[33m=>\u001b[39m {\n     \u001b[90m 409 |\u001b[39m           \u001b[36mconst\u001b[39m target \u001b[33m=\u001b[39m event\u001b[33m.\u001b[39mtarget\u001b[33m;\u001b[39m\n    \u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 410 |\u001b[39m           \u001b[36mconst\u001b[39m businessText \u001b[33m=\u001b[39m shown \u001b[33m===\u001b[39m \u001b[32m'marketing'\u001b[39m \u001b[33m&&\u001b[39m gated\u001b[33m.\u001b[39mmarketing\u001b[33m.\u001b[39mmode \u001b[33m===\u001b[39m \u001b[32m'live'\u001b[39m \u001b[33m&&\u001b[39m (target \u001b[36minstanceof\u001b[39m \u001b[33mHTMLTextAreaElement\u001b[39m \u001b[33m||\u001b[39m (target \u001b[36minstanceof\u001b[39m \u001b[33mHTMLInputElement\u001b[39m \u001b[33m&&\u001b[39m target\u001b[33m.\u001b[39mtype \u001b[33m===\u001b[39m \u001b[32m'text'\u001b[39m))\u001b[33m;\u001b[39m\n     \u001b[90m     |\u001b[39m                                                                         \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n     \u001b[90m 411 |\u001b[39m           \u001b[36mif\u001b[39m (workflow \u001b[33m!==\u001b[39m undefined \u001b[33m||\u001b[39m businessText) { edits\u001b[33m.\u001b[39mcurrent \u001b[33m+=\u001b[39m \u001b[35m1\u001b[39m\u001b[33m;\u001b[39m unsaved\u001b[33m.\u001b[39mcurrent \u001b[33m=\u001b[39m \u001b[36mtrue\u001b[39m\u001b[33m;\u001b[39m }\n     \u001b[90m 412 |\u001b[39m         }}\u001b[33m>\u001b[39m\n     \u001b[90m 413 |\u001b[39m           \u001b[33m<\u001b[39m\u001b[33mFrontDoorProvider\u001b[39m value\u001b[33m=\u001b[39m{sectionContext}\u001b[33m>\u001b[39m\u001b[33m<\u001b[39m\u001b[33mPageDocumentProvider\u001b[39m value\u001b[33m=\u001b[39m{childDocument}\u001b[33m>\u001b[39m{body}\u001b[33m<\u001b[39m\u001b[33m/\u001b[39m\u001b[33mPageDocumentProvider\u001b[39m\u001b[33m>\u001b[39m\u001b[33m<\u001b[39m\u001b[33m/\u001b[39m\u001b[33mFrontDoorProvider\u001b[39m\u001b[33m>\u001b[39m\u001b[0m\n\n      at onChangeCapture (src/webparts/aiCoeFrontDoor/components/app/AppShell.tsx:410:73)\n      at HTMLUnknownElement.callCallback (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/react-dom/cjs/react-dom.development.js:3945:14)\n      at HTMLUnknownElement.callTheUserObjectsOperation (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/jsdom/lib/jsdom/living/generated/EventListener.js:26:30)\n      at innerInvokeEventListeners (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:350:25)\n      at invokeEventListeners (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:286:3)\n      at HTMLUnknownElementImpl._dispatch (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:233:9)\n      at HTMLUnknownElementImpl.dispatchEvent (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:104:17)\n      at HTMLUnknownElement.dispatchEvent (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/jsdom/lib/jsdom/living/generated/EventTarget.js:241:34)\n      at Object.invokeGuardedCallbackDev (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/react-dom/cjs/react-dom.development.js:3994:16)\n      at invokeGuardedCallback (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/react-dom/cjs/react-dom.development.js:4056:31)\n      at invokeGuardedCallbackAndCatchFirstError (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/react-dom/cjs/react-dom.development.js:4070:25)\n      at executeDispatch (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/react-dom/cjs/react-dom.development.js:8243:3)\n      at processDispatchQueueItemsInOrder (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/react-dom/cjs/react-dom.development.js:8275:7)\n      at processDispatchQueue (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/react-dom/cjs/react-dom.development.js:8288:5)\n      at dispatchEventsForPlugins (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/react-dom/cjs/react-dom.development.js:8299:3)\n      at ../overture-ai-coe-front-door-rc2-single-webpart/node_modules/react-dom/cjs/react-dom.development.js:8508:12\n      at batchedEventUpdates$1 (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/react-dom/cjs/react-dom.development.js:22396:12)\n      at batchedEventUpdates (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/react-dom/cjs/react-dom.development.js:3745:12)\n      at dispatchEventForPluginEventSystem (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/react-dom/cjs/react-dom.development.js:8507:3)\n      at attemptToDispatchEvent (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/react-dom/cjs/react-dom.development.js:6005:3)\n      at dispatchEvent (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/react-dom/cjs/react-dom.development.js:5924:19)\n      at unstable_runWithPriority (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/scheduler/cjs/scheduler.development.js:468:12)\n      at runWithPriority$1 (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/react-dom/cjs/react-dom.development.js:11276:10)\n      at discreteUpdates$1 (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/react-dom/cjs/react-dom.development.js:22413:14)\n      at discreteUpdates (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/react-dom/cjs/react-dom.development.js:3756:12)\n      at dispatchDiscreteEvent (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/react-dom/cjs/react-dom.development.js:5889:3)\n      at HTMLDivElement.callTheUserObjectsOperation (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/jsdom/lib/jsdom/living/generated/EventListener.js:26:30)\n      at innerInvokeEventListeners (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:350:25)\n      at invokeEventListeners (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:286:3)\n      at HTMLTextAreaElementImpl._dispatch (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:233:9)\n      at HTMLTextAreaElementImpl.dispatchEvent (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:104:17)\n      at HTMLTextAreaElement.dispatchEvent (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/jsdom/lib/jsdom/living/generated/EventTarget.js:241:34)\n      at ../overture-ai-coe-front-door-rc2-single-webpart/node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/events.js:19:20\n      at ../overture-ai-coe-front-door-rc2-single-webpart/node_modules/@testing-library/react/dist/pure.js:66:16\n      at batchedUpdates$1 (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/react-dom/cjs/react-dom.development.js:22380:12)\n      at act (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/react-dom/cjs/react-dom-test-utils.development.js:1042:14)\n      at Object.eventWrapper (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/@testing-library/react/dist/pure.js:65:28)\n      at fireEvent (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/events.js:12:35)\n      at Function.fireEvent.<computed> [as change] (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/events.js:110:36)\n      at Function.fireEvent.<computed> [as change] (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/@testing-library/react/dist/fire-event.js:18:52)\n      at Object.<anonymous> (src/webparts/aiCoeFrontDoor/components/app/AppShell.test.tsx:59:15)\n\n  ● AppShell › blocks leaving unsaved business Marketing input until the server draft seam confirms it\n\n    TypeError: Cannot read properties of undefined (reading 'mode')\n\n    \u001b[0m \u001b[90m 408 |\u001b[39m         \u001b[33m<\u001b[39m\u001b[33mdiv\u001b[39m onChangeCapture\u001b[33m=\u001b[39m{(event)\u001b[33m:\u001b[39m \u001b[36mvoid\u001b[39m \u001b[33m=>\u001b[39m {\n     \u001b[90m 409 |\u001b[39m           \u001b[36mconst\u001b[39m target \u001b[33m=\u001b[39m event\u001b[33m.\u001b[39mtarget\u001b[33m;\u001b[39m\n    \u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 410 |\u001b[39m           \u001b[36mconst\u001b[39m businessText \u001b[33m=\u001b[39m shown \u001b[33m===\u001b[39m \u001b[32m'marketing'\u001b[39m \u001b[33m&&\u001b[39m gated\u001b[33m.\u001b[39mmarketing\u001b[33m.\u001b[39mmode \u001b[33m===\u001b[39m \u001b[32m'live'\u001b[39m \u001b[33m&&\u001b[39m (target \u001b[36minstanceof\u001b[39m \u001b[33mHTMLTextAreaElement\u001b[39m \u001b[33m||\u001b[39m (target \u001b[36minstanceof\u001b[39m \u001b[33mHTMLInputElement\u001b[39m \u001b[33m&&\u001b[39m target\u001b[33m.\u001b[39mtype \u001b[33m===\u001b[39m \u001b[32m'text'\u001b[39m))\u001b[33m;\u001b[39m\n     \u001b[90m     |\u001b[39m                                                                         \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n     \u001b[90m 411 |\u001b[39m           \u001b[36mif\u001b[39m (workflow \u001b[33m!==\u001b[39m undefined \u001b[33m||\u001b[39m businessText) { edits\u001b[33m.\u001b[39mcurrent \u001b[33m+=\u001b[39m \u001b[35m1\u001b[39m\u001b[33m;\u001b[39m unsaved\u001b[33m.\u001b[39mcurrent \u001b[33m=\u001b[39m \u001b[36mtrue\u001b[39m\u001b[33m;\u001b[39m }\n     \u001b[90m 412 |\u001b[39m         }}\u001b[33m>\u001b[39m\n     \u001b[90m 413 |\u001b[39m           \u001b[33m<\u001b[39m\u001b[33mFrontDoorProvider\u001b[39m value\u001b[33m=\u001b[39m{sectionContext}\u001b[33m>\u001b[39m\u001b[33m<\u001b[39m\u001b[33mPageDocumentProvider\u001b[39m value\u001b[33m=\u001b[39m{childDocument}\u001b[33m>\u001b[39m{body}\u001b[33m<\u001b[39m\u001b[33m/\u001b[39m\u001b[33mPageDocumentProvider\u001b[39m\u001b[33m>\u001b[39m\u001b[33m<\u001b[39m\u001b[33m/\u001b[39m\u001b[33mFrontDoorProvider\u001b[39m\u001b[33m>\u001b[39m\u001b[0m\n\n      at onChangeCapture (src/webparts/aiCoeFrontDoor/components/app/AppShell.tsx:410:73)\n      at HTMLUnknownElement.callCallback (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/react-dom/cjs/react-dom.development.js:3945:14)\n      at HTMLUnknownElement.callTheUserObjectsOperation (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/jsdom/lib/jsdom/living/generated/EventListener.js:26:30)\n      at innerInvokeEventListeners (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:350:25)\n      at invokeEventListeners (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:286:3)\n      at HTMLUnknownElementImpl._dispatch (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:233:9)\n      at HTMLUnknownElementImpl.dispatchEvent (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:104:17)\n      at HTMLUnknownElement.dispatchEvent (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/jsdom/lib/jsdom/living/generated/EventTarget.js:241:34)\n      at Object.invokeGuardedCallbackDev (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/react-dom/cjs/react-dom.development.js:3994:16)\n      at invokeGuardedCallback (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/react-dom/cjs/react-dom.development.js:4056:31)\n      at invokeGuardedCallbackAndCatchFirstError (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/react-dom/cjs/react-dom.development.js:4070:25)\n      at executeDispatch (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/react-dom/cjs/react-dom.development.js:8243:3)\n      at processDispatchQueueItemsInOrder (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/react-dom/cjs/react-dom.development.js:8275:7)\n      at processDispatchQueue (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/react-dom/cjs/react-dom.development.js:8288:5)\n      at dispatchEventsForPlugins (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/react-dom/cjs/react-dom.development.js:8299:3)\n      at ../overture-ai-coe-front-door-rc2-single-webpart/node_modules/react-dom/cjs/react-dom.development.js:8508:12\n      at batchedEventUpdates$1 (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/react-dom/cjs/react-dom.development.js:22396:12)\n      at batchedEventUpdates (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/react-dom/cjs/react-dom.development.js:3745:12)\n      at dispatchEventForPluginEventSystem (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/react-dom/cjs/react-dom.development.js:8507:3)\n      at attemptToDispatchEvent (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/react-dom/cjs/react-dom.development.js:6005:3)\n      at dispatchEvent (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/react-dom/cjs/react-dom.development.js:5924:19)\n      at unstable_runWithPriority (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/scheduler/cjs/scheduler.development.js:468:12)\n      at runWithPriority$1 (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/react-dom/cjs/react-dom.development.js:11276:10)\n      at discreteUpdates$1 (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/react-dom/cjs/react-dom.development.js:22413:14)\n      at discreteUpdates (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/react-dom/cjs/react-dom.development.js:3756:12)\n      at dispatchDiscreteEvent (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/react-dom/cjs/react-dom.development.js:5889:3)\n      at HTMLDivElement.callTheUserObjectsOperation (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/jsdom/lib/jsdom/living/generated/EventListener.js:26:30)\n      at innerInvokeEventListeners (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:350:25)\n      at invokeEventListeners (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:286:3)\n      at HTMLSelectElementImpl._dispatch (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:233:9)\n      at HTMLSelectElementImpl.dispatchEvent (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:104:17)\n      at Proxy.dispatchEvent (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/jsdom/lib/jsdom/living/generated/EventTarget.js:241:34)\n      at ../overture-ai-coe-front-door-rc2-single-webpart/node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/events.js:19:20\n      at ../overture-ai-coe-front-door-rc2-single-webpart/node_modules/@testing-library/react/dist/pure.js:66:16\n      at batchedUpdates$1 (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/react-dom/cjs/react-dom.development.js:22380:12)\n      at act (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/react-dom/cjs/react-dom-test-utils.development.js:1042:14)\n      at Object.eventWrapper (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/@testing-library/react/dist/pure.js:65:28)\n      at fireEvent (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/events.js:12:35)\n      at Function.fireEvent.<computed> [as change] (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/events.js:110:36)\n      at Function.fireEvent.<computed> [as change] (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/@testing-library/react/dist/fire-event.js:18:52)\n      at Object.<anonymous> (src/webparts/aiCoeFrontDoor/components/app/AppShell.test.tsx:73:15)\n\n  ● AppShell › blocks leaving unsaved business Marketing input until the server draft seam confirms it\n\n    TypeError: Cannot read properties of undefined (reading 'mode')\n\n    \u001b[0m \u001b[90m 408 |\u001b[39m         \u001b[33m<\u001b[39m\u001b[33mdiv\u001b[39m onChangeCapture\u001b[33m=\u001b[39m{(event)\u001b[33m:\u001b[39m \u001b[36mvoid\u001b[39m \u001b[33m=>\u001b[39m {\n     \u001b[90m 409 |\u001b[39m           \u001b[36mconst\u001b[39m target \u001b[33m=\u001b[39m event\u001b[33m.\u001b[39mtarget\u001b[33m;\u001b[39m\n    \u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 410 |\u001b[39m           \u001b[36mconst\u001b[39m businessText \u001b[33m=\u001b[39m shown \u001b[33m===\u001b[39m \u001b[32m'marketing'\u001b[39m \u001b[33m&&\u001b[39m gated\u001b[33m.\u001b[39mmarketing\u001b[33m.\u001b[39mmode \u001b[33m===\u001b[39m \u001b[32m'live'\u001b[39m \u001b[33m&&\u001b[39m (target \u001b[36minstanceof\u001b[39m \u001b[33mHTMLTextAreaElement\u001b[39m \u001b[33m||\u001b[39m (target \u001b[36minstanceof\u001b[39m \u001b[33mHTMLInputElement\u001b[39m \u001b[33m&&\u001b[39m target\u001b[33m.\u001b[39mtype \u001b[33m===\u001b[39m \u001b[32m'text'\u001b[39m))\u001b[33m;\u001b[39m\n     \u001b[90m     |\u001b[39m                                                                         \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n     \u001b[90m 411 |\u001b[39m           \u001b[36mif\u001b[39m (workflow \u001b[33m!==\u001b[39m undefined \u001b[33m||\u001b[39m businessText) { edits\u001b[33m.\u001b[39mcurrent \u001b[33m+=\u001b[39m \u001b[35m1\u001b[39m\u001b[33m;\u001b[39m unsaved\u001b[33m.\u001b[39mcurrent \u001b[33m=\u001b[39m \u001b[36mtrue\u001b[39m\u001b[33m;\u001b[39m }\n     \u001b[90m 412 |\u001b[39m         }}\u001b[33m>\u001b[39m\n     \u001b[90m 413 |\u001b[39m           \u001b[33m<\u001b[39m\u001b[33mFrontDoorProvider\u001b[39m value\u001b[33m=\u001b[39m{sectionContext}\u001b[33m>\u001b[39m\u001b[33m<\u001b[39m\u001b[33mPageDocumentProvider\u001b[39m value\u001b[33m=\u001b[39m{childDocument}\u001b[33m>\u001b[39m{body}\u001b[33m<\u001b[39m\u001b[33m/\u001b[39m\u001b[33mPageDocumentProvider\u001b[39m\u001b[33m>\u001b[39m\u001b[33m<\u001b[39m\u001b[33m/\u001b[39m\u001b[33mFrontDoorProvider\u001b[39m\u001b[33m>\u001b[39m\u001b[0m\n\n      at onChangeCapture (src/webparts/aiCoeFrontDoor/components/app/AppShell.tsx:410:73)\n      at HTMLUnknownElement.callCallback (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/react-dom/cjs/react-dom.development.js:3945:14)\n      at HTMLUnknownElement.callTheUserObjectsOperation (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/jsdom/lib/jsdom/living/generated/EventListener.js:26:30)\n      at innerInvokeEventListeners (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:350:25)\n      at invokeEventListeners (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:286:3)\n      at HTMLUnknownElementImpl._dispatch (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:233:9)\n      at HTMLUnknownElementImpl.dispatchEvent (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:104:17)\n      at HTMLUnknownElement.dispatchEvent (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/jsdom/lib/jsdom/living/generated/EventTarget.js:241:34)\n      at Object.invokeGuardedCallbackDev (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/react-dom/cjs/react-dom.development.js:3994:16)\n      at invokeGuardedCallback (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/react-dom/cjs/react-dom.development.js:4056:31)\n      at invokeGuardedCallbackAndCatchFirstError (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/react-dom/cjs/react-dom.development.js:4070:25)\n      at executeDispatch (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/react-dom/cjs/react-dom.development.js:8243:3)\n      at processDispatchQueueItemsInOrder (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/react-dom/cjs/react-dom.development.js:8275:7)\n      at processDispatchQueue (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/react-dom/cjs/react-dom.development.js:8288:5)\n      at dispatchEventsForPlugins (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/react-dom/cjs/react-dom.development.js:8299:3)\n      at ../overture-ai-coe-front-door-rc2-single-webpart/node_modules/react-dom/cjs/react-dom.development.js:8508:12\n      at batchedEventUpdates$1 (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/react-dom/cjs/react-dom.development.js:22396:12)\n      at batchedEventUpdates (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/react-dom/cjs/react-dom.development.js:3745:12)\n      at dispatchEventForPluginEventSystem (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/react-dom/cjs/react-dom.development.js:8507:3)\n      at attemptToDispatchEvent (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/react-dom/cjs/react-dom.development.js:6005:3)\n      at dispatchEvent (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/react-dom/cjs/react-dom.development.js:5924:19)\n      at unstable_runWithPriority (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/scheduler/cjs/scheduler.development.js:468:12)\n      at runWithPriority$1 (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/react-dom/cjs/react-dom.development.js:11276:10)\n      at discreteUpdates$1 (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/react-dom/cjs/react-dom.development.js:22413:14)\n      at discreteUpdates (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/react-dom/cjs/react-dom.development.js:3756:12)\n      at dispatchDiscreteEvent (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/react-dom/cjs/react-dom.development.js:5889:3)\n      at HTMLDivElement.callTheUserObjectsOperation (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/jsdom/lib/jsdom/living/generated/EventListener.js:26:30)\n      at innerInvokeEventListeners (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:350:25)\n      at invokeEventListeners (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:286:3)\n      at HTMLTextAreaElementImpl._dispatch (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:233:9)\n      at HTMLTextAreaElementImpl.dispatchEvent (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:104:17)\n      at HTMLTextAreaElement.dispatchEvent (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/jsdom/lib/jsdom/living/generated/EventTarget.js:241:34)\n      at ../overture-ai-coe-front-door-rc2-single-webpart/node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/events.js:19:20\n      at ../overture-ai-coe-front-door-rc2-single-webpart/node_modules/@testing-library/react/dist/pure.js:66:16\n      at batchedUpdates$1 (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/react-dom/cjs/react-dom.development.js:22380:12)\n      at act (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/react-dom/cjs/react-dom-test-utils.development.js:1042:14)\n      at Object.eventWrapper (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/@testing-library/react/dist/pure.js:65:28)\n      at fireEvent (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/events.js:12:35)\n      at Function.fireEvent.<computed> [as change] (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/events.js:110:36)\n      at Function.fireEvent.<computed> [as change] (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/@testing-library/react/dist/fire-event.js:18:52)\n      at Object.<anonymous> (src/webparts/aiCoeFrontDoor/components/app/AppShell.test.tsx:75:15)\n\n  ● AppShell › blocks leaving unsaved business Marketing input until the server draft seam confirms it\n\n    Unable to find an element with the text: /Unsaved changes/. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.\n\n    Ignored nodes: comments, script, style\n    \u001b[36m<body>\u001b[39m\n      \u001b[36m<div>\u001b[39m\n        \u001b[36m<div\u001b[39m\n          \u001b[33mclass\u001b[39m=\u001b[32m\"overture-app ai-view ai-view--app\"\u001b[39m\n        \u001b[36m>\u001b[39m\n          \u001b[36m<header\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-top\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[36m<div\u001b[39m\n              \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-brand\"\u001b[39m\n            \u001b[36m>\u001b[39m\n              \u001b[36m<span\u001b[39m\n                \u001b[33maria-hidden\u001b[39m=\u001b[32m\"true\"\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-mark\"\u001b[39m\n              \u001b[36m/>\u001b[39m\n              \u001b[36m<span\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-brand-text\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[36m<strong\u001b[39m\n                  \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-brand-name\"\u001b[39m\n                \u001b[36m>\u001b[39m\n                  \u001b[0mOverture\u001b[0m\n                \u001b[36m</strong>\u001b[39m\n                \u001b[36m<small\u001b[39m\n                  \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-brand-note\"\u001b[39m\n                \u001b[36m>\u001b[39m\n                  \u001b[0mAI Center of Excellence\u001b[0m\n                \u001b[36m</small>\u001b[39m\n              \u001b[36m</span>\u001b[39m\n            \u001b[36m</div>\u001b[39m\n            \u001b[36m<div\u001b[39m\n              \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-chips\"\u001b[39m\n            \u001b[36m>\u001b[39m\n              \u001b[36m<span\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-chip-line\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[36m<span\u001b[39m\n                  \u001b[33maria-hidden\u001b[39m=\u001b[32m\"true\"\u001b[39m\n                  \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-dot\"\u001b[39m\n                \u001b[36m/>\u001b[39m\n                \u001b[0mMarketing participant\u001b[0m\n              \u001b[36m</span>\u001b[39m\n              \u001b[36m<span\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-chip-line\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[36m<span\u001b[39m\n                  \u001b[33maria-hidden\u001b[39m=\u001b[32m\"true\"\u001b[39m\n                  \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-dot\"\u001b[39m\n                \u001b[36m/>\u001b[39m\n                \u001b[0mAccess confirmed\u001b[0m\n              \u001b[36m</span>\u001b[39m\n              \u001b[36m<span\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-chip-line ai-app-chip-line--who\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[0mSigned in as Pat Example\u001b[0m\n              \u001b[36m</span>\u001b[39m\n            \u001b[36m</div>\u001b[39m\n          \u001b[36m</header>\u001b[39m\n          \u001b[36m<nav\u001b[39m\n            \u001b[33maria-label\u001b[39m=\u001b[32m\"AI Center of Excellence sections\"\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-tabs\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[36m<div\u001b[39m\n              \u001b[33maria-label\u001b[39m=\u001b[32m\"AI Center of Excellence sections\"\u001b[39m\n              \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-tabrow\"\u001b[39m\n              \u001b[33mrole\u001b[39m=\u001b[32m\"tablist\"\u001b[39m\n            \u001b[36m>\u001b[39m\n              \u001b[36m<button\u001b[39m\n                \u001b[33maria-controls\u001b[39m=\u001b[32m\"ai-app-panel-home\"\u001b[39m\n                \u001b[33maria-selected\u001b[39m=\u001b[32m\"true\"\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-tab\"\u001b[39m\n                \u001b[33mid\u001b[39m=\u001b[32m\"ai-app-tab-home\"\u001b[39m\n                \u001b[33mrole\u001b[39m=\u001b[32m\"tab\"\u001b[39m\n                \u001b[33mtabindex\u001b[39m=\u001b[32m\"0\"\u001b[39m\n                \u001b[33mtype\u001b[39m=\u001b[32m\"button\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[0mHome\u001b[0m\n              \u001b[36m</button>\u001b[39m\n              \u001b[36m<button\u001b[39m\n                \u001b[33maria-controls\u001b[39m=\u001b[32m\"ai-app-panel-cases\"\u001b[39m\n                \u001b[33maria-selected\u001b[39m=\u001b[32m\"false\"\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-tab\"\u001b[39m\n                \u001b[33mid\u001b[39m=\u001b[32m\"ai-app-tab-cases\"\u001b[39m\n                \u001b[33mrole\u001b[39m=\u001b[32m\"tab\"\u001b[39m\n                \u001b[33mtabindex\u001b[39m=\u001b[32m\"-1\"\u001b[39m\n                \u001b[33mtype\u001b[39m=\u001b[32m\"button\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[0mCases\u001b[0m\n              \u001b[36m</button>\u001b[39m\n              \u001b[36m<button\u001b[39m\n                \u001b[33maria-controls\u001b[39m=\u001b[32m\"ai-app-panel-engineering\"\u001b[39m\n                \u001b[33maria-selected\u001b[39m=\u001b[32m\"false\"\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-tab\"\u001b[39m\n                \u001b[33mid\u001b[39m=\u001b[32m\"ai-app-tab-engineering\"\u001b[39m\n                \u001b[33mrole\u001b[39m=\u001b[32m\"tab\"\u001b[39m\n                \u001b[33mtabindex\u001b[39m=\u001b[32m\"-1\"\u001b[39m\n                \u001b[33mtype\u001b[39m=\u001b[32m\"button\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[0mEngineering\u001b[0m\n              \u001b[36m</button>\u001b[39m\n              \u001b[36m<button\u001b[39m\n                \u001b[33maria-controls\u001b[39m=\u001b[32m\"ai-app-panel-marketing\"\u001b[39m\n                \u001b[33maria-selected\u001b[39m=\u001b[32m\"false\"\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-tab\"\u001b[39m\n                \u001b[33mid\u001b[39m=\u001b[32m\"ai-app-tab-marketing\"\u001b[39m\n                \u001b[33mrole\u001b[39m=\u001b[32m\"tab\"\u001b[39m\n                \u001b[33mtabindex\u001b[39m=\u001b[32m\"-1\"\u001b[39m\n                \u001b[33mtype\u001b[39m=\u001b[32m\"button\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[0mMarketing\u001b[0m\n              \u001b[36m</button>\u001b[39m\n              \u001b[36m<button\u001b[39m\n                \u001b[33maria-controls\u001b[39m=\u001b[32m\"ai-app-panel-improvement\"\u001b[39m\n                \u001b[33maria-selected\u001b[39m=\u001b[32m\"false\"\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-tab\"\u001b[39m\n                \u001b[33mid\u001b[39m=\u001b[32m\"ai-app-tab-improvement\"\u001b[39m\n                \u001b[33mrole\u001b[39m=\u001b[32m\"tab\"\u001b[39m\n                \u001b[33mtabindex\u001b[39m=\u001b[32m\"-1\"\u001b[39m\n                \u001b[33mtype\u001b[39m=\u001b[32m\"button\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[0mImprovement\u001b[0m\n              \u001b[36m</button>\u001b[39m\n            \u001b[36m</div>\u001b[39m\n          \u001b[36m</nav>\u001b[39m\n          \u001b[36m<section\u001b[39m\n            \u001b[33maria-labelledby\u001b[39m=\u001b[32m\"ai-app-tab-home\"\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-panel\"\u001b[39m\n            \u001b[33mid\u001b[39m=\u001b[32m\"ai-app-panel-home\"\u001b[39m\n            \u001b[33mrole\u001b[39m=\u001b[32m\"tabpanel\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[36m<h2\u001b[39m\n              \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-heading ai-app-heading--quiet\"\u001b[39m\n              \u001b[33mtabindex\u001b[39m=\u001b[32m\"-1\"\u001b[39m\n            \u001b[36m>\u001b[39m\n              \u001b[0mHome\u001b[0m\n            \u001b[36m</h2>\u001b[39m\n            \u001b[36m<div>\u001b[39m\n              \u001b[36m<div\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-first\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[36m<div\u001b[39m\n                  \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-hero\"\u001b[39m\n                \u001b[36m>\u001b[39m\n                  \u001b[36m<p\u001b[39m\n                    \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-hero-eyebrow\"\u001b[39m\n                  \u001b[36m>\u001b[39m\n                    \u001b[0mOverture AI Center of Excellence\u001b[0m\n                  \u001b[36m</p>\u001b[39m\n                  \u001b[36m<p\u001b[39m\n                    \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-hero-title\"\u001b[39m\n                  \u001b[36m>\u001b[39m\n                    \u001b[0mMake the next move.\u001b[0m\n                  \u001b[36m</p>\u001b[39m\n                  \u001b[36m<p\u001b[39m\n                    \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-hero-text\"\u001b[39m\n                  \u001b[36m>\u001b[39m\n                    \u001b[0mStart with the work. A person reads every request, and every answer says what it rests on.\u001b[0m\n                  \u001b[36m</p>\u001b[39m\n                  \u001b[36m<form\u001b[39m\n                    \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-command\"\u001b[39m\n                  \u001b[36m>\u001b[39m\n                    \u001b[36m<label\u001b[39m\n                      \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-command-label\"\u001b[39m\n                      \u001b[33mfor\u001b[39m=\u001b[32m\"ai-app-command-input\"\u001b[39m\n                    \u001b[36m>\u001b[39m\n                      \u001b[0mWhat are you trying to get done?\u001b[0m\n                    \u001b[36m</label>\u001b[39m\n                    \u001b[36m<span\u001b[39m\n                      \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-command-row\"\u001b[39m\n                    \u001b[36m>\u001b[39m\n                      \u001b[36m<input\u001b[39m\n                        \u001b[33mautocomplete\u001b[39m=\u001b[32m\"off\"\u001b[39m\n                        \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-command-input\"\u001b[39m\n                        \u001b[33mid\u001b[39m=\u001b[32m\"ai-app-command-input\"\u001b[39m\n                        \u001b[33mplaceholder\u001b[39m=\u001b[32m\"What are you trying to get done?\"\u001b[39m\n                        \u001b[33mvalue\u001b[39m=\u001b[32m\"\"\u001b[39m\n                      \u001b[36m/>\u001b[39m\n                      \u001b[36m<button\u001b[39m\n                        \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-primary\"\u001b[39m\n                        \u001b[33mtype\u001b[39m=\u001b[32m\"submit\"\u001b[39m\n                      \u001b[36m>\u001b[39m\n                        \u001b[0mAsk the Overture AI CoE\u001b[0m\n                      \u001b[36m</button>\u001b[39m\n                    \u001b[36m</span>\u001b[39m\n                  \u001b[36m</form>\u001b[39m\n                  \u001b[36m<p\u001b[39m\n                    \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-hero-micro\"\u001b[39m\n                  \u001b[36m>\u001b[39m\n                    \u001b[0mYour sentence is saved as a draft in the configured store and opens the guided request here. It is not submitted for review from this box.\u001b[0m\n                  \u001b[36m</p>\u001b[39m\n                \u001b[36m</div>\u001b[39m\n                \u001b[36m<div\u001b[39m\n                  \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-first-side\"\u001b[39m\n                \u001b[36m>\u001b[39m\n                  \u001b[36m<section\u001b[39m\n                    \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-surface ai-app-status\"\u001b[39m\n                  \u001b[36m>\u001b[39m\n                    \u001b[36m<h3\u001b[39m\n                      \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-status-title\"\u001b[39m\n                    \u001b[36m>\u001b[39m\n                      \u001b[0mWhat this view can say\u001b[0m\n                    \u001b[36m</h3>\u001b[39m\n                    \u001b[36m<ul\u001b[39m\n                      \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-status-rows\"\u001b[39m\n                    \u001b[36m>\u001b[39m\n                      \u001b[36m<li\u001b[39m\n                        \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-status-row\"\u001b[39m\n                      \u001b[36m>\u001b[39m\n                        \u001b[36m<span\u001b[39m\n                          \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-status-text\"\u001b[39m\n                        \u001b[36m>\u001b[39m\n                          \u001b[36m<strong\u001b[39m\n                            \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-status-label\"\u001b[39m\n                          \u001b[36m>\u001b[39m\n                            \u001b[0mYour access\u001b[0m\n                          \u001b[36m</strong>\u001b[39m\n                          \u001b[36m<small\u001b[39m\n                            \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-status-note\"\u001b[39m\n                          \u001b[36m>\u001b[39m\n                            \u001b[0mResolved from your site groups\u001b[0m\n                          \u001b[36m</small>\u001b[39m\n                        \u001b[36m</span>\u001b[39m\n                        \u001b[36m<span\u001b[39m\n                          \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-pill ai-app-pill--good\"\u001b[39m\n                        \u001b[36m>\u001b[39m\n                          \u001b[0mConfirmed\u001b[0m\n                        \u001b[36m</span>\u001b[39m\n                      \u001b[36m</li>\u001b[39m\n                      \u001b[36m<li\u001b[39m\n                        \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-status-row\"\u001b[39m\n                      \u001b[36m>\u001b[39m\n                        \u001b[36m<span\u001b[39m\n                          \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-status-text\"\u001b[39m\n                        \u001b[36m>\u001b[39m\n                          \u001b[36m<strong\u001b[39m\n                            \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-status-label\"\u001b[39m\n                          \u001b[36m>\u001b[39m\n                            \u001b[0mWhat this page can do\u001b[0m\n                          \u001b[36m</strong>\u001b[39m\n                          \u001b[36m<small\u001b[39m\n                            \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-status-note\"\u001b[39m\n                          \u001b[36m>\u001b[39m\n                            \u001b[0mIt drafts, records and shows. It sends nothing and publishes nothing.\u001b[0m\n                          \u001b[36m</small>\u001b[39m\n                        \u001b[36m</span>\u001b[39m\n                        \u001b[36m<span\u001b[39m\n                          \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-pill ai-app-pill--good\"\u001b[39m\n                        \u001b[36m>\u001b[39m\n                          \u001b[0mBounded\u001b[0m\n                        \u001b[36m</span>\u001b[39m\n                      \u001b[36m</li>\u001b[39m\n                      \u001b[36m<li\u001b[39m\n                        \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-status-row\"\u001b[39m\n                      \u001b[36m>\u001b[39m\n                        \u001b[36m<span\u001b[39m\n                          \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-status-text\"\u001b[39m\n                        \u001b[36m>\u001b[39m\n                          \u001b[36m<strong\u001b[39m\n                            \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-status-label\"\u001b[39m\n                          \u001b[36m>\u001b[39m\n                            \u001b[0mMarketing workflows\u001b[0m\n                          \u001b[36m</strong>\u001b[39m\n                          \u001b[36m<small\u001b[39m\n                            \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-status-note\"\u001b[39m\n                          \u001b[36m>\u001b[39m\n                            \u001b[0mA labelled demonstration, and a synthetic workspace with real validation, review and persistence over invented sources\u001b[0m\n                          \u001b[36m</small>\u001b[39m\n                        \u001b[36m</span>\u001b[39m\n                        \u001b[36m<span\u001b[39m\n                          \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-pill ai-app-pill--design\"\u001b[39m\n                        \u001b[36m>\u001b[39m\n                          \u001b[0mSynthetic only\u001b[0m\n                        \u001b[36m</span>\u001b[39m\n                      \u001b[36m</li>\u001b[39m\n                    \u001b[36m</ul>\u001b[39m\n                  \u001b[36m</section>\u001b[39m\n                \u001b[36m</div>\u001b[39m\n              \u001b[36m</div>\u001b[39m\n              \u001b[36m<ul\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-choices\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[36m<li\u001b[39m\n                  \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-choice\"\u001b[39m\n                \u001b[36m>\u001b[39m\n                  \u001b[36m<button\u001b[39m\n                    \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-choice-button\"\u001b[39m\n                    \u001b[33mtype\u001b[39m=\u001b[32m\"button\"\u001b[39m\n                  \u001b[36m>\u001b[39m\n                    \u001b[36m<span\u001b[39m\n                      \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-choice-step\"\u001b[39m\n                    \u001b[36m>\u001b[39m\n                      \u001b[0m01\u001b[0m\n                    \u001b[36m</span>\u001b[39m\n                    \u001b[36m<span\u001b[39m\n                      \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-choice-title\"\u001b[39m\n                    \u001b[36m>\u001b[39m\n                      \u001b[0mGet my work done\u001b[0m\n                    \u001b[36m</span>\u001b[39m\n                    \u001b[36m<span\u001b[39m\n                      \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-choice-text\"\u001b[39m\n                    \u001b[36m>\u001b[39m\n                      \u001b[0mAsk for a draft, check whether a tool is allowed, or get help with something you are stuck on.\u001b[0m\n                    \u001b[36m</span>\u001b[39m\n                  \u001b[36m</button>\u001b[39m\n                \u001b[36m</li>\u001b[39m\n                \u001b[36m<li\u001b[39m\n                  \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-choice\"\u001b[39m\n                \u001b[36m>\u001b[39m\n                  \u001b[36m<button\u001b[39m\n                    \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-choice-button\"\u001b[39m\n                    \u001b[33mtype\u001b[39m=\u001b[32m\"button\"\u001b[39m\n                  \u001b[36m>\u001b[39m\n                    \u001b[36m<span\u001b[39m\n                      \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-choice-step\"\u001b[39m\n                    \u001b[36m>\u001b[39m\n                      \u001b[0m02\u001b[0m\n                    \u001b[36m</span>\u001b[39m\n                    \u001b[36m<span\u001b[39m\n                      \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-choice-title\"\u001b[39m\n                    \u001b[36m>\u001b[39m\n                      \u001b[0mRun or improve the business\u001b[0m\n                    \u001b[36m</span>\u001b[39m\n                    \u001b[36m<span\u001b[39m\n                      \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-choice-text\"\u001b[39m\n                    \u001b[36m>\u001b[39m\n                      \u001b[0mRegister how your team is using AI, record how a task turned out, or raise something that is not working.\u001b[0m\n                    \u001b[36m</span>\u001b[39m\n                  \u001b[36m</button>\u001b[39m\n                \u001b[36m</li>\u001b[39m\n                \u001b[36m<li\u001b[39m\n                  \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-choice\"\u001b[39m\n                \u001b[36m>\u001b[39m\n                  \u001b[36m<button\u001b[39m\n                    \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-choice-button\"\u001b[39m\n                    \u001b[33mtype\u001b[39m=\u001b[32m\"button\"\u001b[39m\n                  \u001b[36m>\u001b[39m\n                    \u001b[36m<span\u001b[39m\n                      \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-choice-step\"\u001b[39m\n                    \u001b[36m>\u001b[39m\n                      \u001b[0m03\u001b[0m\n                    \u001b[36m</span>\u001b[39m\n                    \u001b[36m<span\u001b[39m\n                      \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-choice-title\"\u001b[39m\n                    \u001b[36m>\u001b[39m\n                      \u001b[0mReview enterprise AI value\u001b[0m\n                    \u001b[36m</span>\u001b[39m\n                    \u001b[36m<span\u001b[39m\n                      \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-choice-text\"\u001b[39m\n                    \u001b[36m>\u001b[39m\n                      \u001b[0mSee what has actually been measured, with the evidence behind each number.\u001b[0m\n                    \u001b[36m</span>\u001b[39m\n                  \u001b[36m</button>\u001b[39m\n                \u001b[36m</li>\u001b[39m\n              \u001b[36m</ul>\u001b[39m\n              \u001b[36m<div\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-head\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[36m<div\u001b[39m\n                  \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-head-text\"\u001b[39m\n                \u001b[36m>\u001b[39m\n                  \u001b[36m<h3\u001b[39m\n                    \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-head-title\"\u001b[39m\n                  \u001b[36m>\u001b[39m\n                    \u001b[0mWhat matters now\u001b[0m\n                  \u001b[36m</h3>\u001b[39m\n                  \u001b[36m<p\u001b[39m\n                    \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-head-note\"\u001b[39m\n                  \u001b[36m>\u001b[39m\n                    \u001b[0mDrawn from the role your site groups resolved, not from anything this page can change.\u001b[0m\n                  \u001b[36m</p>\u001b[39m\n                \u001b[36m</div>\u001b[39m\n              \u001b[36m</div>\u001b[39m\n              \u001b[36m<ul\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-threes\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[36m<li\u001b[39m\n                  \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-surface ai-app-case\"\u001b[39m\n                \u001b[36m>\u001b[39m\n                  \u001b[36m<span\u001b[39m\n                    \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-case-top\"\u001b[39m\n                  \u001b[36m>\u001b[39m\n                    \u001b[36m<span\u001b[39m\n                      \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-case-ref\"\u001b[39m\n                    \u001b[36m>\u001b[39m\n                      \u001b[0m01\u001b[0m\n                    \u001b[36m</span>\u001b[39m\n                    \u001b[36m<span\u001b[39m\n                      \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-pill ai-app-pill--design\"\u001b[39m\n                    \u001b[36m>\u001b[39m\n                      \u001b[0mSynthetic only\u001b[0m\n                    \u001b[36m</span>\u001b[39m\n                  \u001b[36m</span>\u001b[39m\n                  \u001b[36m<h4\u001b[39m\n                    \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-case-title\"\u001b[39m\n                  \u001b[36m>\u001b[39m\n                    \u001b[0mDraft against permitted sources\u001b[0m\n                  \u001b[36m</h4>\u001b[39m\n                  \u001b[36m<p\u001b[39m\n                    \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-case-summary\"\u001b[39m\n                  \u001b[36m>\u001b[39m\n                    \u001b[0mA brief, a plan or a follow-through drafted from the fixture register until a real one is approved.\u001b[0m\n                  \u001b[36m</p>\u001b[39m\n                \u001b[36m</li>\u001b[39m\n                \u001b[36m<li\u001b[39m\n                  \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-surface ai-app-case\"\u001b[39m\n                \u001b[36m>\u001b[39m\n                  \u001b[36m<span\u001b[39m\n                    \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-case-top\"\u001b[39m\n                  \u001b[36m>\u001b[39m\n                    \u001b[36m<span\u001b[39m\n                      \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-case-ref\"\u001b[39m\n                    \u001b[36m>\u001b[39m\n                      \u001b[0m02\u001b[0m\n                    \u001b[36m</span>\u001b[39m\n                    \u001b[36m<span\u001b[39m\n                      \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-pill ai-app-pill--wait\"\u001b[39m\n                    \u001b[36m>\u001b[39m\n                      \u001b[0mReviewer unbound\u001b[0m\n                    \u001b[36m</span>\u001b[39m\n                  \u001b[36m</span>\u001b[39m\n                  \u001b[36m<h4\u001b[39m\n                    \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-case-title\"\u001b[39m\n                  \u001b[36m>\u001b[39m\n                    \u001b[0mSend a draft for review\u001b[0m\n                  \u001b[36m</h4>\u001b[39m\n                  \u001b[36m<p\u001b[39m\n                    \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-case-summary\"\u001b[39m\n                  \u001b[36m>\u001b[39m\n                    \u001b[0mA review is requested of a role; the real owner and approver are not bound yet.\u001b[0m\n                  \u001b[36m</p>\u001b[39m\n                \u001b[36m</li>\u001b[39m\n                \u001b[36m<li\u001b[39m\n                  \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-surface ai-app-case\"\u001b[39m\n                \u001b[36m>\u001b[39m\n                  \u001b[36m<span\u001b[39m\n                    \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-case-top\"\u001b[39m\n                  \u001b[36m>\u001b[39m\n                    \u001b[36m<span\u001b[39m\n                      \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-case-ref\"\u001b[39m\n                    \u001b[36m>\u001b[39m\n                      \u001b[0m03\u001b[0m\n                    \u001b[36m</span>\u001b[39m\n                    \u001b[36m<span\u001b[39m\n                      \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-pill ai-app-pill--info\"\u001b[39m\n                    \u001b[36m>\u001b[39m\n                      \u001b[0mOpen to you\u001b[0m\n                    \u001b[36m</span>\u001b[39m\n                  \u001b[36m</span>\u001b[39m\n                  \u001b[36m<h4\u001b[39m\n                    \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-case-title\"\u001b[39m\n                  \u001b[36m>\u001b[39m\n                    \u001b[0mYour own drafts\u001b[0m\n                  \u001b[36m</h4>\u001b[39m\n                  \u001b[36m<p\u001b[39m\n                    \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-case-summary\"\u001b[39m\n                  \u001b[36m>\u001b[39m\n                    \u001b[0mEvery revision you saved, with its state as the store derives it.\u001b[0m\n                  \u001b[36m</p>\u001b[39m\n                \u001b[36m</li>\u001b[39m\n              \u001b[36m</ul>\u001b[39m\n            \u001b[36m</div>\u001b[39m\n          \u001b[36m</section>\u001b[39m\n          \u001b[36m<footer\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-foot\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[36m<span>\u001b[39m\n              \u001b[0mOverture AI Center of Excellence\u001b[0m\n            \u001b[36m</span>\u001b[39m\n            \u001b[36m<span>\u001b[39m\n              \u001b[0mNothing on this page is sent or published without a person deciding it.\u001b[0m\n            \u001b[36m</span>\u001b[39m\n            \u001b[36m<span\u001b[39m\n              \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-foot-support\"\u001b[39m\n            \u001b[36m>\u001b[39m\n              \u001b[0mSupport route: not bound on this site yet.\u001b[0m\n            \u001b[36m</span>\u001b[39m\n          \u001b[36m</footer>\u001b[39m\n        \u001b[36m</div>\u001b[39m\n      \u001b[36m</div>\u001b[39m\n    \u001b[36m</body>\u001b[39m\n\n    \u001b[0m \u001b[90m 75 |\u001b[39m     fireEvent\u001b[33m.\u001b[39mchange(view\u001b[33m.\u001b[39mgetByLabelText(\u001b[32m'Approved objective'\u001b[39m)\u001b[33m,\u001b[39m { target\u001b[33m:\u001b[39m { value\u001b[33m:\u001b[39m \u001b[32m'Unsubmitted working objective'\u001b[39m } })\u001b[33m;\u001b[39m\n     \u001b[90m 76 |\u001b[39m     fireEvent\u001b[33m.\u001b[39mclick(view\u001b[33m.\u001b[39mgetByRole(\u001b[32m'tab'\u001b[39m\u001b[33m,\u001b[39m { name\u001b[33m:\u001b[39m \u001b[32m'Home'\u001b[39m\u001b[33m,\u001b[39m exact\u001b[33m:\u001b[39m \u001b[36mtrue\u001b[39m }))\u001b[33m;\u001b[39m\n    \u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 77 |\u001b[39m     \u001b[36mawait\u001b[39m view\u001b[33m.\u001b[39mfindByText(\u001b[35m/Unsaved changes/\u001b[39m)\u001b[33m;\u001b[39m\n     \u001b[90m    |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n     \u001b[90m 78 |\u001b[39m     expect(selected(view\u001b[33m.\u001b[39mcontainer))\u001b[33m.\u001b[39mtoBe(\u001b[32m'Marketing'\u001b[39m)\u001b[33m;\u001b[39m\n     \u001b[90m 79 |\u001b[39m     fireEvent\u001b[33m.\u001b[39mclick(view\u001b[33m.\u001b[39mgetByRole(\u001b[32m'button'\u001b[39m\u001b[33m,\u001b[39m { name\u001b[33m:\u001b[39m \u001b[32m'Save working draft'\u001b[39m\u001b[33m,\u001b[39m exact\u001b[33m:\u001b[39m \u001b[36mtrue\u001b[39m }))\u001b[33m;\u001b[39m\n     \u001b[90m 80 |\u001b[39m     \u001b[36mawait\u001b[39m view\u001b[33m.\u001b[39mfindByText(\u001b[32m'Working draft saved and read back from the server.'\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m\n\n      at waitForWrapper (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/wait-for.js:166:27)\n      at ../overture-ai-coe-front-door-rc2-single-webpart/node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/query-helpers.js:86:33\n      at Object.<anonymous> (src/webparts/aiCoeFrontDoor/components/app/AppShell.test.tsx:77:16)\n"
+    },
+    {
+      "leaks": false,
+      "numFailingTests": 0,
+      "numPassingTests": 0,
+      "numPendingTests": 18,
+      "numTodoTests": 0,
+      "openHandles": [],
+      "perfStats": {
+        "end": 1790185452034,
+        "loadTestEnvironmentEnd": 1790185451813,
+        "loadTestEnvironmentStart": 1790185451806,
+        "runtime": 221,
+        "setupAfterEnvEnd": 1790185451899,
+        "setupAfterEnvStart": 1790185451846,
+        "setupFilesEnd": 1790185451814,
+        "setupFilesStart": 1790185451813,
+        "slow": false,
+        "start": 1790185451813
+      },
+      "skipped": true,
+      "snapshot": {
+        "added": 0,
+        "fileDeleted": false,
+        "matched": 0,
+        "unchecked": 0,
+        "uncheckedKeys": [],
+        "unmatched": 0,
+        "updated": 0
+      },
+      "testFilePath": "C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-audit-fixes\\src\\webparts\\aiCoeFrontDoor\\components\\app\\AppBusinessMarketingWorkspace.test.tsx",
+      "testResults": [
+        {
+          "ancestorTitles": [],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "runs all three drafts with selected business sources and source-only meeting evidence",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790185452032,
+          "status": "pending",
+          "title": "runs all three drafts with selected business sources and source-only meeting evidence"
+        },
+        {
+          "ancestorTitles": [],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "unauthorized users make zero business or working-draft calls: {\"roles\":[\"employee\"],\"resolution\":\"resolved\"}",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790185452032,
+          "status": "pending",
+          "title": "unauthorized users make zero business or working-draft calls: {\"roles\":[\"employee\"],\"resolution\":\"resolved\"}"
+        },
+        {
+          "ancestorTitles": [],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "unauthorized users make zero business or working-draft calls: {\"roles\":[\"marketingParticipant\"],\"resolution\":\"unresolved\"}",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790185452033,
+          "status": "pending",
+          "title": "unauthorized users make zero business or working-draft calls: {\"roles\":[\"marketingParticipant\"],\"resolution\":\"unresolved\"}"
+        },
+        {
+          "ancestorTitles": [],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "uses only the current authenticated reviewer and a matching backend authority",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790185452033,
+          "status": "pending",
+          "title": "uses only the current authenticated reviewer and a matching backend authority"
+        },
+        {
+          "ancestorTitles": [],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "keeps uncertain review requests pending across remount and repairs only on explicit action",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790185452033,
+          "status": "pending",
+          "title": "keeps uncertain review requests pending across remount and repairs only on explicit action"
+        },
+        {
+          "ancestorTitles": [],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "saves and loads unsubmitted objective audience and manual JSON only through the server draft seam",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790185452033,
+          "status": "pending",
+          "title": "saves and loads unsubmitted objective audience and manual JSON only through the server draft seam"
+        },
+        {
+          "ancestorTitles": [],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "edits a manual revision with its exact store version and rejects invalid JSON before calling the facade",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790185452033,
+          "status": "pending",
+          "title": "edits a manual revision with its exact store version and rejects invalid JSON before calling the facade"
+        },
+        {
+          "ancestorTitles": [],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "submits manual UI corrections through the real business facade using the server content-only contract",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790185452033,
+          "status": "pending",
+          "title": "submits manual UI corrections through the real business facade using the server content-only contract"
+        },
+        {
+          "ancestorTitles": [],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "offers the provider manual fallback as editable JSON without relabelling it AI output",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790185452033,
+          "status": "pending",
+          "title": "offers the provider manual fallback as editable JSON without relabelling it AI output"
+        },
+        {
+          "ancestorTitles": [],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "blocks overlapping draft clicks and performs no follow-up after unmount",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790185452033,
+          "status": "pending",
+          "title": "blocks overlapping draft clicks and performs no follow-up after unmount"
+        },
+        {
+          "ancestorTitles": [],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "fails closed when business work listing is not bound",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790185452033,
+          "status": "pending",
+          "title": "fails closed when business work listing is not bound"
+        },
+        {
+          "ancestorTitles": [],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "does not expose decisions for nonmatching authority {\"synthetic\":true}",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790185452033,
+          "status": "pending",
+          "title": "does not expose decisions for nonmatching authority {\"synthetic\":true}"
+        },
+        {
+          "ancestorTitles": [],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "does not expose decisions for nonmatching authority {\"actorId\":\"other@contoso.com\"}",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790185452033,
+          "status": "pending",
+          "title": "does not expose decisions for nonmatching authority {\"actorId\":\"other@contoso.com\"}"
+        },
+        {
+          "ancestorTitles": [],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "does not expose decisions for nonmatching authority {\"tenantScope\":\"https://another.example\"}",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790185452033,
+          "status": "pending",
+          "title": "does not expose decisions for nonmatching authority {\"tenantScope\":\"https://another.example\"}"
+        },
+        {
+          "ancestorTitles": [],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "does not expose decisions for nonmatching authority {\"expiresAt\":\"2000-01-01T00:00:00Z\"}",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790185452033,
+          "status": "pending",
+          "title": "does not expose decisions for nonmatching authority {\"expiresAt\":\"2000-01-01T00:00:00Z\"}"
+        },
+        {
+          "ancestorTitles": [],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "does not expose decisions for nonmatching authority {\"revoked\":true}",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790185452033,
+          "status": "pending",
+          "title": "does not expose decisions for nonmatching authority {\"revoked\":true}"
+        },
+        {
+          "ancestorTitles": [],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "does not expose decisions for nonmatching authority {\"scope\":[\"copyChannel\"]}",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790185452033,
+          "status": "pending",
+          "title": "does not expose decisions for nonmatching authority {\"scope\":[\"copyChannel\"]}"
+        },
+        {
+          "ancestorTitles": [],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "live mode selects only server-authorized Work IDs and never mounts the synthetic workspace",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790185452033,
+          "status": "pending",
+          "title": "live mode selects only server-authorized Work IDs and never mounts the synthetic workspace"
+        }
+      ],
+      "failureMessage": null
+    },
+    {
+      "leaks": false,
+      "numFailingTests": 0,
+      "numPassingTests": 0,
+      "numPendingTests": 15,
+      "numTodoTests": 0,
+      "openHandles": [],
+      "perfStats": {
+        "end": 1790185452292,
+        "loadTestEnvironmentEnd": 1790185452047,
+        "loadTestEnvironmentStart": 1790185452041,
+        "runtime": 244,
+        "setupAfterEnvEnd": 1790185452139,
+        "setupAfterEnvStart": 1790185452084,
+        "setupFilesEnd": 1790185452048,
+        "setupFilesStart": 1790185452048,
+        "slow": false,
+        "start": 1790185452048
+      },
+      "skipped": true,
+      "snapshot": {
+        "added": 0,
+        "fileDeleted": false,
+        "matched": 0,
+        "unchecked": 0,
+        "uncheckedKeys": [],
+        "unmatched": 0,
+        "updated": 0
+      },
+      "testFilePath": "C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-audit-fixes\\src\\webparts\\aiCoeFrontDoor\\components\\app\\AppCoreWorkspace.test.tsx",
+      "testResults": [
+        {
+          "ancestorTitles": [
+            "AppCoreWorkspace case journey"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppCoreWorkspace case journey saves only edited clarification fields instead of clearing unseen S1 values",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790185452290,
+          "status": "pending",
+          "title": "saves only edited clarification fields instead of clearing unseen S1 values"
+        },
+        {
+          "ancestorTitles": [
+            "AppCoreWorkspace case journey"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppCoreWorkspace case journey renders unvalidated native work without a fabricated date or synthetic write notice",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790185452290,
+          "status": "pending",
+          "title": "renders unvalidated native work without a fabricated date or synthetic write notice"
+        },
+        {
+          "ancestorTitles": [
+            "AppCoreWorkspace case journey"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppCoreWorkspace case journey does not call human validation for an unauthorized or unresolved reviewer context {\"roles\":[\"employee\"],\"rolesState\":\"resolved\"}",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790185452290,
+          "status": "pending",
+          "title": "does not call human validation for an unauthorized or unresolved reviewer context {\"roles\":[\"employee\"],\"rolesState\":\"resolved\"}"
+        },
+        {
+          "ancestorTitles": [
+            "AppCoreWorkspace case journey"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppCoreWorkspace case journey does not call human validation for an unauthorized or unresolved reviewer context {\"roles\":[\"operator\"],\"rolesState\":\"resolved\",\"isAdmin\":true}",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790185452290,
+          "status": "pending",
+          "title": "does not call human validation for an unauthorized or unresolved reviewer context {\"roles\":[\"operator\"],\"rolesState\":\"resolved\",\"isAdmin\":true}"
+        },
+        {
+          "ancestorTitles": [
+            "AppCoreWorkspace case journey"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppCoreWorkspace case journey does not call human validation for an unauthorized or unresolved reviewer context {\"roles\":[\"marketingReviewer\"],\"rolesState\":\"resolved\"}",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790185452290,
+          "status": "pending",
+          "title": "does not call human validation for an unauthorized or unresolved reviewer context {\"roles\":[\"marketingReviewer\"],\"rolesState\":\"resolved\"}"
+        },
+        {
+          "ancestorTitles": [
+            "AppCoreWorkspace case journey"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppCoreWorkspace case journey does not call human validation for an unauthorized or unresolved reviewer context {\"roles\":[\"designAuthority\"],\"rolesState\":\"pending\"}",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790185452291,
+          "status": "pending",
+          "title": "does not call human validation for an unauthorized or unresolved reviewer context {\"roles\":[\"designAuthority\"],\"rolesState\":\"pending\"}"
+        },
+        {
+          "ancestorTitles": [
+            "AppCoreWorkspace case journey"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppCoreWorkspace case journey does not call human validation for an unauthorized or unresolved reviewer context {\"roles\":[\"designAuthority\"],\"rolesState\":\"unresolved\"}",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790185452291,
+          "status": "pending",
+          "title": "does not call human validation for an unauthorized or unresolved reviewer context {\"roles\":[\"designAuthority\"],\"rolesState\":\"unresolved\"}"
+        },
+        {
+          "ancestorTitles": [
+            "AppCoreWorkspace case journey"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppCoreWorkspace case journey explains unavailable synthetic human validation instead of inventing authority",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790185452291,
+          "status": "pending",
+          "title": "explains unavailable synthetic human validation instead of inventing authority"
+        },
+        {
+          "ancestorTitles": [
+            "AppCoreWorkspace case journey"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppCoreWorkspace case journey keeps recovery failure fail-closed and makes no follow-up call after unmount",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790185452291,
+          "status": "pending",
+          "title": "keeps recovery failure fail-closed and makes no follow-up call after unmount"
+        },
+        {
+          "ancestorTitles": [
+            "AppCoreWorkspace case journey"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppCoreWorkspace case journey offers explicit human validation only to resolved design authority and refreshes the original packet after saving",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790185452291,
+          "status": "pending",
+          "title": "offers explicit human validation only to resolved design authority and refreshes the original packet after saving"
+        },
+        {
+          "ancestorTitles": [
+            "AppCoreWorkspace case journey"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppCoreWorkspace case journey recovers the original pending command before fresh reads and never resubmits an unknown mutation",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790185452291,
+          "status": "pending",
+          "title": "recovers the original pending command before fresh reads and never resubmits an unknown mutation"
+        },
+        {
+          "ancestorTitles": [
+            "AppCoreWorkspace case journey"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppCoreWorkspace case journey lets the person select a packet, read its questions and submit their own classified answer",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790185452291,
+          "status": "pending",
+          "title": "lets the person select a packet, read its questions and submit their own classified answer"
+        },
+        {
+          "ancestorTitles": [
+            "AppCoreWorkspace case journey"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppCoreWorkspace case journey restores only a scoped opaque selection by reading the service after remount",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790185452291,
+          "status": "pending",
+          "title": "restores only a scoped opaque selection by reading the service after remount"
+        },
+        {
+          "ancestorTitles": [
+            "AppCoreWorkspace case journey"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppCoreWorkspace case journey saves entered clarification against the selected WorkID rather than creating a second case",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790185452291,
+          "status": "pending",
+          "title": "saves entered clarification against the selected WorkID rather than creating a second case"
+        },
+        {
+          "ancestorTitles": [
+            "AppCoreWorkspace case journey"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppCoreWorkspace case journey renders public ListMyWork Items as selectable cases and reads status on selection",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790185452291,
+          "status": "pending",
+          "title": "renders public ListMyWork Items as selectable cases and reads status on selection"
+        }
+      ],
+      "failureMessage": null
+    },
+    {
+      "leaks": false,
+      "numFailingTests": 0,
+      "numPassingTests": 0,
+      "numPendingTests": 2,
+      "numTodoTests": 0,
+      "openHandles": [],
+      "perfStats": {
+        "end": 1790185452461,
+        "loadTestEnvironmentEnd": 1790185452302,
+        "loadTestEnvironmentStart": 1790185452296,
+        "runtime": 159,
+        "setupAfterEnvEnd": 1790185452369,
+        "setupAfterEnvStart": 1790185452330,
+        "setupFilesEnd": 1790185452302,
+        "setupFilesStart": 1790185452302,
+        "slow": false,
+        "start": 1790185452302
+      },
+      "skipped": true,
+      "snapshot": {
+        "added": 0,
+        "fileDeleted": false,
+        "matched": 0,
+        "unchecked": 0,
+        "uncheckedKeys": [],
+        "unmatched": 0,
+        "updated": 0
+      },
+      "testFilePath": "C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-audit-fixes\\src\\webparts\\aiCoeFrontDoor\\components\\app\\AppMarketingWorkspace.test.tsx",
+      "testResults": [
+        {
+          "ancestorTitles": [
+            "AppMarketingWorkspace review boundaries"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppMarketingWorkspace review boundaries creates a meaningful objective correction as a new revision after changes are requested",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790185452461,
+          "status": "pending",
+          "title": "creates a meaningful objective correction as a new revision after changes are requested"
+        },
+        {
+          "ancestorTitles": [
+            "AppMarketingWorkspace review boundaries"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppMarketingWorkspace review boundaries does not offer participant-to-reviewer switching or a decision without the service capability",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790185452461,
+          "status": "pending",
+          "title": "does not offer participant-to-reviewer switching or a decision without the service capability"
+        }
+      ],
+      "failureMessage": null
+    },
+    {
+      "leaks": false,
+      "numFailingTests": 0,
+      "numPassingTests": 0,
+      "numPendingTests": 4,
+      "numTodoTests": 0,
+      "openHandles": [],
+      "perfStats": {
+        "end": 1790185452737,
+        "loadTestEnvironmentEnd": 1790185452469,
+        "loadTestEnvironmentStart": 1790185452463,
+        "runtime": 268,
+        "setupAfterEnvEnd": 1790185452572,
+        "setupAfterEnvStart": 1790185452494,
+        "setupFilesEnd": 1790185452469,
+        "setupFilesStart": 1790185452469,
+        "slow": false,
+        "start": 1790185452469
+      },
+      "skipped": true,
+      "snapshot": {
+        "added": 0,
+        "fileDeleted": false,
+        "matched": 0,
+        "unchecked": 0,
+        "uncheckedKeys": [],
+        "unmatched": 0,
+        "updated": 0
+      },
+      "testFilePath": "C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-audit-fixes\\src\\webparts\\aiCoeFrontDoor\\components\\app\\AppSections.test.tsx",
+      "testResults": [
+        {
+          "ancestorTitles": [
+            "same-app measurement and teaching entry"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "same-app measurement and teaching entry opens and closes the guidance with keyboard controls in the narrow layout",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790185452736,
+          "status": "pending",
+          "title": "opens and closes the guidance with keyboard controls in the narrow layout"
+        },
+        {
+          "ancestorTitles": [
+            "same-app measurement and teaching entry"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "same-app measurement and teaching entry opens source, role, stop and recovery quick-start guidance from Engineering without a private source link",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790185452736,
+          "status": "pending",
+          "title": "opens source, role, stop and recovery quick-start guidance from Engineering without a private source link"
+        },
+        {
+          "ancestorTitles": [
+            "same-app measurement and teaching entry"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "same-app measurement and teaching entry connects Improvement guidance to the existing outcome form, not another tracker",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790185452736,
+          "status": "pending",
+          "title": "connects Improvement guidance to the existing outcome form, not another tracker"
+        },
+        {
+          "ancestorTitles": [
+            "same-app measurement and teaching entry"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "same-app measurement and teaching entry makes manual commissioning and proposal/retest instructions reachable without publishing or claiming approval",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790185452736,
+          "status": "pending",
+          "title": "makes manual commissioning and proposal/retest instructions reachable without publishing or claiming approval"
+        }
+      ],
+      "failureMessage": null
+    },
+    {
+      "leaks": false,
+      "numFailingTests": 0,
+      "numPassingTests": 0,
+      "numPendingTests": 5,
+      "numTodoTests": 0,
+      "openHandles": [],
+      "perfStats": {
+        "end": 1790185452845,
+        "loadTestEnvironmentEnd": 1790185452747,
+        "loadTestEnvironmentStart": 1790185452740,
+        "runtime": 98,
+        "setupAfterEnvEnd": 1790185452827,
+        "setupAfterEnvStart": 1790185452779,
+        "setupFilesEnd": 1790185452748,
+        "setupFilesStart": 1790185452747,
+        "slow": false,
+        "start": 1790185452747
+      },
+      "skipped": true,
+      "snapshot": {
+        "added": 0,
+        "fileDeleted": false,
+        "matched": 0,
+        "unchecked": 0,
+        "uncheckedKeys": [],
+        "unmatched": 0,
+        "updated": 0
+      },
+      "testFilePath": "C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-audit-fixes\\src\\webparts\\aiCoeFrontDoor\\content\\measures.test.ts",
+      "testResults": [
+        {
+          "ancestorTitles": [
+            "suppress"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "suppress holds back a measure whose group is smaller than the document minimum",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790185452842,
+          "status": "pending",
+          "title": "holds back a measure whose group is smaller than the document minimum"
+        },
+        {
+          "ancestorTitles": [
+            "suppress"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "suppress holds back nothing when the row names no group, and nothing at all without a measure",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790185452842,
+          "status": "pending",
+          "title": "holds back nothing when the row names no group, and nothing at all without a measure"
+        },
+        {
+          "ancestorTitles": [
+            "effectiveState"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "effectiveState is the row state, unless the group is too small or the number is missing",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790185452842,
+          "status": "pending",
+          "title": "is the row state, unless the group is too small or the number is missing"
+        },
+        {
+          "ancestorTitles": [
+            "formatMeasure"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "formatMeasure shows a measured number in its unit",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790185452842,
+          "status": "pending",
+          "title": "shows a measured number in its unit"
+        },
+        {
+          "ancestorTitles": [
+            "formatMeasure"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "formatMeasure shows the plain placeholder wherever there is no measured number",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790185452842,
+          "status": "pending",
+          "title": "shows the plain placeholder wherever there is no measured number"
+        }
+      ],
+      "failureMessage": null
+    },
+    {
+      "leaks": false,
+      "numFailingTests": 0,
+      "numPassingTests": 0,
+      "numPendingTests": 12,
+      "numTodoTests": 0,
+      "openHandles": [],
+      "perfStats": {
+        "end": 1790185453030,
+        "loadTestEnvironmentEnd": 1790185452856,
+        "loadTestEnvironmentStart": 1790185452847,
+        "runtime": 173,
+        "setupAfterEnvEnd": 1790185452935,
+        "setupAfterEnvStart": 1790185452889,
+        "setupFilesEnd": 1790185452857,
+        "setupFilesStart": 1790185452857,
+        "slow": false,
+        "start": 1790185452857
+      },
+      "skipped": true,
+      "snapshot": {
+        "added": 0,
+        "fileDeleted": false,
+        "matched": 0,
+        "unchecked": 0,
+        "uncheckedKeys": [],
+        "unmatched": 0,
+        "updated": 0
+      },
+      "testFilePath": "C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-audit-fixes\\src\\webparts\\aiCoeFrontDoor\\components\\app\\AppValue.test.tsx",
+      "testResults": [
+        {
+          "ancestorTitles": [
+            "AppValue evidence gate"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppValue evidence gate withholds a number without current evidence, a valid period and privacy metadata: {}",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790185453028,
+          "status": "pending",
+          "title": "withholds a number without current evidence, a valid period and privacy metadata: {}"
+        },
+        {
+          "ancestorTitles": [
+            "AppValue evidence gate"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppValue evidence gate withholds a number without current evidence, a valid period and privacy metadata: {\"evidenceRef\":\" \"}",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790185453028,
+          "status": "pending",
+          "title": "withholds a number without current evidence, a valid period and privacy metadata: {\"evidenceRef\":\" \"}"
+        },
+        {
+          "ancestorTitles": [
+            "AppValue evidence gate"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppValue evidence gate withholds a number without current evidence, a valid period and privacy metadata: {}",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790185453028,
+          "status": "pending",
+          "title": "withholds a number without current evidence, a valid period and privacy metadata: {}"
+        },
+        {
+          "ancestorTitles": [
+            "AppValue evidence gate"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppValue evidence gate withholds a number without current evidence, a valid period and privacy metadata: {}",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790185453028,
+          "status": "pending",
+          "title": "withholds a number without current evidence, a valid period and privacy metadata: {}"
+        },
+        {
+          "ancestorTitles": [
+            "AppValue evidence gate"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppValue evidence gate withholds a number without current evidence, a valid period and privacy metadata: {\"periodStart\":\"2026-09-23\"}",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790185453028,
+          "status": "pending",
+          "title": "withholds a number without current evidence, a valid period and privacy metadata: {\"periodStart\":\"2026-09-23\"}"
+        },
+        {
+          "ancestorTitles": [
+            "AppValue evidence gate"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppValue evidence gate withholds a number without current evidence, a valid period and privacy metadata: {\"periodEnd\":\"2026-09-24\"}",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790185453028,
+          "status": "pending",
+          "title": "withholds a number without current evidence, a valid period and privacy metadata: {\"periodEnd\":\"2026-09-24\"}"
+        },
+        {
+          "ancestorTitles": [
+            "AppValue evidence gate"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppValue evidence gate withholds a number without current evidence, a valid period and privacy metadata: {\"periodStart\":\"2026-08-01\",\"periodEnd\":\"2026-08-10\"}",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790185453028,
+          "status": "pending",
+          "title": "withholds a number without current evidence, a valid period and privacy metadata: {\"periodStart\":\"2026-08-01\",\"periodEnd\":\"2026-08-10\"}"
+        },
+        {
+          "ancestorTitles": [
+            "AppValue evidence gate"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppValue evidence gate withholds a number without current evidence, a valid period and privacy metadata: {}",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790185453028,
+          "status": "pending",
+          "title": "withholds a number without current evidence, a valid period and privacy metadata: {}"
+        },
+        {
+          "ancestorTitles": [
+            "AppValue evidence gate"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppValue evidence gate withholds a number without current evidence, a valid period and privacy metadata: {\"cohortSize\":null}",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790185453028,
+          "status": "pending",
+          "title": "withholds a number without current evidence, a valid period and privacy metadata: {\"cohortSize\":null}"
+        },
+        {
+          "ancestorTitles": [
+            "AppValue evidence gate"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppValue evidence gate withholds a number without current evidence, a valid period and privacy metadata: {\"value\":null}",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790185453028,
+          "status": "pending",
+          "title": "withholds a number without current evidence, a valid period and privacy metadata: {\"value\":null}"
+        },
+        {
+          "ancestorTitles": [
+            "AppValue evidence gate"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppValue evidence gate shows the recorded measure with evidence AND period, without calling the value verified",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790185453029,
+          "status": "pending",
+          "title": "shows the recorded measure with evidence AND period, without calling the value verified"
+        },
+        {
+          "ancestorTitles": [
+            "AppValue evidence gate"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppValue evidence gate suppresses a sensitive small cohort even if its row claims to be measured",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790185453029,
+          "status": "pending",
+          "title": "suppresses a sensitive small cohort even if its row claims to be measured"
+        }
+      ],
+      "failureMessage": null
+    },
+    {
+      "leaks": false,
+      "numFailingTests": 0,
+      "numPassingTests": 0,
+      "numPendingTests": 2,
+      "numTodoTests": 0,
+      "openHandles": [],
+      "perfStats": {
+        "end": 1790185453151,
+        "loadTestEnvironmentEnd": 1790185453038,
+        "loadTestEnvironmentStart": 1790185453031,
+        "runtime": 112,
+        "setupAfterEnvEnd": 1790185453144,
+        "setupAfterEnvStart": 1790185453077,
+        "setupFilesEnd": 1790185453039,
+        "setupFilesStart": 1790185453039,
+        "slow": false,
+        "start": 1790185453039
+      },
+      "skipped": true,
+      "snapshot": {
+        "added": 0,
+        "fileDeleted": false,
+        "matched": 0,
+        "unchecked": 0,
+        "uncheckedKeys": [],
+        "unmatched": 0,
+        "updated": 0
+      },
+      "testFilePath": "C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-audit-fixes\\src\\webparts\\aiCoeFrontDoor\\content\\measures.app.test.ts",
+      "testResults": [
+        {
+          "ancestorTitles": [
+            "explicit app measure privacy policy"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "explicit app measure privacy policy allows a declared non-person metric without treating an absent cohort as that declaration",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790185453151,
+          "status": "pending",
+          "title": "allows a declared non-person metric without treating an absent cohort as that declaration"
+        },
+        {
+          "ancestorTitles": [
+            "explicit app measure privacy policy"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "explicit app measure privacy policy never exempts a row that actually records a small sensitive cohort",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790185453151,
+          "status": "pending",
+          "title": "never exempts a row that actually records a small sensitive cohort"
+        }
+      ],
+      "failureMessage": null
+    }
+  ],
+  "wasInterrupted": false
+}

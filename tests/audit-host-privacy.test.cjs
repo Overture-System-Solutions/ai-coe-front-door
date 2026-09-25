@@ -1,0 +1,63 @@
+'use strict';
+const {test}=require('node:test');
+const assert=require('node:assert/strict');
+const Module=require('node:module');
+const original=Module._load;
+const sp={Version:{parse:s=>s},SPHttpClient:{configurations:{v1:{}}},AadHttpClient:{configurations:{v1:{}}},SPPermission:{manageWeb:'manageWeb'},BaseClientSideWebPart:class {async onInit(){}},PropertyPaneDropdown:()=>({}),PropertyPaneTextField:()=>({})};
+Module._load=function(name,parent,isMain){if(name.startsWith('@microsoft/sp-'))return sp;if(name==='AiCoeFrontDoorWebPartStrings'||name.endsWith('.scss'))return {};return original.call(this,name,parent,isMain);};
+require.extensions['.scss']=module=>{module.exports={};};
+const load=require('./audit-source-loader.cjs');
+const WebPart=load('AiCoeFrontDoorWebPart.ts').default;
+const {createBranding}=load('branding/branding.ts');
+
+test('real-site composition never persists business text in a browser or enables synthetic Marketing',async()=>{
+ const browserWrites=[];
+ global.window={localStorage:{getItem:()=>null,setItem:(k,v)=>browserWrites.push([k,v]),removeItem:()=>{},length:0,key:()=>null}};
+ const part=new WebPart();part.properties={view:'app'};
+ part.context={pageContext:{web:{absoluteUrl:'https://example.sharepoint.com/sites/business',permissions:{hasPermission:()=>false}},user:{email:'audit@example.invalid',displayName:'Synthetic tester'}},spHttpClient:{get:async()=>({ok:false,status:404}),post:async()=>{throw new Error('No live calls allowed.');}},aadHttpClientFactory:{getClient:async()=>{throw new Error('No live provider.');}}};
+ await part.onInit();
+ const services=part._servicesFor(part._core,createBranding(''));
+ const result=await services.draftStore.save('idea',{answers:{workToImprove:'DO_NOT_STORE_BUSINESS_TEXT'}});
+ assert.ok(!JSON.stringify(browserWrites).includes('DO_NOT_STORE_BUSINESS_TEXT'));
+ assert.equal(result.ok,false,'Unbound server storage must not silently fall back to local storage.');
+ assert.equal(services.marketing.mode,'live');
+ assert.equal(typeof services.governance.restoreSubmission,'function','Production submissions require durable server recovery.');
+});
+test('host selects the native CORE adapter only for an explicitly qualified complete binding',async()=>{
+ global.window={localStorage:{getItem:()=>null,setItem:()=>{},removeItem:()=>{}}};
+ const part=new WebPart();
+ const binding={contractVersion:'v0.2.0',requestListId:'11111111-1111-4111-8111-111111111111',resultListId:'22222222-2222-4222-8222-222222222222',tenantLabel:'SYNTHETIC',qualified:true,qualificationReceiptRef:'RCPT-QUALIFICATION',testRecord:true};
+ part.properties={view:'app',coreBindingJson:JSON.stringify(binding)};
+ part.context={pageContext:{web:{absoluteUrl:'https://example.sharepoint.com/sites/business',permissions:{hasPermission:()=>false}},user:{email:'audit@example.invalid',displayName:'Synthetic tester'}},spHttpClient:{get:async()=>{throw new Error('No live calls.');},post:async()=>{throw new Error('No live calls.');}},aadHttpClientFactory:{getClient:async()=>{throw new Error('No live provider.');}}};
+ await part.onInit();
+ const services=part._servicesFor(part._core,createBranding(''));
+ assert.equal(services.coreWork.mode,'live');assert.equal(services.coreWork.enabled,true);
+ assert.equal(typeof services.coreWork.recoverPending,'function');
+ part.properties.coreBindingJson=JSON.stringify({...binding,qualified:false});
+ assert.equal(part._servicesFor(part._core,createBranding('')).coreWork.enabled,false);
+ part.properties.coreBindingJson='{bad json';
+ assert.equal(part._servicesFor(part._core,createBranding('')).coreWork.enabled,false);
+});
+test('host binds qualified server draft policy without a browser content fallback',async()=>{
+ const browser=[];global.window={navigator:{locks:{request:async(name,operation)=>operation()}},localStorage:{getItem:()=>null,setItem:(k,v)=>browser.push([k,v]),removeItem:()=>{}}};
+ const part=new WebPart();let row;
+ part.properties={view:'app',draftListId:'11111111-1111-4111-8111-111111111111',draftPolicyJson:JSON.stringify({qualified:true,qualificationReceiptRef:'RCPT-SYNTHETIC',retentionPolicyRef:'POLICY-RETENTION',accessPolicyRef:'POLICY-ACCESS',retentionDays:30,qualifiedUntil:'2099-01-01T00:00:00Z'})};
+ part.context={pageContext:{web:{absoluteUrl:'https://example.sharepoint.com/sites/business',permissions:{hasPermission:()=>false}},user:{email:'audit@example.invalid',displayName:'Synthetic tester'}},spHttpClient:{get:async()=>({ok:true,status:200,json:async()=>({value:row?[row]:[]})}),post:async(url,config,options)=>{row={...JSON.parse(options.body),Id:1,Author:{EMail:'audit@example.invalid'},'@odata.etag':'"1"'};return {ok:true,status:201,json:async()=>row};}},aadHttpClientFactory:{getClient:async()=>{throw new Error('No live provider.');}}};
+ await part.onInit();const services=part._servicesFor(part._core,createBranding(''));
+ assert.equal((await services.draftStore.save('idea',{answers:{title:'SERVER_ONLY_SENTINEL'}})).ok,true);
+ assert.ok(row.DraftJson.includes('SERVER_ONLY_SENTINEL'));assert.ok(!JSON.stringify(browser).includes('SERVER_ONLY_SENTINEL'));
+});
+test('host wires the qualified business Marketing facade and verifies native caller before ingress',async()=>{
+ const refs=new Map();global.window={localStorage:{getItem:k=>refs.get(k)||null,setItem:(k,v)=>refs.set(k,v),removeItem:k=>refs.delete(k)}};
+ const siteUrl='https://example.sharepoint.com/sites/business';const binding={enabled:true,siteUrl,requestListId:'11111111-1111-4111-8111-111111111111',resultListId:'22222222-2222-4222-8222-222222222222',qualificationReceiptRef:'QUAL-SYNTHETIC'};
+ const part=new WebPart(),posts=[];let result,currentEmail='audit@example.invalid';const {payloadHash}=load('content/actionEnvelope.ts');
+ part.properties={view:'app',marketingBindingJson:JSON.stringify(binding)};
+ part.context={pageContext:{web:{absoluteUrl:siteUrl,permissions:{hasPermission:()=>false}},user:{email:'audit@example.invalid',displayName:'Synthetic tester'}},spHttpClient:{get:async url=>({ok:true,status:200,json:async()=>url.includes('/currentuser?')?{Id:13,Email:currentEmail}:{value:result?[result]:[]}}),post:async(url,config,options)=>{const body=JSON.parse(options.body);posts.push(body);const value=[];result={RequestId:body.Title,ResultJson:JSON.stringify({protocol:'marketing.v1',requestId:body.Title,operation:body.Operation,tenantScope:siteUrl,actorId:'audit@example.invalid',value,valueHash:await payloadHash(value)})};return {ok:true,status:201,json:async()=>({Id:1})};}},aadHttpClientFactory:{getClient:async()=>{throw new Error('No live provider.');}}};
+ await part.onInit();const service=part._servicesFor(part._core,createBranding('')).marketing;
+ assert.deepEqual(service.liveReasons,[]);assert.equal(typeof service.recoverPending,'function');
+ assert.deepEqual(await service.review.listArtifacts('CW-SYNTHETIC_TEST'),[]);assert.equal(posts.length,1);
+ assert.ok(!/actorId|tenantScope|roles|resolution/.test(posts[0].PayloadJson));
+ currentEmail='other@example.invalid';await assert.rejects(()=>service.review.listArtifacts('CW-SYNTHETIC_TEST'));assert.equal(posts.length,1);
+ part.properties.marketingBindingJson=JSON.stringify({...binding,siteUrl:'https://foreign.sharepoint.com/sites/other'});
+ assert.ok(part._servicesFor(part._core,createBranding('')).marketing.liveReasons.length>0);
+});

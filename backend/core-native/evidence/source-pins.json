@@ -1,0 +1,40 @@
+{
+  "source": "/mnt/c/Users/scfre/JuliannaAI/OSS-AI-CoE/evidence/bld-core-front-door-review-2026-09-22/extracted/AICoECoreAutomation_3_0_0_0_PACKAGE-2026-09-21/AICoECoreAutomation_3_0_0_0/generator",
+  "files": [
+    {
+      "path": "build.py",
+      "sha256": "987c5e19fed3a76a5c9ab483e2c435ef98318995f26e09c0e3d3636781a8dad8",
+      "bytes": 4526
+    },
+    {
+      "path": "flows.py",
+      "sha256": "b5535aafaed2c88dcd1f36b855c513e35701e08e7ffd950f04b6eaec3cb92b8d",
+      "bytes": 82839
+    },
+    {
+      "path": "model.py",
+      "sha256": "b148dd01f221715b5eb62de6fc7f57b8132f9e417b1b0efc45381661b156818c",
+      "bytes": 14175
+    },
+    {
+      "path": "package.py",
+      "sha256": "1b24fa3aad34bd06880b36ef600d7186b68b126dcf587bf5c4162719b22fad85",
+      "bytes": 8570
+    },
+    {
+      "path": "reference.py",
+      "sha256": "1f1291aa16ad15d06da5b2dc3f0d3f2e4712ddd55f911e837db45f0e9d45bb76",
+      "bytes": 28893
+    },
+    {
+      "path": "validate.py",
+      "sha256": "7c5af369a90ff54d3826118a52c6fb966223018c990b8eaa885e66a3e9549197",
+      "bytes": 6389
+    },
+    {
+      "path": "wdl.py",
+      "sha256": "e4a1bd55c5402dee025170551113010ae481580dd9372036b047bd9ba9e9df92",
+      "bytes": 10481
+    }
+  ]
+}

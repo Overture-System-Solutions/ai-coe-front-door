@@ -1,0 +1,132 @@
+{
+  "schemaVersion": "workflow-outcomes-export.v1",
+  "scope": {
+    "tenant": "synthetic-tenant",
+    "site": "synthetic-site",
+    "list": "synthetic-outcome-list",
+    "cohort": "synthetic-cohort"
+  },
+  "rows": [
+    {
+      "Title": "Task outcome — OVT-AICOE-20260910-00000000",
+      "OutcomeId": "OVT-AICOE-20260910-00000000",
+      "RecordedAt": "2026-09-10T12:00:00.000Z",
+      "TaskType": "Drafting or writing",
+      "Outcome": "Accepted",
+      "ReviewState": "Reviewed by me",
+      "CorrectionCategory": "",
+      "RouteAvailability": "Draft only",
+      "WorkflowVersion": "1.0"
+    },
+    {
+      "Title": "Task outcome — OVT-AICOE-20260910-00000001",
+      "OutcomeId": "OVT-AICOE-20260910-00000001",
+      "RecordedAt": "2026-09-10T12:00:00.000Z",
+      "TaskType": "Drafting or writing",
+      "Outcome": "Accepted",
+      "ReviewState": "Reviewed by me",
+      "CorrectionCategory": "",
+      "RouteAvailability": "Draft only",
+      "WorkflowVersion": "1.0"
+    },
+    {
+      "Title": "Task outcome — OVT-AICOE-20260910-00000002",
+      "OutcomeId": "OVT-AICOE-20260910-00000002",
+      "RecordedAt": "2026-09-10T12:00:00.000Z",
+      "TaskType": "Drafting or writing",
+      "Outcome": "Accepted",
+      "ReviewState": "Reviewed by me",
+      "CorrectionCategory": "",
+      "RouteAvailability": "Draft only",
+      "WorkflowVersion": "1.0"
+    },
+    {
+      "Title": "Task outcome — OVT-AICOE-20260910-00000003",
+      "OutcomeId": "OVT-AICOE-20260910-00000003",
+      "RecordedAt": "2026-09-10T12:00:00.000Z",
+      "TaskType": "Drafting or writing",
+      "Outcome": "Accepted",
+      "ReviewState": "Reviewed by me",
+      "CorrectionCategory": "",
+      "RouteAvailability": "Draft only",
+      "WorkflowVersion": "1.0"
+    },
+    {
+      "Title": "Task outcome — OVT-AICOE-20260910-00000004",
+      "OutcomeId": "OVT-AICOE-20260910-00000004",
+      "RecordedAt": "2026-09-10T12:00:00.000Z",
+      "TaskType": "Drafting or writing",
+      "Outcome": "Accepted",
+      "ReviewState": "Reviewed by me",
+      "CorrectionCategory": "",
+      "RouteAvailability": "Draft only",
+      "WorkflowVersion": "1.0"
+    },
+    {
+      "Title": "Task outcome — OVT-AICOE-20260910-00000005",
+      "OutcomeId": "OVT-AICOE-20260910-00000005",
+      "RecordedAt": "2026-09-10T12:00:00.000Z",
+      "TaskType": "Drafting or writing",
+      "Outcome": "Corrected",
+      "ReviewState": "Reviewed by me",
+      "CorrectionCategory": "fact",
+      "RouteAvailability": "Draft only",
+      "WorkflowVersion": "1.0"
+    },
+    {
+      "Title": "Task outcome — OVT-AICOE-20260910-00000006",
+      "OutcomeId": "OVT-AICOE-20260910-00000006",
+      "RecordedAt": "2026-09-10T12:00:00.000Z",
+      "TaskType": "Drafting or writing",
+      "Outcome": "Corrected",
+      "ReviewState": "Reviewed by me",
+      "CorrectionCategory": "fact",
+      "RouteAvailability": "Draft only",
+      "WorkflowVersion": "1.0"
+    },
+    {
+      "Title": "Task outcome — OVT-AICOE-20260910-00000007",
+      "OutcomeId": "OVT-AICOE-20260910-00000007",
+      "RecordedAt": "2026-09-10T12:00:00.000Z",
+      "TaskType": "Drafting or writing",
+      "Outcome": "Corrected",
+      "ReviewState": "Reviewed by me",
+      "CorrectionCategory": "fact",
+      "RouteAvailability": "Draft only",
+      "WorkflowVersion": "1.0"
+    },
+    {
+      "Title": "Task outcome — OVT-AICOE-20260910-00000008",
+      "OutcomeId": "OVT-AICOE-20260910-00000008",
+      "RecordedAt": "2026-09-10T12:00:00.000Z",
+      "TaskType": "Drafting or writing",
+      "Outcome": "Corrected",
+      "ReviewState": "Reviewed by me",
+      "CorrectionCategory": "fact",
+      "RouteAvailability": "Draft only",
+      "WorkflowVersion": "1.0"
+    },
+    {
+      "Title": "Task outcome — OVT-AICOE-20260910-00000009",
+      "OutcomeId": "OVT-AICOE-20260910-00000009",
+      "RecordedAt": "2026-09-10T12:00:00.000Z",
+      "TaskType": "Drafting or writing",
+      "Outcome": "Corrected",
+      "ReviewState": "Reviewed by me",
+      "CorrectionCategory": "fact",
+      "RouteAvailability": "Draft only",
+      "WorkflowVersion": "1.0"
+    },
+    {
+      "Title": "Task outcome — OVT-AICOE-20260910-00000000",
+      "OutcomeId": "OVT-AICOE-20260910-00000000",
+      "RecordedAt": "2026-09-10T12:00:00.000Z",
+      "TaskType": "Drafting or writing",
+      "Outcome": "Accepted",
+      "ReviewState": "Reviewed by me",
+      "CorrectionCategory": "",
+      "RouteAvailability": "Draft only",
+      "WorkflowVersion": "1.0"
+    }
+  ]
+}

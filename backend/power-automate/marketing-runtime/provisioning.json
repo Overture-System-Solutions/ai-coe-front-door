@@ -1,0 +1,70 @@
+{
+  "kind": "review-only-provisioning-descriptor",
+  "version": "marketing.v1",
+  "applyImplemented": false,
+  "applyPerformed": false,
+  "owner": "existing canonical writer; Marketing extension only",
+  "lists": [
+    {
+      "binding": "canonicalListId",
+      "suggestedTitle": "AI CoE Marketing Canonical",
+      "inheritPermissions": false,
+      "callerRights": [],
+      "writerRights": ["read", "add", "update"],
+      "readSecurity": 1,
+      "writeSecurity": 1,
+      "fields": [
+        {"name": "Title", "type": "Text", "required": true, "indexed": true, "unique": true},
+        {"name": "RecordKey", "type": "Text", "required": true, "indexed": true},
+        {"name": "TenantScope", "type": "Text", "required": true},
+        {"name": "RecordJson", "type": "Note", "required": true, "richText": false},
+        {"name": "RecordHash", "type": "Text", "required": true}
+      ]
+    },
+    {
+      "binding": "requestListId",
+      "suggestedTitle": "AI CoE Marketing Requests",
+      "inheritPermissions": false,
+      "callerRights": ["AddListItems"],
+      "callerForbiddenRights": ["ViewListItems", "EditListItems", "DeleteListItems", "ManageLists", "ManagePermissions"],
+      "writerRights": ["read"],
+      "readSecurity": 1,
+      "writeSecurity": 1,
+      "fields": [
+        {"name": "Title", "type": "Text", "required": true, "indexed": true, "unique": true},
+        {"name": "Operation", "type": "Text", "required": true},
+        {"name": "ProtocolVersion", "type": "Text", "required": true},
+        {"name": "PayloadJson", "type": "Note", "required": true, "richText": false}
+      ],
+      "identity": "Built-in Author, Editor, Created, Modified. No custom actor field is authoritative. Never modify a submitted row."
+    },
+    {
+      "binding": "resultListId",
+      "suggestedTitle": "AI CoE Marketing Results",
+      "inheritPermissions": false,
+      "callerRights": [],
+      "writerRights": ["read", "add", "ManagePermissions"],
+      "perItemGrant": "Verified request Author gets Read 1073741826 only after private item creation; read back ACL and result. Only configured writer principal may retain another assignment.",
+      "readSecurity": 1,
+      "writeSecurity": 1,
+      "fields": [
+        {"name": "Title", "type": "Text", "required": true},
+        {"name": "RequestId", "type": "Text", "required": true, "indexed": true, "unique": true},
+        {"name": "VerifiedAuthorId", "type": "Number", "required": true},
+        {"name": "ResultJson", "type": "Note", "required": true, "richText": false}
+      ]
+    }
+  ],
+  "requiredAcceptance": [
+    "Three distinct private list GUIDs; no reused CORE case list",
+    "Custom create-only request role native validation; never combine read-own settings and unique Title",
+    "Author/Editor cannot be forged by a participant; result and canonical records cannot be edited by callers",
+    "Writer Author request forbidden; writerPrincipalId verified against actual connection identity",
+    "Unique keys, server ETags, long text size limits and pagination fail closed",
+    "Result item ACL grant, explicit revocation and retention/purge lifecycle tested; old private projections are historical records, not fresh authorization",
+    "Site owners/administrators retain administrative access; per-item ACLs do not override tenant administrator powers",
+    "Register approval authority/receipts, source permissions and controlled metadata maintenance use existing writer governance",
+    "Crash-held writer claims require explicit operator reconciliation; no timed automatic takeover"
+  ],
+  "prohibited": ["CORE case writes", "send", "publish", "assign", "schedule", "new paid host", "automatic permission provisioning"]
+}

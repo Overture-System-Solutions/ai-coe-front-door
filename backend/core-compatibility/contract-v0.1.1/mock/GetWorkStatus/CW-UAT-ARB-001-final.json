@@ -1,0 +1,34 @@
+{
+ "request": {
+  "Context": {
+   "CorrelationID": "CORR-UAT-ARB-001",
+   "IdempotencyKey": "CW-UAT-ARB-001:status:9",
+   "ClientVersion": "spfx-candidate-0.1",
+   "TenantLabel": "CloudWave-PrivatePilot",
+   "TestRecord": true
+  },
+  "WorkID": "CW-UAT-ARB-001"
+ },
+ "response": {
+  "Result": "PASS",
+  "ReceiptID": "RCPT-UAT-ARB-001-028",
+  "Work": {
+   "WorkID": "CW-UAT-ARB-001",
+   "Title": "UAT: new vendor AI transcription tool",
+   "Stage": "DECISION",
+   "State": "READY_FOR_ARB",
+   "EmployeeStatus": "With the right reviewer",
+   "Lane": "ARB",
+   "NextAction": "Prepare decision packet for ARB",
+   "NextOwner": "ai-coe-operator",
+   "NextDate": "2026-09-22T14:00:00Z",
+   "Version": 9,
+   "LastValidatedAt": "2026-09-21T14:12:00Z",
+   "OpenEvidenceGaps": [],
+   "DuplicateStatus": "RELATED_NOT_DUPLICATE",
+   "RelatedWorkIDs": [
+    "CW-05"
+   ]
+  }
+ }
+}

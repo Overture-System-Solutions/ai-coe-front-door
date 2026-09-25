@@ -29,6 +29,11 @@ npm-debug.log*
 # Python
 __pycache__/
 *.pyc
+# pytest scratch space (--basetemp folders hold machine-local symlinks) and its cache
+.pytest_cache/
+pytest-tmp/
+evidence/parent-native-tmp/
+evidence/parent-native-complete-tmp/
 
 # Secrets and local environment
 .env
@@ -40,7 +45,14 @@ __pycache__/
 # OS / editor
 .DS_Store
 .vs/
+.idea/
 .ntvs_analysis.dat
+
+# .NET build output of the local connector helpers (rebuilt from their source by `dotnet build`)
+bin/
+obj/
+# The local .NET home those builds use (NuGet and SDK caches)
+dotnet-home/
 
 # Operator-filled page provisioning parameters (site-specific; copy parameters.sample.json).
 # One file per site, so two sites' values never sit in the same file: parameters.json is the

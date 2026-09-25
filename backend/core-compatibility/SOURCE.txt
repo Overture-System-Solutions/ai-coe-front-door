@@ -1,0 +1,12 @@
+Contract copy for this branch only.
+
+Original frozen bytes (do not modify):
+  evidence/bld-core-front-door-review-2026-09-22/extracted/CW-AICOE-UI-FLOW-CONTRACT-v0.1.1-2026-09-21/
+
+This folder is a working copy so the front-door tests can pin the 23 fixture pairs without reading
+outside the worktree. It is not a new contract version and not a fork of the delivery.
+
+Generated flow originals remain under:
+  evidence/bld-core-front-door-review-2026-09-22/extracted/AICoECoreAutomation_3_0_0_0_PACKAGE-2026-09-21/AICoECoreAutomation_3_0_0_0/flow-definitions/
+
+Sibling development/power-automate is untouched.

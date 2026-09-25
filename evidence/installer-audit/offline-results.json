@@ -1,0 +1,38 @@
+{
+  "status": "PASS",
+  "scope": "OFFLINE fake PnP only; Windows DPAPI exercised",
+  "powershellVersion": "7.6.6",
+  "parsed": [
+    "sharepoint/pages/one-page/New-FrontDoorAppPage.ps1",
+    "sharepoint/pages/one-page/New-FrontDoorDraftList.ps1",
+    "sharepoint/pages/one-page/ProvisioningReceipt.ps1",
+    "tests/audit-provisioning.ps1",
+    "tests/audit-draft-provisioning.ps1"
+  ],
+  "page": {
+    "status": "PASS",
+    "scope": "Offline fake PnP only",
+    "checks": 13,
+    "receiptDirectory": "C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-audit-fixes\\tests\\..\\evidence\\installer-audit\\page-0bef5ea5f38f477f81f5779cd84d26a7",
+    "liveQualified": false
+  },
+  "draft": {
+    "status": "PASS",
+    "checks": 9,
+    "scope": "Offline fake PnP only",
+    "receiptDirectory": "C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-audit-fixes\\tests\\..\\evidence\\installer-audit\\draft-d584a69bc46242f0b66f92cc0047d369",
+    "qualified": false
+  },
+  "hashes": {
+    "sharepoint/pages/one-page/app-page.json": "dca40c2f4f77e66293e9983c6f914c065bf4e65c9b793677f2af4594da98e24d",
+    "sharepoint/pages/one-page/parameters.sample.json": "248a196ae4d21fba221e2b5dd55081bfb6d31f4aca0a63331ab8aeaa0f906317",
+    "sharepoint/pages/one-page/New-FrontDoorDraftList.ps1": "13945a5a43d6d26aea2b754e4fec48ac1b1f522394a157041348643dc4f437c1",
+    "src/provisioning/onePageDefinition.test.ts": "588b72f89503da1614911c8d159a5edbd9d1dd0dd773fbd2dad2d40e9da3744f",
+    "sharepoint/pages/one-page/ProvisioningReceipt.ps1": "6317477378ec1e6c1fcf66080b38ac26fdd168c6582b8999985cf377b922ae80",
+    "tests/audit-provisioning.ps1": "7c6775444f151c646f684a37301cf460a11d664fa50f611a7c832cd3982eaae5",
+    "tests/audit-draft-provisioning.ps1": "5fa2175cd7b4941c9d87a7dfbd309df6865c91c2f6485ebf8c9b8c5ecd9d6b5e",
+    "sharepoint/pages/one-page/New-FrontDoorAppPage.ps1": "a699b462ede4c4aa981e108392870c0a973e24474a5f6f2b3f24692b8fd96817"
+  },
+  "liveQualified": false,
+  "generatedAt": "2026-09-23T14:14:36.9007275Z"
+}

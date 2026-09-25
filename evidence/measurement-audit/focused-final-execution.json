@@ -1,0 +1,8 @@
+{
+  "command": "node.exe evidence/measurement-audit/run-tests.cjs \"\" focused-final",
+  "result": {
+    "output": "PASS src/webparts/aiCoeFrontDoor/services/workflowOutcomeAggregation.test.ts\nPASS src/webparts/aiCoeFrontDoor/components/app/AppSections.test.tsx\n\nTest Suites: 2 passed, 2 total\nTests:       43 passed, 43 total\nSnapshots:   0 total\nTime:        5.206 s\nRan all test suites.",
+    "exit_code": 0,
+    "error": null
+  }
+}

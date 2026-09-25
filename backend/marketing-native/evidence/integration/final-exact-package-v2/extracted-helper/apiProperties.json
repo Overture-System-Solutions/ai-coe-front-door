@@ -1,0 +1,12 @@
+{
+  "properties": {
+    "connectionParameters": {},
+    "iconBrandColor": "#552583",
+    "capabilities": [],
+    "scriptOperations": [
+      "Evaluate"
+    ],
+    "publisher": "AI CoE",
+    "stackOwner": "AI CoE"
+  }
+}

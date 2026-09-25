@@ -1,0 +1,825 @@
+{
+  "numFailedTestSuites": 1,
+  "numFailedTests": 1,
+  "numPassedTestSuites": 0,
+  "numPassedTests": 0,
+  "numPendingTestSuites": 1,
+  "numPendingTests": 41,
+  "numRuntimeErrorTestSuites": 0,
+  "numTodoTests": 0,
+  "numTotalTestSuites": 2,
+  "numTotalTests": 42,
+  "openHandles": [],
+  "snapshot": {
+    "added": 0,
+    "didUpdate": false,
+    "failure": false,
+    "filesAdded": 0,
+    "filesRemoved": 0,
+    "filesRemovedList": [],
+    "filesUnmatched": 0,
+    "filesUpdated": 0,
+    "matched": 0,
+    "total": 0,
+    "unchecked": 0,
+    "uncheckedKeysByFile": [],
+    "unmatched": 0,
+    "updated": 0
+  },
+  "startTime": 1790271118820,
+  "success": false,
+  "testResults": [
+    {
+      "leaks": false,
+      "numFailingTests": 0,
+      "numPassingTests": 0,
+      "numPendingTests": 38,
+      "numTodoTests": 0,
+      "openHandles": [],
+      "perfStats": {
+        "end": 1790271142467,
+        "loadTestEnvironmentEnd": 1790271130911,
+        "loadTestEnvironmentStart": 1790271119263,
+        "runtime": 11554,
+        "setupAfterEnvEnd": 1790271135782,
+        "setupAfterEnvStart": 1790271132262,
+        "setupFilesEnd": 1790271131115,
+        "setupFilesStart": 1790271130913,
+        "slow": true,
+        "start": 1790271130913
+      },
+      "skipped": true,
+      "snapshot": {
+        "added": 0,
+        "fileDeleted": false,
+        "matched": 0,
+        "unchecked": 0,
+        "uncheckedKeys": [],
+        "unmatched": 0,
+        "updated": 0
+      },
+      "testFilePath": "C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-audit-fixes\\src\\webparts\\aiCoeFrontDoor\\components\\app\\AppShell.test.tsx",
+      "testResults": [
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell preserves transient synthetic objective and notes across section changes without a browser-text write",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271142462,
+          "status": "pending",
+          "title": "preserves transient synthetic objective and notes across section changes without a browser-text write"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell blocks leaving unsaved business Marketing input until the server draft seam confirms it",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271142463,
+          "status": "pending",
+          "title": "blocks leaving unsaved business Marketing input until the server draft seam confirms it"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell opens on the first screen with the entry panel and the three ways in",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271142463,
+          "status": "pending",
+          "title": "opens on the first screen with the entry panel and the three ways in"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell keeps a section a person may not use out of the tab list entirely",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271142463,
+          "status": "pending",
+          "title": "keeps a section a person may not use out of the tab list entirely"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell opens the measured view to a leader but still not the operator surface",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271142463,
+          "status": "pending",
+          "title": "opens the measured view to a leader but still not the operator surface"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell shows nothing narrowed while the membership is unresolved, rather than guessing",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271142463,
+          "status": "pending",
+          "title": "shows nothing narrowed while the membership is unresolved, rather than guessing"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell moves along the tabs with the arrow keys, and wraps at both ends",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271142463,
+          "status": "pending",
+          "title": "moves along the tabs with the arrow keys, and wraps at both ends"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell keeps sequential keyboard navigation on the actual focused tab, but pointer entry focuses the heading",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271142463,
+          "status": "pending",
+          "title": "keeps sequential keyboard navigation on the actual focused tab, but pointer entry focuses the heading"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell ignores a key the tab list does not own, so typing is not swallowed",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271142463,
+          "status": "pending",
+          "title": "ignores a key the tab list does not own, so typing is not swallowed"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell keeps one tab in the tab order and points each panel at its tab",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271142463,
+          "status": "pending",
+          "title": "keeps one tab in the tab order and points each panel at its tab"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell gives the section a heading that can take focus, so a change is announced",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271142463,
+          "status": "pending",
+          "title": "gives the section a heading that can take focus, so a change is announced"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell names the person and what the view can say about their access",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271142463,
+          "status": "pending",
+          "title": "names the person and what the view can say about their access"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell says so when the membership could not be confirmed, rather than staying quiet about it",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271142463,
+          "status": "pending",
+          "title": "says so when the membership could not be confirmed, rather than staying quiet about it"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell supplies the configured document route to the actual submission receipt",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271142463,
+          "status": "pending",
+          "title": "supplies the configured document route to the actual submission receipt"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell carries the footer promise on every section",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271142463,
+          "status": "pending",
+          "title": "carries the footer promise on every section"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell does not mount Enterprise value or call getMeasures when an employee clicks the Home card",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271142463,
+          "status": "pending",
+          "title": "does not mount Enterprise value or call getMeasures when an employee clicks the Home card"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell does not fetch measures or usage while membership is unresolved, including from the Home card",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271142464,
+          "status": "pending",
+          "title": "does not fetch measures or usage while membership is unresolved, including from the Home card"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell shows Usage on Enterprise value for an operator and not on System map",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271142464,
+          "status": "pending",
+          "title": "shows Usage on Enterprise value for an operator and not on System map"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell lets a leader open Enterprise value without mounting usage or calling getMetrics",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271142464,
+          "status": "pending",
+          "title": "lets a leader open Enterprise value without mounting usage or calling getMetrics"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell keeps the Home sentence as the idea draft and opens the guided request with the same wording",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271142464,
+          "status": "pending",
+          "title": "keeps the Home sentence as the idea draft and opens the guided request with the same wording"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell keeps guided edits mounted when navigation needs an unsaved draft and saving is refused",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271142464,
+          "status": "pending",
+          "title": "keeps guided edits mounted when navigation needs an unsaved draft and saving is refused"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell keeps guided edits mounted when navigation needs an unsaved draft and saving is rejected",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271142464,
+          "status": "pending",
+          "title": "keeps guided edits mounted when navigation needs an unsaved draft and saving is rejected"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell keeps the sentence in the box and opens nothing when the draft cannot be saved",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271142464,
+          "status": "pending",
+          "title": "keeps the sentence in the box and opens nothing when the draft cannot be saved"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell opens Marketing for a reviewer without granting drafting controls",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271142464,
+          "status": "pending",
+          "title": "opens Marketing for a reviewer without granting drafting controls"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell shows Marketing to a bounded participant and keeps the synthetic workspace across a Home round-trip",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271142464,
+          "status": "pending",
+          "title": "shows Marketing to a bounded participant and keeps the synthetic workspace across a Home round-trip"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell tells an operator without site-owner permission that the queue was not read",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271142464,
+          "status": "pending",
+          "title": "tells an operator without site-owner permission that the queue was not read"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell says the support route is unbound when the content document does not name one",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271142464,
+          "status": "pending",
+          "title": "says the support route is unbound when the content document does not name one"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell does not expose an unsafe support link: javascript:void(0)",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271142464,
+          "status": "pending",
+          "title": "does not expose an unsafe support link: javascript:void(0)"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell does not expose an unsafe support link: data:text/html,unsafe",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271142464,
+          "status": "pending",
+          "title": "does not expose an unsafe support link: data:text/html,unsafe"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell does not expose an unsafe support link: //untrusted.invalid/path",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271142464,
+          "status": "pending",
+          "title": "does not expose an unsafe support link: //untrusted.invalid/path"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell resolves site-relative support links against the site rather than the hosting page",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271142464,
+          "status": "pending",
+          "title": "resolves site-relative support links against the site rather than the hosting page"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell renders a configured support route from the page content document",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271142464,
+          "status": "pending",
+          "title": "renders a configured support route from the page content document"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell places the administrator control last, apart from the section tabs, for a site owner",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271142464,
+          "status": "pending",
+          "title": "places the administrator control last, apart from the section tabs, for a site owner"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell opens the administrator queue from that control and still opens a section tab",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271142464,
+          "status": "pending",
+          "title": "opens the administrator queue from that control and still opens a section tab"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell does not keep the administrator queue on System map once it has its own control",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271142464,
+          "status": "pending",
+          "title": "does not keep the administrator queue on System map once it has its own control"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell moves to the administrator control with End when the person may open it",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271142464,
+          "status": "pending",
+          "title": "moves to the administrator control with End when the person may open it"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell spaces Register team AI use from the other Improvement cards and keeps the larger panels below",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271142464,
+          "status": "pending",
+          "title": "spaces Register team AI use from the other Improvement cards and keeps the larger panels below"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell does not mount the administrator queue or read it for an employee",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271142464,
+          "status": "pending",
+          "title": "does not mount the administrator queue or read it for an employee"
+        }
+      ],
+      "failureMessage": null
+    },
+    {
+      "leaks": false,
+      "numFailingTests": 1,
+      "numPassingTests": 0,
+      "numPendingTests": 3,
+      "numTodoTests": 0,
+      "openHandles": [],
+      "perfStats": {
+        "end": 1790271144348,
+        "loadTestEnvironmentEnd": 1790271142480,
+        "loadTestEnvironmentStart": 1790271142471,
+        "runtime": 1868,
+        "setupAfterEnvEnd": 1790271142602,
+        "setupAfterEnvStart": 1790271142528,
+        "setupFilesEnd": 1790271142480,
+        "setupFilesStart": 1790271142480,
+        "slow": false,
+        "start": 1790271142480
+      },
+      "skipped": false,
+      "snapshot": {
+        "added": 0,
+        "fileDeleted": false,
+        "matched": 0,
+        "unchecked": 0,
+        "uncheckedKeys": [],
+        "unmatched": 0,
+        "updated": 0
+      },
+      "testFilePath": "C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-audit-fixes\\src\\webparts\\aiCoeFrontDoor\\components\\app\\AppSections.test.tsx",
+      "testResults": [
+        {
+          "ancestorTitles": [
+            "same-app measurement and teaching entry"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "same-app measurement and teaching entry opens and closes the guidance with keyboard controls in the narrow layout",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271144228,
+          "status": "pending",
+          "title": "opens and closes the guidance with keyboard controls in the narrow layout"
+        },
+        {
+          "ancestorTitles": [
+            "same-app measurement and teaching entry"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "same-app measurement and teaching entry opens source, role, stop and recovery quick-start guidance from Engineering without a private source link",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271144228,
+          "status": "pending",
+          "title": "opens source, role, stop and recovery quick-start guidance from Engineering without a private source link"
+        },
+        {
+          "ancestorTitles": [
+            "same-app measurement and teaching entry"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "same-app measurement and teaching entry connects Improvement guidance to the existing outcome form, not another tracker",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271144228,
+          "status": "pending",
+          "title": "connects Improvement guidance to the existing outcome form, not another tracker"
+        },
+        {
+          "ancestorTitles": [
+            "same-app measurement and teaching entry"
+          ],
+          "duration": 105,
+          "failing": false,
+          "failureDetails": [
+            {
+              "matcherResult": {
+                "message": "expect(received).toBeNull()\n\nReceived: <button aria-controls=\"ai-measurement-commissioning\" aria-expanded=\"false\" class=\"ai-app-starter-button\" type=\"button\">Operator commissioning: manual review and publication</button>",
+                "pass": false
+              }
+            }
+          ],
+          "failureMessages": [
+            "Error: expect(received).toBeNull()\n\nReceived: <button aria-controls=\"ai-measurement-commissioning\" aria-expanded=\"false\" class=\"ai-app-starter-button\" type=\"button\">Operator commissioning: manual review and publication</button>\n    at Object.<anonymous> (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-audit-fixes\\src\\webparts\\aiCoeFrontDoor\\components\\app\\AppSections.test.tsx:61:76)"
+          ],
+          "fullName": "same-app measurement and teaching entry keeps Improvement proposal/retest guidance without the misplaced operator commissioning control",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 1,
+          "retryReasons": [],
+          "startAt": 1790271144228,
+          "status": "failed",
+          "title": "keeps Improvement proposal/retest guidance without the misplaced operator commissioning control"
+        }
+      ],
+      "failureMessage": "  ● same-app measurement and teaching entry › keeps Improvement proposal/retest guidance without the misplaced operator commissioning control\n\n    expect(received).toBeNull()\n\n    Received: <button aria-controls=\"ai-measurement-commissioning\" aria-expanded=\"false\" class=\"ai-app-starter-button\" type=\"button\">Operator commissioning: manual review and publication</button>\n\n    \u001b[0m \u001b[90m 59 |\u001b[39m     \u001b[36mconst\u001b[39m view \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m shell()\u001b[33m;\u001b[39m\n     \u001b[90m 60 |\u001b[39m     fireEvent\u001b[33m.\u001b[39mclick(view\u001b[33m.\u001b[39mgetByRole(\u001b[32m'tab'\u001b[39m\u001b[33m,\u001b[39m { name\u001b[33m:\u001b[39m \u001b[32m'Improvement'\u001b[39m }))\u001b[33m;\u001b[39m\n    \u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 61 |\u001b[39m     expect(view\u001b[33m.\u001b[39mqueryByRole(\u001b[32m'button'\u001b[39m\u001b[33m,\u001b[39m { name\u001b[33m:\u001b[39m \u001b[35m/Operator commissioning/\u001b[39m }))\u001b[33m.\u001b[39mtoBeNull()\u001b[33m;\u001b[39m\n     \u001b[90m    |\u001b[39m                                                                            \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n     \u001b[90m 62 |\u001b[39m     expect(view\u001b[33m.\u001b[39mqueryByRole(\u001b[32m'region'\u001b[39m\u001b[33m,\u001b[39m { name\u001b[33m:\u001b[39m \u001b[35m/Operator commissioning/\u001b[39m }))\u001b[33m.\u001b[39mtoBeNull()\u001b[33m;\u001b[39m\n     \u001b[90m 63 |\u001b[39m     expect(view\u001b[33m.\u001b[39mcontainer\u001b[33m.\u001b[39mtextContent)\u001b[33m.\u001b[39mnot\u001b[33m.\u001b[39mtoContain(\u001b[32m'aggregate-workflow-outcomes.cjs'\u001b[39m)\u001b[33m;\u001b[39m\n     \u001b[90m 64 |\u001b[39m     expect(view\u001b[33m.\u001b[39mgetByText(\u001b[35m/No automatic policy change/\u001b[39m))\u001b[33m.\u001b[39mtoBeInTheDocument()\u001b[33m;\u001b[39m\u001b[0m\n\n      at Object.<anonymous> (src/webparts/aiCoeFrontDoor/components/app/AppSections.test.tsx:61:76)\n"
+    }
+  ],
+  "wasInterrupted": false
+}

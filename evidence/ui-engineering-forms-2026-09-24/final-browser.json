@@ -1,0 +1,151 @@
+{
+  "scope": "BUILT_BUNDLE_LOCAL_SYNTHETIC_ONLY",
+  "roles": [
+    {
+      "role": "owner",
+      "enterpriseEntry": true
+    },
+    {
+      "role": "employee",
+      "enterpriseEntry": false
+    },
+    {
+      "role": "leader",
+      "enterpriseEntry": true
+    },
+    {
+      "role": "operator",
+      "enterpriseEntry": true
+    },
+    {
+      "role": "designAuthority",
+      "enterpriseEntry": false
+    },
+    {
+      "role": "marketingParticipant",
+      "enterpriseEntry": false
+    },
+    {
+      "role": "marketingReviewer",
+      "enterpriseEntry": false
+    }
+  ],
+  "layouts": [
+    {
+      "section": "Cases",
+      "viewport": 1440,
+      "spacing": {
+        "padding": "24px",
+        "gap": 24
+      },
+      "overflow": {
+        "scroll": 1440,
+        "width": 1440
+      }
+    },
+    {
+      "section": "Cases",
+      "viewport": 390,
+      "spacing": {
+        "padding": "24px",
+        "gap": 24
+      },
+      "overflow": {
+        "scroll": 390,
+        "width": 390
+      }
+    },
+    {
+      "section": "Marketing demo",
+      "viewport": 1440,
+      "spacing": {
+        "padding": "24px",
+        "gap": 24
+      },
+      "overflow": {
+        "scroll": 1440,
+        "width": 1440
+      }
+    },
+    {
+      "section": "Marketing demo",
+      "viewport": 390,
+      "spacing": {
+        "padding": "24px",
+        "gap": 24
+      },
+      "overflow": {
+        "scroll": 390,
+        "width": 390
+      }
+    },
+    {
+      "section": "Improvement",
+      "viewport": 1440,
+      "spacing": {
+        "padding": "24px",
+        "gap": 24
+      },
+      "overflow": {
+        "scroll": 1440,
+        "width": 1440
+      }
+    },
+    {
+      "section": "Improvement",
+      "viewport": 390,
+      "spacing": {
+        "padding": "24px",
+        "gap": 24
+      },
+      "overflow": {
+        "scroll": 390,
+        "width": 390
+      }
+    },
+    {
+      "section": "Registration form",
+      "viewport": 1440,
+      "geometry": {
+        "width": 768,
+        "parentWidth": 1398,
+        "cardWidth": 768,
+        "maxWidth": "768px",
+        "rootFont": 16,
+        "left": 315,
+        "right": 315
+      },
+      "overflow": {
+        "scroll": 1440,
+        "width": 1440
+      }
+    },
+    {
+      "section": "Registration form",
+      "viewport": 390,
+      "geometry": {
+        "width": 348,
+        "parentWidth": 348,
+        "cardWidth": 348,
+        "maxWidth": "768px",
+        "rootFont": 16,
+        "left": 0,
+        "right": 0
+      },
+      "overflow": {
+        "scroll": 390,
+        "width": 390
+      }
+    }
+  ],
+  "caseToggle": {
+    "emptyAndPopulated": true,
+    "keyboard": true,
+    "selectedCasePreserved": true,
+    "unsavedAnswersPreserved": true
+  },
+  "marketingSingleWarning": true,
+  "status": "PASS",
+  "javascriptErrors": [],
+  "externalRequests": []
+}

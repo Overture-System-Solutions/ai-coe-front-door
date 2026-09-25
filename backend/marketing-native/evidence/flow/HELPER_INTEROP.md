@@ -1,0 +1,35 @@
+# Flow/helper reconciliation — parent integration handoff
+
+Scope: generated WDL and offline expression execution only. The helper is being authored concurrently; this is **not** an assertion that its final seven-mode implementation works. Parent owns exact generated-WDL + compiled-final-Script execution. Do not replace missing helper outputs with fixture results.
+
+## Fixed flow-side discrepancies
+
+- Outstanding durable-order test reproduced: validator previously checked references but not success ancestry. It now requires the paid intent readback, fresh source authorization, projection verification, command completion and final writer release boundaries. Mutation tests exercise early dispatch/completion.
+- Pre-disclosure ACL filtering formerly accepted an existing Author Read grant. It now accepts only the configured writer principal. A previously public item is held for operator reconciliation rather than treated as private; `breakroleinheritance` is not assumed to revoke an already unique item's grants. This intentionally holds crash recovery after a grant until operator reconciliation. No automatic revocation is claimed.
+- Request rereads now normalize either a bare REST object or `{d: row}` before exact comparison, matching initial Request_Read handling; real request edits still fail.
+- Helper `parts/00_Core.cs` inspection found Date accepted at most millisecond precision; default native UTC timestamps may be more precise. Flow-produced Now/CommandStart now explicitly use `utcNow('yyyy-MM-ddTHH:mm:ss.fffZ')`. The offline evaluator supports this exact format. Parent harness should use `marketing_validate.OfflineExpression` rather than only the pinned donor. **Service-provided Row.Created/Modified are deliberately not rewritten**; parent/helper must test supported native timestamp precision.
+
+## Exact wire contracts to exercise with the final helper
+
+| Boundary | Generated flow expectation / required helper behavior |
+|---|---|
+| Evaluate | Only seven modes; OpenApiConnection parameters `body/Mode`, `body/Payload` (one JSON string). Every refusal is Valid=false, no business-text diagnostics; flow assertions require boolean true. |
+| Common | Config/Row/Records/Sources/Now/RunId/ProviderResponse, PascalCase. ProviderResponse is JSON null before an actual retained response, although internal WDL object variable starts `{}`. No response-like fixture is a provider receipt. |
+| Fields | InspectWrite and Projection return an **object**, not JSON text. Flow serializes it exactly once into SharePoint `parameters/body`. Canonical fields: Title, RecordKey, TenantScope, RecordJson(string), RecordHash(string). Projection fields: Title, RequestId, VerifiedAuthorId(number), ResultJson(string). Do not add unprovisioned columns. |
+| Write | Key, Value(object), ExpectedVersion(exact etag or null). Null is create-only. InspectWrite must return boolean AlreadyApplied, numeric ItemId or null/0, exact ExpectedETag and object Fields. VerifyWrite requires actual complete readback. |
+| Page | Successful bare/verbose collection normalized to Rows(array), Next(string). Approved same-site/list continuation only. Flow appends every row (no dedup), stops cycles, and requires empty Next after its bounded 20-page loop. |
+| Sources | SourceRequests: sourceId/versionOrETag plus PermissionUri/MetadataUri/ContentUri. Before source bytes, flow verifies permission bits 1 and 32 and metadata ETag. After bytes, it records both permission masks, both metadata ETags, the **raw string body** and actual content ETag header. Missing/wrapped/non-text bodies or missing/mismatched ETags must refuse in helper. |
+| Snapshots | Each acquisition drains canonical records before Preflight; reads source permission/metadata before bytes and after bytes; rereads immutable request; then drains canonical records again before Plan. This runs initially, immediately before provider dispatch, and before result grant. Subsequent provider-response planning uses another fresh canonical snapshot. |
+| Provider | Initial Plan may return NeedProvider true + projected ProviderWire + ProviderWireHash. Existing pending provider row refuses before any call. The newly written pending row is present at Before_Provider Plan, which must reauthorize the same wire without treating it as permission for an automatic retry. Retained actual response is read back before artifact planning. |
+| Native replay | `native-plan:<UUID>` stores `{status:'prepared',fingerprint,plan:<exact successful Plan response>}` before writes. Flow replays that exact plan/result/writes. A later Plan must freshly reauthorize the original result, not generate a new revision or compare the original ExpectedVersion as though already-applied writes were new edits. Result mismatch blocks the grant. `completed` journal only follows verified projection + command completion. |
+| Projection | VerifyProjection checks exact bytes/identity and HasUniqueRoleAssignments plus Author Read only and permitted writer grant. Author must differ from writer. Projection(success) is not a grant/receipt. Current source/member/review authorization must precede new disclosure. |
+
+## Observed helper status and limits
+
+A later source-only inspection of `connector/parts/10_Modes.cs` confirmed object Fields, numeric VerifiedAuthorId, string RecordJson/ResultJson, nullable ItemId/ExpectedETag, and post-grant verification requiring both writer and Author assignments. **Concrete interop blocker for helper/parent:** its Page continuation parser currently expects `/_api/web/lists(guid='<id>')/items` (with `=`), but this generator and native SharePoint REST use `/_api/web/lists(guid'<id>')/items` (no `=`). Fix/qualify the helper parser against the actual continuation strings; do not change the real REST URI to accommodate a parser bug. This is a concurrent authored-part observation, not a compiled-helper failure claim.
+
+Initial inspection found no connector directory. Subsequent inspection found a concurrent intermediate `Script.cs`/local harness implementing only Preflight/Plan for ListMarketingWorkV1; those intermediate bytes are **not a final helper acceptance baseline**. Check final helper source and its own test receipt. The flow lane has not executed the helper, a Node host, an entire flow, a tenant operation, a model, or native designer Save.
+
+`tests/flow/test_interoperability.py` uses actual parent reference **inputs** and explicitly labeled wire fixtures to execute generated expressions. It does not claim that the helper produced those fixtures. Parent's reference vectors cover 18 scenarios/12 operations according to PARENT_PROGRESS; AI and recovery coverage require separate integration cases.
+
+Remaining native gates: real helper registration/API/Dataverse identity, supported hosted C# APIs and size/time bound, designer Save including projected binding types, actual SharePoint REST response/content/ETag shapes, private-list/Author-only ACL with two real accounts, qualified provider response/truncation/cost, crash-held writer reconciliation and explicit projection revocation/retention. Keep flow OFF and helper API unbound.

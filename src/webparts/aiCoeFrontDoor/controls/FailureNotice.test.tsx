@@ -61,7 +61,7 @@ describe('FailureNotice', () => {
       expect(within(notice).queryByText(failureClass)).not.toBeInTheDocument();
       unmount();
     }
-    expect(DRAFT_KEPT_TEXT).toBe('Your answers are kept as a draft on this device.');
+    expect(DRAFT_KEPT_TEXT).toBe('Your answers remain on this screen. Save the draft before leaving.');
   });
 
   it('lays the facts out as a description list, never a data grid element', () => {

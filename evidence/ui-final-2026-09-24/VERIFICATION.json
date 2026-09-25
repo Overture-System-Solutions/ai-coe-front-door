@@ -1,0 +1,110 @@
+{
+  "verifiedAt": "2026-09-24T21:18:38.938959+00:00",
+  "scope": "FINAL_UI_UX_OFFLINE_UAT_ONLY",
+  "status": "PASS",
+  "requestedChanges": [
+    {
+      "id": "enterprise-entry",
+      "change": "Hide Review enterprise AI value unless its existing capability permits access",
+      "evidence": "AppShell.entryAccess.test.tsx; final-browser.json roles"
+    },
+    {
+      "id": "cases-padding",
+      "change": "24px top padding around the request-explanation row",
+      "evidence": "final-browser.json Cases layouts"
+    },
+    {
+      "id": "cases-toggle",
+      "change": "Show/Hide saved cases; fresh read when reopened, preserve selected case and unsaved answers",
+      "evidence": "AppCoreWorkspace.uat.test.tsx; final-browser.json caseToggle"
+    },
+    {
+      "id": "marketing-notice",
+      "change": "Remove duplicate plain service label; retain the synthetic warning banner",
+      "evidence": "AppMarketingWorkspace.test.tsx; final-browser.json marketingSingleWarning"
+    },
+    {
+      "id": "marketing-padding",
+      "change": "24px bottom padding around labelled demonstration workflow cards",
+      "evidence": "final-browser.json Marketing demo layouts"
+    },
+    {
+      "id": "improvement-padding",
+      "change": "24px top padding around Improvement starter cards",
+      "evidence": "final-browser.json Improvement layouts"
+    },
+    {
+      "id": "registration-width",
+      "change": "Restore only Register team AI use form to the existing centered 48rem shell",
+      "evidence": "AppSections.test.tsx; final-browser.json Registration form layouts"
+    }
+  ],
+  "productionTests": {
+    "suites": 125,
+    "passed": 1191,
+    "failed": 0,
+    "log": "heft-production.log"
+  },
+  "focusedTests": {
+    "passed": 130,
+    "suites": 12,
+    "failed": 0,
+    "receipt": "all-source.json"
+  },
+  "lint": {
+    "nonBlockingWarnings": 112,
+    "allFlaggedSourceLinesExistedBefore": true,
+    "receipt": "lint-warning-review.json"
+  },
+  "browser": {
+    "receipt": "final-browser.json",
+    "simulatedRoles": 7,
+    "layoutChecks": 8,
+    "javascriptErrors": [],
+    "externalRequests": [],
+    "priorUatRegression": "browser-verification.json"
+  },
+  "sourceChanges": [
+    "src/webparts/aiCoeFrontDoor/components/app/AppCoreWorkspace.tsx",
+    "src/webparts/aiCoeFrontDoor/components/app/AppCoreWorkspace.uat.test.tsx",
+    "src/webparts/aiCoeFrontDoor/components/app/AppMarketing.tsx",
+    "src/webparts/aiCoeFrontDoor/components/app/AppMarketingWorkspace.test.tsx",
+    "src/webparts/aiCoeFrontDoor/components/app/AppMarketingWorkspace.tsx",
+    "src/webparts/aiCoeFrontDoor/components/app/AppSections.test.tsx",
+    "src/webparts/aiCoeFrontDoor/components/app/AppSections.tsx",
+    "src/webparts/aiCoeFrontDoor/components/app/AppShell.test.tsx",
+    "src/webparts/aiCoeFrontDoor/components/app/AppShell.tsx",
+    "src/webparts/aiCoeFrontDoor/styles/appShell.global.scss"
+  ],
+  "sourceAdditions": [
+    "src/webparts/aiCoeFrontDoor/components/app/AppMarketing.uat.test.tsx",
+    "src/webparts/aiCoeFrontDoor/components/app/AppShell.entryAccess.test.tsx"
+  ],
+  "sourceHashes": {
+    "src/webparts/aiCoeFrontDoor/components/app/AppCoreWorkspace.tsx": "171a845e995a329baa40a9ed84ef66d861ce3c02f1d9290c34da02183202202e",
+    "src/webparts/aiCoeFrontDoor/components/app/AppCoreWorkspace.uat.test.tsx": "745393b5a3a8e0560448085d9789db003ed5b80f877e88abea8ce557a71b85bb",
+    "src/webparts/aiCoeFrontDoor/components/app/AppMarketing.tsx": "0fc20a0eabd31160def962553dc5d106d37033d7b287f35df436a5b098bfb596",
+    "src/webparts/aiCoeFrontDoor/components/app/AppMarketingWorkspace.test.tsx": "b55700bf46e2d52f60d5d934b6a537c972abddfbb666c482642fe5def08eb3cd",
+    "src/webparts/aiCoeFrontDoor/components/app/AppMarketingWorkspace.tsx": "1c7c3ddc3a03d85cc0fc72e3a36985c61acbcd904c3036ca107773313261f8a2",
+    "src/webparts/aiCoeFrontDoor/components/app/AppSections.test.tsx": "5b773c38f8a483751877a38ab18688710451d2f93c64bf989a05e50b22fb17d7",
+    "src/webparts/aiCoeFrontDoor/components/app/AppSections.tsx": "13771b80f0611a55cbc20de20c0cab7fdc599194fb1fa906b62abb0bad278e49",
+    "src/webparts/aiCoeFrontDoor/components/app/AppShell.test.tsx": "4358bcee91d22a4e57f9c3a63cfa496a14f2124e57575583e26415d694593de6",
+    "src/webparts/aiCoeFrontDoor/components/app/AppShell.tsx": "9878c4d98d8f73fca9a1061ceb90c47302364d9e9f1e5c346bd4b77a590db923",
+    "src/webparts/aiCoeFrontDoor/styles/appShell.global.scss": "7296d2e7090d076f6738fa109d8870dba0566e42e4b4c91b42d8e5654f5caf94",
+    "src/webparts/aiCoeFrontDoor/components/app/AppMarketing.uat.test.tsx": "aaec018787f40f417f3d11484cd62b23ae487e3b6a9bfd7b5d13bfe5b19e2068",
+    "src/webparts/aiCoeFrontDoor/components/app/AppShell.entryAccess.test.tsx": "020508d01c096eebcca9d9969e06a6567adab81b3907794ac5e34d12a7661b70"
+  },
+  "servedBundle": "dist/ai-coe-front-door-web-part_e42fef9e9dd06eedd246.js",
+  "servedBundleSha256": "7b60a8146d15a53a62f58c07acc9455f4253b443a3fd9c729f6b06a555b8399b",
+  "previewUrl": "http://127.0.0.1:4173/?view=app&organization=CloudWave&role=marketingParticipant",
+  "previewProcess": "proc_656b15fc7f4c",
+  "previousPackageUnchanged": true,
+  "previousPackageSha256": "5a01fd5a6c40a3e2b71999de9cba44a2a7fe630148c9debc7d83885d2fc7a86b",
+  "beforeSnapshot": "before-final-ui.zip",
+  "beforeSnapshotSha256": "333678c5d1743756b8f43439732b3269f9532e3ff8b787c38db16c7721ffe610",
+  "newSppkgBuilt": false,
+  "hotReloadImplemented": false,
+  "tenantChanges": false,
+  "liveModelCalls": false,
+  "committed": false
+}

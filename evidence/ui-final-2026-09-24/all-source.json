@@ -1,0 +1,2596 @@
+{
+  "numFailedTestSuites": 0,
+  "numFailedTests": 0,
+  "numPassedTestSuites": 12,
+  "numPassedTests": 130,
+  "numPendingTestSuites": 0,
+  "numPendingTests": 0,
+  "numRuntimeErrorTestSuites": 0,
+  "numTodoTests": 0,
+  "numTotalTestSuites": 12,
+  "numTotalTests": 130,
+  "openHandles": [],
+  "snapshot": {
+    "added": 0,
+    "didUpdate": false,
+    "failure": false,
+    "filesAdded": 0,
+    "filesRemoved": 0,
+    "filesRemovedList": [],
+    "filesUnmatched": 0,
+    "filesUpdated": 0,
+    "matched": 0,
+    "total": 0,
+    "unchecked": 0,
+    "uncheckedKeysByFile": [],
+    "unmatched": 0,
+    "updated": 0
+  },
+  "startTime": 1790283992227,
+  "success": true,
+  "testResults": [
+    {
+      "leaks": false,
+      "numFailingTests": 0,
+      "numPassingTests": 38,
+      "numPendingTests": 0,
+      "numTodoTests": 0,
+      "openHandles": [],
+      "perfStats": {
+        "end": 1790283996188,
+        "loadTestEnvironmentEnd": 1790283992968,
+        "loadTestEnvironmentStart": 1790283992375,
+        "runtime": 3218,
+        "setupAfterEnvEnd": 1790283993289,
+        "setupAfterEnvStart": 1790283993115,
+        "setupFilesEnd": 1790283992981,
+        "setupFilesStart": 1790283992970,
+        "slow": false,
+        "start": 1790283992970
+      },
+      "skipped": false,
+      "snapshot": {
+        "added": 0,
+        "fileDeleted": false,
+        "matched": 0,
+        "unchecked": 0,
+        "uncheckedKeys": [],
+        "unmatched": 0,
+        "updated": 0
+      },
+      "testFilePath": "C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-audit-fixes\\src\\webparts\\aiCoeFrontDoor\\components\\app\\AppShell.test.tsx",
+      "testResults": [
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": 133,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell preserves transient synthetic objective and notes across section changes without a browser-text write",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 4,
+          "retryReasons": [],
+          "startAt": 1790283995157,
+          "status": "passed",
+          "title": "preserves transient synthetic objective and notes across section changes without a browser-text write"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": 114,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell blocks leaving unsaved business Marketing input until the server draft seam confirms it",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 4,
+          "retryReasons": [],
+          "startAt": 1790283995291,
+          "status": "passed",
+          "title": "blocks leaving unsaved business Marketing input until the server draft seam confirms it"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": 8,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell opens on the first screen with the entry panel and only the available ways in",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 4,
+          "retryReasons": [],
+          "startAt": 1790283995406,
+          "status": "passed",
+          "title": "opens on the first screen with the entry panel and only the available ways in"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": 11,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell keeps a section a person may not use out of the tab list entirely",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 6,
+          "retryReasons": [],
+          "startAt": 1790283995414,
+          "status": "passed",
+          "title": "keeps a section a person may not use out of the tab list entirely"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": 11,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell opens the measured view to a leader but still not the operator surface",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 5,
+          "retryReasons": [],
+          "startAt": 1790283995425,
+          "status": "passed",
+          "title": "opens the measured view to a leader but still not the operator surface"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": 7,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell shows nothing narrowed while the membership is unresolved, rather than guessing",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 2,
+          "retryReasons": [],
+          "startAt": 1790283995436,
+          "status": "passed",
+          "title": "shows nothing narrowed while the membership is unresolved, rather than guessing"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": 32,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell moves along the tabs with the arrow keys, and wraps at both ends",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 7,
+          "retryReasons": [],
+          "startAt": 1790283995443,
+          "status": "passed",
+          "title": "moves along the tabs with the arrow keys, and wraps at both ends"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": 32,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell keeps sequential keyboard navigation on the actual focused tab, but pointer entry focuses the heading",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 8,
+          "retryReasons": [],
+          "startAt": 1790283995475,
+          "status": "passed",
+          "title": "keeps sequential keyboard navigation on the actual focused tab, but pointer entry focuses the heading"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": 7,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell ignores a key the tab list does not own, so typing is not swallowed",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 2,
+          "retryReasons": [],
+          "startAt": 1790283995507,
+          "status": "passed",
+          "title": "ignores a key the tab list does not own, so typing is not swallowed"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": 7,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell keeps one tab in the tab order and points each panel at its tab",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 3,
+          "retryReasons": [],
+          "startAt": 1790283995514,
+          "status": "passed",
+          "title": "keeps one tab in the tab order and points each panel at its tab"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": 7,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell gives the section a heading that can take focus, so a change is announced",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 4,
+          "retryReasons": [],
+          "startAt": 1790283995522,
+          "status": "passed",
+          "title": "gives the section a heading that can take focus, so a change is announced"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": 8,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell names the person and what the view can say about their access",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 3,
+          "retryReasons": [],
+          "startAt": 1790283995529,
+          "status": "passed",
+          "title": "names the person and what the view can say about their access"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": 7,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell says so when the membership could not be confirmed, rather than staying quiet about it",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 2,
+          "retryReasons": [],
+          "startAt": 1790283995537,
+          "status": "passed",
+          "title": "says so when the membership could not be confirmed, rather than staying quiet about it"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": 273,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell supplies the configured document route to the actual submission receipt",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 4,
+          "retryReasons": [],
+          "startAt": 1790283995544,
+          "status": "passed",
+          "title": "supplies the configured document route to the actual submission receipt"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": 8,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell carries the footer promise on every section",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 2,
+          "retryReasons": [],
+          "startAt": 1790283995817,
+          "status": "passed",
+          "title": "carries the footer promise on every section"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": 6,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell hides the Enterprise value Home card for an employee without mounting or fetching it",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 8,
+          "retryReasons": [],
+          "startAt": 1790283995825,
+          "status": "passed",
+          "title": "hides the Enterprise value Home card for an employee without mounting or fetching it"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": 7,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell hides the Enterprise value Home card and fetches nothing while membership is unresolved",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 10,
+          "retryReasons": [],
+          "startAt": 1790283995831,
+          "status": "passed",
+          "title": "hides the Enterprise value Home card and fetches nothing while membership is unresolved"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": 27,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell shows Usage on Enterprise value for an operator without a System map route",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 11,
+          "retryReasons": [],
+          "startAt": 1790283995839,
+          "status": "passed",
+          "title": "shows Usage on Enterprise value for an operator without a System map route"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": 11,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell lets a leader open Enterprise value without mounting usage or calling getMetrics",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 6,
+          "retryReasons": [],
+          "startAt": 1790283995866,
+          "status": "passed",
+          "title": "lets a leader open Enterprise value without mounting usage or calling getMetrics"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": 15,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell keeps the Home sentence as the idea draft and opens the guided request with the same wording",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 4,
+          "retryReasons": [],
+          "startAt": 1790283995877,
+          "status": "passed",
+          "title": "keeps the Home sentence as the idea draft and opens the guided request with the same wording"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": 62,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell keeps guided edits mounted when navigation needs an unsaved draft and saving is refused",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 9,
+          "retryReasons": [],
+          "startAt": 1790283995892,
+          "status": "passed",
+          "title": "keeps guided edits mounted when navigation needs an unsaved draft and saving is refused"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": 59,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell keeps guided edits mounted when navigation needs an unsaved draft and saving is rejected",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 9,
+          "retryReasons": [],
+          "startAt": 1790283995954,
+          "status": "passed",
+          "title": "keeps guided edits mounted when navigation needs an unsaved draft and saving is rejected"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": 9,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell keeps the sentence in the box and opens nothing when the draft cannot be saved",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 4,
+          "retryReasons": [],
+          "startAt": 1790283996013,
+          "status": "passed",
+          "title": "keeps the sentence in the box and opens nothing when the draft cannot be saved"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": 14,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell opens Marketing for a reviewer without granting drafting controls",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 4,
+          "retryReasons": [],
+          "startAt": 1790283996023,
+          "status": "passed",
+          "title": "opens Marketing for a reviewer without granting drafting controls"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": 18,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell shows Marketing to a bounded participant and keeps the synthetic workspace across a Home round-trip",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 4,
+          "retryReasons": [],
+          "startAt": 1790283996037,
+          "status": "passed",
+          "title": "shows Marketing to a bounded participant and keeps the synthetic workspace across a Home round-trip"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": 17,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell keeps the administrator queue unread for an operator without site-owner permission and no System map route",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 6,
+          "retryReasons": [],
+          "startAt": 1790283996055,
+          "status": "passed",
+          "title": "keeps the administrator queue unread for an operator without site-owner permission and no System map route"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": 7,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell says the support route is unbound when the content document does not name one",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 2,
+          "retryReasons": [],
+          "startAt": 1790283996072,
+          "status": "passed",
+          "title": "says the support route is unbound when the content document does not name one"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": 9,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell does not expose an unsafe support link: javascript:void(0)",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 3,
+          "retryReasons": [],
+          "startAt": 1790283996079,
+          "status": "passed",
+          "title": "does not expose an unsafe support link: javascript:void(0)"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": 6,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell does not expose an unsafe support link: data:text/html,unsafe",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 3,
+          "retryReasons": [],
+          "startAt": 1790283996088,
+          "status": "passed",
+          "title": "does not expose an unsafe support link: data:text/html,unsafe"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": 6,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell does not expose an unsafe support link: //untrusted.invalid/path",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 3,
+          "retryReasons": [],
+          "startAt": 1790283996095,
+          "status": "passed",
+          "title": "does not expose an unsafe support link: //untrusted.invalid/path"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": 6,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell resolves site-relative support links against the site rather than the hosting page",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 2,
+          "retryReasons": [],
+          "startAt": 1790283996101,
+          "status": "passed",
+          "title": "resolves site-relative support links against the site rather than the hosting page"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": 9,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell renders a configured support route from the page content document",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 3,
+          "retryReasons": [],
+          "startAt": 1790283996107,
+          "status": "passed",
+          "title": "renders a configured support route from the page content document"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": 6,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell places the administrator control last, apart from the section tabs, for a site owner",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 10,
+          "retryReasons": [],
+          "startAt": 1790283996116,
+          "status": "passed",
+          "title": "places the administrator control last, apart from the section tabs, for a site owner"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": 14,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell opens the administrator queue from that control and still opens a section tab",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 5,
+          "retryReasons": [],
+          "startAt": 1790283996122,
+          "status": "passed",
+          "title": "opens the administrator queue from that control and still opens a section tab"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": 8,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell keeps System map absent and administrator reads lazy even for a site owner",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 7,
+          "retryReasons": [],
+          "startAt": 1790283996136,
+          "status": "passed",
+          "title": "keeps System map absent and administrator reads lazy even for a site owner"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": 18,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell moves to the administrator control with End when the person may open it",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 2,
+          "retryReasons": [],
+          "startAt": 1790283996145,
+          "status": "passed",
+          "title": "moves to the administrator control with End when the person may open it"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": 10,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell spaces Register team AI use from the other Improvement cards and keeps the larger panels below",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 6,
+          "retryReasons": [],
+          "startAt": 1790283996163,
+          "status": "passed",
+          "title": "spaces Register team AI use from the other Improvement cards and keeps the larger panels below"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": 12,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell does not mount the administrator queue or read it for an employee",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 5,
+          "retryReasons": [],
+          "startAt": 1790283996173,
+          "status": "passed",
+          "title": "does not mount the administrator queue or read it for an employee"
+        }
+      ],
+      "failureMessage": null
+    },
+    {
+      "leaks": false,
+      "numFailingTests": 0,
+      "numPassingTests": 20,
+      "numPendingTests": 0,
+      "numTodoTests": 0,
+      "openHandles": [],
+      "perfStats": {
+        "end": 1790283997644,
+        "loadTestEnvironmentEnd": 1790283996202,
+        "loadTestEnvironmentStart": 1790283996191,
+        "runtime": 1442,
+        "setupAfterEnvEnd": 1790283996290,
+        "setupAfterEnvStart": 1790283996238,
+        "setupFilesEnd": 1790283996203,
+        "setupFilesStart": 1790283996202,
+        "slow": false,
+        "start": 1790283996202
+      },
+      "skipped": false,
+      "snapshot": {
+        "added": 0,
+        "fileDeleted": false,
+        "matched": 0,
+        "unchecked": 0,
+        "uncheckedKeys": [],
+        "unmatched": 0,
+        "updated": 0
+      },
+      "testFilePath": "C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-audit-fixes\\src\\webparts\\aiCoeFrontDoor\\components\\app\\AppBusinessMarketingWorkspace.test.tsx",
+      "testResults": [
+        {
+          "ancestorTitles": [],
+          "duration": 216,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "runs all three drafts with selected business sources and source-only meeting evidence",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 10,
+          "retryReasons": [],
+          "startAt": 1790283996446,
+          "status": "passed",
+          "title": "runs all three drafts with selected business sources and source-only meeting evidence"
+        },
+        {
+          "ancestorTitles": [],
+          "duration": 4,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "unauthorized users make zero business or working-draft calls: {\"roles\":[\"employee\"],\"resolution\":\"resolved\"}",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 6,
+          "retryReasons": [],
+          "startAt": 1790283996663,
+          "status": "passed",
+          "title": "unauthorized users make zero business or working-draft calls: {\"roles\":[\"employee\"],\"resolution\":\"resolved\"}"
+        },
+        {
+          "ancestorTitles": [],
+          "duration": 4,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "unauthorized users make zero business or working-draft calls: {\"roles\":[\"marketingParticipant\"],\"resolution\":\"unresolved\"}",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 6,
+          "retryReasons": [],
+          "startAt": 1790283996668,
+          "status": "passed",
+          "title": "unauthorized users make zero business or working-draft calls: {\"roles\":[\"marketingParticipant\"],\"resolution\":\"unresolved\"}"
+        },
+        {
+          "ancestorTitles": [],
+          "duration": 82,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "uses only the current authenticated reviewer and a matching backend authority",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 6,
+          "retryReasons": [],
+          "startAt": 1790283996672,
+          "status": "passed",
+          "title": "uses only the current authenticated reviewer and a matching backend authority"
+        },
+        {
+          "ancestorTitles": [],
+          "duration": 133,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "keeps uncertain review requests pending across remount and repairs only on explicit action",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 13,
+          "retryReasons": [],
+          "startAt": 1790283996754,
+          "status": "passed",
+          "title": "keeps uncertain review requests pending across remount and repairs only on explicit action"
+        },
+        {
+          "ancestorTitles": [],
+          "duration": 65,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "saves and loads unsubmitted objective audience and manual JSON only through the server draft seam",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 12,
+          "retryReasons": [],
+          "startAt": 1790283996887,
+          "status": "passed",
+          "title": "saves and loads unsubmitted objective audience and manual JSON only through the server draft seam"
+        },
+        {
+          "ancestorTitles": [],
+          "duration": 106,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "edits a manual revision with its exact store version and rejects invalid JSON before calling the facade",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 6,
+          "retryReasons": [],
+          "startAt": 1790283996952,
+          "status": "passed",
+          "title": "edits a manual revision with its exact store version and rejects invalid JSON before calling the facade"
+        },
+        {
+          "ancestorTitles": [],
+          "duration": 73,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "does not discard unsaved author text through the case or workspace-mode switchers",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 8,
+          "retryReasons": [],
+          "startAt": 1790283997058,
+          "status": "passed",
+          "title": "does not discard unsaved author text through the case or workspace-mode switchers"
+        },
+        {
+          "ancestorTitles": [],
+          "duration": 52,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "lets a reviewer explicitly discard an unsent comment without mutating a saved record",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 7,
+          "retryReasons": [],
+          "startAt": 1790283997131,
+          "status": "passed",
+          "title": "lets a reviewer explicitly discard an unsent comment without mutating a saved record"
+        },
+        {
+          "ancestorTitles": [],
+          "duration": 114,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "submits manual UI corrections through the real business facade using the server content-only contract",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 8,
+          "retryReasons": [],
+          "startAt": 1790283997183,
+          "status": "passed",
+          "title": "submits manual UI corrections through the real business facade using the server content-only contract"
+        },
+        {
+          "ancestorTitles": [],
+          "duration": 64,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "offers the provider manual fallback as editable JSON without relabelling it AI output",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 5,
+          "retryReasons": [],
+          "startAt": 1790283997297,
+          "status": "passed",
+          "title": "offers the provider manual fallback as editable JSON without relabelling it AI output"
+        },
+        {
+          "ancestorTitles": [],
+          "duration": 50,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "blocks overlapping draft clicks and performs no follow-up after unmount",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 6,
+          "retryReasons": [],
+          "startAt": 1790283997361,
+          "status": "passed",
+          "title": "blocks overlapping draft clicks and performs no follow-up after unmount"
+        },
+        {
+          "ancestorTitles": [],
+          "duration": 5,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "fails closed when business work listing is not bound",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 3,
+          "retryReasons": [],
+          "startAt": 1790283997411,
+          "status": "passed",
+          "title": "fails closed when business work listing is not bound"
+        },
+        {
+          "ancestorTitles": [],
+          "duration": 26,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "does not expose decisions for nonmatching authority {\"synthetic\":true}",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 5,
+          "retryReasons": [],
+          "startAt": 1790283997416,
+          "status": "passed",
+          "title": "does not expose decisions for nonmatching authority {\"synthetic\":true}"
+        },
+        {
+          "ancestorTitles": [],
+          "duration": 38,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "does not expose decisions for nonmatching authority {\"actorId\":\"other@contoso.com\"}",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 5,
+          "retryReasons": [],
+          "startAt": 1790283997442,
+          "status": "passed",
+          "title": "does not expose decisions for nonmatching authority {\"actorId\":\"other@contoso.com\"}"
+        },
+        {
+          "ancestorTitles": [],
+          "duration": 43,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "does not expose decisions for nonmatching authority {\"tenantScope\":\"https://another.example\"}",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 5,
+          "retryReasons": [],
+          "startAt": 1790283997480,
+          "status": "passed",
+          "title": "does not expose decisions for nonmatching authority {\"tenantScope\":\"https://another.example\"}"
+        },
+        {
+          "ancestorTitles": [],
+          "duration": 34,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "does not expose decisions for nonmatching authority {\"expiresAt\":\"2000-01-01T00:00:00Z\"}",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 5,
+          "retryReasons": [],
+          "startAt": 1790283997524,
+          "status": "passed",
+          "title": "does not expose decisions for nonmatching authority {\"expiresAt\":\"2000-01-01T00:00:00Z\"}"
+        },
+        {
+          "ancestorTitles": [],
+          "duration": 37,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "does not expose decisions for nonmatching authority {\"revoked\":true}",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 5,
+          "retryReasons": [],
+          "startAt": 1790283997558,
+          "status": "passed",
+          "title": "does not expose decisions for nonmatching authority {\"revoked\":true}"
+        },
+        {
+          "ancestorTitles": [],
+          "duration": 21,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "does not expose decisions for nonmatching authority {\"scope\":[\"copyChannel\"]}",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 5,
+          "retryReasons": [],
+          "startAt": 1790283997595,
+          "status": "passed",
+          "title": "does not expose decisions for nonmatching authority {\"scope\":[\"copyChannel\"]}"
+        },
+        {
+          "ancestorTitles": [],
+          "duration": 27,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "live mode selects only server-authorized Work IDs and never mounts the synthetic workspace",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 7,
+          "retryReasons": [],
+          "startAt": 1790283997616,
+          "status": "passed",
+          "title": "live mode selects only server-authorized Work IDs and never mounts the synthetic workspace"
+        }
+      ],
+      "failureMessage": null
+    },
+    {
+      "leaks": false,
+      "numFailingTests": 0,
+      "numPassingTests": 15,
+      "numPendingTests": 0,
+      "numTodoTests": 0,
+      "openHandles": [],
+      "perfStats": {
+        "end": 1790283998775,
+        "loadTestEnvironmentEnd": 1790283997652,
+        "loadTestEnvironmentStart": 1790283997645,
+        "runtime": 1122,
+        "setupAfterEnvEnd": 1790283997752,
+        "setupAfterEnvStart": 1790283997698,
+        "setupFilesEnd": 1790283997653,
+        "setupFilesStart": 1790283997653,
+        "slow": false,
+        "start": 1790283997653
+      },
+      "skipped": false,
+      "snapshot": {
+        "added": 0,
+        "fileDeleted": false,
+        "matched": 0,
+        "unchecked": 0,
+        "uncheckedKeys": [],
+        "unmatched": 0,
+        "updated": 0
+      },
+      "testFilePath": "C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-audit-fixes\\src\\webparts\\aiCoeFrontDoor\\components\\app\\AppCoreWorkspace.test.tsx",
+      "testResults": [
+        {
+          "ancestorTitles": [
+            "AppCoreWorkspace case journey"
+          ],
+          "duration": 85,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppCoreWorkspace case journey saves only edited clarification fields instead of clearing unseen S1 values",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 8,
+          "retryReasons": [],
+          "startAt": 1790283997924,
+          "status": "passed",
+          "title": "saves only edited clarification fields instead of clearing unseen S1 values"
+        },
+        {
+          "ancestorTitles": [
+            "AppCoreWorkspace case journey"
+          ],
+          "duration": 23,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppCoreWorkspace case journey renders unvalidated native work without a fabricated date or synthetic write notice",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 4,
+          "retryReasons": [],
+          "startAt": 1790283998009,
+          "status": "passed",
+          "title": "renders unvalidated native work without a fabricated date or synthetic write notice"
+        },
+        {
+          "ancestorTitles": [
+            "AppCoreWorkspace case journey"
+          ],
+          "duration": 69,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppCoreWorkspace case journey does not call human validation for an unauthorized or unresolved reviewer context {\"roles\":[\"employee\"],\"rolesState\":\"resolved\"}",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 7,
+          "retryReasons": [],
+          "startAt": 1790283998032,
+          "status": "passed",
+          "title": "does not call human validation for an unauthorized or unresolved reviewer context {\"roles\":[\"employee\"],\"rolesState\":\"resolved\"}"
+        },
+        {
+          "ancestorTitles": [
+            "AppCoreWorkspace case journey"
+          ],
+          "duration": 73,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppCoreWorkspace case journey does not call human validation for an unauthorized or unresolved reviewer context {\"roles\":[\"operator\"],\"rolesState\":\"resolved\",\"isAdmin\":true}",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 7,
+          "retryReasons": [],
+          "startAt": 1790283998101,
+          "status": "passed",
+          "title": "does not call human validation for an unauthorized or unresolved reviewer context {\"roles\":[\"operator\"],\"rolesState\":\"resolved\",\"isAdmin\":true}"
+        },
+        {
+          "ancestorTitles": [
+            "AppCoreWorkspace case journey"
+          ],
+          "duration": 69,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppCoreWorkspace case journey does not call human validation for an unauthorized or unresolved reviewer context {\"roles\":[\"marketingReviewer\"],\"rolesState\":\"resolved\"}",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 7,
+          "retryReasons": [],
+          "startAt": 1790283998174,
+          "status": "passed",
+          "title": "does not call human validation for an unauthorized or unresolved reviewer context {\"roles\":[\"marketingReviewer\"],\"rolesState\":\"resolved\"}"
+        },
+        {
+          "ancestorTitles": [
+            "AppCoreWorkspace case journey"
+          ],
+          "duration": 53,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppCoreWorkspace case journey does not call human validation for an unauthorized or unresolved reviewer context {\"roles\":[\"designAuthority\"],\"rolesState\":\"pending\"}",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 7,
+          "retryReasons": [],
+          "startAt": 1790283998244,
+          "status": "passed",
+          "title": "does not call human validation for an unauthorized or unresolved reviewer context {\"roles\":[\"designAuthority\"],\"rolesState\":\"pending\"}"
+        },
+        {
+          "ancestorTitles": [
+            "AppCoreWorkspace case journey"
+          ],
+          "duration": 51,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppCoreWorkspace case journey does not call human validation for an unauthorized or unresolved reviewer context {\"roles\":[\"designAuthority\"],\"rolesState\":\"unresolved\"}",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 7,
+          "retryReasons": [],
+          "startAt": 1790283998297,
+          "status": "passed",
+          "title": "does not call human validation for an unauthorized or unresolved reviewer context {\"roles\":[\"designAuthority\"],\"rolesState\":\"unresolved\"}"
+        },
+        {
+          "ancestorTitles": [
+            "AppCoreWorkspace case journey"
+          ],
+          "duration": 46,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppCoreWorkspace case journey explains unavailable synthetic human validation instead of inventing authority",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 5,
+          "retryReasons": [],
+          "startAt": 1790283998348,
+          "status": "passed",
+          "title": "explains unavailable synthetic human validation instead of inventing authority"
+        },
+        {
+          "ancestorTitles": [
+            "AppCoreWorkspace case journey"
+          ],
+          "duration": 24,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppCoreWorkspace case journey keeps recovery failure fail-closed and makes no follow-up call after unmount",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 6,
+          "retryReasons": [],
+          "startAt": 1790283998394,
+          "status": "passed",
+          "title": "keeps recovery failure fail-closed and makes no follow-up call after unmount"
+        },
+        {
+          "ancestorTitles": [
+            "AppCoreWorkspace case journey"
+          ],
+          "duration": 76,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppCoreWorkspace case journey offers explicit human validation only to resolved design authority and refreshes the original packet after saving",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 12,
+          "retryReasons": [],
+          "startAt": 1790283998418,
+          "status": "passed",
+          "title": "offers explicit human validation only to resolved design authority and refreshes the original packet after saving"
+        },
+        {
+          "ancestorTitles": [
+            "AppCoreWorkspace case journey"
+          ],
+          "duration": 34,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppCoreWorkspace case journey recovers the original pending command before fresh reads and never resubmits an unknown mutation",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 11,
+          "retryReasons": [],
+          "startAt": 1790283998494,
+          "status": "passed",
+          "title": "recovers the original pending command before fresh reads and never resubmits an unknown mutation"
+        },
+        {
+          "ancestorTitles": [
+            "AppCoreWorkspace case journey"
+          ],
+          "duration": 63,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppCoreWorkspace case journey lets the person select a packet, read its questions and submit their own classified answer",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 9,
+          "retryReasons": [],
+          "startAt": 1790283998528,
+          "status": "passed",
+          "title": "lets the person select a packet, read its questions and submit their own classified answer"
+        },
+        {
+          "ancestorTitles": [
+            "AppCoreWorkspace case journey"
+          ],
+          "duration": 97,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppCoreWorkspace case journey restores only a scoped opaque selection by reading the service after remount",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 10,
+          "retryReasons": [],
+          "startAt": 1790283998591,
+          "status": "passed",
+          "title": "restores only a scoped opaque selection by reading the service after remount"
+        },
+        {
+          "ancestorTitles": [
+            "AppCoreWorkspace case journey"
+          ],
+          "duration": 59,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppCoreWorkspace case journey saves entered clarification against the selected WorkID rather than creating a second case",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 6,
+          "retryReasons": [],
+          "startAt": 1790283998688,
+          "status": "passed",
+          "title": "saves entered clarification against the selected WorkID rather than creating a second case"
+        },
+        {
+          "ancestorTitles": [
+            "AppCoreWorkspace case journey"
+          ],
+          "duration": 27,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppCoreWorkspace case journey renders public ListMyWork Items as selectable cases and reads status on selection",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 5,
+          "retryReasons": [],
+          "startAt": 1790283998747,
+          "status": "passed",
+          "title": "renders public ListMyWork Items as selectable cases and reads status on selection"
+        }
+      ],
+      "failureMessage": null
+    },
+    {
+      "leaks": false,
+      "numFailingTests": 0,
+      "numPassingTests": 7,
+      "numPendingTests": 0,
+      "numTodoTests": 0,
+      "openHandles": [],
+      "perfStats": {
+        "end": 1790283999187,
+        "loadTestEnvironmentEnd": 1790283998781,
+        "loadTestEnvironmentStart": 1790283998776,
+        "runtime": 406,
+        "setupAfterEnvEnd": 1790283998850,
+        "setupAfterEnvStart": 1790283998809,
+        "setupFilesEnd": 1790283998782,
+        "setupFilesStart": 1790283998781,
+        "slow": false,
+        "start": 1790283998781
+      },
+      "skipped": false,
+      "snapshot": {
+        "added": 0,
+        "fileDeleted": false,
+        "matched": 0,
+        "unchecked": 0,
+        "uncheckedKeys": [],
+        "unmatched": 0,
+        "updated": 0
+      },
+      "testFilePath": "C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-audit-fixes\\src\\webparts\\aiCoeFrontDoor\\components\\app\\AppCoreWorkspace.uat.test.tsx",
+      "testResults": [
+        {
+          "ancestorTitles": [
+            "Cases UAT clarity"
+          ],
+          "duration": 54,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "Cases UAT clarity toggles the saved-case list without losing unsaved answers (empty: false)",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 15,
+          "retryReasons": [],
+          "startAt": 1790283998940,
+          "status": "passed",
+          "title": "toggles the saved-case list without losing unsaved answers (empty: false)"
+        },
+        {
+          "ancestorTitles": [
+            "Cases UAT clarity"
+          ],
+          "duration": 35,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "Cases UAT clarity toggles the saved-case list without losing unsaved answers (empty: true)",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 15,
+          "retryReasons": [],
+          "startAt": 1790283998995,
+          "status": "passed",
+          "title": "toggles the saved-case list without losing unsaved answers (empty: true)"
+        },
+        {
+          "ancestorTitles": [
+            "Cases UAT clarity"
+          ],
+          "duration": 11,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "Cases UAT clarity starts with an empty, labelled case form rather than pre-entered fictional business text",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 10,
+          "retryReasons": [],
+          "startAt": 1790283999031,
+          "status": "passed",
+          "title": "starts with an empty, labelled case form rather than pre-entered fictional business text"
+        },
+        {
+          "ancestorTitles": [
+            "Cases UAT clarity"
+          ],
+          "duration": 33,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "Cases UAT clarity creates only the entered case and reports readable confirmed feedback",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 7,
+          "retryReasons": [],
+          "startAt": 1790283999042,
+          "status": "passed",
+          "title": "creates only the entered case and reports readable confirmed feedback"
+        },
+        {
+          "ancestorTitles": [
+            "Cases UAT clarity"
+          ],
+          "duration": 57,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "Cases UAT clarity can start a separate blank case without changing an existing one",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 7,
+          "retryReasons": [],
+          "startAt": 1790283999075,
+          "status": "passed",
+          "title": "can start a separate blank case without changing an existing one"
+        },
+        {
+          "ancestorTitles": [
+            "Cases UAT clarity"
+          ],
+          "duration": 11,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "Cases UAT clarity reports unsaved case edits to the shell and protects them from a fresh selection",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 5,
+          "retryReasons": [],
+          "startAt": 1790283999132,
+          "status": "passed",
+          "title": "reports unsaved case edits to the shell and protects them from a fresh selection"
+        },
+        {
+          "ancestorTitles": [
+            "Cases UAT clarity"
+          ],
+          "duration": 44,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "Cases UAT clarity names information requests plainly and keeps certainty choices explained",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 7,
+          "retryReasons": [],
+          "startAt": 1790283999143,
+          "status": "passed",
+          "title": "names information requests plainly and keeps certainty choices explained"
+        }
+      ],
+      "failureMessage": null
+    },
+    {
+      "leaks": false,
+      "numFailingTests": 0,
+      "numPassingTests": 9,
+      "numPendingTests": 0,
+      "numTodoTests": 0,
+      "openHandles": [],
+      "perfStats": {
+        "end": 1790283999775,
+        "loadTestEnvironmentEnd": 1790283999193,
+        "loadTestEnvironmentStart": 1790283999188,
+        "runtime": 582,
+        "setupAfterEnvEnd": 1790283999265,
+        "setupAfterEnvStart": 1790283999223,
+        "setupFilesEnd": 1790283999194,
+        "setupFilesStart": 1790283999193,
+        "slow": false,
+        "start": 1790283999193
+      },
+      "skipped": false,
+      "snapshot": {
+        "added": 0,
+        "fileDeleted": false,
+        "matched": 0,
+        "unchecked": 0,
+        "uncheckedKeys": [],
+        "unmatched": 0,
+        "updated": 0
+      },
+      "testFilePath": "C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-audit-fixes\\src\\webparts\\aiCoeFrontDoor\\components\\app\\AppSections.test.tsx",
+      "testResults": [
+        {
+          "ancestorTitles": [
+            "same-app measurement and teaching entry"
+          ],
+          "duration": 69,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "same-app measurement and teaching entry restores only the team registration form to its previous centered workflow width",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 10,
+          "retryReasons": [],
+          "startAt": 1790283999410,
+          "status": "passed",
+          "title": "restores only the team registration form to its previous centered workflow width"
+        },
+        {
+          "ancestorTitles": [
+            "same-app measurement and teaching entry"
+          ],
+          "duration": 19,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "same-app measurement and teaching entry pads the Improvement starter row above its cards without narrowing the overview",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 4,
+          "retryReasons": [],
+          "startAt": 1790283999479,
+          "status": "passed",
+          "title": "pads the Improvement starter row above its cards without narrowing the overview"
+        },
+        {
+          "ancestorTitles": [
+            "same-app measurement and teaching entry"
+          ],
+          "duration": 18,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "same-app measurement and teaching entry adds top padding to the Cases explanation row, not inside its cards",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 4,
+          "retryReasons": [],
+          "startAt": 1790283999498,
+          "status": "passed",
+          "title": "adds top padding to the Cases explanation row, not inside its cards"
+        },
+        {
+          "ancestorTitles": [
+            "same-app measurement and teaching entry"
+          ],
+          "duration": 26,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "same-app measurement and teaching entry pads the Engineering starter region vertically in the wide layout without changing the cards",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 9,
+          "retryReasons": [],
+          "startAt": 1790283999516,
+          "status": "passed",
+          "title": "pads the Engineering starter region vertically in the wide layout without changing the cards"
+        },
+        {
+          "ancestorTitles": [
+            "same-app measurement and teaching entry"
+          ],
+          "duration": 26,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "same-app measurement and teaching entry pads the Engineering starter region vertically in the narrow layout without changing the cards",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 9,
+          "retryReasons": [],
+          "startAt": 1790283999542,
+          "status": "passed",
+          "title": "pads the Engineering starter region vertically in the narrow layout without changing the cards"
+        },
+        {
+          "ancestorTitles": [
+            "same-app measurement and teaching entry"
+          ],
+          "duration": 82,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "same-app measurement and teaching entry opens and closes the guidance with keyboard controls in the narrow layout",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 6,
+          "retryReasons": [],
+          "startAt": 1790283999568,
+          "status": "passed",
+          "title": "opens and closes the guidance with keyboard controls in the narrow layout"
+        },
+        {
+          "ancestorTitles": [
+            "same-app measurement and teaching entry"
+          ],
+          "duration": 43,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "same-app measurement and teaching entry opens source, role, stop and recovery quick-start guidance from Engineering without a private source link",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 11,
+          "retryReasons": [],
+          "startAt": 1790283999650,
+          "status": "passed",
+          "title": "opens source, role, stop and recovery quick-start guidance from Engineering without a private source link"
+        },
+        {
+          "ancestorTitles": [
+            "same-app measurement and teaching entry"
+          ],
+          "duration": 52,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "same-app measurement and teaching entry connects Improvement guidance to the existing outcome form, not another tracker",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 4,
+          "retryReasons": [],
+          "startAt": 1790283999693,
+          "status": "passed",
+          "title": "connects Improvement guidance to the existing outcome form, not another tracker"
+        },
+        {
+          "ancestorTitles": [
+            "same-app measurement and teaching entry"
+          ],
+          "duration": 28,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "same-app measurement and teaching entry keeps Improvement proposal/retest guidance without the misplaced operator commissioning control",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 8,
+          "retryReasons": [],
+          "startAt": 1790283999746,
+          "status": "passed",
+          "title": "keeps Improvement proposal/retest guidance without the misplaced operator commissioning control"
+        }
+      ],
+      "failureMessage": null
+    },
+    {
+      "leaks": false,
+      "numFailingTests": 0,
+      "numPassingTests": 9,
+      "numPendingTests": 0,
+      "numTodoTests": 0,
+      "openHandles": [],
+      "perfStats": {
+        "end": 1790283999898,
+        "loadTestEnvironmentEnd": 1790283999783,
+        "loadTestEnvironmentStart": 1790283999778,
+        "runtime": 115,
+        "setupAfterEnvEnd": 1790283999864,
+        "setupAfterEnvStart": 1790283999825,
+        "setupFilesEnd": 1790283999784,
+        "setupFilesStart": 1790283999783,
+        "slow": false,
+        "start": 1790283999783
+      },
+      "skipped": false,
+      "snapshot": {
+        "added": 0,
+        "fileDeleted": false,
+        "matched": 0,
+        "unchecked": 0,
+        "uncheckedKeys": [],
+        "unmatched": 0,
+        "updated": 0
+      },
+      "testFilePath": "C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-audit-fixes\\src\\webparts\\aiCoeFrontDoor\\services\\authorization.test.ts",
+      "testResults": [
+        {
+          "ancestorTitles": [
+            "capability gate"
+          ],
+          "duration": 4,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "capability gate lets everyone signed in do their own work",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 7,
+          "retryReasons": [],
+          "startAt": 1790283999884,
+          "status": "passed",
+          "title": "lets everyone signed in do their own work"
+        },
+        {
+          "ancestorTitles": [
+            "capability gate"
+          ],
+          "duration": 4,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "capability gate refuses the operator surfaces to an employee, and says so without naming a group or a role",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 11,
+          "retryReasons": [],
+          "startAt": 1790283999888,
+          "status": "passed",
+          "title": "refuses the operator surfaces to an employee, and says so without naming a group or a role"
+        },
+        {
+          "ancestorTitles": [
+            "capability gate"
+          ],
+          "duration": 1,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "capability gate gives the measured view to a leader and to an operator, and the queue only to an operator",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 6,
+          "retryReasons": [],
+          "startAt": 1790283999892,
+          "status": "passed",
+          "title": "gives the measured view to a leader and to an operator, and the queue only to an operator"
+        },
+        {
+          "ancestorTitles": [
+            "capability gate"
+          ],
+          "duration": 1,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "capability gate fails closed while the membership is unresolved, however many roles the resolution claims",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 16,
+          "retryReasons": [],
+          "startAt": 1790283999893,
+          "status": "passed",
+          "title": "fails closed while the membership is unresolved, however many roles the resolution claims"
+        },
+        {
+          "ancestorTitles": [
+            "capability gate"
+          ],
+          "duration": 0,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "capability gate never calls the service when the capability is refused",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 4,
+          "retryReasons": [],
+          "startAt": 1790283999894,
+          "status": "passed",
+          "title": "never calls the service when the capability is refused"
+        },
+        {
+          "ancestorTitles": [
+            "capability gate"
+          ],
+          "duration": 1,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "capability gate calls the service exactly once when the capability is allowed, and hands its answer back untouched",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 4,
+          "retryReasons": [],
+          "startAt": 1790283999894,
+          "status": "passed",
+          "title": "calls the service exactly once when the capability is allowed, and hands its answer back untouched"
+        },
+        {
+          "ancestorTitles": [
+            "capability gate"
+          ],
+          "duration": 1,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "capability gate opens Marketing drafting to the bounded participant role and the two local walkthrough roles, never to an employee or a leader",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 16,
+          "retryReasons": [],
+          "startAt": 1790283999895,
+          "status": "passed",
+          "title": "opens Marketing drafting to the bounded participant role and the two local walkthrough roles, never to an employee or a leader"
+        },
+        {
+          "ancestorTitles": [
+            "capability gate"
+          ],
+          "duration": 1,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "capability gate holds the Marketing review decision to the Marketing reviewer alone: a platform role is not a business approval",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 8,
+          "retryReasons": [],
+          "startAt": 1790283999896,
+          "status": "passed",
+          "title": "holds the Marketing review decision to the Marketing reviewer alone: a platform role is not a business approval"
+        },
+        {
+          "ancestorTitles": [
+            "capability gate"
+          ],
+          "duration": 1,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "capability gate declares a role list for every capability, so a new one cannot default to open",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 11,
+          "retryReasons": [],
+          "startAt": 1790283999897,
+          "status": "passed",
+          "title": "declares a role list for every capability, so a new one cannot default to open"
+        }
+      ],
+      "failureMessage": null
+    },
+    {
+      "leaks": false,
+      "numFailingTests": 0,
+      "numPassingTests": 7,
+      "numPendingTests": 0,
+      "numTodoTests": 0,
+      "openHandles": [],
+      "perfStats": {
+        "end": 1790284000219,
+        "loadTestEnvironmentEnd": 1790283999908,
+        "loadTestEnvironmentStart": 1790283999902,
+        "runtime": 311,
+        "setupAfterEnvEnd": 1790284000040,
+        "setupAfterEnvStart": 1790283999947,
+        "setupFilesEnd": 1790283999908,
+        "setupFilesStart": 1790283999908,
+        "slow": false,
+        "start": 1790283999908
+      },
+      "skipped": false,
+      "snapshot": {
+        "added": 0,
+        "fileDeleted": false,
+        "matched": 0,
+        "unchecked": 0,
+        "uncheckedKeys": [],
+        "unmatched": 0,
+        "updated": 0
+      },
+      "testFilePath": "C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-audit-fixes\\src\\webparts\\aiCoeFrontDoor\\services\\gatedServices.test.ts",
+      "testResults": [
+        {
+          "ancestorTitles": [
+            "gated service facades"
+          ],
+          "duration": 4,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "gated service facades refuses the measures read to an employee without calling the service, in the service's own denied shape",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 8,
+          "retryReasons": [],
+          "startAt": 1790284000201,
+          "status": "passed",
+          "title": "refuses the measures read to an employee without calling the service, in the service's own denied shape"
+        },
+        {
+          "ancestorTitles": [
+            "gated service facades"
+          ],
+          "duration": 5,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "gated service facades refuses every protected read while the membership is unresolved, whatever roles it claims",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 5,
+          "retryReasons": [],
+          "startAt": 1790284000205,
+          "status": "passed",
+          "title": "refuses every protected read while the membership is unresolved, whatever roles it claims"
+        },
+        {
+          "ancestorTitles": [
+            "gated service facades"
+          ],
+          "duration": 2,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "gated service facades lets a leader read the measures once and still refuses the operator surfaces",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 8,
+          "retryReasons": [],
+          "startAt": 1790284000211,
+          "status": "passed",
+          "title": "lets a leader read the measures once and still refuses the operator surfaces"
+        },
+        {
+          "ancestorTitles": [
+            "gated service facades"
+          ],
+          "duration": 1,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "gated service facades passes every operator read through exactly once, untouched",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 6,
+          "retryReasons": [],
+          "startAt": 1790284000213,
+          "status": "passed",
+          "title": "passes every operator read through exactly once, untouched"
+        },
+        {
+          "ancestorTitles": [
+            "gated service facades"
+          ],
+          "duration": 1,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "gated service facades leaves a person's own writes open, so an unconfirmed membership never blocks their own work",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 2,
+          "retryReasons": [],
+          "startAt": 1790284000215,
+          "status": "passed",
+          "title": "leaves a person's own writes open, so an unconfirmed membership never blocks their own work"
+        },
+        {
+          "ancestorTitles": [
+            "gated service facades"
+          ],
+          "duration": 1,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "gated service facades keeps an absent measures service absent rather than inventing one",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 3,
+          "retryReasons": [],
+          "startAt": 1790284000216,
+          "status": "passed",
+          "title": "keeps an absent measures service absent rather than inventing one"
+        },
+        {
+          "ancestorTitles": [
+            "gated service facades"
+          ],
+          "duration": 1,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "gated service facades never names a group, a role or a list in the refusal",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 5,
+          "retryReasons": [],
+          "startAt": 1790284000217,
+          "status": "passed",
+          "title": "never names a group, a role or a list in the refusal"
+        }
+      ],
+      "failureMessage": null
+    },
+    {
+      "leaks": false,
+      "numFailingTests": 0,
+      "numPassingTests": 3,
+      "numPendingTests": 0,
+      "numTodoTests": 0,
+      "openHandles": [],
+      "perfStats": {
+        "end": 1790284000525,
+        "loadTestEnvironmentEnd": 1790284000225,
+        "loadTestEnvironmentStart": 1790284000220,
+        "runtime": 299,
+        "setupAfterEnvEnd": 1790284000313,
+        "setupAfterEnvStart": 1790284000266,
+        "setupFilesEnd": 1790284000226,
+        "setupFilesStart": 1790284000226,
+        "slow": false,
+        "start": 1790284000226
+      },
+      "skipped": false,
+      "snapshot": {
+        "added": 0,
+        "fileDeleted": false,
+        "matched": 0,
+        "unchecked": 0,
+        "uncheckedKeys": [],
+        "unmatched": 0,
+        "updated": 0
+      },
+      "testFilePath": "C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-audit-fixes\\src\\webparts\\aiCoeFrontDoor\\components\\app\\AppMarketingWorkspace.test.tsx",
+      "testResults": [
+        {
+          "ancestorTitles": [
+            "AppMarketingWorkspace review boundaries"
+          ],
+          "duration": 12,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppMarketingWorkspace review boundaries keeps one synthetic warning banner without repeating the service label as plain text",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 6,
+          "retryReasons": [],
+          "startAt": 1790284000406,
+          "status": "passed",
+          "title": "keeps one synthetic warning banner without repeating the service label as plain text"
+        },
+        {
+          "ancestorTitles": [
+            "AppMarketingWorkspace review boundaries"
+          ],
+          "duration": 78,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppMarketingWorkspace review boundaries creates a meaningful objective correction as a new revision after changes are requested",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 7,
+          "retryReasons": [],
+          "startAt": 1790284000418,
+          "status": "passed",
+          "title": "creates a meaningful objective correction as a new revision after changes are requested"
+        },
+        {
+          "ancestorTitles": [
+            "AppMarketingWorkspace review boundaries"
+          ],
+          "duration": 28,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppMarketingWorkspace review boundaries does not offer participant-to-reviewer switching or a decision without the service capability",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 3,
+          "retryReasons": [],
+          "startAt": 1790284000496,
+          "status": "passed",
+          "title": "does not offer participant-to-reviewer switching or a decision without the service capability"
+        }
+      ],
+      "failureMessage": null
+    },
+    {
+      "leaks": false,
+      "numFailingTests": 0,
+      "numPassingTests": 2,
+      "numPendingTests": 0,
+      "numTodoTests": 0,
+      "openHandles": [],
+      "perfStats": {
+        "end": 1790284000778,
+        "loadTestEnvironmentEnd": 1790284000534,
+        "loadTestEnvironmentStart": 1790284000526,
+        "runtime": 244,
+        "setupAfterEnvEnd": 1790284000601,
+        "setupAfterEnvStart": 1790284000562,
+        "setupFilesEnd": 1790284000535,
+        "setupFilesStart": 1790284000534,
+        "slow": false,
+        "start": 1790284000534
+      },
+      "skipped": false,
+      "snapshot": {
+        "added": 0,
+        "fileDeleted": false,
+        "matched": 0,
+        "unchecked": 0,
+        "uncheckedKeys": [],
+        "unmatched": 0,
+        "updated": 0
+      },
+      "testFilePath": "C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-audit-fixes\\src\\webparts\\aiCoeFrontDoor\\components\\app\\AppShell.cases.test.tsx",
+      "testResults": [
+        {
+          "ancestorTitles": [
+            "Cases unsaved navigation wiring"
+          ],
+          "duration": 47,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "Cases unsaved navigation wiring blocks pointer navigation, gives case-specific instructions and stays mounted until a confirmed save",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 7,
+          "retryReasons": [],
+          "startAt": 1790284000701,
+          "status": "passed",
+          "title": "blocks pointer navigation, gives case-specific instructions and stays mounted until a confirmed save"
+        },
+        {
+          "ancestorTitles": [
+            "Cases unsaved navigation wiring"
+          ],
+          "duration": 29,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "Cases unsaved navigation wiring guards keyboard and unload until explicit discard, without deleting a saved draft",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 7,
+          "retryReasons": [],
+          "startAt": 1790284000748,
+          "status": "passed",
+          "title": "guards keyboard and unload until explicit discard, without deleting a saved draft"
+        }
+      ],
+      "failureMessage": null
+    },
+    {
+      "leaks": false,
+      "numFailingTests": 0,
+      "numPassingTests": 12,
+      "numPendingTests": 0,
+      "numTodoTests": 0,
+      "openHandles": [],
+      "perfStats": {
+        "end": 1790284000981,
+        "loadTestEnvironmentEnd": 1790284000786,
+        "loadTestEnvironmentStart": 1790284000780,
+        "runtime": 195,
+        "setupAfterEnvEnd": 1790284000852,
+        "setupAfterEnvStart": 1790284000812,
+        "setupFilesEnd": 1790284000787,
+        "setupFilesStart": 1790284000786,
+        "slow": false,
+        "start": 1790284000786
+      },
+      "skipped": false,
+      "snapshot": {
+        "added": 0,
+        "fileDeleted": false,
+        "matched": 0,
+        "unchecked": 0,
+        "uncheckedKeys": [],
+        "unmatched": 0,
+        "updated": 0
+      },
+      "testFilePath": "C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-audit-fixes\\src\\webparts\\aiCoeFrontDoor\\components\\app\\AppValue.test.tsx",
+      "testResults": [
+        {
+          "ancestorTitles": [
+            "AppValue evidence gate"
+          ],
+          "duration": 4,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppValue evidence gate withholds a number without current evidence, a valid period and privacy metadata: {}",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 4,
+          "retryReasons": [],
+          "startAt": 1790284000947,
+          "status": "passed",
+          "title": "withholds a number without current evidence, a valid period and privacy metadata: {}"
+        },
+        {
+          "ancestorTitles": [
+            "AppValue evidence gate"
+          ],
+          "duration": 2,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppValue evidence gate withholds a number without current evidence, a valid period and privacy metadata: {\"evidenceRef\":\" \"}",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 4,
+          "retryReasons": [],
+          "startAt": 1790284000952,
+          "status": "passed",
+          "title": "withholds a number without current evidence, a valid period and privacy metadata: {\"evidenceRef\":\" \"}"
+        },
+        {
+          "ancestorTitles": [
+            "AppValue evidence gate"
+          ],
+          "duration": 2,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppValue evidence gate withholds a number without current evidence, a valid period and privacy metadata: {}",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 4,
+          "retryReasons": [],
+          "startAt": 1790284000955,
+          "status": "passed",
+          "title": "withholds a number without current evidence, a valid period and privacy metadata: {}"
+        },
+        {
+          "ancestorTitles": [
+            "AppValue evidence gate"
+          ],
+          "duration": 2,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppValue evidence gate withholds a number without current evidence, a valid period and privacy metadata: {}",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 4,
+          "retryReasons": [],
+          "startAt": 1790284000957,
+          "status": "passed",
+          "title": "withholds a number without current evidence, a valid period and privacy metadata: {}"
+        },
+        {
+          "ancestorTitles": [
+            "AppValue evidence gate"
+          ],
+          "duration": 3,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppValue evidence gate withholds a number without current evidence, a valid period and privacy metadata: {\"periodStart\":\"2026-09-23\"}",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 4,
+          "retryReasons": [],
+          "startAt": 1790284000959,
+          "status": "passed",
+          "title": "withholds a number without current evidence, a valid period and privacy metadata: {\"periodStart\":\"2026-09-23\"}"
+        },
+        {
+          "ancestorTitles": [
+            "AppValue evidence gate"
+          ],
+          "duration": 2,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppValue evidence gate withholds a number without current evidence, a valid period and privacy metadata: {\"periodEnd\":\"2026-09-24\"}",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 4,
+          "retryReasons": [],
+          "startAt": 1790284000962,
+          "status": "passed",
+          "title": "withholds a number without current evidence, a valid period and privacy metadata: {\"periodEnd\":\"2026-09-24\"}"
+        },
+        {
+          "ancestorTitles": [
+            "AppValue evidence gate"
+          ],
+          "duration": 2,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppValue evidence gate withholds a number without current evidence, a valid period and privacy metadata: {\"periodStart\":\"2026-08-01\",\"periodEnd\":\"2026-08-10\"}",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 4,
+          "retryReasons": [],
+          "startAt": 1790284000964,
+          "status": "passed",
+          "title": "withholds a number without current evidence, a valid period and privacy metadata: {\"periodStart\":\"2026-08-01\",\"periodEnd\":\"2026-08-10\"}"
+        },
+        {
+          "ancestorTitles": [
+            "AppValue evidence gate"
+          ],
+          "duration": 2,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppValue evidence gate withholds a number without current evidence, a valid period and privacy metadata: {}",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 4,
+          "retryReasons": [],
+          "startAt": 1790284000966,
+          "status": "passed",
+          "title": "withholds a number without current evidence, a valid period and privacy metadata: {}"
+        },
+        {
+          "ancestorTitles": [
+            "AppValue evidence gate"
+          ],
+          "duration": 5,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppValue evidence gate withholds a number without current evidence, a valid period and privacy metadata: {\"cohortSize\":null}",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 4,
+          "retryReasons": [],
+          "startAt": 1790284000968,
+          "status": "passed",
+          "title": "withholds a number without current evidence, a valid period and privacy metadata: {\"cohortSize\":null}"
+        },
+        {
+          "ancestorTitles": [
+            "AppValue evidence gate"
+          ],
+          "duration": 2,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppValue evidence gate withholds a number without current evidence, a valid period and privacy metadata: {\"value\":null}",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 4,
+          "retryReasons": [],
+          "startAt": 1790284000973,
+          "status": "passed",
+          "title": "withholds a number without current evidence, a valid period and privacy metadata: {\"value\":null}"
+        },
+        {
+          "ancestorTitles": [
+            "AppValue evidence gate"
+          ],
+          "duration": 3,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppValue evidence gate shows the recorded measure with evidence AND period, without calling the value verified",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 6,
+          "retryReasons": [],
+          "startAt": 1790284000975,
+          "status": "passed",
+          "title": "shows the recorded measure with evidence AND period, without calling the value verified"
+        },
+        {
+          "ancestorTitles": [
+            "AppValue evidence gate"
+          ],
+          "duration": 2,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppValue evidence gate suppresses a sensitive small cohort even if its row claims to be measured",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 3,
+          "retryReasons": [],
+          "startAt": 1790284000978,
+          "status": "passed",
+          "title": "suppresses a sensitive small cohort even if its row claims to be measured"
+        }
+      ],
+      "failureMessage": null
+    },
+    {
+      "leaks": false,
+      "numFailingTests": 0,
+      "numPassingTests": 7,
+      "numPendingTests": 0,
+      "numTodoTests": 0,
+      "openHandles": [],
+      "perfStats": {
+        "end": 1790284001347,
+        "loadTestEnvironmentEnd": 1790284000989,
+        "loadTestEnvironmentStart": 1790284000982,
+        "runtime": 358,
+        "setupAfterEnvEnd": 1790284001070,
+        "setupAfterEnvStart": 1790284001021,
+        "setupFilesEnd": 1790284000990,
+        "setupFilesStart": 1790284000989,
+        "slow": false,
+        "start": 1790284000989
+      },
+      "skipped": false,
+      "snapshot": {
+        "added": 0,
+        "fileDeleted": false,
+        "matched": 0,
+        "unchecked": 0,
+        "uncheckedKeys": [],
+        "unmatched": 0,
+        "updated": 0
+      },
+      "testFilePath": "C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-audit-fixes\\src\\webparts\\aiCoeFrontDoor\\components\\app\\AppShell.entryAccess.test.tsx",
+      "testResults": [
+        {
+          "ancestorTitles": [],
+          "duration": 26,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "matches the enterprise Home entry to the existing employee capability",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 5,
+          "retryReasons": [],
+          "startAt": 1790284001198,
+          "status": "passed",
+          "title": "matches the enterprise Home entry to the existing employee capability"
+        },
+        {
+          "ancestorTitles": [],
+          "duration": 29,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "matches the enterprise Home entry to the existing leader capability",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 8,
+          "retryReasons": [],
+          "startAt": 1790284001224,
+          "status": "passed",
+          "title": "matches the enterprise Home entry to the existing leader capability"
+        },
+        {
+          "ancestorTitles": [],
+          "duration": 27,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "matches the enterprise Home entry to the existing operator capability",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 7,
+          "retryReasons": [],
+          "startAt": 1790284001253,
+          "status": "passed",
+          "title": "matches the enterprise Home entry to the existing operator capability"
+        },
+        {
+          "ancestorTitles": [],
+          "duration": 14,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "matches the enterprise Home entry to the existing designAuthority capability",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 5,
+          "retryReasons": [],
+          "startAt": 1790284001280,
+          "status": "passed",
+          "title": "matches the enterprise Home entry to the existing designAuthority capability"
+        },
+        {
+          "ancestorTitles": [],
+          "duration": 16,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "matches the enterprise Home entry to the existing marketingParticipant capability",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 5,
+          "retryReasons": [],
+          "startAt": 1790284001294,
+          "status": "passed",
+          "title": "matches the enterprise Home entry to the existing marketingParticipant capability"
+        },
+        {
+          "ancestorTitles": [],
+          "duration": 16,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "matches the enterprise Home entry to the existing marketingReviewer capability",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 5,
+          "retryReasons": [],
+          "startAt": 1790284001310,
+          "status": "passed",
+          "title": "matches the enterprise Home entry to the existing marketingReviewer capability"
+        },
+        {
+          "ancestorTitles": [],
+          "duration": 20,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "keeps the enterprise Home entry absent until its membership has actually resolved",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 4,
+          "retryReasons": [],
+          "startAt": 1790284001326,
+          "status": "passed",
+          "title": "keeps the enterprise Home entry absent until its membership has actually resolved"
+        }
+      ],
+      "failureMessage": null
+    },
+    {
+      "leaks": false,
+      "numFailingTests": 0,
+      "numPassingTests": 1,
+      "numPendingTests": 0,
+      "numTodoTests": 0,
+      "openHandles": [],
+      "perfStats": {
+        "end": 1790284001551,
+        "loadTestEnvironmentEnd": 1790284001352,
+        "loadTestEnvironmentStart": 1790284001348,
+        "runtime": 198,
+        "setupAfterEnvEnd": 1790284001420,
+        "setupAfterEnvStart": 1790284001380,
+        "setupFilesEnd": 1790284001353,
+        "setupFilesStart": 1790284001353,
+        "slow": false,
+        "start": 1790284001353
+      },
+      "skipped": false,
+      "snapshot": {
+        "added": 0,
+        "fileDeleted": false,
+        "matched": 0,
+        "unchecked": 0,
+        "uncheckedKeys": [],
+        "unmatched": 0,
+        "updated": 0
+      },
+      "testFilePath": "C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-audit-fixes\\src\\webparts\\aiCoeFrontDoor\\components\\app\\AppMarketing.uat.test.tsx",
+      "testResults": [
+        {
+          "ancestorTitles": [],
+          "duration": 37,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "adds bottom padding around the labelled demonstration cards without changing their actions",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 7,
+          "retryReasons": [],
+          "startAt": 1790284001513,
+          "status": "passed",
+          "title": "adds bottom padding around the labelled demonstration cards without changing their actions"
+        }
+      ],
+      "failureMessage": null
+    }
+  ],
+  "wasInterrupted": false
+}

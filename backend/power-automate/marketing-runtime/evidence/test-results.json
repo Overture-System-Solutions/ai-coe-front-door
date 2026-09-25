@@ -1,0 +1,26 @@
+{
+  "capturedAt": "2026-09-23T14:51:48.994100+00:00",
+  "boundary": "real local source/runtime; explicitly fake SharePoint/provider only",
+  "testsExitCode": 0,
+  "typecheckExitCode": 0,
+  "tests": 58,
+  "pass": 58,
+  "fail": 0,
+  "skipped": 0,
+  "cancelled": 0,
+  "parentRecovery": {
+    "tests": 4,
+    "pass": 4,
+    "fail": 0,
+    "skipped": 0,
+    "cancelled": 0
+  },
+  "typecheck": {
+    "rootFiles": 21,
+    "diagnostics": []
+  },
+  "historicalArchive": {
+    "name": "marketing-runtime-offline-0.1.0.zip",
+    "sha256": "fd7a8ade1ff49d0dc5a36bb3318d2e0e5e25d74cf015db91b04fd9fd80b5da48"
+  }
+}

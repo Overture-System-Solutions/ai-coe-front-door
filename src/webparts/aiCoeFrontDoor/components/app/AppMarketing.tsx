@@ -27,32 +27,30 @@ import {
   DEMO_UNRESOLVED,
   DEMO_WORKFLOWS
 } from '../../content/marketing/demoData';
-import {
-  INITIAL_JOURNEYS,
-  MARKETING_WORKFLOW_IDS,
-  STAGE_LABEL,
-  STAGE_STATE,
-  demoReference,
-  lockReason,
-  reduce
-} from '../../content/marketing/demoJourney';
+import { MARKETING_WORKFLOW_IDS, STAGE_LABEL, STAGE_STATE, demoReference, lockReason, reduce } from '../../content/marketing/demoJourney';
 import type { DemoEvent, DemoJourneys, IDemoState, MarketingWorkflowId } from '../../content/marketing/demoJourney';
 import { FIXTURE_REGISTER } from '../../content/marketing/sourceRegister';
 import type { ISourceEntry } from '../../content/marketing/sourceRegister';
 import type { ICalendarEntry, IClaim } from '../../content/marketing/campaignBrief';
 import type { PillState } from '../../controls/StatusPill';
+import { useFrontDoor } from '../../context/FrontDoorContext';
+import type { IMarketingServices } from '../../services/marketing/marketingServices';
+import type { IRoleResolution } from '../../services/roleResolver';
+import { AppMarketingWorkspace } from './AppMarketingWorkspace';
+import type { ISyntheticMarketingInputs } from './AppMarketingWorkspace';
+import { AppBusinessMarketingWorkspace } from './AppBusinessMarketingWorkspace';
+import { AppNotice } from './kit';
 
 /**
- * The Marketing workflows, walked end to end with invented material.
+ * The Marketing section: two clearly separated modes.
  *
- * What this is. A demonstration of the three workflows and, more usefully, of the safeguards around them: a claim
- * with no approved source is shown marked rather than asserted, a figure with no citation is caught by the copy
- * policy, a proposed owner is a role and never a person, a content plan cannot begin until a brief is accepted, and
- * the accepted brief's version is recorded on the plan that elaborated it.
+ * The **synthetic workspace** is the implementation: the three drafting operations, the source gate, the review
+ * protocol and the durable store, over a fixture register and a deterministic provider. It is the default when the
+ * web part has the Marketing services.
  *
- * What this is not. Nothing here reaches a service, a provider or a tenant. Drafting is a short wait and then
- * prepared text. Reviewing is a button pressed by whoever is sitting there, labelled with a fictional reviewer.
- * Saving writes to React state and is gone when the tab closes. Every screen says so.
+ * The **labelled demonstration** is the earlier walkthrough kept as it was: prepared text after a pause, fictional
+ * reviewer buttons, no service. Its state now lives in the shell rather than here (review finding FD03), so
+ * leaving the section and returning finds it where it was; it is still a demonstration, and every screen says so.
  *
  * Wording note: this file is scanned for Tailwind utility names; keep prose free of utility words.
  */
@@ -60,31 +58,98 @@ import type { PillState } from '../../controls/StatusPill';
 /** How long the pretend drafting takes. Long enough to read as work, short enough not to annoy. */
 const DRAFT_PAUSE_MS: number = 900;
 
-export function AppMarketing(): React.ReactElement {
-  const [journeys, setJourneys] = React.useState<DemoJourneys>(INITIAL_JOURNEYS);
+export type MarketingMode = 'workspace' | 'demo';
+
+export interface IAppMarketingProps {
+  demo: DemoJourneys;
+  onDemoChange: (next: DemoJourneys) => void;
+  resolution: IRoleResolution;
+  workingInputs?: ISyntheticMarketingInputs;
+  onWorkingInputsChange?: (next: ISyntheticMarketingInputs) => void;
+  onBusinessDirtyChange?: (dirty: boolean) => void;
+}
+
+export const NO_MARKETING_SERVICES_TEXT: string = 'The Marketing services are not wired on this instance, so only the labelled demonstration is available.';
+
+export function AppMarketing({ demo, onDemoChange, resolution, workingInputs, onWorkingInputsChange, onBusinessDirtyChange }: IAppMarketingProps): React.ReactElement {
+  const { services } = useFrontDoor();
+  const marketing: IMarketingServices | undefined = services.marketing;
+  const [mode, setMode] = React.useState<MarketingMode>(marketing === undefined ? 'demo' : 'workspace');
+  const [businessBlocked, setBusinessBlocked] = React.useState(false);
+
+  return (
+    <div className="ai-app-marketing">
+      <div className="ai-app-modes" role="group" aria-label="Marketing mode">
+        <button type="button" className={`ai-app-mode${mode === 'workspace' ? ' ai-app-mode--on' : ''}`} aria-pressed={mode === 'workspace'} onClick={(): void => { if (!businessBlocked) setMode('workspace'); }} disabled={marketing === undefined || businessBlocked}>
+          {marketing?.mode === 'live' ? 'Business workspace' : 'Synthetic workspace'}
+        </button>
+        <button type="button" className={`ai-app-mode${mode === 'demo' ? ' ai-app-mode--on' : ''}`} aria-pressed={mode === 'demo'} onClick={(): void => { if (!businessBlocked) setMode('demo'); }} disabled={businessBlocked}>
+          Labelled demonstration
+        </button>
+      </div>
+      {marketing === undefined && <AppNotice tone="info">{NO_MARKETING_SERVICES_TEXT}</AppNotice>}
+      {mode === 'workspace' && marketing !== undefined ? (marketing.mode === 'live' ? <AppBusinessMarketingWorkspace marketing={marketing} resolution={resolution} onDirtyChange={onBusinessDirtyChange} onNavigationBlockedChange={setBusinessBlocked} /> : <AppMarketingWorkspace marketing={marketing} resolution={resolution} workingInputs={workingInputs} onWorkingInputsChange={onWorkingInputsChange} />) : <DemoWalkthrough journeys={demo} onChange={onDemoChange} />}
+    </div>
+  );
+}
+
+interface IDemoWalkthroughProps {
+  journeys: DemoJourneys;
+  onChange: (next: DemoJourneys) => void;
+}
+
+/**
+ * The demonstration. Nothing here calls a service, a provider or a tenant. Drafting is a short wait and then
+ * prepared text. Reviewing is a button pressed by whoever is sitting there, labelled with a fictional reviewer.
+ * The state is the shell's, handed in, so navigation keeps it; it is still not persistence, and the screen says so.
+ */
+function DemoWalkthrough({ journeys, onChange }: IDemoWalkthroughProps): React.ReactElement {
   const [open, setOpen] = React.useState<MarketingWorkflowId | undefined>(undefined);
   const timers: React.MutableRefObject<number[]> = React.useRef<number[]>([]);
+  const latest: React.MutableRefObject<DemoJourneys> = React.useRef<DemoJourneys>(journeys);
+  latest.current = journeys;
 
+  const send = React.useCallback(
+    (id: MarketingWorkflowId, event: DemoEvent): void => {
+      const current: DemoJourneys = latest.current;
+      const next: DemoJourneys = { ...current, [id]: reduce(current[id], event) };
+      latest.current = next;
+      onChange(next);
+    },
+    [onChange]
+  );
+
+  const armTimer = React.useCallback(
+    (id: MarketingWorkflowId): void => {
+      const handle: number = window.setTimeout((): void => send(id, { type: 'draftReady' }), DRAFT_PAUSE_MS);
+      timers.current.push(handle);
+    },
+    [send]
+  );
+
+  // A journey left mid-draft (the person moved to another section) finishes drafting when the walkthrough returns.
   React.useEffect((): (() => void) => {
+    for (const id of MARKETING_WORKFLOW_IDS) {
+      if (journeys[id].stage === 'drafting') {
+        armTimer(id);
+      }
+    }
     return (): void => {
       for (const handle of timers.current) {
         window.clearTimeout(handle);
       }
       timers.current = [];
     };
-  }, []);
-
-  const send = React.useCallback((id: MarketingWorkflowId, event: DemoEvent): void => {
-    setJourneys((current: DemoJourneys): DemoJourneys => ({ ...current, [id]: reduce(current[id], event) }));
+    // Arm once on mount for whatever was mid-draft; later drafts arm themselves in startDraft.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const startDraft = React.useCallback(
     (id: MarketingWorkflowId): void => {
       send(id, { type: 'draft' });
-      const handle: number = window.setTimeout((): void => send(id, { type: 'draftReady' }), DRAFT_PAUSE_MS);
-      timers.current.push(handle);
+      armTimer(id);
     },
-    [send]
+    [send, armTimer]
   );
 
   if (open !== undefined) {
@@ -103,29 +168,22 @@ export function AppMarketing(): React.ReactElement {
             briefVersion: open === 'contentPlan' ? journeys.campaignBrief.version : undefined
           })
         }
-        onRequestChanges={(): void =>
-          send(open, { type: 'requestChanges', note: 'Hold the availability claim until it has an approved source.' })
-        }
+        onRequestChanges={(): void => send(open, { type: 'requestChanges', note: 'Hold the availability claim until it has an approved source.' })}
         onReset={(): void => send(open, { type: 'reset' })}
       />
     );
   }
 
   return (
-    <div className="ai-app-marketing">
+    <React.Fragment>
       <DemoBanner />
-      <ul className="ai-app-starters">
+      <ul className="ai-app-starters ai-app-starters--marketing-demo">
         {MARKETING_WORKFLOW_IDS.map((id: MarketingWorkflowId): React.ReactElement => {
           const locked: string | undefined = lockReason(id, journeys);
           const state: IDemoState = journeys[id];
           return (
             <li key={id} className="ai-app-starter">
-              <button
-                type="button"
-                className="ai-app-starter-button"
-                onClick={(): void => setOpen(id)}
-                disabled={locked !== undefined && state.stage === 'start'}
-              >
+              <button type="button" className="ai-app-starter-button" onClick={(): void => setOpen(id)} disabled={locked !== undefined && state.stage === 'start'}>
                 <span className="ai-app-starter-title">{DEMO_WORKFLOWS[id].title}</span>
                 <span className="ai-app-stage">
                   <StatusPill state={STAGE_STATE[state.stage] as PillState} label={STAGE_LABEL[state.stage]} />
@@ -139,7 +197,7 @@ export function AppMarketing(): React.ReactElement {
         })}
       </ul>
       <MarketingStatus journeys={journeys} />
-    </div>
+    </React.Fragment>
   );
 }
 
@@ -220,12 +278,8 @@ function WorkflowDetail(props: IDetailProps): React.ReactElement {
       )}
       {state.stage === 'saved' && (
         <div className="ai-app-panel">
-          <p className="ai-app-note">
-            {`Saved in this tab as ${state.reference ?? ''}, version ${state.version}. Nothing left the browser.`}
-          </p>
-          {state.elaboratedBriefVersion !== undefined && (
-            <p className="ai-app-note">{`Elaborated from campaign brief version ${state.elaboratedBriefVersion}, which it does not overwrite.`}</p>
-          )}
+          <p className="ai-app-note">{`Kept in this page as ${state.reference ?? ''}, version ${state.version}. Nothing left the browser; a reload starts the demonstration again.`}</p>
+          {state.elaboratedBriefVersion !== undefined && <p className="ai-app-note">{`Elaborated from campaign brief version ${state.elaboratedBriefVersion}, which it does not overwrite.`}</p>}
           <div className="ai-app-actions">
             <button type="button" className="ai-app-secondary" onClick={props.onReset}>
               Start this demo again
@@ -261,10 +315,7 @@ function StartPanel({ id, onDraft, startLabel }: { id: MarketingWorkflowId; onDr
           </li>
         ))}
       </ul>
-      <p className="ai-app-note">
-        This register is a synthetic fixture, so a real run would stop here. The demo carries on so the rest of the
-        journey can be seen.
-      </p>
+      <p className="ai-app-note">This register is a synthetic fixture, so a real run would stop here. The demo carries on so the rest of the journey can be seen.</p>
       <div className="ai-app-actions">
         <button type="button" className="ai-app-primary" onClick={onDraft}>
           {startLabel}
@@ -369,7 +420,8 @@ function PlanBody(): React.ReactElement {
       <h5 className="ai-app-subheading">Copy variants</h5>
       <ul className="ai-app-variants">
         {DEMO_COPY_VARIANTS.map((variant, index: number): React.ReactElement => {
-          const check: ICopyCheckResult = checkCopy(`${variant.headline} ${variant.body}`, { cited: true });
+          // Demonstration copy is uncited on purpose: the figure check shows what a real run would catch.
+          const check: ICopyCheckResult = checkCopy(`${variant.headline} ${variant.body}`, { cited: false });
           return (
             <li key={index} className="ai-app-variant">
               <span className="ai-app-field-label">{variant.audience}</span>
@@ -401,9 +453,7 @@ function FollowThroughBody(): React.ReactElement {
       </ul>
       <Section title="Brief changes" items={DEMO_BRIEF_CHANGES} />
       <Section title="Unresolved questions" items={DEMO_UNRESOLVED} />
-      <p className="ai-app-note">
-        {`${DEMO_MEETING_OWNER} would accept decisions and actions; ${DEMO_COPY_REVIEWER} would send anything that goes out. Neither happens here.`}
-      </p>
+      <p className="ai-app-note">{`${DEMO_MEETING_OWNER} would accept decisions and actions; ${DEMO_COPY_REVIEWER} would send anything that goes out. Neither happens here.`}</p>
     </React.Fragment>
   );
 }
@@ -413,9 +463,7 @@ function ReviewPanel({ id, onAccept, onRequestChanges }: { id: MarketingWorkflow
   return (
     <div className="ai-app-panel ai-app-panel--review">
       <h4 className="ai-app-subheading">Review</h4>
-      <p className="ai-app-note">
-        {`Standing in for ${reviewer}. In a real run this decision belongs to a named person with the authority to make it, and that identity is not bound yet.`}
-      </p>
+      <p className="ai-app-note">{`Standing in for ${reviewer}. In a real run this decision belongs to a named person with the authority to make it, and that identity is not bound yet.`}</p>
       <div className="ai-app-actions">
         <button type="button" className="ai-app-primary" onClick={onAccept}>
           Accept
@@ -434,7 +482,7 @@ function MarketingStatus({ journeys }: { journeys: DemoJourneys }): React.ReactE
     <div className="ai-app-panel">
       <h4 className="ai-app-subheading">Status</h4>
       {saved.length === 0 ? (
-        <p className="ai-app-empty">Nothing saved yet. Finish a workflow and it will be listed here with its reference.</p>
+        <p className="ai-app-empty">Nothing kept yet. Finish a workflow and it will be listed here with its reference.</p>
       ) : (
         <ul className="ai-app-list">
           {saved.map((id: MarketingWorkflowId): React.ReactElement => (
@@ -442,7 +490,7 @@ function MarketingStatus({ journeys }: { journeys: DemoJourneys }): React.ReactE
           ))}
         </ul>
       )}
-      <p className="ai-app-note">Saved means saved in this browser tab. Closing it loses everything.</p>
+      <p className="ai-app-note">Kept means kept in this page while it is open: leaving the section and coming back finds it, a reload does not. Durable records are the synthetic workspace's job.</p>
     </div>
   );
 }

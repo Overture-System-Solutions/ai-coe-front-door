@@ -163,7 +163,7 @@ describe('ToolCheckWorkflow', () => {
     expect(screen.getByRole('progressbar')).toHaveAttribute('aria-label', 'Progress: Just getting started');
     enterAnswer(toolCheck.steps[0], 'Drafting notes.');
     fireEvent.click(screen.getByRole('button', { name: 'Save draft' }));
-    await screen.findByText('Draft saved on this device.');
+    await screen.findByText('Draft saved.');
     expect(JSON.parse(draftStore.drafts.toolCheck)).toEqual({ answers: { helpWith: 'Drafting notes.' }, currentStepId: 'helpWith', phase: 'form', decision: null });
     first.unmount();
 

@@ -1,0 +1,5 @@
+{
+  "scope": "Owned shell/sections/routes source/tests and imported graph; strict noEmit; no Heft build",
+  "compiler": "5.8.3",
+  "diagnostics": []
+}

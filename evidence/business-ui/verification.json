@@ -1,0 +1,19 @@
+{
+  "tests": {
+    "numTotalTests": 19,
+    "numPassedTests": 19,
+    "numFailedTests": 0,
+    "numPendingTests": 0,
+    "numTotalTestSuites": 2,
+    "numPassedTestSuites": 2,
+    "success": true
+  },
+  "typecheckDiagnostics": 0,
+  "sourceHashes": {
+    "src/webparts/aiCoeFrontDoor/components/app/AppMarketing.tsx": "271c9b0f1bfc62cd724df3f2df076d6c9982e4a709c0800f96c6409f1cd4ad54",
+    "src/webparts/aiCoeFrontDoor/components/app/AppMarketingWorkspace.tsx": "1e2788f74abbc521d87d8950089c59a2ee32db7dee323bf8df086b9880dfae81",
+    "src/webparts/aiCoeFrontDoor/components/app/AppBusinessMarketingWorkspace.tsx": "98ffcb219ec1773946dda8a2530a6a6a5acabd567b80860c1ff37ff37728f163",
+    "src/webparts/aiCoeFrontDoor/components/app/AppBusinessMarketingWorkspace.test.tsx": "7e15db8879ad7be5cd1f999618502661e1976f0bb482c1318d986f3a83e0ee23"
+  },
+  "boundary": "offline source Jest and strict no-emit only; no host/native/live acceptance"
+}

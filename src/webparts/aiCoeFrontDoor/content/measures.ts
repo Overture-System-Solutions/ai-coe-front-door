@@ -63,3 +63,54 @@ export function formatMeasure(measure: IProgramMeasure | undefined, minimumCohor
   }
   return withUnit(measure.value, measure.unit);
 }
+
+export interface IAppMeasurePolicy {
+  now: Date;
+  freshnessDays: number;
+  minimumCohort: number;
+  /** Explicit caller-owned policy; missing cohort data is never a non-person declaration. */
+  privacy?: 'people' | 'nonPerson';
+}
+
+export interface IMeasurePresentation {
+  value: string;
+  note: string;
+  placeholder: boolean;
+}
+
+/** Exact calendar days only: Date.parse alone silently normalizes invalid days. */
+function calendarDay(day: string | undefined): number | undefined {
+  if (day === undefined || !/^\d{4}-\d{2}-\d{2}$/.test(day)) { return undefined; }
+  const stamp = Date.parse(`${day}T00:00:00Z`);
+  return Number.isFinite(stamp) && new Date(stamp).toISOString().slice(0, 10) === day ? stamp : undefined;
+}
+
+/**
+ * Consolidated-app evidence policy; the frozen legacy formatter above retains parity.
+ * All current scorecard measures describe people/tasks. Unknown ids are treated as sensitive too,
+ * never inferred non-person from a missing cohort. A reference is provenance, not verified evidence.
+ */
+export function presentAppMeasure(measure: IProgramMeasure, policy: IAppMeasurePolicy): IMeasurePresentation {
+  const minimum = Math.max(5, policy.minimumCohort);
+  if (suppress(measure, minimum)) {
+    return { value: 'Not shown: group too small', note: 'Sensitive cohort withheld.', placeholder: true };
+  }
+  if (measure.state !== 'MEASURED') {
+    return { value: formatMeasure(measure, minimum), note: measure.evidenceNote ?? 'Evidence and baseline required.', placeholder: true };
+  }
+  const start = calendarDay(measure.periodStart);
+  const end = calendarDay(measure.periodEnd);
+  const today = calendarDay(Number.isFinite(policy.now.getTime()) ? policy.now.toISOString().slice(0, 10) : undefined);
+  const periodValid = start !== undefined && end !== undefined && today !== undefined && start <= end && end <= today &&
+    Number.isFinite(policy.freshnessDays) && policy.freshnessDays >= 0 && today - end <= policy.freshnessDays * 86400000;
+  const cohortValid = measure.cohortSize !== undefined && Number.isInteger(measure.cohortSize) && measure.cohortSize >= minimum;
+  const privacyValid = cohortValid || (policy.privacy === 'nonPerson' && measure.cohortSize === undefined);
+  if (!Number.isFinite(measure.value) || !measure.evidenceRef?.trim() || !periodValid || !privacyValid) {
+    return { value: 'Not available', note: 'Current evidence reference, completed period and valid cohort or explicit non-person metadata required.', placeholder: true };
+  }
+  return {
+    value: formatMeasure(measure, minimum),
+    note: `Evidence reference: ${measure.evidenceRef}. Period: ${measure.periodStart} to ${measure.periodEnd}. Recorded, not independently verified.`,
+    placeholder: false
+  };
+}

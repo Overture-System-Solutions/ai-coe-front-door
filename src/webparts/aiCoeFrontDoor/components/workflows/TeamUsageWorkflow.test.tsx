@@ -146,7 +146,7 @@ describe('TeamUsageWorkflow', () => {
     const draftStore: InMemoryDraftStore = new InMemoryDraftStore();
     const first: IWorkflowHarness = await reachSummary({ draftStore });
     fireEvent.click(screen.getByRole('button', { name: 'Save draft' }));
-    await screen.findByText('Draft saved on this device.');
+    await screen.findByText('Draft saved.');
     expect(JSON.parse(draftStore.drafts.teamUsage)).toEqual({
       answers,
       currentStepId: 'followUpPreference',

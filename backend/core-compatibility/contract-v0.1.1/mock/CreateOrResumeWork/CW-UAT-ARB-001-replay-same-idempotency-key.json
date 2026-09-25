@@ -1,0 +1,52 @@
+{
+ "request": {
+  "Context": {
+   "CorrelationID": "CORR-UAT-ARB-001",
+   "IdempotencyKey": "CW-UAT-ARB-001:create:35f058d71c776e46",
+   "ClientVersion": "spfx-candidate-0.1",
+   "TenantLabel": "CloudWave-PrivatePilot",
+   "TestRecord": true
+  },
+  "S1": {
+   "Title": "UAT: new vendor AI transcription tool",
+   "DesiredOutcome": "Reduce manual effort in a recurring process",
+   "Requester": "uat-manager@example.invalid",
+   "Department": "Sales",
+   "SourceRefs": [
+    "uat:conversation:CW-UAT-ARB-001"
+   ],
+   "Risks": [],
+   "SourceChannel": "ASK_AI_COE_UAT",
+   "DataClassification": "INTERNAL"
+  },
+  "WorkID": null
+ },
+ "response": {
+  "Result": "PASS",
+  "ReceiptID": "RCPT-UAT-ARB-001-004",
+  "Work": {
+   "WorkID": "CW-UAT-ARB-001",
+   "Title": "UAT: new vendor AI transcription tool",
+   "Stage": "INTAKE",
+   "State": "CLARIFYING",
+   "EmployeeStatus": "Need one answer",
+   "Lane": "PREPARATION",
+   "NextAction": "RETURN_TO_REQUESTER_CLARIFY: problem statement, sponsor",
+   "NextOwner": "uat-manager@example.invalid",
+   "NextDate": "2026-09-22T14:00:00Z",
+   "Version": 2,
+   "LastValidatedAt": "2026-09-21T14:01:00Z",
+   "OpenEvidenceGaps": [
+    "S1_PROBLEM_STATEMENT",
+    "S1_SPONSOR"
+   ],
+   "DuplicateStatus": "NOT_CHECKED",
+   "RelatedWorkIDs": []
+  },
+  "Created": false,
+  "ClarificationRequired": [
+   "S1_PROBLEM_STATEMENT",
+   "S1_SPONSOR"
+  ]
+ }
+}

@@ -22,10 +22,10 @@ import type { IWorkflowCatalog } from './workflows/types';
 
 // Every mount re-evaluates the built bundle, and coverage tracking slows each evaluation; the journeys near the end of
 // this file otherwise drift past Jest's five-second default, and a test abandoned mid-act() crashes the worker at teardown.
-// A test that mounts three times and plays a whole journey through each needs well past thirty seconds against the
-// minified production bundle, and an abandoned test leaks its act() warnings into the next one, so allow the same
-// sixty seconds the journey parity suite allows.
-jest.setTimeout(60000);
+// A test that mounts three times and plays a whole journey through each needs well past sixty seconds against the
+// minified production bundle once Binding A and Marketing are in it, and an abandoned test leaks its act() warnings
+// into the next one, so allow two minutes.
+jest.setTimeout(120000);
 
 const bundlePath: string = newestDistBundle();
 const bundle: IWebPartBundle = loadWebPartBundle(bundlePath, newestStringsChunk());
@@ -307,7 +307,7 @@ describe('AiCoeFrontDoorWebPart bundle', () => {
         properties: {
           label: 'Role groups',
           description:
-            'Site groups that map to roles, as role=Group title pairs separated by semicolons: leader=…; operator=…; designAuthority=…. Site owners always count as operators.',
+            'Site groups that map to roles, as role=Group title pairs separated by semicolons: leader=…; operator=…; designAuthority=…; marketingParticipant=…; marketingReviewer=…. Site owners always count as operators; no group grants a Marketing role until it is named here.',
           placeholder: 'leader=AI CoE Leaders;operator=AI CoE Operators'
         }
       },
@@ -329,10 +329,14 @@ describe('AiCoeFrontDoorWebPart bundle', () => {
         properties: {
           label: 'AI draft flow URL',
           description:
-            'HTTP trigger URL of the drafting flow. The flow must allow any user in the tenant, and the Microsoft Flow Service API permission must be approved. Leave blank to keep plain summaries.',
+            'HTTP trigger URL of the drafting flow. Keep its approved authenticated caller restriction and approve only the required Microsoft Flow Service API permission. Leave blank to keep plain summaries.',
           placeholder: 'https://…/triggers/manual/paths/invoke?api-version=1'
         }
-      }
+      },
+      { targetProperty: 'draftListId', properties: { label: 'Server draft list ID', description: 'Unsubmitted work stays on the server, never in browser storage. Blank disables saved business drafts.' } },
+      { targetProperty: 'draftPolicyJson', properties: { label: 'Qualified server draft policy (JSON)', multiline: true, description: 'Supply accepted access/retention references, retention period and qualification expiry. Server policy commissioning is required; this field does not enforce tenant retention.' } },
+      { targetProperty: 'coreBindingJson', properties: { label: 'Qualified native CORE binding (JSON)', multiline: true, description: 'Use the exact accepted v0.2.0 binding receipt and separate request/result GUIDs. Never enter secrets. A property cannot grant server permissions.' } },
+      { targetProperty: 'marketingBindingJson', properties: { label: 'Qualified business Marketing binding (JSON)', multiline: true, description: 'Requires the approved existing-writer runtime, separate ingress/results and actual qualification. No provider credentials belong in this web part.' } }
     ]);
   });
 
@@ -647,6 +651,7 @@ describe('AiCoeFrontDoorWebPart bundle', () => {
 
   it('drafts the idea summary through the configured flow with an Entra token client', async () => {
     const instance: IHostedInstance = await mount({
+      siteUrl: 'http://localhost/simulated-site',
       properties: { organizationName: '', draftServiceUrl: FLOW_URL },
       draftFlow: (request: unknown): { status: number; body: string } => ({
         status: 200,
@@ -679,13 +684,15 @@ describe('AiCoeFrontDoorWebPart bundle', () => {
   it('stays truthful with every provider unavailable: the command falls back with its draft, the tile reads Needs access, a request saves and reads back', async () => {
     // Every off-site route blank (the sample document's work route has no link), the draft flow answering 503; only the site's lists answer.
     const flowDown = (): { status: number; body: string } => ({ status: 503, body: JSON.stringify({ ok: false, code: 'AI_DRAFT_UNAVAILABLE' }) });
-    const files: { [path: string]: string } = { '/sites/ai/SiteAssets/ai-coe-pages.json': JSON.stringify(SAMPLE_PAGE_DOCUMENT) };
+    // Browser-store compatibility is explicitly synthetic; real-site privacy is tested separately.
+    const siteUrl: string = 'http://localhost/simulated-site';
+    const files: { [path: string]: string } = { '/simulated-site/SiteAssets/ai-coe-pages.json': JSON.stringify(SAMPLE_PAGE_DOCUMENT) };
     const sentence: string = 'Prepare me for the Contoso customer meeting.';
-    const guidedIntake: string = 'https://contoso.sharepoint.com/sites/ai/SitePages/Explore-an-AI-idea.aspx';
+    const guidedIntake: string = `${siteUrl}/SitePages/Explore-an-AI-idea.aspx`;
     const draftKey: string = `${DRAFT_KEY_PREFIX}idea`;
 
     // Start here renders; the tile on the closed route is a labelled non-link that points at the guided request.
-    const first: IHostedInstance = await mount({ properties: { organizationName: '', view: 'page', pageKey: 'startHere', draftServiceUrl: FLOW_URL }, files, draftFlow: flowDown });
+    const first: IHostedInstance = await mount({ siteUrl, properties: { organizationName: '', view: 'page', pageKey: 'startHere', draftServiceUrl: FLOW_URL }, files, draftFlow: flowDown });
     const root: HTMLElement = first.webPart.domElement;
     await waitFor((): void => expect(within(root).getByRole('heading', { level: 1, name: 'What do you need done?' })).toBeInTheDocument());
     const closed: HTMLElement = within(root).getByText('Get work done').closest('.ai-service-card') as HTMLElement;
@@ -710,7 +717,7 @@ describe('AiCoeFrontDoorWebPart bundle', () => {
     instances.pop();
 
     // The guided request page resumes the sentence; the flow is down, so the plain summary stands in; the record is written and read back.
-    const idea: IHostedInstance = await mount({ properties: { organizationName: '', view: 'idea', contentUrl: 'SiteAssets/ai-coe-pages.json', draftServiceUrl: FLOW_URL }, files, draftFlow: flowDown });
+    const idea: IHostedInstance = await mount({ siteUrl, properties: { organizationName: '', view: 'idea', contentUrl: 'SiteAssets/ai-coe-pages.json', draftServiceUrl: FLOW_URL }, files, draftFlow: flowDown });
     const page: HTMLElement = idea.webPart.domElement;
     await waitFor((): void => expect(within(page).getByRole('button', { name: 'Continue' })).toBeInTheDocument());
     expect(page.querySelector('#workToImprove')).toHaveValue(sentence);

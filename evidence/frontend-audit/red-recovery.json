@@ -1,0 +1,1301 @@
+{
+  "numFailedTestSuites": 1,
+  "numFailedTests": 1,
+  "numPassedTestSuites": 0,
+  "numPassedTests": 0,
+  "numPendingTestSuites": 5,
+  "numPendingTests": 61,
+  "numRuntimeErrorTestSuites": 0,
+  "numTodoTests": 0,
+  "numTotalTestSuites": 6,
+  "numTotalTests": 62,
+  "openHandles": [],
+  "snapshot": {
+    "added": 0,
+    "didUpdate": false,
+    "failure": false,
+    "filesAdded": 0,
+    "filesRemoved": 0,
+    "filesRemovedList": [],
+    "filesUnmatched": 0,
+    "filesUpdated": 0,
+    "matched": 0,
+    "total": 0,
+    "unchecked": 0,
+    "uncheckedKeysByFile": [],
+    "unmatched": 0,
+    "updated": 0
+  },
+  "startTime": 1790170083802,
+  "success": false,
+  "testResults": [
+    {
+      "leaks": false,
+      "numFailingTests": 0,
+      "numPassingTests": 0,
+      "numPendingTests": 36,
+      "numTodoTests": 0,
+      "openHandles": [],
+      "perfStats": {
+        "end": 1790170088975,
+        "loadTestEnvironmentEnd": 1790170084945,
+        "loadTestEnvironmentStart": 1790170083996,
+        "runtime": 4027,
+        "setupAfterEnvEnd": 1790170085464,
+        "setupAfterEnvStart": 1790170085158,
+        "setupFilesEnd": 1790170084964,
+        "setupFilesStart": 1790170084948,
+        "slow": false,
+        "start": 1790170084948
+      },
+      "skipped": true,
+      "snapshot": {
+        "added": 0,
+        "fileDeleted": false,
+        "matched": 0,
+        "unchecked": 0,
+        "uncheckedKeys": [],
+        "unmatched": 0,
+        "updated": 0
+      },
+      "testFilePath": "C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-audit-fixes\\src\\webparts\\aiCoeFrontDoor\\components\\app\\AppShell.test.tsx",
+      "testResults": [
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell opens on the first screen with the entry panel and the three ways in",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790170088968,
+          "status": "pending",
+          "title": "opens on the first screen with the entry panel and the three ways in"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell keeps a section a person may not use out of the tab list entirely",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790170088968,
+          "status": "pending",
+          "title": "keeps a section a person may not use out of the tab list entirely"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell opens the measured view to a leader but still not the operator surface",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790170088969,
+          "status": "pending",
+          "title": "opens the measured view to a leader but still not the operator surface"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell shows nothing narrowed while the membership is unresolved, rather than guessing",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790170088969,
+          "status": "pending",
+          "title": "shows nothing narrowed while the membership is unresolved, rather than guessing"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell moves along the tabs with the arrow keys, and wraps at both ends",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790170088969,
+          "status": "pending",
+          "title": "moves along the tabs with the arrow keys, and wraps at both ends"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell keeps sequential keyboard navigation on the actual focused tab, but pointer entry focuses the heading",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790170088969,
+          "status": "pending",
+          "title": "keeps sequential keyboard navigation on the actual focused tab, but pointer entry focuses the heading"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell ignores a key the tab list does not own, so typing is not swallowed",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790170088969,
+          "status": "pending",
+          "title": "ignores a key the tab list does not own, so typing is not swallowed"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell keeps one tab in the tab order and points each panel at its tab",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790170088969,
+          "status": "pending",
+          "title": "keeps one tab in the tab order and points each panel at its tab"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell gives the section a heading that can take focus, so a change is announced",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790170088969,
+          "status": "pending",
+          "title": "gives the section a heading that can take focus, so a change is announced"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell names the person and what the view can say about their access",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790170088969,
+          "status": "pending",
+          "title": "names the person and what the view can say about their access"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell says so when the membership could not be confirmed, rather than staying quiet about it",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790170088969,
+          "status": "pending",
+          "title": "says so when the membership could not be confirmed, rather than staying quiet about it"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell supplies the configured document route to the actual submission receipt",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790170088969,
+          "status": "pending",
+          "title": "supplies the configured document route to the actual submission receipt"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell carries the footer promise on every section",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790170088969,
+          "status": "pending",
+          "title": "carries the footer promise on every section"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell does not mount Enterprise value or call getMeasures when an employee clicks the Home card",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790170088970,
+          "status": "pending",
+          "title": "does not mount Enterprise value or call getMeasures when an employee clicks the Home card"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell does not fetch measures or usage while membership is unresolved, including from the Home card",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790170088970,
+          "status": "pending",
+          "title": "does not fetch measures or usage while membership is unresolved, including from the Home card"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell shows Usage on Enterprise value for an operator and not on System map",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790170088970,
+          "status": "pending",
+          "title": "shows Usage on Enterprise value for an operator and not on System map"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell lets a leader open Enterprise value without mounting usage or calling getMetrics",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790170088970,
+          "status": "pending",
+          "title": "lets a leader open Enterprise value without mounting usage or calling getMetrics"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell keeps the Home sentence as the idea draft and opens the guided request with the same wording",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790170088970,
+          "status": "pending",
+          "title": "keeps the Home sentence as the idea draft and opens the guided request with the same wording"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell keeps guided edits mounted when navigation needs an unsaved draft and saving is refused",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790170088970,
+          "status": "pending",
+          "title": "keeps guided edits mounted when navigation needs an unsaved draft and saving is refused"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell keeps guided edits mounted when navigation needs an unsaved draft and saving is rejected",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790170088970,
+          "status": "pending",
+          "title": "keeps guided edits mounted when navigation needs an unsaved draft and saving is rejected"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell keeps the sentence in the box and opens nothing when the draft cannot be saved",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790170088970,
+          "status": "pending",
+          "title": "keeps the sentence in the box and opens nothing when the draft cannot be saved"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell opens Marketing for a reviewer without granting drafting controls",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790170088970,
+          "status": "pending",
+          "title": "opens Marketing for a reviewer without granting drafting controls"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell shows Marketing to a bounded participant and keeps the synthetic workspace across a Home round-trip",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790170088970,
+          "status": "pending",
+          "title": "shows Marketing to a bounded participant and keeps the synthetic workspace across a Home round-trip"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell tells an operator without site-owner permission that the queue was not read",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790170088970,
+          "status": "pending",
+          "title": "tells an operator without site-owner permission that the queue was not read"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell says the support route is unbound when the content document does not name one",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790170088971,
+          "status": "pending",
+          "title": "says the support route is unbound when the content document does not name one"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell does not expose an unsafe support link: javascript:void(0)",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790170088971,
+          "status": "pending",
+          "title": "does not expose an unsafe support link: javascript:void(0)"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell does not expose an unsafe support link: data:text/html,unsafe",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790170088971,
+          "status": "pending",
+          "title": "does not expose an unsafe support link: data:text/html,unsafe"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell does not expose an unsafe support link: //untrusted.invalid/path",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790170088971,
+          "status": "pending",
+          "title": "does not expose an unsafe support link: //untrusted.invalid/path"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell resolves site-relative support links against the site rather than the hosting page",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790170088971,
+          "status": "pending",
+          "title": "resolves site-relative support links against the site rather than the hosting page"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell renders a configured support route from the page content document",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790170088971,
+          "status": "pending",
+          "title": "renders a configured support route from the page content document"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell places the administrator control last, apart from the section tabs, for a site owner",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790170088971,
+          "status": "pending",
+          "title": "places the administrator control last, apart from the section tabs, for a site owner"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell opens the administrator queue from that control and still opens a section tab",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790170088971,
+          "status": "pending",
+          "title": "opens the administrator queue from that control and still opens a section tab"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell does not keep the administrator queue on System map once it has its own control",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790170088972,
+          "status": "pending",
+          "title": "does not keep the administrator queue on System map once it has its own control"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell moves to the administrator control with End when the person may open it",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790170088972,
+          "status": "pending",
+          "title": "moves to the administrator control with End when the person may open it"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell spaces Register team AI use from the other Improvement cards and keeps the larger panels below",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790170088972,
+          "status": "pending",
+          "title": "spaces Register team AI use from the other Improvement cards and keeps the larger panels below"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell does not mount the administrator queue or read it for an employee",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790170088972,
+          "status": "pending",
+          "title": "does not mount the administrator queue or read it for an employee"
+        }
+      ],
+      "failureMessage": null
+    },
+    {
+      "leaks": false,
+      "numFailingTests": 1,
+      "numPassingTests": 0,
+      "numPendingTests": 4,
+      "numTodoTests": 0,
+      "openHandles": [],
+      "perfStats": {
+        "end": 1790170090490,
+        "loadTestEnvironmentEnd": 1790170088999,
+        "loadTestEnvironmentStart": 1790170088981,
+        "runtime": 1491,
+        "setupAfterEnvEnd": 1790170089156,
+        "setupAfterEnvStart": 1790170089062,
+        "setupFilesEnd": 1790170089000,
+        "setupFilesStart": 1790170088999,
+        "slow": false,
+        "start": 1790170088999
+      },
+      "skipped": false,
+      "snapshot": {
+        "added": 0,
+        "fileDeleted": false,
+        "matched": 0,
+        "unchecked": 0,
+        "uncheckedKeys": [],
+        "unmatched": 0,
+        "updated": 0
+      },
+      "testFilePath": "C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-audit-fixes\\src\\webparts\\aiCoeFrontDoor\\components\\app\\AppCoreWorkspace.test.tsx",
+      "testResults": [
+        {
+          "ancestorTitles": [
+            "AppCoreWorkspace case journey"
+          ],
+          "duration": 1094,
+          "failing": false,
+          "failureDetails": [
+            {
+              "matcherResult": {
+                "message": "expect(jest.fn()).toHaveBeenCalledWith(...expected)\n\nExpected: {\"actorId\": \"pat@contoso.com\", \"tenantScope\": \"https://contoso.sharepoint.com/sites/ai\"}\n\nNumber of calls: 0",
+                "pass": false
+              }
+            }
+          ],
+          "failureMessages": [
+            "Error: expect(jest.fn()).toHaveBeenCalledWith(...expected)\n\nExpected: {\"actorId\": \"pat@contoso.com\", \"tenantScope\": \"https://contoso.sharepoint.com/sites/ai\"}\n\nNumber of calls: 0\n\nIgnored nodes: comments, script, style\n\u001b[36m<html>\u001b[39m\n  \u001b[36m<head />\u001b[39m\n  \u001b[36m<body>\u001b[39m\n    \u001b[36m<div>\u001b[39m\n      \u001b[36m<div\u001b[39m\n        \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-panel\"\u001b[39m\n      \u001b[36m>\u001b[39m\n        \u001b[36m<p\u001b[39m\n          \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-aside ai-app-aside--info\"\u001b[39m\n          \u001b[33mrole\u001b[39m=\u001b[32m\"note\"\u001b[39m\n        \u001b[36m>\u001b[39m\n          \u001b[0mSynthetic Binding A workspace: real command keys, validators and polling over a local command list. Not a tenant write, not approval, and not a live model call.\u001b[0m\n        \u001b[36m</p>\u001b[39m\n        \u001b[36m<p\u001b[39m\n          \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-note\"\u001b[39m\n        \u001b[36m>\u001b[39m\n          \u001b[0mSynthetic Binding A: real command keys, validators and polling over an in-memory command list. Not a tenant write.\u001b[0m\n        \u001b[36m</p>\u001b[39m\n        \u001b[36m<label\u001b[39m\n          \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-field-label\"\u001b[39m\n          \u001b[33mfor\u001b[39m=\u001b[32m\"ai-core-title\"\u001b[39m\n        \u001b[36m>\u001b[39m\n          \u001b[0mTitle\u001b[0m\n          \u001b[36m<input\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-command-input\"\u001b[39m\n            \u001b[33mid\u001b[39m=\u001b[32m\"ai-core-title\"\u001b[39m\n            \u001b[33mvalue\u001b[39m=\u001b[32m\"Automate a weekly operations pack\"\u001b[39m\n          \u001b[36m/>\u001b[39m\n        \u001b[36m</label>\u001b[39m\n        \u001b[36m<label\u001b[39m\n          \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-field-label\"\u001b[39m\n          \u001b[33mfor\u001b[39m=\u001b[32m\"ai-core-problem\"\u001b[39m\n        \u001b[36m>\u001b[39m\n          \u001b[0mProblem statement\u001b[0m\n          \u001b[36m<input\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-command-input\"\u001b[39m\n            \u001b[33mid\u001b[39m=\u001b[32m\"ai-core-problem\"\u001b[39m\n            \u001b[33mvalue\u001b[39m=\u001b[32m\"Hours spent copying numbers between tools.\"\u001b[39m\n          \u001b[36m/>\u001b[39m\n        \u001b[36m</label>\u001b[39m\n        \u001b[36m<label\u001b[39m\n          \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-field-label\"\u001b[39m\n          \u001b[33mfor\u001b[39m=\u001b[32m\"ai-core-outcome\"\u001b[39m\n        \u001b[36m>\u001b[39m\n          \u001b[0mDesired outcome\u001b[0m\n          \u001b[36m<input\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-command-input\"\u001b[39m\n            \u001b[33mid\u001b[39m=\u001b[32m\"ai-core-outcome\"\u001b[39m\n            \u001b[33mvalue\u001b[39m=\u001b[32m\"A reviewed weekly pack with less copying.\"\u001b[39m\n          \u001b[36m/>\u001b[39m\n        \u001b[36m</label>\u001b[39m\n        \u001b[36m<label\u001b[39m\n          \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-field-label\"\u001b[39m\n          \u001b[33mfor\u001b[39m=\u001b[32m\"ai-core-sponsor\"\u001b[39m\n        \u001b[36m>\u001b[39m\n          \u001b[0mSponsor (role, not a default person)\u001b[0m\n          \u001b[36m<input\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-command-input\"\u001b[39m\n            \u001b[33mid\u001b[39m=\u001b[32m\"ai-core-sponsor\"\u001b[39m\n            \u001b[33mvalue\u001b[39m=\u001b[32m\"Named sponsor (synthetic)\"\u001b[39m\n          \u001b[36m/>\u001b[39m\n        \u001b[36m</label>\u001b[39m\n        \u001b[36m<div\u001b[39m\n          \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-actions\"\u001b[39m\n        \u001b[36m>\u001b[39m\n          \u001b[36m<button\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-primary\"\u001b[39m\n            \u001b[33mtype\u001b[39m=\u001b[32m\"button\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[0mCreate work\u001b[0m\n          \u001b[36m</button>\u001b[39m\n          \u001b[36m<button\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-ghost\"\u001b[39m\n            \u001b[33mdisabled\u001b[39m=\u001b[32m\"\"\u001b[39m\n            \u001b[33mtype\u001b[39m=\u001b[32m\"button\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[0mRefresh status\u001b[0m\n          \u001b[36m</button>\u001b[39m\n          \u001b[36m<button\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-ghost\"\u001b[39m\n            \u001b[33mtype\u001b[39m=\u001b[32m\"button\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[0mList my work\u001b[0m\n          \u001b[36m</button>\u001b[39m\n          \u001b[36m<button\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-ghost\"\u001b[39m\n            \u001b[33mdisabled\u001b[39m=\u001b[32m\"\"\u001b[39m\n            \u001b[33mtype\u001b[39m=\u001b[32m\"button\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[0mAsk for a decision packet\u001b[0m\n          \u001b[36m</button>\u001b[39m\n        \u001b[36m</div>\u001b[39m\n        \u001b[36m<p\u001b[39m\n          \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-note\"\u001b[39m\n          \u001b[33mdata-core-phase\u001b[39m=\u001b[32m\"idle\"\u001b[39m\n        \u001b[36m>\u001b[39m\n          \u001b[0mCommand: idle. Synthetic Binding A: real command keys, validators and polling over an in-memory command list. Not a tenant write.\u001b[0m\n        \u001b[36m</p>\u001b[39m\n      \u001b[36m</div>\u001b[39m\n    \u001b[36m</div>\u001b[39m\n  \u001b[36m</body>\u001b[39m\n\u001b[36m</html>\u001b[39m\n    at C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-audit-fixes\\src\\webparts\\aiCoeFrontDoor\\components\\app\\AppCoreWorkspace.test.tsx:31:64\n    at runWithExpensiveErrorDiagnosticsDisabled (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\@testing-library\\react\\node_modules\\@testing-library\\dom\\dist\\config.js:47:12)\n    at checkCallback (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\@testing-library\\react\\node_modules\\@testing-library\\dom\\dist\\wait-for.js:127:77)\n    at checkRealTimersCallback (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\@testing-library\\react\\node_modules\\@testing-library\\dom\\dist\\wait-for.js:121:16)\n    at Timeout.task [as _onTimeout] (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jsdom\\lib\\jsdom\\browser\\Window.js:579:19)\n    at listOnTimeout (node:internal/timers:588:17)\n    at processTimers (node:internal/timers:523:7)"
+          ],
+          "fullName": "AppCoreWorkspace case journey recovers the original pending command before fresh reads and never resubmits an unknown mutation",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 1,
+          "retryReasons": [],
+          "startAt": 1790170089356,
+          "status": "failed",
+          "title": "recovers the original pending command before fresh reads and never resubmits an unknown mutation"
+        },
+        {
+          "ancestorTitles": [
+            "AppCoreWorkspace case journey"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppCoreWorkspace case journey lets the person select a packet, read its questions and submit their own classified answer",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790170090467,
+          "status": "pending",
+          "title": "lets the person select a packet, read its questions and submit their own classified answer"
+        },
+        {
+          "ancestorTitles": [
+            "AppCoreWorkspace case journey"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppCoreWorkspace case journey restores only a scoped opaque selection by reading the service after remount",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790170090467,
+          "status": "pending",
+          "title": "restores only a scoped opaque selection by reading the service after remount"
+        },
+        {
+          "ancestorTitles": [
+            "AppCoreWorkspace case journey"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppCoreWorkspace case journey saves entered clarification against the selected WorkID rather than creating a second case",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790170090467,
+          "status": "pending",
+          "title": "saves entered clarification against the selected WorkID rather than creating a second case"
+        },
+        {
+          "ancestorTitles": [
+            "AppCoreWorkspace case journey"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppCoreWorkspace case journey renders public ListMyWork Items as selectable cases and reads status on selection",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790170090468,
+          "status": "pending",
+          "title": "renders public ListMyWork Items as selectable cases and reads status on selection"
+        }
+      ],
+      "failureMessage": "  ● AppCoreWorkspace case journey › recovers the original pending command before fresh reads and never resubmits an unknown mutation\n\n    expect(jest.fn()).toHaveBeenCalledWith(...expected)\n\n    Expected: {\"actorId\": \"pat@contoso.com\", \"tenantScope\": \"https://contoso.sharepoint.com/sites/ai\"}\n\n    Number of calls: 0\n\n    Ignored nodes: comments, script, style\n    \u001b[36m<html>\u001b[39m\n      \u001b[36m<head />\u001b[39m\n      \u001b[36m<body>\u001b[39m\n        \u001b[36m<div>\u001b[39m\n          \u001b[36m<div\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-panel\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[36m<p\u001b[39m\n              \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-aside ai-app-aside--info\"\u001b[39m\n              \u001b[33mrole\u001b[39m=\u001b[32m\"note\"\u001b[39m\n            \u001b[36m>\u001b[39m\n              \u001b[0mSynthetic Binding A workspace: real command keys, validators and polling over a local command list. Not a tenant write, not approval, and not a live model call.\u001b[0m\n            \u001b[36m</p>\u001b[39m\n            \u001b[36m<p\u001b[39m\n              \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-note\"\u001b[39m\n            \u001b[36m>\u001b[39m\n              \u001b[0mSynthetic Binding A: real command keys, validators and polling over an in-memory command list. Not a tenant write.\u001b[0m\n            \u001b[36m</p>\u001b[39m\n            \u001b[36m<label\u001b[39m\n              \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-field-label\"\u001b[39m\n              \u001b[33mfor\u001b[39m=\u001b[32m\"ai-core-title\"\u001b[39m\n            \u001b[36m>\u001b[39m\n              \u001b[0mTitle\u001b[0m\n              \u001b[36m<input\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-command-input\"\u001b[39m\n                \u001b[33mid\u001b[39m=\u001b[32m\"ai-core-title\"\u001b[39m\n                \u001b[33mvalue\u001b[39m=\u001b[32m\"Automate a weekly operations pack\"\u001b[39m\n              \u001b[36m/>\u001b[39m\n            \u001b[36m</label>\u001b[39m\n            \u001b[36m<label\u001b[39m\n              \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-field-label\"\u001b[39m\n              \u001b[33mfor\u001b[39m=\u001b[32m\"ai-core-problem\"\u001b[39m\n            \u001b[36m>\u001b[39m\n              \u001b[0mProblem statement\u001b[0m\n              \u001b[36m<input\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-command-input\"\u001b[39m\n                \u001b[33mid\u001b[39m=\u001b[32m\"ai-core-problem\"\u001b[39m\n                \u001b[33mvalue\u001b[39m=\u001b[32m\"Hours spent copying numbers between tools.\"\u001b[39m\n              \u001b[36m/>\u001b[39m\n            \u001b[36m</label>\u001b[39m\n            \u001b[36m<label\u001b[39m\n              \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-field-label\"\u001b[39m\n              \u001b[33mfor\u001b[39m=\u001b[32m\"ai-core-outcome\"\u001b[39m\n            \u001b[36m>\u001b[39m\n              \u001b[0mDesired outcome\u001b[0m\n              \u001b[36m<input\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-command-input\"\u001b[39m\n                \u001b[33mid\u001b[39m=\u001b[32m\"ai-core-outcome\"\u001b[39m\n                \u001b[33mvalue\u001b[39m=\u001b[32m\"A reviewed weekly pack with less copying.\"\u001b[39m\n              \u001b[36m/>\u001b[39m\n            \u001b[36m</label>\u001b[39m\n            \u001b[36m<label\u001b[39m\n              \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-field-label\"\u001b[39m\n              \u001b[33mfor\u001b[39m=\u001b[32m\"ai-core-sponsor\"\u001b[39m\n            \u001b[36m>\u001b[39m\n              \u001b[0mSponsor (role, not a default person)\u001b[0m\n              \u001b[36m<input\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-command-input\"\u001b[39m\n                \u001b[33mid\u001b[39m=\u001b[32m\"ai-core-sponsor\"\u001b[39m\n                \u001b[33mvalue\u001b[39m=\u001b[32m\"Named sponsor (synthetic)\"\u001b[39m\n              \u001b[36m/>\u001b[39m\n            \u001b[36m</label>\u001b[39m\n            \u001b[36m<div\u001b[39m\n              \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-actions\"\u001b[39m\n            \u001b[36m>\u001b[39m\n              \u001b[36m<button\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-primary\"\u001b[39m\n                \u001b[33mtype\u001b[39m=\u001b[32m\"button\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[0mCreate work\u001b[0m\n              \u001b[36m</button>\u001b[39m\n              \u001b[36m<button\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-ghost\"\u001b[39m\n                \u001b[33mdisabled\u001b[39m=\u001b[32m\"\"\u001b[39m\n                \u001b[33mtype\u001b[39m=\u001b[32m\"button\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[0mRefresh status\u001b[0m\n              \u001b[36m</button>\u001b[39m\n              \u001b[36m<button\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-ghost\"\u001b[39m\n                \u001b[33mtype\u001b[39m=\u001b[32m\"button\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[0mList my work\u001b[0m\n              \u001b[36m</button>\u001b[39m\n              \u001b[36m<button\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-ghost\"\u001b[39m\n                \u001b[33mdisabled\u001b[39m=\u001b[32m\"\"\u001b[39m\n                \u001b[33mtype\u001b[39m=\u001b[32m\"button\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[0mAsk for a decision packet\u001b[0m\n              \u001b[36m</button>\u001b[39m\n            \u001b[36m</div>\u001b[39m\n            \u001b[36m<p\u001b[39m\n              \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-note\"\u001b[39m\n              \u001b[33mdata-core-phase\u001b[39m=\u001b[32m\"idle\"\u001b[39m\n            \u001b[36m>\u001b[39m\n              \u001b[0mCommand: idle. Synthetic Binding A: real command keys, validators and polling over an in-memory command list. Not a tenant write.\u001b[0m\n            \u001b[36m</p>\u001b[39m\n          \u001b[36m</div>\u001b[39m\n        \u001b[36m</div>\u001b[39m\n      \u001b[36m</body>\u001b[39m\n    \u001b[36m</html>\u001b[39m\n\n    \u001b[0m \u001b[90m 29 |\u001b[39m     \u001b[36mconst\u001b[39m create \u001b[33m=\u001b[39m jest\u001b[33m.\u001b[39mspyOn(service\u001b[33m,\u001b[39m \u001b[32m'createOrResume'\u001b[39m)\u001b[33m;\u001b[39m\n     \u001b[90m 30 |\u001b[39m     \u001b[36mconst\u001b[39m view \u001b[33m=\u001b[39m renderWithFrontDoor(\u001b[33m<\u001b[39m\u001b[33mAppCoreWorkspace\u001b[39m coreWork\u001b[33m=\u001b[39m{service} \u001b[33m/\u001b[39m\u001b[33m>\u001b[39m)\u001b[33m;\u001b[39m\n    \u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 31 |\u001b[39m     \u001b[36mawait\u001b[39m waitFor(()\u001b[33m:\u001b[39m \u001b[36mvoid\u001b[39m \u001b[33m=>\u001b[39m { expect(service\u001b[33m.\u001b[39mrecoverPending)\u001b[33m.\u001b[39mtoHaveBeenCalledWith(session)\u001b[33m;\u001b[39m })\u001b[33m;\u001b[39m\n     \u001b[90m    |\u001b[39m                                                                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n     \u001b[90m 32 |\u001b[39m     expect(list)\u001b[33m.\u001b[39mnot\u001b[33m.\u001b[39mtoHaveBeenCalled()\u001b[33m;\u001b[39m\n     \u001b[90m 33 |\u001b[39m     expect(view\u001b[33m.\u001b[39mgetByRole(\u001b[32m'button'\u001b[39m\u001b[33m,\u001b[39m { name\u001b[33m:\u001b[39m \u001b[32m'Create work'\u001b[39m }))\u001b[33m.\u001b[39mtoBeDisabled()\u001b[33m;\u001b[39m\n     \u001b[90m 34 |\u001b[39m     \u001b[36mawait\u001b[39m act(\u001b[36masync\u001b[39m ()\u001b[33m:\u001b[39m \u001b[33mPromise\u001b[39m\u001b[33m<\u001b[39m\u001b[36mvoid\u001b[39m\u001b[33m>\u001b[39m \u001b[33m=>\u001b[39m { finish(pending)\u001b[33m;\u001b[39m })\u001b[33m;\u001b[39m\u001b[0m\n\n      at src/webparts/aiCoeFrontDoor/components/app/AppCoreWorkspace.test.tsx:31:64\n      at runWithExpensiveErrorDiagnosticsDisabled (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/config.js:47:12)\n      at checkCallback (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/wait-for.js:127:77)\n      at checkRealTimersCallback (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/wait-for.js:121:16)\n      at Timeout.task [as _onTimeout] (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/jsdom/lib/jsdom/browser/Window.js:579:19)\n"
+    },
+    {
+      "leaks": false,
+      "numFailingTests": 0,
+      "numPassingTests": 0,
+      "numPendingTests": 2,
+      "numTodoTests": 0,
+      "openHandles": [],
+      "perfStats": {
+        "end": 1790170090842,
+        "loadTestEnvironmentEnd": 1790170090506,
+        "loadTestEnvironmentStart": 1790170090495,
+        "runtime": 335,
+        "setupAfterEnvEnd": 1790170090656,
+        "setupAfterEnvStart": 1790170090565,
+        "setupFilesEnd": 1790170090508,
+        "setupFilesStart": 1790170090507,
+        "slow": false,
+        "start": 1790170090507
+      },
+      "skipped": true,
+      "snapshot": {
+        "added": 0,
+        "fileDeleted": false,
+        "matched": 0,
+        "unchecked": 0,
+        "uncheckedKeys": [],
+        "unmatched": 0,
+        "updated": 0
+      },
+      "testFilePath": "C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-audit-fixes\\src\\webparts\\aiCoeFrontDoor\\components\\app\\AppMarketingWorkspace.test.tsx",
+      "testResults": [
+        {
+          "ancestorTitles": [
+            "AppMarketingWorkspace review boundaries"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppMarketingWorkspace review boundaries creates a meaningful objective correction as a new revision after changes are requested",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790170090842,
+          "status": "pending",
+          "title": "creates a meaningful objective correction as a new revision after changes are requested"
+        },
+        {
+          "ancestorTitles": [
+            "AppMarketingWorkspace review boundaries"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppMarketingWorkspace review boundaries does not offer participant-to-reviewer switching or a decision without the service capability",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790170090842,
+          "status": "pending",
+          "title": "does not offer participant-to-reviewer switching or a decision without the service capability"
+        }
+      ],
+      "failureMessage": null
+    },
+    {
+      "leaks": false,
+      "numFailingTests": 0,
+      "numPassingTests": 0,
+      "numPendingTests": 5,
+      "numTodoTests": 0,
+      "openHandles": [],
+      "perfStats": {
+        "end": 1790170091005,
+        "loadTestEnvironmentEnd": 1790170090851,
+        "loadTestEnvironmentStart": 1790170090844,
+        "runtime": 154,
+        "setupAfterEnvEnd": 1790170090986,
+        "setupAfterEnvStart": 1790170090904,
+        "setupFilesEnd": 1790170090851,
+        "setupFilesStart": 1790170090851,
+        "slow": false,
+        "start": 1790170090851
+      },
+      "skipped": true,
+      "snapshot": {
+        "added": 0,
+        "fileDeleted": false,
+        "matched": 0,
+        "unchecked": 0,
+        "uncheckedKeys": [],
+        "unmatched": 0,
+        "updated": 0
+      },
+      "testFilePath": "C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-audit-fixes\\src\\webparts\\aiCoeFrontDoor\\content\\measures.test.ts",
+      "testResults": [
+        {
+          "ancestorTitles": [
+            "suppress"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "suppress holds back a measure whose group is smaller than the document minimum",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790170091004,
+          "status": "pending",
+          "title": "holds back a measure whose group is smaller than the document minimum"
+        },
+        {
+          "ancestorTitles": [
+            "suppress"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "suppress holds back nothing when the row names no group, and nothing at all without a measure",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790170091004,
+          "status": "pending",
+          "title": "holds back nothing when the row names no group, and nothing at all without a measure"
+        },
+        {
+          "ancestorTitles": [
+            "effectiveState"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "effectiveState is the row state, unless the group is too small or the number is missing",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790170091004,
+          "status": "pending",
+          "title": "is the row state, unless the group is too small or the number is missing"
+        },
+        {
+          "ancestorTitles": [
+            "formatMeasure"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "formatMeasure shows a measured number in its unit",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790170091004,
+          "status": "pending",
+          "title": "shows a measured number in its unit"
+        },
+        {
+          "ancestorTitles": [
+            "formatMeasure"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "formatMeasure shows the plain placeholder wherever there is no measured number",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790170091004,
+          "status": "pending",
+          "title": "shows the plain placeholder wherever there is no measured number"
+        }
+      ],
+      "failureMessage": null
+    },
+    {
+      "leaks": false,
+      "numFailingTests": 0,
+      "numPassingTests": 0,
+      "numPendingTests": 12,
+      "numTodoTests": 0,
+      "openHandles": [],
+      "perfStats": {
+        "end": 1790170091291,
+        "loadTestEnvironmentEnd": 1790170091021,
+        "loadTestEnvironmentStart": 1790170091013,
+        "runtime": 270,
+        "setupAfterEnvEnd": 1790170091139,
+        "setupAfterEnvStart": 1790170091066,
+        "setupFilesEnd": 1790170091022,
+        "setupFilesStart": 1790170091021,
+        "slow": false,
+        "start": 1790170091021
+      },
+      "skipped": true,
+      "snapshot": {
+        "added": 0,
+        "fileDeleted": false,
+        "matched": 0,
+        "unchecked": 0,
+        "uncheckedKeys": [],
+        "unmatched": 0,
+        "updated": 0
+      },
+      "testFilePath": "C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-audit-fixes\\src\\webparts\\aiCoeFrontDoor\\components\\app\\AppValue.test.tsx",
+      "testResults": [
+        {
+          "ancestorTitles": [
+            "AppValue evidence gate"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppValue evidence gate withholds a number without current evidence, a valid period and privacy metadata: {}",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790170091290,
+          "status": "pending",
+          "title": "withholds a number without current evidence, a valid period and privacy metadata: {}"
+        },
+        {
+          "ancestorTitles": [
+            "AppValue evidence gate"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppValue evidence gate withholds a number without current evidence, a valid period and privacy metadata: {\"evidenceRef\":\" \"}",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790170091290,
+          "status": "pending",
+          "title": "withholds a number without current evidence, a valid period and privacy metadata: {\"evidenceRef\":\" \"}"
+        },
+        {
+          "ancestorTitles": [
+            "AppValue evidence gate"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppValue evidence gate withholds a number without current evidence, a valid period and privacy metadata: {}",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790170091290,
+          "status": "pending",
+          "title": "withholds a number without current evidence, a valid period and privacy metadata: {}"
+        },
+        {
+          "ancestorTitles": [
+            "AppValue evidence gate"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppValue evidence gate withholds a number without current evidence, a valid period and privacy metadata: {}",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790170091290,
+          "status": "pending",
+          "title": "withholds a number without current evidence, a valid period and privacy metadata: {}"
+        },
+        {
+          "ancestorTitles": [
+            "AppValue evidence gate"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppValue evidence gate withholds a number without current evidence, a valid period and privacy metadata: {\"periodStart\":\"2026-09-23\"}",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790170091290,
+          "status": "pending",
+          "title": "withholds a number without current evidence, a valid period and privacy metadata: {\"periodStart\":\"2026-09-23\"}"
+        },
+        {
+          "ancestorTitles": [
+            "AppValue evidence gate"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppValue evidence gate withholds a number without current evidence, a valid period and privacy metadata: {\"periodEnd\":\"2026-09-24\"}",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790170091290,
+          "status": "pending",
+          "title": "withholds a number without current evidence, a valid period and privacy metadata: {\"periodEnd\":\"2026-09-24\"}"
+        },
+        {
+          "ancestorTitles": [
+            "AppValue evidence gate"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppValue evidence gate withholds a number without current evidence, a valid period and privacy metadata: {\"periodStart\":\"2026-08-01\",\"periodEnd\":\"2026-08-10\"}",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790170091290,
+          "status": "pending",
+          "title": "withholds a number without current evidence, a valid period and privacy metadata: {\"periodStart\":\"2026-08-01\",\"periodEnd\":\"2026-08-10\"}"
+        },
+        {
+          "ancestorTitles": [
+            "AppValue evidence gate"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppValue evidence gate withholds a number without current evidence, a valid period and privacy metadata: {}",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790170091290,
+          "status": "pending",
+          "title": "withholds a number without current evidence, a valid period and privacy metadata: {}"
+        },
+        {
+          "ancestorTitles": [
+            "AppValue evidence gate"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppValue evidence gate withholds a number without current evidence, a valid period and privacy metadata: {\"cohortSize\":null}",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790170091290,
+          "status": "pending",
+          "title": "withholds a number without current evidence, a valid period and privacy metadata: {\"cohortSize\":null}"
+        },
+        {
+          "ancestorTitles": [
+            "AppValue evidence gate"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppValue evidence gate withholds a number without current evidence, a valid period and privacy metadata: {\"value\":null}",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790170091290,
+          "status": "pending",
+          "title": "withholds a number without current evidence, a valid period and privacy metadata: {\"value\":null}"
+        },
+        {
+          "ancestorTitles": [
+            "AppValue evidence gate"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppValue evidence gate shows the recorded measure with evidence AND period, without calling the value verified",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790170091290,
+          "status": "pending",
+          "title": "shows the recorded measure with evidence AND period, without calling the value verified"
+        },
+        {
+          "ancestorTitles": [
+            "AppValue evidence gate"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppValue evidence gate suppresses a sensitive small cohort even if its row claims to be measured",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790170091290,
+          "status": "pending",
+          "title": "suppresses a sensitive small cohort even if its row claims to be measured"
+        }
+      ],
+      "failureMessage": null
+    },
+    {
+      "leaks": false,
+      "numFailingTests": 0,
+      "numPassingTests": 0,
+      "numPendingTests": 2,
+      "numTodoTests": 0,
+      "openHandles": [],
+      "perfStats": {
+        "end": 1790170091443,
+        "loadTestEnvironmentEnd": 1790170091305,
+        "loadTestEnvironmentStart": 1790170091294,
+        "runtime": 137,
+        "setupAfterEnvEnd": 1790170091435,
+        "setupAfterEnvStart": 1790170091355,
+        "setupFilesEnd": 1790170091307,
+        "setupFilesStart": 1790170091306,
+        "slow": false,
+        "start": 1790170091306
+      },
+      "skipped": true,
+      "snapshot": {
+        "added": 0,
+        "fileDeleted": false,
+        "matched": 0,
+        "unchecked": 0,
+        "uncheckedKeys": [],
+        "unmatched": 0,
+        "updated": 0
+      },
+      "testFilePath": "C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-audit-fixes\\src\\webparts\\aiCoeFrontDoor\\content\\measures.app.test.ts",
+      "testResults": [
+        {
+          "ancestorTitles": [
+            "explicit app measure privacy policy"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "explicit app measure privacy policy allows a declared non-person metric without treating an absent cohort as that declaration",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790170091442,
+          "status": "pending",
+          "title": "allows a declared non-person metric without treating an absent cohort as that declaration"
+        },
+        {
+          "ancestorTitles": [
+            "explicit app measure privacy policy"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "explicit app measure privacy policy never exempts a row that actually records a small sensitive cohort",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790170091442,
+          "status": "pending",
+          "title": "never exempts a row that actually records a small sensitive cohort"
+        }
+      ],
+      "failureMessage": null
+    }
+  ],
+  "wasInterrupted": false
+}

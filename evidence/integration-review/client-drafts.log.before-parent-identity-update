@@ -1,0 +1,94 @@
+TAP version 13
+# Subtest: v0.2.0 preserves an unvalidated null time without weakening v0.1.1
+ok 1 - v0.2.0 preserves an unvalidated null time without weakening v0.1.1
+  ---
+  duration_ms: 1.6064
+  type: 'test'
+  ...
+# Subtest: native create/read/clarification/readiness uses split ingress and fresh validated versions
+ok 2 - native create/read/clarification/readiness uses split ingress and fresh validated versions
+  ---
+  duration_ms: 66.5676
+  type: 'test'
+  ...
+# Subtest: native evidence reads actual packet identities and submits the observed packet version
+ok 3 - native evidence reads actual packet identities and submits the observed packet version
+  ---
+  duration_ms: 1.9212
+  type: 'test'
+  ...
+# Subtest: unknown create survives reload and recovers without another POST or browser business text
+ok 4 - unknown create survives reload and recovers without another POST or browser business text
+  ---
+  duration_ms: 1.5974
+  type: 'test'
+  ...
+# Subtest: human evidence validation uses current packet version and leaves authority to server
+ok 5 - human evidence validation uses current packet version and leaves authority to server
+  ---
+  duration_ms: 1.3299
+  type: 'test'
+  ...
+# Subtest: a terminal-looking inconclusive body cannot discard the original mutation intent
+ok 6 - a terminal-looking inconclusive body cannot discard the original mutation intent
+  ---
+  duration_ms: 0.9761
+  type: 'test'
+  ...
+# Subtest: material clarification invalidates the previously observed packet version
+ok 7 - material clarification invalidates the previously observed packet version
+  ---
+  duration_ms: 0.947
+  type: 'test'
+  ...
+# Subtest: current native caller and result request-author identity are verified, not just payload scope
+ok 8 - current native caller and result request-author identity are verified, not just payload scope
+  ---
+  duration_ms: 0.8521
+  type: 'test'
+  ...
+# Subtest: business draft content is stored and recovered only from the server
+ok 9 - business draft content is stored and recovered only from the server
+  ---
+  duration_ms: 10.9101
+  type: 'test'
+  ...
+# Subtest: business draft writes require current retention/access qualification, not just a list GUID
+ok 10 - business draft writes require current retention/access qualification, not just a list GUID
+  ---
+  duration_ms: 0.3804
+  type: 'test'
+  ...
+# Subtest: an uncertain update cannot be silently erased by loading an older server draft
+ok 11 - an uncertain update cannot be silently erased by loading an older server draft
+  ---
+  duration_ms: 2.656
+  type: 'test'
+  ...
+# Subtest: stale ETags, foreign authors and duplicate keys never become successful draft saves
+ok 12 - stale ETags, foreign authors and duplicate keys never become successful draft saves
+  ---
+  duration_ms: 3.2726
+  type: 'test'
+  ...
+# Subtest: an uncertain clear is not confused with an empty but uncleared draft
+ok 13 - an uncertain clear is not confused with an empty but uncleared draft
+  ---
+  duration_ms: 1.305
+  type: 'test'
+  ...
+# Subtest: a lost create response recovers exactly once from server readback after restart
+ok 14 - a lost create response recovers exactly once from server readback after restart
+  ---
+  duration_ms: 0.8997
+  type: 'test'
+  ...
+1..14
+# tests 14
+# suites 0
+# pass 14
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 408.7069

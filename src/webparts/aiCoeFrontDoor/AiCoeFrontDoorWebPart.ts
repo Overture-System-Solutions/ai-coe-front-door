@@ -33,6 +33,10 @@ import type { IFrontDoorServices, IFrontDoorUser } from './context/FrontDoorCont
 import { createIdeaDraftService } from './services/draftService';
 import type { IDraftHttpClient } from './services/draftService';
 import { browserLocalStorage, LocalStorageDraftStore } from './services/draftStorage';
+import { ServerDraftStore } from './services/serverDraftStore';
+import type { IServerDraftPolicy } from './services/serverDraftStore';
+import type { IDraftStore } from './services/draftStorage';
+import { DurableSubmissionService } from './services/durableSubmissionService';
 import { createFlowClientFactory } from './services/flowClient';
 import { GovernanceService } from './services/GovernanceService';
 import { MyWorkService } from './services/myWorkService';
@@ -43,6 +47,14 @@ import { RoleResolver } from './services/roleResolver';
 import { createToolPolicyEvaluator } from './services/toolPolicyEvaluator';
 import type { IServiceContext } from './services/types';
 import { UsageMetricsService } from './services/UsageMetricsService';
+import { createDisabledLiveCoreWorkService, createSyntheticCoreWorkService } from './services/core/coreWorkService';
+import type { ICoreWorkService } from './services/core/coreWorkService';
+import { NativeCoreWorkService } from './services/core/nativeCoreWorkService';
+import type { INativeCoreBinding } from './services/core/nativeCoreWorkService';
+import { MemoryStorageBackend } from './services/marketing/artifactStore';
+import type { IStorageBackend } from './services/marketing/artifactStore';
+import { createBusinessMarketingServices, createDisabledLiveMarketingServices, createSyntheticMarketingServices } from './services/marketing/marketingServices';
+import type { IMarketingServices, IMarketingBusinessBinding } from './services/marketing/marketingServices';
 
 export interface IAiCoeFrontDoorWebPartProps extends IPageViewProperties {
   /** Organization name shown in the header, hero badge and summaries; blank keeps the wording neutral. */
@@ -57,6 +69,14 @@ export interface IAiCoeFrontDoorWebPartProps extends IPageViewProperties {
   paletteOverrides: string;
   /** HTTP trigger URL of the AI draft flow; blank keeps the deterministic summaries. */
   draftServiceUrl: string;
+  /** Server-owned, caller-secured list for unsubmitted business drafts. Blank fails closed. */
+  draftListId?: string;
+  /** Accepted server retention/access policy references; no secret values. */
+  draftPolicyJson?: string;
+  /** Non-secret, explicitly qualified v0.2.0 request/result binding. Empty leaves native work unavailable. */
+  coreBindingJson?: string;
+  /** Accepted Marketing extension ingress/result binding. Empty never selects the business runtime. */
+  marketingBindingJson?: string;
   /** Usage feed shown by the telemetry strip: "claude" (default), "openai" (as shipped in 1.0.0.7) or "both". */
   telemetryProvider: string;
 }
@@ -66,7 +86,7 @@ interface ICoreServices {
   usage: UsageMetricsService;
   myWork: MyWorkService;
   programMeasures: ProgramMeasuresService;
-  draftStore: LocalStorageDraftStore;
+
   flowClient: () => Promise<IDraftHttpClient>;
   user: IFrontDoorUser;
   /** Kept for the services that depend on a property, such as the page content reader. */
@@ -93,7 +113,7 @@ export default class AiCoeFrontDoorWebPart extends BaseClientSideWebPart<IAiCoeF
       usage: new UsageMetricsService(serviceContext),
       myWork: new MyWorkService(serviceContext),
       programMeasures: new ProgramMeasuresService(serviceContext),
-      draftStore: new LocalStorageDraftStore(browserLocalStorage()),
+
       flowClient: createFlowClientFactory(this.context.aadHttpClientFactory),
       user: serviceContext.user,
       serviceContext
@@ -247,6 +267,25 @@ export default class AiCoeFrontDoorWebPart extends BaseClientSideWebPart<IAiCoeF
             label: strings.DraftServiceUrlFieldLabel,
             description: strings.DraftServiceUrlFieldDescription,
             placeholder: 'https://…/triggers/manual/paths/invoke?api-version=1'
+          }),
+          PropertyPaneTextField('draftListId', {
+            label: 'Server draft list ID',
+            description: 'Unsubmitted work stays on the server, never in browser storage. Blank disables saved business drafts.'
+          }),
+          PropertyPaneTextField('draftPolicyJson', {
+            label: 'Qualified server draft policy (JSON)',
+            multiline: true,
+            description: 'Supply accepted access/retention references, retention period and qualification expiry. Server policy commissioning is required; this field does not enforce tenant retention.'
+          }),
+          PropertyPaneTextField('coreBindingJson', {
+            label: 'Qualified native CORE binding (JSON)',
+            multiline: true,
+            description: 'Use the exact accepted v0.2.0 binding receipt and separate request/result GUIDs. Never enter secrets. A property cannot grant server permissions.'
+          }),
+          PropertyPaneTextField('marketingBindingJson', {
+            label: 'Qualified business Marketing binding (JSON)',
+            multiline: true,
+            description: 'Requires the approved existing-writer runtime, separate ingress/results and actual qualification. No provider credentials belong in this web part.'
           })
         ]
       },
@@ -342,23 +381,96 @@ export default class AiCoeFrontDoorWebPart extends BaseClientSideWebPart<IAiCoeF
     const contentUrl: string | undefined =
       parseFrontDoorView(this.properties.view) === 'page' ? parseContentUrl(this.properties.contentUrl) : parseOptionalContentUrl(this.properties.contentUrl);
     // The tool policy evaluator reads the branding, so every branding input joins the key.
-    const key: string = JSON.stringify([branding.organizationName, branding.governanceReference, branding.reviewSystemName, draftServiceUrl, contentUrl ?? null, roleGroups]);
+    const key: string = JSON.stringify([branding.organizationName, branding.governanceReference, branding.reviewSystemName, draftServiceUrl, contentUrl ?? null, roleGroups, this.properties.draftListId ?? '', this.properties.draftPolicyJson ?? '', this.properties.coreBindingJson ?? '', this.properties.marketingBindingJson ?? '', core.serviceContext.siteUrl, core.user.email]);
     if (this._services === undefined || this._servicesKey !== key) {
+      const synthetic: boolean = this._isSyntheticHost(core.serviceContext.siteUrl);
+      const draftStore: IDraftStore = synthetic
+        ? new LocalStorageDraftStore(browserLocalStorage())
+        : new ServerDraftStore(core.serviceContext, { listId: this.properties.draftListId ?? '', references: browserLocalStorage(), policy: this._draftPolicy() });
       this._services = {
-        governance: core.governance,
+        governance: synthetic ? core.governance : new DurableSubmissionService(core.governance, draftStore),
         usage: core.usage,
         myWork: core.myWork,
         programMeasures: core.programMeasures,
         // Reads the site groups once per bundle; the manageWeb answer is passed in at the call, never checked again.
         roles: new RoleResolver(core.serviceContext, parseRoleGroups(roleGroups)),
-        draftStore: core.draftStore,
+        draftStore,
         toolPolicyEvaluator: createToolPolicyEvaluator(branding),
         ideaDrafts: createIdeaDraftService(draftServiceUrl, core.flowClient),
         // Reads the document once per instance and document path; the page key alone never refetches.
-        pageContent: contentUrl === undefined ? undefined : new PageContentService(core.serviceContext, contentUrl)
+        pageContent: contentUrl === undefined ? undefined : new PageContentService(core.serviceContext, contentUrl),
+        marketing: this._marketingServices(core),
+        coreWork: this._coreWork(core)
       };
       this._servicesKey = key;
     }
     return this._services;
+  }
+
+  /** Browser storage when it exists; an in-memory store otherwise. Synthetic records only. */
+  private _storage(): IStorageBackend {
+    const storage: Storage | undefined = browserLocalStorage();
+    return storage !== undefined ? storage : new MemoryStorageBackend();
+  }
+
+  /**
+   * The native adapter is selected only for a complete qualified split binding. The server remains authoritative.
+   * Offline preview alone receives the labelled synthetic engine.
+   */
+  private _coreWork(core: ICoreServices): ICoreWorkService {
+    if (this._isSyntheticHost(core.serviceContext.siteUrl)) {
+      return createSyntheticCoreWorkService(core.user.email, { backend: this._storage() });
+    }
+    if (this.properties.coreBindingJson) {
+      try {
+        const binding: INativeCoreBinding = JSON.parse(this.properties.coreBindingJson) as INativeCoreBinding;
+        return new NativeCoreWorkService(core.serviceContext, { binding, references: browserLocalStorage() });
+      } catch { /* Malformed or incomplete bindings cannot activate a transport. */ }
+    }
+    return createDisabledLiveCoreWorkService();
+  }
+
+  private _isSyntheticHost(siteUrl: string): boolean {
+    try {
+      const url: URL = new URL(siteUrl);
+      return ['127.0.0.1', 'localhost', '[::1]'].indexOf(url.hostname) >= 0 && url.pathname === '/simulated-site';
+    } catch {
+      return false;
+    }
+  }
+  private _draftPolicy(): IServerDraftPolicy | undefined {
+    try {
+      const policy: IServerDraftPolicy = JSON.parse(this.properties.draftPolicyJson ?? '') as IServerDraftPolicy;
+      return policy !== null && typeof policy === 'object' ? policy : undefined;
+    } catch { return undefined; }
+  }
+  private _marketingServices(core: ICoreServices): IMarketingServices {
+    if (this._isSyntheticHost(core.serviceContext.siteUrl)) { return createSyntheticMarketingServices(this._storage()); }
+    try {
+      const binding: IMarketingBusinessBinding = JSON.parse(this.properties.marketingBindingJson ?? '') as IMarketingBusinessBinding;
+      const references: Storage | undefined = browserLocalStorage();
+      if (!binding || binding.siteUrl !== core.serviceContext.siteUrl.replace(/\/$/, '') || references === undefined) { return createDisabledLiveMarketingServices(); }
+      const context: IServiceContext = core.serviceContext;
+      const bases: string[] = [binding.requestListId, binding.resultListId].map((id: string): string => `${binding.siteUrl}/_api/web/lists(guid'${id}')/items`);
+      const headers = { Accept: 'application/json;odata=nometadata', 'Content-Type': 'application/json;odata=nometadata' };
+      return createBusinessMarketingServices({
+        binding, references,
+        session: { actorId: core.user.email, tenantScope: binding.siteUrl, resolution: { resolution: 'unresolved', roles: [] } },
+        pollAttempts: 4,
+        wait: (): Promise<void> => new Promise((resolve): void => { setTimeout(resolve, 750); }),
+        http: { request: async (method, url, body) => {
+          if (!bases.some((base: string): boolean => url === base || url.startsWith(`${base}?`))) { throw new Error('Marketing URL is outside the bound ingress/results.'); }
+          if (method === 'POST') {
+            const identity = await context.client.get(`${binding.siteUrl}/_api/web/currentuser?$select=Id,Email`, context.configuration, { headers });
+            const native = identity.ok ? await identity.json() as { Id?: unknown; Email?: unknown } : undefined;
+            if (typeof native?.Id !== 'number' || native.Id < 1 || typeof native.Email !== 'string' || native.Email.toLowerCase() !== core.user.email.toLowerCase()) { throw new Error('Native caller changed; re-open the page.'); }
+          }
+          const response = method === 'POST'
+            ? await context.client.post(url, context.configuration, { headers, body: JSON.stringify(body) })
+            : await context.client.get(url, context.configuration, { headers });
+          return { status: response.status, body: await response.json().catch((): null => null) };
+        } }
+      });
+    } catch { return createDisabledLiveMarketingServices(); }
   }
 }

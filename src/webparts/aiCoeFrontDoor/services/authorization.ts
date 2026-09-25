@@ -54,8 +54,14 @@ export const CAPABILITIES: readonly Capability[] = [
  * unresolved membership. Anything naming a narrower role is refused until the membership is known.
  *
  * `readAdminQueue` deliberately does not accept `leader`: the queue carries other people's request text, and a
- * leader is given the measured view instead. `decideMarketingReview` is the only write a role other than the
- * submitter may make, and it is held to the two roles the Marketing playbook names as approvers.
+ * leader is given the measured view instead.
+ *
+ * The Marketing capabilities are held to the two bounded Marketing roles. Drafting is open to a Marketing
+ * participant, and to the two platform roles that run the local walkthrough (an operator, a design authority) so
+ * the labelled demonstration and the synthetic workspace can be exercised on a site before any Marketing group is
+ * bound. `decideMarketingReview` is the one write a role other than the submitter may make, and it is held to the
+ * Marketing reviewer alone: an operator or a site owner is a platform role, not a business approval, and the
+ * review service additionally binds the reviewer's identity to an authority scope before a decision is recorded.
  */
 const ALLOWED: { [capability in Capability]: readonly RoleId[] } = {
   readOwnRequests: ['employee'],
@@ -64,10 +70,10 @@ const ALLOWED: { [capability in Capability]: readonly RoleId[] } = {
   readAdminQueue: ['operator'],
   readUsageTelemetry: ['operator'],
   readProgramMeasures: ['leader', 'operator'],
-  draftCampaignBrief: ['operator', 'designAuthority'],
-  draftContentPlan: ['operator', 'designAuthority'],
-  draftMeetingFollowThrough: ['operator', 'designAuthority'],
-  decideMarketingReview: ['operator', 'designAuthority']
+  draftCampaignBrief: ['marketingParticipant', 'operator', 'designAuthority'],
+  draftContentPlan: ['marketingParticipant', 'operator', 'designAuthority'],
+  draftMeetingFollowThrough: ['marketingParticipant', 'operator', 'designAuthority'],
+  decideMarketingReview: ['marketingReviewer']
 };
 
 /** Why a capability was refused, in words a page may show without naming a group or a permission level. */

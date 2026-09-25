@@ -1,0 +1,20 @@
+{
+  "exitCode": 0,
+  "command": [
+    "/home/far_cdx/.hermes/hermes-agent/venv/bin/python",
+    "-B",
+    "-m",
+    "pytest",
+    "/mnt/c/Users/scfre/JuliannaAI/OSS-AI-CoE/development/overture-ai-coe-front-door-audit-fixes/backend/core-native/tests",
+    "/mnt/c/Users/scfre/JuliannaAI/OSS-AI-CoE/development/overture-ai-coe-front-door-audit-fixes/evidence/integration-review/test_native_existing_packages.py",
+    "-q",
+    "--capture=sys",
+    "-p",
+    "no:cacheprovider",
+    "-k",
+    "not test_review_build_has_current_bytes_no_reference_model_claims",
+    "--junitxml=/mnt/c/Users/scfre/JuliannaAI/OSS-AI-CoE/development/overture-ai-coe-front-door-audit-fixes/evidence/integration-review/native-tests.xml",
+    "--basetemp=/mnt/c/Users/scfre/JuliannaAI/OSS-AI-CoE/development/overture-ai-coe-front-door-audit-fixes/evidence/integration-review/pytest-tmp"
+  ],
+  "log": "native-tests.log"
+}

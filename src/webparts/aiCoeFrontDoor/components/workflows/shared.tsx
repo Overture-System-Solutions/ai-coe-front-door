@@ -12,7 +12,7 @@ import type { ISessionBase } from '../../workflows/formEngine';
 import type { IPieceWorkflowDefinition, IStep, PieceWorkflowId, WorkflowId } from '../../workflows/types';
 
 export interface IWorkflowProps {
-  /** True when the visitor chose to resume the draft saved on this device. */
+  /** True when the visitor chose to resume the draft from the configured store. */
   resumeDraft: boolean;
   onExit: () => void;
   /** Reports whether a draft now exists for the workflow, so the landing page can show "Resume draft". */
@@ -22,7 +22,7 @@ export interface IWorkflowProps {
 export const SETTING_UP_TEXT: string = 'Setting things up…';
 export const INTRO_TEXT: string = 'A few quick questions. You can save your progress and come back any time.';
 export const SUBMITTING_TEXT: string = 'Putting your summary together…';
-export const DRAFT_SAVED_TEXT: string = 'Draft saved on this device.';
+export const DRAFT_SAVED_TEXT: string = 'Draft saved.';
 export const DRAFT_NOT_SAVED_TEXT: string = 'We could not save a draft right now. Your answers are still here for this session.';
 
 /**

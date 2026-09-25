@@ -54,7 +54,7 @@ describe('FrontDoorShell', () => {
     await screen.findByRole('heading', { level: 2, name: catalog.helpTraining.steps[0].title });
     enterAnswer(catalog.helpTraining.steps[0], 'new');
     fireEvent.click(screen.getByRole('button', { name: 'Save draft' }));
-    await screen.findByText('Draft saved on this device.');
+    await screen.findByText('Draft saved.');
     fireEvent.click(screen.getByRole('button', { name: 'All topics' }));
     expect(within(card('Get help or training')).getByText('Resume draft')).toBeInTheDocument();
     expect(screen.getAllByText('Resume draft')).toHaveLength(1);

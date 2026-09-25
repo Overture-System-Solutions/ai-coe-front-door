@@ -1,0 +1,96 @@
+{
+  "verifiedAt": "2026-09-24T14:41:39.475767+00:00",
+  "scope": "OFFLINE_PAC_ARTIFACT_CHECK_ONLY",
+  "definitionConnectionStateIdentitySemanticsPreserved": true,
+  "tenantActionsPerformed": false,
+  "workflowId": "1d53f3a8-7e14-5a4a-b224-a7b0bf9eaa99",
+  "flowState": "OFF",
+  "helperApi": "UNBOUND_MARKETING_INTEGRITY",
+  "candidate": {
+    "path": "/mnt/c/Users/scfre/JuliannaAI/OSS-AI-CoE/development/overture-ai-coe-front-door-audit-fixes/backend/marketing-native/out/AICoEMarketingAutomation_1_0_0_0_UNBOUND_REVIEW_ONLY.zip",
+    "sha256": "629dde403c49cadfece35af92197ac559a1d2989f5139bd26a7f35729a4bfd74"
+  },
+  "pacRoundtrip": {
+    "path": "/mnt/c/Users/scfre/JuliannaAI/OSS-AI-CoE/development/overture-ai-coe-front-door-audit-fixes/backend/marketing-native/out/pac-roundtrip/AICoEMarketingAutomation_1_0_0_0.zip",
+    "sha256": "cfadb968f5544234aa34ce8d7c6e8d551737d8bfc0104db985a9ffc57119f872"
+  },
+  "commands": [
+    {
+      "command": [
+        "/home/far_cdx/.cache/oss-demo-pac/pac",
+        "help"
+      ],
+      "exitCode": 0,
+      "log": "evidence/flow/pac/verified-pr8nge5h/help.log"
+    },
+    {
+      "command": [
+        "/home/far_cdx/.cache/oss-demo-pac/pac",
+        "solution",
+        "unpack",
+        "--zipfile",
+        "/mnt/c/Users/scfre/JuliannaAI/OSS-AI-CoE/development/overture-ai-coe-front-door-audit-fixes/backend/marketing-native/out/AICoEMarketingAutomation_1_0_0_0_UNBOUND_REVIEW_ONLY.zip",
+        "--folder",
+        "/mnt/c/Users/scfre/JuliannaAI/OSS-AI-CoE/development/overture-ai-coe-front-door-audit-fixes/backend/marketing-native/evidence/flow/pac/verified-pr8nge5h/unpacked",
+        "--packagetype",
+        "Unmanaged",
+        "--log",
+        "/mnt/c/Users/scfre/JuliannaAI/OSS-AI-CoE/development/overture-ai-coe-front-door-audit-fixes/backend/marketing-native/evidence/flow/pac/verified-pr8nge5h/unpack-detail.log"
+      ],
+      "exitCode": 0,
+      "log": "evidence/flow/pac/verified-pr8nge5h/unpack.log"
+    },
+    {
+      "command": [
+        "/home/far_cdx/.cache/oss-demo-pac/pac",
+        "solution",
+        "pack",
+        "--folder",
+        "/mnt/c/Users/scfre/JuliannaAI/OSS-AI-CoE/development/overture-ai-coe-front-door-audit-fixes/backend/marketing-native/evidence/flow/pac/verified-pr8nge5h/unpacked",
+        "--zipfile",
+        "/mnt/c/Users/scfre/JuliannaAI/OSS-AI-CoE/development/overture-ai-coe-front-door-audit-fixes/backend/marketing-native/out/pac-roundtrip/AICoEMarketingAutomation_1_0_0_0.zip",
+        "--packagetype",
+        "Unmanaged",
+        "--log",
+        "/mnt/c/Users/scfre/JuliannaAI/OSS-AI-CoE/development/overture-ai-coe-front-door-audit-fixes/backend/marketing-native/evidence/flow/pac/verified-pr8nge5h/pack-detail.log"
+      ],
+      "exitCode": 0,
+      "log": "evidence/flow/pac/verified-pr8nge5h/pack.log"
+    },
+    {
+      "command": [
+        "/home/far_cdx/.cache/oss-demo-pac/pac",
+        "solution",
+        "unpack",
+        "--zipfile",
+        "/mnt/c/Users/scfre/JuliannaAI/OSS-AI-CoE/development/overture-ai-coe-front-door-audit-fixes/backend/marketing-native/out/pac-roundtrip/AICoEMarketingAutomation_1_0_0_0.zip",
+        "--folder",
+        "/mnt/c/Users/scfre/JuliannaAI/OSS-AI-CoE/development/overture-ai-coe-front-door-audit-fixes/backend/marketing-native/evidence/flow/pac/verified-pr8nge5h/roundtrip",
+        "--packagetype",
+        "Unmanaged",
+        "--log",
+        "/mnt/c/Users/scfre/JuliannaAI/OSS-AI-CoE/development/overture-ai-coe-front-door-audit-fixes/backend/marketing-native/evidence/flow/pac/verified-pr8nge5h/roundtrip-detail.log"
+      ],
+      "exitCode": 0,
+      "log": "evidence/flow/pac/verified-pr8nge5h/roundtrip.log"
+    },
+    {
+      "command": [
+        "/home/far_cdx/.cache/oss-demo-pac/pac",
+        "solution",
+        "create-settings",
+        "--solution-zip",
+        "/mnt/c/Users/scfre/JuliannaAI/OSS-AI-CoE/development/overture-ai-coe-front-door-audit-fixes/backend/marketing-native/out/pac-roundtrip/AICoEMarketingAutomation_1_0_0_0.zip",
+        "--settings-file",
+        "/mnt/c/Users/scfre/JuliannaAI/OSS-AI-CoE/development/overture-ai-coe-front-door-audit-fixes/backend/marketing-native/evidence/flow/pac/verified-pr8nge5h/settings.json"
+      ],
+      "exitCode": 0,
+      "log": "evidence/flow/pac/verified-pr8nge5h/settings.log"
+    }
+  ],
+  "notClaimed": [
+    "native designer Save/import/activation",
+    "helper hosted execution",
+    "tenant permissions or provider results"
+  ]
+}

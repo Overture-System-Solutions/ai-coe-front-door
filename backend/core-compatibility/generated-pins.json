@@ -1,0 +1,51 @@
+{
+  "title": "Pins from generated 3.0.0.0 flow definitions versus v0.1.1 fixtures",
+  "originalsUnchanged": "evidence/bld-core-front-door-review-2026-09-22/extracted/AICoECoreAutomation_3_0_0_0_PACKAGE-2026-09-21/AICoECoreAutomation_3_0_0_0/flow-definitions/AICoE01CaseCommand.json",
+  "contractCopy": "backend/core-compatibility/contract-v0.1.1/",
+  "create": {
+    "generatedVersion": 1,
+    "fixtureVersion": 2,
+    "fixtureFile": "mock/CreateOrResumeWork/CW-UAT-FAST-001-create-incomplete-s1.json",
+    "localEngine": 1,
+    "status": "amber",
+    "reason": "Local engine and generated create template write Version 1. Fixture pairs return Version 2. Amendment records the fixture mismatch; client does not invent Version 2."
+  },
+  "readiness": {
+    "generatedExpression": "@if(equals(outputs('Lane'), 'PREPARATION'), 'DECISION_READY', if(equals(outputs('Lane'), 'AI_COE_FAST_PATH'), 'READY_FOR_AI_COE', concat('READY_FOR_', outputs('Lane'))))",
+    "generatedArbState": "READY_FOR_ARB",
+    "fixtureState": "DECISION_READY",
+    "fixtureLane": "PREPARATION",
+    "fixtureFile": "mock/RequestDecisionReadiness/CW-UAT-ARB-001-ready.json",
+    "localEngineState": "READY_FOR_ARB",
+    "status": "amber",
+    "reason": "Local engine follows the ARB-lane generated branch (READY_FOR_ARB). Fixtures pair DECISION_READY with Lane PREPARATION, which is the other branch of the same generated expression. Both mismatches stay visible."
+  },
+  "replay": {
+    "contractSection": "v0.1.1 §7a stored-response: preserve original Created, including true",
+    "fixtureCreated": false,
+    "localEngine": "preserves original Created including true",
+    "status": "amber",
+    "reason": "Replay fixtures rewrite Created to false. Local client uses §7a."
+  },
+  "partialResume": {
+    "createSchemaRequires": ["S1.Title", "S1.SourceChannel"],
+    "referenceResumeOmitsThem": true,
+    "localEngine": "refuses resume without Title/SourceChannel as a create-shaped request",
+    "status": "amber",
+    "reason": "Amendment proposes a versioned create-versus-resume discriminator. v0.1.1 is not silently extended."
+  },
+  "rootOneOf": {
+    "status": "amber",
+    "reason": "Public root oneOf rejects two legitimate error pairs because GetWorkStatus and RequestDecisionReadiness overlap. Client validates by operation."
+  },
+  "mockServer": {
+    "cachedNegativeReplay": "HTTP 200",
+    "status": "red",
+    "reason": "Shipped mock is not the acceptance simulator. Cached negatives become 200 and three replay bodies disagree. Local MemoryCommandTransport plus LocalCoreEngine replace it for Binding A tests."
+  },
+  "packetProjection": {
+    "extensionId": "core-packet-list.v0.1-proposal",
+    "status": "extension",
+    "reason": "None of the five operations returns packet IDs, questions, assigned person, due date or current packet version. Local projection is marked an extension, not a sixth deployed op."
+  }
+}

@@ -1,0 +1,119 @@
+{
+  "kind": "marketing-provisioning-local-verification.v1",
+  "phase": "green-group-drift",
+  "scope": "Offline process-local fake PnP; local installed command metadata only",
+  "nativeCalls": 0,
+  "tenantApplied": false,
+  "qualified": false,
+  "enabled": false,
+  "sourceHashes": "source-hashes.json",
+  "results": [
+    {
+      "name": "provisioning",
+      "command": [
+        "/mnt/c/Program Files/PowerShell/7/pwsh.exe",
+        "-NoProfile",
+        "-NonInteractive",
+        "-File",
+        "C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-audit-fixes\\tests\\provisioning\\Run-ProvisioningTests.ps1",
+        "-Case",
+        "all"
+      ],
+      "startedAt": "2026-09-24T13:37:27.452524+00:00",
+      "durationSeconds": 1.745,
+      "exitCode": 0,
+      "passed": true,
+      "summary": {
+        "status": "PASS",
+        "checks": 29,
+        "case": "all",
+        "scope": "Offline fake PnP only",
+        "qualified": false
+      }
+    },
+    {
+      "name": "bootstrap",
+      "command": [
+        "/mnt/c/Program Files/PowerShell/7/pwsh.exe",
+        "-NoProfile",
+        "-NonInteractive",
+        "-File",
+        "C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-audit-fixes\\tests\\provisioning\\Run-BootstrapTests.ps1"
+      ],
+      "startedAt": "2026-09-24T13:37:29.224070+00:00",
+      "durationSeconds": 1.769,
+      "exitCode": 0,
+      "passed": true,
+      "summary": {
+        "status": "PASS",
+        "checks": 29,
+        "scope": "Offline bootstrap only",
+        "qualified": false
+      }
+    },
+    {
+      "name": "surface",
+      "command": [
+        "/mnt/c/Program Files/PowerShell/7/pwsh.exe",
+        "-NoProfile",
+        "-NonInteractive",
+        "-File",
+        "C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-audit-fixes\\tests\\provisioning\\Check-NativeSurface.ps1"
+      ],
+      "startedAt": "2026-09-24T13:37:30.996491+00:00",
+      "durationSeconds": 0.692,
+      "exitCode": 0,
+      "passed": true,
+      "summary": {
+        "status": "PASS",
+        "scope": "Local syntax and installed command metadata ONLY",
+        "scripts": 4,
+        "commandSites": 32,
+        "powershell": "7.6.6",
+        "pnp": "3.1.0",
+        "nativeCalls": 0,
+        "qualified": false
+      }
+    },
+    {
+      "name": "independent",
+      "command": [
+        "/mnt/c/Program Files/PowerShell/7/pwsh.exe",
+        "-NoProfile",
+        "-NonInteractive",
+        "-File",
+        "C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-audit-fixes\\tests\\provisioning\\Run-IndependentTests.ps1",
+        "-Case",
+        "all"
+      ],
+      "startedAt": "2026-09-24T13:37:31.693198+00:00",
+      "durationSeconds": 1.271,
+      "exitCode": 0,
+      "passed": true,
+      "summary": {
+        "status": "PASS",
+        "checks": 2,
+        "failed": 0,
+        "scope": "Independent offline fake PnP fault injection",
+        "qualified": false,
+        "cases": [
+          {
+            "name": "group-drift",
+            "status": "PASS",
+            "observation": "Group/principal drift since preflight; stop and reconcile without changing membership.",
+            "requesterGranted": false,
+            "fakeWrites": 28
+          },
+          {
+            "name": "group-drift-after-grant",
+            "status": "PASS",
+            "observation": "Group/principal drift since preflight; stop and reconcile without changing membership.",
+            "requesterGranted": true,
+            "fakeWrites": 29
+          }
+        ]
+      }
+    }
+  ],
+  "allPassed": true
+}

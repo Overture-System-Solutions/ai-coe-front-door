@@ -1,0 +1,10 @@
+'use strict';
+const fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypto');
+const root=path.resolve(__dirname,'../..'),ts=require(path.join(root,'node_modules/typescript'));
+const dirs=['services/marketing','content/marketing'];
+const inputs=dirs.flatMap(dir=>fs.readdirSync(path.join(root,'src/webparts/aiCoeFrontDoor',dir)).filter(n=>n.endsWith('.ts')&&!n.endsWith('.test.ts')).map(n=>'src/webparts/aiCoeFrontDoor/'+dir+'/'+n));
+const options={target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.CommonJS,moduleResolution:ts.ModuleResolutionKind.Node10,strict:true,skipLibCheck:true,noEmit:true,esModuleInterop:true,resolveJsonModule:true,types:['node'],typeRoots:[path.join(root,'node_modules/@types')]};
+const diagnostics=ts.getPreEmitDiagnostics(ts.createProgram(inputs.map(p=>path.join(root,p)),options));
+const result={scope:'Marketing roots plus dependency graph; strict no emit; not a Heft build',compiler:ts.version,rootFiles:inputs,sourceHashes:Object.fromEntries(inputs.map(p=>[p,crypto.createHash('sha256').update(fs.readFileSync(path.join(root,p))).digest('hex')])),diagnostics:diagnostics.map(d=>({code:d.code,file:d.file?path.relative(root,d.file.fileName):null,line:d.file&&d.start!==undefined?d.file.getLineAndCharacterOfPosition(d.start).line+1:null,message:ts.flattenDiagnosticMessageText(d.messageText,'\n')}))};
+fs.writeFileSync(path.join(__dirname,'typecheck.json'),JSON.stringify(result,null,2)+'\n');
+console.log(JSON.stringify({rootFiles:inputs.length,diagnostics:result.diagnostics})); if(diagnostics.length)process.exitCode=1;

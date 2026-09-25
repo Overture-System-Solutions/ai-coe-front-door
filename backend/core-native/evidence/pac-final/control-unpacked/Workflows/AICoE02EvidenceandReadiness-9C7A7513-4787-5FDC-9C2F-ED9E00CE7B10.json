@@ -1,0 +1,1087 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_sharepointonline": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "aicoe_sharepointonline"
+        },
+        "api": {
+          "name": "shared_sharepointonline"
+        }
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        },
+        "aicoe_SiteUrl (aicoe_SiteUrl)": {
+          "defaultValue": "https://parkplace.sharepoint.com/sites/AICoE-PrivatePilot",
+          "type": "String",
+          "metadata": {
+            "schemaName": "aicoe_SiteUrl",
+            "description": "SharePoint site that hosts the AI CoE lists. Set per environment."
+          }
+        },
+        "aicoe_NotificationEmail (aicoe_NotificationEmail)": {
+          "defaultValue": "REPLACE-BEFORE-ENABLING.invalid",
+          "type": "String",
+          "metadata": {
+            "schemaName": "aicoe_NotificationEmail",
+            "description": "Alert address. Invalid on purpose until set."
+          }
+        },
+        "aicoe_EnvironmentLabel (aicoe_EnvironmentLabel)": {
+          "defaultValue": "Pilot",
+          "type": "String",
+          "metadata": {
+            "schemaName": "aicoe_EnvironmentLabel",
+            "description": "Appears in log rows and outbox subjects."
+          }
+        }
+      },
+      "triggers": {
+        "Trigger": {
+          "type": "Recurrence",
+          "recurrence": {
+            "frequency": "Minute",
+            "interval": 15,
+            "timeZone": "Eastern Standard Time"
+          },
+          "runtimeConfiguration": {
+            "concurrency": {
+              "runs": 1
+            }
+          }
+        }
+      },
+      "actions": {
+        "Get_Definitions": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_sharepointonline",
+              "operationId": "GetItems",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+            },
+            "parameters": {
+              "dataset": "@parameters('aicoe_SiteUrl (aicoe_SiteUrl)')",
+              "table": "AI CoE Definitions",
+              "$top": 500
+            },
+            "authentication": "@parameters('$authentication')"
+          },
+          "runAfter": {}
+        },
+        "Select_Cfg": {
+          "type": "Select",
+          "inputs": {
+            "from": "@body('Get_Definitions')?['value']",
+            "select": "@concat('\"', item()?['Title'], '\":', item()?['Value'])"
+          },
+          "runAfter": {
+            "Get_Definitions": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Cfg": {
+          "type": "Compose",
+          "inputs": "@json(concat('{', join(body('Select_Cfg'), ','), '}'))",
+          "runAfter": {
+            "Select_Cfg": [
+              "Succeeded"
+            ]
+          }
+        },
+        "RunStart": {
+          "type": "Compose",
+          "inputs": "@utcNow()",
+          "runAfter": {
+            "Cfg": [
+              "Succeeded"
+            ]
+          }
+        },
+        "PacketTypes": {
+          "type": "Compose",
+          "inputs": [
+            "S2_CUSTOMER_MARKET",
+            "S3_FINANCIAL",
+            "S4_TECHNICAL",
+            "S5_RISK_COMPLIANCE"
+          ],
+          "runAfter": {
+            "RunStart": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Scope_Evidence": {
+          "type": "Scope",
+          "actions": {
+            "Get_Triage": {
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_sharepointonline",
+                  "operationId": "GetItems",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+                },
+                "parameters": {
+                  "dataset": "@parameters('aicoe_SiteUrl (aicoe_SiteUrl)')",
+                  "table": "@outputs('Cfg')?['ListId_Cases']",
+                  "$top": 50,
+                  "$filter": "(State eq 'READY_FOR_TRIAGE' or (State eq 'NOT_DECISION_READY' and ValidationState eq 'NOT_STARTED')) and DuplicateStatus ne 'CONFIRMED_DUPLICATE'"
+                },
+                "authentication": "@parameters('$authentication')"
+              },
+              "runAfter": {}
+            },
+            "For_each_case": {
+              "type": "Foreach",
+              "foreach": "@body('Get_Triage')?['value']",
+              "actions": {
+                "Existing_Packets": {
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "host": {
+                      "connectionName": "shared_sharepointonline",
+                      "operationId": "GetItems",
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+                    },
+                    "parameters": {
+                      "dataset": "@parameters('aicoe_SiteUrl (aicoe_SiteUrl)')",
+                      "table": "@outputs('Cfg')?['ListId_Evidence']",
+                      "$top": 50,
+                      "$filter": "@concat('WorkID eq ''', items('For_each_case')?['Title'], ''' and RecordKind eq ''EVIDENCE_PACKET''')"
+                    },
+                    "authentication": "@parameters('$authentication')"
+                  },
+                  "runAfter": {}
+                },
+                "Existing_Types": {
+                  "type": "Select",
+                  "inputs": {
+                    "from": "@body('Existing_Packets')?['value']",
+                    "select": "@item()?['EvidenceType']"
+                  },
+                  "runAfter": {
+                    "Existing_Packets": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "For_each_type": {
+                  "type": "Foreach",
+                  "foreach": "@outputs('PacketTypes')",
+                  "actions": {
+                    "If_Packet_Missing": {
+                      "type": "If",
+                      "expression": {
+                        "and": [
+                          {
+                            "equals": [
+                              "@contains(body('Existing_Types'), items('For_each_type'))",
+                              false
+                            ]
+                          }
+                        ]
+                      },
+                      "actions": {
+                        "Tmpl": {
+                          "type": "Compose",
+                          "inputs": "@outputs('Cfg')?['PacketDefaults']?[items('For_each_type')]",
+                          "runAfter": {}
+                        },
+                        "PacketRec": {
+                          "type": "Compose",
+                          "inputs": {
+                            "EvidencePacketID": "@concat('EVP-', replace(items('For_each_case')?['Title'], 'CW-', ''), '-', items('For_each_type'))",
+                            "WorkID": "@items('For_each_case')?['Title']",
+                            "EvidenceType": "@items('For_each_type')",
+                            "ReasonRequired": "Decision readiness hard gate S2_S5_COMPLETE_OR_NA",
+                            "Questions": [
+                              "@outputs('Tmpl')?['q']"
+                            ],
+                            "AssignedRole": "@outputs('Tmpl')?['role']",
+                            "AssignedPerson": null,
+                            "SourceRefs": [
+                              "@concat('case:', items('For_each_case')?['Title'])"
+                            ],
+                            "DueAt": "@addDays(utcNow(), int(outputs('Cfg')?['PacketDueDays']))",
+                            "Status": "AWAITING_RESPONSE",
+                            "Applicability": "REQUIRED",
+                            "Response": null,
+                            "ValidatorAssertion": null,
+                            "Confidence": null,
+                            "KnownAssumedUnknown": "UNKNOWN",
+                            "FreshnessState": "UNPROVED",
+                            "Version": 1
+                          },
+                          "runAfter": {
+                            "Tmpl": [
+                              "Succeeded"
+                            ]
+                          }
+                        },
+                        "Create_Packet": {
+                          "type": "OpenApiConnection",
+                          "inputs": {
+                            "host": {
+                              "connectionName": "shared_sharepointonline",
+                              "operationId": "PostItem",
+                              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+                            },
+                            "parameters": {
+                              "dataset": "@parameters('aicoe_SiteUrl (aicoe_SiteUrl)')",
+                              "table": "@outputs('Cfg')?['ListId_Evidence']",
+                              "item": {
+                                "Title": "@outputs('PacketRec')?['EvidencePacketID']",
+                                "WorkID": "@items('For_each_case')?['Title']",
+                                "RecordKind": {
+                                  "Value": "EVIDENCE_PACKET"
+                                },
+                                "EvidenceType": "@items('For_each_type')",
+                                "ReasonRequired": "@outputs('PacketRec')?['ReasonRequired']",
+                                "Questions": "@string(outputs('PacketRec')?['Questions'])",
+                                "AssignedRole": "@outputs('Tmpl')?['role']",
+                                "SourceRefs": "@string(outputs('PacketRec')?['SourceRefs'])",
+                                "DueAt": "@outputs('PacketRec')?['DueAt']",
+                                "Status": {
+                                  "Value": "AWAITING_RESPONSE"
+                                },
+                                "Applicability": {
+                                  "Value": "REQUIRED"
+                                },
+                                "KnownAssumedUnknown": {
+                                  "Value": "UNKNOWN"
+                                },
+                                "FreshnessState": {
+                                  "Value": "UNPROVED"
+                                },
+                                "Version": 1,
+                                "RecordJson": "@string(outputs('PacketRec'))",
+                                "TestRecord": "@coalesce(items('For_each_case')?['TestRecord'], false)"
+                              }
+                            },
+                            "authentication": "@parameters('$authentication')"
+                          },
+                          "runAfter": {
+                            "PacketRec": [
+                              "Succeeded"
+                            ]
+                          }
+                        },
+                        "Queue_Request": {
+                          "type": "OpenApiConnection",
+                          "inputs": {
+                            "host": {
+                              "connectionName": "shared_sharepointonline",
+                              "operationId": "PostItem",
+                              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+                            },
+                            "parameters": {
+                              "dataset": "@parameters('aicoe_SiteUrl (aicoe_SiteUrl)')",
+                              "table": "@outputs('Cfg')?['ListId_Outbox']",
+                              "item": {
+                                "Title": "@concat('OUT-', formatDateTime(utcNow(),'yyyyMMddHHmmss'), '-', toUpper(substring(replace(guid(),'-',''),0,6)))",
+                                "WorkID": "@items('For_each_case')?['Title']",
+                                "Recipient": "@coalesce(outputs('PacketRec')?['AssignedPerson'], parameters('aicoe_NotificationEmail (aicoe_NotificationEmail)'))",
+                                "Subject": "@concat('[', parameters('aicoe_EnvironmentLabel (aicoe_EnvironmentLabel)'), '] Evidence requested: ', items('For_each_type'), ' for ', items('For_each_case')?['Title'])",
+                                "Body": "@concat('Packet ', outputs('PacketRec')?['EvidencePacketID'], ' \u2014 ', outputs('Tmpl')?['q'], ' Due ', outputs('PacketRec')?['DueAt'], '. Reply through Ask AI CoE (SubmitEvidenceResponse).')",
+                                "State": {
+                                  "Value": "QUEUED"
+                                },
+                                "Attempts": 0,
+                                "TestRecord": "@coalesce(items('For_each_case')?['TestRecord'], false)"
+                              }
+                            },
+                            "authentication": "@parameters('$authentication')"
+                          },
+                          "runAfter": {
+                            "Create_Packet": [
+                              "Succeeded"
+                            ]
+                          }
+                        }
+                      },
+                      "runAfter": {}
+                    }
+                  },
+                  "runtimeConfiguration": {
+                    "concurrency": {
+                      "repetitions": 1
+                    }
+                  },
+                  "runAfter": {
+                    "Existing_Types": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "Update_Case_Triaged": {
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "host": {
+                      "connectionName": "shared_sharepointonline",
+                      "operationId": "PatchItem",
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+                    },
+                    "parameters": {
+                      "dataset": "@parameters('aicoe_SiteUrl (aicoe_SiteUrl)')",
+                      "table": "@outputs('Cfg')?['ListId_Cases']",
+                      "id": "@items('For_each_case')?['ID']",
+                      "item": {
+                        "Stage": {
+                          "Value": "EVIDENCE"
+                        },
+                        "State": {
+                          "Value": "AWAITING_SME"
+                        },
+                        "EmployeeStatus": "@outputs('Cfg')?['EmployeeStatusMap']?['AWAITING_SME']",
+                        "RequiredValidators": "@string(outputs('PacketTypes'))",
+                        "OpenEvidenceGaps": "@string(outputs('PacketTypes'))",
+                        "ValidationState": {
+                          "Value": "IN_PROGRESS"
+                        },
+                        "Version": "@add(int(coalesce(items('For_each_case')?['Version'], 1)), 1)",
+                        "LastValidatedAt": "@utcNow()",
+                        "NextAction": "Validators return S2-S5 packets",
+                        "NextOwner": "validators",
+                        "RecordJson": "@string(setProperty(setProperty(setProperty(setProperty(setProperty(setProperty(json(items('For_each_case')?['RecordJson']), 'Stage', 'EVIDENCE'), 'State', 'AWAITING_SME'), 'RequiredValidators', outputs('PacketTypes')), 'OpenEvidenceGaps', outputs('PacketTypes')), 'ValidationState', 'IN_PROGRESS'), 'Version', add(int(coalesce(items('For_each_case')?['Version'], 1)), 1)))"
+                      }
+                    },
+                    "authentication": "@parameters('$authentication')"
+                  },
+                  "runAfter": {
+                    "For_each_type": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "Evt_Issued": {
+                  "type": "Compose",
+                  "inputs": {
+                    "EventID": "@concat('EVT-', formatDateTime(utcNow(),'yyyyMMddHHmmss'), '-', toUpper(substring(replace(guid(),'-',''),0,6)))",
+                    "WorkID": "@items('For_each_case')?['Title']",
+                    "EventType": "EVIDENCE_PACKETS_ISSUED",
+                    "OccurredAt": "@utcNow()",
+                    "ActorType": "SERVICE",
+                    "ActorID": "AI CoE 02 Evidence and Readiness",
+                    "Provider": null,
+                    "SourceRef": "svc:AI CoE 02 Evidence and Readiness",
+                    "SourceVersion": "1",
+                    "CorrelationID": "@concat('CORR-', replace(items('For_each_case')?['Title'], 'CW-', ''))",
+                    "CausationID": null,
+                    "IdempotencyKey": "@concat(items('For_each_case')?['Title'], ':EVIDENCE_PACKETS_ISSUED:', string(add(int(coalesce(items('For_each_case')?['Version'], 1)), 1)))",
+                    "PayloadVersion": "1",
+                    "Payload": {
+                      "Types": "@outputs('PacketTypes')"
+                    },
+                    "AuthorityClass": "WRITE_BUSINESS_RECORD",
+                    "ReceiptID": "@concat('RCPT-', formatDateTime(utcNow(),'yyyyMMddHHmmss'), '-', toUpper(substring(replace(guid(),'-',''),0,6)))",
+                    "SchemaVersion": "2.0.0"
+                  },
+                  "runAfter": {
+                    "Update_Case_Triaged": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "Event_Issued": {
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "host": {
+                      "connectionName": "shared_sharepointonline",
+                      "operationId": "PostItem",
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+                    },
+                    "parameters": {
+                      "dataset": "@parameters('aicoe_SiteUrl (aicoe_SiteUrl)')",
+                      "table": "@outputs('Cfg')?['ListId_Events']",
+                      "item": {
+                        "Title": "@outputs('Evt_Issued')?['EventID']",
+                        "WorkID": "@items('For_each_case')?['Title']",
+                        "EventType": "EVIDENCE_PACKETS_ISSUED",
+                        "OccurredAt": "@utcNow()",
+                        "ActorType": {
+                          "Value": "SERVICE"
+                        },
+                        "ActorID": "AI CoE 02 Evidence and Readiness",
+                        "CorrelationID": "@outputs('Evt_Issued')?['CorrelationID']",
+                        "IdempotencyKey": "@outputs('Evt_Issued')?['IdempotencyKey']",
+                        "AuthorityClass": "WRITE_BUSINESS_RECORD",
+                        "ReceiptID": "@outputs('Evt_Issued')?['ReceiptID']",
+                        "SourceVersion": "1",
+                        "Payload": "@string(outputs('Evt_Issued'))",
+                        "TestRecord": "@coalesce(items('For_each_case')?['TestRecord'], false)"
+                      }
+                    },
+                    "authentication": "@parameters('$authentication')"
+                  },
+                  "runAfter": {
+                    "Evt_Issued": [
+                      "Succeeded"
+                    ]
+                  }
+                }
+              },
+              "runtimeConfiguration": {
+                "concurrency": {
+                  "repetitions": 1
+                }
+              },
+              "runAfter": {
+                "Get_Triage": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Get_Returned": {
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_sharepointonline",
+                  "operationId": "GetItems",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+                },
+                "parameters": {
+                  "dataset": "@parameters('aicoe_SiteUrl (aicoe_SiteUrl)')",
+                  "table": "@outputs('Cfg')?['ListId_Evidence']",
+                  "$top": 100,
+                  "$filter": "Status eq 'RETURNED' and RecordKind eq 'EVIDENCE_PACKET'"
+                },
+                "authentication": "@parameters('$authentication')"
+              },
+              "runAfter": {
+                "For_each_case": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "If_AutoValidate": {
+              "type": "If",
+              "expression": {
+                "and": [
+                  {
+                    "equals": [
+                      "@outputs('Cfg')?['AutoValidateReturnedPackets']",
+                      true
+                    ]
+                  }
+                ]
+              },
+              "actions": {
+                "For_each_returned": {
+                  "type": "Foreach",
+                  "foreach": "@body('Get_Returned')?['value']",
+                  "actions": {
+                    "Validate_Packet": {
+                      "type": "OpenApiConnection",
+                      "inputs": {
+                        "host": {
+                          "connectionName": "shared_sharepointonline",
+                          "operationId": "PatchItem",
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+                        },
+                        "parameters": {
+                          "dataset": "@parameters('aicoe_SiteUrl (aicoe_SiteUrl)')",
+                          "table": "@outputs('Cfg')?['ListId_Evidence']",
+                          "id": "@items('For_each_returned')?['ID']",
+                          "item": {
+                            "Status": {
+                              "Value": "VALIDATED"
+                            },
+                            "ValidatorAssertion": "AUTO_VALIDATED_UAT (provisional; AutoValidateReturnedPackets=true) \u2014 not a human validation",
+                            "FreshnessState": {
+                              "Value": "CURRENT"
+                            },
+                            "Confidence": "AWAITING_VALIDATION",
+                            "Version": "@add(int(coalesce(items('For_each_returned')?['Version'], 1)), 1)",
+                            "RecordJson": "@string(setProperty(setProperty(setProperty(json(items('For_each_returned')?['RecordJson']), 'Status', 'VALIDATED'), 'ValidatorAssertion', 'AUTO_VALIDATED_UAT (provisional)'), 'Version', add(int(coalesce(items('For_each_returned')?['Version'], 1)), 1)))"
+                          }
+                        },
+                        "authentication": "@parameters('$authentication')"
+                      },
+                      "runAfter": {}
+                    },
+                    "Log_AutoValidate": {
+                      "type": "OpenApiConnection",
+                      "inputs": {
+                        "host": {
+                          "connectionName": "shared_sharepointonline",
+                          "operationId": "PostItem",
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+                        },
+                        "parameters": {
+                          "dataset": "@parameters('aicoe_SiteUrl (aicoe_SiteUrl)')",
+                          "table": "@outputs('Cfg')?['ListId_Log']",
+                          "item": {
+                            "Title": "@concat('LOG-', formatDateTime(utcNow(),'yyyyMMddHHmmss'), '-', toUpper(substring(replace(guid(),'-',''),0,6)))",
+                            "Flow": "AI CoE 02 Evidence and Readiness",
+                            "RunId": "@workflow()?['run']?['name']",
+                            "Level": {
+                              "Value": "Warning"
+                            },
+                            "Message": "@concat('UAT auto-validated packet ', items('For_each_returned')?['Title'], ' (AutoValidateReturnedPackets=true). Not a human validation.')",
+                            "WorkID": "@items('For_each_returned')?['WorkID']",
+                            "LoggedAt": "@utcNow()"
+                          }
+                        },
+                        "authentication": "@parameters('$authentication')"
+                      },
+                      "runAfter": {
+                        "Validate_Packet": [
+                          "Succeeded"
+                        ]
+                      }
+                    }
+                  },
+                  "runtimeConfiguration": {
+                    "concurrency": {
+                      "repetitions": 1
+                    }
+                  },
+                  "runAfter": {}
+                }
+              },
+              "runAfter": {
+                "Get_Returned": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Get_AwaitingSME": {
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_sharepointonline",
+                  "operationId": "GetItems",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+                },
+                "parameters": {
+                  "dataset": "@parameters('aicoe_SiteUrl (aicoe_SiteUrl)')",
+                  "table": "@outputs('Cfg')?['ListId_Cases']",
+                  "$top": 100,
+                  "$filter": "State eq 'AWAITING_SME'"
+                },
+                "authentication": "@parameters('$authentication')"
+              },
+              "runAfter": {
+                "If_AutoValidate": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "For_each_sme": {
+              "type": "Foreach",
+              "foreach": "@body('Get_AwaitingSME')?['value']",
+              "actions": {
+                "Case_Packets": {
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "host": {
+                      "connectionName": "shared_sharepointonline",
+                      "operationId": "GetItems",
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+                    },
+                    "parameters": {
+                      "dataset": "@parameters('aicoe_SiteUrl (aicoe_SiteUrl)')",
+                      "table": "@outputs('Cfg')?['ListId_Evidence']",
+                      "$top": 50,
+                      "$filter": "@concat('WorkID eq ''', items('For_each_sme')?['Title'], ''' and RecordKind eq ''EVIDENCE_PACKET''')"
+                    },
+                    "authentication": "@parameters('$authentication')"
+                  },
+                  "runAfter": {}
+                },
+                "Open_Packets": {
+                  "type": "Query",
+                  "inputs": {
+                    "from": "@body('Case_Packets')?['value']",
+                    "where": "@and(equals(item()?['Applicability']?['Value'], 'REQUIRED'), not(or(equals(item()?['Status']?['Value'], 'VALIDATED'), equals(item()?['Status']?['Value'], 'NOT_APPLICABLE'))))"
+                  },
+                  "runAfter": {
+                    "Case_Packets": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "Open_Types": {
+                  "type": "Select",
+                  "inputs": {
+                    "from": "@body('Open_Packets')",
+                    "select": "@item()?['EvidenceType']"
+                  },
+                  "runAfter": {
+                    "Open_Packets": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "If_Gaps_Changed": {
+                  "type": "If",
+                  "expression": {
+                    "and": [
+                      {
+                        "not": {
+                          "equals": [
+                            "@string(body('Open_Types'))",
+                            "@coalesce(items('For_each_sme')?['OpenEvidenceGaps'], '')"
+                          ]
+                        }
+                      }
+                    ]
+                  },
+                  "actions": {
+                    "Update_Gaps": {
+                      "type": "OpenApiConnection",
+                      "inputs": {
+                        "host": {
+                          "connectionName": "shared_sharepointonline",
+                          "operationId": "PatchItem",
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+                        },
+                        "parameters": {
+                          "dataset": "@parameters('aicoe_SiteUrl (aicoe_SiteUrl)')",
+                          "table": "@outputs('Cfg')?['ListId_Cases']",
+                          "id": "@items('For_each_sme')?['ID']",
+                          "item": {
+                            "OpenEvidenceGaps": "@string(body('Open_Types'))",
+                            "State": {
+                              "Value": "@if(empty(body('Open_Types')), 'EVIDENCE_BUILDING', 'AWAITING_SME')"
+                            },
+                            "EmployeeStatus": "@outputs('Cfg')?['EmployeeStatusMap']?[if(empty(body('Open_Types')), 'EVIDENCE_BUILDING', 'AWAITING_SME')]",
+                            "ValidationState": {
+                              "Value": "@if(empty(body('Open_Types')), 'COMPLETE', 'IN_PROGRESS')"
+                            },
+                            "Version": "@add(int(coalesce(items('For_each_sme')?['Version'], 1)), 1)",
+                            "LastValidatedAt": "@utcNow()",
+                            "NextAction": "@if(empty(body('Open_Types')), 'Request decision readiness (RequestDecisionReadiness)', concat('Validators return: ', join(body('Open_Types'), ', ')))",
+                            "NextOwner": "@if(empty(body('Open_Types')), 'ai-coe-operator', 'validators')",
+                            "RecordJson": "@string(setProperty(setProperty(setProperty(setProperty(json(items('For_each_sme')?['RecordJson']), 'OpenEvidenceGaps', body('Open_Types')), 'State', if(empty(body('Open_Types')), 'EVIDENCE_BUILDING', 'AWAITING_SME')), 'ValidationState', if(empty(body('Open_Types')), 'COMPLETE', 'IN_PROGRESS')), 'Version', add(int(coalesce(items('For_each_sme')?['Version'], 1)), 1)))"
+                          }
+                        },
+                        "authentication": "@parameters('$authentication')"
+                      },
+                      "runAfter": {}
+                    }
+                  },
+                  "runAfter": {
+                    "Open_Types": [
+                      "Succeeded"
+                    ]
+                  }
+                }
+              },
+              "runtimeConfiguration": {
+                "concurrency": {
+                  "repetitions": 1
+                }
+              },
+              "runAfter": {
+                "Get_AwaitingSME": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Get_Overdue": {
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_sharepointonline",
+                  "operationId": "GetItems",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+                },
+                "parameters": {
+                  "dataset": "@parameters('aicoe_SiteUrl (aicoe_SiteUrl)')",
+                  "table": "@outputs('Cfg')?['ListId_Evidence']",
+                  "$top": 100,
+                  "$filter": "@concat('Status eq ''AWAITING_RESPONSE'' and DueAt lt ''', utcNow(), '''')"
+                },
+                "authentication": "@parameters('$authentication')"
+              },
+              "runAfter": {
+                "For_each_sme": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "For_each_overdue": {
+              "type": "Foreach",
+              "foreach": "@body('Get_Overdue')?['value']",
+              "actions": {
+                "If_Reminder_Due": {
+                  "type": "If",
+                  "expression": {
+                    "and": [
+                      {
+                        "less": [
+                          "@ticks(coalesce(items('For_each_overdue')?['LastReminderAt'], '1970-01-01T00:00:00Z'))",
+                          "@ticks(addDays(utcNow(), mul(-1, int(outputs('Cfg')?['ReminderAfterDays']))))"
+                        ]
+                      }
+                    ]
+                  },
+                  "actions": {
+                    "Queue_Reminder": {
+                      "type": "OpenApiConnection",
+                      "inputs": {
+                        "host": {
+                          "connectionName": "shared_sharepointonline",
+                          "operationId": "PostItem",
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+                        },
+                        "parameters": {
+                          "dataset": "@parameters('aicoe_SiteUrl (aicoe_SiteUrl)')",
+                          "table": "@outputs('Cfg')?['ListId_Outbox']",
+                          "item": {
+                            "Title": "@concat('OUT-', formatDateTime(utcNow(),'yyyyMMddHHmmss'), '-', toUpper(substring(replace(guid(),'-',''),0,6)))",
+                            "WorkID": "@items('For_each_overdue')?['WorkID']",
+                            "Recipient": "@coalesce(items('For_each_overdue')?['AssignedPerson'], parameters('aicoe_NotificationEmail (aicoe_NotificationEmail)'))",
+                            "Subject": "@concat('Reminder: evidence overdue ', items('For_each_overdue')?['Title'])",
+                            "Body": "@concat('Packet ', items('For_each_overdue')?['Title'], ' was due ', items('For_each_overdue')?['DueAt'], '.')",
+                            "State": {
+                              "Value": "QUEUED"
+                            },
+                            "Attempts": 0,
+                            "TestRecord": "@coalesce(items('For_each_overdue')?['TestRecord'], false)"
+                          }
+                        },
+                        "authentication": "@parameters('$authentication')"
+                      },
+                      "runAfter": {}
+                    },
+                    "Stamp_Reminder": {
+                      "type": "OpenApiConnection",
+                      "inputs": {
+                        "host": {
+                          "connectionName": "shared_sharepointonline",
+                          "operationId": "PatchItem",
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+                        },
+                        "parameters": {
+                          "dataset": "@parameters('aicoe_SiteUrl (aicoe_SiteUrl)')",
+                          "table": "@outputs('Cfg')?['ListId_Evidence']",
+                          "id": "@items('For_each_overdue')?['ID']",
+                          "item": {
+                            "LastReminderAt": "@utcNow()"
+                          }
+                        },
+                        "authentication": "@parameters('$authentication')"
+                      },
+                      "runAfter": {
+                        "Queue_Reminder": [
+                          "Succeeded"
+                        ]
+                      }
+                    }
+                  },
+                  "runAfter": {}
+                },
+                "If_Escalate": {
+                  "type": "If",
+                  "expression": {
+                    "and": [
+                      {
+                        "equals": [
+                          "@empty(coalesce(items('For_each_overdue')?['EscalationAt'], ''))",
+                          true
+                        ]
+                      },
+                      {
+                        "less": [
+                          "@ticks(items('For_each_overdue')?['DueAt'])",
+                          "@ticks(addDays(utcNow(), mul(-1, int(outputs('Cfg')?['EscalationAfterDays']))))"
+                        ]
+                      }
+                    ]
+                  },
+                  "actions": {
+                    "Evt_Escalate": {
+                      "type": "Compose",
+                      "inputs": {
+                        "EventID": "@concat('EVT-', formatDateTime(utcNow(),'yyyyMMddHHmmss'), '-', toUpper(substring(replace(guid(),'-',''),0,6)))",
+                        "WorkID": "@items('For_each_overdue')?['WorkID']",
+                        "EventType": "ESCALATION_REQUIRED",
+                        "OccurredAt": "@utcNow()",
+                        "ActorType": "SERVICE",
+                        "ActorID": "AI CoE 02 Evidence and Readiness",
+                        "Provider": null,
+                        "SourceRef": "@concat('evidence-packet:', items('For_each_overdue')?['Title'])",
+                        "SourceVersion": "@string(coalesce(items('For_each_overdue')?['Version'], 1))",
+                        "CorrelationID": "@concat('CORR-', replace(items('For_each_overdue')?['WorkID'], 'CW-', ''))",
+                        "CausationID": null,
+                        "IdempotencyKey": "@concat(items('For_each_overdue')?['WorkID'], ':ESCALATION_REQUIRED:', items('For_each_overdue')?['Title'])",
+                        "PayloadVersion": "1",
+                        "Payload": {
+                          "EvidencePacketID": "@items('For_each_overdue')?['Title']",
+                          "DueAt": "@items('For_each_overdue')?['DueAt']"
+                        },
+                        "AuthorityClass": "NOTIFY",
+                        "ReceiptID": "@concat('RCPT-', formatDateTime(utcNow(),'yyyyMMddHHmmss'), '-', toUpper(substring(replace(guid(),'-',''),0,6)))",
+                        "SchemaVersion": "2.0.0"
+                      },
+                      "runAfter": {}
+                    },
+                    "Event_Escalate": {
+                      "type": "OpenApiConnection",
+                      "inputs": {
+                        "host": {
+                          "connectionName": "shared_sharepointonline",
+                          "operationId": "PostItem",
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+                        },
+                        "parameters": {
+                          "dataset": "@parameters('aicoe_SiteUrl (aicoe_SiteUrl)')",
+                          "table": "@outputs('Cfg')?['ListId_Events']",
+                          "item": {
+                            "Title": "@outputs('Evt_Escalate')?['EventID']",
+                            "WorkID": "@items('For_each_overdue')?['WorkID']",
+                            "EventType": "ESCALATION_REQUIRED",
+                            "OccurredAt": "@utcNow()",
+                            "ActorType": {
+                              "Value": "SERVICE"
+                            },
+                            "ActorID": "AI CoE 02 Evidence and Readiness",
+                            "CorrelationID": "@outputs('Evt_Escalate')?['CorrelationID']",
+                            "IdempotencyKey": "@outputs('Evt_Escalate')?['IdempotencyKey']",
+                            "AuthorityClass": "NOTIFY",
+                            "ReceiptID": "@outputs('Evt_Escalate')?['ReceiptID']",
+                            "SourceVersion": "1",
+                            "Payload": "@string(outputs('Evt_Escalate'))",
+                            "TestRecord": "@coalesce(items('For_each_overdue')?['TestRecord'], false)"
+                          }
+                        },
+                        "authentication": "@parameters('$authentication')"
+                      },
+                      "runAfter": {
+                        "Evt_Escalate": [
+                          "Succeeded"
+                        ]
+                      }
+                    },
+                    "Stamp_Escalation": {
+                      "type": "OpenApiConnection",
+                      "inputs": {
+                        "host": {
+                          "connectionName": "shared_sharepointonline",
+                          "operationId": "PatchItem",
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+                        },
+                        "parameters": {
+                          "dataset": "@parameters('aicoe_SiteUrl (aicoe_SiteUrl)')",
+                          "table": "@outputs('Cfg')?['ListId_Evidence']",
+                          "id": "@items('For_each_overdue')?['ID']",
+                          "item": {
+                            "EscalationAt": "@utcNow()"
+                          }
+                        },
+                        "authentication": "@parameters('$authentication')"
+                      },
+                      "runAfter": {
+                        "Event_Escalate": [
+                          "Succeeded"
+                        ]
+                      }
+                    }
+                  },
+                  "runAfter": {
+                    "If_Reminder_Due": [
+                      "Succeeded"
+                    ]
+                  }
+                }
+              },
+              "runtimeConfiguration": {
+                "concurrency": {
+                  "repetitions": 1
+                }
+              },
+              "runAfter": {
+                "Get_Overdue": [
+                  "Succeeded"
+                ]
+              }
+            }
+          },
+          "runAfter": {
+            "PacketTypes": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Find_Heartbeat": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_sharepointonline",
+              "operationId": "GetItems",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+            },
+            "parameters": {
+              "dataset": "@parameters('aicoe_SiteUrl (aicoe_SiteUrl)')",
+              "table": "@outputs('Cfg')?['ListId_Definitions']",
+              "$top": 1,
+              "$filter": "Title eq 'Heartbeat_02_Evidence'"
+            },
+            "authentication": "@parameters('$authentication')"
+          },
+          "runAfter": {
+            "Scope_Evidence": [
+              "Succeeded"
+            ]
+          }
+        },
+        "If_Heartbeat_Exists": {
+          "type": "If",
+          "expression": {
+            "and": [
+              {
+                "greater": [
+                  "@length(body('Find_Heartbeat')?['value'])",
+                  0
+                ]
+              }
+            ]
+          },
+          "actions": {
+            "Update_Heartbeat": {
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_sharepointonline",
+                  "operationId": "PatchItem",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+                },
+                "parameters": {
+                  "dataset": "@parameters('aicoe_SiteUrl (aicoe_SiteUrl)')",
+                  "table": "@outputs('Cfg')?['ListId_Definitions']",
+                  "id": "@first(body('Find_Heartbeat')?['value'])?['ID']",
+                  "item": {
+                    "Value": "@concat('\"', utcNow(), '\"')"
+                  }
+                },
+                "authentication": "@parameters('$authentication')"
+              },
+              "runAfter": {}
+            }
+          },
+          "runAfter": {
+            "Find_Heartbeat": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Log_Flow_Failure": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_sharepointonline",
+              "operationId": "PostItem",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+            },
+            "parameters": {
+              "dataset": "@parameters('aicoe_SiteUrl (aicoe_SiteUrl)')",
+              "table": "@outputs('Cfg')?['ListId_Log']",
+              "item": {
+                "Title": "@concat('LOG-', formatDateTime(utcNow(),'yyyyMMddHHmmss'), '-', toUpper(substring(replace(guid(),'-',''),0,6)))",
+                "Flow": "AI CoE 02 Evidence and Readiness",
+                "RunId": "@workflow()?['run']?['name']",
+                "Level": {
+                  "Value": "Error"
+                },
+                "Message": "AI CoE 02 Evidence and Readiness: scope failed; no partial state is lost, next cycle resumes from list state.",
+                "CorrelationID": "",
+                "WorkID": "",
+                "LoggedAt": "@utcNow()"
+              }
+            },
+            "authentication": "@parameters('$authentication')"
+          },
+          "runAfter": {
+            "Scope_Evidence": [
+              "Failed",
+              "TimedOut"
+            ]
+          }
+        },
+        "Terminate_Failed": {
+          "type": "Terminate",
+          "inputs": {
+            "runStatus": "Failed",
+            "runError": {
+              "code": "FLOW_FAILURE",
+              "message": "AI CoE 02 Evidence and Readiness: scope failed; no partial state is lost, next cycle resumes from list state."
+            }
+          },
+          "runAfter": {
+            "Log_Flow_Failure": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Log_Cfg_Failure": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_sharepointonline",
+              "operationId": "PostItem",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+            },
+            "parameters": {
+              "dataset": "@parameters('aicoe_SiteUrl (aicoe_SiteUrl)')",
+              "table": "AI Automation Log",
+              "item": {
+                "Title": "@concat('LOG-', formatDateTime(utcNow(),'yyyyMMddHHmmss'), '-', toUpper(substring(replace(guid(),'-',''),0,6)))",
+                "Flow": "AI CoE 02 Evidence and Readiness",
+                "RunId": "@workflow()?['run']?['name']",
+                "Level": {
+                  "Value": "Error"
+                },
+                "Message": "@concat('Configuration load failed (AI CoE Definitions unreadable or a Value is not a JSON literal): ', string(coalesce(actions('Cfg')?['error'], actions('Select_Cfg')?['error'], actions('Get_Definitions')?['error'], 'unknown')))",
+                "CorrelationID": "",
+                "WorkID": "",
+                "LoggedAt": "@utcNow()"
+              }
+            },
+            "authentication": "@parameters('$authentication')"
+          },
+          "runAfter": {
+            "Cfg": [
+              "Failed",
+              "Skipped"
+            ]
+          }
+        },
+        "Terminate_Cfg": {
+          "type": "Terminate",
+          "inputs": {
+            "runStatus": "Failed",
+            "runError": {
+              "code": "CONFIG_LOAD_FAILED",
+              "message": "AI CoE Definitions must contain valid JSON literals in Value."
+            }
+          },
+          "runAfter": {
+            "Log_Cfg_Failure": [
+              "Succeeded"
+            ]
+          }
+        }
+      },
+      "description": "Issues S2-S5 evidence packets for READY_FOR_TRIAGE cases, (UAT only) auto-validates RETURNED packets when AutoValidateReturnedPackets=true, keeps OpenEvidenceGaps current, and writes reminder/escalation outbox rows for overdue packets. Sends nothing. Polls every 15 minutes."
+    },
+    "templateName": null
+  },
+  "schemaVersion": "1.0.0.0"
+}

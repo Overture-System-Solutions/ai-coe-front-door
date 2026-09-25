@@ -767,7 +767,9 @@ describe('page provisioning script', () => {
 
 describe('README', () => {
   it('documents the current package and the page layout', () => {
-    expect(readme).toContain('## Deploy 1.0.0.15');
+    expect(readme).toContain('## Deploy 1.0.0.17');
+    expect(readme).not.toContain('## Deploy 1.0.0.16');
+    expect(readme).not.toContain('## Deploy 1.0.0.15');
     expect(readme).not.toContain('Deploy 1.0.0.14');
     expect(readme).not.toContain('Deploy 1.0.0.13');
     expect(readme).not.toContain('Deploy 1.0.0.12');
@@ -896,34 +898,22 @@ describe('README', () => {
     expect(readme).toContain('?page=value');
   });
 
-  it('documents the release close of 1.0.0.15: the role start, the outcome record, the eleventh entry and the rollback', () => {
-    // The deploy section of this release: what the package changes (one page-link property and the eleventh toolbox
-    // entry), what the script changes (the pilot group, the skipped page, the outcome page and its list) and what the
-    // site owes first (the pilot group and the pilot team name).
-    const deploy: string = readme.slice(readme.indexOf('## Deploy 1.0.0.15'), readme.indexOf('### Enable AI drafting'));
+  it('documents the 1.0.0.17 correction candidate, commissioning gates and additive one-page path', () => {
+    const deploy: string = readme.slice(readme.indexOf('## Deploy 1.0.0.17'), readme.indexOf('### Enable AI drafting'));
+    expect(deploy).toContain('view:app');
+    expect(deploy).toContain('New-FrontDoorAppPage.ps1');
+    expect(deploy).toContain('marketingParticipant');
+    expect(deploy).toContain('LIVE_BINDINGS_REQUIRED.md');
     expect(deploy).toContain('Record a task outcome');
     expect(deploy).toContain('`pageOutcome`');
     expect(deploy).toContain('AI CoE Outcome Records');
     expect(deploy).toContain('PilotGroup');
     expect(deploy).toContain('PilotTeamName');
     expect(deploy).toContain('`skipWhenBlank`');
-    // The eleventh toolbox entry the package adds, which the verifier counts.
-    expect(deploy).toMatch(/eleventh|eleven/);
-    // The upgrade path stays the one of 1.0.0.14: no -Overwrite, instance properties in place.
     expect(deploy).toMatch(/without `-Overwrite`/);
-    // The tenant acceptance of this release (decisions 4 and 5): the row holds no text of the task, and a second
-    // pilot member cannot read it while an operator can.
-    expect(deploy).toMatch(/second[\s\S]{0,120}?cannot read/i);
-    // Rollback: the previous package and its script; the pages and the list are additive and stay.
     const rollback: string = deploy.slice(deploy.indexOf('### Rollback'));
-    expect(rollback).toContain('1.0.0.14');
-    expect(rollback).toContain('AI CoE Outcome Records');
-    expect(rollback).toContain('Record a task outcome');
-    expect(rollback).toMatch(/harmless|by hand/);
-    // The eleventh toolbox entry is in the package, so it leaves with it.
-    expect(rollback).toMatch(/toolbox entry/);
-    // The README wraps its paragraphs, so the two words may be parted by a newline.
-    expect(rollback).toMatch(/pilot\s+team/i);
+    expect(rollback).toContain('explicit rollback authority');
+    expect(rollback).toContain('disable business draft entry');
   });
 
   it('documents the list security of 1.0.0.13: why it works, the flow identity, the tenant check and the rollback', () => {

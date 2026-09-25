@@ -10,6 +10,8 @@ import type { IProgramMeasuresService } from '../services/programMeasuresService
 import type { IRoleResolver } from '../services/roleResolver';
 import type { IToolPolicyEvaluator } from '../services/toolPolicyEvaluator';
 import type { IGovernanceService, IUsageMetricsService } from '../services/types';
+import type { IMarketingServices } from '../services/marketing/marketingServices';
+import type { ICoreWorkService } from '../services/core/coreWorkService';
 import type { IWorkflowCatalog } from '../workflows/types';
 
 export interface IFrontDoorUser {
@@ -32,6 +34,10 @@ export interface IFrontDoorServices {
   roles?: IRoleResolver;
   /** Reads the program measures; present for web parts, absent in the legacy-only test setups (every measure then reads as not available). */
   programMeasures?: IProgramMeasuresService;
+  /** The Marketing drafting, review and persistence bundle (synthetic or disabled live); absent in the legacy-only test setups. */
+  marketing?: IMarketingServices;
+  /** The CORE Binding A case service (disabled until a command list is bound); absent in the legacy-only test setups. */
+  coreWork?: ICoreWorkService;
 }
 
 /** Everything the pages need from the host: who is looking, where they are, and the services to talk to. */

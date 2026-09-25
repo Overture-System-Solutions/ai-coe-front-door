@@ -1,0 +1,1185 @@
+{
+  "numFailedTestSuites": 2,
+  "numFailedTests": 6,
+  "numPassedTestSuites": 0,
+  "numPassedTests": 4,
+  "numPendingTestSuites": 1,
+  "numPendingTests": 47,
+  "numRuntimeErrorTestSuites": 0,
+  "numTodoTests": 0,
+  "numTotalTestSuites": 3,
+  "numTotalTests": 57,
+  "openHandles": [],
+  "snapshot": {
+    "added": 0,
+    "didUpdate": false,
+    "failure": false,
+    "filesAdded": 0,
+    "filesRemoved": 0,
+    "filesRemovedList": [],
+    "filesUnmatched": 0,
+    "filesUpdated": 0,
+    "matched": 0,
+    "total": 0,
+    "unchecked": 0,
+    "uncheckedKeysByFile": [],
+    "unmatched": 0,
+    "updated": 0
+  },
+  "startTime": 1790271274118,
+  "success": false,
+  "testResults": [
+    {
+      "leaks": false,
+      "numFailingTests": 3,
+      "numPassingTests": 0,
+      "numPendingTests": 35,
+      "numTodoTests": 0,
+      "openHandles": [],
+      "perfStats": {
+        "end": 1790271277372,
+        "loadTestEnvironmentEnd": 1790271274899,
+        "loadTestEnvironmentStart": 1790271274270,
+        "runtime": 2471,
+        "setupAfterEnvEnd": 1790271275235,
+        "setupAfterEnvStart": 1790271275055,
+        "setupFilesEnd": 1790271274913,
+        "setupFilesStart": 1790271274901,
+        "slow": false,
+        "start": 1790271274901
+      },
+      "skipped": false,
+      "snapshot": {
+        "added": 0,
+        "fileDeleted": false,
+        "matched": 0,
+        "unchecked": 0,
+        "uncheckedKeys": [],
+        "unmatched": 0,
+        "updated": 0
+      },
+      "testFilePath": "C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-audit-fixes\\src\\webparts\\aiCoeFrontDoor\\components\\app\\AppShell.test.tsx",
+      "testResults": [
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell preserves transient synthetic objective and notes across section changes without a browser-text write",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271277218,
+          "status": "pending",
+          "title": "preserves transient synthetic objective and notes across section changes without a browser-text write"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell blocks leaving unsaved business Marketing input until the server draft seam confirms it",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271277219,
+          "status": "pending",
+          "title": "blocks leaving unsaved business Marketing input until the server draft seam confirms it"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell opens on the first screen with the entry panel and the three ways in",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271277219,
+          "status": "pending",
+          "title": "opens on the first screen with the entry panel and the three ways in"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell keeps a section a person may not use out of the tab list entirely",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271277219,
+          "status": "pending",
+          "title": "keeps a section a person may not use out of the tab list entirely"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell opens the measured view to a leader but still not the operator surface",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271277219,
+          "status": "pending",
+          "title": "opens the measured view to a leader but still not the operator surface"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell shows nothing narrowed while the membership is unresolved, rather than guessing",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271277219,
+          "status": "pending",
+          "title": "shows nothing narrowed while the membership is unresolved, rather than guessing"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell moves along the tabs with the arrow keys, and wraps at both ends",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271277219,
+          "status": "pending",
+          "title": "moves along the tabs with the arrow keys, and wraps at both ends"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell keeps sequential keyboard navigation on the actual focused tab, but pointer entry focuses the heading",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271277219,
+          "status": "pending",
+          "title": "keeps sequential keyboard navigation on the actual focused tab, but pointer entry focuses the heading"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell ignores a key the tab list does not own, so typing is not swallowed",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271277219,
+          "status": "pending",
+          "title": "ignores a key the tab list does not own, so typing is not swallowed"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell keeps one tab in the tab order and points each panel at its tab",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271277219,
+          "status": "pending",
+          "title": "keeps one tab in the tab order and points each panel at its tab"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell gives the section a heading that can take focus, so a change is announced",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271277219,
+          "status": "pending",
+          "title": "gives the section a heading that can take focus, so a change is announced"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell names the person and what the view can say about their access",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271277219,
+          "status": "pending",
+          "title": "names the person and what the view can say about their access"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell says so when the membership could not be confirmed, rather than staying quiet about it",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271277219,
+          "status": "pending",
+          "title": "says so when the membership could not be confirmed, rather than staying quiet about it"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell supplies the configured document route to the actual submission receipt",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271277219,
+          "status": "pending",
+          "title": "supplies the configured document route to the actual submission receipt"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell carries the footer promise on every section",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271277220,
+          "status": "pending",
+          "title": "carries the footer promise on every section"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell does not mount Enterprise value or call getMeasures when an employee clicks the Home card",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271277220,
+          "status": "pending",
+          "title": "does not mount Enterprise value or call getMeasures when an employee clicks the Home card"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell does not fetch measures or usage while membership is unresolved, including from the Home card",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271277220,
+          "status": "pending",
+          "title": "does not fetch measures or usage while membership is unresolved, including from the Home card"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": 82,
+          "failing": false,
+          "failureDetails": [
+            {
+              "matcherResult": {
+                "message": "expect(received).not.toContain(expected) // indexOf\n\nExpected value: not \"System map\"\nReceived array:     [\"Home\", \"Cases\", \"Engineering\", \"Marketing\", \"Improvement\", \"Enterprise value\", \"System map\", \"Admin\"]",
+                "pass": true
+              }
+            }
+          ],
+          "failureMessages": [
+            "Error: expect(received).not.toContain(expected) // indexOf\n\nExpected value: not \"System map\"\nReceived array:     [\"Home\", \"Cases\", \"Engineering\", \"Marketing\", \"Improvement\", \"Enterprise value\", \"System map\", \"Admin\"]\n    at Object.<anonymous> (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-audit-fixes\\src\\webparts\\aiCoeFrontDoor\\components\\app\\AppShell.test.tsx:274:37)"
+          ],
+          "fullName": "AppShell shows Usage on Enterprise value for an operator without a System map route",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 7,
+          "retryReasons": [],
+          "startAt": 1790271277220,
+          "status": "failed",
+          "title": "shows Usage on Enterprise value for an operator without a System map route"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell lets a leader open Enterprise value without mounting usage or calling getMetrics",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271277317,
+          "status": "pending",
+          "title": "lets a leader open Enterprise value without mounting usage or calling getMetrics"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell keeps the Home sentence as the idea draft and opens the guided request with the same wording",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271277317,
+          "status": "pending",
+          "title": "keeps the Home sentence as the idea draft and opens the guided request with the same wording"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell keeps guided edits mounted when navigation needs an unsaved draft and saving is refused",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271277318,
+          "status": "pending",
+          "title": "keeps guided edits mounted when navigation needs an unsaved draft and saving is refused"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell keeps guided edits mounted when navigation needs an unsaved draft and saving is rejected",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271277318,
+          "status": "pending",
+          "title": "keeps guided edits mounted when navigation needs an unsaved draft and saving is rejected"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell keeps the sentence in the box and opens nothing when the draft cannot be saved",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271277318,
+          "status": "pending",
+          "title": "keeps the sentence in the box and opens nothing when the draft cannot be saved"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell opens Marketing for a reviewer without granting drafting controls",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271277318,
+          "status": "pending",
+          "title": "opens Marketing for a reviewer without granting drafting controls"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell shows Marketing to a bounded participant and keeps the synthetic workspace across a Home round-trip",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271277318,
+          "status": "pending",
+          "title": "shows Marketing to a bounded participant and keeps the synthetic workspace across a Home round-trip"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": 12,
+          "failing": false,
+          "failureDetails": [
+            {
+              "matcherResult": {
+                "message": "expect(received).not.toContain(expected) // indexOf\n\nExpected value: not \"System map\"\nReceived array:     [\"Home\", \"Cases\", \"Engineering\", \"Marketing\", \"Improvement\", \"Enterprise value\", \"System map\"]",
+                "pass": true
+              }
+            }
+          ],
+          "failureMessages": [
+            "Error: expect(received).not.toContain(expected) // indexOf\n\nExpected value: not \"System map\"\nReceived array:     [\"Home\", \"Cases\", \"Engineering\", \"Marketing\", \"Improvement\", \"Enterprise value\", \"System map\"]\n    at Object.<anonymous> (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-audit-fixes\\src\\webparts\\aiCoeFrontDoor\\components\\app\\AppShell.test.tsx:408:37)"
+          ],
+          "fullName": "AppShell keeps the administrator queue unread for an operator without site-owner permission and no System map route",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 1,
+          "retryReasons": [],
+          "startAt": 1790271277318,
+          "status": "failed",
+          "title": "keeps the administrator queue unread for an operator without site-owner permission and no System map route"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell says the support route is unbound when the content document does not name one",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271277331,
+          "status": "pending",
+          "title": "says the support route is unbound when the content document does not name one"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell does not expose an unsafe support link: javascript:void(0)",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271277331,
+          "status": "pending",
+          "title": "does not expose an unsafe support link: javascript:void(0)"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell does not expose an unsafe support link: data:text/html,unsafe",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271277331,
+          "status": "pending",
+          "title": "does not expose an unsafe support link: data:text/html,unsafe"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell does not expose an unsafe support link: //untrusted.invalid/path",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271277331,
+          "status": "pending",
+          "title": "does not expose an unsafe support link: //untrusted.invalid/path"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell resolves site-relative support links against the site rather than the hosting page",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271277331,
+          "status": "pending",
+          "title": "resolves site-relative support links against the site rather than the hosting page"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell renders a configured support route from the page content document",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271277331,
+          "status": "pending",
+          "title": "renders a configured support route from the page content document"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell places the administrator control last, apart from the section tabs, for a site owner",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271277331,
+          "status": "pending",
+          "title": "places the administrator control last, apart from the section tabs, for a site owner"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell opens the administrator queue from that control and still opens a section tab",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271277331,
+          "status": "pending",
+          "title": "opens the administrator queue from that control and still opens a section tab"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": 11,
+          "failing": false,
+          "failureDetails": [
+            {
+              "matcherResult": {
+                "message": "expect(received).not.toContain(expected) // indexOf\n\nExpected value: not \"System map\"\nReceived array:     [\"Home\", \"Cases\", \"Engineering\", \"Marketing\", \"Improvement\", \"Enterprise value\", \"System map\", \"Admin\"]",
+                "pass": true
+              }
+            }
+          ],
+          "failureMessages": [
+            "Error: expect(received).not.toContain(expected) // indexOf\n\nExpected value: not \"System map\"\nReceived array:     [\"Home\", \"Cases\", \"Engineering\", \"Marketing\", \"Improvement\", \"Enterprise value\", \"System map\", \"Admin\"]\n    at Object.<anonymous> (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-audit-fixes\\src\\webparts\\aiCoeFrontDoor\\components\\app\\AppShell.test.tsx:504:37)"
+          ],
+          "fullName": "AppShell keeps System map absent and administrator reads lazy even for a site owner",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 1,
+          "retryReasons": [],
+          "startAt": 1790271277331,
+          "status": "failed",
+          "title": "keeps System map absent and administrator reads lazy even for a site owner"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell moves to the administrator control with End when the person may open it",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271277342,
+          "status": "pending",
+          "title": "moves to the administrator control with End when the person may open it"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell spaces Register team AI use from the other Improvement cards and keeps the larger panels below",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271277342,
+          "status": "pending",
+          "title": "spaces Register team AI use from the other Improvement cards and keeps the larger panels below"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell does not mount the administrator queue or read it for an employee",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271277342,
+          "status": "pending",
+          "title": "does not mount the administrator queue or read it for an employee"
+        }
+      ],
+      "failureMessage": "  ● AppShell › shows Usage on Enterprise value for an operator without a System map route\n\n    expect(received).not.toContain(expected) // indexOf\n\n    Expected value: not \"System map\"\n    Received array:     [\"Home\", \"Cases\", \"Engineering\", \"Marketing\", \"Improvement\", \"Enterprise value\", \"System map\", \"Admin\"]\n\n    \u001b[0m \u001b[90m 272 |\u001b[39m     expect(usage\u001b[33m.\u001b[39mcalls)\u001b[33m.\u001b[39mtoBeGreaterThan(\u001b[35m0\u001b[39m)\u001b[33m;\u001b[39m\n     \u001b[90m 273 |\u001b[39m     expect(measures\u001b[33m.\u001b[39mcalls)\u001b[33m.\u001b[39mtoBeGreaterThan(\u001b[35m0\u001b[39m)\u001b[33m;\u001b[39m\n    \u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 274 |\u001b[39m     expect(tabNames(container))\u001b[33m.\u001b[39mnot\u001b[33m.\u001b[39mtoContain(\u001b[32m'System map'\u001b[39m)\u001b[33m;\u001b[39m\n     \u001b[90m     |\u001b[39m                                     \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n     \u001b[90m 275 |\u001b[39m     \u001b[36mawait\u001b[39m act(\u001b[36masync\u001b[39m ()\u001b[33m:\u001b[39m \u001b[33mPromise\u001b[39m\u001b[33m<\u001b[39m\u001b[36mvoid\u001b[39m\u001b[33m>\u001b[39m \u001b[33m=>\u001b[39m {\n     \u001b[90m 276 |\u001b[39m       fireEvent\u001b[33m.\u001b[39mclick(container\u001b[33m.\u001b[39mquerySelector(\u001b[32m'#ai-app-tab-home'\u001b[39m) \u001b[36mas\u001b[39m \u001b[33mElement\u001b[39m)\u001b[33m;\u001b[39m\n     \u001b[90m 277 |\u001b[39m     })\u001b[33m;\u001b[39m\u001b[0m\n\n      at Object.<anonymous> (src/webparts/aiCoeFrontDoor/components/app/AppShell.test.tsx:274:37)\n\n  ● AppShell › keeps the administrator queue unread for an operator without site-owner permission and no System map route\n\n    expect(received).not.toContain(expected) // indexOf\n\n    Expected value: not \"System map\"\n    Received array:     [\"Home\", \"Cases\", \"Engineering\", \"Marketing\", \"Improvement\", \"Enterprise value\", \"System map\"]\n\n    \u001b[0m \u001b[90m 406 |\u001b[39m       governance\n     \u001b[90m 407 |\u001b[39m     })\u001b[33m;\u001b[39m\n    \u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 408 |\u001b[39m     expect(tabNames(container))\u001b[33m.\u001b[39mnot\u001b[33m.\u001b[39mtoContain(\u001b[32m'System map'\u001b[39m)\u001b[33m;\u001b[39m\n     \u001b[90m     |\u001b[39m                                     \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n     \u001b[90m 409 |\u001b[39m     expect(tabNames(container))\u001b[33m.\u001b[39mtoContain(\u001b[32m'Enterprise value'\u001b[39m)\u001b[33m;\u001b[39m\n     \u001b[90m 410 |\u001b[39m     \u001b[36mawait\u001b[39m act(\u001b[36masync\u001b[39m ()\u001b[33m:\u001b[39m \u001b[33mPromise\u001b[39m\u001b[33m<\u001b[39m\u001b[36mvoid\u001b[39m\u001b[33m>\u001b[39m \u001b[33m=>\u001b[39m {\n     \u001b[90m 411 |\u001b[39m       fireEvent\u001b[33m.\u001b[39mkeyDown(container\u001b[33m.\u001b[39mquerySelector(\u001b[32m'[role=\"tablist\"]'\u001b[39m) \u001b[36mas\u001b[39m \u001b[33mElement\u001b[39m\u001b[33m,\u001b[39m { key\u001b[33m:\u001b[39m \u001b[32m'End'\u001b[39m })\u001b[33m;\u001b[39m\u001b[0m\n\n      at Object.<anonymous> (src/webparts/aiCoeFrontDoor/components/app/AppShell.test.tsx:408:37)\n\n  ● AppShell › keeps System map absent and administrator reads lazy even for a site owner\n\n    expect(received).not.toContain(expected) // indexOf\n\n    Expected value: not \"System map\"\n    Received array:     [\"Home\", \"Cases\", \"Engineering\", \"Marketing\", \"Improvement\", \"Enterprise value\", \"System map\", \"Admin\"]\n\n    \u001b[0m \u001b[90m 502 |\u001b[39m       governance\n     \u001b[90m 503 |\u001b[39m     })\u001b[33m;\u001b[39m\n    \u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 504 |\u001b[39m     expect(tabNames(container))\u001b[33m.\u001b[39mnot\u001b[33m.\u001b[39mtoContain(\u001b[32m'System map'\u001b[39m)\u001b[33m;\u001b[39m\n     \u001b[90m     |\u001b[39m                                     \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n     \u001b[90m 505 |\u001b[39m     expect(tabNames(container))\u001b[33m.\u001b[39mtoContain(\u001b[32m'Admin'\u001b[39m)\u001b[33m;\u001b[39m\n     \u001b[90m 506 |\u001b[39m     expect(selected(container))\u001b[33m.\u001b[39mtoBe(\u001b[32m'Home'\u001b[39m)\u001b[33m;\u001b[39m\n     \u001b[90m 507 |\u001b[39m     expect(container\u001b[33m.\u001b[39mquerySelector(\u001b[32m'.ai-admin-dashboard'\u001b[39m))\u001b[33m.\u001b[39mtoBeNull()\u001b[33m;\u001b[39m\u001b[0m\n\n      at Object.<anonymous> (src/webparts/aiCoeFrontDoor/components/app/AppShell.test.tsx:504:37)\n"
+    },
+    {
+      "leaks": false,
+      "numFailingTests": 0,
+      "numPassingTests": 0,
+      "numPendingTests": 4,
+      "numTodoTests": 0,
+      "openHandles": [],
+      "perfStats": {
+        "end": 1790271277633,
+        "loadTestEnvironmentEnd": 1790271277384,
+        "loadTestEnvironmentStart": 1790271277376,
+        "runtime": 249,
+        "setupAfterEnvEnd": 1790271277475,
+        "setupAfterEnvStart": 1790271277419,
+        "setupFilesEnd": 1790271277384,
+        "setupFilesStart": 1790271277384,
+        "slow": false,
+        "start": 1790271277384
+      },
+      "skipped": true,
+      "snapshot": {
+        "added": 0,
+        "fileDeleted": false,
+        "matched": 0,
+        "unchecked": 0,
+        "uncheckedKeys": [],
+        "unmatched": 0,
+        "updated": 0
+      },
+      "testFilePath": "C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-audit-fixes\\src\\webparts\\aiCoeFrontDoor\\components\\app\\AppSections.test.tsx",
+      "testResults": [
+        {
+          "ancestorTitles": [
+            "same-app measurement and teaching entry"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "same-app measurement and teaching entry opens and closes the guidance with keyboard controls in the narrow layout",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271277633,
+          "status": "pending",
+          "title": "opens and closes the guidance with keyboard controls in the narrow layout"
+        },
+        {
+          "ancestorTitles": [
+            "same-app measurement and teaching entry"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "same-app measurement and teaching entry opens source, role, stop and recovery quick-start guidance from Engineering without a private source link",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271277633,
+          "status": "pending",
+          "title": "opens source, role, stop and recovery quick-start guidance from Engineering without a private source link"
+        },
+        {
+          "ancestorTitles": [
+            "same-app measurement and teaching entry"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "same-app measurement and teaching entry connects Improvement guidance to the existing outcome form, not another tracker",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271277633,
+          "status": "pending",
+          "title": "connects Improvement guidance to the existing outcome form, not another tracker"
+        },
+        {
+          "ancestorTitles": [
+            "same-app measurement and teaching entry"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "same-app measurement and teaching entry keeps Improvement proposal/retest guidance without the misplaced operator commissioning control",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271277633,
+          "status": "pending",
+          "title": "keeps Improvement proposal/retest guidance without the misplaced operator commissioning control"
+        }
+      ],
+      "failureMessage": null
+    },
+    {
+      "leaks": false,
+      "numFailingTests": 3,
+      "numPassingTests": 4,
+      "numPendingTests": 8,
+      "numTodoTests": 0,
+      "openHandles": [],
+      "perfStats": {
+        "end": 1790271277755,
+        "loadTestEnvironmentEnd": 1790271277644,
+        "loadTestEnvironmentStart": 1790271277636,
+        "runtime": 111,
+        "setupAfterEnvEnd": 1790271277723,
+        "setupAfterEnvStart": 1790271277681,
+        "setupFilesEnd": 1790271277644,
+        "setupFilesStart": 1790271277644,
+        "slow": false,
+        "start": 1790271277644
+      },
+      "skipped": false,
+      "snapshot": {
+        "added": 0,
+        "fileDeleted": false,
+        "matched": 0,
+        "unchecked": 0,
+        "uncheckedKeys": [],
+        "unmatched": 0,
+        "updated": 0
+      },
+      "testFilePath": "C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-audit-fixes\\src\\webparts\\aiCoeFrontDoor\\content\\appSections.test.ts",
+      "testResults": [
+        {
+          "ancestorTitles": [
+            "consolidated section routes"
+          ],
+          "duration": 3,
+          "failing": false,
+          "failureDetails": [
+            {
+              "matcherResult": {
+                "actual": [
+                  "home",
+                  "cases",
+                  "engineering",
+                  "marketing",
+                  "improvement",
+                  "value",
+                  "map",
+                  "admin"
+                ],
+                "expected": [
+                  "home",
+                  "cases",
+                  "engineering",
+                  "marketing",
+                  "improvement",
+                  "value",
+                  "admin"
+                ],
+                "message": "expect(received).toEqual(expected) // deep equality\n\n- Expected  - 0\n+ Received  + 1\n\n@@ -3,7 +3,8 @@\n    \"cases\",\n    \"engineering\",\n    \"marketing\",\n    \"improvement\",\n    \"value\",\n+   \"map\",\n    \"admin\",\n  ]",
+                "name": "toEqual",
+                "pass": false
+              }
+            }
+          ],
+          "failureMessages": [
+            "Error: expect(received).toEqual(expected) // deep equality\n\n- Expected  - 0\n+ Received  + 1\n\n@@ -3,7 +3,8 @@\n    \"cases\",\n    \"engineering\",\n    \"marketing\",\n    \"improvement\",\n    \"value\",\n+   \"map\",\n    \"admin\",\n  ]\n    at Object.<anonymous> (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-audit-fixes\\src\\webparts\\aiCoeFrontDoor\\content\\appSections.test.ts:5:29)\n    at Promise.finally.completed (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1557:28)\n    at new Promise (<anonymous>)\n    at callAsyncCircusFn (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1497:10)\n    at _callCircusTest (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1007:40)\n    at _runTest (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:947:3)\n    at C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:849:7\n    at _runTestsForDescribeBlock (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:862:11)\n    at _runTestsForDescribeBlock (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:857:11)\n    at run (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:761:3)\n    at runAndTransformResultsToJestFormat (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1918:21)\n    at jestAdapter (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\runner.js:101:19)\n    at runTestInternal (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-runner\\build\\index.js:275:16)\n    at runTest (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-runner\\build\\index.js:343:7)"
+          ],
+          "fullName": "consolidated section routes removes System map from every section route while retaining guarded Admin and value",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 1,
+          "retryReasons": [],
+          "startAt": 1790271277738,
+          "status": "failed",
+          "title": "removes System map from every section route while retaining guarded Admin and value"
+        },
+        {
+          "ancestorTitles": [
+            "consolidated section routes"
+          ],
+          "duration": 2,
+          "failing": false,
+          "failureDetails": [
+            {
+              "matcherResult": {
+                "actual": "map",
+                "expected": "home",
+                "message": "expect(received).toBe(expected) // Object.is equality\n\nExpected: \"home\"\nReceived: \"map\"",
+                "name": "toBe",
+                "pass": false
+              }
+            }
+          ],
+          "failureMessages": [
+            "Error: expect(received).toBe(expected) // Object.is equality\n\nExpected: \"home\"\nReceived: \"map\"\n    at C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-audit-fixes\\src\\webparts\\aiCoeFrontDoor\\content\\appSections.test.ts:14:36\n    at Object.<anonymous> (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-each\\build\\index.js:80:140)\n    at Promise.finally.completed (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1557:28)\n    at new Promise (<anonymous>)\n    at callAsyncCircusFn (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1497:10)\n    at _callCircusTest (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1007:40)\n    at _runTest (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:947:3)\n    at C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:849:7\n    at _runTestsForDescribeBlock (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:862:11)\n    at _runTestsForDescribeBlock (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:857:11)\n    at run (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:761:3)\n    at runAndTransformResultsToJestFormat (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1918:21)\n    at jestAdapter (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\runner.js:101:19)\n    at runTestInternal (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-runner\\build\\index.js:275:16)\n    at runTest (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-runner\\build\\index.js:343:7)"
+          ],
+          "fullName": "consolidated section routes returns Home for stale or unknown route map",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 1,
+          "retryReasons": [],
+          "startAt": 1790271277744,
+          "status": "failed",
+          "title": "returns Home for stale or unknown route map"
+        },
+        {
+          "ancestorTitles": [
+            "consolidated section routes"
+          ],
+          "duration": 0,
+          "failing": false,
+          "failureDetails": [
+            {
+              "matcherResult": {
+                "actual": "map",
+                "expected": "home",
+                "message": "expect(received).toBe(expected) // Object.is equality\n\nExpected: \"home\"\nReceived: \"map\"",
+                "name": "toBe",
+                "pass": false
+              }
+            }
+          ],
+          "failureMessages": [
+            "Error: expect(received).toBe(expected) // Object.is equality\n\nExpected: \"home\"\nReceived: \"map\"\n    at C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-audit-fixes\\src\\webparts\\aiCoeFrontDoor\\content\\appSections.test.ts:14:36\n    at Object.<anonymous> (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-each\\build\\index.js:80:140)\n    at Promise.finally.completed (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1557:28)\n    at new Promise (<anonymous>)\n    at callAsyncCircusFn (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1497:10)\n    at _callCircusTest (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1007:40)\n    at _runTest (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:947:3)\n    at C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:849:7\n    at _runTestsForDescribeBlock (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:862:11)\n    at _runTestsForDescribeBlock (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:857:11)\n    at run (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:761:3)\n    at runAndTransformResultsToJestFormat (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1918:21)\n    at jestAdapter (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-circus\\build\\runner.js:101:19)\n    at runTestInternal (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-runner\\build\\index.js:275:16)\n    at runTest (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\jest-runner\\build\\index.js:343:7)"
+          ],
+          "fullName": "consolidated section routes returns Home for stale or unknown route  MAP ",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 1,
+          "retryReasons": [],
+          "startAt": 1790271277747,
+          "status": "failed",
+          "title": "returns Home for stale or unknown route  MAP "
+        },
+        {
+          "ancestorTitles": [
+            "consolidated section routes"
+          ],
+          "duration": 0,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "consolidated section routes returns Home for stale or unknown route System map",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 2,
+          "retryReasons": [],
+          "startAt": 1790271277748,
+          "status": "passed",
+          "title": "returns Home for stale or unknown route System map"
+        },
+        {
+          "ancestorTitles": [
+            "consolidated section routes"
+          ],
+          "duration": 0,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "consolidated section routes returns Home for stale or unknown route undefined",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 2,
+          "retryReasons": [],
+          "startAt": 1790271277749,
+          "status": "passed",
+          "title": "returns Home for stale or unknown route undefined"
+        },
+        {
+          "ancestorTitles": [
+            "consolidated section routes"
+          ],
+          "duration": 1,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "consolidated section routes returns Home for stale or unknown route null",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 2,
+          "retryReasons": [],
+          "startAt": 1790271277749,
+          "status": "passed",
+          "title": "returns Home for stale or unknown route null"
+        },
+        {
+          "ancestorTitles": [
+            "consolidated section routes"
+          ],
+          "duration": 0,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "consolidated section routes returns Home for stale or unknown route 3",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 2,
+          "retryReasons": [],
+          "startAt": 1790271277750,
+          "status": "passed",
+          "title": "returns Home for stale or unknown route 3"
+        },
+        {
+          "ancestorTitles": [
+            "consolidated section routes"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "consolidated section routes keeps supported route home addressable",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271277751,
+          "status": "pending",
+          "title": "keeps supported route home addressable"
+        },
+        {
+          "ancestorTitles": [
+            "consolidated section routes"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "consolidated section routes keeps supported route cases addressable",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271277751,
+          "status": "pending",
+          "title": "keeps supported route cases addressable"
+        },
+        {
+          "ancestorTitles": [
+            "consolidated section routes"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "consolidated section routes keeps supported route engineering addressable",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271277751,
+          "status": "pending",
+          "title": "keeps supported route engineering addressable"
+        },
+        {
+          "ancestorTitles": [
+            "consolidated section routes"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "consolidated section routes keeps supported route marketing addressable",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271277751,
+          "status": "pending",
+          "title": "keeps supported route marketing addressable"
+        },
+        {
+          "ancestorTitles": [
+            "consolidated section routes"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "consolidated section routes keeps supported route improvement addressable",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271277751,
+          "status": "pending",
+          "title": "keeps supported route improvement addressable"
+        },
+        {
+          "ancestorTitles": [
+            "consolidated section routes"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "consolidated section routes keeps supported route value addressable",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271277751,
+          "status": "pending",
+          "title": "keeps supported route value addressable"
+        },
+        {
+          "ancestorTitles": [
+            "consolidated section routes"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "consolidated section routes keeps supported route map addressable",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271277751,
+          "status": "pending",
+          "title": "keeps supported route map addressable"
+        },
+        {
+          "ancestorTitles": [
+            "consolidated section routes"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "consolidated section routes keeps supported route admin addressable",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271277751,
+          "status": "pending",
+          "title": "keeps supported route admin addressable"
+        }
+      ],
+      "failureMessage": "  ● consolidated section routes › removes System map from every section route while retaining guarded Admin and value\n\n    expect(received).toEqual(expected) // deep equality\n\n    - Expected  - 0\n    + Received  + 1\n\n    @@ -3,7 +3,8 @@\n        \"cases\",\n        \"engineering\",\n        \"marketing\",\n        \"improvement\",\n        \"value\",\n    +   \"map\",\n        \"admin\",\n      ]\n\n    \u001b[0m \u001b[90m 3 |\u001b[39m describe(\u001b[32m'consolidated section routes'\u001b[39m\u001b[33m,\u001b[39m () \u001b[33m=>\u001b[39m {\n     \u001b[90m 4 |\u001b[39m   it(\u001b[32m'removes System map from every section route while retaining guarded Admin and value'\u001b[39m\u001b[33m,\u001b[39m () \u001b[33m=>\u001b[39m {\n    \u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 5 |\u001b[39m     expect(\u001b[33mAPP_SECTION_IDS\u001b[39m)\u001b[33m.\u001b[39mtoEqual([\u001b[32m'home'\u001b[39m\u001b[33m,\u001b[39m \u001b[32m'cases'\u001b[39m\u001b[33m,\u001b[39m \u001b[32m'engineering'\u001b[39m\u001b[33m,\u001b[39m \u001b[32m'marketing'\u001b[39m\u001b[33m,\u001b[39m \u001b[32m'improvement'\u001b[39m\u001b[33m,\u001b[39m \u001b[32m'value'\u001b[39m\u001b[33m,\u001b[39m \u001b[32m'admin'\u001b[39m])\u001b[33m;\u001b[39m\n     \u001b[90m   |\u001b[39m                             \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n     \u001b[90m 6 |\u001b[39m     expect(\u001b[33mAPP_SECTIONS\u001b[39m\u001b[33m.\u001b[39mmap(section \u001b[33m=>\u001b[39m section\u001b[33m.\u001b[39mid))\u001b[33m.\u001b[39mtoEqual(\u001b[33mAPP_SECTION_IDS\u001b[39m)\u001b[33m;\u001b[39m\n     \u001b[90m 7 |\u001b[39m     expect(\u001b[33mAPP_SECTIONS\u001b[39m\u001b[33m.\u001b[39mmap(section \u001b[33m=>\u001b[39m section\u001b[33m.\u001b[39mlabel))\u001b[33m.\u001b[39mnot\u001b[33m.\u001b[39mtoContain(\u001b[32m'System map'\u001b[39m)\u001b[33m;\u001b[39m\n     \u001b[90m 8 |\u001b[39m     expect(sectionOf(\u001b[32m'admin'\u001b[39m)\u001b[33m.\u001b[39mcapability)\u001b[33m.\u001b[39mtoBe(\u001b[32m'readAdminQueue'\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m\n\n      at Object.<anonymous> (src/webparts/aiCoeFrontDoor/content/appSections.test.ts:5:29)\n\n  ● consolidated section routes › returns Home for stale or unknown route map\n\n    expect(received).toBe(expected) // Object.is equality\n\n    Expected: \"home\"\n    Received: \"map\"\n\n    \u001b[0m \u001b[90m 12 |\u001b[39m\n     \u001b[90m 13 |\u001b[39m   it\u001b[33m.\u001b[39meach([\u001b[32m'map'\u001b[39m\u001b[33m,\u001b[39m \u001b[32m' MAP '\u001b[39m\u001b[33m,\u001b[39m \u001b[32m'System map'\u001b[39m\u001b[33m,\u001b[39m undefined\u001b[33m,\u001b[39m \u001b[36mnull\u001b[39m\u001b[33m,\u001b[39m \u001b[35m3\u001b[39m])(\u001b[32m'returns Home for stale or unknown route %s'\u001b[39m\u001b[33m,\u001b[39m value \u001b[33m=>\u001b[39m {\n    \u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 14 |\u001b[39m     expect(parseAppSection(value))\u001b[33m.\u001b[39mtoBe(\u001b[32m'home'\u001b[39m)\u001b[33m;\u001b[39m\n     \u001b[90m    |\u001b[39m                                    \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n     \u001b[90m 15 |\u001b[39m   })\u001b[33m;\u001b[39m\n     \u001b[90m 16 |\u001b[39m\n     \u001b[90m 17 |\u001b[39m   it\u001b[33m.\u001b[39meach(\u001b[33mAPP_SECTION_IDS\u001b[39m)(\u001b[32m'keeps supported route %s addressable'\u001b[39m\u001b[33m,\u001b[39m id \u001b[33m=>\u001b[39m {\u001b[0m\n\n      at src/webparts/aiCoeFrontDoor/content/appSections.test.ts:14:36\n\n  ● consolidated section routes › returns Home for stale or unknown route  MAP \n\n    expect(received).toBe(expected) // Object.is equality\n\n    Expected: \"home\"\n    Received: \"map\"\n\n    \u001b[0m \u001b[90m 12 |\u001b[39m\n     \u001b[90m 13 |\u001b[39m   it\u001b[33m.\u001b[39meach([\u001b[32m'map'\u001b[39m\u001b[33m,\u001b[39m \u001b[32m' MAP '\u001b[39m\u001b[33m,\u001b[39m \u001b[32m'System map'\u001b[39m\u001b[33m,\u001b[39m undefined\u001b[33m,\u001b[39m \u001b[36mnull\u001b[39m\u001b[33m,\u001b[39m \u001b[35m3\u001b[39m])(\u001b[32m'returns Home for stale or unknown route %s'\u001b[39m\u001b[33m,\u001b[39m value \u001b[33m=>\u001b[39m {\n    \u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 14 |\u001b[39m     expect(parseAppSection(value))\u001b[33m.\u001b[39mtoBe(\u001b[32m'home'\u001b[39m)\u001b[33m;\u001b[39m\n     \u001b[90m    |\u001b[39m                                    \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n     \u001b[90m 15 |\u001b[39m   })\u001b[33m;\u001b[39m\n     \u001b[90m 16 |\u001b[39m\n     \u001b[90m 17 |\u001b[39m   it\u001b[33m.\u001b[39meach(\u001b[33mAPP_SECTION_IDS\u001b[39m)(\u001b[32m'keeps supported route %s addressable'\u001b[39m\u001b[33m,\u001b[39m id \u001b[33m=>\u001b[39m {\u001b[0m\n\n      at src/webparts/aiCoeFrontDoor/content/appSections.test.ts:14:36\n"
+    }
+  ],
+  "wasInterrupted": false
+}

@@ -78,7 +78,7 @@ describe('FeedbackWorkflow', () => {
     const draftStore: InMemoryDraftStore = new InMemoryDraftStore();
     const first: IWorkflowHarness = await reachReview({ draftStore });
     fireEvent.click(screen.getByRole('button', { name: 'Save draft' }));
-    await screen.findByText('Draft saved on this device.');
+    await screen.findByText('Draft saved.');
     expect(JSON.parse(draftStore.drafts.feedback)).toEqual({ answers, currentStepId: 'contactEmail', phase: 'review', themes: [] });
     expect(first.onDraftsChanged).toHaveBeenCalledWith('feedback', true);
     first.unmount();

@@ -1,0 +1,16 @@
+{
+  "scriptBytes": 101614,
+  "sha256": "05f6a8507360c476749db2a0a78c41f6e96ce35401fa8973822ea4eb989db936",
+  "parts": {
+    "parts/00_Core.cs": "39c1d0aa7e2cae5667d13f19f0900a8c18770e9c3d679fc0ca47ac0ea5d66410",
+    "parts/05_EmbeddedSchemas.cs": "1d544f2a002a54a22aa364fa7d90417414776f4d11eb893d9e1114a9981792bf",
+    "parts/10_Modes.cs": "5e57379419a403e0fcabfb1c3d83878df099c7c2a95a2410ca0d01d42d16abd8",
+    "parts/20_Validation.cs": "60814f2cc44e37d71186b785856d551626226a51009e1983fcb44cdcecf1e661",
+    "parts/25_RecordIntegrity.cs": "e5eac2aefad296b14efd7ae9fd96f731735a68e472cac6d000c938c6493afdde",
+    "parts/30_Sources.cs": "9f93c94063191ea36402efc240332ed9e767dec9b63d48ec8a46225f461a3daa",
+    "parts/40_Business.cs": "f1e9c650df429500cf93ebee96a390ac5c375138f45bcfd3fe2f07b20a2eaf68",
+    "parts/50_Reviews.cs": "aae6908167a28cb480c94568081f1c608bbec646541686e867c5c4926c7960f7",
+    "parts/60_ProviderRecovery.cs": "05765a05ab2a2644c27323277f9785486df3c5d221690df6272b07f63f33dbaa"
+  },
+  "boundary": "LOCAL_CSHARP73_SHIM_ONLY_NOT_HOSTED_QUALIFICATION"
+}

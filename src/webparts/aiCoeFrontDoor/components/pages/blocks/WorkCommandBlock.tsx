@@ -42,7 +42,7 @@ export function openedText(label: string): string {
 }
 
 /** The alert when the draft store cannot keep the sentence (it answers `{ ok: false }`, it never throws). */
-export const SAVE_FAILED_TEXT: string = 'Your sentence could not be kept on this device. Copy it and use the guided request.';
+export const SAVE_FAILED_TEXT: string = 'Your draft save could not be confirmed. Keep this page open and confirm the same draft or ask the owner for help.';
 
 let commandCount: number = 0;
 

@@ -1,0 +1,10 @@
+{
+  "exitCode": 0,
+  "command": [
+    "/mnt/c/Program Files/nodejs/node.exe",
+    "--test",
+    "tests/audit-native-client.test.cjs",
+    "tests/audit-server-drafts.test.cjs"
+  ],
+  "log": "client-drafts.log"
+}

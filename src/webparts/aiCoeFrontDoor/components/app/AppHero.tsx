@@ -22,8 +22,11 @@ export interface IAppHeroProps {
   organizationName: string;
   choices: readonly IEntryChoice[];
   onChoose: (section: AppSectionId) => void;
-  /** Where a typed sentence goes; the guided request until a tenant proves a better destination. */
-  onCommand: (sentence: string) => void;
+  /**
+   * Where a typed sentence goes: kept as the idea draft and opened in the guided request, in this instance. Resolves
+   * with a complaint when the sentence could not be kept, so the box keeps it and says so rather than losing it.
+   */
+  onCommand: (sentence: string) => Promise<string | undefined>;
   /** The wording of the button, from the branding rather than a provider name. */
   commandLabel: string;
   role: RoleId;
@@ -33,7 +36,9 @@ export interface IAppHeroProps {
   pending: boolean;
 }
 
-const EMPTY_COMMAND: string = 'Say what you need done first.';
+export const EMPTY_COMMAND: string = 'Say what you need done first.';
+/** The alert when the draft store cannot keep the sentence: it stays in the box, and nothing opens or is sent. */
+export const SAVE_FAILED_TEXT: string = 'Your draft save could not be confirmed, so the guided request did not open. Your sentence is still here; confirm the same draft or ask the owner for help.';
 
 /** The three things that matter, by role. Each is true of this build, and none of them invents a record. */
 const PRIORITIES: { [role in RoleId]: IAppCase[] } = {
@@ -56,6 +61,16 @@ const PRIORITIES: { [role in RoleId]: IAppCase[] } = {
     { reference: '01', title: 'What needs a decision', tone: 'wait', state: 'Awaiting you', summary: 'Only what cannot proceed inside the boundaries already agreed.' },
     { reference: '02', title: 'Material changes', tone: 'design', state: 'Review candidate', summary: 'Changes to the shape of the system, rather than routine progress.' },
     { reference: '03', title: 'Marketing workflows', tone: 'design', state: 'Demo only', summary: 'Three workflows walked end to end with invented material.' }
+  ],
+  marketingParticipant: [
+    { reference: '01', title: 'Draft against permitted sources', tone: 'design', state: 'Synthetic only', summary: 'A brief, a plan or a follow-through drafted from the fixture register until a real one is approved.' },
+    { reference: '02', title: 'Send a draft for review', tone: 'wait', state: 'Reviewer unbound', summary: 'A review is requested of a role; the real owner and approver are not bound yet.' },
+    { reference: '03', title: 'Your own drafts', tone: 'info', state: 'Open to you', summary: 'Every revision you saved, with its state as the store derives it.' }
+  ],
+  marketingReviewer: [
+    { reference: '01', title: 'Decisions waiting on you', tone: 'wait', state: 'Within your scope', summary: 'Only reviews of the kinds your bound authority covers, on the exact revision requested.' },
+    { reference: '02', title: 'What a decision binds', tone: 'info', state: 'Exact content', summary: 'The revision, its hash and the register snapshot. A later edit needs a new decision.' },
+    { reference: '03', title: 'What a decision permits', tone: 'design', state: 'Drafting only', summary: 'An acceptance unlocks the next draft. It sends, publishes, assigns and schedules nothing.' }
   ]
 };
 
@@ -71,6 +86,15 @@ export function AppHero({
 }: IAppHeroProps): React.ReactElement {
   const [sentence, setSentence] = React.useState<string>('');
   const [complaint, setComplaint] = React.useState<string>('');
+  const [busy, setBusy] = React.useState<boolean>(false);
+  const mounted: React.MutableRefObject<boolean> = React.useRef<boolean>(true);
+
+  React.useEffect((): (() => void) => {
+    mounted.current = true;
+    return (): void => {
+      mounted.current = false;
+    };
+  }, []);
 
   const submit = React.useCallback(
     (event: React.FormEvent): void => {
@@ -81,7 +105,24 @@ export function AppHero({
         return;
       }
       setComplaint('');
-      onCommand(typed);
+      setBusy(true);
+      onCommand(typed).then(
+        (failure: string | undefined): void => {
+          if (mounted.current) {
+            setBusy(false);
+            // The sentence stays in the box either way: on success the shell has opened the request with it.
+            if (failure !== undefined) {
+              setComplaint(failure);
+            }
+          }
+        },
+        (): void => {
+          if (mounted.current) {
+            setBusy(false);
+            setComplaint(SAVE_FAILED_TEXT);
+          }
+        }
+      );
     },
     [sentence, onCommand]
   );
@@ -108,13 +149,13 @@ export function AppHero({
                 value={sentence}
                 onChange={(event: React.ChangeEvent<HTMLInputElement>): void => setSentence(event.target.value)}
               />
-              <button type="submit" className="ai-app-primary">
+              <button type="submit" className="ai-app-primary" disabled={busy}>
                 {commandLabel}
               </button>
             </span>
           </form>
           <p className="ai-app-hero-micro" role={complaint === '' ? undefined : 'alert'}>
-            {complaint === '' ? 'Your sentence opens the guided request. Nothing is sent from this box.' : complaint}
+            {complaint === '' ? 'Your sentence is saved as a draft in the configured store and opens the guided request here. It is not submitted for review from this box.' : complaint}
           </p>
         </div>
         <div className="ai-app-first-side">

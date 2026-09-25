@@ -1,0 +1,1172 @@
+{
+ "Command": {
+  "title": "AI CoE Case Command",
+  "template": 100,
+  "title_means": "IdempotencyKey (unique, required)",
+  "columns": [
+   {
+    "name": "Operation",
+    "type": "Choice",
+    "values": [
+     "CreateOrResumeWork",
+     "GetWorkStatus",
+     "ListMyWork",
+     "SubmitEvidenceResponse",
+     "RequestDecisionReadiness"
+    ],
+    "required": true
+   },
+   {
+    "name": "WorkID",
+    "type": "Text",
+    "indexed": true
+   },
+   {
+    "name": "RequestJson",
+    "type": "Note",
+    "required": true
+   },
+   {
+    "name": "ResponseJson",
+    "type": "Note"
+   },
+   {
+    "name": "Result",
+    "type": "Choice",
+    "values": [
+     "PENDING",
+     "PASS",
+     "FAIL",
+     "DENIED",
+     "INCONCLUSIVE",
+     "RECONCILIATION_REQUIRED"
+    ],
+    "default": "PENDING",
+    "indexed": true
+   },
+   {
+    "name": "ReceiptID",
+    "type": "Text"
+   },
+   {
+    "name": "CorrelationID",
+    "type": "Text"
+   },
+   {
+    "name": "Claimed",
+    "type": "Boolean",
+    "default": false,
+    "indexed": true
+   },
+   {
+    "name": "ClaimToken",
+    "type": "Text"
+   },
+   {
+    "name": "ClaimedAt",
+    "type": "DateTime"
+   },
+   {
+    "name": "CompletedAt",
+    "type": "DateTime"
+   },
+   {
+    "name": "ErrorClass",
+    "type": "Text"
+   },
+   {
+    "name": "TestRecord",
+    "type": "Boolean",
+    "default": false
+   }
+  ]
+ },
+ "Cases": {
+  "title": "AI CoE Cases",
+  "template": 100,
+  "title_means": "WorkID (unique, required)",
+  "columns": [
+   {
+    "name": "WorkTitle",
+    "type": "Text",
+    "required": true
+   },
+   {
+    "name": "WorkType",
+    "type": "Choice",
+    "values": [
+     "IDEA",
+     "CASE",
+     "DECISION",
+     "PROJECT",
+     "IMPROVEMENT",
+     "ADMIN_WORK",
+     "STRATEGIC_CASE"
+    ]
+   },
+   {
+    "name": "Stage",
+    "type": "Choice",
+    "values": [
+     "INTAKE",
+     "EVIDENCE",
+     "DECISION",
+     "DELIVERY",
+     "VALUE",
+     "IMPROVEMENT",
+     "CLOSED"
+    ],
+    "indexed": true
+   },
+   {
+    "name": "State",
+    "type": "Choice",
+    "values": [
+     "DRAFT",
+     "CLARIFYING",
+     "READY_FOR_TRIAGE",
+     "EVIDENCE_BUILDING",
+     "AWAITING_SME",
+     "NOT_DECISION_READY",
+     "DECISION_READY",
+     "READY_FOR_AI_COE",
+     "READY_FOR_ARB",
+     "READY_FOR_ELT",
+     "APPROVED",
+     "APPROVED_WITH_CONDITIONS",
+     "DEFERRED",
+     "REJECTED",
+     "PROJECT_ACTIVATING",
+     "IN_DELIVERY",
+     "AT_RISK",
+     "BLOCKED",
+     "VALUE_REVIEW",
+     "OPERATING",
+     "IMPROVEMENT_PROPOSED",
+     "REVALIDATION_REQUIRED",
+     "RETIRED"
+    ],
+    "indexed": true
+   },
+   {
+    "name": "EmployeeStatus",
+    "type": "Text"
+   },
+   {
+    "name": "ProblemStatement",
+    "type": "Note"
+   },
+   {
+    "name": "DesiredOutcome",
+    "type": "Note"
+   },
+   {
+    "name": "Requester",
+    "type": "Text",
+    "indexed": true
+   },
+   {
+    "name": "Department",
+    "type": "Text"
+   },
+   {
+    "name": "Sponsor",
+    "type": "Text"
+   },
+   {
+    "name": "AccountableOwner",
+    "type": "Text",
+    "indexed": true
+   },
+   {
+    "name": "ResponsibleLead",
+    "type": "Text"
+   },
+   {
+    "name": "CreatedAt",
+    "type": "DateTime"
+   },
+   {
+    "name": "SourceChannel",
+    "type": "Text"
+   },
+   {
+    "name": "SourceRefs",
+    "type": "Note"
+   },
+   {
+    "name": "RelatedWorkIDs",
+    "type": "Note"
+   },
+   {
+    "name": "DuplicateStatus",
+    "type": "Choice",
+    "values": [
+     "NOT_CHECKED",
+     "UNIQUE",
+     "POSSIBLE_DUPLICATE",
+     "CONFIRMED_DUPLICATE",
+     "RELATED_NOT_DUPLICATE"
+    ]
+   },
+   {
+    "name": "Lane",
+    "type": "Choice",
+    "values": [
+     "PREPARATION",
+     "AI_COE_FAST_PATH",
+     "ARB",
+     "ELT"
+    ]
+   },
+   {
+    "name": "ARBTier",
+    "type": "Text"
+   },
+   {
+    "name": "AgentRiskTier",
+    "type": "Text"
+   },
+   {
+    "name": "PScoreLegacy",
+    "type": "Text"
+   },
+   {
+    "name": "PScoreCandidate",
+    "type": "Text"
+   },
+   {
+    "name": "PScoreVersion",
+    "type": "Text"
+   },
+   {
+    "name": "PScoreConfidence",
+    "type": "Text"
+   },
+   {
+    "name": "Lift",
+    "type": "Text"
+   },
+   {
+    "name": "LiftVersion",
+    "type": "Text"
+   },
+   {
+    "name": "DecisionReadiness",
+    "type": "Text"
+   },
+   {
+    "name": "ReadinessVersion",
+    "type": "Text"
+   },
+   {
+    "name": "DecisionReadinessState",
+    "type": "Choice",
+    "values": [
+     "NOT_READY",
+     "READY",
+     "REVALIDATION_REQUIRED",
+     "NOT_APPLICABLE"
+    ]
+   },
+   {
+    "name": "DecisionRequested",
+    "type": "Note"
+   },
+   {
+    "name": "DecisionAuthority",
+    "type": "Text"
+   },
+   {
+    "name": "RequiredValidators",
+    "type": "Note"
+   },
+   {
+    "name": "ValidationState",
+    "type": "Choice",
+    "values": [
+     "NOT_STARTED",
+     "IN_PROGRESS",
+     "COMPLETE",
+     "FAILED",
+     "NOT_APPLICABLE"
+    ]
+   },
+   {
+    "name": "OpenEvidenceGaps",
+    "type": "Note"
+   },
+   {
+    "name": "Dependencies",
+    "type": "Note"
+   },
+   {
+    "name": "Risks",
+    "type": "Note"
+   },
+   {
+    "name": "TaskSystem",
+    "type": "Text"
+   },
+   {
+    "name": "CollaborationSurface",
+    "type": "Text"
+   },
+   {
+    "name": "CurrentRelease",
+    "type": "Text"
+   },
+   {
+    "name": "LastValidatedAt",
+    "type": "DateTime"
+   },
+   {
+    "name": "NextAction",
+    "type": "Note"
+   },
+   {
+    "name": "NextOwner",
+    "type": "Text"
+   },
+   {
+    "name": "NextDate",
+    "type": "Text"
+   },
+   {
+    "name": "ValueBaselineID",
+    "type": "Text"
+   },
+   {
+    "name": "ActualValueID",
+    "type": "Text"
+   },
+   {
+    "name": "RetentionClass",
+    "type": "Text"
+   },
+   {
+    "name": "DataClassification",
+    "type": "Choice",
+    "values": [
+     "PUBLIC",
+     "INTERNAL",
+     "CONFIDENTIAL",
+     "RESTRICTED"
+    ]
+   },
+   {
+    "name": "Version",
+    "type": "Number"
+   },
+   {
+    "name": "RecordJson",
+    "type": "Note"
+   },
+   {
+    "name": "TestRecord",
+    "type": "Boolean",
+    "default": false
+   },
+   {
+    "name": "ContentVersion",
+    "type": "Number"
+   },
+   {
+    "name": "LegacyRefs",
+    "type": "Note"
+   }
+  ]
+ },
+ "Evidence": {
+  "title": "AI CoE Evidence Value",
+  "template": 100,
+  "title_means": "EvidencePacketID / ValueRecordID (unique, required)",
+  "columns": [
+   {
+    "name": "WorkID",
+    "type": "Text",
+    "indexed": true,
+    "required": true
+   },
+   {
+    "name": "RecordKind",
+    "type": "Choice",
+    "values": [
+     "EVIDENCE_PACKET",
+     "VALUE_RECORD"
+    ]
+   },
+   {
+    "name": "EvidenceType",
+    "type": "Text",
+    "indexed": true
+   },
+   {
+    "name": "ReasonRequired",
+    "type": "Note"
+   },
+   {
+    "name": "Questions",
+    "type": "Note"
+   },
+   {
+    "name": "AssignedRole",
+    "type": "Text"
+   },
+   {
+    "name": "AssignedPerson",
+    "type": "Text",
+    "indexed": true
+   },
+   {
+    "name": "SourceRefs",
+    "type": "Note"
+   },
+   {
+    "name": "DueAt",
+    "type": "DateTime"
+   },
+   {
+    "name": "Status",
+    "type": "Choice",
+    "values": [
+     "OPEN",
+     "ASSIGNED",
+     "AWAITING_RESPONSE",
+     "RETURNED",
+     "VALIDATED",
+     "REJECTED",
+     "EXPIRED",
+     "NOT_APPLICABLE"
+    ],
+    "indexed": true
+   },
+   {
+    "name": "Applicability",
+    "type": "Choice",
+    "values": [
+     "REQUIRED",
+     "CONDITIONAL",
+     "NOT_APPLICABLE"
+    ]
+   },
+   {
+    "name": "Response",
+    "type": "Note"
+   },
+   {
+    "name": "ValidatorAssertion",
+    "type": "Note"
+   },
+   {
+    "name": "Confidence",
+    "type": "Text"
+   },
+   {
+    "name": "KnownAssumedUnknown",
+    "type": "Choice",
+    "values": [
+     "KNOWN",
+     "ASSUMED",
+     "UNKNOWN",
+     "MIXED"
+    ]
+   },
+   {
+    "name": "FreshnessState",
+    "type": "Choice",
+    "values": [
+     "CURRENT",
+     "STALE",
+     "UNPROVED",
+     "NOT_APPLICABLE"
+    ]
+   },
+   {
+    "name": "ReturnedAt",
+    "type": "DateTime"
+   },
+   {
+    "name": "LastReminderAt",
+    "type": "DateTime"
+   },
+   {
+    "name": "EscalationAt",
+    "type": "DateTime"
+   },
+   {
+    "name": "Version",
+    "type": "Number"
+   },
+   {
+    "name": "RecordJson",
+    "type": "Note"
+   },
+   {
+    "name": "TestRecord",
+    "type": "Boolean",
+    "default": false
+   },
+   {
+    "name": "CaseContentVersion",
+    "type": "Number"
+   },
+   {
+    "name": "ValidationKind",
+    "type": "Text"
+   },
+   {
+    "name": "ValidatorPrincipal",
+    "type": "Text"
+   },
+   {
+    "name": "ValidationSourceRefs",
+    "type": "Note"
+   },
+   {
+    "name": "ValidatedAt",
+    "type": "DateTime"
+   },
+   {
+    "name": "ValidationExpiresAt",
+    "type": "DateTime"
+   }
+  ]
+ },
+ "Decisions": {
+  "title": "AI CoE Decisions Changes",
+  "template": 100,
+  "title_means": "DecisionPacketID / ApprovalID (unique, required)",
+  "columns": [
+   {
+    "name": "WorkID",
+    "type": "Text",
+    "indexed": true,
+    "required": true
+   },
+   {
+    "name": "RecordKind",
+    "type": "Choice",
+    "values": [
+     "DECISION_PACKET",
+     "APPROVAL",
+     "CHANGE"
+    ]
+   },
+   {
+    "name": "Status",
+    "type": "Choice",
+    "values": [
+     "DRAFT",
+     "READY_FOR_DECISION",
+     "APPROVED",
+     "APPROVED_WITH_CONDITIONS",
+     "DEFERRED",
+     "REJECTED",
+     "INVALIDATED"
+    ],
+    "indexed": true
+   },
+   {
+    "name": "ReadinessState",
+    "type": "Choice",
+    "values": [
+     "READY",
+     "NOT_READY",
+     "REVALIDATION_REQUIRED"
+    ]
+   },
+   {
+    "name": "ReadinessGates",
+    "type": "Note"
+   },
+   {
+    "name": "BlockingGates",
+    "type": "Note"
+   },
+   {
+    "name": "Lane",
+    "type": "Text"
+   },
+   {
+    "name": "RuleFired",
+    "type": "Text"
+   },
+   {
+    "name": "PayloadHash",
+    "type": "Text"
+   },
+   {
+    "name": "EvidenceSetHash",
+    "type": "Text"
+   },
+   {
+    "name": "HashProvenance",
+    "type": "Choice",
+    "values": [
+     "CLIENT_COMPUTED",
+     "NOT_PROVIDED",
+     "SERVER_SHA256"
+    ]
+   },
+   {
+    "name": "BusinessCaseVersion",
+    "type": "Text"
+   },
+   {
+    "name": "DecisionRequested",
+    "type": "Note"
+   },
+   {
+    "name": "DecisionAuthority",
+    "type": "Text"
+   },
+   {
+    "name": "DecisionAuthoritySource",
+    "type": "Text"
+   },
+   {
+    "name": "ExpiresAt",
+    "type": "DateTime"
+   },
+   {
+    "name": "ApprovalID",
+    "type": "Text"
+   },
+   {
+    "name": "Version",
+    "type": "Number"
+   },
+   {
+    "name": "RecordJson",
+    "type": "Note"
+   },
+   {
+    "name": "TestRecord",
+    "type": "Boolean",
+    "default": false
+   },
+   {
+    "name": "CaseContentVersion",
+    "type": "Number"
+   },
+   {
+    "name": "PolicySourceHash",
+    "type": "Text"
+   },
+   {
+    "name": "PolicyBindingVersion",
+    "type": "Text"
+   }
+  ]
+ },
+ "Events": {
+  "title": "AI CoE Lifecycle Events",
+  "template": 100,
+  "title_means": "EventID (unique, required) \u2014 append-only",
+  "columns": [
+   {
+    "name": "WorkID",
+    "type": "Text",
+    "indexed": true,
+    "required": true
+   },
+   {
+    "name": "EventType",
+    "type": "Text",
+    "indexed": true
+   },
+   {
+    "name": "OccurredAt",
+    "type": "DateTime"
+   },
+   {
+    "name": "ActorType",
+    "type": "Choice",
+    "values": [
+     "HUMAN",
+     "AI",
+     "SERVICE",
+     "SYSTEM"
+    ]
+   },
+   {
+    "name": "ActorID",
+    "type": "Text"
+   },
+   {
+    "name": "CorrelationID",
+    "type": "Text"
+   },
+   {
+    "name": "IdempotencyKey",
+    "type": "Text",
+    "unique": true,
+    "required": true
+   },
+   {
+    "name": "AuthorityClass",
+    "type": "Text"
+   },
+   {
+    "name": "ReceiptID",
+    "type": "Text"
+   },
+   {
+    "name": "SourceVersion",
+    "type": "Text"
+   },
+   {
+    "name": "Payload",
+    "type": "Note"
+   },
+   {
+    "name": "TestRecord",
+    "type": "Boolean",
+    "default": false
+   },
+   {
+    "name": "RecordJson",
+    "type": "Note"
+   }
+  ]
+ },
+ "Receipts": {
+  "title": "AI CoE Audit Receipts",
+  "template": 100,
+  "title_means": "ReceiptID (unique, required) \u2014 never overwritten",
+  "columns": [
+   {
+    "name": "OperationID",
+    "type": "Text",
+    "required": true
+   },
+   {
+    "name": "OperationClass",
+    "type": "Text"
+   },
+   {
+    "name": "ActorID",
+    "type": "Text"
+   },
+   {
+    "name": "TargetRef",
+    "type": "Text",
+    "indexed": true
+   },
+   {
+    "name": "BeforeVersion",
+    "type": "Text"
+   },
+   {
+    "name": "AfterVersion",
+    "type": "Text"
+   },
+   {
+    "name": "PayloadHash",
+    "type": "Text"
+   },
+   {
+    "name": "ReadbackHash",
+    "type": "Text"
+   },
+   {
+    "name": "Result",
+    "type": "Choice",
+    "values": [
+     "PASS",
+     "FAIL",
+     "INCONCLUSIVE",
+     "DENIED",
+     "RECONCILIATION_REQUIRED"
+    ]
+   },
+   {
+    "name": "ObservedAt",
+    "type": "DateTime"
+   },
+   {
+    "name": "EvidenceRefs",
+    "type": "Note"
+   },
+   {
+    "name": "ErrorClass",
+    "type": "Text"
+   },
+   {
+    "name": "RecordJson",
+    "type": "Note"
+   },
+   {
+    "name": "TestRecord",
+    "type": "Boolean",
+    "default": false
+   },
+   {
+    "name": "RequestHash",
+    "type": "Text"
+   },
+   {
+    "name": "ResponseHash",
+    "type": "Text"
+   }
+  ]
+ },
+ "Outbox": {
+  "title": "AI CoE Notification Outbox",
+  "template": 100,
+  "title_means": "OutboxID (unique, required)",
+  "columns": [
+   {
+    "name": "WorkID",
+    "type": "Text",
+    "indexed": true
+   },
+   {
+    "name": "Recipient",
+    "type": "Text"
+   },
+   {
+    "name": "Subject",
+    "type": "Text"
+   },
+   {
+    "name": "Body",
+    "type": "Note"
+   },
+   {
+    "name": "State",
+    "type": "Choice",
+    "values": [
+     "QUEUED",
+     "SUPPRESSED",
+     "SENT",
+     "FAILED"
+    ],
+    "default": "QUEUED",
+    "indexed": true
+   },
+   {
+    "name": "Attempts",
+    "type": "Number",
+    "default": 0
+   },
+   {
+    "name": "ReceiptID",
+    "type": "Text"
+   },
+   {
+    "name": "SuppressionReason",
+    "type": "Text"
+   },
+   {
+    "name": "TestRecord",
+    "type": "Boolean",
+    "default": false
+   },
+   {
+    "name": "RecordJson",
+    "type": "Note"
+   },
+   {
+    "name": "Version",
+    "type": "Number"
+   }
+  ]
+ },
+ "Definitions": {
+  "title": "AI CoE Definitions",
+  "template": 100,
+  "title_means": "Key (unique, required) \u2014 bootstrap list, the ONLY list addressed by title",
+  "columns": [
+   {
+    "name": "Value",
+    "type": "Note",
+    "required": true
+   },
+   {
+    "name": "Category",
+    "type": "Text",
+    "indexed": true
+   },
+   {
+    "name": "Version",
+    "type": "Text"
+   },
+   {
+    "name": "Provisional",
+    "type": "Boolean",
+    "default": false
+   },
+   {
+    "name": "Note",
+    "type": "Note"
+   }
+  ]
+ },
+ "Log": {
+  "title": "AI Automation Log",
+  "template": 100,
+  "title_means": "LogID (unique, required)",
+  "columns": [
+   {
+    "name": "Flow",
+    "type": "Text",
+    "indexed": true
+   },
+   {
+    "name": "RunId",
+    "type": "Text"
+   },
+   {
+    "name": "Level",
+    "type": "Choice",
+    "values": [
+     "Info",
+     "Warning",
+     "Error",
+     "Succeeded",
+     "Skipped"
+    ],
+    "indexed": true
+   },
+   {
+    "name": "Message",
+    "type": "Note"
+   },
+   {
+    "name": "CorrelationID",
+    "type": "Text"
+   },
+   {
+    "name": "WorkID",
+    "type": "Text"
+   },
+   {
+    "name": "LoggedAt",
+    "type": "DateTime"
+   }
+  ]
+ },
+ "Packets": {
+  "title": "AI CoE Work Packets",
+  "template": 101,
+  "title_means": "document library \u2014 <WorkID>.md Markdown companions",
+  "columns": []
+ },
+ "Requests": {
+  "title": "AI CoE Command Requests",
+  "template": 100,
+  "title_means": "Immutable caller intent (unique Title)",
+  "columns": [
+   {
+    "name": "ContractVersion",
+    "type": "Text",
+    "required": true
+   },
+   {
+    "name": "Operation",
+    "type": "Choice",
+    "values": [
+     "CreateOrResumeWork",
+     "GetWorkStatus",
+     "ListMyWork",
+     "SubmitEvidenceResponse",
+     "RequestDecisionReadiness",
+     "ListEvidencePackets",
+     "ValidateEvidencePacket"
+    ],
+    "required": true
+   },
+   {
+    "name": "WorkID",
+    "type": "Text"
+   },
+   {
+    "name": "RequestJson",
+    "type": "Note",
+    "required": true
+   },
+   {
+    "name": "TestRecord",
+    "type": "Boolean",
+    "default": false
+   }
+  ]
+ },
+ "Results": {
+  "title": "AI CoE Command Results",
+  "template": 100,
+  "title_means": "Service-owned result (unique Title)",
+  "columns": [
+   {
+    "name": "RequestItemID",
+    "type": "Number"
+   },
+   {
+    "name": "RequestAuthorID",
+    "type": "Number"
+   },
+   {
+    "name": "ContractVersion",
+    "type": "Text"
+   },
+   {
+    "name": "Operation",
+    "type": "Text"
+   },
+   {
+    "name": "Result",
+    "type": "Text"
+   },
+   {
+    "name": "ResponseJson",
+    "type": "Note"
+   },
+   {
+    "name": "ReceiptID",
+    "type": "Text"
+   },
+   {
+    "name": "CompletedAt",
+    "type": "DateTime"
+   },
+   {
+    "name": "Published",
+    "type": "Boolean",
+    "default": false
+   }
+  ]
+ },
+ "Journal": {
+  "title": "AI CoE Command Journal",
+  "template": 100,
+  "title_means": "Private durable command plan or CORE_WRITER slot",
+  "columns": [
+   {
+    "name": "State",
+    "type": "Text",
+    "indexed": true
+   },
+   {
+    "name": "ActiveIntent",
+    "type": "Text"
+   },
+   {
+    "name": "RequestItemID",
+    "type": "Number"
+   },
+   {
+    "name": "RequestHash",
+    "type": "Text"
+   },
+   {
+    "name": "PlanJson",
+    "type": "Note"
+   },
+   {
+    "name": "PlanHash",
+    "type": "Text"
+   },
+   {
+    "name": "ClaimToken",
+    "type": "Text"
+   },
+   {
+    "name": "LeaseUntil",
+    "type": "DateTime"
+   },
+   {
+    "name": "RecordJson",
+    "type": "Note"
+   }
+  ]
+ },
+ "Authority": {
+  "title": "AI CoE Authority Bindings",
+  "template": 100,
+  "title_means": "Private scoped and expiring human authority; not a payload flag",
+  "columns": [
+   {
+    "name": "WorkID",
+    "type": "Text",
+    "indexed": true
+   },
+   {
+    "name": "Principal",
+    "type": "Text"
+   },
+   {
+    "name": "Role",
+    "type": "Text"
+   },
+   {
+    "name": "CaseContentVersion",
+    "type": "Number"
+   },
+   {
+    "name": "EvidenceType",
+    "type": "Text"
+   },
+   {
+    "name": "Active",
+    "type": "Boolean"
+   },
+   {
+    "name": "Accepted",
+    "type": "Boolean"
+   },
+   {
+    "name": "SourceRefs",
+    "type": "Note"
+   },
+   {
+    "name": "ReceiptID",
+    "type": "Text"
+   },
+   {
+    "name": "ExpiresAt",
+    "type": "DateTime"
+   },
+   {
+    "name": "Facts",
+    "type": "Note"
+   },
+   {
+    "name": "RecordJson",
+    "type": "Note"
+   },
+   {
+    "name": "TestRecord",
+    "type": "Boolean"
+   }
+  ]
+ },
+ "SystemRequests": {
+  "title": "AI CoE System Requests",
+  "template": 100,
+  "title_means": "Service-only create ingress; cannot be populated by employees",
+  "columns": [
+   {
+    "name": "Operation",
+    "type": "Text"
+   },
+   {
+    "name": "WorkID",
+    "type": "Text"
+   },
+   {
+    "name": "RequestJson",
+    "type": "Note"
+   },
+   {
+    "name": "RecordJson",
+    "type": "Note"
+   },
+   {
+    "name": "TestRecord",
+    "type": "Boolean"
+   }
+  ]
+ }
+}

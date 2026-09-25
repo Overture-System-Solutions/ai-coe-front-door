@@ -1,0 +1,35 @@
+{
+  "kind": "unbound-existing-host-contract",
+  "powerAutomateImportable": false,
+  "enabled": false,
+  "invocation": {
+    "module": "server/invoke.cjs",
+    "export": "createMarketingInvocation",
+    "input": {"requestItemId": "positive integer; only input property"},
+    "result": ["protocol", "requestId", "operation", "projectionConfirmed"],
+    "identity": "Read immutable SharePoint request by numeric item ID; trust verified Author only"
+  },
+  "hostBindings": {
+    "sp.request": "Existing writer-authenticated SharePoint HTTP: (method,url,body?,headers?) => {status,body,etag?}. createSharePointHttp is supplied; getAccessToken lives only in the existing host.",
+    "runAsCanonicalWriter": "Existing controller: (scope,asyncOperation) => result. Enforce existing operator authority, serialization and cancellation. No parallel independent CORE writer.",
+    "invokeClaude": "Existing approved Claude connector: (wire) => native parsed Messages response. No provider secrets or arbitrary URL in requests. One call; never auto-retry uncertain outcome. Host applies bounded timeout and secure input/output logging policies."
+  },
+  "claudeWire": {
+    "operationId": "GenerateIntakeDraft",
+    "endpoint": "POST https://api.anthropic.com/v1/messages",
+    "requiredConnectorHeader": {"anthropic-version": "2023-06-01"},
+    "basis": "S778 Claude connector 1.0.0.2 (SHA-256 635d273010c7f27714d94e2474b057baf16431f7bdecc4d3be679b7be7057f19) and S779 integration 1.0.0.5 body projection convention; existing idea-only flow and original exports are not modified",
+    "parameters": ["body/model", "body/max_tokens", "body/system", "body/messages", "body/stream", "body/thinking/type", "body/output_config/format/type", "body/output_config/format/schema"],
+    "maxTokens": 1600,
+    "thinking": "disabled",
+    "stream": false,
+    "model": "server qualification binding required; no invented default",
+    "limits": "Larger drafts may truncate under the frozen connector limit; runtime refuses truncation rather than extending the original connector. Qualify an explicit larger bound separately if necessary."
+  },
+  "remainingImplementation": [
+    "Bind this invocation module into the selected existing Node-capable canonical-writer host/bridge. Ordinary Power Automate WDL cannot execute Node source.",
+    "Provide authenticated trigger-to-request-ID handoff and actual connector invocation in that host; this candidate does not claim an installed trigger or connector bridge.",
+    "If no existing approved Node-capable execution surface exists, approve a no-new-cost compatible route or port to the selected runtime; do not treat this ZIP as importable."
+  ],
+  "qualification": "Private qualification:<ref> PASS receipt must match SHA-256 canonical JSON of exact runtime config or provider config and have finite unexpired expiresAt. Config changes require a new approved receipt."
+}

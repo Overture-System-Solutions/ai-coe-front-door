@@ -1,0 +1,70 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "AI CoE Core Integrity",
+    "version": "3.0.0.1",
+    "description": "Pure private custom-code evaluator; no external forwarding. Register separately before binding flows."
+  },
+  "host": "unused.invalid",
+  "basePath": "/",
+  "schemes": [
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "security": [],
+  "paths": {
+    "/evaluate": {
+      "post": {
+        "operationId": "Evaluate",
+        "summary": "Evaluate native CORE validation and durable plans",
+        "x-ms-visibility": "internal",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "Mode",
+                "Payload"
+              ],
+              "properties": {
+                "Mode": {
+                  "type": "string"
+                },
+                "Payload": {
+                  "type": "string",
+                  "description": "Strict JSON serialized by the server-owned flow"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Typed fail-closed evaluation",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "Valid": {
+                  "type": "boolean"
+                },
+                "ErrorClass": {
+                  "type": "string"
+                }
+              },
+              "additionalProperties": true
+            }
+          }
+        }
+      }
+    }
+  }
+}

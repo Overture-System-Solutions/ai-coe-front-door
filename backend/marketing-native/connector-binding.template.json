@@ -1,0 +1,37 @@
+{
+  "schema": "marketing-native-operator-binding.v1",
+  "status": "UNBOUND",
+  "enabled": false,
+  "controllerQualified": false,
+  "securityQualified": false,
+  "siteUrl": "",
+  "canonicalListId": "",
+  "requestListId": "",
+  "resultListId": "",
+  "writerPrincipalId": null,
+  "writerIdentityReference": "samuel.conrad@osscontact.com — approved later writer, not a participant test identity",
+  "readRoleDefinitionId": 1073741826,
+  "qualificationReceiptRef": "",
+  "provider": {"model": "", "qualificationReceiptRef": ""},
+  "helper": {
+    "logicalName": "aicoe_marketingintegrity",
+    "connectionReferenceLogicalName": "aicoe_marketingintegrity",
+    "runtimeApiName": "UNBOUND_MARKETING_INTEGRITY",
+    "registeredConnectorId": null,
+    "registrationReadbackRef": null,
+    "nativeSaveAndScriptQualificationRef": null
+  },
+  "connections": {
+    "aicoe_marketing_sharepoint": {"connectionId": null, "verifiedWriterReadbackRef": null},
+    "aicoe_marketingintegrity": {"connectionId": null},
+    "aicoe_marketingclaude": {"connectionId": null, "apiName": "shared_cwdd-5foss-20claude-20intake-20draft-5f55b0e9f278ac89c6", "logicalName": "cwdd_ossclaudeintakedraft", "nativeQualificationRef": null}
+  },
+  "operatorBoundary": [
+    "This file is a review template, not an executed permission grant or qualification receipt.",
+    "Do not copy metadata fields into Config. Config contains only the root contract fields.",
+    "Keep the solution OFF. Register/save the helper separately, then read its actual native API and Dataverse identifiers; no guessed runtime API ID.",
+    "The current generator deliberately only emits UNBOUND review packages. Native rebinding/activation requires a separately reviewed source/config change and exact qualified config hash receipt.",
+    "Participant Author must differ from the actual verified writer connection principal. No self-test bypass.",
+    "No tenant check/import/auth/permission/model calls are performed by the local builder."
+  ]
+}

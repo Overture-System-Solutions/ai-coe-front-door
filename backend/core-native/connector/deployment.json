@@ -1,0 +1,13 @@
+{
+  "kind": "PAC_CUSTOM_CONNECTOR_REGISTRATION_BUNDLE_NOT_A_SOLUTION_IMPORT",
+  "solutionUniqueName": "AICoECoreIntegrity",
+  "codeSource": "Script.cs",
+  "scriptFile": "Script.csx",
+  "apiDefinitionFile": "apiDefinition.swagger.json",
+  "apiPropertiesFile": "apiProperties.json",
+  "registerCommand": "pac connector create --environment <AUTHORIZED_ENVIRONMENT> --solution-unique-name AICoECoreIntegrity --api-definition-file apiDefinition.swagger.json --api-properties-file apiProperties.json --script-file Script.csx",
+  "executeAuthorized": false,
+  "nativeRuntimeApiName": null,
+  "qualificationRequired": true,
+  "forwarding": false
+}

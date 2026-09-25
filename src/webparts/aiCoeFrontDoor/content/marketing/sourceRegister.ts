@@ -63,12 +63,32 @@ export interface ISourceRef {
   versionOrETag: string;
 }
 
+/** The marker every synthetic row carries; a register or an entry that carries it is a fixture whatever its label says. */
+export const FIXTURE_MARKER: RegExp = /(^|[^A-Z0-9])FIXTURE([^A-Z0-9]|$)/;
+export const FIXTURE_LOCATION: RegExp = /^fixture:\/\//i;
+
+/** True when the register, its version or any of its rows carries a fixture marker: a label cannot undo that. */
+export function carriesFixtureMarker(register: ISourceRegister): boolean {
+  if (FIXTURE_MARKER.test(register.registerId) || /fixture/i.test(register.version)) {
+    return true;
+  }
+  for (const entry of register.entries) {
+    if (FIXTURE_MARKER.test(entry.id) || FIXTURE_LOCATION.test(entry.location) || /fixture/i.test(entry.versionOrETag)) {
+      return true;
+    }
+  }
+  return false;
+}
+
 /**
- * Whether this register may back business content. Only an approved one may. A fixture is refused by name, which
- * is what keeps a live Marketing route closed while the real register is still being prepared.
+ * Whether this register may back business content: only an approved one that carries no fixture marker anywhere.
+ * The 2026-09-22 review showed the first version accepting `{...FIXTURE_REGISTER, approval: 'approved'}`; a label
+ * is not approval, so a fixture is now refused by its rows and not only by its label. This is still a boolean
+ * convenience, not qualification: the composed gate (`sourceGate.ts`) additionally requires an authenticated
+ * approval receipt bound to the register's snapshot hash, freshness, audience and revocation checks.
  */
 export function isUsableForBusinessContent(register: ISourceRegister): boolean {
-  return register.approval === 'approved';
+  return register.approval === 'approved' && !carriesFixtureMarker(register);
 }
 
 export const FIXTURE_REFUSAL: string =
@@ -156,6 +176,21 @@ export const FIXTURE_REGISTER: ISourceRegister = {
       classification: 'Fixture, not real material',
       audience: 'Local testing only',
       mayNotProve: 'Any real adoption or engagement figure.'
+    },
+    {
+      // The permitted meeting notes workflow 3 reads: a source like the others, so notes are cited, never trusted.
+      id: 'FIXTURE-MEETING-004',
+      location: 'fixture://meeting/notes-week-1',
+      versionOrETag: 'fixture-v1',
+      owner: 'Fictional Meeting Owner (fixture)',
+      asOf: '2026-09-21',
+      classification: 'Fixture, not real material',
+      audience: 'Local testing only',
+      mayNotProve: 'That any real person decided or committed to anything.'
     }
   ]
 };
+
+/** The invented notes behind the fixture meeting source, for the synthetic workspace and its tests. */
+export const FIXTURE_MEETING_NOTES: string =
+  'Fictional meeting, week 1. Attendees agreed the launch should wait for the availability source. Someone raised that two teams are duplicating work. The newsletter slot was said to be tight and should be checked before promising a date. Who owns the availability claim is not settled?';

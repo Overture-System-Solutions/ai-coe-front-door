@@ -1,4 +1,4 @@
-import type { SubmissionWorkflowType } from '../workflows/types';
+import type { SubmissionPieceType, SubmissionWorkflowType } from '../workflows/types';
 import type { FailureClass } from './failureClass';
 
 /**
@@ -63,7 +63,14 @@ export interface IAdminDashboardData extends IFailureFields {
   message: string;
 }
 
+export interface IRecoveredSubmission {
+  attempt: { workflowType: SubmissionPieceType; payload: unknown; intakeId: string };
+  result: ISubmissionResult;
+}
+
 export interface IGovernanceService {
+  /** Recover an unfinished, server-stored intent without submitting a new request. */
+  restoreSubmission?(): Promise<IRecoveredSubmission | undefined>;
   submitWorkflow(workflowType: SubmissionWorkflowType, payload: unknown, options?: ISubmitOptions): Promise<ISubmissionResult>;
   /**
    * Writes one outcome record (the answers of the outcome piece) to its own list: choices only, no

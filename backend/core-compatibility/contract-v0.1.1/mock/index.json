@@ -1,0 +1,44 @@
+{
+ "pairs": {
+  "CreateOrResumeWork": [
+   "CW-UAT-FAST-001-create-incomplete-s1",
+   "CW-UAT-FAST-001-replay-same-idempotency-key",
+   "CW-UAT-ARB-001-create-incomplete-s1",
+   "CW-UAT-ARB-001-replay-same-idempotency-key",
+   "CW-UAT-ELT-001-create-incomplete-s1",
+   "CW-UAT-ELT-001-replay-same-idempotency-key",
+   "negative-missing-title"
+  ],
+  "GetWorkStatus": [
+   "CW-UAT-FAST-001-final",
+   "CW-UAT-ARB-001-final",
+   "CW-UAT-ELT-001-final",
+   "negative-other-users-work",
+   "negative-unknown-work-id"
+  ],
+  "SubmitEvidenceResponse": [
+   "CW-UAT-FAST-001-s3-finance",
+   "CW-UAT-ARB-001-s3-finance",
+   "CW-UAT-ELT-001-s3-finance",
+   "negative-lease-conflict"
+  ],
+  "RequestDecisionReadiness": [
+   "CW-UAT-FAST-001-not-ready",
+   "CW-UAT-FAST-001-ready",
+   "CW-UAT-ARB-001-not-ready",
+   "CW-UAT-ARB-001-ready",
+   "CW-UAT-ELT-001-not-ready",
+   "CW-UAT-ELT-001-ready"
+  ],
+  "ListMyWork": [
+   "uat-analyst-own-work"
+  ]
+ },
+ "count": 23,
+ "fixtures_sha256": "0fec6541dc4d54512b1126b5563ef523e3712298b4a7a2e89dacd74bc02e9ff6",
+ "rc2_schema_sha256": {
+  "work-record.v2.schema.json": "966b93f38ffaaaf1252b6346a48b570c5bdce47c1c2508bde381431334268db2",
+  "evidence-packet.v2.schema.json": "991d0c12ce40d2c8df6ffa8b23adc36f88c972b9cb67f52ce467195ce361ac89",
+  "audit-receipt.v1.schema.json": "351ba80a721bab60620eae53b8e2421a6d3c31f624a4d9184b7c82692d64776e"
+ }
+}

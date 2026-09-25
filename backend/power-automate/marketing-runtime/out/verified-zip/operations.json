@@ -1,0 +1,24 @@
+{
+  "protocol": "marketing.v1",
+  "release": "0.1.1",
+  "enabledByDefault": false,
+  "operations": {
+    "ListMarketingWorkV1": { "fields": [], "mutation": false, "result": "string[]; sorted unique canonical current Author member.workIds only; max 500" },
+    "SaveManualMarketingDraftV1": { "fields": ["workId", "kind", "payload", "sourceIds", "artifactId", "expectedStoreVersion"], "mutation": true, "recoveryKind": "draft", "result": "DraftResult", "payload": "Content-only actual artifact schema; server identity/register/time/envelope/provenance/receipt fields forbidden", "concurrency": "expectedStoreVersion required with artifactId; both absent for new; immutable revision-bound token", "provenance": { "mode": "manual", "provider": "human", "model": "none", "qualificationReceiptRef": null } },
+    "DraftCampaignBriefV1": { "fields": ["workId", "objective", "audienceContext", "sourceIds", "artifactId"], "mutation": true, "recoveryKind": "draft" },
+    "DraftContentPlanV1": { "fields": ["workId", "briefArtifactId", "sourceIds", "artifactId"], "mutation": true, "recoveryKind": "draft" },
+    "DraftMeetingFollowThroughV1": { "fields": ["workId", "briefArtifactId", "sourceIds", "artifactId", "notes"], "mutation": true, "recoveryKind": "draft" },
+    "RequestReviewV1": { "fields": ["target", "reviewKind"], "mutation": true, "recoveryKind": "review" },
+    "RecordReviewDecisionV1": { "fields": ["target", "reviewKind", "outcome", "comments", "expectedStoreVersion", "idempotencyKey"], "mutation": true, "recoveryKind": "review" },
+    "RecoverMarketingIntentV1": { "fields": ["intentKey", "kind"], "mutation": true, "sameRootOnly": true },
+    "GetArtifactV1": { "fields": ["artifactId", "revision"], "mutation": false },
+    "ListArtifactsV1": { "fields": ["workId", "own"], "mutation": false },
+    "GetReviewV1": { "fields": ["reviewId"], "mutation": false },
+    "ListReviewDecisionsV1": { "fields": ["artifactId"], "mutation": false },
+    "ListReviewRequestsV1": { "fields": ["artifactId"], "mutation": false },
+    "ListAuthoritiesV1": { "fields": [], "mutation": false },
+    "ReadSourceRegisterV1": { "fields": [], "mutation": false },
+    "ReadSourceExcerptV1": { "fields": ["reference"], "mutation": false }
+  },
+  "limits": "No send/publish/assign/schedule, no client authority or business browser persistence; existing canonical writer only. All normal reviews still apply to manual artifacts."
+}

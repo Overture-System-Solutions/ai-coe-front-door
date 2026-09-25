@@ -219,7 +219,7 @@ describe('WorkCommandBlock', () => {
       expect(alert.tagName).toBe('P');
       expect(alert).toHaveClass('ai-page-command-alert');
       expect(alert.textContent).toBe(SAVE_FAILED_TEXT);
-      expect(alert.textContent).toBe('Your sentence could not be kept on this device. Copy it and use the guided request.');
+      expect(alert.textContent).toBe('Your draft save could not be confirmed. Keep this page open and confirm the same draft or ask the owner for help.');
       // The sentence stays where it can be copied; the input is not at fault, so it is not marked invalid.
       expect(input.value).toBe(SENTENCE);
       expect(input).not.toHaveAttribute('aria-invalid');

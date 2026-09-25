@@ -85,14 +85,25 @@ describe('capability gate', () => {
     expect(isRefused(result)).toBe(false);
   });
 
-  it('holds the Marketing drafting and review capabilities to the two approving roles', () => {
-    const marketing: Capability[] = ['draftCampaignBrief', 'draftContentPlan', 'draftMeetingFollowThrough', 'decideMarketingReview'];
-    for (const capability of marketing) {
-      expect({ capability, roles: rolesFor(capability).slice() }).toEqual({ capability, roles: ['operator', 'designAuthority'] });
+  it('opens Marketing drafting to the bounded participant role and the two local walkthrough roles, never to an employee or a leader', () => {
+    const drafting: Capability[] = ['draftCampaignBrief', 'draftContentPlan', 'draftMeetingFollowThrough'];
+    for (const capability of drafting) {
+      expect({ capability, roles: rolesFor(capability).slice() }).toEqual({ capability, roles: ['marketingParticipant', 'operator', 'designAuthority'] });
       expect(decide(capability, resolved()).allowed).toBe(false);
       expect(decide(capability, resolved('leader')).allowed).toBe(false);
+      expect(decide(capability, resolved('marketingParticipant')).allowed).toBe(true);
       expect(decide(capability, resolved('designAuthority')).allowed).toBe(true);
     }
+  });
+
+  it('holds the Marketing review decision to the Marketing reviewer alone: a platform role is not a business approval', () => {
+    expect(rolesFor('decideMarketingReview')).toEqual(['marketingReviewer']);
+    expect(decide('decideMarketingReview', resolved('marketingReviewer')).allowed).toBe(true);
+    for (const role of ['operator', 'designAuthority', 'leader', 'marketingParticipant'] as RoleId[]) {
+      expect({ role, allowed: decide('decideMarketingReview', resolved(role)).allowed }).toEqual({ role, allowed: false });
+    }
+    // A participant may draft but may not decide on their own draft; the two roles are separable on purpose.
+    expect(decide('draftCampaignBrief', resolved('marketingReviewer')).allowed).toBe(false);
   });
 
   it('declares a role list for every capability, so a new one cannot default to open', () => {

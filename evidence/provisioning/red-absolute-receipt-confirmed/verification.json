@@ -1,0 +1,53 @@
+{
+  "kind": "marketing-provisioning-local-verification.v1",
+  "phase": "red-absolute-receipt-confirmed",
+  "scope": "Offline process-local fake PnP; local installed command metadata only",
+  "nativeCalls": 0,
+  "tenantApplied": false,
+  "qualified": false,
+  "enabled": false,
+  "sourceHashes": "source-hashes.json",
+  "sourceFileCount": 16,
+  "sourcesUnchangedDuringTests": true,
+  "schema": {
+    "byteIdenticalPreservedDescriptor": true,
+    "sha256": "690903876bf650bacaf33436620cf99ef26386a8c44748e9b31cae4df3ad6b25",
+    "listCount": 3,
+    "declaredFieldCount": 13
+  },
+  "results": [
+    {
+      "name": "independent",
+      "command": [
+        "/mnt/c/Program Files/PowerShell/7/pwsh.exe",
+        "-NoProfile",
+        "-NonInteractive",
+        "-File",
+        "C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-audit-fixes\\tests\\provisioning\\Run-IndependentTests.ps1",
+        "-Case",
+        "drive-relative-receipt"
+      ],
+      "startedAt": "2026-09-24T13:49:35.097325+00:00",
+      "durationSeconds": 0.687,
+      "exitCode": 1,
+      "passed": false,
+      "summary": {
+        "status": "FAIL",
+        "checks": 1,
+        "failed": 1,
+        "scope": "Independent offline fake PnP fault injection",
+        "qualified": false,
+        "cases": [
+          {
+            "name": "drive-relative-receipt",
+            "status": "FAIL",
+            "observation": "ASSERT: Expected refusal for drive-relative-receipt",
+            "requesterGranted": false,
+            "fakeWrites": 0
+          }
+        ]
+      }
+    }
+  ],
+  "allPassed": false
+}

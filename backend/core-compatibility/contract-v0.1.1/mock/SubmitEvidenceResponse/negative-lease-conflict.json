@@ -1,0 +1,23 @@
+{
+ "request": {
+  "Context": {
+   "CorrelationID": "CORR-UAT-FAST-001",
+   "IdempotencyKey": "evidence:neg:1",
+   "ClientVersion": "spfx-candidate-0.1",
+   "TenantLabel": "CloudWave-PrivatePilot",
+   "TestRecord": true
+  },
+  "WorkID": "CW-UAT-FAST-001",
+  "EvidencePacketID": "EVP-UAT-FAST-001-S3_FINANCIAL",
+  "Response": "x",
+  "KnownAssumedUnknown": "ASSUMED"
+ },
+ "response": {
+  "Result": "RECONCILIATION_REQUIRED",
+  "ErrorClass": "STALE_LEASE_OR_VERSION",
+  "Message": "Record version changed since read; read back before retry with the same IdempotencyKey.",
+  "ReceiptID": "RCPT-UAT-NEG-004",
+  "RetryAllowed": true,
+  "RetryAfterSeconds": 5
+ }
+}

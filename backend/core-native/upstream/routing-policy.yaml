@@ -1,0 +1,117 @@
+version: 2.0.0
+activation_state: CANDIDATE_REQUIRES_TENANT_BINDING
+expression_language:
+  id: CW-POLICY-1
+  operators:
+  - eq
+  - in
+  - all
+  - any
+  - not
+  - gte
+  - lte
+  - is_bound
+  unknown_value: FAIL_CLOSED
+evaluation:
+  order: ascending_priority_first_match
+  conflict_rule: highest_required_authority_wins
+  authority_order:
+  - PREPARATION
+  - AI_COE_FAST_PATH
+  - ARB
+  - ELT
+  unbound_threshold: PREPARATION
+  emit:
+  - route
+  - rule_id
+  - input_hash
+  - policy_version
+  - binding_version
+  - receipt_id
+rules:
+- id: ROUTE-000
+  priority: 0
+  when:
+    any:
+    - eq:
+      - s1_complete
+      - false
+    - eq:
+      - decision_readiness_state
+      - NOT_READY
+  route: PREPARATION
+- id: ROUTE-010
+  priority: 10
+  when:
+    eq:
+    - decision_authority_bound
+    - false
+  route: PREPARATION
+- id: ROUTE-100
+  priority: 100
+  when:
+    any:
+    - eq:
+      - strategic
+      - true
+    - eq:
+      - material_multi_authority
+      - true
+    - eq:
+      - financial_commitment
+      - true
+    - eq:
+      - material_investment_threshold_met
+      - true
+  route: ELT
+- id: ROUTE-200
+  priority: 200
+  when:
+    any:
+    - eq:
+      - new_vendor
+      - true
+    - eq:
+      - new_tool
+      - true
+    - eq:
+      - production_architecture_change
+      - true
+    - eq:
+      - security_exception
+      - true
+    - eq:
+      - regulated_process
+      - true
+    - eq:
+      - risk_threshold_met
+      - true
+    - eq:
+      - contract_commitment
+      - true
+  route: ARB
+- id: ROUTE-300
+  priority: 300
+  when:
+    all:
+    - eq:
+      - capability_approved
+      - true
+    - eq:
+      - workflow_bounded
+      - true
+    - eq:
+      - risk_within_delegation
+      - true
+    - eq:
+      - delegated_authority_bound
+      - true
+  route: AI_COE_FAST_PATH
+- id: ROUTE-999
+  priority: 999
+  when:
+    eq:
+    - always
+    - true
+  route: PREPARATION
+policy_rule: AI_COE_IS_NOT_A_COMPETING_SHADOW_APPROVAL_SYSTEM

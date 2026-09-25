@@ -104,12 +104,13 @@ describe('Palette tokens', () => {
   const allSheets: string[] = cssFiles('.css');
   const reads: ITokenRead[] = tokenReads(globalSheets);
 
-  it('compiles the six global stylesheets the web part imports', () => {
+  it('compiles the seven global stylesheets the web part imports', () => {
     // appShell.global.scss arrives with the consolidated view. It is a sixth file rather than rules added to the
     // shipped stylesheet on purpose: frontDoor.global.scss and theme.global.scss are reproduced rule for rule
     // against package 1.0.0.7 and may gain nothing, so every new rule lives in an additive scoped sheet.
     expect(globalSheets.map((file: string): string => path.basename(file))).toEqual([
       'appShell.global.scss.css',
+      'coreWorkspace.global.scss.css',
       'frontDoor.global.scss.css',
       'pageResponsive.global.scss.css',
       'pageViews.global.scss.css',
@@ -302,6 +303,29 @@ describe('Palette tokens', () => {
       '.ai-view--app .ai-app-variant': ['--fd-soft'],
       '.ai-view--app .ai-app-variant-headline': ['--fd-ink'],
       '.ai-view--app .ai-page-identity': ['--fd-muted'],
+      // Cases-only colors: generated from the compiled scoped sheet, per the README recipe.
+      '.ai-view--app .ai-case-workspace .ai-case-choice': ['--fd-ink', '--fd-line', '--fd-paper'],
+      '.ai-view--app .ai-case-workspace .ai-case-choice small': ['--fd-muted'],
+      '.ai-view--app .ai-case-workspace .ai-case-choice[aria-pressed=true]': ['--fd-accent', '--fd-accent-soft'],
+      '.ai-view--app .ai-case-workspace .ai-case-feedback': ['--fd-ink'],
+      '.ai-view--app .ai-case-workspace .ai-case-field label': ['--fd-ink'],
+      '.ai-view--app .ai-case-workspace .ai-case-help': ['--fd-muted'],
+      '.ai-view--app .ai-case-workspace .ai-case-overview': ['--fd-bg', '--fd-line'],
+      '.ai-view--app .ai-case-workspace .ai-case-request': ['--fd-bg'],
+      '.ai-view--app .ai-case-workspace .ai-case-status': ['--fd-soft'],
+      '.ai-view--app .ai-case-workspace .ai-case-technical': ['--fd-line', '--fd-muted'],
+      '.ai-view--app .ai-case-workspace .ai-case-validation': ['--fd-line'],
+      '.ai-view--app .ai-case-workspace .ai-case-validation label': ['--fd-ink'],
+      '.ai-view--app .ai-case-workspace button:focus-visible': ['--fd-focus'],
+      '.ai-view--app .ai-case-workspace input': ['--fd-ink', '--fd-line', '--fd-paper'],
+      '.ai-view--app .ai-case-workspace input::placeholder': ['--fd-muted'],
+      '.ai-view--app .ai-case-workspace input:focus-visible': ['--fd-focus'],
+      '.ai-view--app .ai-case-workspace select': ['--fd-ink', '--fd-line', '--fd-paper'],
+      '.ai-view--app .ai-case-workspace select:focus-visible': ['--fd-focus'],
+      '.ai-view--app .ai-case-workspace summary:focus-visible': ['--fd-focus'],
+      '.ai-view--app .ai-case-workspace textarea': ['--fd-ink', '--fd-line', '--fd-paper'],
+      '.ai-view--app .ai-case-workspace textarea::placeholder': ['--fd-muted'],
+      '.ai-view--app .ai-case-workspace textarea:focus-visible': ['--fd-focus'],
     });
   });
 

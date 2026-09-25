@@ -1,0 +1,40 @@
+{
+ "request": {
+  "Context": {
+   "CorrelationID": "CORR-UAT-ELT-001",
+   "IdempotencyKey": "CW-UAT-ELT-001:evidence:EVP-UAT-ELT-001-S3_FINANCIAL:v2",
+   "ClientVersion": "spfx-candidate-0.1",
+   "TenantLabel": "CloudWave-PrivatePilot",
+   "TestRecord": true
+  },
+  "WorkID": "CW-UAT-ELT-001",
+  "EvidencePacketID": "EVP-UAT-ELT-001-S3_FINANCIAL",
+  "Response": "Baseline 6h/week analyst time; validated by Finance (UAT synthetic)",
+  "KnownAssumedUnknown": "KNOWN"
+ },
+ "response": {
+  "Result": "PASS",
+  "ReceiptID": "RCPT-UAT-ELT-001-025",
+  "Work": {
+   "WorkID": "CW-UAT-ELT-001",
+   "Title": "UAT: enterprise model routing platform",
+   "Stage": "DECISION",
+   "State": "NOT_DECISION_READY",
+   "EmployeeStatus": "Working",
+   "Lane": "PREPARATION",
+   "NextAction": "Close gates: S2_S5_COMPLETE_OR_NA, SME_VALIDATIONS_COMPLETE",
+   "NextOwner": "Finance",
+   "NextDate": "2026-09-22T14:00:00Z",
+   "Version": 7,
+   "LastValidatedAt": "2026-09-21T14:07:00Z",
+   "OpenEvidenceGaps": [
+    "S3_FINANCIAL"
+   ],
+   "DuplicateStatus": "RELATED_NOT_DUPLICATE",
+   "RelatedWorkIDs": [
+    "CW-05"
+   ]
+  },
+  "PacketStatus": "RETURNED"
+ }
+}

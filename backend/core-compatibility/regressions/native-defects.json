@@ -1,0 +1,9 @@
+{
+  "note": "These regressions fail against a corrected 3.0.0.0 delivery and currently PASS by confirming the defect is still present in the frozen generator. They are not Heft tests and are not native Power Automate runs.",
+  "sourceRoot": "evidence/bld-core-front-door-review-2026-09-22/extracted/AICoECoreAutomation_3_0_0_0_PACKAGE-2026-09-21/AICoECoreAutomation_3_0_0_0/generator/",
+  "defects": [
+    { "id": "F01", "file": "flows.py", "mustContain": "Find_ListId_Row", "status": "still-present" },
+    { "id": "F03", "file": "flows.py", "mustContain": "LOOSE={\"type\":\"object\"}", "status": "still-present" },
+    { "id": "F06", "file": "model.py", "mustContain": "AutoValidateReturnedPackets", "status": "still-present" }
+  ]
+}
