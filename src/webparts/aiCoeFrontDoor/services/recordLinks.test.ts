@@ -1,6 +1,6 @@
 import { createFakeListClient, InMemoryListStore } from '../../../testing/listStore';
 import { INTAKES_LIST_TITLE, USE_CASES_LIST_TITLE } from './GovernanceService';
-import { caseLinksFor, myCaseLinks, requestLink } from './recordLinks';
+import { caseLinksFor, myCaseLinks, requestLink, requestLinksFor } from './recordLinks';
 import type { IServiceContext } from './types';
 
 const SITE: string = 'https://contoso.sharepoint.com/sites/ai';
@@ -40,6 +40,19 @@ describe('record links (1.0.0.18)', () => {
     });
   });
 
+  it('finds named requests by their reference, for a business case that started from one (1.0.0.19)', async () => {
+    const { store, context } = harness();
+    store.seed(INTAKES_LIST_TITLE, [{ IntakeId: 'OVT-7' }, { IntakeId: 'OVT-6' }]);
+    expect(await requestLinksFor(context, ['OVT-6', 'OVT-404'])).toEqual({
+      'OVT-6': 'https://contoso.sharepoint.com/sites/ai/Lists/AI CoE Pilot Intakes/DispForm.aspx?ID=2'
+    });
+    const reads = store.requests.filter((request) => request.list === INTAKES_LIST_TITLE && request.url.indexOf('/items') >= 0);
+    expect(reads.map((request) => decodeURIComponent(request.url))).toEqual([
+      expect.stringContaining("IntakeId eq 'OVT-6'"),
+      expect.stringContaining("IntakeId eq 'OVT-404'")
+    ]);
+  });
+
   it('gives no link, rather than failing, when a list cannot be read', async () => {
     const { store, context } = harness();
     store.deny(USE_CASES_LIST_TITLE);
@@ -47,5 +60,6 @@ describe('record links (1.0.0.18)', () => {
     expect(await myCaseLinks(context, 'ada@contoso.com')).toEqual({});
     expect(await caseLinksFor(context, ['OVT-1'])).toEqual({});
     expect(await requestLink(context, 7)).toBeUndefined();
+    expect(await requestLinksFor(context, ['OVT-1'])).toEqual({});
   });
 });

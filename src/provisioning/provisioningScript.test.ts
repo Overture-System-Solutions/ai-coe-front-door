@@ -812,7 +812,8 @@ describe('page provisioning script', () => {
 
 describe('README', () => {
   it('documents the current package and the page layout', () => {
-    expect(readme).toContain('## Deploy 1.0.0.18');
+    expect(readme).toContain('## Deploy 1.0.0.19');
+    expect(readme).not.toContain('## Deploy 1.0.0.18');
     expect(readme).not.toContain('## Deploy 1.0.0.17');
     expect(readme).not.toContain('## Deploy 1.0.0.16');
     expect(readme).not.toContain('## Deploy 1.0.0.15');
@@ -944,8 +945,15 @@ describe('README', () => {
     expect(readme).toContain('?page=value');
   });
 
-  it('documents the 1.0.0.18 candidate, what 1.0.0.17 already added, commissioning gates and additive one-page path', () => {
-    const deploy: string = readme.slice(readme.indexOf('## Deploy 1.0.0.18'), readme.indexOf('### Enable AI drafting'));
+  it('documents the 1.0.0.19 candidate, what 1.0.0.18 and 1.0.0.17 already added, commissioning gates and additive one-page path', () => {
+    const deploy: string = readme.slice(readme.indexOf('## Deploy 1.0.0.19'), readme.indexOf('### Enable AI drafting'));
+    // 1.0.0.19: Cases leaves the business-case workspace out on an unbound site, a business case names the request it
+    // started from, and the undecided rule for which cases need one is shown as two options.
+    expect(deploy).toContain('coreBindingJson');
+    expect(deploy).toContain('LegacyRefs');
+    expect(deploy).toContain('Option A');
+    expect(deploy).toContain('Option B');
+    expect(deploy).toMatch(/does not return them yet/);
     // 1.0.0.18: the approved-tools register, the concierge settings, and the tabbed view's changes.
     expect(deploy).toContain('AI CoE Approved Tools');
     expect(deploy).toContain('conciergeChatUrl');

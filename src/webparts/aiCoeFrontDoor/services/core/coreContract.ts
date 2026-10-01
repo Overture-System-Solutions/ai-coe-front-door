@@ -143,6 +143,17 @@ export interface IWorkProjection {
   OpenEvidenceGaps?: string[];
   DuplicateStatus?: DuplicateStatus;
   RelatedWorkIDs?: string[];
+  /**
+   * The request and AI CoE case this work started from. The native service stores them on create (Cases.LegacyRefs)
+   * but its projection does not return them yet, so only a service that does return them shows the link (1.0.0.19).
+   */
+  LegacyRefs?: ILegacyRefs;
+}
+
+/** A request reference (IntakeId) and an AI CoE case reference (CoEID), as the native service validates them. */
+export interface ILegacyRefs {
+  IntakeId?: string;
+  CoEID?: string;
 }
 
 /** What an employee view is shown: the projection without foreign work identifiers or anything diagnostic. */
@@ -159,6 +170,8 @@ export interface IEmployeeWork {
   lastValidatedAt: string | null;
   openEvidenceGaps: string[];
   duplicateStatus: DuplicateStatus | undefined;
+  /** Present only when the service returned where the work started. */
+  legacyRefs?: { intakeId?: string; coeId?: string };
 }
 
 export interface ICoreError {
@@ -383,6 +396,30 @@ export function parseS1(value: unknown, path: string, issues: IContractIssue[], 
   return s1;
 }
 
+/** The service's own rule for a legacy reference: 1 to 200 letters, digits, hyphens or underscores. */
+const LEGACY_REFERENCE: RegExp = /^[A-Za-z0-9_-]{1,200}$/;
+
+function legacyRefsField(value: unknown, path: string, issues: IContractIssue[]): ILegacyRefs | undefined {
+  const raw: Raw | undefined = strict(value, path, issues, [], ['IntakeId', 'CoEID']);
+  if (raw === undefined) {
+    return undefined;
+  }
+  const refs: ILegacyRefs = {};
+  if (raw.IntakeId !== undefined) {
+    const intakeId: string | null | undefined = str(raw.IntakeId, `${path}.IntakeId`, issues, { pattern: LEGACY_REFERENCE });
+    if (typeof intakeId === 'string') {
+      refs.IntakeId = intakeId;
+    }
+  }
+  if (raw.CoEID !== undefined) {
+    const coeId: string | null | undefined = str(raw.CoEID, `${path}.CoEID`, issues, { pattern: LEGACY_REFERENCE });
+    if (typeof coeId === 'string') {
+      refs.CoEID = coeId;
+    }
+  }
+  return refs;
+}
+
 function workIdField(value: unknown, path: string, issues: IContractIssue[]): string | undefined {
   const parsed: string | null | undefined = str(value, path, issues, { min: 1, pattern: CANONICAL_WORK_ID });
   return typeof parsed === 'string' ? parsed : undefined;
@@ -486,7 +523,8 @@ export function parseWorkProjection(value: unknown, path: string, issues: IContr
   const raw: Raw | undefined = strict(value, path, issues, ['WorkID', 'Title', 'Stage', 'State', 'EmployeeStatus', 'Lane', 'NextAction', 'NextOwner', 'NextDate', 'Version', 'LastValidatedAt'], [
     'OpenEvidenceGaps',
     'DuplicateStatus',
-    'RelatedWorkIDs'
+    'RelatedWorkIDs',
+    'LegacyRefs'
   ]);
   if (raw === undefined) {
     return undefined;
@@ -509,6 +547,7 @@ export function parseWorkProjection(value: unknown, path: string, issues: IContr
   const OpenEvidenceGaps: string[] | undefined = raw.OpenEvidenceGaps === undefined ? undefined : strArray(raw.OpenEvidenceGaps, `${path}.OpenEvidenceGaps`, issues);
   const DuplicateStatus: DuplicateStatus | undefined = raw.DuplicateStatus === undefined ? undefined : enumOf(raw.DuplicateStatus, `${path}.DuplicateStatus`, issues, DUPLICATE_STATUSES);
   const RelatedWorkIDs: string[] | undefined = raw.RelatedWorkIDs === undefined ? undefined : strArray(raw.RelatedWorkIDs, `${path}.RelatedWorkIDs`, issues, { unique: true, min: 1, pattern: CANONICAL_WORK_ID });
+  const LegacyRefs: ILegacyRefs | undefined = raw.LegacyRefs === undefined ? undefined : legacyRefsField(raw.LegacyRefs, `${path}.LegacyRefs`, issues);
   if (issues.length !== before || WorkID === undefined || typeof Title !== 'string' || Stage === undefined || State === undefined || EmployeeStatus === undefined || Lane === undefined || NextAction === undefined || NextOwner === undefined || NextDate === undefined || typeof Version !== 'number' || LastValidatedAt === undefined) {
     return undefined;
   }
@@ -521,6 +560,9 @@ export function parseWorkProjection(value: unknown, path: string, issues: IContr
   }
   if (RelatedWorkIDs !== undefined) {
     work.RelatedWorkIDs = RelatedWorkIDs;
+  }
+  if (LegacyRefs !== undefined) {
+    work.LegacyRefs = LegacyRefs;
   }
   return work;
 }
@@ -664,7 +706,7 @@ export function isCoreError(response: CoreResponse): response is ICoreError {
 
 /** The employee view of a projection: no foreign work identifiers, no diagnostics. */
 export function toEmployeeWork(work: IWorkProjection): IEmployeeWork {
-  return {
+  const employee: IEmployeeWork = {
     workId: work.WorkID,
     title: work.Title,
     stage: work.Stage,
@@ -678,6 +720,16 @@ export function toEmployeeWork(work: IWorkProjection): IEmployeeWork {
     openEvidenceGaps: work.OpenEvidenceGaps ?? [],
     duplicateStatus: work.DuplicateStatus
   };
+  if (work.LegacyRefs !== undefined && (work.LegacyRefs.IntakeId !== undefined || work.LegacyRefs.CoEID !== undefined)) {
+    employee.legacyRefs = {};
+    if (work.LegacyRefs.IntakeId !== undefined) {
+      employee.legacyRefs.intakeId = work.LegacyRefs.IntakeId;
+    }
+    if (work.LegacyRefs.CoEID !== undefined) {
+      employee.legacyRefs.coeId = work.LegacyRefs.CoEID;
+    }
+  }
+  return employee;
 }
 
 /** The receipt every failure envelope of the shipped flow writes when nothing auditable exists. Not a receipt. */

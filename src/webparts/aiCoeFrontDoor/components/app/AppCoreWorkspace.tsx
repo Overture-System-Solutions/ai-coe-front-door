@@ -45,6 +45,40 @@ function nextStep(work: IEmployeeWork): string {
   return work.nextAction ?? 'No next action has been recorded.';
 }
 
+/**
+ * Where a business case started (1.0.0.19): the request and the AI CoE case it came from, each linked to its record in
+ * a new tab when the reader can see it. Shown only when the case service returns the references.
+ */
+function StartedFrom({ refs }: { refs: NonNullable<IEmployeeWork['legacyRefs']> }): React.ReactElement {
+  const { services } = useFrontDoor();
+  const [links, setLinks] = React.useState<{ request?: string; record?: string }>({});
+  React.useEffect((): (() => void) => {
+    let cancelled: boolean = false;
+    const myWork = services.myWork;
+    const read = async (): Promise<void> => {
+      const request: string | undefined = refs.intakeId !== undefined && myWork?.requestLinksFor !== undefined ? (await myWork.requestLinksFor([refs.intakeId]))[refs.intakeId] : undefined;
+      const record: string | undefined = refs.coeId !== undefined && myWork?.caseLinks !== undefined ? (await myWork.caseLinks([refs.coeId]))[refs.coeId] : undefined;
+      if (!cancelled) {
+        setLinks({ request, record });
+      }
+    };
+    read().catch((): void => undefined);
+    return (): void => {
+      cancelled = true;
+    };
+  }, [services.myWork, refs.intakeId, refs.coeId]);
+  const label: string = refs.intakeId !== undefined
+    ? `Started from request ${refs.intakeId}${refs.coeId !== undefined && refs.coeId !== refs.intakeId ? `, AI CoE case ${refs.coeId}` : ''}`
+    : `Started from AI CoE case ${refs.coeId ?? ''}`;
+  return (
+    <p className="ai-app-note ai-case-origin">
+      {label}
+      {links.request !== undefined && <> · <a href={links.request} target="_blank" rel="noopener noreferrer">Open the request</a></>}
+      {links.record !== undefined && <> · <a href={links.record} target="_blank" rel="noopener noreferrer">Open the case</a></>}
+    </p>
+  );
+}
+
 export function AppCoreWorkspace({ coreWork, onDirtyChange }: ICoreWorkspaceProps): React.ReactElement {
   const { user, siteUrl } = useFrontDoor();
   return <CoreCaseWorkspace key={`${siteUrl}:${user.email}:${coreWork.mode}`} coreWork={coreWork} onDirtyChange={onDirtyChange} />;
@@ -269,7 +303,7 @@ function CoreCaseWorkspace({ coreWork, onDirtyChange }: ICoreWorkspaceProps): Re
             </ul>}
           </section>}
           {work !== undefined && <section className="ai-case-overview" aria-label="Selected case status">
-            <div><span className="ai-app-note">Selected case</span><h3 className="ai-app-detail-title">{work.title}</h3><p className="ai-app-note">Case reference: <span>{work.workId}</span></p></div>
+            <div><span className="ai-app-note">Selected case</span><h3 className="ai-app-detail-title">{work.title}</h3><p className="ai-app-note">Case reference: <span>{work.workId}</span></p>{work.legacyRefs !== undefined && <StartedFrom refs={work.legacyRefs} />}</div>
             <div><span className="ai-case-status">{work.employeeStatus}</span><p>{nextStep(work)}</p></div>
           </section>}
           <section className="ai-app-panel ai-case-details" aria-labelledby="ai-core-details-heading">

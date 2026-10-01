@@ -346,6 +346,8 @@ export function AppShell({ settings }: IAppShellProps): React.ReactElement {
               commandLabel={`Ask the ${branding.coeName}`}
               status={viewStatus(resolution, roleState.status === 'loading')}
             />
+            {/* The approved tools close Home, read-only (moved from Requests in 1.0.0.19). */}
+            <AppApprovedTools load={toolsLoad} />
           </React.Fragment>
         );
         break;
@@ -353,7 +355,7 @@ export function AppShell({ settings }: IAppShellProps): React.ReactElement {
         body = <AppCases onDirtyChange={onBusinessDirtyChange} analysis={decide('analyzeCasePortfolio', resolution).allowed ? <AppCaseAnalysis /> : undefined} />;
         break;
       case 'engineering':
-        body = <AppEngineering mine={<MyWork />} starters={<AppStarters kind="engineering" onStart={setWorkflow} />} below={<AppApprovedTools load={toolsLoad} />} />;
+        body = <AppEngineering mine={<MyWork />} starters={<AppStarters kind="engineering" onStart={setWorkflow} />} />;
         break;
       case 'marketing':
         body = <AppMarketing demo={demo} onDemoChange={setDemo} resolution={resolution} workingInputs={syntheticInputs} onWorkingInputsChange={setSyntheticInputs} onBusinessDirtyChange={onBusinessDirtyChange} />;

@@ -89,23 +89,32 @@ export async function myCaseLinks(context: IServiceContext, email: string): Prom
 }
 
 /** Named cases, by reference, each read on its own; a case the reader cannot see is left out. */
-export async function caseLinksFor(context: IServiceContext, references: readonly string[]): Promise<{ [reference: string]: string }> {
+export function caseLinksFor(context: IServiceContext, references: readonly string[]): Promise<{ [reference: string]: string }> {
+  return linksByReference(context, USE_CASES_LIST_TITLE, 'CoEID', references);
+}
+
+/** Named requests, by reference, each read on its own; a request the reader cannot see is left out (1.0.0.19). */
+export function requestLinksFor(context: IServiceContext, references: readonly string[]): Promise<{ [reference: string]: string }> {
+  return linksByReference(context, INTAKES_LIST_TITLE, 'IntakeId', references);
+}
+
+async function linksByReference(context: IServiceContext, listTitle: string, field: string, references: readonly string[]): Promise<{ [reference: string]: string }> {
   const links: { [reference: string]: string } = {};
-  const form: string | undefined = await displayForm(context, USE_CASES_LIST_TITLE);
+  const form: string | undefined = await displayForm(context, listTitle);
   if (form === undefined) {
     return links;
   }
   const unique: string[] = references.filter((reference: string, index: number): boolean => reference !== '' && references.indexOf(reference) === index);
   for (const reference of unique) {
     try {
-      const filter: string = encodeURIComponent(`CoEID eq ${odataLiteral(reference)}`);
-      const rows: IListItem[] = rowsOf(await getJson(context, `${listItemsUrl(context.siteUrl, USE_CASES_LIST_TITLE)}?$filter=${filter}&$select=Id,CoEID&$top=1`));
+      const filter: string = encodeURIComponent(`${field} eq ${odataLiteral(reference)}`);
+      const rows: IListItem[] = rowsOf(await getJson(context, `${listItemsUrl(context.siteUrl, listTitle)}?$filter=${filter}&$select=Id,${field}&$top=1`));
       const id: number | undefined = rows.length > 0 ? idOf(rows[0]) : undefined;
       if (id !== undefined) {
         links[reference] = `${form}?ID=${id}`;
       }
     } catch {
-      // This case stays unlinked.
+      // This record stays unlinked.
     }
   }
   return links;

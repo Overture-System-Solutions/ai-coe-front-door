@@ -50,7 +50,7 @@ import { RoleResolver } from './services/roleResolver';
 import { createToolPolicyEvaluator } from './services/toolPolicyEvaluator';
 import type { IServiceContext } from './services/types';
 import { UsageMetricsService } from './services/UsageMetricsService';
-import { createDisabledLiveCoreWorkService, createSyntheticCoreWorkService } from './services/core/coreWorkService';
+import { createSyntheticCoreWorkService } from './services/core/coreWorkService';
 import type { ICoreWorkService } from './services/core/coreWorkService';
 import { NativeCoreWorkService } from './services/core/nativeCoreWorkService';
 import type { INativeCoreBinding } from './services/core/nativeCoreWorkService';
@@ -443,9 +443,10 @@ export default class AiCoeFrontDoorWebPart extends BaseClientSideWebPart<IAiCoeF
 
   /**
    * The native adapter is selected only for a complete qualified split binding. The server remains authoritative.
-   * Offline preview alone receives the labelled synthetic engine.
+   * Offline preview alone receives the labelled synthetic engine. A real site with no readable binding gets no case
+   * service, so Cases leaves the business-case workspace out instead of listing why it is not connected (1.0.0.19).
    */
-  private _coreWork(core: ICoreServices): ICoreWorkService {
+  private _coreWork(core: ICoreServices): ICoreWorkService | undefined {
     if (this._isSyntheticHost(core.serviceContext.siteUrl)) {
       return createSyntheticCoreWorkService(core.user.email, { backend: this._storage() });
     }
@@ -455,7 +456,7 @@ export default class AiCoeFrontDoorWebPart extends BaseClientSideWebPart<IAiCoeF
         return new NativeCoreWorkService(core.serviceContext, { binding, references: browserLocalStorage() });
       } catch { /* Malformed or incomplete bindings cannot activate a transport. */ }
     }
-    return createDisabledLiveCoreWorkService();
+    return undefined;
   }
 
   private _isSyntheticHost(siteUrl: string): boolean {

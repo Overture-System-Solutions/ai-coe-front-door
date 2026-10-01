@@ -97,23 +97,26 @@ describe('same-app measurement and teaching entry', () => {
     expect(styles).toMatch(/\.ai-app-cases-explanation\s*\{\s*padding-top:\s*24px;/);
   });
 
-  it.each(['wide', 'narrow'] as const)('stacks the Requests forms beside My requests in the %s layout, one column when narrow', async layout => {
+  it.each(['wide', 'narrow'] as const)('lays the four Requests forms in one row and My requests in two columns in the %s layout, one column when narrow', async layout => {
     const view = renderWithFrontDoor(<AppShell settings={{ view: 'app', layout, pages: {} }} />);
     await act(async () => undefined);
     fireEvent.click(view.getByRole('tab', { name: 'Requests' }));
     const starters = view.container.querySelector('.ai-app-starters--engineering');
     expect(starters).not.toBeNull();
     expect(starters?.querySelectorAll('.ai-app-starter-button')).toHaveLength(4);
-    expect(starters?.closest('.ai-app-requests-start')).not.toBeNull();
+    expect(starters?.closest('section.ai-app-requests-start')).not.toBeNull();
     expect(Array.from(starters?.querySelectorAll('.ai-app-starter-title') ?? []).map(node => node.textContent)).toEqual([
       'Explore an AI idea', 'Check a tool or task', 'Register team AI use', 'Get help or training'
     ]);
     const styles = fs.readFileSync(path.join(process.cwd(), 'src/webparts/aiCoeFrontDoor/styles/appShell.global.scss'), 'utf8');
-    // Two columns, My requests the wider one; the forms stack in one column; narrow and small screens get one column.
-    expect(styles).toMatch(/\.ai-app-requests\s*\{[^}]*display:\s*grid;[^}]*grid-template-columns:\s*minmax\(0, 1\.35fr\) minmax\(280px, 1fr\);/);
-    expect(styles).toMatch(/\.ai-app-starters--engineering\s*\{[^}]*grid-template-columns:\s*minmax\(0, 1fr\);/);
-    expect(styles).toMatch(/\.ai-view--app\.ai-view--narrow\s*\{[^}]*\.ai-app-requests\s*\{[^}]*grid-template-columns:\s*minmax\(0, 1fr\)/);
-    expect(styles).toMatch(/@media \(max-width: 720px\)\s*\{[^}]*\.ai-app-requests\s*\{[^}]*grid-template-columns:\s*minmax\(0, 1fr\)/);
+    // 1.0.0.19: the four forms in one row (two by two on a medium screen), My requests in two columns that fill side by
+    // side; the narrow layout and a small screen get one column of each. The 1.0.0.18 side-by-side grid is gone.
+    expect(styles).not.toMatch(/\.ai-app-requests\s*\{/);
+    expect(styles).toMatch(/\.ai-app-starters--engineering\s*\{\s*grid-template-columns:\s*repeat\(4, minmax\(0, 1fr\)\);/);
+    expect(styles).toMatch(/@media \(max-width: 1024px\)\s*\{\s*\.ai-view--app \.ai-app-starters--engineering\s*\{\s*grid-template-columns:\s*repeat\(2, minmax\(0, 1fr\)\);/);
+    expect(styles).toMatch(/\.ai-app-requests-mine \.ai-page-mywork-list\s*\{[^}]*display:\s*grid;[^}]*grid-template-columns:\s*repeat\(2, minmax\(0, 1fr\)\);/);
+    expect(styles).toMatch(/\.ai-view--app\.ai-view--narrow\s*\{\s*\.ai-app-requests-mine \.ai-page-mywork-list\s*\{\s*grid-template-columns:\s*minmax\(0, 1fr\);/);
+    expect(styles).toMatch(/@media \(max-width: 720px\)\s*\{\s*\.ai-view--app \.ai-app-requests-mine \.ai-page-mywork-list\s*\{\s*grid-template-columns:\s*minmax\(0, 1fr\);/);
     fireEvent.click(view.getByRole('button', { name: /Check a tool or task/ }));
     await waitFor(() => expect(view.container.querySelector('.ai-app-starters')).toBeNull());
     expect(view.governance.submissions).toHaveLength(0);

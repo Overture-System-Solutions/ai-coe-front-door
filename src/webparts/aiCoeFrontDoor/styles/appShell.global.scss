@@ -166,17 +166,17 @@
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
-  // Requests (1.0.0.18): My requests on the left, the request forms stacked on the right.
-  .ai-app-requests {
-    align-items: start;
-    display: grid;
-    gap: 24px;
-    grid-template-columns: minmax(0, 1.35fr) minmax(280px, 1fr);
-    padding-block: 24px;
+  // Requests (1.0.0.19): the request forms in their own section, four in a row, and the person's own requests below.
+  .ai-app-requests-start {
+    padding-top: 24px;
   }
 
   .ai-app-starters--engineering {
-    grid-template-columns: minmax(0, 1fr);
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .ai-app-requests-mine {
+    padding-block: 28px 8px;
   }
 
   // What is going on? (1.0.0.18): the explanation at the foot of Requests, Improvement and Cases, closed by default.
@@ -312,7 +312,7 @@
 
 // One column where the part sits in a narrow column, and on a small screen.
 .ai-view--app.ai-view--narrow {
-  .ai-app-requests {
+  .ai-app-requests-mine .ai-page-mywork-list {
     grid-template-columns: minmax(0, 1fr);
   }
 
@@ -331,12 +331,16 @@
   }
 }
 
+// Requests (1.0.0.19): the four request forms two by two on a medium screen. Before the small-screen rules, which
+// take them to one column.
+@media (max-width: 1024px) {
+  .ai-view--app .ai-app-starters--engineering {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
 @media (max-width: 720px) {
   .ai-view--app {
-    .ai-app-requests {
-      grid-template-columns: minmax(0, 1fr);
-    }
-
     .ai-app-choices,
     .ai-app-starters,
     .ai-app-measures {
@@ -1274,9 +1278,11 @@
     margin: 0 0 10px;
   }
 
+  // Two columns since 1.0.0.19, filled side by side, so a long list grows half as tall.
   .ai-app-requests-mine .ai-page-mywork-list {
     display: grid;
     gap: 12px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     margin: 0;
   }
 
@@ -1325,6 +1331,13 @@
   .ai-app-requests-mine .ai-mywork-note {
     color: var(--fd-muted, #5b6878);
     margin: 0;
+  }
+}
+
+// After the two-column list above, so a small screen gets one column of requests.
+@media (max-width: 720px) {
+  .ai-view--app .ai-app-requests-mine .ai-page-mywork-list {
+    grid-template-columns: minmax(0, 1fr);
   }
 }
 

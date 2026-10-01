@@ -9,7 +9,7 @@ The final local correction build is **1.0.0.17** on `fix/coe-audit-server-drafts
 ## Remaining implementation
 
 1. **Marketing execution in Microsoft:** the tested `marketing-runtime-offline-0.1.1.zip` is a Node extension, not a Power Automate import. A compatible approved Microsoft execution/trigger/Claude-connector integration or a native port remains to be implemented and qualified. The existing idea-only draft flow must not be silently widened; keep working OSS exports intact.
-2. **Legacy-to-CORE journey:** preserve existing IntakeId/CoEID values and verify their explicit association with the CORE-returned WorkID end to end. Optional LegacyRefs and mapping code do not alone prove an integrated native journey.
+2. **Legacy-to-CORE journey:** preserve existing IntakeId/CoEID values and verify their explicit association with the CORE-returned WorkID end to end. Optional LegacyRefs and mapping code do not alone prove an integrated native journey. Since 1.0.0.19 the front door shows a business case's LegacyRefs when the service returns them, but the native projection (`connector/Script.cs` `Projection`) does not return them yet, and nothing creates a business case from a request: the rule for which cases need one is undecided (two options are shown in Cases).
 3. **Marketing provisioning:** its descriptor is not an installer. Actual private canonical/membership/source/review/request/result lists and their ACL/retention lifecycle require a scoped implementation/commissioning path under the approved writer.
 4. **Monday.com:** no setup or integration has been implemented. Board, field, operation, synchronization and authority scope must be established first; preserve Monday/ARB governance.
 

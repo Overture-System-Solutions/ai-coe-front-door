@@ -1,5 +1,6 @@
 /**
- * The approved-tools register in the tabbed view (1.0.0.18): Requests shows the register read-only, the tool check
+ * The approved-tools register in the tabbed view (1.0.0.18): Home shows the register read-only at its foot (moved there
+ * from Requests in 1.0.0.19), the tool check
  * picks its tool from it in five screens and answers from the tool's row - without the old "prototype" label - and the
  * other shorter forms ask their related questions together.
  */
@@ -27,6 +28,13 @@ function register(result: IApprovedToolsResult): IApprovedToolsService {
   return { getTools: jest.fn().mockResolvedValue(result) };
 }
 
+async function openHome(approvedTools?: IApprovedToolsService): Promise<ReturnType<typeof renderWithFrontDoor>> {
+  const view = renderWithFrontDoor(<AppShell settings={{ view: 'app', layout: 'wide', pages: {} }} />, { approvedTools });
+  await act(async (): Promise<void> => undefined);
+  expect(view.getByRole('tab', { name: 'Home', selected: true })).toBeInTheDocument();
+  return view;
+}
+
 async function openRequests(approvedTools?: IApprovedToolsService): Promise<ReturnType<typeof renderWithFrontDoor>> {
   const view = renderWithFrontDoor(<AppShell settings={{ view: 'app', layout: 'wide', pages: {} }} />, { approvedTools });
   await act(async (): Promise<void> => undefined);
@@ -48,9 +56,14 @@ async function next(view: ReturnType<typeof renderWithFrontDoor>, label: string 
 }
 
 describe('the approved-tools register in the tabbed view', () => {
-  it('shows the register on Requests: each tool with its status, what it is approved for and the information it may use', async () => {
-    const view = await openRequests(register({ state: 'ok', tools: [GAMMA, COPILOT], message: 'Read 2 tools.' }));
+  it('shows the register at the foot of Home: each tool with its status, what it is approved for and the information it may use', async () => {
+    const view = await openHome(register({ state: 'ok', tools: [GAMMA, COPILOT], message: 'Read 2 tools.' }));
     const panel: HTMLElement = await view.findByRole('region', { name: 'Approved tools' });
+    // Last on Home: after the entry panel and its three ways in.
+    const choices: Element | null = view.container.querySelector('.ai-app-choices');
+    expect(choices).not.toBeNull();
+    expect((choices as Element).compareDocumentPosition(panel) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    expect(panel.parentElement?.lastElementChild).toBe(panel);
     const rows: HTMLElement[] = within(panel).getAllByRole('listitem');
     expect(rows.map((row: HTMLElement): string => within(row).getByRole('heading').textContent ?? '')).toEqual(['Gamma', 'Microsoft 365 Copilot Chat']);
     expect(rows[1].textContent).toContain('Approved');
@@ -61,11 +74,17 @@ describe('the approved-tools register in the tabbed view', () => {
     expect(rows[0].textContent).toContain('Not approved');
   });
 
+  it('leaves the register off Requests, which now holds only the request forms and My requests (1.0.0.19)', async () => {
+    const view = await openRequests(register({ state: 'ok', tools: [GAMMA, COPILOT], message: 'Read 2 tools.' }));
+    expect(view.getByRole('region', { name: 'Start a request' })).toBeInTheDocument();
+    expect(view.queryByRole('region', { name: 'Approved tools' })).toBeNull();
+  });
+
   it('says so when the register is empty or cannot be read', async () => {
-    const empty = await openRequests(register({ state: 'ok', tools: [], message: 'Read 0 tools.' }));
+    const empty = await openHome(register({ state: 'ok', tools: [], message: 'Read 0 tools.' }));
     expect((await empty.findByRole('region', { name: 'Approved tools' })).textContent).toContain('No tools are on the approved list yet.');
     empty.unmount();
-    const failed = await openRequests(register({ state: 'unavailable', tools: [], message: 'x', failureClass: 'SOURCE', userMessage: 'x' }));
+    const failed = await openHome(register({ state: 'unavailable', tools: [], message: 'x', failureClass: 'SOURCE', userMessage: 'x' }));
     expect((await failed.findByRole('region', { name: 'Approved tools' })).textContent).toContain('The approved tools could not be read on this site.');
   });
 

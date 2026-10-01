@@ -654,6 +654,26 @@ describe('AiCoeFrontDoorWebPart bundle', () => {
     expect(fileReads(unkeyed)).toHaveLength(0);
   });
 
+  it.each([
+    ['no case service binding', {}],
+    ['a binding that cannot be read', { coreBindingJson: '{not json' }]
+  ])('leaves the business-case workspace out of Cases on a real site with %s (1.0.0.19)', async (_name: string, binding: { [key: string]: unknown }) => {
+    const { webPart } = await mount({ isAdmin: true, properties: { view: 'app', ...binding } });
+    const root: HTMLElement = webPart.domElement;
+    await waitFor((): void => expect(within(root).getByRole('tab', { name: 'Cases' })).toBeInTheDocument());
+    await act(async (): Promise<void> => {
+      fireEvent.click(within(root).getByRole('tab', { name: 'Cases' }));
+    });
+    expect(within(root).getByRole('tab', { name: 'Cases', selected: true })).toBeInTheDocument();
+    // 1.0.0.18 showed a notice that cases are saved through the configured service, then seven commissioning reasons.
+    expect(root.querySelector('.ai-case-workspace:not(.ai-case-analysis)')).toBeNull();
+    expect(root.textContent).not.toContain('Your cases are saved through the configured service');
+    expect(root.textContent).not.toContain('integrity helper must be registered');
+    fireEvent.click(within(root).getByRole('button', { name: 'What is going on?' }));
+    expect(within(root).getByText('What happens to a request', { selector: 'h2, h3, h4' })).toBeInTheDocument();
+    expect(within(root).queryByRole('region', { name: 'From a request to a business case' })).not.toBeInTheDocument();
+  });
+
   it('gates the administrator dashboard by permission for the admin view', async () => {
     const visitor: IHostedInstance = await mount({ properties: { view: 'admin' } });
     expect(within(visitor.webPart.domElement).getByText(ADMIN_ONLY_TEXT)).toBeInTheDocument();

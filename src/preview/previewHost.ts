@@ -19,6 +19,9 @@
  * tslib helpers, which a browser cannot resolve from a bare module specifier.
  */
 
+import { PRACTICE_CORE_STORE_KEY, practiceJourney, withPracticeCases } from './practiceCases.js';
+import type { IPracticeJourney } from './practiceCases';
+
 interface IPreviewItem {
   Id: number;
   [field: string]: unknown;
@@ -220,6 +223,40 @@ function seedUseCases(): void {
   }
 }
 seedUseCases();
+
+/** A list row from a record of the worked example, with the preview's own id. */
+function previewRow(record: object, extra: { [field: string]: unknown }): IPreviewItem {
+  const row: IPreviewItem = { Id: nextId++ };
+  const fields: { [field: string]: unknown } = record as { [field: string]: unknown };
+  for (const key of Object.keys(fields)) {
+    row[key] = fields[key];
+  }
+  for (const key of Object.keys(extra)) {
+    row[key] = extra[key];
+  }
+  return row;
+}
+
+/**
+ * The worked example from a request to a business case (1.0.0.19, see practiceCases.ts): four requests of the preview
+ * person with their AI CoE cases, and two business cases added to what the practice case service has saved in this
+ * browser, so Cases opens with one business case in progress and one ready for the review board.
+ */
+function seedPracticeJourney(): void {
+  const journey: IPracticeJourney = practiceJourney();
+  for (const intake of journey.intakes) {
+    lists['AI CoE Pilot Intakes'].push(previewRow(intake, { PayloadJson: '{"simulated":true}' }));
+  }
+  for (const useCase of journey.useCases) {
+    lists['AI CoE Use Cases'].push(previewRow(useCase, {}));
+  }
+  try {
+    window.localStorage.setItem(PRACTICE_CORE_STORE_KEY, withPracticeCases(window.localStorage.getItem(PRACTICE_CORE_STORE_KEY), journey.works));
+  } catch {
+    // Storage refused: Cases opens without the example business cases.
+  }
+}
+seedPracticeJourney();
 
 /**
  * Fictional rows of the measures list an operator fills in by hand, so the Enterprise value page shows

@@ -8,7 +8,7 @@
  *
  * Wording note: this file is scanned for Tailwind utility names; keep prose free of utility words.
  */
-import { caseLinksFor, myCaseLinks, requestLinks } from './recordLinks';
+import { caseLinksFor, myCaseLinks, requestLinks, requestLinksFor } from './recordLinks';
 import type { SubmissionWorkflowType } from '../workflows/types';
 import { classifyError, classifyResponse, failureUserMessage } from './failureClass';
 import type { FailureClass } from './failureClass';
@@ -51,6 +51,8 @@ export interface IMyWorkService {
   recordLinks?(items: readonly IMyWorkItem[]): Promise<{ [itemId: number]: IRecordLink }>;
   /** The link of each named case the reader can see, by reference. Never throws. */
   caseLinks?(references: readonly string[]): Promise<{ [reference: string]: string }>;
+  /** The link of each named request the reader can see, by reference (1.0.0.19). Never throws. */
+  requestLinksFor?(references: readonly string[]): Promise<{ [reference: string]: string }>;
 }
 
 /** The columns a status line needs; the payload column is never asked for. */
@@ -132,6 +134,10 @@ export class MyWorkService implements IMyWorkService {
 
   public caseLinks(references: readonly string[]): Promise<{ [reference: string]: string }> {
     return caseLinksFor(this._context, references);
+  }
+
+  public requestLinksFor(references: readonly string[]): Promise<{ [reference: string]: string }> {
+    return requestLinksFor(this._context, references);
   }
 
   public async getMine(): Promise<IMyWorkResult> {

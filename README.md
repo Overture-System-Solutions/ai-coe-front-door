@@ -6,7 +6,7 @@ feedback), a telemetry snapshot and an administrator dashboard, all writing to S
 
 This project is the maintainable source for the web part that shipped as package **1.0.0.7** (`original/`). The
 shipped package was reverse-engineered (see `docs/RECOVERY.md`) and then ported to idiomatic TypeScript with a
-test-first approach. It builds the next in-place candidate, **1.0.0.18**, with the same solution, feature and web part
+test-first approach. It builds the next in-place candidate, **1.0.0.19**, with the same solution, feature and web part
 identities, and it is tenant neutral: the organization name is a web part property. Since 1.0.0.10 the front door can
 also be spread over several native pages, one piece per page, since 1.0.0.11 it renders whole content pages from a
 document in Site Assets, in its own style (see "Lay out the front door across pages"), since 1.0.0.12 the first
@@ -66,17 +66,36 @@ Use Node.js 22.14 or newer (below 23) and npm.
   inventory fields; what the lock file cannot say reads `AWAITING_TENANT_INVENTORY` until the tenant inventory
   fills it). Both files are committed with each release.
 
-## Deploy 1.0.0.18
+## Deploy 1.0.0.19
 
 This is an **offline review candidate**, not authorization to import or activate business processing. After separate
 approval, upload `sharepoint/solution/overture-ai-coe-front-door.sppkg` as an update of the existing app.
 The solution id (`f125ebdf-4a9d-4e6e-8479-3a18874e7752`), feature id (`69ab84b7-608c-47ee-9623-af8ebaf2cb10`,
 version 1.0.0.2) and web part id (`cf2e5904-0703-4fe4-ae5a-ec012d6fa689`) are unchanged, so the provisioned lists
-are left untouched. 1.0.0.18 changes no shipped list schema; it declares one new list, **AI CoE Approved Tools**,
-which `-ListsOnly` and the companion workflow solutions' SharePoint Provisioning flow create (read-only for members,
-written by owners and the operators group).
+are left untouched. 1.0.0.19 changes no list schema and declares no new list.
 
-What 1.0.0.18 changes, in the tabbed view (`view:app`) only unless said otherwise:
+What 1.0.0.19 changes, in the tabbed view (`view:app`):
+- **Requests layout.** Start a request has its own section above My requests: the four forms sit in one row (two by
+  two on a medium screen, one column on a small screen or in the narrow layout). My requests fills two columns side
+  by side (one on a small screen), so a long list grows half as tall.
+- **Approved tools on Home.** The read-only AI CoE Approved Tools panel moved from Requests to the foot of Home.
+- **Cases on a real site.** With no readable `coreBindingJson`, Cases leaves the business-case workspace out. 1.0.0.18
+  showed a notice that cases are saved through the configured service and seven commissioning reasons there. The
+  case analysis and the explanations stay; a site that binds the case service gets the workspace as before.
+- **Where a business case started.** A business case names the request and the AI CoE case it came from
+  (`LegacyRefs`: `IntakeId`, `CoEID`) and links each record in a new tab. The native case service stores these
+  references on create but its projection does not return them yet, so a real site shows them only once it does.
+- **From a request to a business case.** Where the workspace is shown, "What is going on?" in Cases adds the path from a
+  request to a business case and the two rules for which cases need one, both marked not decided: Option A, by
+  risk (Triage rates the case High, or it costs $1,000 a month or more); Option B, the approver's third choice
+  "Needs a business case". Nothing moves a case into a business case yet.
+- **Offline preview.** A worked example (`src/preview/practiceCases.ts`): four requests of the preview person with
+  their AI CoE cases, and two business cases in the practice case service, one still collecting its sections and one
+  reviewed and ready for the review board.
+
+What 1.0.0.18 already added remains. It declared one new list, **AI CoE Approved Tools**, which `-ListsOnly` and the
+companion workflow solutions' SharePoint Provisioning flow create (read-only for members, written by owners and the
+operators group), and changed the tabbed view (`view:app`) as follows, unless said otherwise:
 - **Navigation.** Home, Requests (was Engineering), Improvement, Marketing, then Cases, Metrics (was Enterprise
   value) and Admin together at the far end. The section ids are unchanged, so saved drafts still resolve.
 - **Requests.** My requests on the left, the request forms stacked on the right (Register team AI use moved here

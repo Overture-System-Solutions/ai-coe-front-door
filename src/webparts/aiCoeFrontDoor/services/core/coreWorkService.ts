@@ -298,7 +298,8 @@ class CoreWorkService implements ICoreWorkService {
 export const SYNTHETIC_CORE_LABEL: string =
   'Synthetic Binding A: real command keys, validators and polling over an in-memory command list. Not a tenant write.';
 
-const CORE_STORE_KEY: string = 'overture-ai-coe-front-door:core:synthetic-state';
+/** Where the practice case service keeps its state in the browser; the offline preview seeds its worked example here. */
+export const SYNTHETIC_CORE_STORE_KEY: string = 'overture-ai-coe-front-door:core:synthetic-state';
 
 interface ISyntheticCoreState {
   rows: ICommandRow[];
@@ -311,7 +312,7 @@ function readState(backend: IStorageBackend | undefined): ISyntheticCoreState | 
   if (backend === undefined) {
     return undefined;
   }
-  const raw: string | null = backend.getItem(CORE_STORE_KEY);
+  const raw: string | null = backend.getItem(SYNTHETIC_CORE_STORE_KEY);
   if (raw === null || raw === '') {
     return undefined;
   }
@@ -337,7 +338,7 @@ export function createSyntheticCoreWorkService(callerId: string, options: ICoreW
     }
     const snap = holder.service.persistenceSnapshot();
     const state: ISyntheticCoreState = { rows: transport.snapshot(), engine: engine.dump(), associations: snap.associations, evals: snap.evals };
-    options.backend.setItem(CORE_STORE_KEY, JSON.stringify(state));
+    options.backend.setItem(SYNTHETIC_CORE_STORE_KEY, JSON.stringify(state));
   };
   transport.process = async (row: ICommandRow): Promise<ICommandRow> => {
     const completed: ICommandRow = await engine.process(row);

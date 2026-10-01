@@ -19,6 +19,15 @@ import type { IAppStep } from './kit';
 /** What the front door does to a request, in the order it happens. */
 const REQUEST_FLOW: readonly string[] = ['You send it', 'Written to the list', 'Read back', 'Receipt', 'A person reads it'];
 
+/** How a request would become a business case (1.0.0.19), shown wherever the business-case workspace is. */
+const BUSINESS_CASE_FLOW: readonly string[] = ['Request', 'AI CoE case', 'Triage rates the risk', 'Business case', 'Each section reviewed', 'Ready for the review board'];
+
+/** The two rules for which cases need a business case. Neither is chosen or built, so both stay options. */
+const BUSINESS_CASE_RULES: readonly IAppStep[] = [
+  { marker: 'A', title: 'Option A: by risk', note: 'Triage rates the case High, or it costs $1,000 a month or more.', tone: 'wait', state: 'Not decided' },
+  { marker: 'B', title: 'Option B: the approver decides', note: 'A third choice, "Needs a business case", beside Approve and Decline.', tone: 'wait', state: 'Not decided' }
+];
+
 /** The three controls the shipped services already keep, each with whether it is in force. */
 const TRUTH_CONTROLS: readonly IAppStep[] = [
   {
@@ -97,7 +106,8 @@ export function AppWhatIsGoingOn({ section, children }: { section: string; child
 /**
  * The cases the AI CoE is deciding. A leader gets the case analysis panel first, handed in by the shell only when the
  * role holds it; then the case workspace when one is configured. The person's own requests moved to Requests in
- * 1.0.0.18, and the panels that explain the pipeline sit under "What is going on?".
+ * 1.0.0.18, and the panels that explain the pipeline sit under "What is going on?", with the path from a request to
+ * a business case wherever the workspace is shown (1.0.0.19).
  */
 export function AppCases({ onDirtyChange, analysis }: { onDirtyChange?: (dirty: boolean) => void; analysis?: React.ReactNode }): React.ReactElement {
   const { services } = useFrontDoor();
@@ -117,30 +127,36 @@ export function AppCases({ onDirtyChange, analysis }: { onDirtyChange?: (dirty: 
             <AppSteps steps={TRUTH_CONTROLS} />
           </AppPanel>
         </div>
+        {services.coreWork !== undefined && (
+          <section className="ai-app-surface ai-app-business-case-path" aria-label="From a request to a business case">
+            <AppSectionHead title="From a request to a business case" note="For a case that needs more than a yes or a no: its costs, risks and technical details built up and reviewed before the review board decides." />
+            <AppFlow label="From a request to a business case" steps={BUSINESS_CASE_FLOW} />
+            <h4 className="ai-app-subheading">Which cases need a business case?</h4>
+            <AppSteps steps={BUSINESS_CASE_RULES} />
+            <p className="ai-app-note">Nothing moves a case into a business case yet. Until the AI CoE picks a rule, a business case is started by hand.</p>
+          </section>
+        )}
       </AppWhatIsGoingOn>
     </React.Fragment>
   );
 }
 
 /**
- * Requests (1.0.0.18): two columns, the person's own requests on the left and the request forms stacked on the right,
- * with anything else the section shows (`below`) under them and the explanation under "What is going on?".
+ * Requests (1.0.0.19): the request forms in their own section, the person's own requests below them, and the
+ * explanation under "What is going on?". The approved tools moved to the foot of Home.
  */
-export function AppEngineering({ mine, starters, below }: { mine: React.ReactNode; starters: React.ReactNode; below?: React.ReactNode }): React.ReactElement {
+export function AppEngineering({ mine, starters }: { mine: React.ReactNode; starters: React.ReactNode }): React.ReactElement {
   return (
     <React.Fragment>
       <AppGettingStarted section="engineering" />
-      <div className="ai-app-requests">
-        <div className="ai-app-requests-mine">{mine}</div>
-        <div className="ai-app-requests-start">
-          <AppSectionHead
-            title="Start a request"
-            note="A few short questions and a summary a person can act on. Nothing is submitted until you confirm it."
-          />
-          {starters}
-        </div>
-      </div>
-      {below}
+      <section className="ai-app-requests-start" aria-label="Start a request">
+        <AppSectionHead
+          title="Start a request"
+          note="A few short questions and a summary a person can act on. Nothing is submitted until you confirm it."
+        />
+        {starters}
+      </section>
+      <div className="ai-app-requests-mine">{mine}</div>
       <AppWhatIsGoingOn section="requests">
         <div className="ai-app-split">
           <AppPanel>
@@ -226,7 +242,7 @@ function AppGettingStarted({ section }: { section: 'engineering' | 'improvement'
         <p>If a save is pending or an action is uncertain, retain its reference and reconcile the source-native state with the recovery owner before retrying the same intent. Do not create a new submission merely because confirmation is missing. Use the approved manual draft fallback only; do not bypass a refused route.</p>
         <h4>Teach-back and office hours</h4>
         <p>Explain permitted information, human review and the human decision. Demonstrate one safe task and one missing-source fallback. Ask a colleague to start, review, identify the stop condition and find help using their own identity. Keep content-free correction themes and outcome choices. A named champion, support owner and authorized two-user/no-builder exercise are still required; local tests are not that acceptance.</p>
-        <p>{section === 'improvement' ? 'Use the Record a task outcome and Share feedback controls immediately below. The proposal and retest steps follow them.' : 'Use the request forms beside My requests: Check a tool or task, Register team AI use and Get help or training. For feedback and outcomes, choose the Improvement tab.'}</p>
+        <p>{section === 'improvement' ? 'Use the Record a task outcome and Share feedback controls immediately below. The proposal and retest steps follow them.' : 'Use the request forms above My requests: Check a tool or task, Register team AI use and Get help or training. For feedback and outcomes, choose the Improvement tab.'}</p>
       </section>}
     </AppPanel>
   );

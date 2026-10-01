@@ -180,7 +180,7 @@ describe('offline preview server', () => {
   });
 
   it('serves only the allowlisted assets', async () => {
-    for (const route of ['/react.js', '/react-dom.js', '/host.js', '/strings.js', '/bundle.js', '/mount.js']) {
+    for (const route of ['/react.js', '/react-dom.js', '/host.js', '/practiceCases.js', '/strings.js', '/bundle.js', '/mount.js']) {
       const asset: IResponse = await get(`${base}${route}`);
       expect(asset.status).toBe(200);
       expect(asset.headers['content-type']).toBe('text/javascript');
@@ -213,8 +213,14 @@ describe('offline preview server', () => {
     // Opening a new tab is stubbed, never blocked: the work command opens an available route after saving the draft.
     expect(host.body).toContain('window.open = ');
     expect(host.body).not.toContain('window.open = blocked');
-    // Browsers cannot resolve bare specifiers such as "tslib"; the host must compile helper-free.
-    expect(host.body).not.toMatch(/^import\b/m);
+    // Browsers cannot resolve bare specifiers such as "tslib"; the host must compile helper-free. Its one import is the
+    // worked example from a request to a business case (1.0.0.19), by a relative path the server answers, and the
+    // example itself imports nothing.
+    expect(host.body.match(/^import\b.*$/gm)).toEqual(["import { PRACTICE_CORE_STORE_KEY, practiceJourney, withPracticeCases } from './practiceCases.js';"]);
+    const example: IResponse = await get(`${base}/practiceCases.js`);
+    expect(example.status).toBe(200);
+    expect(example.body).toContain('CW-PRACTICE-0001');
+    expect(example.body).not.toMatch(/^import\b/m);
   });
 
   it('refuses non-loopback host headers', async () => {

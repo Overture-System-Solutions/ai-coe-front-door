@@ -1,7 +1,7 @@
 /**
- * The tabbed view's 1.0.0.18 layout: Home without "What matters now", Requests as two columns (the person's own
- * requests on the left, the four request forms stacked on the right), Cases without the person's requests, and the
- * explanatory panels of Requests, Improvement and Cases behind one closed "What is going on?" disclosure.
+ * The tabbed view's layout: Home without "What matters now" (1.0.0.18), Requests with the four request forms in their
+ * own section above the person's own requests (1.0.0.19), Cases without the person's requests, and the explanatory
+ * panels of Requests, Improvement and Cases behind one closed "What is going on?" disclosure (1.0.0.18).
  */
 import * as React from 'react';
 import { act, fireEvent } from '@testing-library/react';
@@ -39,22 +39,26 @@ describe('tabbed view layout (1.0.0.18)', () => {
     expect(view.container.querySelectorAll('.ai-app-choice-button').length).toBeGreaterThan(0);
   });
 
-  it('shows My requests on the left of Requests and the four request forms stacked on the right', async () => {
+  it('puts Start a request in its own section above My requests on Requests (1.0.0.19)', async () => {
     const view = await renderShell();
     await openTab(view, 'Requests');
-    const columns: Element | null = view.container.querySelector('.ai-app-requests');
-    expect(columns).not.toBeNull();
-    const mine: Element | null = (columns as Element).querySelector('.ai-app-requests-mine');
-    const start: Element | null = (columns as Element).querySelector('.ai-app-requests-start');
+    // The 1.0.0.18 two-column wrapper is gone: the two are sections one above the other.
+    expect(view.container.querySelector('.ai-app-requests')).toBeNull();
+    const start: HTMLElement = view.getByRole('region', { name: 'Start a request' });
+    const mine: Element | null = view.container.querySelector('.ai-app-requests-mine');
+    expect(start).toHaveClass('ai-app-requests-start');
     expect(mine?.querySelector('h2')?.textContent).toBe('My requests');
-    expect(Array.from(start?.querySelectorAll('.ai-app-starter-title') ?? []).map((node: Element): string => node.textContent ?? '')).toEqual([
+    expect(Array.from(start.querySelectorAll('.ai-app-starter-title')).map((node: Element): string => node.textContent ?? '')).toEqual([
       'Explore an AI idea',
       'Check a tool or task',
       'Register team AI use',
       'Get help or training'
     ]);
-    // My requests comes first in reading order, so it is the left column.
-    expect((mine as Element).compareDocumentPosition(start as Element) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    expect(start.contains(mine)).toBe(false);
+    expect((mine as Element).contains(start)).toBe(false);
+    expect(start.compareDocumentPosition(mine as Element) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    // The approved tools moved to the foot of Home (1.0.0.19).
+    expect(view.container.querySelector('[aria-label="Approved tools"]')).toBeNull();
   });
 
   it('keeps My requests off Cases', async () => {
