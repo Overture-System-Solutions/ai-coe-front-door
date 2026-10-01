@@ -1,6 +1,8 @@
 import * as React from 'react';
+import { useFrontDoor } from '../../context/FrontDoorContext';
 import { MyWork } from '../pages/MyWork';
 import { UsageTelemetryStrip } from '../UsageTelemetryStrip';
+import { AppCoreWorkspace } from './AppCoreWorkspace';
 import { AppFlow, AppLayerCard, AppNotice, AppPanel, AppSectionHead, AppSteps } from './kit';
 import type { IAppStep } from './kit';
 
@@ -60,7 +62,7 @@ const LAYERS: readonly ILayer[] = [
   { layer: 'Drafting', title: 'A flow you configure', note: 'The idea page can call a flow when a URL is set. Blank keeps plain summaries, which is the default.' },
   { layer: 'Provisioning', title: 'A script an owner runs', note: 'Pages, lists, permissions and the content document. It runs outside this code, against a site you name.' },
   { layer: 'Telemetry', title: 'Usage lists', note: 'The operator view reads them. Nothing in this package writes them; a companion solution does.' },
-  { layer: 'Not connected', title: 'The wider system', note: 'Case records, work units and a canonical store are described in the engineering package and are not built here.' },
+  { layer: 'CORE Binding A', title: 'Command list + polling', note: 'Typed client, validators and a synthetic local engine are built. Live SharePoint writes stay gated until native defects and bindings are independently verified.' },
   { layer: 'Control', title: 'A person', note: 'Sending, publishing, assigning and scheduling stay outside this part, behind their own authority.' }
 ];
 
@@ -72,8 +74,10 @@ const LAYERS: readonly ILayer[] = [
  * caption, and the panel beside it states it as one.
  */
 export function AppCases(): React.ReactElement {
+  const { services } = useFrontDoor();
   return (
     <React.Fragment>
+      {services.coreWork !== undefined && <AppCoreWorkspace coreWork={services.coreWork} />}
       <div className="ai-app-cases">
         <MyWork />
       </div>
@@ -162,11 +166,17 @@ export function AppSystemMap({ admin }: { admin?: React.ReactNode }): React.Reac
         A connection existing is not permission to use it, and a list being readable is not proof a figure in it was
         measured. Each route is qualified on its own.
       </AppNotice>
-      <AppPanel>
-        <AppSectionHead title="Usage" note="Read from the usage lists. Nothing in this package writes them." />
-        <UsageTelemetryStrip />
-      </AppPanel>
       {admin}
     </React.Fragment>
+  );
+}
+
+/** The usage lists, shown on Enterprise value when the person already holds that read. */
+export function AppUsage(): React.ReactElement {
+  return (
+    <AppPanel>
+      <AppSectionHead title="Usage" note="Read from the usage lists. Nothing in this package writes them." />
+      <UsageTelemetryStrip />
+    </AppPanel>
   );
 }

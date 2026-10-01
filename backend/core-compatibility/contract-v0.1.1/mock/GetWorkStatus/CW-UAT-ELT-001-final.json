@@ -1,0 +1,34 @@
+{
+ "request": {
+  "Context": {
+   "CorrelationID": "CORR-UAT-ELT-001",
+   "IdempotencyKey": "CW-UAT-ELT-001:status:9",
+   "ClientVersion": "spfx-candidate-0.1",
+   "TenantLabel": "CloudWave-PrivatePilot",
+   "TestRecord": true
+  },
+  "WorkID": "CW-UAT-ELT-001"
+ },
+ "response": {
+  "Result": "PASS",
+  "ReceiptID": "RCPT-UAT-ELT-001-028",
+  "Work": {
+   "WorkID": "CW-UAT-ELT-001",
+   "Title": "UAT: enterprise model routing platform",
+   "Stage": "DECISION",
+   "State": "READY_FOR_ELT",
+   "EmployeeStatus": "With the right reviewer",
+   "Lane": "ELT",
+   "NextAction": "Prepare decision packet for ELT",
+   "NextOwner": "ai-coe-operator",
+   "NextDate": "2026-09-22T14:00:00Z",
+   "Version": 9,
+   "LastValidatedAt": "2026-09-21T14:12:00Z",
+   "OpenEvidenceGaps": [],
+   "DuplicateStatus": "RELATED_NOT_DUPLICATE",
+   "RelatedWorkIDs": [
+    "CW-05"
+   ]
+  }
+ }
+}

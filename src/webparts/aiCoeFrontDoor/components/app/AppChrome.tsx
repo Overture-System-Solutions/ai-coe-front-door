@@ -21,7 +21,9 @@ const ROLE_WORDS: { [role in RoleId]: string } = {
   employee: 'Employee',
   leader: 'Leader',
   operator: 'AI CoE operator',
-  designAuthority: 'Design authority'
+  designAuthority: 'Design authority',
+  marketingParticipant: 'Marketing participant',
+  marketingReviewer: 'Marketing reviewer'
 };
 
 /**
@@ -33,9 +35,15 @@ function asName(label: string): string {
 }
 
 /** The widest role held, since a person in two groups is described by the one that opens the most. */
-function widestRole(roles: readonly RoleId[]): RoleId {
-  const order: RoleId[] = ['designAuthority', 'operator', 'leader', 'employee'];
+export function widestRole(roles: readonly RoleId[]): RoleId {
+  const order: RoleId[] = ['designAuthority', 'operator', 'leader', 'marketingReviewer', 'marketingParticipant', 'employee'];
   return order.filter((role: RoleId): boolean => roles.indexOf(role) >= 0)[0] ?? 'employee';
+}
+
+/** The support route, as the page document binds it; a blank means unbound and is said so, never invented. */
+export interface ISupportRouteBinding {
+  label: string;
+  href?: string;
 }
 
 export interface IAppTopbarProps {
@@ -73,12 +81,37 @@ export function AppTopbar({ organizationName, displayName, resolution, pending }
   );
 }
 
-/** What the view will not claim, said once at the bottom where the reference says it. */
-export function AppFooter({ organizationName }: { organizationName: string }): React.ReactElement {
+export const SUPPORT_UNBOUND_TEXT: string = 'Support route: not bound on this site yet.';
+export const SUPPORT_PENDING_TEXT: string = 'Support route: reading the site\'s content document.';
+
+/**
+ * What the view will not claim, said once at the bottom where the reference says it, and the support route the
+ * site actually binds. The route comes from the shared footer of the page content document, the one place a site
+ * owner names it; without one the footer says the route is unbound rather than inventing a contact.
+ */
+export function AppFooter({ organizationName, support }: { organizationName: string; support: ISupportRouteBinding | 'pending' | undefined }): React.ReactElement {
+  let route: React.ReactNode;
+  if (support === 'pending') {
+    route = <span className="ai-app-foot-support">{SUPPORT_PENDING_TEXT}</span>;
+  } else if (support === undefined) {
+    route = <span className="ai-app-foot-support">{SUPPORT_UNBOUND_TEXT}</span>;
+  } else if (support.href !== undefined) {
+    route = (
+      <span className="ai-app-foot-support">
+        {'Support: '}
+        <a href={support.href} target="_blank" rel="noopener noreferrer">
+          {support.label}
+        </a>
+      </span>
+    );
+  } else {
+    route = <span className="ai-app-foot-support">{`Support: ${support.label} (no link bound)`}</span>;
+  }
   return (
     <footer className="ai-app-foot">
       <span>{`${organizationName} AI Center of Excellence`}</span>
       <span>Nothing on this page is sent or published without a person deciding it.</span>
+      {route}
     </footer>
   );
 }

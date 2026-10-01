@@ -8,8 +8,8 @@ function vocabularyWith(roles: { [roleId: string]: string }): IVocabulary {
 }
 
 describe('role ids', () => {
-  it('names the four roles of the plan, employee first', () => {
-    expect(ROLE_IDS).toEqual(['employee', 'leader', 'operator', 'designAuthority']);
+  it('names the four platform roles of the plan, employee first, then the two bounded Marketing roles', () => {
+    expect(ROLE_IDS).toEqual(['employee', 'leader', 'operator', 'designAuthority', 'marketingParticipant', 'marketingReviewer']);
     expect(Object.keys(DEFAULT_ROLE_LABELS).sort()).toEqual(ROLE_IDS.slice().sort());
     expect(isRoleId('leader')).toBe(true);
     expect(isRoleId('Leader')).toBe(false);
@@ -47,6 +47,8 @@ describe('roleLabel', () => {
     expect(roleLabel('leader')).toBe('Leader');
     expect(roleLabel('operator')).toBe('AI CoE operator');
     expect(roleLabel('designAuthority')).toBe('Design authority');
+    expect(roleLabel('marketingParticipant')).toBe('Marketing participant');
+    expect(roleLabel('marketingReviewer')).toBe('Marketing reviewer');
   });
 
   it('takes the document wording when the vocabulary names the role, and keeps the default when it is blank', () => {

@@ -43,6 +43,11 @@ import { RoleResolver } from './services/roleResolver';
 import { createToolPolicyEvaluator } from './services/toolPolicyEvaluator';
 import type { IServiceContext } from './services/types';
 import { UsageMetricsService } from './services/UsageMetricsService';
+import { createDisabledLiveCoreWorkService, createSyntheticCoreWorkService } from './services/core/coreWorkService';
+import type { ICoreWorkService } from './services/core/coreWorkService';
+import { MemoryStorageBackend } from './services/marketing/artifactStore';
+import type { IStorageBackend } from './services/marketing/artifactStore';
+import { createSyntheticMarketingServices } from './services/marketing/marketingServices';
 
 export interface IAiCoeFrontDoorWebPartProps extends IPageViewProperties {
   /** Organization name shown in the header, hero badge and summaries; blank keeps the wording neutral. */
@@ -355,10 +360,29 @@ export default class AiCoeFrontDoorWebPart extends BaseClientSideWebPart<IAiCoeF
         toolPolicyEvaluator: createToolPolicyEvaluator(branding),
         ideaDrafts: createIdeaDraftService(draftServiceUrl, core.flowClient),
         // Reads the document once per instance and document path; the page key alone never refetches.
-        pageContent: contentUrl === undefined ? undefined : new PageContentService(core.serviceContext, contentUrl)
+        pageContent: contentUrl === undefined ? undefined : new PageContentService(core.serviceContext, contentUrl),
+        marketing: createSyntheticMarketingServices(this._storage()),
+        coreWork: this._coreWork(core)
       };
       this._servicesKey = key;
     }
     return this._services;
+  }
+
+  /** Browser storage when it exists; an in-memory store otherwise. Synthetic records only. */
+  private _storage(): IStorageBackend {
+    const storage: Storage | undefined = browserLocalStorage();
+    return storage !== undefined ? storage : new MemoryStorageBackend();
+  }
+
+  /**
+   * Live Binding A stays gated. The offline preview host uses a labelled synthetic engine so the local case journey
+   * can be exercised; a real site never writes a command row from this bundle.
+   */
+  private _coreWork(core: ICoreServices): ICoreWorkService {
+    if (core.serviceContext.siteUrl.indexOf('/simulated-site') >= 0) {
+      return createSyntheticCoreWorkService(core.user.email, { backend: this._storage() });
+    }
+    return createDisabledLiveCoreWorkService();
   }
 }

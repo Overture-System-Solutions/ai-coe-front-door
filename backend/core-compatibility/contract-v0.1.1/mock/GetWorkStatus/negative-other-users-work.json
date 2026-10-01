@@ -1,0 +1,19 @@
+{
+ "request": {
+  "Context": {
+   "CorrelationID": "CORR-UAT-ARB-001",
+   "IdempotencyKey": "status:neg:1",
+   "ClientVersion": "spfx-candidate-0.1",
+   "TenantLabel": "CloudWave-PrivatePilot",
+   "TestRecord": true
+  },
+  "WorkID": "CW-UAT-ARB-001"
+ },
+ "response": {
+  "Result": "DENIED",
+  "ErrorClass": "NOT_AUTHORIZED",
+  "Message": "Signed-in identity is not requester, owner or authorized viewer of this Work ID.",
+  "ReceiptID": "RCPT-UAT-NEG-001",
+  "RetryAllowed": false
+ }
+}

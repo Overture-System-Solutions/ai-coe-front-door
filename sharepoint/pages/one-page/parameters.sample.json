@@ -1,0 +1,14 @@
+{
+  "OrganizationName": "Contoso",
+  "GovernanceReference": "",
+  "ReviewSystemName": "",
+  "DraftServiceUrl": "",
+  "LeadersGroup": "",
+  "OperatorsGroup": "",
+  "DesignAuthorityGroup": "",
+  "MarketingParticipantsGroup": "",
+  "MarketingReviewersGroup": "",
+  "SupportUrl": "",
+  "Palette": "",
+  "PageFile": "Front-Door.aspx"
+}

@@ -1,0 +1,42 @@
+{
+ "request": {
+  "Context": {
+   "CorrelationID": "CORR-UAT-FAST-001",
+   "IdempotencyKey": "CW-UAT-FAST-001:readiness:7",
+   "ClientVersion": "spfx-candidate-0.1",
+   "TenantLabel": "CloudWave-PrivatePilot",
+   "TestRecord": true
+  },
+  "WorkID": "CW-UAT-FAST-001"
+ },
+ "response": {
+  "Result": "PASS",
+  "ReceiptID": "RCPT-UAT-FAST-001-019",
+  "Work": {
+   "WorkID": "CW-UAT-FAST-001",
+   "Title": "UAT: automate weekly reporting inside approved tool",
+   "Stage": "DECISION",
+   "State": "NOT_DECISION_READY",
+   "EmployeeStatus": "Working",
+   "Lane": "PREPARATION",
+   "NextAction": "Close gates: S2_S5_COMPLETE_OR_NA, SME_VALIDATIONS_COMPLETE",
+   "NextOwner": "Finance",
+   "NextDate": "2026-09-22T14:00:00Z",
+   "Version": 7,
+   "LastValidatedAt": "2026-09-21T14:07:00Z",
+   "OpenEvidenceGaps": [
+    "S3_FINANCIAL"
+   ],
+   "DuplicateStatus": "RELATED_NOT_DUPLICATE",
+   "RelatedWorkIDs": [
+    "CW-05"
+   ]
+  },
+  "DecisionReadinessState": "NOT_READY",
+  "BlockingGates": [
+   "S2_S5_COMPLETE_OR_NA",
+   "SME_VALIDATIONS_COMPLETE"
+  ],
+  "DecisionPacketID": null
+ }
+}

@@ -1,0 +1,96 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://local.invalid/marketing/artifact-envelope.v1.json",
+  "title": "MarketingArtifactEnvelope.v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "envelopeVersion",
+    "tenantScope",
+    "workId",
+    "artifactId",
+    "kind",
+    "schemaVersion",
+    "revision",
+    "supersedes",
+    "parents",
+    "payload",
+    "payloadHash",
+    "registerSnapshot",
+    "sourcesUsed",
+    "workflowVersion",
+    "policyVersion",
+    "providerProvenance",
+    "evidenceGaps",
+    "createdAt",
+    "testRecord"
+  ],
+  "properties": {
+    "envelopeVersion": { "const": "1.0" },
+    "tenantScope": { "type": "string", "minLength": 1 },
+    "workId": { "type": "string", "minLength": 1 },
+    "artifactId": { "type": "string", "minLength": 1 },
+    "kind": { "enum": ["campaignBrief", "contentPlan", "meetingFollowThrough"] },
+    "schemaVersion": { "type": "string", "minLength": 1 },
+    "revision": { "type": "integer", "minimum": 1 },
+    "supersedes": { "oneOf": [{ "type": "null" }, { "$ref": "#/$defs/artifactRef" }] },
+    "parents": { "type": "array", "items": { "$ref": "#/$defs/artifactRef" } },
+    "payload": { "type": "object" },
+    "payloadHash": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "registerSnapshot": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["registerId", "version", "snapshotHash", "snapshotRef"],
+      "properties": {
+        "registerId": { "type": "string" },
+        "version": { "type": "string" },
+        "snapshotHash": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "snapshotRef": { "type": "string" }
+      }
+    },
+    "sourcesUsed": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["sourceId", "versionOrETag", "locator"],
+        "properties": {
+          "sourceId": { "type": "string" },
+          "versionOrETag": { "type": "string" },
+          "locator": { "type": "string" }
+        }
+      }
+    },
+    "workflowVersion": { "type": "string" },
+    "policyVersion": { "type": "string" },
+    "providerProvenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mode", "provider", "model", "requestId", "responseId", "qualificationReceiptRef"],
+      "properties": {
+        "mode": { "enum": ["synthetic", "qualified", "manual"] },
+        "provider": { "type": "string" },
+        "model": { "type": "string" },
+        "requestId": { "type": "string" },
+        "responseId": { "type": "string" },
+        "qualificationReceiptRef": { "type": ["string", "null"] }
+      }
+    },
+    "evidenceGaps": { "type": "array", "items": { "type": "string" } },
+    "createdAt": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,3})?Z$" },
+    "testRecord": { "type": "boolean" }
+  },
+  "$defs": {
+    "artifactRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "artifactId", "revision", "payloadHash"],
+      "properties": {
+        "kind": { "enum": ["campaignBrief", "contentPlan", "meetingFollowThrough"] },
+        "artifactId": { "type": "string" },
+        "revision": { "type": "integer", "minimum": 1 },
+        "payloadHash": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+      }
+    }
+  }
+}

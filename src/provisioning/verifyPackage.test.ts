@@ -13,7 +13,7 @@ import * as path from 'path';
 import { TENANT_WORDS_PATH } from './tenantWords';
 
 const ROOT: string = process.cwd();
-const RELEASE: string = '1.0.0.15';
+const RELEASE: string = '1.0.0.16';
 const script: string = fs.readFileSync(path.join(ROOT, 'scripts/verify-package.mjs'), 'utf8');
 
 /** The sixteen `required_inventory_fields` of 13_SECURITY_AND_THREAT_MODEL/secrets-supply-chain.yaml, in its order. */
@@ -88,13 +88,13 @@ describe('verify-package', () => {
     expect(fs.readFileSync(path.join(ROOT, 'README.md'), 'utf8')).toContain(`## Deploy ${RELEASE}`);
   });
 
-  it('counts the eleven toolbox entries of 1.0.0.15, the legacy view first and the outcome record last', () => {
-    // The packaged component manifest is what a site reads: one entry per piece, the content page and, since
-    // 1.0.0.15, the outcome record. The legacy entry stays first so an upgraded instance without a view renders
-    // as before, and the new entry is appended last.
-    expect(script).toMatch(/preconfiguredViews\.length === 11/);
-    expect(script).toContain('Expected eleven toolbox entries');
-    expect(script).toMatch(/preconfiguredViews\[0\] === 'legacy'/);
+  it('counts the twelve toolbox entries of 1.0.0.16, the consolidated app first and the outcome record last', () => {
+    // The packaged component manifest is what a site reads: the consolidated app first so a new instance opens
+    // as one page, the legacy view next so an author can still place the shipped screen, then one entry per piece,
+    // the content page and the outcome record last.
+    expect(script).toMatch(/preconfiguredViews\.length === 12/);
+    expect(script).toContain('Expected twelve toolbox entries');
+    expect(script).toMatch(/preconfiguredViews\[0\] === 'app'/);
     expect(script).toMatch(/preconfiguredViews\[preconfiguredViews\.length - 1\] === 'outcome'/);
   });
 

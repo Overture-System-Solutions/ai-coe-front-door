@@ -11,8 +11,8 @@ const PAGE_KEYS = ['startHere', 'learn', 'useAi', 'requests', 'prompts', 'status
 const DENY_TARGETS = ['none', 'intakes'];
 // Roles the host can simulate: "owner" is this preview as it always was (a site owner in no group), the rest are
 // answered as site group membership. Production resolves the role from identity; the bundle reads no role here.
-const ROLES = ['owner', 'employee', 'leader', 'operator', 'designAuthority'];
-const ROLE_GROUPS = 'leader=Preview Leaders;operator=Preview Operators;designAuthority=Preview Design Authority';
+const ROLES = ['owner', 'employee', 'leader', 'operator', 'designAuthority', 'marketingParticipant', 'marketingReviewer'];
+const ROLE_GROUPS = 'leader=Preview Leaders;operator=Preview Operators;designAuthority=Preview Design Authority;marketingParticipant=Preview Marketing Participants;marketingReviewer=Preview Marketing Reviewers';
 // The home tiles link to other pages; offline, every other page is this page showing another piece.
 const PAGE_PROPERTIES = {
   pageIdea: 'idea',

@@ -22,10 +22,10 @@ import type { IWorkflowCatalog } from './workflows/types';
 
 // Every mount re-evaluates the built bundle, and coverage tracking slows each evaluation; the journeys near the end of
 // this file otherwise drift past Jest's five-second default, and a test abandoned mid-act() crashes the worker at teardown.
-// A test that mounts three times and plays a whole journey through each needs well past thirty seconds against the
-// minified production bundle, and an abandoned test leaks its act() warnings into the next one, so allow the same
-// sixty seconds the journey parity suite allows.
-jest.setTimeout(60000);
+// A test that mounts three times and plays a whole journey through each needs well past sixty seconds against the
+// minified production bundle once Binding A and Marketing are in it, and an abandoned test leaks its act() warnings
+// into the next one, so allow two minutes.
+jest.setTimeout(120000);
 
 const bundlePath: string = newestDistBundle();
 const bundle: IWebPartBundle = loadWebPartBundle(bundlePath, newestStringsChunk());
@@ -307,7 +307,7 @@ describe('AiCoeFrontDoorWebPart bundle', () => {
         properties: {
           label: 'Role groups',
           description:
-            'Site groups that map to roles, as role=Group title pairs separated by semicolons: leader=…; operator=…; designAuthority=…. Site owners always count as operators.',
+            'Site groups that map to roles, as role=Group title pairs separated by semicolons: leader=…; operator=…; designAuthority=…; marketingParticipant=…; marketingReviewer=…. Site owners always count as operators; no group grants a Marketing role until it is named here.',
           placeholder: 'leader=AI CoE Leaders;operator=AI CoE Operators'
         }
       },

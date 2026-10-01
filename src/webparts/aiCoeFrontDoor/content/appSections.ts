@@ -8,15 +8,16 @@
  *
  * Every section names the capability it needs. A section whose capability is refused is not drawn, and, far more
  * importantly, its services are never called: the capability is checked before the section mounts. A tab left
- * undrawn is a courtesy, not the control (see services/authorization.ts).
+ * undrawn is a courtesy, not the control (see services/authorization.ts). The administrator queue is listed last
+ * so the shell can draw it as a separate control at the far end of the bar.
  *
  * Wording note: this file is scanned for Tailwind utility names; keep prose free of utility words.
  */
 import type { Capability } from '../services/authorization';
 
-export type AppSectionId = 'home' | 'cases' | 'engineering' | 'marketing' | 'improvement' | 'value' | 'map';
+export type AppSectionId = 'home' | 'cases' | 'engineering' | 'marketing' | 'improvement' | 'value' | 'map' | 'admin';
 
-export const APP_SECTION_IDS: readonly AppSectionId[] = ['home', 'cases', 'engineering', 'marketing', 'improvement', 'value', 'map'];
+export const APP_SECTION_IDS: readonly AppSectionId[] = ['home', 'cases', 'engineering', 'marketing', 'improvement', 'value', 'map', 'admin'];
 
 export const DEFAULT_APP_SECTION: AppSectionId = 'home';
 
@@ -34,9 +35,10 @@ export interface IAppSection {
 }
 
 /**
- * The six sections. `home` and `cases` are a person's own work and are open to everyone; `engineering` is the
- * guided intake, also open; `improvement` is feedback and outcome recording, also open. Only the measured view and
- * the operator surface are held to a role, which is the same division the site already enforces by page.
+ * The sections. `home` and `cases` are a person's own work and are open to everyone; `engineering` is the
+ * guided intake, also open; `improvement` is feedback and outcome recording, also open. The measured view, the
+ * operator surface and the administrator queue are held to a role, which is the same division the site already
+ * enforces by page. The queue is a separate control, not a seventh tab in the section group.
  */
 export const APP_SECTIONS: readonly IAppSection[] = [
   {
@@ -76,6 +78,12 @@ export const APP_SECTIONS: readonly IAppSection[] = [
     label: 'System map',
     summary: 'What is connected, what it is allowed to do, and what is still waiting on a binding.',
     capability: 'readUsageTelemetry'
+  },
+  {
+    id: 'admin',
+    label: 'Admin',
+    summary: 'The administrator queue of submissions, governance progress and recorded decisions.',
+    capability: 'readAdminQueue'
   }
 ];
 

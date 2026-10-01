@@ -20,6 +20,7 @@ import type { ICopyFinding } from './copyPolicy';
 import {
   FIXTURE_REGISTER,
   FIXTURE_REFUSAL,
+  carriesFixtureMarker,
   citeAgainst,
   isUsableForBusinessContent
 } from './sourceRegister';
@@ -51,8 +52,21 @@ describe('approved-source register', () => {
     expect(FIXTURE_REGISTER.approval).toBe('syntheticFixture');
     expect(isUsableForBusinessContent(FIXTURE_REGISTER)).toBe(false);
     expect(FIXTURE_REFUSAL.length).toBeGreaterThan(0);
-    const approved: ISourceRegister = { ...FIXTURE_REGISTER, approval: 'approved' };
-    expect(isUsableForBusinessContent(approved)).toBe(true);
+    // A label is not approval (review finding FD05, 2026-09-22): relabelling the fixture must not open the route,
+    // because every row still carries the fixture marker and a fixture location.
+    const relabelled: ISourceRegister = { ...FIXTURE_REGISTER, approval: 'approved' };
+    expect(carriesFixtureMarker(relabelled)).toBe(true);
+    expect(isUsableForBusinessContent(relabelled)).toBe(false);
+    // A register with no fixture marker anywhere and the approved label passes the boolean; the composed gate in
+    // sourceGate.ts still demands an approval receipt before it may back business content.
+    const plain: ISourceRegister = {
+      registerId: 'PILOT-SOURCE-REGISTER',
+      version: '1.0.0',
+      approval: 'approved',
+      asOf: '2026-09-21',
+      entries: [{ id: 'BRAND-MESSAGE-HOUSE', location: 'https://example.invalid/brand/message-house', versionOrETag: 'etag-1', owner: 'Brand owner (role)', asOf: '2026-09-21', classification: 'Internal', audience: 'All staff', mayNotProve: '' }]
+    };
+    expect(isUsableForBusinessContent(plain)).toBe(true);
   });
 
   it('never lets generated output approve a new source: an unknown reference becomes a gap', () => {
@@ -174,6 +188,29 @@ describe('CampaignBrief.v1', () => {
     expect(validateCampaignBrief({ ...fixtureBrief(), schemaVersion: '2.0' }).valid).toBe(false);
     expect(validateCampaignBrief(undefined).valid).toBe(false);
     expect(validateCampaignBrief({}).valid).toBe(false);
+  });
+
+  it('refuses a citation that is an empty object, a non-date timestamp, and extra identity keys on a proposed owner', () => {
+    const emptyCite: ICampaignBriefV1 = fixtureBrief();
+    (emptyCite.message[0] as unknown as { sources: unknown }).sources = [{}];
+    const empty: ReturnType<typeof validateCampaignBrief> = validateCampaignBrief(emptyCite);
+    expect(empty.valid).toBe(false);
+    expect(empty.errors.join(' ')).toMatch(/sourceId|sources/);
+
+    const dated: ICampaignBriefV1 = fixtureBrief();
+    dated.createdAt = 'not-a-date';
+    const when: ReturnType<typeof validateCampaignBrief> = validateCampaignBrief(dated);
+    expect(when.valid).toBe(false);
+    expect(when.errors.join(' ')).toContain('createdAt');
+
+    const extra: ICampaignBriefV1 = fixtureBrief();
+    extra.proposedOwners = [{ role: 'Communications owner', note: 'Planning only.' }];
+    (extra.proposedOwners[0] as unknown as { email: string; assignedTo: string; taskId: string }).email = 'owner@example.invalid';
+    (extra.proposedOwners[0] as unknown as { assignedTo: string }).assignedTo = 'Jordan';
+    (extra.proposedOwners[0] as unknown as { taskId: string }).taskId = 'TASK-1';
+    const owners: ReturnType<typeof validateCampaignBrief> = validateCampaignBrief(extra);
+    expect(owners.valid).toBe(false);
+    expect(owners.errors.join(' ')).toMatch(/email|assignedTo|taskId|not part of this contract|is not in the contract/i);
   });
 });
 

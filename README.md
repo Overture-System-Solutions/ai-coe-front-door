@@ -6,7 +6,7 @@ feedback), a telemetry snapshot and an administrator dashboard, all writing to S
 
 This project is the maintainable source for the web part that shipped as package **1.0.0.7** (`original/`). The
 shipped package was reverse-engineered (see `docs/RECOVERY.md`) and then ported to idiomatic TypeScript with a
-test-first approach. It builds the next in-place upgrade, **1.0.0.15**, with the same solution, feature and web part
+test-first approach. It builds the next in-place upgrade, **1.0.0.16**, with the same solution, feature and web part
 identities, and it is tenant neutral: the organization name is a web part property. Since 1.0.0.10 the front door can
 also be spread over several native pages, one piece per page, since 1.0.0.11 it renders whole content pages from a
 document in Site Assets, in its own style (see "Lay out the front door across pages"), since 1.0.0.12 the first
@@ -21,7 +21,9 @@ a run that reports the release it published and every binding the site still owe
 override", "Page permissions" and "Instance properties"), and since 1.0.0.15 a pilot team can be given a start page
 of its own, keyed on the team's name and read by its own site group, and anyone can record how a task went on a page
 whose every answer is a choice, so the row it writes holds no prompt, no output and no text of the work itself (see
-"Deploy", "The outcome record" and "Lists").
+"Deploy", "The outcome record" and "Lists"), and since 1.0.0.16 the consolidated application, Binding A CORE client,
+Marketing draft/review contracts and an additive one-page `view:app` definition are in the package while live CORE
+writes stay gated.
 
 ## Work with it
 
@@ -64,71 +66,38 @@ Use Node.js 22.14 or newer (below 23) and npm.
   inventory fields; what the lock file cannot say reads `AWAITING_TENANT_INVENTORY` until the tenant inventory
   fills it). Both files are committed with each release.
 
-## Deploy 1.0.0.15
+## Deploy 1.0.0.16
 
 Upload `sharepoint/solution/overture-ai-coe-front-door.sppkg` to the app catalog as an update of the existing app.
 The solution id (`f125ebdf-4a9d-4e6e-8479-3a18874e7752`), feature id (`69ab84b7-608c-47ee-9623-af8ebaf2cb10`,
-version 1.0.0.2) and web part id (`cf2e5904-0703-4fe4-ae5a-ec012d6fa689`) are unchanged, so the three provisioned
-lists (AI CoE Pilot Intakes and its two schemas under `sharepoint/assets/`) are left untouched; 1.0.0.15 changes no
-shipped list and no column of one. It adds one web part property, `pageOutcome` (**Record a task outcome page**, in
-the Page links group, blank by default), which is where a home piece sends the sixth card, and an eleventh toolbox
-entry, **AI CoE: Record a task outcome**, which presets the new outcome piece; the ten entries before it, the legacy
-view first, are unchanged. What it changes on the site comes from the script, not the package: one new list,
-**AI CoE Outcome Records**, created from the `lists` section of `pages.json` and secured from its own declaration
-(see "Lists" and "The outcome record"); one new page, **Record a task outcome**, a child of Requests that everyone
-may open; and one new page for a pilot team, **{PilotTeamName} start** (`Pilot-start.aspx`), behind
-`groups:PilotGroup` and keyed on `PilotTeamName` with `skipWhenBlank`, so a site that names no pilot team never
-builds it and nothing on the site points at it. The content document also gains the three workflow cards and the
-"What this site records" notice on Start here, and the outcome card on the Requests home piece. The other four
-lists the web part reads (AI CoE Use Cases, AI CoE Decisions, AI Usage Daily, AI CoE Incidents) are provisioned by
-the companion Power Automate solutions, exactly as before.
+version 1.0.0.2) and web part id (`cf2e5904-0703-4fe4-ae5a-ec012d6fa689`) are unchanged, so the provisioned lists
+are left untouched. 1.0.0.16 changes no shipped list schema. It packages the consolidated `view:app` as the first
+toolbox entry, a typed Binding A CORE client that stays disabled until live bindings and native CORE corrections
+exist, Marketing draft/review contracts with a synthetic local store, two extra role-group keys
+(`marketingParticipant`, `marketingReviewer`), and an **additive** one-page script at
+`sharepoint/pages/one-page/New-FrontDoorAppPage.ps1` that places one `view:app` instance on an explicitly named
+page. That script has dry-run and binding checks, no `-Overwrite`, and does not replace QuickLaunch. The sixteen-page
+`pages.json` and `New-FrontDoorPages.ps1` are unchanged: they still create zero `app` instances.
 
-Do first, before the script runs: if this site is running a pilot, create the pilot team's site group, put its title
-in `PilotGroup` and the team's name in `PilotTeamName` in `parameters.json` (the groups of 1.0.0.14 stay as they
-are). Both blanks are allowed and neither is an error: a blank `PilotTeamName` skips the start page altogether, and
-a blank or unknown `PilotGroup` is a warning that leaves the page owners-only (see "Page permissions"). The outcome
-page and its list are built either way, because recording how a task went is not a pilot's privilege.
+What 1.0.0.15 already added remains: `pageOutcome`, the eleventh-then-twelfth toolbox outcome entry, **AI CoE Outcome Records**, **Record a task outcome**, the pilot start keyed on `PilotTeamName` / `PilotGroup` with `skipWhenBlank`.
+Do first, before either script runs: create the site groups this instance should bind, including Marketing
+participant and reviewer groups if those roles should open. Blank groups leave those roles unbound.
 
-After deployment the property pane is as in 1.0.0.14, with one new Page links field: **Record a task outcome page**.
-The script does not fill it. On the provisioned Requests page, which is a content page, the sixth card comes from the
-`outcome` entry of its home `piece` block in the content document; `pageOutcome` is the property to set by hand on a
-separate **AI CoE: Home tiles** instance, where there is no document to read it from. Existing instances keep
-rendering the whole front door on one page:
-the **Page layout → Piece shown on this page** dropdown defaults to that, and the page properties are ignored until
-another piece is chosen. Then apply the page definition (see "Applying it"): on a site that already carries the
-1.0.0.14 pages the script runs without `-Overwrite`; every existing page keeps its content and its instance
-properties are **updated in place** (see "Instance properties"), so the Branding properties arrive without rebuilding
-anything; the outcome list is created, its inheritance broken, its two built-in person columns taken off the default
-view and `ReadSecurity 2 / WriteSecurity 2` set; the content document is rewritten (Start here gains the workflow
-cards, the records notice and the card to the pilot start; Requests' home piece gains the sixth card); and the two
-new pages are created, the pilot start only where `PilotTeamName` is filled in.
+The sixteen-page script still runs without `-Overwrite` so existing pages keep their content and instance properties
+are **updated in place**. The one-page script is a separate path: name `PageFile` and run `-DryRun` / `-CheckBindings`
+first. Live CORE command writes, Marketing send/publish/assign/schedule, and tenant provisioning from this worktree
+are not authorized by the package alone.
 
-The tenant acceptance for this release: create the pilot group, set `PilotTeamName` and run the script; open the
-pilot team's start page as a member of that group and confirm the three workflow cards and the five checks are
-there; then record one outcome on **Record a task outcome** and confirm the receipt names the reference, that the
-row in **AI CoE Outcome Records** holds no prompt, no answer and no text of the task itself (every column is a
-choice or a value the web part writes), and that a second member of the pilot group cannot read that row in the
-list UI while an operator can.
+Tenant acceptance for this release is **not claimed** from a local build. Confirm the five items in
+`LIVE_BINDINGS_REQUIRED.md` before any live Binding A write.
 
 ### Rollback
 
-Redeploy the 1.0.0.14 package from that release's build and rerun that version's `New-FrontDoorPages.ps1` without
-`-Overwrite`: the content document is rewritten from that version's `pages.json` (Site Assets keeps every version,
-so the 1.0.0.15 document stays in its history), so Start here loses the workflow cards, the records notice and the
-card to the pilot start, and the Requests home piece its sixth card. What this release added is additive and stays.
-The **AI CoE Outcome Records** list stays with its rows and the item-level security the script set, read by nothing
-(harmless), until an owner exports the rows and deletes it by hand. The **Record a task outcome** and pilot team
-start pages stay; the older document describes neither key, so the pilot start reports the missing key and nothing
-else, while the outcome page's instance asks for a piece that package does not know and falls back to the whole
-front door on one page — delete either page by hand from Site Pages if that is not wanted. The page permission
-granted to the pilot group stays as this release set it, because the older script does not touch a page it does not
-create; reset it by hand from that page's permissions panel, which leaves the page owners-only. The `pageOutcome`
-property stays in the property bags, inert (the 1.0.0.14 bundle reads it not), unless you rerun the older script
-with `-Overwrite`, which rebuilds every page from that version's definition. The eleventh toolbox entry is part of
-the package, so it disappears with it: **AI CoE: Record a task outcome** is no longer offered when a page is
-edited. The intake lists' item-level security of 1.0.0.13 is untouched by either script and is reverted by hand as
-*List security* documents (`Set-PnPList -ReadSecurity 1 -WriteSecurity 1`, then `-ResetRoleInheritance`, on each of
-the two lists); the rows are untouched either way.
+Redeploy the 1.0.0.15 package from that release's build. The older bundle does not mount the CORE workspace or the
+synthetic Marketing store; existing `view:app` instances fall back to whatever that package knew, and an absent view
+still parses to the whole front door on one page. The sixteen-page script of 1.0.0.15 run without `-Overwrite`
+rewrites the content document and leaves additive pages. The one-page Front-Door.aspx, if created later under
+separate authorization, stays until deleted by hand.
 
 ### Enable AI drafting of idea summaries
 
@@ -708,7 +677,7 @@ state are printed: a value belongs to the tenant and never goes to the console.
 
 **Applying it** (site owner, outside this repository; the build and tests never touch a tenant):
 
-1. Deploy 1.0.0.15 and "Get it" on the site, so the component is available to the script. Create the site groups
+1. Deploy 1.0.0.16 and "Get it" on the site, so the component is available to the script. Create the site groups
    the definition binds (leaders, operators, design authority, and since 1.0.0.15 the pilot team's) before the run,
    so the pages that name them are not left owners-only.
 2. Copy `sharepoint/pages/parameters.sample.json` to `sharepoint/pages/parameters.json` (ignored by git), fill in the values.

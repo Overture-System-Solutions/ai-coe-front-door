@@ -9,7 +9,7 @@ define([], function() {
     "ReviewSystemNameFieldLabel": "Review system name",
     "ReviewSystemNameFieldDescription": "Name of the performance-review system quoted in tool guidance. Leave blank for the default wording.",
     "RoleGroupsFieldLabel": "Role groups",
-    "RoleGroupsFieldDescription": "Site groups that map to roles, as role=Group title pairs separated by semicolons: leader=…; operator=…; designAuthority=…. Site owners always count as operators.",
+    "RoleGroupsFieldDescription": "Site groups that map to roles, as role=Group title pairs separated by semicolons: leader=…; operator=…; designAuthority=…; marketingParticipant=…; marketingReviewer=…. Site owners always count as operators; no group grants a Marketing role until it is named here.",
     "PaletteOverridesFieldLabel": "Palette overrides",
     "PaletteOverridesFieldDescription": "Colours of this organization as key=#hex pairs separated by semicolons, for example accent=#008B83;ink=#102B3D. Keys: accent, ink, muted, bg, paper, focus, stateGreen, stateBlue, stateAmber, stateRed, line, soft, heroFrom, heroTo, heroGlow, accentDark, accentSoft. Leave blank to keep the shipped colours.",
     "DraftingGroupName": "AI drafting",

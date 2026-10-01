@@ -1,0 +1,36 @@
+{
+ "request": {
+  "Context": {
+   "CorrelationID": "CORR-UAT-LIST",
+   "IdempotencyKey": "list:uat-analyst:1",
+   "ClientVersion": "spfx-candidate-0.1",
+   "TenantLabel": "CloudWave-PrivatePilot",
+   "TestRecord": true
+  },
+  "Requester": "uat-analyst@example.invalid"
+ },
+ "response": {
+  "Result": "PASS",
+  "ReceiptID": "RCPT-UAT-LIST-001",
+  "Items": [
+   {
+    "WorkID": "CW-UAT-FAST-001",
+    "Title": "UAT: automate weekly reporting inside approved tool",
+    "Stage": "DELIVERY",
+    "State": "PROJECT_ACTIVATING",
+    "EmployeeStatus": "Working",
+    "Lane": "AI_COE_FAST_PATH",
+    "NextAction": "Activate PM-Lite project",
+    "NextOwner": "uat-owner@example.invalid",
+    "NextDate": "2026-09-22T14:00:00Z",
+    "Version": 11,
+    "LastValidatedAt": "2026-09-21T14:14:00Z",
+    "OpenEvidenceGaps": [],
+    "DuplicateStatus": "RELATED_NOT_DUPLICATE",
+    "RelatedWorkIDs": [
+     "CW-05"
+    ]
+   }
+  ]
+ }
+}

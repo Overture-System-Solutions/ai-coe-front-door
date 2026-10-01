@@ -1,0 +1,24 @@
+{
+ "request": {
+  "Context": {
+   "CorrelationID": "CORR-UAT-X",
+   "IdempotencyKey": "create:neg:1",
+   "ClientVersion": "spfx-candidate-0.1",
+   "TenantLabel": "CloudWave-PrivatePilot",
+   "TestRecord": true
+  },
+  "S1": {
+   "SourceChannel": "ASK_AI_COE_UAT",
+   "Title": ""
+  },
+  "WorkID": null
+ },
+ "response": {
+  "Result": "FAIL",
+  "ErrorClass": "VALIDATION_FAILED",
+  "Message": "S1.Title is required (minLength 1). Nothing was written.",
+  "ReceiptID": "RCPT-UAT-NEG-003",
+  "RetryAllowed": true
+ },
+ "_note": "request intentionally violates S1.Title minLength; expected outcome is the recorded error envelope"
+}
