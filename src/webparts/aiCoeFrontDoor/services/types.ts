@@ -42,6 +42,12 @@ export interface ISubmissionResult extends IFailureFields {
   savedAt?: string;
   /** The workflow version written with the row. */
   version?: string;
+  /**
+   * True when the result is about an earlier attempt, not the answers just sent: the server recovery record holds
+   * an unconfirmed attempt and refuses any other submission until it is confirmed. The answers on screen were not
+   * sent, so a result like this never settles their draft; the reference is that earlier attempt's.
+   */
+  earlierAttempt?: boolean;
   message: string;
 }
 
@@ -71,6 +77,12 @@ export interface IRecoveredSubmission {
 export interface IGovernanceService {
   /** Recover an unfinished, server-stored intent without submitting a new request. */
   restoreSubmission?(): Promise<IRecoveredSubmission | undefined>;
+  /**
+   * The payload a new submission is sent as, when the service adds to what the form built (the consolidated view's
+   * gate marks a leader's business case to be reviewed sooner). A caller keeps what this returns as the attempt, so
+   * a retry, which is never prepared again, sends exactly what its first attempt recorded. Absent: sent as built.
+   */
+  prepareSubmission?(workflowType: SubmissionPieceType, payload: unknown): unknown;
   submitWorkflow(workflowType: SubmissionWorkflowType, payload: unknown, options?: ISubmitOptions): Promise<ISubmissionResult>;
   /**
    * Writes one outcome record (the answers of the outcome piece) to its own list: choices only, no

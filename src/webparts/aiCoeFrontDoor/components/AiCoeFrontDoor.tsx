@@ -30,7 +30,9 @@ export interface IAiCoeFrontDoorProps {
 /**
  * Root of the React tree: the scoped section every stylesheet targets, the screen-reader-only
  * signed-in line of the legacy view (a page view shows the person visibly in its own chrome, so
- * nothing is announced twice), and the providers the pages read from.
+ * nothing is announced twice), and the providers the pages read from. The consolidated view takes
+ * no submission provider from here: it mounts its own over the gated governance service, for the
+ * membership it resolves (see AppShell), so its forms have no other route to the lists.
  */
 export function AiCoeFrontDoor({ isDarkTheme, branding, siteUrl, user, isAdmin, telemetryProvider, services, pageView, navigate }: IAiCoeFrontDoorProps): React.ReactElement {
   const settings: IPageViewSettings | undefined = pageView === undefined || pageView.view === 'legacy' ? undefined : pageView;
@@ -43,9 +45,13 @@ export function AiCoeFrontDoor({ isDarkTheme, branding, siteUrl, user, isAdmin, 
     <section id="overture-ai-coe-pilot" className={styles.aiCoeFrontDoor} data-theme={isDarkTheme ? 'dark' : 'light'}>
       {settings === undefined && <span className={styles.signedInUser}>{`Signed in as ${user.displayName}`}</span>}
       <FrontDoorProvider value={value}>
-        <SubmissionProvider governanceService={services.governance}>
-          {settings === undefined ? <FrontDoorShell /> : settings.view === 'app' ? <AppShell settings={settings} /> : <PageViewShell key={settings.view} settings={settings} />}
-        </SubmissionProvider>
+        {settings !== undefined && settings.view === 'app' ? (
+          <AppShell settings={settings} />
+        ) : (
+          <SubmissionProvider governanceService={services.governance}>
+            {settings === undefined ? <FrontDoorShell /> : <PageViewShell key={settings.view} settings={settings} />}
+          </SubmissionProvider>
+        )}
       </FrontDoorProvider>
     </section>
   );

@@ -15,7 +15,15 @@ import {
   REVIEW_STATES,
   ROUTE_AVAILABILITY
 } from '../webparts/aiCoeFrontDoor/content/workflows/outcome';
-import { INTAKES_LIST_TITLE, OUTCOME_RECORDS_LIST_TITLE, OWN_ITEMS_SECURITY, PROGRAM_MEASURES_LIST_TITLE } from '../webparts/aiCoeFrontDoor/services/lists';
+import {
+  APPROVED_TOOLS_LIST_TITLE,
+  INTAKES_LIST_TITLE,
+  OUTCOME_RECORDS_LIST_TITLE,
+  OWN_ITEMS_SECURITY,
+  PROGRAM_MEASURES_LIST_TITLE,
+  READ_ONLY_SECURITY
+} from '../webparts/aiCoeFrontDoor/services/lists';
+import { APPROVED_TOOL_STATUSES, APPROVED_TOOLS_SELECT } from '../webparts/aiCoeFrontDoor/services/approvedToolsService';
 import { MY_WORK_SELECT } from '../webparts/aiCoeFrontDoor/services/myWorkService';
 import { findTenantWords, PROVISIONING_SCAN, readTenantWords } from './tenantWords';
 import type { ITenantWords } from './tenantWords';
@@ -33,7 +41,10 @@ interface IListDefinition {
   title: string;
   description: string;
   fields: IListField[];
-  /** `ownItems` (1.0.0.15): the script secures the list it created, as it secures the two intake lists. */
+  /**
+   * `ownItems` (1.0.0.15): the script secures the list it created, as it secures the two intake lists.
+   * `readOnly` (1.0.0.18): everyone reads every row; only owners and the named groups write.
+   */
   security?: string;
   /** The `group` parameters whose site groups read every row of the list. */
   fullControlGroups?: string[];
@@ -75,7 +86,8 @@ describe('declared lists and the services that read them', () => {
     // list the script creates and a list the web part reads can never be two different lists.
     expect(PROGRAM_MEASURES_LIST_TITLE).toBe('AI CoE Program Measures');
     expect(OUTCOME_RECORDS_LIST_TITLE).toBe('AI CoE Outcome Records');
-    expect(definition.lists.map((list: IListDefinition): string => list.title)).toEqual([PROGRAM_MEASURES_LIST_TITLE, OUTCOME_RECORDS_LIST_TITLE]);
+    expect(APPROVED_TOOLS_LIST_TITLE).toBe('AI CoE Approved Tools');
+    expect(definition.lists.map((list: IListDefinition): string => list.title)).toEqual([PROGRAM_MEASURES_LIST_TITLE, OUTCOME_RECORDS_LIST_TITLE, APPROVED_TOOLS_LIST_TITLE]);
     // The intake list is not declared here: the package feature provisions it and the script only secures it.
     expect(definition.lists.map((list: IListDefinition): string => list.title)).not.toContain(INTAKES_LIST_TITLE);
   });
@@ -128,6 +140,43 @@ describe('declared lists and the services that read them', () => {
     // No person column is declared: the submitter is only in SharePoint's own Created By, which the list hides.
     expect(JSON.stringify(outcomes).toLowerCase()).not.toContain('email');
     expect(outcomes.hideFromDefaultView).toEqual(['Author', 'Editor']);
+  });
+
+  it('declares exactly the approved-tools columns the service reads, keyed on a unique tool id (1.0.0.18)', () => {
+    // One list is the approved-tools register for the tool check, the approved-tools panel and the AI CoE Assistant
+    // agent, so the declaration and the service's $select are the same columns and nothing else.
+    const tools: IListDefinition = listOf(APPROVED_TOOLS_LIST_TITLE);
+    const declared: string[] = columnNames(tools);
+    const selected: string[] = APPROVED_TOOLS_SELECT.split(',').filter((column: string): boolean => BUILT_IN_COLUMNS.indexOf(column) < 0);
+    expect(declared).toEqual(selected);
+    const key: IListField = tools.fields[0];
+    expect({ name: key.name, indexed: key.indexed, required: key.required, unique: key.unique }).toEqual({ name: 'ToolId', indexed: true, required: true, unique: true });
+    const status: IListField = tools.fields.filter((field: IListField): boolean => field.name === 'Status')[0];
+    expect({ type: status.type, required: status.required, choices: status.choices }).toEqual({ type: 'Choice', required: true, choices: APPROVED_TOOL_STATUSES.slice() });
+    // Every allowance is a yes/no column, so a row nobody filled in allows nothing.
+    const allowances: IListField[] = tools.fields.filter((field: IListField): boolean => /Allowed$/.test(field.name));
+    expect(allowances.map((field: IListField): string => field.name)).toEqual([
+      'CompanyInfoAllowed',
+      'EmployeeInfoAllowed',
+      'CustomerInfoAllowed',
+      'PatientInfoAllowed',
+      'ConfidentialInfoAllowed',
+      'RegulatedInfoAllowed',
+      'FileUploadsAllowed',
+      'ExternalSharingAllowed'
+    ]);
+    for (const field of allowances) {
+      expect({ name: field.name, type: field.type }).toEqual({ name: field.name, type: 'Boolean' });
+    }
+  });
+
+  it('lets everyone read the approved tools and only owners and operators change them (1.0.0.18)', () => {
+    // Nobody may approve their own tool: the list is read by every member and written only by a principal holding
+    // Override List Behaviors, which the owners and the operators group are granted on the list itself.
+    const tools: IListDefinition = listOf(APPROVED_TOOLS_LIST_TITLE);
+    expect(READ_ONLY_SECURITY).toBe('readOnly');
+    expect(tools.security).toBe(READ_ONLY_SECURITY);
+    expect(tools.fullControlGroups).toEqual(['OperatorsGroup']);
   });
 
   it('gives the outcome record the vocabularies the workflow offers, so no answer can fall outside the column', () => {

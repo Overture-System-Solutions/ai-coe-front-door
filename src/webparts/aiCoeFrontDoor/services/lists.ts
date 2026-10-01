@@ -38,3 +38,17 @@ export const OWN_ITEMS_LISTS: readonly string[] = [INTAKES_LIST_TITLE, USE_CASES
  * list, and every measure then reads as not available rather than as a number nobody can source.
  */
 export const PROGRAM_MEASURES_LIST_TITLE: string = 'AI CoE Program Measures';
+
+/**
+ * The approved-tools register (1.0.0.18): one row per AI tool the AI CoE has reviewed, read by the tool check, the
+ * approved-tools panel and the AI CoE Assistant agent. Created from the `lists` section of `pages.json` by the script
+ * and by the provisioning flow; a site that carries no such list has no approved tools, never an assumed approval.
+ */
+export const APPROVED_TOOLS_LIST_TITLE: string = 'AI CoE Approved Tools';
+
+/**
+ * The security mode `pages.json` names for a register everyone reads and only owners and the named groups write
+ * (`ReadSecurity 1 / WriteSecurity 4`): the write setting stops everyone whose permission level withholds Override
+ * List Behaviors, and the owners and those groups are given Full Control on the list itself.
+ */
+export const READ_ONLY_SECURITY: string = 'readOnly';

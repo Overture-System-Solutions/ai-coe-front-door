@@ -140,7 +140,9 @@ describe('MyWork', () => {
     expect(rows).toHaveLength(1);
     expect(within(rows[0]).getByText('OVT-AICOE-20260901-AAAAAAAA')).toBeInTheDocument();
     expect(container.textContent).not.toContain('CCCCCCCC');
-    expect(store.requests).toHaveLength(1);
-    expect(store.requests[0].query.$filter).toBe(`RequestorEmail eq '${TEST_USER.email}'`);
+    // One read of the request list; the link lookups since 1.0.0.18 read the lists themselves, never more rows.
+    const itemReads = store.requests.filter((request) => request.url.indexOf('/items') >= 0);
+    expect(itemReads).toHaveLength(1);
+    expect(itemReads[0].query.$filter).toBe(`RequestorEmail eq '${TEST_USER.email}'`);
   });
 });

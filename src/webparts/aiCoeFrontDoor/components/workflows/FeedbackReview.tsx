@@ -27,7 +27,7 @@ export function FeedbackReview({ workflow, answers, onEditAnswer, onConfirm }: I
         </p>
       </div>
       <NoticeBanner icon={Info}>{FEEDBACK_NOTICE}</NoticeBanner>
-      <AnswerList steps={answerableSteps(visibleSteps(workflow, answers))} answers={answers} onEdit={onEditAnswer} className="space-y-3" />
+      <AnswerList steps={answerableSteps(visibleSteps(workflow, answers), answers)} answers={answers} onEdit={onEditAnswer} className="space-y-3" />
       <WhatHappensNext text={feedbackWhatHappensNext(answers)} />
       <div className="flex flex-wrap gap-3 pt-2">
         <button

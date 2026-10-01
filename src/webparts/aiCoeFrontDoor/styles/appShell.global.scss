@@ -75,6 +75,14 @@
   // The queue control keeps the same tab face but sits at the far end of the bar, not in the section group.
   .ai-app-tab--admin {
     flex: 0 0 auto;
+  }
+
+  // 1.0.0.18: Cases, Metrics and Admin sit together at the far end; the first of them takes the gap.
+  .ai-app-tab--end {
+    flex: 0 0 auto;
+  }
+
+  .ai-app-tab--end-first {
     margin-left: auto;
   }
 
@@ -158,8 +166,46 @@
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
-  .ai-app-starters--engineering {
+  // Requests (1.0.0.18): My requests on the left, the request forms stacked on the right.
+  .ai-app-requests {
+    align-items: start;
+    display: grid;
+    gap: 24px;
+    grid-template-columns: minmax(0, 1.35fr) minmax(280px, 1fr);
     padding-block: 24px;
+  }
+
+  .ai-app-starters--engineering {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  // What is going on? (1.0.0.18): the explanation at the foot of Requests, Improvement and Cases, closed by default.
+  .ai-app-going-on {
+    border-top: 1px solid var(--fd-line, #d6e0e8);
+    margin: 28px 0 0;
+    padding: 14px 0 0;
+  }
+
+  .ai-app-going-on-toggle {
+    background: transparent;
+    border: 0;
+    color: var(--fd-accent-dark, #055d66);
+    cursor: pointer;
+    font: inherit;
+    font-size: 15px;
+    font-weight: 650;
+    padding: 6px 0;
+  }
+
+  .ai-app-going-on-toggle::before {
+    content: '\25B8';
+    display: inline-block;
+    margin-right: 8px;
+    transition: transform 120ms ease;
+  }
+
+  .ai-app-going-on-toggle[aria-expanded='true']::before {
+    transform: rotate(90deg);
   }
 
   .ai-app-cases-explanation {
@@ -222,6 +268,17 @@
     line-height: 1.45;
   }
 
+  .ai-app-draft-badge {
+    background: var(--fd-accent-soft, #e8f7f6);
+    border-radius: 999px;
+    color: var(--fd-accent-dark, #055d66);
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 700;
+    margin-top: 10px;
+    padding: 3px 10px;
+  }
+
   .ai-app-measure {
     background: var(--fd-paper, #fff);
     border: 1px solid var(--fd-line, #d6e0e8);
@@ -255,6 +312,10 @@
 
 // One column where the part sits in a narrow column, and on a small screen.
 .ai-view--app.ai-view--narrow {
+  .ai-app-requests {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
   .ai-app-choices,
   .ai-app-starters,
   .ai-app-measures {
@@ -272,6 +333,10 @@
 
 @media (max-width: 720px) {
   .ai-view--app {
+    .ai-app-requests {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
     .ai-app-choices,
     .ai-app-starters,
     .ai-app-measures {
@@ -289,6 +354,9 @@
 
     .ai-app-tab--admin {
       flex: 0 0 auto;
+    }
+
+    .ai-app-tab--end-first {
       margin-left: auto;
     }
 
@@ -1028,6 +1096,9 @@
 
   .ai-app-tab--admin {
     flex: 0 0 auto;
+  }
+
+  .ai-app-tab--end-first {
     margin-left: auto;
   }
 
@@ -1191,25 +1262,25 @@
   }
 }
 
-// A person's own requests. The list is the front door's own, reused unchanged, but the rules that made each row a
-// card are scoped to the page view it was written for, so inside this view it arrived as bare lines of text - the
-// one screen holding real records looking the least finished of the seven. These give it the kit's surface. They
-// are scoped to the section rather than to the class, so the legacy screens are untouched.
+// A person's own requests (on Requests since 1.0.0.18). The list is the front door's own, reused unchanged, but the
+// rules that made each row a card are scoped to the page view it was written for, so inside this view it arrived as
+// bare lines of text. These give it the kit's surface. They are scoped to the column rather than to the class, so the
+// legacy screens are untouched.
 .ai-view--app {
-  .ai-app-cases .ai-page-mywork-title {
+  .ai-app-requests-mine .ai-page-mywork-title {
     color: var(--fd-ink, #10243e);
     font-size: 18px;
     font-weight: 700;
     margin: 0 0 10px;
   }
 
-  .ai-app-cases .ai-page-mywork-list {
+  .ai-app-requests-mine .ai-page-mywork-list {
     display: grid;
     gap: 12px;
     margin: 0;
   }
 
-  .ai-app-cases .ai-mywork-row {
+  .ai-app-requests-mine .ai-mywork-row {
     background: var(--fd-paper, #fff);
     border: 1px solid var(--fd-line, #d6e0e8);
     border-radius: 14px;
@@ -1217,7 +1288,7 @@
     padding: 16px 18px;
   }
 
-  .ai-app-cases .ai-mywork-head {
+  .ai-app-requests-mine .ai-mywork-head {
     align-items: center;
     display: flex;
     flex-wrap: wrap;
@@ -1225,24 +1296,24 @@
     margin: 0 0 6px;
   }
 
-  .ai-app-cases .ai-mywork-label {
+  .ai-app-requests-mine .ai-mywork-label {
     color: var(--fd-ink, #10243e);
     font-size: 16px;
     font-weight: 600;
   }
 
-  .ai-app-cases .ai-mywork-reference,
-  .ai-app-cases .ai-mywork-dates {
+  .ai-app-requests-mine .ai-mywork-reference,
+  .ai-app-requests-mine .ai-mywork-dates {
     color: var(--fd-muted, #5b6878);
     font-size: 13px;
     margin: 2px 0 0;
   }
 
-  .ai-app-cases .ai-mywork-key {
+  .ai-app-requests-mine .ai-mywork-key {
     margin: 0 6px 0 0;
   }
 
-  .ai-app-cases .ai-mywork-row code {
+  .ai-app-requests-mine .ai-mywork-row code {
     background: var(--fd-soft, #e5ebf0);
     border-radius: 6px;
     color: var(--fd-ink, #10243e);
@@ -1251,7 +1322,7 @@
     padding: 1px 6px;
   }
 
-  .ai-app-cases .ai-mywork-note {
+  .ai-app-requests-mine .ai-mywork-note {
     color: var(--fd-muted, #5b6878);
     margin: 0;
   }
@@ -1306,4 +1377,269 @@
 
 .ai-view--app .ai-app-foot-support {
   display: block;
+}
+
+// 1.0.0.18: the cards carry the palette. Each form card has its own tone - a left edge and an icon badge in a palette
+// colour over a tint of the palette's soft colours - and lifts on hover; the Home ways in, the approved tools and the
+// analysis cards take the same tones. Strong inks that the palette has no word for (gold, green, slate, red) are the
+// pill inks this view already draws, so no new colour enters the sheet.
+.ai-view--app {
+  .ai-app-starter-button,
+  .ai-app-choice-button {
+    border-left-width: 5px;
+    transition: box-shadow 140ms ease, transform 140ms ease;
+  }
+
+  .ai-app-starter-button:hover,
+  .ai-app-choice-button:hover {
+    transform: translateY(-2px);
+  }
+
+  .ai-app-starter-icon {
+    align-items: center;
+    border-radius: 11px;
+    display: inline-flex;
+    height: 38px;
+    justify-content: center;
+    margin: 0 0 10px;
+    width: 38px;
+  }
+
+  .ai-app-starter-glyph {
+    height: 20px;
+    width: 20px;
+  }
+
+  .ai-app-starter--teal .ai-app-starter-button,
+  .ai-app-choice--teal .ai-app-choice-button {
+    background: linear-gradient(112deg, var(--fd-paper, #fff), var(--fd-accent-soft, #e8f7f6));
+    border-left-color: var(--fd-accent, #087f83);
+  }
+
+  .ai-app-starter--teal .ai-app-starter-icon {
+    background: var(--fd-accent-soft, #e8f7f6);
+    color: var(--fd-accent, #087f83);
+  }
+
+  .ai-app-starter--blue .ai-app-starter-button,
+  .ai-app-choice--blue .ai-app-choice-button {
+    background: linear-gradient(112deg, var(--fd-paper, #fff), var(--fd-state-blue, #e7f0fb));
+    border-left-color: var(--fd-focus, #0b66d4);
+  }
+
+  .ai-app-starter--blue .ai-app-starter-icon {
+    background: var(--fd-state-blue, #e7f0fb);
+    color: var(--fd-focus, #0b66d4);
+  }
+
+  .ai-app-starter--navy .ai-app-starter-button {
+    background: linear-gradient(112deg, var(--fd-paper, #fff), var(--fd-soft, #e5ebf0));
+    border-left-color: var(--fd-hero-from, #10243e);
+  }
+
+  .ai-app-starter--navy .ai-app-starter-icon {
+    background: var(--fd-soft, #e5ebf0);
+    color: var(--fd-hero-from, #10243e);
+  }
+
+  .ai-app-starter--gold .ai-app-starter-button {
+    background: linear-gradient(112deg, var(--fd-paper, #fff), var(--fd-state-amber, #fff4cf));
+    border-left-color: #8a4e00;
+  }
+
+  .ai-app-starter--gold .ai-app-starter-icon {
+    background: var(--fd-state-amber, #fff4cf);
+    color: #8a4e00;
+  }
+
+  .ai-app-starter--green .ai-app-starter-button,
+  .ai-app-choice--green .ai-app-choice-button {
+    background: linear-gradient(112deg, var(--fd-paper, #fff), var(--fd-state-green, #ddf6f0));
+    border-left-color: #0c6f4a;
+  }
+
+  .ai-app-starter--green .ai-app-starter-icon {
+    background: var(--fd-state-green, #ddf6f0);
+    color: #0c6f4a;
+  }
+
+  .ai-app-starter--slate .ai-app-starter-button {
+    background: linear-gradient(112deg, var(--fd-paper, #fff), var(--fd-soft, #e5ebf0));
+    border-left-color: #435b77;
+  }
+
+  .ai-app-starter--slate .ai-app-starter-icon {
+    background: var(--fd-soft, #e5ebf0);
+    color: #435b77;
+  }
+
+  // The concierge hand-off in the hero: a light panel over the entry panel's wash.
+  .ai-app-concierge {
+    background: var(--fd-paper, #fff);
+    border-radius: 14px;
+    box-shadow: 0 12px 30px rgba(6, 42, 70, 0.25);
+    color: var(--fd-ink, #10243e);
+    margin: 14px 0 0;
+    max-width: 640px;
+    padding: 16px 18px;
+  }
+
+  .ai-app-concierge-text {
+    margin: 0 0 12px;
+  }
+
+  .ai-app-concierge-actions {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .ai-app-link-button {
+    background: transparent;
+    border: 0;
+    color: var(--fd-muted, #5b6878);
+    cursor: pointer;
+    font: inherit;
+    padding: 8px 6px;
+    text-decoration: underline;
+  }
+
+  .ai-concierge-card {
+    background: linear-gradient(112deg, var(--fd-paper, #fff), var(--fd-accent-soft, #e8f7f6));
+    border-left: 5px solid var(--fd-accent, #087f83);
+  }
+
+  .ai-concierge-card .ai-route-card-link {
+    background: var(--fd-accent, #087f83);
+    border: 0;
+    border-radius: 10px;
+    color: #fff;
+    cursor: pointer;
+    font: inherit;
+    font-weight: 650;
+    padding: 9px 14px;
+  }
+
+  // Claude's analysis: short paragraphs at a readable width, then the two lists side by side.
+  .ai-app-analysis-summary {
+    border-left: 4px solid var(--fd-accent, #087f83);
+    margin: 0 0 18px;
+    padding: 2px 0 2px 16px;
+  }
+
+  .ai-app-analysis-summary p {
+    color: var(--fd-ink, #10243e);
+    font-size: 16px;
+    line-height: 1.6;
+    margin: 0 0 10px;
+    max-width: 70ch;
+  }
+
+  .ai-app-analysis-lists {
+    margin: 18px 0 0;
+  }
+
+  .ai-app-case-link {
+    color: inherit;
+    text-decoration: underline;
+    text-decoration-color: var(--fd-line, #d6e0e8);
+    text-underline-offset: 3px;
+  }
+
+  .ai-app-case-link:hover {
+    text-decoration-color: var(--fd-accent, #087f83);
+  }
+
+  // The approved tools under the Requests columns.
+  .ai-app-approved-tools {
+    margin: 8px 0 0;
+  }
+
+  .ai-app-tools {
+    display: grid;
+    gap: 14px;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .ai-app-tool {
+    border-left: 5px solid var(--fd-line, #d6e0e8);
+    padding: 16px 18px;
+  }
+
+  .ai-app-tool--good {
+    border-left-color: #0c6f4a;
+  }
+
+  .ai-app-tool--info {
+    border-left-color: #075f88;
+  }
+
+  .ai-app-tool--wait {
+    border-left-color: #8a4e00;
+  }
+
+  .ai-app-tool--block {
+    border-left-color: #942c2c;
+  }
+
+  .ai-app-tool-top {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 12px;
+    justify-content: space-between;
+    margin: 0 0 6px;
+  }
+
+  .ai-app-tool-name {
+    color: var(--fd-ink, #10243e);
+    font-size: 16px;
+    font-weight: 700;
+    margin: 0;
+  }
+
+  .ai-app-tool-line {
+    color: var(--fd-ink, #10243e);
+    font-size: 14px;
+    margin: 6px 0 0;
+  }
+
+  .ai-app-tool-muted {
+    color: var(--fd-muted, #5b6878);
+  }
+
+  // My requests: each card opens what it stands for.
+  .ai-app-requests-mine .ai-mywork-row {
+    border-left: 5px solid var(--fd-accent, #087f83);
+  }
+
+  .ai-app-requests-mine .ai-mywork-link {
+    color: var(--fd-ink, #10243e);
+    text-decoration: underline;
+    text-decoration-color: var(--fd-line, #d6e0e8);
+    text-underline-offset: 3px;
+  }
+
+  .ai-app-requests-mine .ai-mywork-open {
+    color: var(--fd-accent-dark, #055d66);
+    font-size: 13px;
+    font-weight: 650;
+    margin: 6px 0 0;
+  }
+
+  // A grouped question screen: each question set apart from the next.
+  .ai-step-group .ai-step-field + .ai-step-field {
+    border-top: 1px solid var(--fd-line, #d6e0e8);
+    padding-top: 18px;
+  }
+}
+
+@media (max-width: 720px) {
+  .ai-view--app .ai-app-tools {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }

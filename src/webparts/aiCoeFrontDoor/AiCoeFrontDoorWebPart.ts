@@ -44,6 +44,8 @@ import { MyWorkService } from './services/myWorkService';
 import { browserNavigate } from './services/navigation';
 import { PageContentService } from './services/pageContentService';
 import { ProgramMeasuresService } from './services/programMeasuresService';
+import { ApprovedToolsService } from './services/approvedToolsService';
+import { parseConcierge } from './services/concierge';
 import { RoleResolver } from './services/roleResolver';
 import { createToolPolicyEvaluator } from './services/toolPolicyEvaluator';
 import type { IServiceContext } from './services/types';
@@ -72,6 +74,10 @@ export interface IAiCoeFrontDoorWebPartProps extends IPageViewProperties {
   draftServiceUrl: string;
   /** HTTP trigger URL of the case analysis flow behind the leaders' Cases panel; blank leaves the panel unbound. */
   caseAnalysisUrl?: string;
+  /** The AI CoE Concierge chat link (Microsoft 365 Copilot) the Ask box hands a question to (1.0.0.18); blank = not set up. */
+  conciergeChatUrl?: string;
+  /** The link that adds the AI CoE Concierge in Teams, offered once (1.0.0.18); blank offers only the chat. */
+  conciergeAddUrl?: string;
   /** Server-owned, caller-secured list for unsubmitted business drafts. Blank fails closed. */
   draftListId?: string;
   /** Accepted server retention/access policy references; no secret values. */
@@ -276,6 +282,16 @@ export default class AiCoeFrontDoorWebPart extends BaseClientSideWebPart<IAiCoeF
             description: strings.CaseAnalysisUrlFieldDescription,
             placeholder: 'https://…/triggers/manual/paths/invoke?api-version=1'
           }),
+          PropertyPaneTextField('conciergeChatUrl', {
+            label: 'AI CoE Concierge chat link',
+            description: 'The AI CoE Concierge agent\'s chat link in Microsoft 365 Copilot (its Share link, https://m365.cloud.microsoft/chat/?titleId=...). The Ask box on the tabbed view copies a question and opens this chat; a saved request offers it as the next step. Only https Microsoft Copilot or Teams addresses are used. Leave blank and the box says the concierge is not set up.',
+            placeholder: 'https://m365.cloud.microsoft/chat/?titleId=T_…'
+          }),
+          PropertyPaneTextField('conciergeAddUrl', {
+            label: 'AI CoE Concierge add link (Teams)',
+            description: 'The link that adds the AI CoE Concierge in Teams (https://teams.microsoft.com/l/app/?titleId=...), offered once to people who have not added it yet. Leave blank to offer only the chat.',
+            placeholder: 'https://teams.microsoft.com/l/app/?titleId=T_…'
+          }),
           PropertyPaneTextField('draftListId', {
             label: 'Server draft list ID',
             description: 'Unsubmitted work stays on the server, never in browser storage. Blank disables saved business drafts.'
@@ -390,7 +406,7 @@ export default class AiCoeFrontDoorWebPart extends BaseClientSideWebPart<IAiCoeF
     const contentUrl: string | undefined =
       parseFrontDoorView(this.properties.view) === 'page' ? parseContentUrl(this.properties.contentUrl) : parseOptionalContentUrl(this.properties.contentUrl);
     // The tool policy evaluator reads the branding, so every branding input joins the key.
-    const key: string = JSON.stringify([branding.organizationName, branding.governanceReference, branding.reviewSystemName, draftServiceUrl, caseAnalysisUrl, contentUrl ?? null, roleGroups, this.properties.draftListId ?? '', this.properties.draftPolicyJson ?? '', this.properties.coreBindingJson ?? '', this.properties.marketingBindingJson ?? '', core.serviceContext.siteUrl, core.user.email]);
+    const key: string = JSON.stringify([branding.organizationName, branding.governanceReference, branding.reviewSystemName, draftServiceUrl, caseAnalysisUrl, this.properties.conciergeChatUrl ?? '', this.properties.conciergeAddUrl ?? '', contentUrl ?? null, roleGroups, this.properties.draftListId ?? '', this.properties.draftPolicyJson ?? '', this.properties.coreBindingJson ?? '', this.properties.marketingBindingJson ?? '', core.serviceContext.siteUrl, core.user.email]);
     if (this._services === undefined || this._servicesKey !== key) {
       const synthetic: boolean = this._isSyntheticHost(core.serviceContext.siteUrl);
       const draftStore: IDraftStore = synthetic
@@ -407,6 +423,8 @@ export default class AiCoeFrontDoorWebPart extends BaseClientSideWebPart<IAiCoeF
         toolPolicyEvaluator: createToolPolicyEvaluator(branding),
         ideaDrafts: createIdeaDraftService(draftServiceUrl, core.flowClient),
         caseAnalysis: createCaseAnalysisService(caseAnalysisUrl, core.flowClient),
+        concierge: parseConcierge(this.properties.conciergeChatUrl, this.properties.conciergeAddUrl),
+        approvedTools: new ApprovedToolsService(core.serviceContext),
         // Reads the document once per instance and document path; the page key alone never refetches.
         pageContent: contentUrl === undefined ? undefined : new PageContentService(core.serviceContext, contentUrl),
         marketing: this._marketingServices(core),

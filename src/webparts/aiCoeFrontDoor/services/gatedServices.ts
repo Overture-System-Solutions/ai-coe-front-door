@@ -29,8 +29,8 @@ import { failureUserMessage } from './failureClass';
 import { isGovernanceWorkflow } from './GovernanceService';
 import type { IProgramMeasuresResult, IProgramMeasuresService } from './programMeasuresService';
 import type { IRoleResolution } from './roleResolver';
-import type { IAdminDashboardData, IGovernanceService, ISubmissionResult, ISubmitOptions, IUsageMetricsResult, IUsageMetricsService } from './types';
-import type { SubmissionWorkflowType } from '../workflows/types';
+import type { IAdminDashboardData, IGovernanceService, IRecoveredSubmission, ISubmissionResult, ISubmitOptions, IUsageMetricsResult, IUsageMetricsService } from './types';
+import type { SubmissionPieceType, SubmissionWorkflowType } from '../workflows/types';
 
 /** The sentence a refused facade puts in a result's `message`; it names no group, role or list. */
 export const GATED_MESSAGE: string = 'This read was not made: the signed-in person does not hold the capability it needs.';
@@ -96,11 +96,24 @@ export function gateUsage(service: IUsageMetricsService, resolution: IRoleResolu
  * added on the way is the review priority of a business case: a leader's governance submission is marked to be
  * reviewed sooner, and anyone else's never carries that mark (see executivePriority.ts). It orders the review queue
  * and grants nothing.
+ *
+ * The mark is decided once, when a submission is new. A retry (it names the reference of an earlier attempt) is sent
+ * exactly as that attempt was: a real site's recovery record matches a retry to its first attempt by the digest of
+ * its payload, and refuses anything else until that attempt is confirmed. Deciding the mark again, from a membership
+ * that has not answered yet or has changed since, or for an attempt recorded before the forms came through here,
+ * would refuse the person's own retry, and with it every later submission, for good. `prepareSubmission` gives the
+ * caller the payload a new submission is sent as, so the attempt it keeps for a retry is that payload. The recovery
+ * record is the person's own and passes through, read by the service that keeps it.
  */
 export function gateGovernance(service: IGovernanceService, resolution: IRoleResolution, counters: IGateCounters): IGovernanceService {
+  const prepareSubmission = (workflowType: SubmissionPieceType, payload: unknown): unknown =>
+    workflowType !== 'outcome' && isGovernanceWorkflow(workflowType) ? applyReviewPriority(payload, holdsLeaderRole(resolution)) : payload;
+  const restore: IGovernanceService['restoreSubmission'] = service.restoreSubmission;
   return {
+    ...(restore === undefined ? {} : { restoreSubmission: (): Promise<IRecoveredSubmission | undefined> => restore.call(service) }),
+    prepareSubmission,
     submitWorkflow: (workflowType: SubmissionWorkflowType, payload: unknown, options?: ISubmitOptions): Promise<ISubmissionResult> =>
-      service.submitWorkflow(workflowType, isGovernanceWorkflow(workflowType) ? applyReviewPriority(payload, holdsLeaderRole(resolution)) : payload, options),
+      service.submitWorkflow(workflowType, options?.intakeId === undefined ? prepareSubmission(workflowType, payload) : payload, options),
     submitOutcome: (payload: unknown, options?: ISubmitOptions): Promise<ISubmissionResult> => service.submitOutcome(payload, options),
     getAdminDashboardData: async (): Promise<IAdminDashboardData> => {
       const decision: IDecision = decide('readAdminQueue', resolution);

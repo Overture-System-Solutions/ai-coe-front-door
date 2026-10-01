@@ -1,6 +1,6 @@
 import type { IBranding } from '../branding/branding';
 import { asStringArray, includes } from '../utils/collections';
-import { formatAnswer, visibleSteps } from '../workflows/formEngine';
+import { answerSteps, formatAnswer } from '../workflows/formEngine';
 import type { IAnswers, IStep, IWorkflowDefinition, WorkflowId } from '../workflows/types';
 import { createRecordId } from './recordId';
 
@@ -216,8 +216,11 @@ export function evaluateToolPolicy(answers: IAnswers, branding: IBranding): IPol
 }
 
 export interface IPolicyEvaluation extends IPolicyDecision {
-  /** The shipped evaluator is a local prototype, not a policy service; the UI labels it as such. */
-  mode: 'prototype';
+  /**
+   * The shipped evaluator is a local prototype, not a policy service, and the UI labels it as such; `register`
+   * (1.0.0.18) is the tabbed view's tool check, which reads the approved-tools register.
+   */
+  mode: 'prototype' | 'register';
 }
 
 export interface IToolPolicyEvaluator {
@@ -313,7 +316,7 @@ export function buildReviewRequestExportText(
   }
   lines.push('');
   lines.push('Original answers:');
-  for (const step of visibleSteps(definition, answers)) {
+  for (const step of answerSteps(definition, answers)) {
     if (step.type !== 'notice') {
       const value: string = formatAnswer(step, answers[step.id]);
       if (value) {
@@ -330,6 +333,12 @@ export function indexSteps(definition: IWorkflowDefinition): { [stepId: string]:
   const index: { [stepId: string]: IStep } = {};
   for (const step of definition.steps) {
     index[step.id] = step;
+    // A group's fields are questions of their own for every summary that looks one up by its answer key.
+    if (step.type === 'group') {
+      for (const field of step.fields) {
+        index[field.id] = field;
+      }
+    }
   }
   return index;
 }

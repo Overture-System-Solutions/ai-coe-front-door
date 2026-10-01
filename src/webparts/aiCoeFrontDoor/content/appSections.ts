@@ -2,7 +2,7 @@
  * The sections of the consolidated view, and the capability each one needs.
  *
  * The prototype organises the front door as six tabs above three entry choices: get my work done, run or improve
- * the business, review enterprise AI value. That organisation is kept because it matches how someone arrives -
+ * the business, review the AI metrics. That organisation is kept because it matches how someone arrives -
  * with a task, not with a system in mind - but each section here maps to something the front door can actually do.
  * Nothing is listed to fill a tab.
  *
@@ -17,7 +17,7 @@ import type { Capability } from '../services/authorization';
 
 export type AppSectionId = 'home' | 'cases' | 'engineering' | 'marketing' | 'improvement' | 'value' | 'admin';
 
-export const APP_SECTION_IDS: readonly AppSectionId[] = ['home', 'cases', 'engineering', 'marketing', 'improvement', 'value', 'admin'];
+export const APP_SECTION_IDS: readonly AppSectionId[] = ['home', 'engineering', 'improvement', 'marketing', 'cases', 'value', 'admin'];
 
 export const DEFAULT_APP_SECTION: AppSectionId = 'home';
 
@@ -34,13 +34,16 @@ export interface IAppSection {
   capability?: Capability;
   /** Alternative entry capabilities; each operation still enforces its own service gate. */
   alternativeCapabilities?: readonly Capability[];
+  /** Drawn at the far end of the tab row, with the other end sections (1.0.0.18: Cases, Metrics, Admin). */
+  end?: true;
 }
 
 /**
- * The sections. `home` and `cases` are a person's own work and are open to everyone; `engineering` is the
- * guided intake, also open; `improvement` is feedback and outcome recording, also open. Marketing, the measured
- * view and the administrator queue are held to a role, which is the same division the site already
- * enforces by page. The queue is a separate control, not a seventh tab in the section group.
+ * The sections, in tab order (1.0.0.18). `home`, `engineering` (shown as Requests: the guided requests and the
+ * person's own requests) and `improvement` (outcomes and feedback) are open to everyone, and so is `cases`. Marketing,
+ * the measured view (shown as Metrics) and the administrator queue are held to a role, which is the same division the
+ * site already enforces by page. Cases, Metrics and Admin sit together at the far end of the row. The ids are kept as
+ * they were, so nothing saved against a section changes meaning; only the order and the wording moved.
  */
 export const APP_SECTIONS: readonly IAppSection[] = [
   {
@@ -49,14 +52,14 @@ export const APP_SECTIONS: readonly IAppSection[] = [
     summary: 'Say what you need done, or pick one of the three ways in.'
   },
   {
-    id: 'cases',
-    label: 'Cases',
-    summary: 'Start a case, add requested information, and follow its review.'
+    id: 'engineering',
+    label: 'Requests',
+    summary: 'Start a request - an idea, a tool or task check, your team\'s AI use, help or training - and follow the ones you sent.'
   },
   {
-    id: 'engineering',
-    label: 'Engineering',
-    summary: 'The guided requests: an idea, a tool or task check, a team disclosure, help or training.'
+    id: 'improvement',
+    label: 'Improvement',
+    summary: 'Record how an AI task turned out, or tell the AI CoE what is not working.'
   },
   {
     id: 'marketing',
@@ -66,21 +69,24 @@ export const APP_SECTIONS: readonly IAppSection[] = [
     alternativeCapabilities: ['decideMarketingReview']
   },
   {
-    id: 'improvement',
-    label: 'Improvement',
-    summary: 'Record how an AI task turned out, or tell the AI CoE what is not working.'
+    id: 'cases',
+    label: 'Cases',
+    summary: 'The cases the AI CoE is deciding: add requested information and follow their review.',
+    end: true
   },
   {
     id: 'value',
-    label: 'Enterprise value',
+    label: 'Metrics',
     summary: 'Measures recorded with their evidence. A measure nobody has recorded shows what it is waiting for.',
-    capability: 'readProgramMeasures'
+    capability: 'readProgramMeasures',
+    end: true
   },
   {
     id: 'admin',
     label: 'Admin',
     summary: 'The administrator queue of submissions, governance progress and recorded decisions.',
-    capability: 'readAdminQueue'
+    capability: 'readAdminQueue',
+    end: true
   }
 ];
 
@@ -96,18 +102,18 @@ export const ENTRY_CHOICES: readonly IEntryChoice[] = [
   {
     step: '01',
     title: 'Get my work done',
-    description: 'Ask for a draft, check whether a tool is allowed, or get help with something you are stuck on.',
+    description: 'Share an idea, check whether a tool is allowed, tell us how your team uses AI, or get help with something you are stuck on.',
     section: 'engineering'
   },
   {
     step: '02',
     title: 'Run or improve the business',
-    description: 'Register how your team is using AI, record how a task turned out, or raise something that is not working.',
+    description: 'Record how a task turned out, or raise something that is not working.',
     section: 'improvement'
   },
   {
     step: '03',
-    title: 'Review enterprise AI value',
+    title: 'Review AI metrics',
     description: 'See what has actually been measured, with the evidence behind each number.',
     section: 'value'
   }

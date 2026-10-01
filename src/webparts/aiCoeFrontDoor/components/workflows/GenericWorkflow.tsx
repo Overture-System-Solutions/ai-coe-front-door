@@ -85,6 +85,14 @@ export function GenericWorkflow({ workflowId, resumeDraft, onExit, onDraftsChang
     dispatch({ type: 'SET_RESULT', result });
   };
 
+  const confirm = (): void => {
+    // The governance service reports failures as results; a rejection here is a programming error.
+    submitAnswers().catch((error: unknown): void => {
+      console.error('AI CoE submission failed', error);
+      dispatch({ type: 'SET_PHASE', phase: 'review' });
+    });
+  };
+
   /** Sends the last attempt again under its reference (page views: a pending or failed record completes, nothing duplicates). */
   const confirmAgain = async (): Promise<void> => {
     dispatch({ type: 'SET_PHASE', phase: 'submitting' });
@@ -106,11 +114,7 @@ export function GenericWorkflow({ workflowId, resumeDraft, onExit, onDraftsChang
 
   const next = (): void => {
     if (session.phase === 'review') {
-      // The governance service reports failures as results; a rejection here is a programming error.
-      submitAnswers().catch((error: unknown): void => {
-        console.error('AI CoE submission failed', error);
-        dispatch({ type: 'SET_PHASE', phase: 'review' });
-      });
+      confirm();
       return;
     }
     const message: string | undefined = validateStep(step, session.answers);
@@ -157,6 +161,8 @@ export function GenericWorkflow({ workflowId, resumeDraft, onExit, onDraftsChang
                 dispatch({ type: 'ANSWER', stepId: step.id, value });
               }
             }}
+            answers={session.answers}
+            onAnswerField={(fieldId: string, fieldValue: string | string[]): void => dispatch({ type: 'ANSWER', stepId: fieldId, value: fieldValue })}
           />
         )}
         {inReview && (
@@ -177,6 +183,7 @@ export function GenericWorkflow({ workflowId, resumeDraft, onExit, onDraftsChang
             onStartOver={(): void => setConfirmingRestart(true)}
             onDone={onExit}
             onRetry={retry}
+            onSendAnswers={confirm}
           />
         )}
         {(inForm || inReview) && (

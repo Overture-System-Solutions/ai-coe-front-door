@@ -86,7 +86,7 @@ export function SummaryReview<TKey extends string>({
           </p>
         )}
       </div>
-      <OriginalAnswers steps={answerableSteps(visibleSteps(workflow, session.answers))} answers={session.answers} onEdit={onEditAnswer} />
+      <OriginalAnswers steps={answerableSteps(visibleSteps(workflow, session.answers), session.answers)} answers={session.answers} onEdit={onEditAnswer} />
       <WhatHappensNext text={whatHappensNext} />
       <div className="flex flex-wrap gap-3 pt-2">
         <button

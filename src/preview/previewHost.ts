@@ -76,7 +76,7 @@ interface IPreviewWindow {
   FrontDoorPreview: IPreviewApi;
 }
 
-const LIST_TITLES: string[] = ['AI CoE Pilot Intakes', 'AI CoE Use Cases', 'AI CoE Decisions', 'AI Usage Daily', 'AI CoE Incidents', 'AI CoE Program Measures', 'AI CoE Outcome Records'];
+const LIST_TITLES: string[] = ['AI CoE Pilot Intakes', 'AI CoE Use Cases', 'AI CoE Decisions', 'AI Usage Daily', 'AI CoE Incidents', 'AI CoE Program Measures', 'AI CoE Outcome Records', 'AI CoE Approved Tools'];
 const previewWindow: IPreviewWindow = window as unknown as IPreviewWindow;
 const lists: { [title: string]: IPreviewItem[] } = {};
 const requests: IPreviewRequest[] = [];
@@ -282,6 +282,52 @@ function isoDaysAgo(days: number): string {
 }
 // Seeded here rather than beside the other lists: the rows carry dated periods, which this helper writes.
 seedMeasures();
+
+/**
+ * Fictional rows of the approved-tools register (1.0.0.18), so the Requests panel and the tool check's picker show the
+ * three kinds of answer offline: approved for internal information, approved with conditions, and not approved.
+ */
+function seedApprovedTools(): void {
+  const tools: IPreviewItem[] = lists['AI CoE Approved Tools'];
+  const rows: IPreviewItem[] = [
+    {
+      Id: nextId++,
+      Title: 'Workplace Chat Assistant (simulated)',
+      ToolId: 'workplace-chat',
+      OtherNames: 'Chat assistant, Work chat',
+      Vendor: 'Example vendor',
+      Status: 'Approved',
+      ApprovedFor: 'Drafting, summarising and brainstorming with internal information.',
+      CompanyInfoAllowed: true,
+      LastReviewed: isoDaysAgo(10),
+      ReviewedBy: 'AI CoE (simulated)'
+    },
+    {
+      Id: nextId++,
+      Title: 'Meeting Notes Helper (simulated)',
+      ToolId: 'meeting-notes',
+      Status: 'Approved with conditions',
+      ApprovedFor: 'Summarising internal meetings.',
+      CompanyInfoAllowed: true,
+      FileUploadsAllowed: true,
+      Conditions: 'Tell everyone in the meeting before it records.',
+      LastReviewed: isoDaysAgo(20)
+    },
+    {
+      Id: nextId++,
+      Title: 'Free Image Generator (simulated)',
+      ToolId: 'image-generator',
+      Status: 'Not approved',
+      NotApprovedFor: 'Any work material; its terms let the vendor keep uploads.',
+      LastReviewed: isoDaysAgo(5)
+    }
+  ];
+  for (const row of rows) {
+    tools.push(row);
+  }
+}
+
+seedApprovedTools();
 
 // Simulated preview data: the content document a site would keep in Site Assets, with Contoso wording and links
 // back into this preview. Every block type appears at least once. The route table shows the three answers a route
@@ -737,6 +783,14 @@ function request(method: 'GET' | 'POST', url: string, options: { body?: string }
   if (fileMatch !== null) {
     return fileResponse(method, fileMatch[1].replace(/''/g, "'"));
   }
+  // A list's own display-form address (1.0.0.18 card links), as SharePoint answers it: server-relative.
+  const formMatch: RegExpMatchArray | null = String(url).match(/getbytitle\('((?:[^']|'')+)'\)\?\$select=DefaultDisplayFormUrl/);
+  if (formMatch !== null && lists[formMatch[1].replace(/''/g, "'")] !== undefined) {
+    const title: string = formMatch[1].replace(/''/g, "'");
+    requests.push({ method, list: title, body: undefined, simulated: true });
+    const form: unknown = { DefaultDisplayFormUrl: `/simulated-site/Lists/${title}/DispForm.aspx` };
+    return Promise.resolve({ ok: true, status: 200, json: (): Promise<unknown> => Promise.resolve(form), text: (): Promise<string> => Promise.resolve(JSON.stringify(form)) });
+  }
   const match: RegExpMatchArray | null = String(url).match(/getbytitle\('((?:[^']|'')+)'\)\/items/);
   const list: string | undefined = match === null ? undefined : match[1].replace(/''/g, "'");
   if (list === undefined || lists[list] === undefined) {
@@ -967,7 +1021,15 @@ previewWindow.FrontDoorPreview = {
     if (webPartClass === undefined) {
       return Promise.reject(new Error('Load the built bundle before mounting.'));
     }
-    pendingProperties = Object.assign({}, properties);
+    // The AI CoE Concierge links (1.0.0.18) are simulated so the Ask box and its first-time message can be seen; opening
+    // them leaves the preview for the real Microsoft address, which the preview cannot answer.
+    pendingProperties = Object.assign(
+      {
+        conciergeChatUrl: 'https://m365.cloud.microsoft/chat/?titleId=T_PREVIEW-SIMULATED',
+        conciergeAddUrl: 'https://teams.microsoft.com/l/app/?titleId=T_PREVIEW-SIMULATED'
+      },
+      properties
+    );
     const webPart: IPreviewWebPart = new webPartClass();
     mounted = webPart;
     return webPart.onInit().then((): IPreviewWebPart => {

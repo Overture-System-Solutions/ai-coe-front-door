@@ -54,7 +54,10 @@ describe('Cases unsaved navigation wiring', () => {
     window.dispatchEvent(before);
     expect(before.defaultPrevented).toBe(true);
     fireEvent.click(view.getByRole('button', { name: 'Discard unsaved changes and leave' }));
-    expect(view.getByRole('tab', { name: 'Engineering', selected: true })).toBeInTheDocument();
+    // Cases sits at the far end since 1.0.0.18, so the key moves on to the tab after it, wrapping round to Home.
+    const order: string[] = view.getAllByRole('tab').map((tab: HTMLElement): string => (tab.textContent ?? '').trim());
+    const next: string = order[(order.indexOf('Cases') + 1) % order.length];
+    expect(view.getByRole('tab', { name: next, selected: true })).toBeInTheDocument();
     const after = new Event('beforeunload', { cancelable: true });
     window.dispatchEvent(after);
     expect(after.defaultPrevented).toBe(false);

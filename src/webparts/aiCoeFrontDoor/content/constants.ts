@@ -26,6 +26,16 @@ export const RECEIPT_PENDING_BEFORE_REFERENCE: string = 'SharePoint accepted you
 export const RECEIPT_PENDING_AFTER_REFERENCE: string = 'but did not confirm it back. Confirm again with the same reference; nothing is duplicated.';
 export const RECEIPT_CONFIRM_AGAIN: string = 'Confirm again';
 
+/**
+ * The recovery record refused the answers on the page in favour of an earlier, unconfirmed request: the receipt
+ * says those answers were not sent, and once the earlier request is saved they can be sent on their own.
+ */
+export const RECEIPT_EARLIER_NOT_SENT: string = 'That reference is an earlier request. The answers on this page have not been sent yet; they can be sent once it is confirmed.';
+export const RECEIPT_EARLIER_SAVED_TITLE: string = 'Earlier request confirmed';
+export const RECEIPT_EARLIER_SAVED_BEFORE_REFERENCE: string = 'Your earlier request';
+export const RECEIPT_EARLIER_SAVED_AFTER_REFERENCE: string = 'is saved and confirmed. The answers on this page have not been sent yet.';
+export const RECEIPT_SEND_ANSWERS: string = 'Send these answers';
+
 /** The legacy shell's third branch: never the "not created" heading above a record that may exist. */
 export const LEGACY_PENDING_TITLE: string = 'Saved but not yet confirmed.';
 export const LEGACY_PENDING_TEXT: string = 'Open the form again and confirm with the same reference; nothing is duplicated.';

@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { useFrontDoor } from '../../context/FrontDoorContext';
-import { MyWork } from '../pages/MyWork';
 import { UsageTelemetryStrip } from '../UsageTelemetryStrip';
 import { AppCoreWorkspace } from './AppCoreWorkspace';
 import { AppFlow, AppLayerCard, AppNotice, AppPanel, AppSectionHead, AppSteps } from './kit';
@@ -67,12 +66,38 @@ const LAYERS: readonly ILayer[] = [
 ];
 
 /**
- * A person's own requests, plus the controls that decide what they see. A leader also gets the case analysis panel
- * above them, handed in by the shell only when the role holds it.
- *
- * No head of its own: the shell already names the section and the reused list names itself, so a third heading here
- * said the same thing a third time. What it carried - that only your own rows are read - is a control rather than a
- * caption, and the panel beside it states it as one.
+ * The explanatory panels at the foot of Requests, Improvement and Cases (1.0.0.18): kept, but behind one disclosure
+ * that starts closed, so the section opens on what a person came to do. The panels are not mounted until it opens.
+ */
+export const WHAT_IS_GOING_ON: string = 'What is going on?';
+
+export function AppWhatIsGoingOn({ section, children }: { section: string; children: React.ReactNode }): React.ReactElement {
+  const [open, setOpen] = React.useState<boolean>(false);
+  const id: string = `ai-app-going-on-${section}`;
+  return (
+    <div className="ai-app-going-on">
+      <button
+        type="button"
+        className="ai-app-going-on-toggle"
+        aria-expanded={open}
+        aria-controls={id}
+        onClick={(): void => setOpen(!open)}
+      >
+        {WHAT_IS_GOING_ON}
+      </button>
+      {open && (
+        <div id={id} className="ai-app-going-on-body" role="region" aria-label={WHAT_IS_GOING_ON}>
+          {children}
+        </div>
+      )}
+    </div>
+  );
+}
+
+/**
+ * The cases the AI CoE is deciding. A leader gets the case analysis panel first, handed in by the shell only when the
+ * role holds it; then the case workspace when one is configured. The person's own requests moved to Requests in
+ * 1.0.0.18, and the panels that explain the pipeline sit under "What is going on?".
  */
 export function AppCases({ onDirtyChange, analysis }: { onDirtyChange?: (dirty: boolean) => void; analysis?: React.ReactNode }): React.ReactElement {
   const { services } = useFrontDoor();
@@ -80,47 +105,57 @@ export function AppCases({ onDirtyChange, analysis }: { onDirtyChange?: (dirty: 
     <React.Fragment>
       {analysis}
       {services.coreWork !== undefined && <AppCoreWorkspace coreWork={services.coreWork} onDirtyChange={onDirtyChange} />}
-      <div className="ai-app-cases">
-        <MyWork />
-      </div>
-      <div className="ai-app-split ai-app-cases-explanation">
-        <AppPanel>
-          <AppSectionHead title="What happens to a request" />
-          <AppFlow label="What happens to a request" steps={REQUEST_FLOW} />
-          <p className="ai-app-note">No step here sends a message or changes anything outside the list.</p>
-        </AppPanel>
-        <AppPanel>
-          <AppSectionHead title="Truth controls" />
-          <AppSteps steps={TRUTH_CONTROLS} />
-        </AppPanel>
-      </div>
+      <AppWhatIsGoingOn section="cases">
+        <div className="ai-app-split ai-app-cases-explanation">
+          <AppPanel>
+            <AppSectionHead title="What happens to a request" />
+            <AppFlow label="What happens to a request" steps={REQUEST_FLOW} />
+            <p className="ai-app-note">No step here sends a message or changes anything outside the list.</p>
+          </AppPanel>
+          <AppPanel>
+            <AppSectionHead title="Truth controls" />
+            <AppSteps steps={TRUTH_CONTROLS} />
+          </AppPanel>
+        </div>
+      </AppWhatIsGoingOn>
     </React.Fragment>
   );
 }
 
-/** The guided requests, and what the front door does with one. */
-export function AppEngineering({ starters }: { starters: React.ReactNode }): React.ReactElement {
+/**
+ * Requests (1.0.0.18): two columns, the person's own requests on the left and the request forms stacked on the right,
+ * with anything else the section shows (`below`) under them and the explanation under "What is going on?".
+ */
+export function AppEngineering({ mine, starters, below }: { mine: React.ReactNode; starters: React.ReactNode; below?: React.ReactNode }): React.ReactElement {
   return (
     <React.Fragment>
-      <AppSectionHead
-        title="Start a guided request"
-        note="Four short questions and a summary a person can act on. Nothing is submitted until you confirm it."
-      />
       <AppGettingStarted section="engineering" />
-      {starters}
-      <div className="ai-app-split">
-        <AppPanel>
-          <AppSectionHead title="What the front door does with it" />
-          <AppFlow label="What the front door does with a request" steps={REQUEST_FLOW} />
-        </AppPanel>
-        <AppPanel>
-          <AppSectionHead title="What it will not do" />
-          <AppNotice>
-            It does not decide your request, tell you a tool is approved, or send anything on your behalf. It records
-            what you asked for and shows you where it stands.
-          </AppNotice>
-        </AppPanel>
+      <div className="ai-app-requests">
+        <div className="ai-app-requests-mine">{mine}</div>
+        <div className="ai-app-requests-start">
+          <AppSectionHead
+            title="Start a request"
+            note="A few short questions and a summary a person can act on. Nothing is submitted until you confirm it."
+          />
+          {starters}
+        </div>
       </div>
+      {below}
+      <AppWhatIsGoingOn section="requests">
+        <div className="ai-app-split">
+          <AppPanel>
+            <AppSectionHead title="What the front door does with it" />
+            <AppFlow label="What the front door does with a request" steps={REQUEST_FLOW} />
+          </AppPanel>
+          <AppPanel>
+            <AppSectionHead title="What it will not do" />
+            <AppNotice>
+              It does not decide your request or send anything on your behalf. It records what you asked for and shows
+              you where it stands.
+            </AppNotice>
+          </AppPanel>
+        </div>
+      </AppWhatIsGoingOn>
     </React.Fragment>
   );
 }
@@ -131,10 +166,11 @@ export function AppImprovement({ starters }: { starters: React.ReactNode }): Rea
     <React.Fragment>
       <AppSectionHead
         title="Tell the AI CoE what happened"
-        note="How a task turned out, how your team is using AI, or what is not working."
+        note="How a task turned out, or what is not working."
       />
       <AppGettingStarted section="improvement" />
       {starters}
+      <AppWhatIsGoingOn section="improvement">
       <div className="ai-app-split">
         <AppPanel>
           <AppSectionHead title="What happens to what you record" note="Proposed manual improvement path — not automatic promotion." />
@@ -156,6 +192,7 @@ export function AppImprovement({ starters }: { starters: React.ReactNode }): Rea
           </AppNotice>
         </AppPanel>
       </div>
+      </AppWhatIsGoingOn>
     </React.Fragment>
   );
 }
@@ -171,7 +208,7 @@ function AppGettingStarted({ section }: { section: 'engineering' | 'improvement'
       {open && <section id={id} role="region" aria-label={title}>
         <p>Start with one small permitted task, not a product. A demonstration uses invented material and is not live acceptance.</p>
         <ol>
-          <li>Minutes 0–2: confirm your own identity, intended audience and approved destination. Use Check a tool or task in Engineering if permission is unclear.</li>
+          <li>Minutes 0–2: confirm your own identity, intended audience and approved destination. Use Check a tool or task in Requests if permission is unclear.</li>
           <li>Minutes 2–4: identify current permitted sources and their versions. Supply only the minimum allowed context; label missing facts. Do not paste secrets, personal information or restricted client material.</li>
           <li>Minutes 4–7: use the permitted draft route. In Marketing, if your role permits it, start with a campaign brief, then an accepted brief for a content plan, or permitted meeting notes for draft follow-through. The labelled synthetic workspace is practice only.</li>
           <li>Minutes 7–9: verify claims, numbers, dates, sources, audience, voice and proposed commitments. Correct or stop if they cannot be supported. A draft is not permission to send, publish, assign, schedule or change production records.</li>
@@ -185,11 +222,11 @@ function AppGettingStarted({ section }: { section: 'engineering' | 'improvement'
           <li>Operator: reconcile receipts and privacy before reporting counts. Participation, repeated use, safety, time saved and cost are not established by task volume.</li>
         </ul>
         <h4>Stop and recover</h4>
-        <p>Stop for wrong identity, audience, missing sources, someone else’s information, an unsupported claim or an unexpected external action. Do not widen access. Use the named support route in the footer; if it is unbound, business commissioning remains incomplete. Get help or training in Engineering records a request, not an emergency response.</p>
+        <p>Stop for wrong identity, audience, missing sources, someone else’s information, an unsupported claim or an unexpected external action. Do not widen access. Use the named support route in the footer; if it is unbound, business commissioning remains incomplete. Get help or training in Requests records a request, not an emergency response.</p>
         <p>If a save is pending or an action is uncertain, retain its reference and reconcile the source-native state with the recovery owner before retrying the same intent. Do not create a new submission merely because confirmation is missing. Use the approved manual draft fallback only; do not bypass a refused route.</p>
         <h4>Teach-back and office hours</h4>
         <p>Explain permitted information, human review and the human decision. Demonstrate one safe task and one missing-source fallback. Ask a colleague to start, review, identify the stop condition and find help using their own identity. Keep content-free correction themes and outcome choices. A named champion, support owner and authorized two-user/no-builder exercise are still required; local tests are not that acceptance.</p>
-        <p>{section === 'improvement' ? 'Use the Record a task outcome and Share feedback controls immediately below. The proposal and retest steps follow them.' : 'Use the Check a tool or task and Get help or training controls immediately below. For feedback and outcomes, choose the Improvement tab.'}</p>
+        <p>{section === 'improvement' ? 'Use the Record a task outcome and Share feedback controls immediately below. The proposal and retest steps follow them.' : 'Use the request forms beside My requests: Check a tool or task, Register team AI use and Get help or training. For feedback and outcomes, choose the Improvement tab.'}</p>
       </section>}
     </AppPanel>
   );
@@ -218,7 +255,7 @@ export function AppSystemMap({ admin }: { admin?: React.ReactNode }): React.Reac
   );
 }
 
-/** The usage lists, shown on Enterprise value when the person already holds that read. */
+/** The usage lists, shown on Metrics when the person already holds that read. */
 export function AppUsage(): React.ReactElement {
   return (
     <AppPanel>

@@ -6,7 +6,7 @@ feedback), a telemetry snapshot and an administrator dashboard, all writing to S
 
 This project is the maintainable source for the web part that shipped as package **1.0.0.7** (`original/`). The
 shipped package was reverse-engineered (see `docs/RECOVERY.md`) and then ported to idiomatic TypeScript with a
-test-first approach. It builds the next in-place correction candidate, **1.0.0.17**, with the same solution, feature and web part
+test-first approach. It builds the next in-place candidate, **1.0.0.18**, with the same solution, feature and web part
 identities, and it is tenant neutral: the organization name is a web part property. Since 1.0.0.10 the front door can
 also be spread over several native pages, one piece per page, since 1.0.0.11 it renders whole content pages from a
 document in Site Assets, in its own style (see "Lay out the front door across pages"), since 1.0.0.12 the first
@@ -66,13 +66,35 @@ Use Node.js 22.14 or newer (below 23) and npm.
   inventory fields; what the lock file cannot say reads `AWAITING_TENANT_INVENTORY` until the tenant inventory
   fills it). Both files are committed with each release.
 
-## Deploy 1.0.0.17
+## Deploy 1.0.0.18
 
 This is an **offline review candidate**, not authorization to import or activate business processing. After separate
 approval, upload `sharepoint/solution/overture-ai-coe-front-door.sppkg` as an update of the existing app.
 The solution id (`f125ebdf-4a9d-4e6e-8479-3a18874e7752`), feature id (`69ab84b7-608c-47ee-9623-af8ebaf2cb10`,
 version 1.0.0.2) and web part id (`cf2e5904-0703-4fe4-ae5a-ec012d6fa689`) are unchanged, so the provisioned lists
-are left untouched. 1.0.0.17 changes no shipped list schema. It retains consolidated `view:app` as the first
+are left untouched. 1.0.0.18 changes no shipped list schema; it declares one new list, **AI CoE Approved Tools**,
+which `-ListsOnly` and the companion workflow solutions' SharePoint Provisioning flow create (read-only for members,
+written by owners and the operators group).
+
+What 1.0.0.18 changes, in the tabbed view (`view:app`) only unless said otherwise:
+- **Navigation.** Home, Requests (was Engineering), Improvement, Marketing, then Cases, Metrics (was Enterprise
+  value) and Admin together at the far end. The section ids are unchanged, so saved drafts still resolve.
+- **Requests.** My requests on the left, the request forms stacked on the right (Register team AI use moved here
+  from Improvement), and the approved tools read-only below. My requests left Cases. Each card links to what it
+  stands for: a request with a case to the case, any other request to its row (all views).
+- **What is going on?** The explanatory panels of Requests, Improvement and Cases sit behind one closed disclosure.
+  Home drops "What matters now".
+- **Ask the AI CoE.** The box copies the question and opens the **AI CoE Concierge** (a Copilot Studio agent) from the
+  `conciergeChatUrl` property; `conciergeAddUrl` is the Teams link offered once to add it. Blank: the box says the
+  concierge is not set up. It no longer saves an idea draft. After a saved request the next step is the concierge, or
+  nothing when none is set up.
+- **Shorter forms.** AI idea, Check a tool or task and Register team AI use in five screens of up to three related
+  questions, every answer under its old key (the idea-draft flow is unchanged). The tool check picks its tool from
+  **AI CoE Approved Tools** and answers from the tool's row; the "guidance prototype" label is gone there.
+- **Claude's analysis** reads as short paragraphs, its cases link to their records, and its two lists sit side by side.
+- **Colour.** Each form card, the Home ways in, the approved tools and the analysis cards carry palette tones.
+
+What 1.0.0.17 already added remains. It retains consolidated `view:app` as the first
 toolbox entry, adds the qualified v0.2.0 split CORE transport and recovery, server-side business drafts,
 and the separate business Marketing facade while preserving the synthetic local store for loopback preview only.
 The role-group keys (`marketingParticipant`, `marketingReviewer`) remain. The **additive** one-page script at
@@ -85,7 +107,13 @@ Do first, before either script runs: create the site groups this instance should
 participant and reviewer groups if those roles should open. Blank groups leave those roles unbound.
 
 The sixteen-page script still runs without `-Overwrite` so existing pages keep their content and instance properties
-are **updated in place**. The one-page script is a separate path: name `PageFile` and run `-DryRun` / `-CheckBindings`
+are **updated in place**. A site whose front door is placed by the one-page installer runs it with **`-ListsOnly`**:
+it puts the `listSecurity` lists (AI CoE Pilot Intakes, AI CoE Use Cases) under item-level security and ensures the
+declared lists (AI CoE Program Measures for the Metrics tab, AI CoE Outcome Records with its own security, and since
+1.0.0.18 AI CoE Approved Tools, read-only for members), then stops before the content document, pages, navigation
+and home page. Text parameters may stay blank, so the one-page parameter file can be passed as it is. The companion
+workflow solutions' SharePoint Provisioning flow creates the same declared lists from a copy of this declaration
+(their 1.0.0.2 Provisioning releases include AI CoE Approved Tools). The one-page script is a separate path: name `PageFile` and run `-DryRun` / `-CheckBindings`
 first. Read its current README before any explicit apply. Live CORE command writes, Marketing send/publish/assign/schedule, and tenant provisioning from this worktree
 are not authorized by the package alone.
 
@@ -533,6 +561,20 @@ Control, `ReadSecurity 2 / WriteSecurity 2` last, and the two built-in person co
 person therefore reads only the rows they recorded; operators and owners read them all; the columns and the rows
 themselves are never removed. `settings.minimumCohort` is what keeps a measure derived from these rows from being
 shown for a group too small to be anonymous.
+
+1.0.0.18 declares a third one: *AI CoE Approved Tools*, the approved-tools register the tool check, the approved-tools
+panel and the AI CoE Assistant agent all read. One row per reviewed tool, `Title` holding the name people know it by.
+Its columns are `ToolId` (text, indexed, unique, required: the stable key a tool check records), `OtherNames`
+(multi-line text: other names people use, comma-separated), `Vendor` (text), `Status` (choice: `Approved`,
+`Approved with conditions`, `Not approved`, `Under review`, required), `ApprovedFor` (multi-line text), eight yes/no
+allowances - `CompanyInfoAllowed`, `EmployeeInfoAllowed`, `CustomerInfoAllowed`, `PatientInfoAllowed`,
+`ConfidentialInfoAllowed`, `RegulatedInfoAllowed`, `FileUploadsAllowed` and `ExternalSharingAllowed` - then
+`Conditions`, `NotApprovedFor` and `HowToGetAccess` (multi-line text), `LastReviewed` (date) and `ReviewedBy` (text).
+An allowance left blank allows nothing, and a tool that is not on the list has not been reviewed. Its security is
+`"security": "readOnly"` with `"fullControlGroups": ["OperatorsGroup"]`: inheritance broken, the owners and the
+operators group at Full Control, then `ReadSecurity 1 / WriteSecurity 4`, so every member reads every row and nobody
+without Override List Behaviors adds or changes one - no one can approve their own tool. The provisioning flow of the
+companion workflow solutions creates the same list with the same security.
 
 *How a percentage is written.* A measure whose `Unit` is `%` is written as a proportion: 0.62 for 62%, and 1 for the
 whole. The tile multiplies a value between 0 and 1 by a hundred and shows a value above 1 as the percentage it already

@@ -1,6 +1,7 @@
 import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import * as React from 'react';
-import { InMemoryDraftStore } from '../../../../testing/fakeServices';
+import { createFakeGovernanceService, EARLIER_ATTEMPT, EARLIER_ATTEMPT_SAVED, holdEarlierAttempt, InMemoryDraftStore } from '../../../../testing/fakeServices';
+import type { IFakeGovernanceService } from '../../../../testing/fakeServices';
 import { continueButton, enterAnswer, HELP_TRAINING_JOURNEY, journeyAnswers, playJourney } from '../../../../testing/journeys';
 import { renderWithFrontDoor } from '../../../../testing/renderWithFrontDoor';
 import type { FrontDoorRenderResult, ITestFrontDoorOptions } from '../../../../testing/renderWithFrontDoor';
@@ -173,6 +174,37 @@ describe('GenericWorkflow', () => {
       await screen.findByText('Saved and confirmed');
       expect(governance.submissions.map((submission): string | undefined => submission.intakeId)).toEqual([undefined, RETRY_ID]);
       expect(draftStore.keys()).toEqual([]);
+    });
+
+    it('confirms an earlier attempt that held these answers back without settling their draft, then sends them on request', async () => {
+      const draftStore: InMemoryDraftStore = new InMemoryDraftStore();
+      const governance: IFakeGovernanceService = createFakeGovernanceService();
+      const saved: ISubmissionResult = governance.result;
+      holdEarlierAttempt(governance);
+      const { onDraftsChanged } = renderWorkflow(false, { draftStore, governance, pageView: true });
+      await firstStep();
+      playJourney(HELP_TRAINING_JOURNEY, helpTraining);
+      fireEvent.click(screen.getByRole('button', { name: 'Confirm' }));
+      await screen.findByText('Saved, not yet confirmed');
+      expect(screen.getByText('That reference is an earlier request. The answers on this page have not been sent yet; they can be sent once it is confirmed.')).toBeInTheDocument();
+      await waitFor((): void => expect(draftStore.keys()).toEqual(['helpTraining']));
+
+      governance.result = EARLIER_ATTEMPT_SAVED;
+      fireEvent.click(screen.getByRole('button', { name: 'Confirm again' }));
+      await screen.findByText('Earlier request confirmed');
+      expect(governance.submissions[1]).toEqual({ workflowType: EARLIER_ATTEMPT.workflowType, payload: EARLIER_ATTEMPT.payload, intakeId: EARLIER_ATTEMPT.intakeId });
+      expect(screen.getByText(EARLIER_ATTEMPT.intakeId)).toBeInTheDocument();
+      expect(screen.queryByText('Saved and confirmed')).not.toBeInTheDocument();
+      expect(draftStore.keys()).toEqual(['helpTraining']);
+      expect(onDraftsChanged).not.toHaveBeenCalledWith('helpTraining', false);
+
+      governance.result = saved;
+      fireEvent.click(screen.getByRole('button', { name: 'Send these answers' }));
+      await screen.findByText('Saved and confirmed');
+      expect(governance.submissions).toHaveLength(3);
+      expect(governance.submissions[2]).toEqual({ workflowType: 'helpTraining', payload: journeyAnswers(HELP_TRAINING_JOURNEY) });
+      expect(draftStore.keys()).toEqual([]);
+      expect(onDraftsChanged).toHaveBeenCalledWith('helpTraining', false);
     });
   });
 

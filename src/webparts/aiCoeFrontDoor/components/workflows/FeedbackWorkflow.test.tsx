@@ -2,7 +2,8 @@ import { fireEvent, screen, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { spyOnDownloads } from '../../../../testing/dom';
 import type { IDownloadSpy } from '../../../../testing/dom';
-import { InMemoryDraftStore } from '../../../../testing/fakeServices';
+import { createFakeGovernanceService, EARLIER_ATTEMPT, EARLIER_ATTEMPT_SAVED, holdEarlierAttempt, InMemoryDraftStore } from '../../../../testing/fakeServices';
+import type { IFakeGovernanceService } from '../../../../testing/fakeServices';
 import { enterAnswer, FEEDBACK_JOURNEY, journeyAnswers, playJourney } from '../../../../testing/journeys';
 import { firstStepOf, ISO_TIMESTAMP, renderWorkflowPage } from '../../../../testing/workflowHarness';
 import type { IWorkflowHarness, IWorkflowPageOptions } from '../../../../testing/workflowHarness';
@@ -112,6 +113,36 @@ describe('FeedbackWorkflow', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Confirm again' }));
     await screen.findByText('Saved and confirmed');
     expect(harness.governance.submissions.map((submission): string | undefined => submission.intakeId)).toEqual([undefined, 'OVT-AICOE-20260911-RETRYME2']);
+    expect(draftStore.keys()).toEqual([]);
+    expect(harness.onDraftsChanged).toHaveBeenCalledWith('feedback', false);
+  });
+
+  it('keeps the feedback when Confirm again completes an earlier feedback attempt, and sends it on request', async () => {
+    const draftStore: InMemoryDraftStore = new InMemoryDraftStore();
+    const governance: IFakeGovernanceService = createFakeGovernanceService();
+    const saved: ISubmissionResult = governance.result;
+    holdEarlierAttempt(governance);
+    const harness: IWorkflowHarness = await reachReview({ draftStore, governance, pageView: true });
+    fireEvent.click(screen.getByRole('button', { name: 'Confirm my feedback' }));
+    await screen.findByText('Saved, not yet confirmed');
+    await waitFor((): void => expect(draftStore.keys()).toEqual(['feedback']));
+
+    governance.result = EARLIER_ATTEMPT_SAVED;
+    fireEvent.click(screen.getByRole('button', { name: 'Confirm again' }));
+    await screen.findByText('Earlier request confirmed');
+    expect(governance.submissions[1]).toEqual({ workflowType: 'feedback', payload: EARLIER_ATTEMPT.payload, intakeId: EARLIER_ATTEMPT.intakeId });
+    expect(JSON.parse(draftStore.drafts.feedback)).toEqual({ answers, currentStepId: 'contactEmail', phase: 'review', themes: [] });
+    expect(harness.onDraftsChanged).not.toHaveBeenCalledWith('feedback', false);
+
+    governance.result = saved;
+    fireEvent.click(screen.getByRole('button', { name: 'Send these answers' }));
+    await screen.findByText('Saved and confirmed');
+    expect(governance.submissions[2].intakeId).toBeUndefined();
+    expect(governance.submissions[2].payload).toEqual({
+      ...buildFeedbackRecord(feedback, answers, []),
+      recordId: expect.stringMatching(/^feedback-/),
+      createdAt: expect.stringMatching(ISO_TIMESTAMP)
+    });
     expect(draftStore.keys()).toEqual([]);
     expect(harness.onDraftsChanged).toHaveBeenCalledWith('feedback', false);
   });

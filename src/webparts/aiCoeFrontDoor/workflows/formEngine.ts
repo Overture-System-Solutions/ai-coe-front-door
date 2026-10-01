@@ -1,11 +1,43 @@
 import type { IBranding } from '../branding/branding';
 import type { ISubmissionResult } from '../services/types';
 import { isChoiceStep } from './types';
-import type { AnswerValue, IAnswers, IPieceWorkflowDefinition, IStep } from './types';
+import type { AnswerValue, IAnswers, IFieldStep, IPieceWorkflowDefinition, IStep } from './types';
+
+function shows(step: IStep, answers: IAnswers): boolean {
+  return step.showIf === undefined || step.showIf(answers);
+}
 
 /** Steps whose `showIf` predicate (if any) holds for the current answers, in definition order. */
 export function visibleSteps(definition: IPieceWorkflowDefinition, answers: IAnswers): IStep[] {
-  return definition.steps.filter((step: IStep): boolean => step.showIf === undefined || step.showIf(answers));
+  return definition.steps.filter((step: IStep): boolean => shows(step, answers));
+}
+
+/** The fields of a group that show for the current answers. */
+export function groupFields(step: IStep, answers: IAnswers): IFieldStep[] {
+  return step.type === 'group' ? step.fields.filter((field: IFieldStep): boolean => shows(field, answers)) : [];
+}
+
+/**
+ * The steps as questions to list (1.0.0.18): each group is replaced by its showing fields, each marked with the group
+ * to return to when it is edited; every other step is kept as it is.
+ */
+export function expandSteps(steps: readonly IStep[], answers: IAnswers): IStep[] {
+  const expanded: IStep[] = [];
+  for (const step of steps) {
+    if (step.type === 'group') {
+      for (const field of groupFields(step, answers)) {
+        expanded.push({ ...field, parentId: step.id });
+      }
+    } else {
+      expanded.push(step);
+    }
+  }
+  return expanded;
+}
+
+/** Every question answered on the visible steps, groups expanded and notices left out. */
+export function answerSteps(definition: IPieceWorkflowDefinition, answers: IAnswers): IStep[] {
+  return expandSteps(visibleSteps(definition, answers), answers).filter((step: IStep): boolean => step.type !== 'notice');
 }
 
 /** The closing sentence of a summary; the shipped build appended nothing else for the step types in use. */
@@ -15,6 +47,16 @@ export function whatHappensNextText(definition: IPieceWorkflowDefinition, _answe
 
 /** Validation message for a required step without a usable answer; undefined when the step is fine. */
 export function validateStep(step: IStep | undefined, answers: IAnswers): string | undefined {
+  if (step !== undefined && step.type === 'group') {
+    // A group asks every showing field; the first one still missing is named, so the message says which.
+    for (const field of groupFields(step, answers)) {
+      const message: string | undefined = validateStep(field, answers);
+      if (message !== undefined) {
+        return `${field.title} ${message}`;
+      }
+    }
+    return undefined;
+  }
   if (step === undefined || step.type === 'notice' || !step.required) {
     return undefined;
   }
@@ -69,7 +111,7 @@ export function buildGenericExportText(
   lines.push('AI CoE submission summary');
   lines.push(`Created: ${now.toLocaleString()}`);
   lines.push('');
-  for (const step of steps) {
+  for (const step of expandSteps(steps, answers)) {
     if (step.type !== 'notice') {
       const value: string = formatAnswer(step, answers[step.id]);
       if (value) {

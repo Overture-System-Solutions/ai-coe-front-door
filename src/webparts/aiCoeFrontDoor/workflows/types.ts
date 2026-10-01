@@ -1,7 +1,7 @@
 import type { LucideIcon } from 'lucide-react';
 
-/** Step kinds used by the five workflow definitions. */
-export type StepType = 'text' | 'textarea' | 'select' | 'multiselect' | 'notice';
+/** Step kinds used by the workflow definitions; `group` (1.0.0.18) is one screen holding a few related questions. */
+export type StepType = 'text' | 'textarea' | 'select' | 'multiselect' | 'notice' | 'group';
 
 /** A single answer: free text, one choice, or the selected values of a multiselect. */
 export type AnswerValue = string | string[] | undefined;
@@ -27,6 +27,8 @@ interface IStepBase {
   showSafetyNotice?: boolean;
   /** Hides the step unless the predicate holds for the current answers. */
   showIf?: (answers: IAnswers) => boolean;
+  /** Set on a group's field when the group is expanded for listing: the step to return to when it is edited. */
+  parentId?: string;
 }
 
 export interface IChoiceStep extends IStepBase {
@@ -43,7 +45,19 @@ export interface INoticeStep extends IStepBase {
   body: string;
 }
 
-export type IStep = IChoiceStep | ITextStep | INoticeStep;
+/** A question that can sit inside a group, or a notice that shows under one. */
+export type IFieldStep = IChoiceStep | ITextStep | INoticeStep;
+
+/**
+ * One screen holding two or three closely related questions (1.0.0.18). Each field keeps its own id, so its answer is
+ * stored under the same key as when it was a step of its own; a field may carry its own `showIf` as a follow-up.
+ */
+export interface IGroupStep extends IStepBase {
+  type: 'group';
+  fields: IFieldStep[];
+}
+
+export type IStep = IChoiceStep | ITextStep | INoticeStep | IGroupStep;
 
 export type WorkflowId = 'idea' | 'toolCheck' | 'teamUsage' | 'helpTraining' | 'feedback';
 
@@ -81,6 +95,10 @@ export interface IPieceWorkflowDefinition {
   whatHappensNext?: string;
   workflowVersion?: string;
   steps: IStep[];
+  /** The tool check of the tabbed view picks its tool from the approved-tools register (1.0.0.18). */
+  approvedToolList?: true;
+  /** Answers worked out from others before guidance and submission (the register's view of a picked tool, 1.0.0.18). */
+  deriveAnswers?: (answers: IAnswers) => IAnswers;
 }
 
 /** One of the five shipped workflows: the same shape, with the catalog's own narrower id. */

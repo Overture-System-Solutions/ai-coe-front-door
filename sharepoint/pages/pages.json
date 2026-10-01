@@ -174,6 +174,32 @@
         { "name": "RouteAvailability", "type": "Choice", "choices": ["Available now", "Draft only", "Needs approval", "Needs access", "Not supported"] },
         { "name": "WorkflowVersion", "type": "Text" }
       ]
+    },
+    {
+      "title": "AI CoE Approved Tools",
+      "description": "One row per AI tool the AI CoE has reviewed: its status, what it is approved for, which kinds of information it may be used with, and its conditions. Operators and site owners keep it; everyone else reads it. The tool check and the AI CoE Assistant answer from these rows, so a tool that is not listed has not been reviewed, and a yes/no column left blank allows nothing.",
+      "security": "readOnly",
+      "fullControlGroups": ["OperatorsGroup"],
+      "fields": [
+        { "name": "ToolId", "type": "Text", "required": true, "indexed": true, "unique": true },
+        { "name": "OtherNames", "type": "Note" },
+        { "name": "Vendor", "type": "Text" },
+        { "name": "Status", "type": "Choice", "required": true, "choices": ["Approved", "Approved with conditions", "Not approved", "Under review"] },
+        { "name": "ApprovedFor", "type": "Note" },
+        { "name": "CompanyInfoAllowed", "type": "Boolean" },
+        { "name": "EmployeeInfoAllowed", "type": "Boolean" },
+        { "name": "CustomerInfoAllowed", "type": "Boolean" },
+        { "name": "PatientInfoAllowed", "type": "Boolean" },
+        { "name": "ConfidentialInfoAllowed", "type": "Boolean" },
+        { "name": "RegulatedInfoAllowed", "type": "Boolean" },
+        { "name": "FileUploadsAllowed", "type": "Boolean" },
+        { "name": "ExternalSharingAllowed", "type": "Boolean" },
+        { "name": "Conditions", "type": "Note" },
+        { "name": "NotApprovedFor", "type": "Note" },
+        { "name": "HowToGetAccess", "type": "Note" },
+        { "name": "LastReviewed", "type": "DateTime" },
+        { "name": "ReviewedBy", "type": "Text" }
+      ]
     }
   ],
   "pages": [

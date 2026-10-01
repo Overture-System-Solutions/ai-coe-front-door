@@ -114,6 +114,8 @@ export interface IAppCase {
   facts?: readonly string[];
   next?: string;
   caveat?: string;
+  /** The record this card stands for (1.0.0.18); the title opens it in a new tab. */
+  href?: string;
 }
 
 /** One record, as the reference draws it: a reference, a state, what it is, what is known, and what happens next. */
@@ -124,7 +126,15 @@ export function AppCaseCard({ item }: { item: IAppCase }): React.ReactElement {
         <span className="ai-app-case-ref">{item.reference}</span>
         <AppPill tone={item.tone}>{item.state}</AppPill>
       </span>
-      <h4 className="ai-app-case-title">{item.title}</h4>
+      <h4 className="ai-app-case-title">
+        {item.href === undefined ? (
+          item.title
+        ) : (
+          <a className="ai-app-case-link" href={item.href} target="_blank" rel="noopener noreferrer">
+            {item.title}
+          </a>
+        )}
+      </h4>
       <p className="ai-app-case-summary">{item.summary}</p>
       {item.facts !== undefined && item.facts.length > 0 && (
         <span className="ai-app-case-facts">

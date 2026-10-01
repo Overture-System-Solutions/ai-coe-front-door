@@ -13,7 +13,23 @@ interface ISubmissionRecord {
 }
 
 const SLOT: string = 'submission_last';
-const WORKFLOWS: readonly string[] = ['idea', 'toolCheck', 'teamUsage', 'helpTraining', 'feedback', 'outcome'];
+/**
+ * Every type a recovery record may carry. Keyed by `SubmissionPieceType`, so a type the forms can submit and this
+ * list lacks fails to compile, instead of refusing that record on readback and stopping every later submission.
+ */
+const WORKFLOW_TYPES: { [type in SubmissionPieceType]: true } = {
+  idea: true,
+  toolCheck: true,
+  teamUsage: true,
+  helpTraining: true,
+  feedback: true,
+  'toolCheck-review-request': true,
+  outcome: true
+};
+
+function isWorkflowType(value: unknown): value is SubmissionPieceType {
+  return typeof value === 'string' && Object.prototype.hasOwnProperty.call(WORKFLOW_TYPES, value);
+}
 
 /** Durable intent before legacy list mutations; production injects only a server-side draft store. */
 export class DurableSubmissionService implements IGovernanceService {
@@ -60,7 +76,7 @@ export class DurableSubmissionService implements IGovernanceService {
       throw new Error('The server submission intent is invalid.');
     }
     const record: ISubmissionRecord = raw as ISubmissionRecord;
-    if (record.version !== 1 || ['prepared', 'pending', 'completed'].indexOf(record.phase) < 0 || typeof record.digest !== 'string' || !/^[0-9a-f]{64}$/.test(record.digest) || !record.attempt || WORKFLOWS.indexOf(record.attempt.workflowType) < 0 || !/^OVT-AICOE-\d{8}-[A-Z0-9]{8}$/.test(record.attempt.intakeId)) {
+    if (record.version !== 1 || ['prepared', 'pending', 'completed'].indexOf(record.phase) < 0 || typeof record.digest !== 'string' || !/^[0-9a-f]{64}$/.test(record.digest) || !record.attempt || !isWorkflowType(record.attempt.workflowType) || !/^OVT-AICOE-\d{8}-[A-Z0-9]{8}$/.test(record.attempt.intakeId)) {
       throw new Error('The server submission intent identity is invalid.');
     }
     if (await payloadHash({ workflowType: record.attempt.workflowType, payload: record.attempt.payload }) !== record.digest) {
@@ -79,7 +95,7 @@ export class DurableSubmissionService implements IGovernanceService {
       const existing: ISubmissionRecord | undefined = await this._read();
       if (existing !== undefined && existing.phase !== 'completed') {
         if (existing.digest !== digest || (options?.intakeId !== undefined && existing.attempt.intakeId !== options.intakeId)) {
-          return { ...this._pending(existing.attempt.intakeId), message: 'Confirm the earlier attempt before starting a different submission. Its saved content was not replaced.' };
+          return { ...this._pending(existing.attempt.intakeId), earlierAttempt: true, message: 'Confirm the earlier attempt before starting a different submission. Its saved content was not replaced.' };
         }
         record = existing;
       } else {

@@ -2,18 +2,21 @@
  * The capability-aware facades: the cases that matter are the refusals. A refused read must answer in the
  * service's own denied shape and never reach the underlying service; an allowed one must reach it exactly once.
  */
-import { createFakeGovernanceService, createFakeProgramMeasuresService, createFakeUsageService } from '../../../testing/fakeServices';
-import type { IFakeGovernanceService, IFakeProgramMeasuresService, IFakeUsageMetricsService } from '../../../testing/fakeServices';
+import { createFakeGovernanceService, createFakeProgramMeasuresService, createFakeUsageService, InMemoryDraftStore } from '../../../testing/fakeServices';
+import type { IFakeGovernanceService, IFakeProgramMeasuresService, IFakeUsageMetricsService, IRecordedSubmission } from '../../../testing/fakeServices';
 import { createTestFrontDoor } from '../../../testing/renderWithFrontDoor';
+import { payloadHash } from '../content/actionEnvelope';
 import type { RoleId } from '../content/roles';
 import type { IFrontDoorServices } from '../context/FrontDoorContext';
+import type { SubmissionWorkflowType } from '../workflows/types';
 import type { ICaseAnalysisResult } from './caseAnalysisService';
-import { readReviewPriority } from './executivePriority';
-import { GATED_MESSAGE, gateServices } from './gatedServices';
+import { DurableSubmissionService } from './durableSubmissionService';
+import { EXECUTIVE_REVIEW_PRIORITY, readReviewPriority } from './executivePriority';
+import { GATED_MESSAGE, gateGovernance, gateServices } from './gatedServices';
 import type { IGatedServices } from './gatedServices';
 import type { IProgramMeasuresResult } from './programMeasuresService';
 import type { IRoleResolution } from './roleResolver';
-import type { IAdminDashboardData, IUsageMetricsResult } from './types';
+import type { IAdminDashboardData, IGovernanceService, IRecoveredSubmission, ISubmissionResult, ISubmitOptions, IUsageMetricsResult } from './types';
 
 function resolved(...roles: RoleId[]): IRoleResolution {
   return { roles: ['employee', ...roles], resolution: 'resolved' };
@@ -36,6 +39,46 @@ function build(resolution: IRoleResolution): IGatedServices & IFakes {
   const bundle: IFrontDoorServices = createTestFrontDoor({ programMeasures: measures, usage, governance }).value.services;
   return { ...gateServices(bundle, resolution), measures, usage, governance };
 }
+
+/** The list behind a real site's recovery record: it keeps the reference it is given and confirms only when told to. */
+class ReviewList implements IGovernanceService {
+  public readonly calls: IRecordedSubmission[] = [];
+  public confirms: boolean = false;
+
+  public async submitWorkflow(workflowType: SubmissionWorkflowType, payload: unknown, options?: ISubmitOptions): Promise<ISubmissionResult> {
+    this.calls.push({ workflowType, payload, intakeId: options?.intakeId });
+    return this.confirms
+      ? { connected: true, state: 'saved', intakeId: options?.intakeId, message: 'Saved.' }
+      : { connected: false, state: 'pending', intakeId: options?.intakeId, message: 'Accepted, not read back.' };
+  }
+
+  public submitOutcome(): Promise<ISubmissionResult> {
+    return Promise.reject(new Error('Not used by these tests.'));
+  }
+
+  public getAdminDashboardData(): Promise<IAdminDashboardData> {
+    return Promise.reject(new Error('Not used by these tests.'));
+  }
+}
+
+interface ISite {
+  list: ReviewList;
+  store: InMemoryDraftStore;
+  governance: DurableSubmissionService;
+}
+
+/** A real site's governance: the durable service over the list, its recovery record kept as JSON, as the drafts list keeps it. */
+function durableSite(): ISite {
+  const list: ReviewList = new ReviewList();
+  const store: InMemoryDraftStore = new InMemoryDraftStore();
+  return { list, store, governance: new DurableSubmissionService(list, store) };
+}
+
+function gate(service: IGovernanceService, resolution: IRoleResolution): IGovernanceService {
+  return gateGovernance(service, resolution, { refused: {} });
+}
+
+const BUSINESS_CASE: { [key: string]: unknown } = { originalAnswers: { workToImprove: 'Weekly status reports' } };
 
 describe('gated service facades', () => {
   it('refuses the measures read to an employee without calling the service, in the service\'s own denied shape', async () => {
@@ -125,6 +168,60 @@ describe('gated service facades', () => {
     const service: IGatedServices & IFakes = build(resolved('leader'));
     await service.services.governance.submitWorkflow('helpTraining', payload);
     expect(service.governance.submissions[0].payload).toBe(payload);
+  });
+
+  it('prepares a new submission as it will be sent, so the caller can keep that as the attempt', () => {
+    const leader: IGovernanceService = gate(createFakeGovernanceService(), resolved('leader'));
+    expect(readReviewPriority(leader.prepareSubmission?.('teamUsage', BUSINESS_CASE))).toEqual(EXECUTIVE_REVIEW_PRIORITY);
+    expect(leader.prepareSubmission?.('helpTraining', BUSINESS_CASE)).toBe(BUSINESS_CASE);
+    expect(leader.prepareSubmission?.('outcome', BUSINESS_CASE)).toBe(BUSINESS_CASE);
+
+    const forged: { [key: string]: unknown } = { ...BUSINESS_CASE, reviewPriority: EXECUTIVE_REVIEW_PRIORITY };
+    const employee: IGovernanceService = gate(createFakeGovernanceService(), resolved());
+    expect(employee.prepareSubmission?.('idea', forged)).toEqual(BUSINESS_CASE);
+  });
+
+  it('keeps the recovery record of a real site within reach, and absent where the service keeps none', async () => {
+    const site: ISite = durableSite();
+    await gate(site.governance, resolved('leader')).submitWorkflow('idea', BUSINESS_CASE);
+
+    // The durable service's own method, called on the service: the record it reads is the one it wrote.
+    const restored: IRecoveredSubmission | undefined = await gate(site.governance, resolved()).restoreSubmission?.();
+    expect(restored).toEqual(await site.governance.restoreSubmission());
+    expect(restored?.attempt.intakeId).toBe(site.list.calls[0].intakeId);
+
+    expect('restoreSubmission' in gate(createFakeGovernanceService(), resolved())).toBe(false);
+  });
+
+  it.each([
+    ['before the membership has answered', unresolved('leader')],
+    ['once the person has left the leaders group', resolved()]
+  ])('confirms a leader\'s business case again %s, exactly as it was first sent', async (_when: string, now: IRoleResolution) => {
+    const site: ISite = durableSite();
+    const first: ISubmissionResult = await gate(site.governance, resolved('leader')).submitWorkflow('idea', BUSINESS_CASE);
+    expect(first.state).toBe('pending');
+    const recorded: IRecoveredSubmission | undefined = await site.governance.restoreSubmission();
+
+    site.list.confirms = true;
+    const retried: ISubmissionResult = await gate(site.governance, now).submitWorkflow('idea', recorded!.attempt.payload, { intakeId: recorded!.attempt.intakeId });
+
+    expect(retried).toMatchObject({ state: 'saved', intakeId: first.intakeId });
+    expect(retried.earlierAttempt).toBeUndefined();
+    expect(readReviewPriority(site.list.calls[1].payload)).toEqual(EXECUTIVE_REVIEW_PRIORITY);
+  });
+
+  it('completes a business case recorded without the mark for someone who now leads, instead of refusing it for good', async () => {
+    const site: ISite = durableSite();
+    // What a build that never marked leaves behind: a leader's business case sent without the mark, not yet read back.
+    const intakeId: string = 'OVT-AICOE-20260925-UNMARKED';
+    const digest: string | undefined = await payloadHash({ workflowType: 'idea', payload: BUSINESS_CASE });
+    await site.store.save('submission_last', { version: 1, phase: 'pending', digest, attempt: { workflowType: 'idea', payload: BUSINESS_CASE, intakeId } });
+
+    site.list.confirms = true;
+    const retried: ISubmissionResult = await gate(site.governance, resolved('leader')).submitWorkflow('idea', BUSINESS_CASE, { intakeId });
+
+    expect(retried).toMatchObject({ state: 'saved', intakeId });
+    expect(site.list.calls).toEqual([{ workflowType: 'idea', payload: BUSINESS_CASE, intakeId }]);
   });
 
   it('refuses the case analysis to an employee before a request is built, and lets a leader and an operator ask', async () => {

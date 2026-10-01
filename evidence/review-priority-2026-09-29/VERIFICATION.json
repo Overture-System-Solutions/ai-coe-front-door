@@ -1,0 +1,51 @@
+{
+  "date": "2026-09-29",
+  "worktree": "development/overture-ai-coe-front-door-audit-fixes",
+  "branch": "fix/coe-audit-server-drafts (HEAD 6654548; uncommitted)",
+  "packageVersion": "1.0.0.17",
+  "defect": "From the consolidated view (view=app) a confirmed leader's governance submissions (idea, teamUsage, toolCheck-review-request) never carried the reviewPriority mark: AiCoeFrontDoor mounted SubmissionProvider over the ungated services.governance and AppShell handed the gated bundle only to its sections' FrontDoorProvider. So the request row never took Priority High and the use case never got a NextReviewDate.",
+  "hazardFound": "The recovery record (DurableSubmissionService) digests {workflowType, payload}. Re-deciding the mark on a retry from the current membership changes the digest whenever the membership changed or had not answered yet, and for every pending record made by a build that never marked; the record then refuses the retry and every later submission for good. Shown by stage 2 below.",
+  "fix": [
+    "components/app/AppShell.tsx: SubmissionProvider over gated.services.governance around the section body; the resolution is memoised on [roleState, isAdmin] so the facade changes only with the membership.",
+    "components/AiCoeFrontDoor.tsx: no root SubmissionProvider for view=app (legacy and page views unchanged).",
+    "services/gatedServices.ts gateGovernance: passes restoreSubmission through (called on the service), adds prepareSubmission, prepares only new submissions and sends a retry (intakeId given) untouched.",
+    "services/types.ts: IGovernanceService.prepareSubmission? (optional).",
+    "context/SubmissionContext.tsx: submit keeps the prepared payload as the attempt; a retry is never prepared again."
+  ],
+  "tests": {
+    "new": {
+      "components/app/AppShell.reviewPriority.test.tsx": 8,
+      "services/gatedServices.test.ts": 5,
+      "context/SubmissionContext.test.tsx": 1
+    },
+    "red": { "log": "red-2026-09-29.log", "total": 33, "failed": 8, "failures": ["leader idea not marked", "leader teamUsage not marked", "gate has no prepareSubmission", "gate drops restoreSubmission", "retry refused before the membership answered", "retry refused after leaving the leaders group", "unmarked pending record refused", "provider does not prepare"] },
+    "stage1RoutingOnly": { "log": "stage1-routing-only.log", "total": 8, "failed": 3, "failures": ["Confirm again cannot complete the earlier attempt", "unmarked pending record never completes", "case sent before the membership answered never completes"] },
+    "stage2RestorePassThroughOnly": { "log": "stage2-restore-passthrough.log", "total": 8, "failed": 2, "failures": ["unmarked pending record never completes (lockout)", "case sent before the membership answered never completes"] },
+    "green": { "log": "green-2026-09-29.log", "total": 33, "failed": 0 },
+    "neighbours": { "log": "neighbours-2026-09-29.log", "suites": 23, "total": 250, "failed": 0 },
+    "npmRunBuild": { "log": "build-test-suites-2026-09-29.log", "suites": 130, "passed": 1263, "failed": 0 },
+    "tscNoEmit": "pass"
+  },
+  "npmRunVerify": { "log": "verify-2026-09-29.log", "result": "PASS", "components": 186, "evidence": "evidence/port-verification.json" },
+  "package": {
+    "path": "sharepoint/solution/overture-ai-coe-front-door.sppkg",
+    "sha256": "2436ba7daa6b59b07d5b4a5f2e5ea9d89d0dfc269fe8d9e742603c6622650882",
+    "bytes": 192177,
+    "previousSha256": "ec21cb5fdef2174e480600cf4779ef40dd1b554270e3cbb322b84c9aa951e52f",
+    "bundle": "ClientSideAssets/ai-coe-front-door-web-part_42302aabe9bd742e85ef.js",
+    "bundleSha256": "0ed6c3f4a140c512163a779a8b372de3991ddc1249d0ee8ad8c3f830c25bb335",
+    "bundleContains": ["prepareSubmission", "restoreSubmission", "earlierAttempt"]
+  },
+  "browserCheck": {
+    "where": "offline preview http://127.0.0.1:4173/?view=app&role=leader serving the packaged bundle (served bundle.js sha256 matches bundleSha256)",
+    "steps": "Engineering > Explore an AI idea, thirteen answers, Confirm this reflects my idea",
+    "result": {
+      "receipt": "Saved and confirmed, read back from the list, reference OVT-AICOE-20260929-GTPH9L7Q",
+      "intakeRow": { "WorkflowType": "idea", "Priority": "High", "payloadReviewPriority": "executive" },
+      "useCase": { "NextReviewDate": "2026-10-01T14:29:47.337Z", "submittedAt": "2026-09-29T14:29:47.337Z" },
+      "consoleErrors": 0
+    },
+    "limits": "The preview host is synthetic: it does not wrap submissions in DurableSubmissionService, so the recovery paths are covered by the tests only."
+  },
+  "scope": "Local build verification only: no tenant upload, deployment, SharePoint change, model call, commit or push. Builds on the uncommitted Confirm-again work in the same files."
+}

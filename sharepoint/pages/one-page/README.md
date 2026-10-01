@@ -28,6 +28,20 @@ Apply requires **all** of `-ApplyToSite -ConfirmLiveApply -SiteUrl <explicit HTT
 - Rollback requires `-Rollback -ConfirmLiveRollback -SiteUrl <same site> -ReceiptPath <same prefix>`. It decrypts the applied receipt, verifies the exact instance and component/property/position hashes, writes `.rollback-prepared.json`, restores the original property bag or removes only the new component, reads back, then writes `.rolled-back.json`. A newly created page/section is intentionally retained. Post-apply component drift is rejected.
 - Use a single-writer maintenance window. PnP component commands do not offer an atomic compare-and-swap; hashes detect observed drift, not a distributed lock. Failure after a side effect may need controller reconciliation. Rollback never resets permissions or deletes lists/rows.
 
+## Lists the page reads that this installer does not create
+
+The page places one web part and creates no list. The package creates AI CoE Pilot Intakes; the companion
+provisioning flow creates AI CoE Use Cases, AI CoE Decisions and the other governance lists. AI CoE Program Measures
+(the Enterprise value tab) and AI CoE Outcome Records (Record a task outcome) come from the sixteen-page script's list
+steps, which also put the intake lists under item-level security. Run only those steps with the same parameter file:
+
+```powershell
+pwsh ../New-FrontDoorPages.ps1 -SiteUrl <site> -ParameterFile <one-page parameter file> -ClientId <app id> -ListsOnly
+```
+
+It creates no page, navigation node or content document. Run it after the provisioning flow, so AI CoE Use Cases
+exists to be secured; rerunning changes nothing.
+
 ## Create-only server draft preparation (separate future authorization)
 
 `New-FrontDoorDraftList.ps1` requires `-Apply -ConfirmCreateDraftList -ConfirmPrivateController -SiteUrl <site> -ControllerGroupId <id> -WriterGroupId <different id> -ReceiptPath <private prefix>`.

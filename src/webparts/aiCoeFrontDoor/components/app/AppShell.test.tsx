@@ -7,11 +7,12 @@ import * as React from 'react';
 import { IDEA_JOURNEY, playJourney } from '../../../../testing/journeys';
 import { act, fireEvent, waitFor } from '@testing-library/react';
 import { renderWithFrontDoor } from '../../../../testing/renderWithFrontDoor';
+import { createTabbedCatalog } from '../../content/workflows/tabbedForms';
 import { AppShell } from './AppShell';
 import type { IPageViewSettings } from '../../content/pageViews';
 import type { RoleId } from '../../content/roles';
 import type { IRoleResolution, IRoleResolver } from '../../services/roleResolver';
-import { createFakeGovernanceService, createFakePageContentService, createFakeProgramMeasuresService, createFakeUsageService, InMemoryDraftStore } from '../../../../testing/fakeServices';
+import { createFakeGovernanceService, createFakePageContentService, createFakeProgramMeasuresService, createFakeUsageService } from '../../../../testing/fakeServices';
 import { createSyntheticMarketingServices } from '../../services/marketing/marketingServices';
 import { MemoryStorageBackend } from '../../services/marketing/artifactStore';
 
@@ -95,9 +96,9 @@ describe('AppShell', () => {
     // not styled differently, absent. Their services are therefore never constructed.
     const { container } = await renderShell({ roleResolver: resolver(['employee'], 'resolved') });
     const names: string[] = tabNames(container);
-    expect(names).toEqual(['Home', 'Cases', 'Engineering', 'Improvement']);
+    expect(names).toEqual(['Home', 'Requests', 'Improvement', 'Cases']);
     expect(names.indexOf('Marketing')).toBe(-1);
-    expect(names.indexOf('Enterprise value')).toBe(-1);
+    expect(names.indexOf('Metrics')).toBe(-1);
     expect(names.indexOf('System map')).toBe(-1);
     expect(names.indexOf('Admin')).toBe(-1);
   });
@@ -105,7 +106,7 @@ describe('AppShell', () => {
   it('opens the measured view to a leader but still not the operator surface', async () => {
     const { container } = await renderShell({ roleResolver: resolver(['employee', 'leader'], 'resolved') });
     const names: string[] = tabNames(container);
-    expect(names.indexOf('Enterprise value')).toBeGreaterThan(-1);
+    expect(names.indexOf('Metrics')).toBeGreaterThan(-1);
     expect(names.indexOf('System map')).toBe(-1);
     expect(names.indexOf('Marketing')).toBe(-1);
     expect(names.indexOf('Admin')).toBe(-1);
@@ -114,7 +115,7 @@ describe('AppShell', () => {
   it('shows nothing narrowed while the membership is unresolved, rather than guessing', async () => {
     const { container } = await renderShell({ roleResolver: resolver(['employee', 'operator'], 'unresolved') });
     const names: string[] = tabNames(container);
-    expect(names).toEqual(['Home', 'Cases', 'Engineering', 'Improvement']);
+    expect(names).toEqual(['Home', 'Requests', 'Improvement', 'Cases']);
   });
 
   it('moves along the tabs with the arrow keys, and wraps at both ends', async () => {
@@ -122,22 +123,22 @@ describe('AppShell', () => {
     const list: Element = container.querySelector('[role="tablist"]') as Element;
     expect(selected(container)).toBe('Home');
     await act(async (): Promise<void> => { fireEvent.keyDown(list, { key: 'ArrowRight' }); });
-    expect(selected(container)).toBe('Cases');
+    expect(selected(container)).toBe('Requests');
     await act(async (): Promise<void> => { fireEvent.keyDown(list, { key: 'ArrowLeft' }); });
     expect(selected(container)).toBe('Home');
     // Left from the first wraps to the last, which is what a tab list promises.
     await act(async (): Promise<void> => { fireEvent.keyDown(list, { key: 'ArrowLeft' }); });
-    expect(selected(container)).toBe('Improvement');
+    expect(selected(container)).toBe('Cases');
     await act(async (): Promise<void> => { fireEvent.keyDown(list, { key: 'Home' }); });
     expect(selected(container)).toBe('Home');
     await act(async (): Promise<void> => { fireEvent.keyDown(list, { key: 'End' }); });
-    expect(selected(container)).toBe('Improvement');
+    expect(selected(container)).toBe('Cases');
   });
 
   it('keeps sequential keyboard navigation on the actual focused tab, but pointer entry focuses the heading', async () => {
     const { container } = await renderShell({ roleResolver: resolver(['employee'], 'resolved') });
     (container.querySelector('#ai-app-tab-home') as HTMLElement).focus();
-    for (const [key, id] of [['ArrowRight', 'cases'], ['ArrowRight', 'engineering'], ['End', 'improvement'], ['ArrowRight', 'home'], ['ArrowLeft', 'improvement'], ['Home', 'home']]) {
+    for (const [key, id] of [['ArrowRight', 'engineering'], ['ArrowRight', 'improvement'], ['End', 'cases'], ['ArrowRight', 'home'], ['ArrowLeft', 'cases'], ['Home', 'home']]) {
       await act(async (): Promise<void> => { fireEvent.keyDown(document.activeElement as Element, { key }); });
       expect(document.activeElement).toBe(container.querySelector(`#ai-app-tab-${id}`));
     }
@@ -190,18 +191,22 @@ describe('AppShell', () => {
     expect(container.textContent).toContain('Access not confirmed');
   });
 
-  it('supplies the configured document route to the actual submission receipt', async () => {
+  it.each([true, false])('hands a saved request on to the AI CoE Concierge only when one is set up (concierge set: %s), never to a document route', async (set: boolean) => {
+    // 1.0.0.18 (decision 2a): the tabbed view's next step is the concierge, or nothing; a document route is not used here.
     const pageContent = createFakePageContentService({ connected: true, message: 'loaded', document: {
       version: 1, pages: {}, routes: { assistant: { key: 'assistant', label: 'Approved assistant', href: 'SitePages/Assistant.aspx', state: 'availableNow' } }
     } });
-    const view = await renderShell({ pageView: true, pageContent });
-    await act(async (): Promise<void> => { fireEvent.click(view.getByRole('tab', { name: 'Engineering' })); });
+    const concierge = set ? { chatUrl: 'https://m365.cloud.microsoft/chat/?titleId=T_1' } : undefined;
+    const view = await renderShell({ pageView: true, pageContent, concierge });
+    await act(async (): Promise<void> => { fireEvent.click(view.getByRole('tab', { name: 'Requests' })); });
     await act(async (): Promise<void> => { fireEvent.click(view.getByRole('button', { name: /Explore an AI idea/ })); });
     await waitFor((): void => { expect(view.container.querySelector('#workToImprove')).not.toBeNull(); });
-    playJourney(IDEA_JOURNEY, view.value.catalog.idea);
+    playJourney(IDEA_JOURNEY, createTabbedCatalog(view.value.catalog, []).idea);
     await act(async (): Promise<void> => { fireEvent.click(view.getByRole('button', { name: 'Confirm this reflects my idea' })); });
-    await waitFor((): void => { expect(view.getByRole('link', { name: 'Approved assistant' })).toHaveAttribute('href', 'https://contoso.sharepoint.com/sites/ai/SitePages/Assistant.aspx'); });
-    expect(view.governance.submissions).toHaveLength(1);
+    await waitFor((): void => { expect(view.governance.submissions).toHaveLength(1); });
+    await waitFor((): void => { expect(view.container.textContent).toContain('Saved and confirmed'); });
+    expect(view.queryByRole('link', { name: 'Approved assistant' })).toBeNull();
+    expect(view.queryByRole('region', { name: 'Continue in the AI CoE Concierge' }) !== null).toBe(set);
   });
 
   it('carries the footer promise on every section', async () => {
@@ -209,22 +214,22 @@ describe('AppShell', () => {
     expect(container.querySelector('.ai-app-foot')?.textContent).toContain('without a person deciding it');
   });
 
-  it('hides the Enterprise value Home card for an employee without mounting or fetching it', async () => {
+  it('hides the Metrics Home card for an employee without mounting or fetching it', async () => {
     const measures = createFakeProgramMeasuresService();
     const usage = createFakeUsageService();
     const { container } = await renderShell({ roleResolver: resolver(['employee'], 'resolved'), programMeasures: measures, usage });
     const cards: NodeListOf<HTMLButtonElement> = container.querySelectorAll('.ai-app-choice-button');
-    const value: HTMLButtonElement | undefined = Array.from(cards).filter((button: HTMLButtonElement): boolean => (button.textContent ?? '').indexOf('Review enterprise AI value') >= 0)[0];
+    const value: HTMLButtonElement | undefined = Array.from(cards).filter((button: HTMLButtonElement): boolean => (button.textContent ?? '').indexOf('Review AI metrics') >= 0)[0];
     expect(value).toBeUndefined();
     expect(measures.calls).toBe(0);
     expect(usage.calls).toBe(0);
     expect(selected(container)).toBe('Home');
-    expect(container.textContent).not.toContain('Review enterprise AI value');
+    expect(container.textContent).not.toContain('Review AI metrics');
     expect(container.querySelector('.ai-app-measures')).toBeNull();
     expect(container.querySelector('.ai-usage-section')).toBeNull();
   });
 
-  it('hides the Enterprise value Home card and fetches nothing while membership is unresolved', async () => {
+  it('hides the Metrics Home card and fetches nothing while membership is unresolved', async () => {
     const measures = createFakeProgramMeasuresService();
     const usage = createFakeUsageService();
     const { container } = await renderShell({
@@ -232,12 +237,12 @@ describe('AppShell', () => {
       programMeasures: measures,
       usage
     });
-    expect(tabNames(container).indexOf('Enterprise value')).toBe(-1);
+    expect(tabNames(container).indexOf('Metrics')).toBe(-1);
     expect(container.querySelector('.ai-usage-section')).toBeNull();
     expect(measures.calls).toBe(0);
     expect(usage.calls).toBe(0);
     const cards: NodeListOf<HTMLButtonElement> = container.querySelectorAll('.ai-app-choice-button');
-    const value: HTMLButtonElement | undefined = Array.from(cards).filter((button: HTMLButtonElement): boolean => (button.textContent ?? '').indexOf('Review enterprise AI value') >= 0)[0];
+    const value: HTMLButtonElement | undefined = Array.from(cards).filter((button: HTMLButtonElement): boolean => (button.textContent ?? '').indexOf('Review AI metrics') >= 0)[0];
     expect(value).toBeUndefined();
     expect(selected(container)).toBe('Home');
     expect(measures.calls).toBe(0);
@@ -245,7 +250,7 @@ describe('AppShell', () => {
     expect(container.querySelector('.ai-usage-section')).toBeNull();
   });
 
-  it('shows Usage on Enterprise value for an operator without a System map route', async () => {
+  it('shows Usage on Metrics for an operator without a System map route', async () => {
     const measures = createFakeProgramMeasuresService();
     const usage = createFakeUsageService();
     const { container } = await renderShell({
@@ -254,11 +259,11 @@ describe('AppShell', () => {
       programMeasures: measures,
       usage
     });
-    const valueTab: HTMLElement = Array.from(container.querySelectorAll('[role="tab"]')).filter((tab: Element): boolean => (tab.textContent ?? '').trim() === 'Enterprise value')[0] as HTMLElement;
+    const valueTab: HTMLElement = Array.from(container.querySelectorAll('[role="tab"]')).filter((tab: Element): boolean => (tab.textContent ?? '').trim() === 'Metrics')[0] as HTMLElement;
     await act(async (): Promise<void> => {
       fireEvent.click(valueTab);
     });
-    expect(selected(container)).toBe('Enterprise value');
+    expect(selected(container)).toBe('Metrics');
     await waitFor((): void => {
       expect(container.textContent).toContain('Usage');
     });
@@ -275,7 +280,7 @@ describe('AppShell', () => {
     expect(container.textContent).not.toContain('AI operations snapshot');
   });
 
-  it('lets a leader open Enterprise value without mounting usage or calling getMetrics', async () => {
+  it('lets a leader open Metrics without mounting usage or calling getMetrics', async () => {
     const measures = createFakeProgramMeasuresService();
     const usage = createFakeUsageService();
     const { container } = await renderShell({
@@ -283,11 +288,11 @@ describe('AppShell', () => {
       programMeasures: measures,
       usage
     });
-    const valueTab: HTMLElement = Array.from(container.querySelectorAll('[role="tab"]')).filter((tab: Element): boolean => (tab.textContent ?? '').trim() === 'Enterprise value')[0] as HTMLElement;
+    const valueTab: HTMLElement = Array.from(container.querySelectorAll('[role="tab"]')).filter((tab: Element): boolean => (tab.textContent ?? '').trim() === 'Metrics')[0] as HTMLElement;
     await act(async (): Promise<void> => {
       fireEvent.click(valueTab);
     });
-    expect(selected(container)).toBe('Enterprise value');
+    expect(selected(container)).toBe('Metrics');
     await waitFor((): void => {
       expect(measures.calls).toBeGreaterThan(0);
     });
@@ -296,33 +301,17 @@ describe('AppShell', () => {
     expect(usage.calls).toBe(0);
   });
 
-  it('keeps the Home sentence as the idea draft and opens the guided request with the same wording', async () => {
-    const { container, draftStore } = await renderShell({ roleResolver: resolver(['employee'], 'resolved') });
-    const input: HTMLInputElement = container.querySelector('#ai-app-command-input') as HTMLInputElement;
-    const form: HTMLFormElement = container.querySelector('.ai-app-command') as HTMLFormElement;
-    await act(async (): Promise<void> => {
-      fireEvent.change(input, { target: { value: 'Prepare a weekly operations pack' } });
-    });
-    await act(async (): Promise<void> => {
-      fireEvent.submit(form);
-    });
-    await waitFor((): void => {
-      expect(draftStore.drafts.idea).toBeDefined();
-    });
-    const stored: { answers: { workToImprove: string } } = JSON.parse(draftStore.drafts.idea) as { answers: { workToImprove: string } };
-    expect(stored.answers.workToImprove).toBe('Prepare a weekly operations pack');
-    const resumed: HTMLInputElement | null = container.querySelector('#workToImprove');
-    expect(resumed?.value).toBe('Prepare a weekly operations pack');
-  });
+  // 1.0.0.18: the Home box hands its sentence to the AI CoE Concierge and keeps no idea draft; its cases are in
+  // AppHero.concierge.test.tsx. The two cases that pinned the old draft-and-open behaviour were retired with it.
 
   it.each(['refused', 'rejected'])('keeps guided edits mounted when navigation needs an unsaved draft and saving is %s', async (failure: string) => {
     const view = await renderShell();
-    fireEvent.change(view.container.querySelector('#ai-app-command-input') as Element, { target: { value: 'Original sentence' } });
-    await act(async (): Promise<void> => { fireEvent.submit(view.container.querySelector('.ai-app-command') as Element); });
+    await act(async (): Promise<void> => { fireEvent.click(view.getByRole('tab', { name: 'Requests' })); });
+    await act(async (): Promise<void> => { fireEvent.click(view.getByRole('button', { name: /Explore an AI idea/ })); });
     await waitFor((): void => { expect(view.container.querySelector('#workToImprove')).not.toBeNull(); });
     fireEvent.change(view.container.querySelector('#workToImprove') as Element, { target: { value: 'Edited sentence that must survive' } });
     await act(async (): Promise<void> => { fireEvent.click(view.getByRole('tab', { name: 'Home' })); });
-    expect(selected(view.container)).toBe('Engineering');
+    expect(selected(view.container)).toBe('Requests');
     expect(view.getByRole('alert')).toHaveTextContent('Unsaved changes');
     const save = view.draftStore.save.bind(view.draftStore);
     view.draftStore.save = async (): Promise<{ ok: boolean }> => {
@@ -331,35 +320,16 @@ describe('AppShell', () => {
     };
     await act(async (): Promise<void> => { fireEvent.click(view.getByRole('button', { name: 'Save draft' })); });
     await act(async (): Promise<void> => { fireEvent.click(view.getByRole('tab', { name: 'Home' })); });
-    expect(selected(view.container)).toBe('Engineering');
+    expect(selected(view.container)).toBe('Requests');
     expect(view.container.querySelector('#workToImprove')).toHaveValue('Edited sentence that must survive');
     view.draftStore.save = save;
     await act(async (): Promise<void> => { fireEvent.click(view.getByRole('button', { name: 'Save draft' })); });
     await act(async (): Promise<void> => { fireEvent.click(view.getByRole('tab', { name: 'Home' })); });
     expect(selected(view.container)).toBe('Home');
-    await act(async (): Promise<void> => { fireEvent.click(view.getByRole('tab', { name: 'Engineering' })); });
+    await act(async (): Promise<void> => { fireEvent.click(view.getByRole('tab', { name: 'Requests' })); });
     await act(async (): Promise<void> => { fireEvent.click(view.getByRole('button', { name: /Explore an AI idea/ })); });
     await waitFor((): void => { expect(view.container.querySelector('#workToImprove')).toHaveValue('Edited sentence that must survive'); });
     expect(Object.keys(window.localStorage)).toEqual([]);
-  });
-
-  it('keeps the sentence in the box and opens nothing when the draft cannot be saved', async () => {
-    const failing = new InMemoryDraftStore();
-    failing.save = async (): Promise<{ ok: boolean }> => ({ ok: false });
-    const { container } = await renderShell({ roleResolver: resolver(['employee'], 'resolved'), draftStore: failing });
-    const input: HTMLInputElement = container.querySelector('#ai-app-command-input') as HTMLInputElement;
-    const form: HTMLFormElement = container.querySelector('.ai-app-command') as HTMLFormElement;
-    await act(async (): Promise<void> => {
-      fireEvent.change(input, { target: { value: 'Prepare a weekly operations pack' } });
-    });
-    await act(async (): Promise<void> => {
-      fireEvent.submit(form);
-    });
-    await waitFor((): void => {
-      expect(container.textContent).toContain('draft save could not be confirmed');
-    });
-    expect(selected(container)).toBe('Home');
-    expect(input.value).toBe('Prepare a weekly operations pack');
   });
 
   it('opens Marketing for a reviewer without granting drafting controls', async () => {
@@ -401,11 +371,11 @@ describe('AppShell', () => {
       governance
     });
     expect(tabNames(container)).not.toContain('System map');
-    expect(tabNames(container)).toContain('Enterprise value');
+    expect(tabNames(container)).toContain('Metrics');
     await act(async (): Promise<void> => {
       fireEvent.keyDown(container.querySelector('[role="tablist"]') as Element, { key: 'End' });
     });
-    expect(selected(container)).toBe('Enterprise value');
+    expect(selected(container)).toBe('Metrics');
     expect(governance.dashboardCalls).toBe(0);
     expect(tabNames(container).indexOf('Admin')).toBe(-1);
   });
@@ -447,6 +417,16 @@ describe('AppShell', () => {
     const link: HTMLAnchorElement | null = container.querySelector('.ai-app-foot-support a');
     expect(link?.getAttribute('href')).toBe('https://example.invalid/support');
     expect(link?.textContent).toBe('Ask the AI CoE for help');
+  });
+
+  it('orders the tabs of an operator: Requests, Improvement, Marketing, then Cases, Metrics and Admin together at the far end (1.0.0.18)', async () => {
+    const { container } = await renderShell({ isAdmin: true, roleResolver: resolver(['employee', 'operator'], 'resolved') });
+    expect(tabNames(container)).toEqual(['Home', 'Requests', 'Improvement', 'Marketing', 'Cases', 'Metrics', 'Admin']);
+    const end: string[] = Array.from(container.querySelectorAll('.ai-app-tab--end')).map((tab: Element): string => (tab.textContent ?? '').trim());
+    expect(end).toEqual(['Cases', 'Metrics', 'Admin']);
+    // Only the first of the end group is pushed to the far side; the other two follow it.
+    const first: Element[] = Array.from(container.querySelectorAll('.ai-app-tab--end-first'));
+    expect(first.map((tab: Element): string => (tab.textContent ?? '').trim())).toEqual(['Cases']);
   });
 
   it('places the administrator control last, apart from the section tabs, for a site owner', async () => {
@@ -516,7 +496,7 @@ describe('AppShell', () => {
     expect(selected(container)).toBe('Admin');
   });
 
-  it('spaces Register team AI use from the other Improvement cards and keeps the larger panels below', async () => {
+  it('keeps the outcome and feedback cards on Improvement and the larger panels below, under What is going on?', async () => {
     const { container } = await renderShell();
     const improvementTab: HTMLElement = Array.from(container.querySelectorAll('[role="tab"]')).filter((tab: Element): boolean => (tab.textContent ?? '').trim() === 'Improvement')[0] as HTMLElement;
     await act(async (): Promise<void> => {
@@ -525,7 +505,13 @@ describe('AppShell', () => {
     const list: Element | null = container.querySelector('.ai-app-starters--spaced');
     expect(list).not.toBeNull();
     const titles: string[] = Array.from((list as Element).querySelectorAll('.ai-app-starter-title')).map((node: Element): string => (node.textContent ?? '').trim());
-    expect(titles).toEqual(['Register team AI use', 'Record a task outcome', 'Share feedback']);
+    // Register team AI use moved to Requests (1.0.0.18); the explanation sits under "What is going on?", closed.
+    expect(titles).toEqual(['Record a task outcome', 'Share feedback']);
+    expect(container.textContent).not.toContain('What happens to what you record');
+    const disclosure: HTMLElement = Array.from(container.querySelectorAll('button')).filter((button: Element): boolean => (button.textContent ?? '').trim() === 'What is going on?')[0] as HTMLElement;
+    expect(disclosure.getAttribute('aria-expanded')).toBe('false');
+    await act(async (): Promise<void> => { fireEvent.click(disclosure); });
+    expect(disclosure.getAttribute('aria-expanded')).toBe('true');
     expect(container.querySelector('.ai-app-split')).not.toBeNull();
     expect(container.textContent).toContain('What happens to what you record');
     expect(container.textContent).toContain('What an outcome keeps');

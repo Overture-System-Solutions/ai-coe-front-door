@@ -253,6 +253,8 @@ export function SummaryWorkflow<TKey extends string>({ config, resumeDraft, onEx
                 dispatch({ type: 'ANSWER', stepId: step.id, value });
               }
             }}
+            answers={session.answers}
+            onAnswerField={(fieldId: string, fieldValue: string | string[]): void => dispatch({ type: 'ANSWER', stepId: fieldId, value: fieldValue })}
           />
         )}
         {session.phase === 'generating' && <LoadingState text={aiCopy.generatingText} />}
@@ -292,6 +294,7 @@ export function SummaryWorkflow<TKey extends string>({ config, resumeDraft, onEx
             onStartOver={(): void => setConfirmingRestart(true)}
             onDone={onExit}
             onRetry={retry}
+            onSendAnswers={confirm}
           />
         )}
         {inForm && (

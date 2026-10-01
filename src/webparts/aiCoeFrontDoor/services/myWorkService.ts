@@ -8,6 +8,7 @@
  *
  * Wording note: this file is scanned for Tailwind utility names; keep prose free of utility words.
  */
+import { caseLinksFor, myCaseLinks, requestLinks } from './recordLinks';
 import type { SubmissionWorkflowType } from '../workflows/types';
 import { classifyError, classifyResponse, failureUserMessage } from './failureClass';
 import type { FailureClass } from './failureClass';
@@ -38,8 +39,18 @@ export interface IMyWorkResult extends IFailureFields {
   message: string;
 }
 
+/** Where a card of My requests links to (1.0.0.18): the case a request opened, or the request's own row. */
+export interface IRecordLink {
+  url: string;
+  kind: 'case' | 'request';
+}
+
 export interface IMyWorkService {
   getMine(): Promise<IMyWorkResult>;
+  /** The link of each request by item id; a request with no resolvable link is absent. Never throws. */
+  recordLinks?(items: readonly IMyWorkItem[]): Promise<{ [itemId: number]: IRecordLink }>;
+  /** The link of each named case the reader can see, by reference. Never throws. */
+  caseLinks?(references: readonly string[]): Promise<{ [reference: string]: string }>;
 }
 
 /** The columns a status line needs; the payload column is never asked for. */
@@ -97,6 +108,30 @@ export class MyWorkService implements IMyWorkService {
 
   public constructor(context: IServiceContext) {
     this._context = context;
+  }
+
+  public async recordLinks(items: readonly IMyWorkItem[]): Promise<{ [itemId: number]: IRecordLink }> {
+    const links: { [itemId: number]: IRecordLink } = {};
+    try {
+      const email: string = text(this._context.user.email).trim();
+      const cases: { [reference: string]: string } = email === '' ? {} : await myCaseLinks(this._context, email);
+      const rows: { [itemId: number]: string } = await requestLinks(this._context, items.map((item: IMyWorkItem): number => item.id));
+      for (const item of items) {
+        const caseUrl: string | undefined = item.reference === '' ? undefined : cases[item.reference];
+        if (caseUrl !== undefined) {
+          links[item.id] = { url: caseUrl, kind: 'case' };
+        } else if (rows[item.id] !== undefined) {
+          links[item.id] = { url: rows[item.id], kind: 'request' };
+        }
+      }
+    } catch {
+      // No links: the cards stay, unlinked.
+    }
+    return links;
+  }
+
+  public caseLinks(references: readonly string[]): Promise<{ [reference: string]: string }> {
+    return caseLinksFor(this._context, references);
   }
 
   public async getMine(): Promise<IMyWorkResult> {

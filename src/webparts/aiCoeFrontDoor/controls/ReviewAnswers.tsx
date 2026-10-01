@@ -22,7 +22,7 @@ export function ReviewAnswers({ workflow, steps, answers, onEdit }: IReviewAnswe
           Take a look below. You can change anything before you confirm.
         </p>
       </div>
-      <AnswerList steps={answerableSteps(steps)} answers={answers} onEdit={onEdit} className="space-y-3" />
+      <AnswerList steps={answerableSteps(steps, answers)} answers={answers} onEdit={onEdit} className="space-y-3" />
       <WhatHappensNext text={whatHappensNextText(workflow, answers)} />
     </div>
   );

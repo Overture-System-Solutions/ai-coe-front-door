@@ -55,8 +55,8 @@ export function GuidanceResult({ workflow, answers, decision, onEditAnswer, onSt
   return (
     <div className="space-y-6">
       <div>
-        <span className="overture-badge inline-block rounded-full px-3 py-1 text-xs font-medium">Guidance prototype</span>
-        <h2 className="mt-3 text-xl font-semibold leading-snug">{decision.label}</h2>
+        {workflow.approvedToolList !== true && <span className="overture-badge inline-block rounded-full px-3 py-1 text-xs font-medium">Guidance prototype</span>}
+        <h2 className={workflow.approvedToolList === true ? 'text-xl font-semibold leading-snug' : 'mt-3 text-xl font-semibold leading-snug'}>{decision.label}</h2>
       </div>
       <NoticeBanner icon={Info}>
         This is routing guidance, not an approval decision. A person can still confirm anything you see here — that&apos;s what a CoE review request is

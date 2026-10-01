@@ -19,14 +19,14 @@ it.each([
     programMeasures: measures, usage
   });
   await act(async (): Promise<void> => undefined);
-  const entry = view.queryByRole('button', { name: /Review enterprise AI value/ });
+  const entry = view.queryByRole('button', { name: /Review AI metrics/ });
   expect(entry !== null).toBe(allowed);
-  expect(view.queryByRole('tab', { name: 'Enterprise value' }) !== null).toBe(allowed);
+  expect(view.queryByRole('tab', { name: 'Metrics' }) !== null).toBe(allowed);
   expect(measures.calls).toBe(0);
   expect(usage.calls).toBe(0);
   if (entry !== null) {
     fireEvent.click(entry);
-    await waitFor(() => expect(view.getByRole('tab', { name: 'Enterprise value' })).toHaveAttribute('aria-selected', 'true'));
+    await waitFor(() => expect(view.getByRole('tab', { name: 'Metrics' })).toHaveAttribute('aria-selected', 'true'));
     await act(async (): Promise<void> => undefined);
     expect(measures.calls).toBeGreaterThan(0);
     if (role === 'leader') { expect(usage.calls).toBe(0); }
@@ -37,8 +37,8 @@ it('keeps the enterprise Home entry absent until its membership has actually res
   let finish!: (value: IRoleResolution) => void;
   const pending = new Promise<IRoleResolution>(resolve => { finish = resolve; });
   const view = renderWithFrontDoor(<AppShell settings={settings} />, { roleResolver: { resolve: () => pending } });
-  expect(view.queryByRole('button', { name: /Review enterprise AI value/ })).toBeNull();
-  expect(view.queryByRole('tab', { name: 'Enterprise value' })).toBeNull();
+  expect(view.queryByRole('button', { name: /Review AI metrics/ })).toBeNull();
+  expect(view.queryByRole('tab', { name: 'Metrics' })).toBeNull();
   await act(async (): Promise<void> => { finish({ roles: ['employee', 'leader'], resolution: 'resolved' }); });
-  expect(view.getByRole('button', { name: /Review enterprise AI value/ })).toBeInTheDocument();
+  expect(view.getByRole('button', { name: /Review AI metrics/ })).toBeInTheDocument();
 });

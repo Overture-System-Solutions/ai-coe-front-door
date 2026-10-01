@@ -104,6 +104,13 @@ Contribute withholds Manage Lists (the right to change the list's design and vie
 security work, which rests on the Edit level withholding Override List Behaviors. Without the switch the Members
 group is left at its level.
 
+.PARAMETER ListsOnly
+Run only the list steps, for a site whose front door is placed some other way (the one-page installer): put the
+listSecurity lists under item-level security and ensure the declared lists (their columns, their own security and
+their default views), then stop. No content document is uploaded and no page, navigation node or home page is created
+or changed, so the text parameters may stay blank; group parameters are still read for the Full Control grants, and a
+one-page parameter file (sharepoint/pages/one-page) can be passed as it is. The site need not be a communication site
+and the front-door component need not be installed, though the package's intake list is only secured once it is.
 .PARAMETER AllowNonCommunicationSite
 Proceed on a site that is not a communication site. There the QuickLaunch is the left navigation, and every existing
 node in it is replaced by the five front-door entries.
@@ -128,6 +135,7 @@ param(
   [ValidateSet('', 'claude', 'openai', 'both')][string]$TelemetryProvider = '',
   [switch]$Overwrite,
   [switch]$HardenMembers,
+  [switch]$ListsOnly,
   [switch]$AllowNonCommunicationSite,
   [string]$ClientId
 )
@@ -178,7 +186,8 @@ foreach ($name in @($definition['parameters'].Keys)) {
     elseif ($kinds[$name] -eq 'optional' -and $declaration.Contains('default')) { $values[$name] = [string]$declaration['default'] }
   }
 }
-if ($missing.Count -gt 0) {
+# A lists-only run builds no page and writes no text, so only a page build needs every text parameter.
+if ($missing.Count -gt 0 -and -not $ListsOnly) {
   throw "These text parameters have no value (set them in $ParameterFile or by name): $($missing -join ', ')"
 }
 foreach ($name in @($values.Keys)) {
@@ -194,7 +203,7 @@ if ($ClientId) {
   Connect-PnPOnline -Url $SiteUrl -Interactive
 }
 $web = Get-PnPWeb -Includes ServerRelativeUrl, WebTemplate
-if ($web.WebTemplate -ne 'SITEPAGEPUBLISHING' -and -not $AllowNonCommunicationSite) {
+if ($web.WebTemplate -ne 'SITEPAGEPUBLISHING' -and -not $AllowNonCommunicationSite -and -not $ListsOnly) {
   throw "This is not a communication site ($($web.WebTemplate)). The script rebuilds the QuickLaunch, which is the horizontal top navigation only on communication sites; here it is the left navigation and every existing node would be removed. Pass -AllowNonCommunicationSite to proceed anyway."
 }
 $webRoot = $web.ServerRelativeUrl.TrimEnd('/')
@@ -205,15 +214,18 @@ $webRoot = $web.ServerRelativeUrl.TrimEnd('/')
 function ConvertTo-GuidText([string]$value) {
   return ($value -replace '[{}]', '').Trim().ToLowerInvariant()
 }
-$homePageFile = (Get-PnPHomePage) -replace '^SitePages/', ''
-$wantedId = ConvertTo-GuidText ([string]$definition['componentId'])
-$components = @(Get-PnPPageComponent -Page $homePageFile -ListAvailable)
-$component = $components | Where-Object { (ConvertTo-GuidText ([string]$_.Id)) -eq $wantedId } | Select-Object -First 1
-if ($null -eq $component) {
-  $listed = ($components | ForEach-Object { "$($_.Name) ($($_.Id))" }) -join '; '
-  throw "The front-door component ($($definition['componentId'])) is not available on this site: install the package (app catalog upload, then 'Get it' on the site) and rerun. Components listed for ${homePageFile}: $listed"
+# A lists-only run places no web part, so it does not need the component.
+if (-not $ListsOnly) {
+  $homePageFile = (Get-PnPHomePage) -replace '^SitePages/', ''
+  $wantedId = ConvertTo-GuidText ([string]$definition['componentId'])
+  $components = @(Get-PnPPageComponent -Page $homePageFile -ListAvailable)
+  $component = $components | Where-Object { (ConvertTo-GuidText ([string]$_.Id)) -eq $wantedId } | Select-Object -First 1
+  if ($null -eq $component) {
+    $listed = ($components | ForEach-Object { "$($_.Name) ($($_.Id))" }) -join '; '
+    throw "The front-door component ($($definition['componentId'])) is not available on this site: install the package (app catalog upload, then 'Get it' on the site) and rerun. Components listed for ${homePageFile}: $listed"
+  }
+  Write-Host "Front-door component: $($component.Name) ($($component.Id))"
 }
-Write-Host "Front-door component: $($component.Name) ($($component.Id))"
 
 function Get-Page([string]$key) {
   $page = @($definition['pages'] | Where-Object { $_['key'] -eq $key })
@@ -513,6 +525,40 @@ function Set-OwnItemsSecurity {
   $script:securedLists += $title
 }
 
+# 'readOnly' (1.0.0.18): a register everyone reads and only the owners and the declared groups write, such as the
+# approved tools, where nobody may approve their own tool. The inheritance is broken keeping its grants, the owners and
+# each declared group get Full Control on the list (which carries Override List Behaviors), and then the flags go on:
+# ReadSecurity 1 lets every member read every row, WriteSecurity 4 lets no one without the override create or edit one.
+# A unique key is kept: everyone reads every row, so a collision names no row that is hidden from anyone.
+function Set-ReadOnlySecurity {
+  param(
+    [Parameter(Mandatory = $true)][string]$title,
+    [string[]]$fullControlGroups = @()
+  )
+  $list = Get-PnPList -Identity $title -Includes HasUniqueRoleAssignments -ErrorAction SilentlyContinue
+  if ($null -eq $list) {
+    Write-Warning "The list '$title' is not on this site; read-only security not applied. Install what provisions it and rerun."
+    $script:unsecuredLists += $title
+    return
+  }
+  Write-Host "Securing $title (everyone reads every row; only Owners and the named groups write: $fullControlRole) ..."
+  $owners = Get-PnPGroup -AssociatedOwnerGroup
+  if (-not $list.HasUniqueRoleAssignments) {
+    Set-PnPList -Identity $title -BreakRoleInheritance -CopyRoleAssignments
+  }
+  Set-PnPListPermission -Identity $title -Group $owners -AddRole $fullControlRole
+  foreach ($parameterName in $fullControlGroups) {
+    if (-not $siteGroups.ContainsKey($parameterName)) {
+      Write-Warning "The site group of '$parameterName' is not on this site; Full Control on '$title' not granted, so that role can read the list but not change it."
+      continue
+    }
+    Set-PnPListPermission -Identity $title -Group $siteGroups[$parameterName] -AddRole $fullControlRole
+    Write-Host "  The site group of '$parameterName' holds $fullControlRole on $title and can change its rows."
+  }
+  Set-PnPList -Identity $title -ReadSecurity 1 -WriteSecurity 4
+  $script:securedLists += $title
+}
+
 # The groups that read every row of a list are named as parameters and never as group titles, so nothing
 # tenant-bound is committed. A name that is not a declared 'group' parameter is an authoring mistake in pages.json
 # and stops the run before anything is changed, exactly as it does for a page's permissions. A mode this script does
@@ -523,8 +569,8 @@ function Test-OwnItemsDeclaration {
     [string]$mode,
     [string[]]$fullControlGroups = @()
   )
-  if ($mode -ne 'ownItems') {
-    throw "List security for '$title' in pages.json names an unknown mode '$mode'; expected 'ownItems'."
+  if ($mode -ne 'ownItems' -and $mode -ne 'readOnly') {
+    throw "List security for '$title' in pages.json names an unknown mode '$mode'; expected 'ownItems' or 'readOnly'."
   }
   foreach ($parameterName in $fullControlGroups) {
     if (-not $kinds.ContainsKey($parameterName) -or $kinds[$parameterName] -ne 'group') {
@@ -538,7 +584,11 @@ foreach ($entry in $listSecurity) {
   $title = [string]$entry['title']
   $fullControlGroups = @(if ($entry.Contains('fullControlGroups')) { $entry['fullControlGroups'] })
   Test-OwnItemsDeclaration $title ([string]$entry['security']) $fullControlGroups
-  Set-OwnItemsSecurity $title $fullControlGroups
+  if ([string]$entry['security'] -eq 'readOnly') {
+    Set-ReadOnlySecurity $title $fullControlGroups
+  } else {
+    Set-OwnItemsSecurity $title $fullControlGroups
+  }
 }
 if ($securedLists.Count -gt 0) {
   Write-Warning "The companion flows' connection must hold Override List Behaviors (Full Control, Design or a custom permission level) on the intake lists; an Edit-level connection is trimmed to its own items."
@@ -646,11 +696,28 @@ foreach ($entry in $listDefinitions) {
   }
   # A list that declares its own security is put under it here, where it exists: the same rules, the same wording and
   # the same summary as the lists the package feature provisions (decision 16). The flags go on last, as they do there.
+  # A 'readOnly' register (1.0.0.18) is read by everyone and written only by the owners and the declared groups.
   if ($entry.Contains('security')) {
     $entryGroups = @(if ($entry.Contains('fullControlGroups')) { $entry['fullControlGroups'] })
-    Set-OwnItemsSecurity $title $entryGroups
+    if ([string]$entry['security'] -eq 'readOnly') {
+      Set-ReadOnlySecurity $title $entryGroups
+    } else {
+      Set-OwnItemsSecurity $title $entryGroups
+    }
   }
   $ensuredLists += $title
+}
+
+# A lists-only run ends here, before anything that writes the content document, a page or the navigation.
+if ($ListsOnly) {
+  Write-Host ''
+  Write-Host 'Lists only: no content document, page, navigation node or home page was created or changed.'
+  Write-Host "Lists ensured: $(if ($ensuredLists.Count -gt 0) { $ensuredLists -join ', ' } else { 'none' })"
+  Write-Host "Lists under item-level security: $(if ($securedLists.Count -gt 0) { $securedLists -join ', ' } else { 'none' })"
+  if ($unsecuredLists.Count -gt 0) {
+    Write-Warning "Not secured, not on this site yet: $($unsecuredLists -join ', '). Install what provisions them and rerun."
+  }
+  return
 }
 
 # ---------------------------------------------------------------------------------------------------------------

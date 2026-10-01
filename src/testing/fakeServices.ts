@@ -14,6 +14,7 @@ import type { IToolPolicyEvaluator } from '../webparts/aiCoeFrontDoor/services/t
 import type {
   IAdminDashboardData,
   IGovernanceService,
+  IRecoveredSubmission,
   ISubmissionResult,
   ISubmitOptions,
   IUsageMetricsResult,
@@ -82,6 +83,26 @@ export function createFakeGovernanceService(): IFakeGovernanceService {
   };
   return service;
 }
+
+/** An unconfirmed feedback attempt the server recovery record holds, made before the form under test. */
+export const EARLIER_ATTEMPT: IRecoveredSubmission['attempt'] = {
+  workflowType: 'feedback',
+  payload: { summary: 'An earlier request' },
+  intakeId: 'OVT-AICOE-20260929-EARLIER1'
+};
+
+/**
+ * Answers as the durable submission service does while its recovery record holds `EARLIER_ATTEMPT` unconfirmed:
+ * `restoreSubmission` returns that attempt, and every submission is refused with a pending result about it.
+ */
+export function holdEarlierAttempt(governance: IFakeGovernanceService): void {
+  const pending: ISubmissionResult = { connected: false, state: 'pending', intakeId: EARLIER_ATTEMPT.intakeId, message: 'An earlier server-stored attempt needs confirmation.' };
+  governance.restoreSubmission = async (): Promise<IRecoveredSubmission> => ({ attempt: EARLIER_ATTEMPT, result: pending });
+  governance.result = { ...pending, earlierAttempt: true, message: 'Confirm the earlier attempt before starting a different submission. Its saved content was not replaced.' };
+}
+
+/** What the list answers once the earlier attempt is confirmed under its own reference. */
+export const EARLIER_ATTEMPT_SAVED: ISubmissionResult = { connected: true, state: 'saved', intakeId: EARLIER_ATTEMPT.intakeId, message: 'Submission received and added to the AI CoE service queue.' };
 
 export interface IFakeUsageMetricsService extends IUsageMetricsService {
   calls: number;

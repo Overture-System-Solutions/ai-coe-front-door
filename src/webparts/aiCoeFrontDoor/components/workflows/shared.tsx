@@ -107,10 +107,11 @@ export function useClearDraft(workflowId: PieceWorkflowId, onDraftsChanged: IWor
  * What becomes of the draft once a submission has an outcome. The legacy shell clears it on every
  * submit, as shipped. A page view keeps the answers unless the record is saved: it writes the draft
  * again (so the notice's promise that the answers are kept is true even when nothing was saved
- * before) and swallows a store failure, since the answers are still on screen.
+ * before) and swallows a store failure, since the answers are still on screen. A result about an
+ * earlier attempt is kept the same way in either view: these answers were never sent.
  */
 export function settleDraft(result: ISubmissionResult, pageView: boolean, keep: () => Promise<unknown>, clear: () => Promise<void>): Promise<void> {
-  if (pageView && submissionState(result) !== 'saved') {
+  if (result.earlierAttempt === true || (pageView && submissionState(result) !== 'saved')) {
     return keep().then(
       (): void => undefined,
       (): void => undefined

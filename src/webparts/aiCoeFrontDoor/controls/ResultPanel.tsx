@@ -4,6 +4,10 @@ import {
   LEGACY_PENDING_TEXT,
   LEGACY_PENDING_TITLE,
   RECEIPT_CONFIRM_AGAIN,
+  RECEIPT_EARLIER_NOT_SENT,
+  RECEIPT_EARLIER_SAVED_AFTER_REFERENCE,
+  RECEIPT_EARLIER_SAVED_BEFORE_REFERENCE,
+  RECEIPT_EARLIER_SAVED_TITLE,
   RECEIPT_NOT_APPROVAL,
   RECEIPT_OPEN_RECORD,
   RECEIPT_PENDING_AFTER_REFERENCE,
@@ -13,9 +17,12 @@ import {
   RECEIPT_REFERENCE_KEY,
   RECEIPT_SAVED_AT_KEY,
   RECEIPT_SAVED_TITLE,
+  RECEIPT_SEND_ANSWERS,
   RECEIPT_SOURCE_LINE
 } from '../content/constants';
 import { usePageViewFlag } from '../context/FrontDoorContext';
+import { useHandOff } from '../context/HandOffContext';
+import type { IHandOff } from '../context/HandOffContext';
 import { useSubmission } from '../context/SubmissionContext';
 import { CircleCheck, Clock3, Info, RotateCcw } from '../icons';
 import { failureUserMessage } from '../services/failureClass';
@@ -24,6 +31,7 @@ import { submissionState } from '../services/types';
 import type { ISubmissionResult, SubmissionState } from '../services/types';
 import { FailureNotice } from './FailureNotice';
 import { NoticeBanner } from './NoticeBanner';
+import { ConciergeCard } from './ConciergeCard';
 import { RouteCard } from './RouteCard';
 import { StatusPill } from './StatusPill';
 import { SummaryActions, SummaryText } from './SummaryActions';
@@ -40,6 +48,8 @@ export interface IResultPanelProps {
    * draft afterwards); without it the panel calls the submission context directly.
    */
   onRetry?: () => void;
+  /** Sends the answers on the page, offered once an earlier request that held them back is saved. */
+  onSendAnswers?: () => void;
 }
 
 /** The route the hand-off card after a saved record resolves: the assistant, closed until proved here. */
@@ -106,9 +116,21 @@ function SavedReceipt({ result }: { result: ISubmissionResult }): React.ReactEle
         )}
         <p className="ai-receipt-line ai-receipt-caveat">{RECEIPT_NOT_APPROVAL}</p>
       </section>
-      <RouteCard routeKey={HAND_OFF_ROUTE} reference={reference === '' ? undefined : reference} />
+      <NextStep reference={reference === '' ? undefined : reference} />
     </>
   );
+}
+
+/**
+ * Where the receipt hands on to. A view that provides a hand-off (the tabbed view, 1.0.0.18) shows the AI CoE Concierge
+ * when the site set one up and nothing when it did not; a page view keeps the route card its document resolves.
+ */
+function NextStep({ reference }: { reference: string | undefined }): React.ReactElement | null {
+  const handOff: IHandOff | undefined = useHandOff();
+  if (handOff === undefined) {
+    return <RouteCard routeKey={HAND_OFF_ROUTE} reference={reference} />;
+  }
+  return handOff.concierge === undefined ? null : <ConciergeCard concierge={handOff.concierge} reference={reference} />;
 }
 
 /** The write was accepted but not read back: the reference completes it, nothing is written twice. */
@@ -124,6 +146,7 @@ function PendingReceipt({ result, onConfirmAgain }: { result: ISubmissionResult;
       <p className="ai-receipt-line">
         {RECEIPT_PENDING_BEFORE_REFERENCE} <code>{result.intakeId ?? ''}</code> {RECEIPT_PENDING_AFTER_REFERENCE}
       </p>
+      {result.earlierAttempt === true && <p className="ai-receipt-line">{RECEIPT_EARLIER_NOT_SENT}</p>}
       <button type="button" onClick={onConfirmAgain} className="overture-btn-primary ai-receipt-retry">
         {RECEIPT_CONFIRM_AGAIN}
       </button>
@@ -131,11 +154,38 @@ function PendingReceipt({ result, onConfirmAgain }: { result: ISubmissionResult;
   );
 }
 
+/** An earlier request is saved and read back; the answers on the page were never sent, and go only when asked. */
+function EarlierSavedReceipt({ result, onSendAnswers }: { result: ISubmissionResult; onSendAnswers: (() => void) | undefined }): React.ReactElement {
+  return (
+    <section className="ai-receipt ai-receipt--saved" aria-label={RECEIPT_EARLIER_SAVED_TITLE}>
+      <div className="ai-receipt-head">
+        <CircleCheck className="ai-receipt-icon" aria-hidden="true" focusable="false" />
+        <strong className="ai-receipt-title">{RECEIPT_EARLIER_SAVED_TITLE}</strong>
+      </div>
+      <p className="ai-receipt-line">
+        {RECEIPT_EARLIER_SAVED_BEFORE_REFERENCE} <code>{result.intakeId ?? ''}</code> {RECEIPT_EARLIER_SAVED_AFTER_REFERENCE}
+      </p>
+      {onSendAnswers !== undefined && (
+        <button type="button" onClick={onSendAnswers} className="overture-btn-primary ai-receipt-send">
+          {RECEIPT_SEND_ANSWERS}
+        </button>
+      )}
+    </section>
+  );
+}
+
+interface IPageViewOutcomeProps {
+  lastResult: ISubmissionResult;
+  onRetry: () => void;
+  onSendAnswers: (() => void) | undefined;
+}
+
 /** What a page view shows for the last result: the receipt, the pending receipt or the failure notice. */
-function PageViewOutcome({ lastResult, onRetry }: { lastResult: ISubmissionResult; onRetry: () => void }): React.ReactElement {
+function PageViewOutcome({ lastResult, onRetry, onSendAnswers }: IPageViewOutcomeProps): React.ReactElement {
   const state: SubmissionState = submissionState(lastResult);
   if (state === 'saved') {
-    return <SavedReceipt result={lastResult} />;
+    // A saved earlier request is not a receipt for the answers on the page.
+    return lastResult.earlierAttempt === true ? <EarlierSavedReceipt result={lastResult} onSendAnswers={onSendAnswers} /> : <SavedReceipt result={lastResult} />;
   }
   if (state === 'pending') {
     return <PendingReceipt result={lastResult} onConfirmAgain={onRetry} />;
@@ -148,8 +198,10 @@ function PageViewOutcome({ lastResult, onRetry }: { lastResult: ISubmissionResul
  * Acknowledgement page shown once a workflow has been submitted. The legacy shell keeps its shipped
  * notice (with a third branch for a pending record); a page view shows the receipt, the pending
  * receipt with its confirm-again button, or the failure notice, followed by the same summary and actions.
+ * When the last result is about an earlier request, the page view says so, and once that request is
+ * saved it offers to send the answers on the page.
  */
-export function ResultPanel({ headerIntro, headerSubtext, summaryText, downloadFilename, onStartOver, onDone, onRetry }: IResultPanelProps): React.ReactElement {
+export function ResultPanel({ headerIntro, headerSubtext, summaryText, downloadFilename, onStartOver, onDone, onRetry, onSendAnswers }: IResultPanelProps): React.ReactElement {
   const pageView: boolean = usePageViewFlag();
   const { lastResult, retryLast } = useSubmission();
   const retry: () => void = React.useCallback((): void => {
@@ -170,7 +222,7 @@ export function ResultPanel({ headerIntro, headerSubtext, summaryText, downloadF
           </p>
         </div>
       </div>
-      {pageView && lastResult !== undefined ? <PageViewOutcome lastResult={lastResult} onRetry={retry} /> : <LegacyNotice lastResult={lastResult} />}
+      {pageView && lastResult !== undefined ? <PageViewOutcome lastResult={lastResult} onRetry={retry} onSendAnswers={onSendAnswers} /> : <LegacyNotice lastResult={lastResult} />}
       <SummaryText text={summaryText} />
       <SummaryActions summaryText={summaryText} downloadFilename={downloadFilename} copyButtonClass="overture-btn-primary" />
       <div className="flex flex-wrap gap-3 pt-4" style={{ borderTop: '1px solid var(--color-line)' }}>

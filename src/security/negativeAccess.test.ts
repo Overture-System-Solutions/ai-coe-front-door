@@ -135,7 +135,8 @@ function stripItemOf(root: HTMLElement): HTMLElement {
 }
 
 function intakeReads(store: InMemoryListStore): IRecordedRequest[] {
-  return store.requests.filter((request: IRecordedRequest): boolean => request.method === 'GET' && request.list === INTAKES_LIST_TITLE);
+  // Row reads only: since 1.0.0.18 the card links also read the list's own display-form address, which holds no row.
+  return store.requests.filter((request: IRecordedRequest): boolean => request.method === 'GET' && request.list === INTAKES_LIST_TITLE && request.url.indexOf('/items') >= 0);
 }
 
 /** Nothing of a response body, and no secret shape, anywhere in the rendered page. */

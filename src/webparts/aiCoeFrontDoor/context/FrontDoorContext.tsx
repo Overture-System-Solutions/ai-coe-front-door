@@ -1,7 +1,9 @@
 import * as React from 'react';
 import type { IBranding } from '../branding/branding';
 import type { TelemetryProvider } from '../content/telemetryTiles';
+import type { IApprovedToolsService } from '../services/approvedToolsService';
 import type { ICaseAnalysisService } from '../services/caseAnalysisService';
+import type { IConcierge } from '../services/concierge';
 import type { IIdeaDraftService } from '../services/draftService';
 import type { IDraftStore } from '../services/draftStorage';
 import type { IMyWorkService } from '../services/myWorkService';
@@ -41,6 +43,10 @@ export interface IFrontDoorServices {
   coreWork?: ICoreWorkService;
   /** Claude's analysis of the open business cases, through the case analysis flow; present only when a flow URL is bound. */
   caseAnalysis?: ICaseAnalysisService;
+  /** The AI CoE Concierge links the "Ask the AI CoE" box hands a question to (1.0.0.18); absent when none is set up. */
+  concierge?: IConcierge;
+  /** Reads the approved-tools register (1.0.0.18); absent in the legacy-only test setups (no tool is then approved). */
+  approvedTools?: IApprovedToolsService;
 }
 
 /** Everything the pages need from the host: who is looking, where they are, and the services to talk to. */

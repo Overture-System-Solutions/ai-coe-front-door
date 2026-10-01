@@ -342,6 +342,23 @@ describe('AiCoeFrontDoorWebPart bundle', () => {
           placeholder: 'https://…/triggers/manual/paths/invoke?api-version=1'
         }
       },
+      // 1.0.0.18: the concierge the Ask box hands a question to, and the link that adds it in Teams.
+      {
+        targetProperty: 'conciergeChatUrl',
+        properties: {
+          label: 'AI CoE Concierge chat link',
+          description: 'The AI CoE Concierge agent\'s chat link in Microsoft 365 Copilot (its Share link, https://m365.cloud.microsoft/chat/?titleId=...). The Ask box on the tabbed view copies a question and opens this chat; a saved request offers it as the next step. Only https Microsoft Copilot or Teams addresses are used. Leave blank and the box says the concierge is not set up.',
+          placeholder: 'https://m365.cloud.microsoft/chat/?titleId=T_…'
+        }
+      },
+      {
+        targetProperty: 'conciergeAddUrl',
+        properties: {
+          label: 'AI CoE Concierge add link (Teams)',
+          description: 'The link that adds the AI CoE Concierge in Teams (https://teams.microsoft.com/l/app/?titleId=...), offered once to people who have not added it yet. Leave blank to offer only the chat.',
+          placeholder: 'https://teams.microsoft.com/l/app/?titleId=T_…'
+        }
+      },
       { targetProperty: 'draftListId', properties: { label: 'Server draft list ID', description: 'Unsubmitted work stays on the server, never in browser storage. Blank disables saved business drafts.' } },
       { targetProperty: 'draftPolicyJson', properties: { label: 'Qualified server draft policy (JSON)', multiline: true, description: 'Supply accepted access/retention references, retention period and qualification expiry. Server policy commissioning is required; this field does not enforce tenant retention.' } },
       { targetProperty: 'coreBindingJson', properties: { label: 'Qualified native CORE binding (JSON)', multiline: true, description: 'Use the exact accepted v0.2.0 binding receipt and separate request/result GUIDs. Never enter secrets. A property cannot grant server permissions.' } },

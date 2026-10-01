@@ -41,6 +41,8 @@ const PERSON_FIELDS: readonly string[] = ['RequestorEmail', 'SubmitterEmail'];
 const ITEMS_URL: RegExp = /getbytitle\('((?:[^']|'')*)'\)\/items(?:\((\d+)\))?(?:\?(.*))?$/;
 const GROUPS_URL: RegExp = /\/_api\/web\/currentuser\/groups(?:\?(.*))?$/i;
 const FILE_URL: RegExp = /GetFileByServerRelativeUrl\('((?:[^']|'')*)'\)\/\$value$/i;
+/** The list itself, not its items: answers `DefaultDisplayFormUrl` as SharePoint does, server-relative (1.0.0.18). */
+const LIST_URL: RegExp = /^(.*?)\/_api\/web\/lists\/getbytitle\('((?:[^']|'')*)'\)(?:\?(.*))?$/;
 const EQ_FILTER: RegExp = /^\s*([A-Za-z_][A-Za-z0-9_]*)\s+eq\s+'((?:[^']|'')*)'\s*$/;
 
 function parseQuery(raw: string | undefined): { [name: string]: string } {
@@ -200,6 +202,19 @@ export class InMemoryListStore {
       }
       const select: string[] | undefined = groupsQuery.$select ? groupsQuery.$select.split(',') : undefined;
       return respond(200, { value: this._groups.map((group: IStoredItem): object => project(group, select)) });
+    }
+    const listMatch: RegExpExecArray | null = LIST_URL.exec(url);
+    if (listMatch) {
+      const title: string = listMatch[2].replace(/''/g, "'");
+      this.requests.push({ method, url, list: title, query: parseQuery(listMatch[3]), headers: options.headers, body: undefined });
+      if (!Object.prototype.hasOwnProperty.call(this._lists, title)) {
+        return respond(404, 'List not found');
+      }
+      const listFailure: IListFailure | undefined = this._failures[title];
+      if (listFailure) {
+        return respond(listFailure.status, listFailure.body);
+      }
+      return respond(200, { DefaultDisplayFormUrl: `${new URL(listMatch[1]).pathname.replace(/\/+$/, '')}/Lists/${title}/DispForm.aspx` });
     }
     const match: RegExpExecArray | null = ITEMS_URL.exec(url);
     const list: string | undefined = match ? match[1].replace(/''/g, "'") : undefined;

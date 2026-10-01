@@ -152,6 +152,8 @@ export function FeedbackWorkflow({ resumeDraft, onExit, onDraftsChanged }: IWork
                 dispatch({ type: 'ANSWER', stepId: step.id, value });
               }
             }}
+            answers={session.answers}
+            onAnswerField={(fieldId: string, fieldValue: string | string[]): void => dispatch({ type: 'ANSWER', stepId: fieldId, value: fieldValue })}
           />
         )}
         {inReview && (
@@ -172,6 +174,7 @@ export function FeedbackWorkflow({ resumeDraft, onExit, onDraftsChanged }: IWork
             onStartOver={(): void => setConfirmingRestart(true)}
             onDone={onExit}
             onRetry={retry}
+            onSendAnswers={confirm}
           />
         )}
         {inForm && (

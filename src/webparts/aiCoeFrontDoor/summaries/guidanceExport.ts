@@ -15,7 +15,7 @@ export function buildGuidanceExportText(
   const index: { [stepId: string]: IStep } = indexSteps(definition);
   const lines: string[] = [];
   lines.push(branding.exportHeader(definition.title));
-  lines.push('Guidance prototype — routing only, not an approval decision');
+  lines.push(definition.approvedToolList === true ? 'Guidance from the AI CoE approved-tools list — not an approval decision' : 'Guidance prototype — routing only, not an approval decision');
   lines.push(`Policy reference: ${branding.governanceReference}`);
   lines.push(`Created: ${now.toLocaleString()}`);
   lines.push('');

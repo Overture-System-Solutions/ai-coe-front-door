@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { createBranding } from '../branding/branding';
-import type { IGovernanceService, ISubmissionResult } from '../services/types';
+import type { IGovernanceService, IRecoveredSubmission, ISubmissionResult } from '../services/types';
 import type { SubmissionPieceType } from '../workflows/types';
 
 /** What was last sent: enough to send it again under the same identifier. */
@@ -9,6 +9,12 @@ export interface ISubmissionAttempt {
   payload: unknown;
   /** The identifier the service gave the attempt; a retry hands it back so the rows are found, not written twice. */
   intakeId?: string;
+  /**
+   * True when this is not what the person sent but the earlier attempt the server recovery record holds, which
+   * refused their submission until it is confirmed. A retry completes that attempt; its results are marked
+   * `earlierAttempt`, so the form on screen never settles its own draft with them.
+   */
+  earlier?: boolean;
 }
 
 export interface ISubmissionContextValue {
@@ -17,7 +23,11 @@ export interface ISubmissionContextValue {
   /** The most recent submission itself, kept for `retryLast`. */
   lastAttempt: ISubmissionAttempt | undefined;
   submit(workflowType: SubmissionPieceType, payload: unknown): Promise<ISubmissionResult>;
-  /** Sends the last attempt again under its identifier (a pending or failed record completes, nothing duplicates); undefined when nothing was attempted. */
+  /**
+   * Sends the last attempt again under its identifier (a pending or failed record completes, nothing duplicates);
+   * when the recovery record refused the last submission, that is the earlier attempt it holds. Undefined when
+   * nothing was attempted.
+   */
   retryLast(): Promise<ISubmissionResult | undefined>;
 }
 
@@ -61,26 +71,50 @@ export function SubmissionProvider({ governanceService, children }: ISubmissionP
     return (): void => { mounted = false; };
   }, [governanceService]);
 
-  const run = React.useCallback(
-    async (workflowType: SubmissionPieceType, payload: unknown, intakeId: string | undefined): Promise<ISubmissionResult> => {
-      // The outcome record is a list of its own with no submission payload in it, so it has a method of its own; the
-      // five shipped workflows take exactly the route they took before (decision 16).
-      const options: { intakeId: string } | undefined = intakeId === undefined ? undefined : { intakeId };
-      const result: ISubmissionResult =
-        workflowType === 'outcome' ? await governanceService.submitOutcome(payload, options) : await governanceService.submitWorkflow(workflowType, payload, options);
-      const attempt: ISubmissionAttempt = { workflowType, payload, intakeId: result.intakeId !== undefined ? result.intakeId : intakeId };
-      attemptRef.current = attempt;
-      setLastAttempt(attempt);
-      setLastResult(result);
-      return result;
+  /**
+   * The attempt a retry sends after `result`. A refusal in favour of an earlier attempt adopts that attempt from the
+   * recovery record when it reads back under the refusal's reference. Otherwise the refused attempt stays as it was:
+   * never paired with the earlier reference, since a retry under it would find the earlier rows and call these saved.
+   */
+  const nextAttempt = React.useCallback(
+    async (attempt: ISubmissionAttempt, result: ISubmissionResult): Promise<ISubmissionAttempt> => {
+      if (result.earlierAttempt !== true) {
+        return { ...attempt, intakeId: result.intakeId !== undefined ? result.intakeId : attempt.intakeId };
+      }
+      const restored: IRecoveredSubmission | undefined = await governanceService.restoreSubmission?.().catch((): undefined => undefined);
+      return restored !== undefined && restored.attempt.intakeId === result.intakeId ? { ...restored.attempt, earlier: true } : attempt;
     },
     [governanceService]
   );
-  const submit = React.useCallback((workflowType: SubmissionPieceType, payload: unknown): Promise<ISubmissionResult> => run(workflowType, payload, undefined), [run]);
+
+  const run = React.useCallback(
+    async (attempt: ISubmissionAttempt): Promise<ISubmissionResult> => {
+      const { workflowType, payload, intakeId } = attempt;
+      // The outcome record is a list of its own with no submission payload in it, so it has a method of its own; the
+      // five shipped workflows take exactly the route they took before (decision 16).
+      const options: { intakeId: string } | undefined = intakeId === undefined ? undefined : { intakeId };
+      const sent: ISubmissionResult =
+        workflowType === 'outcome' ? await governanceService.submitOutcome(payload, options) : await governanceService.submitWorkflow(workflowType, payload, options);
+      // Whatever an earlier attempt comes to says nothing about the answers on screen.
+      const result: ISubmissionResult = attempt.earlier === true && sent.earlierAttempt !== true ? { ...sent, earlierAttempt: true } : sent;
+      const next: ISubmissionAttempt = await nextAttempt(attempt, sent);
+      attemptRef.current = next;
+      setLastAttempt(next);
+      setLastResult(result);
+      return result;
+    },
+    [governanceService, nextAttempt]
+  );
+  // A new attempt is kept as the service prepares it, so a retry, never prepared again, sends what the first recorded.
+  const submit = React.useCallback(
+    (workflowType: SubmissionPieceType, payload: unknown): Promise<ISubmissionResult> =>
+      run({ workflowType, payload: governanceService.prepareSubmission === undefined ? payload : governanceService.prepareSubmission(workflowType, payload) }),
+    [run, governanceService]
+  );
   const retryLast = React.useCallback(async (): Promise<ISubmissionResult | undefined> => {
     const restored = attemptRef.current === undefined ? await governanceService.restoreSubmission?.() : undefined;
     const attempt: ISubmissionAttempt | undefined = attemptRef.current ?? restored?.attempt;
-    return attempt === undefined ? undefined : run(attempt.workflowType, attempt.payload, attempt.intakeId);
+    return attempt === undefined ? undefined : run(attempt);
   }, [run, governanceService]);
   const value: ISubmissionContextValue = React.useMemo(
     (): ISubmissionContextValue => ({ lastResult, lastAttempt, submit, retryLast }),

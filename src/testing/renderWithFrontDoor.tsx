@@ -1,4 +1,6 @@
+import type { IApprovedToolsService } from '../webparts/aiCoeFrontDoor/services/approvedToolsService';
 import type { ICaseAnalysisService } from '../webparts/aiCoeFrontDoor/services/caseAnalysisService';
+import type { IConcierge } from '../webparts/aiCoeFrontDoor/services/concierge';
 import { render } from '@testing-library/react';
 import type { RenderResult } from '@testing-library/react';
 import * as React from 'react';
@@ -57,6 +59,10 @@ export interface ITestFrontDoorOptions {
   coreWork?: ICoreWorkService;
   /** Absent by default, like a web part without a case analysis flow bound. */
   caseAnalysis?: ICaseAnalysisService;
+  /** Absent by default, like a web part with no concierge set up. */
+  concierge?: IConcierge;
+  /** Absent by default; no tool is then on the approved list. */
+  approvedTools?: IApprovedToolsService;
   /** The document's wording overrides the blocks read; the defaults unless given. */
   vocabulary?: IVocabulary;
   /** Records where page views navigate to; a fresh mock unless given. */
@@ -115,7 +121,9 @@ export function createTestFrontDoor(options: ITestFrontDoorOptions = {}): ITestF
       programMeasures: options.programMeasures,
       marketing: options.marketing,
       coreWork: options.coreWork,
-      caseAnalysis: options.caseAnalysis
+      caseAnalysis: options.caseAnalysis,
+      concierge: options.concierge,
+      approvedTools: options.approvedTools
     },
     navigate,
     pageView: options.pageView ?? false

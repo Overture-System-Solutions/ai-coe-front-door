@@ -712,10 +712,12 @@ describe('page provisioning script', () => {
     const definition: { lists: { title: string; security?: string; fullControlGroups?: string[]; hideFromDefaultView?: string[] }[]; parameters: { [name: string]: { kind: string } } } =
       JSON.parse(fs.readFileSync(path.join(PAGES_DIR, 'pages.json'), 'utf8'));
     const secure: { title: string; security?: string; fullControlGroups?: string[]; hideFromDefaultView?: string[] }[] = definition.lists.filter(
-      (list: { security?: string }): boolean => list.security !== undefined
+      (list: { security?: string }): boolean => list.security === 'ownItems'
     );
     expect(secure).toHaveLength(1);
     expect(secure[0].security).toBe('ownItems');
+    // The only other mode a declared list may carry is 'readOnly' (1.0.0.18, the approved tools).
+    expect(definition.lists.filter((list: { security?: string }): boolean => list.security !== undefined && list.security !== 'ownItems').map((list: { security?: string }): string => list.security as string)).toEqual(['readOnly']);
     expect(secure[0].hideFromDefaultView).toEqual(['Author', 'Editor']);
     for (const name of secure[0].fullControlGroups ?? []) {
       expect(definition.parameters[name].kind).toBe('group');
@@ -726,6 +728,49 @@ describe('page provisioning script', () => {
     }
     // The run summary counts the list among the secured ones, so an operator sees it was not left open.
     expect(script).toMatch(/List security:/);
+  });
+
+  it('puts a readOnly list under read-all, write-none item security with the owners and the named groups as its only writers (1.0.0.18)', () => {
+    // The approved-tools register: every member reads every row (ReadSecurity 1) and no one without Override List
+    // Behaviors creates or edits one (WriteSecurity 4), so nobody can approve their own tool. The owners and each declared
+    // group are granted Full Control on the list itself, which carries the override, before the flags go on.
+    const security: string = script.slice(script.indexOf('# List security'), script.indexOf('# Lists:'));
+    expect(security).toMatch(/function Set-ReadOnlySecurity/);
+    const body: string = security.slice(security.indexOf('function Set-ReadOnlySecurity'));
+    expect(body).toMatch(/Get-PnPList -Identity \$title -Includes HasUniqueRoleAssignments -ErrorAction SilentlyContinue/);
+    expect(body).toContain('is not on this site; read-only security not applied');
+    expect(body).toMatch(/Set-PnPList -Identity \$title -BreakRoleInheritance -CopyRoleAssignments/);
+    expect(body).toMatch(/Set-PnPListPermission -Identity \$title -Group \$owners -AddRole \$fullControlRole/);
+    expect(body).toMatch(/Set-PnPListPermission -Identity \$title -Group \$siteGroups\[\$parameterName\] -AddRole \$fullControlRole/);
+    expect(body).toMatch(/Set-PnPList -Identity \$title -ReadSecurity 1 -WriteSecurity 4/);
+    // A unique key is allowed here: everyone reads every row, so a collision names no hidden row.
+    expect(body.slice(0, body.indexOf('-ReadSecurity 1 -WriteSecurity 4'))).not.toContain('EnforceUniqueValues');
+    const grant: number = body.indexOf('-Group $siteGroups[$parameterName] -AddRole $fullControlRole');
+    expect(body.indexOf('-BreakRoleInheritance')).toBeLessThan(grant);
+    expect(grant).toBeLessThan(body.indexOf('-ReadSecurity 1 -WriteSecurity 4'));
+    // The declaration check knows both modes, and the Lists section applies the one each list declares.
+    expect(security).toContain("expected 'ownItems' or 'readOnly'");
+    const section: string = script.slice(script.indexOf('# Lists:'), script.indexOf('# Content document'));
+    expect(section).toMatch(/if \(\[string\]\$entry\['security'\] -eq 'readOnly'\) \{\s*Set-ReadOnlySecurity \$title \$entryGroups\s*\} else \{\s*Set-OwnItemsSecurity \$title \$entryGroups\s*\}/);
+  });
+
+  it('offers -ListsOnly for a one-page site: secures and ensures the lists, then stops before any content, page or navigation write', () => {
+    const code: string = codeOnly(script);
+    expect(code).toMatch(/\[switch\]\$ListsOnly/);
+    // Text parameters only matter to a page build; the site-type and component checks guard pages and navigation.
+    expect(code).toMatch(/if \(\$missing\.Count -gt 0 -and -not \$ListsOnly\) \{\s*throw "These text parameters/);
+    expect(code).toMatch(/-ne 'SITEPAGEPUBLISHING' -and -not \$AllowNonCommunicationSite -and -not \$ListsOnly\)/);
+    expect(code).toMatch(/if \(-not \$ListsOnly\) \{\s*\$homePageFile = /);
+    const stop: number = code.indexOf('if ($ListsOnly) {');
+    expect(stop).toBeGreaterThan(code.indexOf('$listSecurity = @('));
+    expect(stop).toBeGreaterThan(code.indexOf('$listDefinitions = @('));
+    expect(stop).toBeLessThan(code.indexOf('$documentPages = [ordered]@{}'));
+    expect(code.slice(stop, code.indexOf('$documentPages = [ordered]@{}'))).toMatch(/\n\s*return\s*\n/);
+    const before: string = code.slice(0, stop);
+    for (const writer of ['Add-PnPFile', 'Add-PnPPage', 'Add-PnPPageSection', 'Add-PnPPageWebPart', 'Set-PnPPage', 'Set-PnPPageWebPart', 'Remove-PnPPage', 'Set-PnPHomePage', 'Add-PnPNavigationNode', 'Remove-PnPNavigationNode', 'Set-PnPListItemPermission']) {
+      expect({ writer, beforeStop: before.indexOf(writer) >= 0 }).toEqual({ writer, beforeStop: false });
+    }
+    expect(script).toMatch(/\.PARAMETER ListsOnly/);
   });
 
   it('no longer needs the native web part templates or HTML text parts', () => {
@@ -767,7 +812,8 @@ describe('page provisioning script', () => {
 
 describe('README', () => {
   it('documents the current package and the page layout', () => {
-    expect(readme).toContain('## Deploy 1.0.0.17');
+    expect(readme).toContain('## Deploy 1.0.0.18');
+    expect(readme).not.toContain('## Deploy 1.0.0.17');
     expect(readme).not.toContain('## Deploy 1.0.0.16');
     expect(readme).not.toContain('## Deploy 1.0.0.15');
     expect(readme).not.toContain('Deploy 1.0.0.14');
@@ -898,8 +944,12 @@ describe('README', () => {
     expect(readme).toContain('?page=value');
   });
 
-  it('documents the 1.0.0.17 correction candidate, commissioning gates and additive one-page path', () => {
-    const deploy: string = readme.slice(readme.indexOf('## Deploy 1.0.0.17'), readme.indexOf('### Enable AI drafting'));
+  it('documents the 1.0.0.18 candidate, what 1.0.0.17 already added, commissioning gates and additive one-page path', () => {
+    const deploy: string = readme.slice(readme.indexOf('## Deploy 1.0.0.18'), readme.indexOf('### Enable AI drafting'));
+    // 1.0.0.18: the approved-tools register, the concierge settings, and the tabbed view's changes.
+    expect(deploy).toContain('AI CoE Approved Tools');
+    expect(deploy).toContain('conciergeChatUrl');
+    expect(deploy).toContain('conciergeAddUrl');
     expect(deploy).toContain('view:app');
     expect(deploy).toContain('New-FrontDoorAppPage.ps1');
     expect(deploy).toContain('marketingParticipant');

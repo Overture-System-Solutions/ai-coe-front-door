@@ -25,6 +25,7 @@ import { CANONICAL_STATUS } from '../webparts/aiCoeFrontDoor/content/truthStates
 import { PAGE_WORKFLOWS, WORKFLOW_ORDER } from '../webparts/aiCoeFrontDoor/content/workflows/catalog';
 import * as icons from '../webparts/aiCoeFrontDoor/icons';
 import {
+  APPROVED_TOOLS_LIST_TITLE,
   INTAKES_LIST_TITLE,
   OUTCOME_RECORDS_LIST_TITLE,
   OWN_ITEMS_LISTS,
@@ -1405,7 +1406,7 @@ describe('front door page definition', () => {
   it('declares the lists the script creates, by title, column, type and flag (decision 9, 1.0.0.14)', () => {
     // New lists come from this section alone: the package feature's XML stays byte-identical, so the program measures
     // list the Enterprise value page reads is declared here and created by the script's "Lists" section.
-    expect(definition.lists.map((list: IListDefinition): string => list.title)).toEqual([PROGRAM_MEASURES_LIST_TITLE, OUTCOME_RECORDS_LIST_TITLE]);
+    expect(definition.lists.map((list: IListDefinition): string => list.title)).toEqual([PROGRAM_MEASURES_LIST_TITLE, OUTCOME_RECORDS_LIST_TITLE, APPROVED_TOOLS_LIST_TITLE]);
     const measures: IListDefinition = definition.lists[0];
     expect(measures.title).toBe('AI CoE Program Measures');
     expect(measures.description.length).toBeGreaterThan(40);

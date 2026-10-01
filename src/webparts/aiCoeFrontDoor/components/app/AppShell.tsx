@@ -10,6 +10,9 @@ import type { ISupportRouteBlock } from '../../content/pageContent';
 import type { IPageViewSettings } from '../../content/pageViews';
 import { FrontDoorProvider, useFrontDoor } from '../../context/FrontDoorContext';
 import type { IFrontDoorContextValue } from '../../context/FrontDoorContext';
+import { HandOffProvider } from '../../context/HandOffContext';
+import type { IHandOff } from '../../context/HandOffContext';
+import { SubmissionProvider } from '../../context/SubmissionContext';
 import { NoticeBanner } from '../../controls/NoticeBanner';
 import { decide } from '../../services/authorization';
 import type { IDecision } from '../../services/authorization';
@@ -28,15 +31,24 @@ import { IdeaWorkflow } from '../workflows/IdeaWorkflow';
 import type { IWorkflowProps } from '../workflows/shared';
 import { TeamUsageWorkflow } from '../workflows/TeamUsageWorkflow';
 import { ToolCheckWorkflow } from '../workflows/ToolCheckWorkflow';
-import { WORK_COMMAND_WORKFLOW_ID, workCommandDraft } from '../pages/blocks/WorkCommandBlock';
-import { AppFooter, AppTopbar, widestRole } from './AppChrome';
+import { MyWork } from '../pages/MyWork';
+import { OUTCOME_WORKFLOW } from '../../content/workflows/outcome';
+import type { LucideIcon } from 'lucide-react';
+import { AppFooter, AppTopbar } from './AppChrome';
 import type { ISupportRouteBinding } from './AppChrome';
 import { AppCases, AppEngineering, AppImprovement, AppUsage } from './AppSections';
 import { AppMarketing } from './AppMarketing';
 import type { ISyntheticMarketingInputs } from './AppMarketingWorkspace';
 import { AppValue } from './AppValue';
 import { AppCaseAnalysis } from './AppCaseAnalysis';
-import { AppHero, SAVE_FAILED_TEXT } from './AppHero';
+import { AppHero } from './AppHero';
+import { AppApprovedTools } from './AppApprovedTools';
+import type { ApprovedToolsLoad } from './AppApprovedTools';
+import { createTabbedCatalog } from '../../content/workflows/tabbedForms';
+import { createRegisterEvaluator } from '../../services/registerToolPolicy';
+import type { IApprovedTool, IApprovedToolsResult } from '../../services/approvedToolsService';
+import type { IWorkflowCatalog } from '../../workflows/types';
+import type { IToolPolicyEvaluator } from '../../services/toolPolicyEvaluator';
 
 /**
  * The consolidated view: one instance, one page, sections reached by tabs inside the part.
@@ -53,16 +65,16 @@ import { AppHero, SAVE_FAILED_TEXT } from './AppHero';
  * - the destination is authorized synchronously, in the navigation itself and again in the render, so a refused
  *   section is never mounted, not even for the one frame an effect would need to send the person back;
  * - the services the sections receive are the capability-aware facades, so a protected read that is somehow
- *   reached answers refused without leaving the browser;
+ *   reached answers refused without leaving the browser; a form's submission goes through the same governance
+ *   facade, which is what marks a leader's business case to be reviewed sooner (see executivePriority.ts);
  * - a refused destination is said so, in place, without naming the group or the role it would take.
  *
  * That is defence in depth and nothing more: item-level security on the lists stays the boundary, because the
  * person controls the client. Server authorization remains mandatory.
  *
- * What a sentence typed on Home becomes. It is kept as the idea draft on this device (the contract the work command
- * of the content pages already uses) and the guided request opens inside this instance, resumed from that draft.
- * Nothing is submitted by navigating, the sentence never enters a URL, and if the draft cannot be kept nothing
- * opens and the box says so.
+ * What a sentence typed on Home becomes (1.0.0.18). It goes to the AI CoE Concierge, the Copilot Studio agent: the
+ * box copies it and opens the concierge chat, where the person pastes it (see AppHero). Nothing is saved or submitted
+ * from the box, the sentence never enters a URL, and a site with no concierge set up is told so.
  *
  * Navigation. Sections are state, not addresses, so moving between them keeps a part-finished request exactly
  * where it was, and the Marketing walkthrough's state lives here rather than beneath the section, so leaving and
@@ -96,7 +108,7 @@ function allowed(section: IAppSection, resolution: IRoleResolution, isAdmin: boo
   return decision;
 }
 
-/** No landing page shares this tree, so a workflow has nothing to report a draft to. */
+/** No landing page shares this tree, so a workflow has nothing to report a draft to; the starters read the store themselves. */
 const NO_DRAFT_TRACKING: IWorkflowProps['onDraftsChanged'] = (): void => undefined;
 
 export function AppShell({ settings }: IAppShellProps): React.ReactElement {
@@ -104,8 +116,12 @@ export function AppShell({ settings }: IAppShellProps): React.ReactElement {
   const { branding, isAdmin, services, user } = context;
   const roleState: RoleLoadState = useRoles(services.roles, isAdmin);
   // Until the membership is known the resolution is the unresolved one, which the gate refuses every narrowed
-  // capability for, so nothing protected is drawn or fetched while the answer is still coming.
-  const resolution: IRoleResolution = roleState.status === 'ready' ? roleState.resolution : unresolvedRoles(isAdmin);
+  // capability for, so nothing protected is drawn or fetched while the answer is still coming. It is kept while it
+  // holds, so the facades below, and the submissions made through them, change only when the membership does.
+  const resolution: IRoleResolution = React.useMemo(
+    (): IRoleResolution => (roleState.status === 'ready' ? roleState.resolution : unresolvedRoles(isAdmin)),
+    [roleState, isAdmin]
+  );
 
   // The facades the sections receive: every protected read decided from this resolution before it leaves the browser.
   const gated: IGatedServices = React.useMemo((): IGatedServices => gateServices(services, resolution), [services, resolution]);
@@ -135,7 +151,40 @@ export function AppShell({ settings }: IAppShellProps): React.ReactElement {
       setBlockedExit(undefined);
     }
   }), [services.draftStore]);
-  const sectionContext: IFrontDoorContextValue = React.useMemo((): IFrontDoorContextValue => ({ ...context, services: { ...gated.services, draftStore: trackedDraftStore } }), [context, gated, trackedDraftStore]);
+  // The approved-tools register (1.0.0.18), read once: the Requests panel shows it, the tool check picks from it.
+  const [toolsLoad, setToolsLoad] = React.useState<ApprovedToolsLoad>({ status: 'loading' });
+  React.useEffect((): (() => void) => {
+    const reader: typeof services.approvedTools = services.approvedTools;
+    if (reader === undefined) {
+      setToolsLoad({ status: 'done', result: { state: 'ok', tools: [], message: 'No register is read in this view.' } });
+      return (): void => undefined;
+    }
+    let cancelled: boolean = false;
+    setToolsLoad({ status: 'loading' });
+    reader.getTools().then(
+      (result: IApprovedToolsResult): void => {
+        if (!cancelled) {
+          setToolsLoad({ status: 'done', result });
+        }
+      },
+      (): void => {
+        if (!cancelled) {
+          setToolsLoad({ status: 'done', result: { state: 'unavailable', tools: [], message: 'The approved tools could not be read.' } });
+        }
+      }
+    );
+    return (): void => {
+      cancelled = true;
+    };
+  }, [services.approvedTools]);
+  const tools: readonly IApprovedTool[] = React.useMemo((): readonly IApprovedTool[] => (toolsLoad.status === 'done' ? toolsLoad.result.tools : []), [toolsLoad]);
+  // The tabbed view's shorter forms, and its tool check answering from the register (1.0.0.18).
+  const tabbedCatalog: IWorkflowCatalog = React.useMemo((): IWorkflowCatalog => createTabbedCatalog(context.catalog, tools), [context.catalog, tools]);
+  const registerEvaluator: IToolPolicyEvaluator = React.useMemo((): IToolPolicyEvaluator => createRegisterEvaluator(branding, tools), [branding, tools]);
+  const sectionContext: IFrontDoorContextValue = React.useMemo(
+    (): IFrontDoorContextValue => ({ ...context, catalog: tabbedCatalog, services: { ...gated.services, draftStore: trackedDraftStore, toolPolicyEvaluator: registerEvaluator } }),
+    [context, gated, trackedDraftStore, tabbedCatalog, registerEvaluator]
+  );
 
   const hostDocument = usePageDocument();
   const [pageDocument, setPageDocument] = React.useState<IPageDocument | undefined>(undefined);
@@ -226,30 +275,6 @@ export function AppShell({ settings }: IAppShellProps): React.ReactElement {
   );
 
   /**
-   * The Home sentence: kept as the idea draft, then the guided request opens here, resumed from it. The store's
-   * answer decides: a failed save opens nothing and returns the complaint for the box to show.
-   */
-  const command = React.useCallback(
-    async (sentence: string): Promise<string | undefined> => {
-      let saved: { ok: boolean };
-      try {
-        saved = await services.draftStore.save(WORK_COMMAND_WORKFLOW_ID, workCommandDraft(sentence));
-      } catch {
-        saved = { ok: false };
-      }
-      if (!saved.ok) {
-        return SAVE_FAILED_TEXT;
-      }
-      moved.current = true;
-      setDenied(undefined);
-      setSection('engineering');
-      setWorkflow('idea');
-      return undefined;
-    },
-    [services.draftStore]
-  );
-
-  /**
    * Arrow keys move along the tabs, Home and End jump to the ends. A tab list that can only be reached by pointer
    * or by tabbing through every tab is not a tab list; this is the behaviour the role promises.
    */
@@ -282,6 +307,7 @@ export function AppShell({ settings }: IAppShellProps): React.ReactElement {
   );
 
   const current: IAppSection = sectionOf(shown);
+  const handOff: IHandOff = React.useMemo((): IHandOff => (services.concierge === undefined ? {} : { concierge: services.concierge }), [services.concierge]);
   const exit = React.useCallback((): void => { open(shown); }, [open, shown]);
   const workflowProps: IWorkflowProps = { resumeDraft: true, onExit: exit, onDraftsChanged: NO_DRAFT_TRACKING };
 
@@ -304,9 +330,8 @@ export function AppShell({ settings }: IAppShellProps): React.ReactElement {
         body = <GenericWorkflow workflowId={workflow} {...workflowProps} />;
         break;
     }
-    if (workflow === 'idea' || workflow === 'toolCheck' || workflow === 'helpTraining' || workflow === 'teamUsage') {
-      body = <div className="ai-workflow-shell">{body}</div>;
-    }
+    // Every guided form reads at the same centered width; the section's heading and tabs above it stay full-width.
+    body = <div className="ai-workflow-shell">{body}</div>;
   } else {
     switch (shown) {
       case 'home':
@@ -317,11 +342,9 @@ export function AppShell({ settings }: IAppShellProps): React.ReactElement {
               organizationName={branding.organizationLabel}
               choices={ENTRY_CHOICES.filter((choice): boolean => allowed(sectionOf(choice.section), resolution, isAdmin).allowed)}
               onChoose={open}
-              onCommand={command}
+              concierge={services.concierge}
               commandLabel={`Ask the ${branding.coeName}`}
-              role={widestRole(resolution.roles)}
               status={viewStatus(resolution, roleState.status === 'loading')}
-              pending={roleState.status === 'loading'}
             />
           </React.Fragment>
         );
@@ -330,7 +353,7 @@ export function AppShell({ settings }: IAppShellProps): React.ReactElement {
         body = <AppCases onDirtyChange={onBusinessDirtyChange} analysis={decide('analyzeCasePortfolio', resolution).allowed ? <AppCaseAnalysis /> : undefined} />;
         break;
       case 'engineering':
-        body = <AppEngineering starters={<AppStarters kind="engineering" onStart={setWorkflow} />} />;
+        body = <AppEngineering mine={<MyWork />} starters={<AppStarters kind="engineering" onStart={setWorkflow} />} below={<AppApprovedTools load={toolsLoad} />} />;
         break;
       case 'marketing':
         body = <AppMarketing demo={demo} onDemoChange={setDemo} resolution={resolution} workingInputs={syntheticInputs} onWorkingInputsChange={setSyntheticInputs} onBusinessDirtyChange={onBusinessDirtyChange} />;
@@ -361,7 +384,7 @@ export function AppShell({ settings }: IAppShellProps): React.ReactElement {
       />
       <nav className="ai-app-tabs" aria-label="AI Center of Excellence sections">
         <div role="tablist" aria-label="AI Center of Excellence sections" className="ai-app-tabrow" onKeyDown={onTabKey}>
-          {visible.map((candidate: IAppSection): React.ReactElement => (
+          {visible.map((candidate: IAppSection, index: number): React.ReactElement => (
             <button
               key={candidate.id}
               type="button"
@@ -370,7 +393,7 @@ export function AppShell({ settings }: IAppShellProps): React.ReactElement {
               aria-selected={candidate.id === shown}
               aria-controls={`ai-app-panel-${candidate.id}`}
               tabIndex={candidate.id === shown ? 0 : -1}
-              className={candidate.id === 'admin' ? 'ai-app-tab ai-app-tab--admin' : 'ai-app-tab'}
+              className={tabClass(candidate, index === visible.findIndex((section: IAppSection): boolean => section.end === true))}
               onClick={(): void => { open(candidate.id); }}
             >
               {candidate.label}
@@ -404,12 +427,38 @@ export function AppShell({ settings }: IAppShellProps): React.ReactElement {
         <div onChangeCapture={(): void => {
           if (workflow !== undefined) { edits.current += 1; unsaved.current = true; }
         }}>
-          <FrontDoorProvider value={sectionContext}><PageDocumentProvider value={childDocument}>{body}</PageDocumentProvider></FrontDoorProvider>
+          <FrontDoorProvider value={sectionContext}>
+            {/* The forms submit through the gated governance facade, for the membership this view resolved. */}
+            <SubmissionProvider governanceService={gated.services.governance}>
+              {/* A saved request hands on to the concierge when the site set one up, and to nothing otherwise. */}
+              <HandOffProvider value={handOff}>
+                <PageDocumentProvider value={childDocument}>{body}</PageDocumentProvider>
+              </HandOffProvider>
+            </SubmissionProvider>
+          </FrontDoorProvider>
         </div>
       </section>
       <AppFooter organizationName={branding.organizationLabel} support={support} siteUrl={context.siteUrl} />
     </div>
   );
+}
+
+/**
+ * A tab's classes: the far-end group (Cases, Metrics, Admin since 1.0.0.18) carries its own class, and the first of
+ * them is the one pushed to the far side, so the three sit together after a gap.
+ */
+function tabClass(section: IAppSection, firstOfEnd: boolean): string {
+  const classes: string[] = ['ai-app-tab'];
+  if (section.end === true) {
+    classes.push('ai-app-tab--end');
+  }
+  if (firstOfEnd) {
+    classes.push('ai-app-tab--end-first');
+  }
+  if (section.id === 'admin') {
+    classes.push('ai-app-tab--admin');
+  }
+  return classes.join(' ');
 }
 
 /**
@@ -447,27 +496,86 @@ interface IStarter {
   description: string;
 }
 
+/**
+ * Each form's own tone (1.0.0.18), drawn from the palette: idea teal, tool check blue, team use navy (the palette has no
+ * violet), help gold, outcome green, feedback slate. The icon is the form's own.
+ */
+const STARTER_TONES: { [id in IStarter['id']]: string } = {
+  idea: 'teal',
+  toolCheck: 'blue',
+  teamUsage: 'navy',
+  helpTraining: 'gold',
+  outcome: 'green',
+  feedback: 'slate'
+};
+
+/** The request forms, stacked down the right of Requests (1.0.0.18: Register team AI use moved here from Improvement). */
 const ENGINEERING_STARTERS: readonly IStarter[] = [
   { id: 'idea', title: 'Explore an AI idea', description: 'Describe something you would like AI to help with and get a summary the AI CoE can act on.' },
   { id: 'toolCheck', title: 'Check a tool or task', description: 'Find out whether a tool or a task is allowed, and what to do if it is not.' },
+  { id: 'teamUsage', title: 'Register team AI use', description: 'Tell the AI CoE how your team is already using AI, so it is counted and supported.' },
   { id: 'helpTraining', title: 'Get help or training', description: 'Ask for help with something specific, or for training for you or your team.' }
 ];
 
 const IMPROVEMENT_STARTERS: readonly IStarter[] = [
-  { id: 'teamUsage', title: 'Register team AI use', description: 'Tell the AI CoE how your team is already using AI, so it is counted and supported.' },
   { id: 'outcome', title: 'Record a task outcome', description: 'Say how one AI task turned out. Every answer is a choice; nothing you typed or produced is saved.' },
   { id: 'feedback', title: 'Share feedback', description: 'Tell the AI CoE what is not working, or what should exist and does not.' }
 ];
 
+/**
+ * Which of these starters have a saved draft, read from the store each time the starters are drawn (so after a form
+ * is left, too). Opening the starter resumes the draft; this only says that there is one to resume.
+ */
+function useSavedDrafts(starters: readonly IStarter[]): { [id: string]: boolean } {
+  const { draftStore } = useFrontDoor().services;
+  const [saved, setSaved] = React.useState<{ [id: string]: boolean }>({});
+  React.useEffect((): (() => void) => {
+    let cancelled: boolean = false;
+    const discover = async (): Promise<void> => {
+      for (const starter of starters) {
+        let draft: unknown;
+        try {
+          draft = await draftStore.load<unknown>(starter.id);
+        } catch {
+          draft = undefined;
+        }
+        if (cancelled) {
+          return;
+        }
+        if (draft !== undefined) {
+          setSaved((current: { [id: string]: boolean }): { [id: string]: boolean } => ({ ...current, [starter.id]: true }));
+        }
+      }
+    };
+    void discover();
+    return (): void => {
+      cancelled = true;
+    };
+  }, [draftStore, starters]);
+  return saved;
+}
+
+function StarterIcon({ icon: Icon }: { icon: LucideIcon }): React.ReactElement {
+  return (
+    <span className="ai-app-starter-icon">
+      <Icon className="ai-app-starter-glyph" aria-hidden={true} />
+    </span>
+  );
+}
+
 function AppStarters({ kind, onStart }: { kind: 'engineering' | 'improvement'; onStart: (id: IStarter['id']) => void }): React.ReactElement {
   const starters: readonly IStarter[] = kind === 'engineering' ? ENGINEERING_STARTERS : IMPROVEMENT_STARTERS;
+  const saved: { [id: string]: boolean } = useSavedDrafts(starters);
+  const { catalog } = useFrontDoor();
   return (
     <ul className={kind === 'improvement' ? 'ai-app-starters ai-app-starters--spaced' : 'ai-app-starters ai-app-starters--engineering'}>
       {starters.map((starter: IStarter): React.ReactElement => (
-        <li key={starter.id} className="ai-app-starter">
+        <li key={starter.id} className={`ai-app-starter ai-app-starter--${STARTER_TONES[starter.id]}`}>
           <button type="button" className="ai-app-starter-button" onClick={(): void => onStart(starter.id)}>
+            <StarterIcon icon={starter.id === 'outcome' ? OUTCOME_WORKFLOW.icon : catalog[starter.id].icon} />
             <span className="ai-app-starter-title">{starter.title}</span>
             <span className="ai-app-starter-text">{starter.description}</span>
+            {saved[starter.id] === true && <span className="ai-app-draft-badge">Resume draft</span>}
           </button>
         </li>
       ))}

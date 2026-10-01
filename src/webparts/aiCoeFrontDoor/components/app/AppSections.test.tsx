@@ -1,8 +1,9 @@
 import * as React from 'react';
 import * as fs from 'fs';
 import * as path from 'path';
-import { act, fireEvent, waitFor } from '@testing-library/react';
+import { act, fireEvent, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { InMemoryDraftStore } from '../../../../testing/fakeServices';
 import { renderWithFrontDoor } from '../../../../testing/renderWithFrontDoor';
 import { AppShell } from './AppShell';
 
@@ -13,42 +14,40 @@ async function shell(): Promise<ReturnType<typeof renderWithFrontDoor>> {
 }
 
 describe('same-app measurement and teaching entry', () => {
-  it.each(['Explore an AI idea', 'Check a tool or task', 'Get help or training'])('centers only the Engineering form for %s', async starter => {
+  it.each(['Explore an AI idea', 'Check a tool or task', 'Register team AI use', 'Get help or training'])('centers only the Requests form for %s', async starter => {
     const view = renderWithFrontDoor(<AppShell settings={{ view: 'app', layout: 'wide', pages: {} }} />);
     await act(async (): Promise<void> => undefined);
-    fireEvent.click(view.getByRole('tab', { name: 'Engineering', exact: true }));
+    fireEvent.click(view.getByRole('tab', { name: 'Requests', exact: true }));
     expect(view.container.querySelector('.ai-workflow-shell')).toBeNull();
-    expect(view.container.querySelectorAll('.ai-app-starters--engineering .ai-app-starter')).toHaveLength(3);
+    expect(view.container.querySelectorAll('.ai-app-starters--engineering .ai-app-starter')).toHaveLength(4);
     fireEvent.click(view.getByRole('button', { name: (name: string): boolean => name.startsWith(starter) }));
     await waitFor(() => expect(view.container.querySelector('.overture-card')).not.toBeNull());
     const card = view.container.querySelector('.overture-card');
     expect(card?.closest('.ai-workflow-shell')).not.toBeNull();
     expect(view.container.querySelectorAll('.ai-workflow-shell')).toHaveLength(1);
-    expect(view.getByRole('heading', { name: 'Engineering', exact: true }).closest('.ai-workflow-shell')).toBeNull();
+    expect(view.getByRole('heading', { name: 'Requests', exact: true }).closest('.ai-workflow-shell')).toBeNull();
     expect(view.getByRole('tablist').closest('.ai-workflow-shell')).toBeNull();
     expect(view.governance.submissions).toHaveLength(0);
-    fireEvent.click(view.getByRole('tab', { name: 'Engineering', exact: true }));
+    fireEvent.click(view.getByRole('tab', { name: 'Requests', exact: true }));
     expect(view.container.querySelector('.ai-workflow-shell')).toBeNull();
-    expect(view.container.querySelectorAll('.ai-app-starters--engineering .ai-app-starter')).toHaveLength(3);
+    expect(view.container.querySelectorAll('.ai-app-starters--engineering .ai-app-starter')).toHaveLength(4);
   });
 
 
-  it('restores only the team registration form to its previous centered workflow width', async () => {
+  it.each(['Record a task outcome', 'Share feedback'])('centers only the Improvement form for %s', async starter => {
     const view = await shell();
     fireEvent.click(view.getByRole('tab', { name: 'Improvement' }));
     expect(view.container.querySelector('.ai-workflow-shell')).toBeNull();
-    fireEvent.click(view.getByRole('button', { name: /^Register team AI use/ }));
-    await waitFor(() => expect(view.container.querySelector('.overture-card')).not.toBeNull());
-    const card = view.container.querySelector('.overture-card');
-    expect(card?.closest('.ai-workflow-shell')).not.toBeNull();
+    fireEvent.click(view.getByRole('button', { name: (name: string): boolean => name.startsWith(starter) }));
+    await waitFor(() => expect(view.container.querySelector('.ai-app-starters')).toBeNull());
+    const shells: NodeListOf<Element> = view.container.querySelectorAll('.ai-workflow-shell');
+    expect(shells).toHaveLength(1);
+    expect(shells[0].querySelector('button, input, textarea, select')).not.toBeNull();
     expect(view.getByRole('heading', { name: 'Improvement', exact: true }).closest('.ai-workflow-shell')).toBeNull();
     expect(view.getByRole('tablist').closest('.ai-workflow-shell')).toBeNull();
     const styles = fs.readFileSync(path.join(process.cwd(), 'src/webparts/aiCoeFrontDoor/styles/frontDoor.global.scss'), 'utf8');
     expect(styles).toMatch(/\.ai-workflow-shell\s*\{[^}]*margin:\s*0 auto;[^}]*max-width:\s*48rem;/);
     fireEvent.click(view.getByRole('tab', { name: 'Improvement' }));
-    expect(view.container.querySelector('.ai-workflow-shell')).toBeNull();
-    fireEvent.click(view.getByRole('button', { name: /^Record a task outcome/ }));
-    await waitFor(() => expect(view.getByText('What kind of task was it?')).toBeInTheDocument());
     expect(view.container.querySelector('.ai-workflow-shell')).toBeNull();
   });
 
@@ -56,7 +55,7 @@ describe('same-app measurement and teaching entry', () => {
   it('pads the Improvement starter row above its cards without narrowing the overview', async () => {
     const view = await shell();
     fireEvent.click(view.getByRole('tab', { name: 'Improvement' }));
-    const row = view.getByRole('button', { name: /^Register team AI use/ }).closest('ul');
+    const row = view.getByRole('button', { name: /^Record a task outcome/ }).closest('ul');
     expect(row).toHaveClass('ai-app-starters--spaced');
     expect(row?.closest('.ai-workflow-shell')).toBeNull();
     const styles = fs.readFileSync(path.join(process.cwd(), 'src/webparts/aiCoeFrontDoor/styles/appShell.global.scss'), 'utf8');
@@ -64,9 +63,33 @@ describe('same-app measurement and teaching entry', () => {
   });
 
 
+  it('marks the starters that have a saved draft, and opening one resumes it', async () => {
+    const draftStore: InMemoryDraftStore = new InMemoryDraftStore();
+    await draftStore.save('idea', { answers: { workToImprove: 'Weekly status reports' }, currentStepId: 'workToImprove', phase: 'form' });
+    await draftStore.save('feedback', { answers: {}, currentStepId: 'feedbackType', phase: 'form' });
+    const view = renderWithFrontDoor(<AppShell settings={{ view: 'app', layout: 'wide', pages: {} }} />, { draftStore });
+    await act(async (): Promise<void> => undefined);
+
+    fireEvent.click(view.getByRole('tab', { name: 'Requests', exact: true }));
+    const idea: HTMLElement = await view.findByRole('button', { name: /^Explore an AI idea.*Resume draft$/ });
+    expect(within(idea).getByText('Resume draft')).toHaveClass('ai-app-draft-badge');
+    expect(within(view.getByRole('button', { name: /^Check a tool or task/ })).queryByText('Resume draft')).toBeNull();
+    expect(within(view.getByRole('button', { name: /^Get help or training/ })).queryByText('Resume draft')).toBeNull();
+
+    fireEvent.click(view.getByRole('tab', { name: 'Improvement' }));
+    const feedback: HTMLElement = await view.findByRole('button', { name: /^Share feedback.*Resume draft$/ });
+    expect(within(feedback).getByText('Resume draft')).toBeInTheDocument();
+    expect(view.getAllByText('Resume draft')).toHaveLength(1);
+
+    fireEvent.click(view.getByRole('tab', { name: 'Requests', exact: true }));
+    fireEvent.click(await view.findByRole('button', { name: /^Explore an AI idea.*Resume draft$/ }));
+    expect(await view.findByDisplayValue('Weekly status reports')).toBeInTheDocument();
+  });
+
   it('adds top padding to the Cases explanation row, not inside its cards', async () => {
     const view = await shell();
     fireEvent.click(view.getByRole('tab', { name: 'Cases' }));
+    fireEvent.click(view.getByRole('button', { name: 'What is going on?' }));
     const row = view.getByRole('heading', { name: 'What happens to a request' }).closest('.ai-app-split');
     expect(row).toHaveClass('ai-app-cases-explanation');
     expect(row).toContainElement(view.getByRole('heading', { name: 'Truth controls' }));
@@ -74,20 +97,23 @@ describe('same-app measurement and teaching entry', () => {
     expect(styles).toMatch(/\.ai-app-cases-explanation\s*\{\s*padding-top:\s*24px;/);
   });
 
-  it.each(['wide', 'narrow'] as const)('pads the Engineering starter region vertically in the %s layout without changing the cards', async layout => {
+  it.each(['wide', 'narrow'] as const)('stacks the Requests forms beside My requests in the %s layout, one column when narrow', async layout => {
     const view = renderWithFrontDoor(<AppShell settings={{ view: 'app', layout, pages: {} }} />);
     await act(async () => undefined);
-    fireEvent.click(view.getByRole('tab', { name: 'Engineering' }));
+    fireEvent.click(view.getByRole('tab', { name: 'Requests' }));
     const starters = view.container.querySelector('.ai-app-starters--engineering');
     expect(starters).not.toBeNull();
-    expect(starters?.querySelectorAll('.ai-app-starter-button')).toHaveLength(3);
+    expect(starters?.querySelectorAll('.ai-app-starter-button')).toHaveLength(4);
+    expect(starters?.closest('.ai-app-requests-start')).not.toBeNull();
     expect(Array.from(starters?.querySelectorAll('.ai-app-starter-title') ?? []).map(node => node.textContent)).toEqual([
-      'Explore an AI idea', 'Check a tool or task', 'Get help or training'
+      'Explore an AI idea', 'Check a tool or task', 'Register team AI use', 'Get help or training'
     ]);
     const styles = fs.readFileSync(path.join(process.cwd(), 'src/webparts/aiCoeFrontDoor/styles/appShell.global.scss'), 'utf8');
-    expect(styles).toMatch(/\.ai-app-starters--engineering\s*\{\s*padding-block:\s*24px;\s*\}/);
-    expect(styles).toMatch(/\.ai-view--app\.ai-view--narrow\s*\{[^}]*\.ai-app-starters,[^}]*grid-template-columns:\s*minmax\(0, 1fr\)/);
-    expect(styles).toMatch(/@media \(max-width: 720px\)\s*\{[^}]*\.ai-app-starters,[^}]*grid-template-columns:\s*minmax\(0, 1fr\)/);
+    // Two columns, My requests the wider one; the forms stack in one column; narrow and small screens get one column.
+    expect(styles).toMatch(/\.ai-app-requests\s*\{[^}]*display:\s*grid;[^}]*grid-template-columns:\s*minmax\(0, 1\.35fr\) minmax\(280px, 1fr\);/);
+    expect(styles).toMatch(/\.ai-app-starters--engineering\s*\{[^}]*grid-template-columns:\s*minmax\(0, 1fr\);/);
+    expect(styles).toMatch(/\.ai-view--app\.ai-view--narrow\s*\{[^}]*\.ai-app-requests\s*\{[^}]*grid-template-columns:\s*minmax\(0, 1fr\)/);
+    expect(styles).toMatch(/@media \(max-width: 720px\)\s*\{[^}]*\.ai-app-requests\s*\{[^}]*grid-template-columns:\s*minmax\(0, 1fr\)/);
     fireEvent.click(view.getByRole('button', { name: /Check a tool or task/ }));
     await waitFor(() => expect(view.container.querySelector('.ai-app-starters')).toBeNull());
     expect(view.governance.submissions).toHaveLength(0);
@@ -110,7 +136,7 @@ describe('same-app measurement and teaching entry', () => {
 
   it('opens source, role, stop and recovery quick-start guidance from Engineering without a private source link', async () => {
     const view = await shell();
-    fireEvent.click(view.getByRole('tab', { name: 'Engineering' }));
+    fireEvent.click(view.getByRole('tab', { name: 'Requests' }));
     const guide = view.getByRole('button', { name: 'Getting started: safe task and review' });
     expect(guide).toHaveAttribute('aria-expanded', 'false');
     fireEvent.click(guide);
@@ -131,6 +157,7 @@ describe('same-app measurement and teaching entry', () => {
     const view = await shell();
     fireEvent.click(view.getByRole('tab', { name: 'Improvement' }));
     fireEvent.click(view.getByRole('button', { name: 'Getting started: safe task and review' }));
+    fireEvent.click(view.getByRole('button', { name: 'What is going on?' }));
     expect(view.getByText(/No automatic policy change/)).toBeInTheDocument();
     fireEvent.click(view.getByRole('button', { name: /Record a task outcome/ }));
     await waitFor(() => expect(view.getByText('What kind of task was it?')).toBeInTheDocument());
@@ -143,6 +170,7 @@ describe('same-app measurement and teaching entry', () => {
     expect(view.queryByRole('button', { name: /Operator commissioning/ })).toBeNull();
     expect(view.queryByRole('region', { name: /Operator commissioning/ })).toBeNull();
     expect(view.container.textContent).not.toContain('aggregate-workflow-outcomes.cjs');
+    fireEvent.click(view.getByRole('button', { name: 'What is going on?' }));
     expect(view.getByText(/No automatic policy change/)).toBeInTheDocument();
     expect(view.getByText(/retest receipt/)).toBeInTheDocument();
     fireEvent.click(view.getByRole('button', { name: /Share feedback/ }));
