@@ -1,0 +1,390 @@
+{
+  "AI CoE Use Cases": [
+    {
+      "title": "CoEID",
+      "internalName": "CoEID",
+      "fieldTypeKind": 2
+    },
+    {
+      "title": "Submitter Email",
+      "internalName": "SubmitterEmail",
+      "fieldTypeKind": 2
+    },
+    {
+      "title": "Business Problem",
+      "internalName": "BusinessProblem",
+      "fieldTypeKind": 3
+    },
+    {
+      "title": "Business Owner Email",
+      "internalName": "BusinessOwnerEmail",
+      "fieldTypeKind": 2
+    },
+    {
+      "title": "Data Sensitivity",
+      "internalName": "DataSensitivity",
+      "fieldTypeKind": 2
+    },
+    {
+      "title": "External Users",
+      "internalName": "ExternalUsers",
+      "fieldTypeKind": 8
+    },
+    {
+      "title": "Autonomous Actions",
+      "internalName": "AutonomousActions",
+      "fieldTypeKind": 8
+    },
+    {
+      "title": "Estimated Monthly Cost",
+      "internalName": "EstimatedMonthlyCost",
+      "fieldTypeKind": 9
+    },
+    {
+      "title": "Status",
+      "internalName": "Status",
+      "fieldTypeKind": 2
+    },
+    {
+      "title": "Risk Tier",
+      "internalName": "RiskTier",
+      "fieldTypeKind": 2
+    },
+    {
+      "title": "Approver Email",
+      "internalName": "ApproverEmail",
+      "fieldTypeKind": 2
+    },
+    {
+      "title": "Approval Requested",
+      "internalName": "ApprovalRequested",
+      "fieldTypeKind": 8
+    },
+    {
+      "title": "Approval Outcome",
+      "internalName": "ApprovalOutcome",
+      "fieldTypeKind": 2
+    },
+    {
+      "title": "Approval Comments",
+      "internalName": "ApprovalComments",
+      "fieldTypeKind": 3
+    },
+    {
+      "title": "Intake Processed",
+      "internalName": "IntakeProcessed",
+      "fieldTypeKind": 8
+    },
+    {
+      "title": "Triage Complete",
+      "internalName": "TriageComplete",
+      "fieldTypeKind": 8
+    },
+    {
+      "title": "Next Review Date",
+      "internalName": "NextReviewDate",
+      "fieldTypeKind": 4
+    },
+    {
+      "title": "Last Status Changed",
+      "internalName": "LastStatusChanged",
+      "fieldTypeKind": 4
+    },
+    {
+      "title": "Pilot Measure",
+      "internalName": "PilotMeasure",
+      "fieldTypeKind": 3
+    }
+  ],
+  "AI CoE Actions": [
+    {
+      "title": "Use Case ID",
+      "internalName": "UseCaseID",
+      "fieldTypeKind": 2
+    },
+    {
+      "title": "Owner Email",
+      "internalName": "OwnerEmail",
+      "fieldTypeKind": 2
+    },
+    {
+      "title": "Due Date",
+      "internalName": "DueDate",
+      "fieldTypeKind": 4
+    },
+    {
+      "title": "Status",
+      "internalName": "Status",
+      "fieldTypeKind": 2
+    },
+    {
+      "title": "Action Type",
+      "internalName": "ActionType",
+      "fieldTypeKind": 2
+    },
+    {
+      "title": "Details",
+      "internalName": "Details",
+      "fieldTypeKind": 3
+    }
+  ],
+  "AI CoE Decisions": [
+    {
+      "title": "Use Case ID",
+      "internalName": "UseCaseID",
+      "fieldTypeKind": 2
+    },
+    {
+      "title": "Decision",
+      "internalName": "Decision",
+      "fieldTypeKind": 2
+    },
+    {
+      "title": "Approver Email",
+      "internalName": "ApproverEmail",
+      "fieldTypeKind": 2
+    },
+    {
+      "title": "Decision Date",
+      "internalName": "DecisionDate",
+      "fieldTypeKind": 4
+    },
+    {
+      "title": "Comments",
+      "internalName": "Comments",
+      "fieldTypeKind": 3
+    }
+  ],
+  "AI Usage Daily": [
+    {
+      "title": "Provider",
+      "internalName": "Provider",
+      "fieldTypeKind": 2
+    },
+    {
+      "title": "Metric Type",
+      "internalName": "MetricType",
+      "fieldTypeKind": 2
+    },
+    {
+      "title": "Bucket Start Epoch",
+      "internalName": "BucketStartEpoch",
+      "fieldTypeKind": 9
+    },
+    {
+      "title": "Bucket Start",
+      "internalName": "BucketStart",
+      "fieldTypeKind": 4
+    },
+    {
+      "title": "Bucket End Epoch",
+      "internalName": "BucketEndEpoch",
+      "fieldTypeKind": 9
+    },
+    {
+      "title": "Project ID",
+      "internalName": "ProjectId",
+      "fieldTypeKind": 2
+    },
+    {
+      "title": "API Key ID",
+      "internalName": "ApiKeyId",
+      "fieldTypeKind": 2
+    },
+    {
+      "title": "Model",
+      "internalName": "Model",
+      "fieldTypeKind": 2
+    },
+    {
+      "title": "Line Item",
+      "internalName": "LineItem",
+      "fieldTypeKind": 2
+    },
+    {
+      "title": "Requests",
+      "internalName": "Requests",
+      "fieldTypeKind": 9
+    },
+    {
+      "title": "Input Tokens",
+      "internalName": "InputTokens",
+      "fieldTypeKind": 9
+    },
+    {
+      "title": "Output Tokens",
+      "internalName": "OutputTokens",
+      "fieldTypeKind": 9
+    },
+    {
+      "title": "Amount",
+      "internalName": "Amount",
+      "fieldTypeKind": 9
+    },
+    {
+      "title": "Currency",
+      "internalName": "Currency",
+      "fieldTypeKind": 2
+    },
+    {
+      "title": "Composite Key",
+      "internalName": "CompositeKey",
+      "fieldTypeKind": 2
+    }
+  ],
+  "AI CoE Budgets": [
+    {
+      "title": "Provider",
+      "internalName": "Provider",
+      "fieldTypeKind": 2
+    },
+    {
+      "title": "Period",
+      "internalName": "Period",
+      "fieldTypeKind": 2
+    },
+    {
+      "title": "Threshold Value",
+      "internalName": "ThresholdValue",
+      "fieldTypeKind": 9
+    },
+    {
+      "title": "Warning Percent",
+      "internalName": "WarningPercent",
+      "fieldTypeKind": 9
+    },
+    {
+      "title": "Active",
+      "internalName": "Active",
+      "fieldTypeKind": 8
+    }
+  ],
+  "AI Benefits Reviews": [
+    {
+      "title": "Use Case ID",
+      "internalName": "UseCaseID",
+      "fieldTypeKind": 2
+    },
+    {
+      "title": "Review Period",
+      "internalName": "ReviewPeriod",
+      "fieldTypeKind": 2
+    },
+    {
+      "title": "Estimated Hours Saved",
+      "internalName": "EstimatedHoursSaved",
+      "fieldTypeKind": 9
+    },
+    {
+      "title": "Actual Hours Saved",
+      "internalName": "ActualHoursSaved",
+      "fieldTypeKind": 9
+    },
+    {
+      "title": "Quality Outcome",
+      "internalName": "QualityOutcome",
+      "fieldTypeKind": 3
+    },
+    {
+      "title": "Evidence URL",
+      "internalName": "EvidenceUrl",
+      "fieldTypeKind": 2
+    },
+    {
+      "title": "Review Date",
+      "internalName": "ReviewDate",
+      "fieldTypeKind": 4
+    }
+  ],
+  "AI CoE Incidents": [
+    {
+      "title": "Category",
+      "internalName": "Category",
+      "fieldTypeKind": 2
+    },
+    {
+      "title": "Severity",
+      "internalName": "Severity",
+      "fieldTypeKind": 2
+    },
+    {
+      "title": "Status",
+      "internalName": "Status",
+      "fieldTypeKind": 2
+    },
+    {
+      "title": "Use Case ID",
+      "internalName": "UseCaseID",
+      "fieldTypeKind": 2
+    },
+    {
+      "title": "Provider",
+      "internalName": "Provider",
+      "fieldTypeKind": 2
+    },
+    {
+      "title": "Detected At",
+      "internalName": "DetectedAt",
+      "fieldTypeKind": 4
+    },
+    {
+      "title": "Details",
+      "internalName": "Details",
+      "fieldTypeKind": 3
+    },
+    {
+      "title": "Owner Email",
+      "internalName": "OwnerEmail",
+      "fieldTypeKind": 2
+    },
+    {
+      "title": "Resolution",
+      "internalName": "Resolution",
+      "fieldTypeKind": 3
+    }
+  ],
+  "AI Automation Log": [
+    {
+      "title": "Flow Name",
+      "internalName": "FlowName",
+      "fieldTypeKind": 2
+    },
+    {
+      "title": "Run ID",
+      "internalName": "RunId",
+      "fieldTypeKind": 2
+    },
+    {
+      "title": "Status",
+      "internalName": "Status",
+      "fieldTypeKind": 2
+    },
+    {
+      "title": "Occurred At",
+      "internalName": "OccurredAt",
+      "fieldTypeKind": 4
+    },
+    {
+      "title": "Details",
+      "internalName": "Details",
+      "fieldTypeKind": 3
+    },
+    {
+      "title": "Record ID",
+      "internalName": "RecordID",
+      "fieldTypeKind": 2
+    }
+  ],
+  "AI CoE Configuration": [
+    {
+      "title": "Value",
+      "internalName": "Value",
+      "fieldTypeKind": 3
+    },
+    {
+      "title": "Description",
+      "internalName": "Description",
+      "fieldTypeKind": 3
+    }
+  ]
+}

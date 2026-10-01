@@ -1,0 +1,157 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "workflowId",
+    "requestId",
+    "demoDataOnly",
+    "answers"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "type": "string",
+      "enum": [
+        "1.0"
+      ]
+    },
+    "workflowId": {
+      "type": "string",
+      "enum": [
+        "idea"
+      ]
+    },
+    "requestId": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 80,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,79}$"
+    },
+    "demoDataOnly": {
+      "type": "boolean",
+      "enum": [
+        true
+      ]
+    },
+    "answers": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "workToImprove": {
+          "type": "string",
+          "maxLength": 1000,
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "painPoints": {
+          "type": "string",
+          "maxLength": 1000,
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "peopleInvolved": {
+          "type": "string",
+          "maxLength": 1000,
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "systemsInvolved": {
+          "type": "string",
+          "maxLength": 1000
+        },
+        "informationUsed": {
+          "type": "string",
+          "maxLength": 1000
+        },
+        "aiToolName": {
+          "type": "string",
+          "maxLength": 1000
+        },
+        "desiredOutcome": {
+          "type": "string",
+          "maxLength": 1000,
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "successMeasure": {
+          "type": "string",
+          "maxLength": 1000
+        },
+        "deadlineSponsorDetail": {
+          "type": "string",
+          "maxLength": 1000
+        },
+        "anythingElse": {
+          "type": "string",
+          "maxLength": 1000
+        },
+        "frequency": {
+          "type": "string",
+          "enum": [
+            "daily",
+            "weekly",
+            "monthly",
+            "rarely",
+            "unsure"
+          ]
+        },
+        "timeSpent": {
+          "type": "string",
+          "enum": [
+            "minutes",
+            "underHour",
+            "hours",
+            "mostOfDay",
+            "varies",
+            "unsure"
+          ]
+        },
+        "informationCategories": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 7,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "enum": [
+              "public",
+              "internal",
+              "employee",
+              "customer",
+              "patient",
+              "otherConfidential",
+              "unsure"
+            ]
+          }
+        },
+        "aiAlreadyUsed": {
+          "type": "string",
+          "enum": [
+            "yes",
+            "no",
+            "unsure"
+          ]
+        },
+        "hasDeadlineSponsor": {
+          "type": "string",
+          "enum": [
+            "yes",
+            "no",
+            "unsure"
+          ]
+        }
+      },
+      "required": [
+        "workToImprove",
+        "painPoints",
+        "peopleInvolved",
+        "frequency",
+        "timeSpent",
+        "informationCategories",
+        "aiAlreadyUsed",
+        "desiredOutcome",
+        "hasDeadlineSponsor"
+      ]
+    }
+  }
+}

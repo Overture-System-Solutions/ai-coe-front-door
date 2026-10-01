@@ -1,0 +1,13 @@
+2026-09-10 13:40:32.006 - Info	
+Extracting /home/far_cdx/.hermes/workspaces/oss-cloudwave-demo-solution/evidence/original-layout.zip to /home/far_cdx/.hermes/workspaces/oss-cloudwave-demo-solution/original-unpacked
+
+2026-09-10 13:40:32.051 - Info	Skipping localization
+2026-09-10 13:40:32.052 - Info	Processing Component: Workflows
+2026-09-10 13:40:32.053 - Info	 - AI CoE — Intake Processing
+2026-09-10 13:40:32.056 - Info	 - AI CoE — Review and Decision
+2026-09-10 13:40:32.056 - Info	 - AI CoE — SharePoint Provisioning
+2026-09-10 13:40:32.056 - Info	 - AI CoE — Triage and Routing
+2026-09-10 13:40:32.056 - Info	 - AI CoE — Weekly Portfolio Control
+2026-09-10 13:40:32.059 - Info	
+Unmanaged Extract complete.
+

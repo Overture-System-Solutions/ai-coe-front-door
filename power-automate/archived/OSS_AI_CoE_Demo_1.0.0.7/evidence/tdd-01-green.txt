@@ -1,0 +1,6 @@
+test_01_all_sharepoint_operations_target_oss_demo (__main__.SolutionTests.test_01_all_sharepoint_operations_target_oss_demo) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 0.002s
+
+OK

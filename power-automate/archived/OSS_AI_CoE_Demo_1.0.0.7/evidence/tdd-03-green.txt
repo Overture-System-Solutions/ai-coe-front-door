@@ -1,0 +1,8 @@
+test_01_all_sharepoint_operations_target_oss_demo (__main__.SolutionTests.test_01_all_sharepoint_operations_target_oss_demo) ... ok
+test_02_demo_routes_all_notifications_and_approvals_only_to_sam (__main__.SolutionTests.test_02_demo_routes_all_notifications_and_approvals_only_to_sam) ... ok
+test_03_preserve_front_door_id_through_intake_and_receipt (__main__.SolutionTests.test_03_preserve_front_door_id_through_intake_and_receipt) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.004s
+
+OK

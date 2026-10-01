@@ -1,0 +1,92 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "urn:aicoe:marketing:controlled-inputs:v1",
+  "title": "Offline non-authorizing Marketing controlled inputs; NOT approval evidence",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["kind", "siteUrl", "records"],
+  "properties": {
+    "kind": {"const": "marketing.bootstrap-input.v1"},
+    "siteUrl": {"$ref": "#/definitions/site"},
+    "records": {"type": "array", "maxItems": 100, "items": {"oneOf": [
+      {"$ref": "#/definitions/member"}, {"$ref": "#/definitions/authority"},
+      {"$ref": "#/definitions/source"}, {"$ref": "#/definitions/qualification"},
+      {"$ref": "#/definitions/receipt"}
+    ]}}
+  },
+  "definitions": {
+    "text": {"type": "string", "minLength": 1, "maxLength": 2000, "pattern": "\\S"},
+    "id": {"type": "string", "pattern": "^[A-Za-z0-9_-]{1,200}$"},
+    "actor": {"type": "string", "minLength": 3, "maxLength": 320, "pattern": "^[^\\s@]+@[^\\s@]+$"},
+    "hash": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "utc": {"type": "string", "format": "date-time", "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d{1,3})?Z$"},
+    "site": {"type": "string", "pattern": "^https://[^\\s/?#@]+\\.sharepoint\\.com/(sites|teams)/[A-Za-z0-9_-]+$"},
+    "member": {
+      "type": "object", "additionalProperties": false, "required": ["Key", "Value"],
+      "properties": {
+        "Key": {"type": "string", "pattern": "^member:[1-9][0-9]{0,9}$"},
+        "Value": {"type": "object", "additionalProperties": false, "required": ["enabled", "actorId", "roles", "workIds", "audience"], "properties": {
+          "enabled": {"const": false}, "actorId": {"$ref": "#/definitions/actor"},
+          "roles": {"type": "array", "maxItems": 3, "uniqueItems": true, "items": {"enum": ["employee", "marketingParticipant", "marketingReviewer"]}},
+          "workIds": {"type": "array", "maxItems": 500, "uniqueItems": true, "items": {"type": "string", "pattern": "^CW-[A-Z0-9_-]{2,124}$"}},
+          "audience": {"$ref": "#/definitions/text"}
+        }}
+      }
+    },
+    "authority": {
+      "type": "object", "additionalProperties": false, "required": ["Key", "Value"],
+      "properties": {
+        "Key": {"type": "string", "pattern": "^authority:[A-Za-z0-9_-]{1,200}$"},
+        "Value": {"type": "object", "additionalProperties": false, "required": ["bindingRef", "actorId", "label", "scope", "expiresAt", "synthetic", "tenantScope", "revoked"], "properties": {
+          "bindingRef": {"$ref": "#/definitions/id"}, "actorId": {"$ref": "#/definitions/actor"}, "label": {"$ref": "#/definitions/text"},
+          "scope": {"type": "array", "minItems": 1, "maxItems": 5, "uniqueItems": true, "items": {"enum": ["sourceRegister", "strategyVoice", "copyChannel", "meetingDecisionsActions", "communicationsSend"]}},
+          "expiresAt": {"$ref": "#/definitions/utc"}, "synthetic": {"const": false}, "tenantScope": {"$ref": "#/definitions/site"}, "revoked": {"const": true}
+        }}
+      }
+    },
+    "entry": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "location", "versionOrETag", "owner", "asOf", "classification", "audience", "mayNotProve"],
+      "properties": {
+        "id": {"$ref": "#/definitions/id"}, "location": {"type": "string", "maxLength": 2000, "pattern": "^https://[^\\s?#@]+\\.(txt|md)$"},
+        "versionOrETag": {"$ref": "#/definitions/text"}, "owner": {"$ref": "#/definitions/text"},
+        "asOf": {"type": "string", "format": "date", "pattern": "^\\d{4}-\\d{2}-\\d{2}$"},
+        "classification": {"$ref": "#/definitions/text"}, "audience": {"$ref": "#/definitions/text"},
+        "mayNotProve": {"type": "string", "maxLength": 2000}
+      }
+    },
+    "source": {
+      "type": "object", "additionalProperties": false, "required": ["Key", "Value"],
+      "properties": {
+        "Key": {"type": "string", "pattern": "^source:[A-Za-z0-9_-]{1,200}$"},
+        "Value": {"type": "object", "additionalProperties": false, "required": ["entry", "actors", "purposes", "audiences", "contentHash", "revoked"], "properties": {
+          "entry": {"$ref": "#/definitions/entry"},
+          "actors": {"type": "array", "maxItems": 200, "uniqueItems": true, "items": {"$ref": "#/definitions/actor"}},
+          "purposes": {"type": "array", "maxItems": 3, "uniqueItems": true, "items": {"enum": ["campaignBrief", "contentPlan", "meetingFollowThrough"]}},
+          "audiences": {"type": "array", "maxItems": 200, "uniqueItems": true, "items": {"$ref": "#/definitions/text"}},
+          "contentHash": {"$ref": "#/definitions/hash"}, "revoked": {"const": true}
+        }}
+      }
+    },
+    "qualification": {
+      "type": "object", "additionalProperties": false, "required": ["Key", "Value"],
+      "properties": {
+        "Key": {"type": "string", "pattern": "^qualification:QUAL-[A-Za-z0-9_-]{1,190}$"},
+        "Value": {"type": "object", "additionalProperties": false, "required": ["result", "bindingHash", "expiresAt"], "properties": {
+          "result": {"const": "INCONCLUSIVE"}, "bindingHash": {"$ref": "#/definitions/hash"}, "expiresAt": {"$ref": "#/definitions/utc"}
+        }}
+      }
+    },
+    "receipt": {
+      "type": "object", "additionalProperties": false, "required": ["Key", "Value"],
+      "properties": {
+        "Key": {"type": "string", "pattern": "^receipt:[A-Za-z0-9_-]{1,200}$"},
+        "Value": {"type": "object", "additionalProperties": false, "required": ["receiptId", "operation", "targetRef", "payloadHash", "readbackHash", "result", "observedAt", "actorId"], "properties": {
+          "receiptId": {"$ref": "#/definitions/id"}, "operation": {"const": "approveSourceRegister"}, "targetRef": {"$ref": "#/definitions/text"},
+          "payloadHash": {"$ref": "#/definitions/hash"}, "readbackHash": {"type": "null"}, "result": {"enum": ["INCONCLUSIVE", "FAIL", "DENIED"]},
+          "observedAt": {"$ref": "#/definitions/utc"}, "actorId": {"$ref": "#/definitions/actor"}
+        }}
+      }
+    }
+  }
+}

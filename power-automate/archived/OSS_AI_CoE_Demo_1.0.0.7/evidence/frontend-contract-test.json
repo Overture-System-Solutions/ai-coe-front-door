@@ -1,0 +1,123 @@
+{
+  "status": "PASS",
+  "testBoundary": "Actual packaged JavaScript; HTTP responses are explicit local fixtures, not live APIs.",
+  "submissionCases": [
+    {
+      "workflow": "idea",
+      "postedLists": [
+        "https://osscontact.sharepoint.com/sites/CloudWaveDashboardDemo/_api/web/lists/getbytitle('AI CoE Pilot Intakes')/items",
+        "https://osscontact.sharepoint.com/sites/CloudWaveDashboardDemo/_api/web/lists/getbytitle('AI CoE Use Cases')/items"
+      ],
+      "recordCount": 2,
+      "sharesIntakeId": true
+    },
+    {
+      "workflow": "toolCheck-review-request",
+      "postedLists": [
+        "https://osscontact.sharepoint.com/sites/CloudWaveDashboardDemo/_api/web/lists/getbytitle('AI CoE Pilot Intakes')/items",
+        "https://osscontact.sharepoint.com/sites/CloudWaveDashboardDemo/_api/web/lists/getbytitle('AI CoE Use Cases')/items"
+      ],
+      "recordCount": 2,
+      "sharesIntakeId": true
+    },
+    {
+      "workflow": "teamUsage",
+      "postedLists": [
+        "https://osscontact.sharepoint.com/sites/CloudWaveDashboardDemo/_api/web/lists/getbytitle('AI CoE Pilot Intakes')/items",
+        "https://osscontact.sharepoint.com/sites/CloudWaveDashboardDemo/_api/web/lists/getbytitle('AI CoE Use Cases')/items"
+      ],
+      "recordCount": 2,
+      "sharesIntakeId": true
+    },
+    {
+      "workflow": "helpTraining",
+      "postedLists": [
+        "https://osscontact.sharepoint.com/sites/CloudWaveDashboardDemo/_api/web/lists/getbytitle('AI CoE Pilot Intakes')/items"
+      ],
+      "recordCount": 1,
+      "sharesIntakeId": true
+    },
+    {
+      "workflow": "feedback",
+      "postedLists": [
+        "https://osscontact.sharepoint.com/sites/CloudWaveDashboardDemo/_api/web/lists/getbytitle('AI CoE Pilot Intakes')/items"
+      ],
+      "recordCount": 1,
+      "sharesIntakeId": true
+    }
+  ],
+  "dashboardQueries": [
+    {
+      "name": "AI CoE Pilot Intakes",
+      "fields": [
+        "Id",
+        "Title",
+        "IntakeId",
+        "WorkflowType",
+        "PilotWorkflowVersion",
+        "Status",
+        "Priority",
+        "RequestorName",
+        "RequestorEmail",
+        "SubmittedAt",
+        "CompanyDataOrWorkflow",
+        "SensitiveOrRegulated",
+        "HumanReview",
+        "ToolName",
+        "RoutingOutcome",
+        "PayloadJson",
+        "PilotOnly",
+        "Created",
+        "Modified"
+      ],
+      "order": "SubmittedAt desc",
+      "top": 200
+    },
+    {
+      "name": "AI CoE Use Cases",
+      "fields": [
+        "Id",
+        "Title",
+        "CoEID",
+        "SubmitterEmail",
+        "BusinessProblem",
+        "BusinessOwnerEmail",
+        "DataSensitivity",
+        "ExternalUsers",
+        "AutonomousActions",
+        "EstimatedMonthlyCost",
+        "Status",
+        "RiskTier",
+        "ApproverEmail",
+        "ApprovalRequested",
+        "ApprovalOutcome",
+        "ApprovalComments",
+        "IntakeProcessed",
+        "TriageComplete",
+        "NextReviewDate",
+        "LastStatusChanged",
+        "PilotMeasure",
+        "Created",
+        "Modified"
+      ],
+      "order": "Created desc",
+      "top": 200
+    },
+    {
+      "name": "AI CoE Decisions",
+      "fields": [
+        "Id",
+        "Title",
+        "UseCaseID",
+        "Decision",
+        "ApproverEmail",
+        "DecisionDate",
+        "Comments",
+        "Created",
+        "Modified"
+      ],
+      "order": "DecisionDate desc",
+      "top": 100
+    }
+  ]
+}

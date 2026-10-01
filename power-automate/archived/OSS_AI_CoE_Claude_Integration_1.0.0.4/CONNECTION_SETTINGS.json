@@ -1,0 +1,11 @@
+{
+  "EnvironmentVariables": [],
+  "ConnectionReferences": [
+    {
+      "LogicalName": "cwdd_claudeintakedraftconnection",
+      "ConnectionId": "",
+      "ConnectorId": "/providers/Microsoft.PowerApps/apis/shared_cwdd-5foss-20claude-20intake-20draft-5f55b0e9f278ac89c6"
+    }
+  ],
+  "CopilotAgents": []
+}

@@ -1,0 +1,17 @@
+test_01_all_sharepoint_operations_target_oss_demo (__main__.SolutionTests.test_01_all_sharepoint_operations_target_oss_demo) ... FAIL
+
+======================================================================
+FAIL: test_01_all_sharepoint_operations_target_oss_demo (__main__.SolutionTests.test_01_all_sharepoint_operations_target_oss_demo)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/far_cdx/.hermes/workspaces/oss-cloudwave-demo-solution/test_solution.py", line 20, in test_01_all_sharepoint_operations_target_oss_demo
+    self.assertEqual(set(datasets),{SITE})
+AssertionError: Items in the first set but not the second:
+'https://osscontact.sharepoint.com/sites/AI-CoE-Lab'
+Items in the second set but not the first:
+'https://osscontact.sharepoint.com/sites/CloudWaveDashboardDemo'
+
+----------------------------------------------------------------------
+Ran 1 test in 0.002s
+
+FAILED (failures=1)

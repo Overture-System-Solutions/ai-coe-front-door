@@ -1,0 +1,129 @@
+OSS CloudWave Dashboard Demo — START HERE
+
+Import this file (leave it zipped):
+OSSCloudWaveDashboardDemo_1_0_0_7.zip
+
+Target site:
+https://osscontact.sharepoint.com/sites/CloudWaveDashboardDemo
+
+Demo reviewer and notification recipient:
+samuel.conrad@osscontact.com
+
+Compatible front-door package inspected:
+overture-ai-coe-front-door.sppkg — actual manifest version 1.0.0.7
+This ZIP contains the Power Automate side, not a replacement SharePoint app.
+
+YOUR NEXT STEPS
+
+1. Open https://make.powerautomate.com/ and choose the intended OSS TEST environment.
+   It needs Dataverse/solution support, appropriate import permissions and usable
+   SharePoint, Office 365 Outlook and Approvals connections. The SharePoint site
+   URL is NOT the Power Platform environment URL. If Solutions/import is missing
+   or the environment is unsuitable, ask the OSS Power Platform administrator.
+
+2. Choose Solutions > Import, and select OSSCloudWaveDashboardDemo_1_0_0_7.zip.
+   Expected solution: OSS CloudWave Dashboard Demo, version 1.0.0.7, unmanaged.
+   Bind the three references to your authorized OSS connections:
+      OSS Demo SharePoint       cwdd_sharedsharepointonline
+      OSS Demo Office 365 Outlook cwdd_sharedoffice365
+      OSS Demo Approvals        cwdd_sharedapprovals
+   Do not paste credentials or API keys into files. The optional generated
+   connection-settings-template.json is for CLI users; normal UI import binds
+   connections interactively and does not require editing that file.
+
+3. Verify all five new flows are OFF before testing. They have new IDs and
+   names beginning "OSS Demo" to avoid replacing Jordan's original flows.
+   Turn on ONLY "OSS Demo — SharePoint Provisioning" and run it manually once.
+   This creates missing core lists/fields in your specified existing demo site.
+   It does not create the site, change permissions or install a web part.
+   Confirm success in run history, then turn provisioning off again.
+   Existing field types are NOT automatically repaired: see schema-reference.json.
+   On any access/schema failure, stop and inspect it; do not repeatedly rerun blind.
+
+4. In SharePoint Site contents, verify AI CoE Use Cases, AI CoE Decisions and
+   AI CoE Configuration are present, along with the remaining core lists.
+   Check DefaultApproverEmail and NotificationEmail are the contact above.
+   Existing configuration rows are retained, so correct stale display values
+   yourself if necessary. Outbound recipients remain pinned to Sam in this demo
+   even if an existing row or a submitted email names another person.
+   Verify your account can add/edit cases and read decisions. The installed
+   1.0.0.7 app must also have its Pilot Intakes, Pilot Decisions and Policies.
+
+5. Turn on ONLY these three workflow flows:
+      OSS Demo — Intake Processing
+      OSS Demo — Triage and Routing
+      OSS Demo — Review and Decision
+   Leave Weekly Portfolio Control OFF unless you want its Monday 08:00 Eastern
+   email digest. No report is sent simply by packaging or creating this ZIP.
+
+6. On the existing 1.0.0.7 front door, choose the AI IDEA workflow and submit
+   one MADE-UP example. It should create a Pilot Intakes row and a Use Cases row
+   sharing the same OVT-AICOE identifier. The newer app already performs this
+   mapping for idea, toolCheck-review-request and teamUsage; no extra bridge flow
+   is included or needed for those routes. Help/training and feedback remain
+   service-queue items and are not forced through case approval.
+   Verify the Use Cases fields BusinessProblem, BusinessOwnerEmail and
+   DataSensitivity are populated. Use only non-sensitive synthetic data.
+
+7. Watch the flow run history: intake polls every 5 minutes, triage every 10,
+   and review every 15. Allow the chain time; it is not instant.
+   Approve the request as samuel.conrad@osscontact.com. Reopen the case and verify
+   its stable CoEID, Approved status, next-review date and AI CoE Decisions row.
+   Refresh the front door's admin dashboard. If its direct record link is wrong,
+   use Site contents to open the actual list item rather than assuming no save.
+   A manual test/run is fine for rehearsal, but disclose it in a live showcase.
+
+WHAT WAS CORRECTED
+
+- All SharePoint operations target CloudWaveDashboardDemo, not AI-CoE-Lab.
+- New solution/publisher, workflow IDs and connection-reference names isolate
+  this demo from the original solution's components in the same environment.
+- All emails and approval assignments are pinned to Sam; reassignment is off.
+  This is a demo containment choice, not production business-owner routing.
+- Intake preserves a nonempty CoEID from front door 1.0.0.7 and receipts use it.
+  The original flow always replaced that ID. The app also has a title-based
+  fallback association, but preserving its actual ID avoids relying on that.
+- Provisioning only creates a missing list/field after a successful empty lookup;
+  a permission error or timeout is no longer treated as evidence of absence.
+- Recurring runs and per-case/list loops are serialized to limit overlap during
+  this small demo. A waiting approval can hold later review work; respond promptly.
+- All workflow definitions are packaged OFF. Importing an update to an already
+  running copy can preserve its live state; always check the actual state yourself.
+
+WHAT THIS DOES NOT DO
+
+- It does not add a live AI model. The inspected 1.0.0.7 summary buttons still
+  return the non-AI summary before reaching the model-call path. An authenticated
+  server-side model service and front-door code change remain separate work.
+- It does not connect Claude/Copilot usage feeds, calculate ROI, install Enterprise
+  Intelligence Home, operate CloudWave production, or publish any client report.
+- It does not grant access, repair licensing/DLP, migrate existing records or
+  prove live tenant readiness. This build was not imported or run in OSS here.
+- The approval timeout is five days. An expired request needs deliberate recovery;
+  do not auto-resubmit or reset flags without checking for a still-active approval.
+- Core case and decision writes are separate operations. Failed writes require
+  inspection/recovery; this is not a production exactly-once or rollback guarantee.
+- The source query limits remain: 100 intake/triage cases, 25 review cases and
+  500 digest rows. This package is for a small demo, not production-scale processing.
+- Do not run another copy of the original core flows against the same demo lists.
+
+LOCAL VERIFICATION
+
+Microsoft Power Platform CLI unpacked, packed and re-unpacked the solution.
+Test-first local checks cover target routing, recipient containment, preserved
+IDs, isolated/off workflow definitions, provisioning failure handling and run
+serialization. The actual 1.0.0.7 JavaScript submission service was exercised
+with explicitly simulated HTTP responses to check its record contracts against
+these provisioned fields. These tests are NOT live Microsoft API responses.
+
+See VERIFICATION.json and evidence/ for exact results. Original source/package
+files were left unchanged. No cloud upload, import, activation or message was
+performed. Import success, licensed connector operations, permissions, approval
+notifications and the full round trip must still be verified in your OSS tenant.
+
+If import fails: keep the flows off and send the full import error/details log.
+Do not fall back to the original AI-CoE-Lab-targeted ZIP.
+
+Official guidance:
+https://learn.microsoft.com/en-us/power-automate/import-flow-solution
+https://learn.microsoft.com/en-us/power-platform/developer/cli/reference/solution

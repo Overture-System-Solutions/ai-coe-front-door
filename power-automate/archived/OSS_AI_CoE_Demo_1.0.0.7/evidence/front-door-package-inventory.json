@@ -1,0 +1,126 @@
+{
+  "file": "/mnt/c/Users/scfre/Downloads/TempTegriaAndCloudwaveResources/overture-ai-coe-front-door.sppkg",
+  "sha256": "97e5e1e3ff5e6c68188ae9d395ac5763dd8e8342a2b514416e51581d714f6500",
+  "members": [
+    {
+      "name": "AppManifest.xml",
+      "bytes": 1224,
+      "sha256": "6df062bc70f8448365d9922166965eb0b9af37cad0394b853814ba644e83f795",
+      "same_path_bytes_as_v6": false
+    },
+    {
+      "name": "_rels/AppManifest.xml.rels",
+      "bytes": 486,
+      "sha256": "0c2612a03a8ec99945c5c96ffc83ba6ed0aed0e24dca5e99e3b858a60aa274cd",
+      "same_path_bytes_as_v6": true
+    },
+    {
+      "name": "_rels/.rels",
+      "bytes": 288,
+      "sha256": "6bd2b17457aadb66d210e6bddb93c88d49a6f526d48308f1a84bc6e0e6bddb0a",
+      "same_path_bytes_as_v6": true
+    },
+    {
+      "name": "[Content_Types].xml",
+      "bytes": 1035,
+      "sha256": "ca75c17e110c16fd9f5641eb4feeaedaaaf16baedb8a3bf06517663f7b7cb497",
+      "same_path_bytes_as_v6": true
+    },
+    {
+      "name": "feature_69ab84b7-608c-47ee-9623-af8ebaf2cb10.xml",
+      "bytes": 352,
+      "sha256": "64e81bf103cf68ab92d534e02401e936b30845b03efd5891a7cd897cf05c4dac",
+      "same_path_bytes_as_v6": false
+    },
+    {
+      "name": "_rels/feature_69ab84b7-608c-47ee-9623-af8ebaf2cb10.xml.rels",
+      "bytes": 1063,
+      "sha256": "71586bc682b4d2492e212cd9f9a69c624934869755f2ff10051a14c753afb280",
+      "same_path_bytes_as_v6": true
+    },
+    {
+      "name": "feature_69ab84b7-608c-47ee-9623-af8ebaf2cb10.xml.config.xml",
+      "bytes": 189,
+      "sha256": "098a543875a05987eaa4934bbf4e85c35478a78da9a868d9ca435dc8792f3606",
+      "same_path_bytes_as_v6": false
+    },
+    {
+      "name": "intake-schema.xml",
+      "bytes": 5802,
+      "sha256": "5e36a7d01c78040f0af27f13f31a84616765bb26437db25a8a6cb65a7e7ba48e",
+      "same_path_bytes_as_v6": true
+    },
+    {
+      "name": "decision-schema.xml",
+      "bytes": 4731,
+      "sha256": "be73e5b4004b47330adc25c43ec76f7a679684cfa29e5d6e3e189d21d17b7c17",
+      "same_path_bytes_as_v6": true
+    },
+    {
+      "name": "69ab84b7-608c-47ee-9623-af8ebaf2cb10/elements.xml",
+      "bytes": 1064,
+      "sha256": "aca0fa3954adf034ddee060f573822d448f35ba832813c883c857de89648c185",
+      "same_path_bytes_as_v6": true
+    },
+    {
+      "name": "69ab84b7-608c-47ee-9623-af8ebaf2cb10/WebPart_cf2e5904-0703-4fe4-ae5a-ec012d6fa689.xml",
+      "bytes": 2592,
+      "sha256": "a534104234c4f815dd7559ffe56de5f82d010b47be37b025259fee11df76fcbc",
+      "same_path_bytes_as_v6": false
+    },
+    {
+      "name": "ClientSideAssets.xml",
+      "bytes": 312,
+      "sha256": "730bd1e4ecb4786ffd9634bb7bbdbed5c8daa69130ac771a378462a69b7ac3df",
+      "same_path_bytes_as_v6": false
+    },
+    {
+      "name": "_rels/ClientSideAssets.xml.rels",
+      "bytes": 1514,
+      "sha256": "065584df1101bdcc9b76c237ea7a3371fd6e170ab2a21da1e36db25e8a67e852",
+      "same_path_bytes_as_v6": false
+    },
+    {
+      "name": "ClientSideAssets.xml.config.xml",
+      "bytes": 189,
+      "sha256": "11de00212ae7b5dc1744f41a44dcf0a381629972b711a45a188716a8dff3a118",
+      "same_path_bytes_as_v6": false
+    },
+    {
+      "name": "ClientSideAssets/ai-coe-front-door-web-part_450ba2c9cd6b51118afa.js",
+      "bytes": 201798,
+      "sha256": "881dfdeb84307ccddbdb966b6ff474b407e7382e8c73c7d6e226162f3cea9987",
+      "same_path_bytes_as_v6": false
+    },
+    {
+      "name": "ClientSideAssets/ai-coe-front-door-web-part_450ba2c9cd6b51118afa.js.LICENSE.txt",
+      "bytes": 993,
+      "sha256": "2c3072e89ebafdb18bb3e5ac68c58d2b5ff23c445ca8fbac3ede20319757dfd0",
+      "same_path_bytes_as_v6": false
+    },
+    {
+      "name": "ClientSideAssets/90936f9b-705e-46e9-b685-4dd3b6f7500b_color.png",
+      "bytes": 10248,
+      "sha256": "4aa6b1320582738d1019eb5dcbde9b1f004423d0d89e67be44981e05b4f05918",
+      "same_path_bytes_as_v6": true
+    },
+    {
+      "name": "ClientSideAssets/90936f9b-705e-46e9-b685-4dd3b6f7500b_outline.png",
+      "bytes": 249,
+      "sha256": "b1ddc76f79027d9c0300689721649ce1f1950271a5fc4ca50ae56545228fb566",
+      "same_path_bytes_as_v6": true
+    },
+    {
+      "name": "ClientSideAssets/cf2e5904-0703-4fe4-ae5a-ec012d6fa689_color.png",
+      "bytes": 10248,
+      "sha256": "4aa6b1320582738d1019eb5dcbde9b1f004423d0d89e67be44981e05b4f05918",
+      "same_path_bytes_as_v6": true
+    },
+    {
+      "name": "ClientSideAssets/cf2e5904-0703-4fe4-ae5a-ec012d6fa689_outline.png",
+      "bytes": 249,
+      "sha256": "b1ddc76f79027d9c0300689721649ce1f1950271a5fc4ca50ae56545228fb566",
+      "same_path_bytes_as_v6": true
+    }
+  ]
+}

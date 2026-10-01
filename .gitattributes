@@ -1,0 +1,2 @@
+# Keep every file byte for byte: exports, packages and verification records carry their own hashes.
+* -text

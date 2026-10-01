@@ -1,0 +1,17 @@
+{
+  "GetUsageReport": {
+    "anthropic-version": "2023-06-01",
+    "starting_at": "@outputs('Window')?['current_month_start']",
+    "ending_at": "@outputs('Window')?['now']",
+    "bucket_width": "1d",
+    "limit": 31,
+    "group_by[]": "model"
+  },
+  "GetCostReport": {
+    "anthropic-version": "2023-06-01",
+    "starting_at": "@outputs('Window')?['current_month_start']",
+    "ending_at": "@outputs('Window')?['now']",
+    "bucket_width": "1d",
+    "limit": 31
+  }
+}

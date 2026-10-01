@@ -1,0 +1,53 @@
+{
+  "usage": [
+    {
+      "Title": "anthropic|completions|2026-08-01|claude-sonnet-5",
+      "Provider": "anthropic",
+      "BucketStartEpoch": 1785542400,
+      "BucketStart": "2026-08-01T00:00:00Z",
+      "BucketEndEpoch": 1785628800,
+      "MetricType": "completions",
+      "Model": "claude-sonnet-5",
+      "InputTokens": 1330,
+      "OutputTokens": 200,
+      "CompositeKey": "anthropic|completions|2026-08-01|claude-sonnet-5"
+    },
+    {
+      "Title": "anthropic|completions|2026-08-01|claude-opus-5",
+      "Provider": "anthropic",
+      "BucketStartEpoch": 1785542400,
+      "BucketStart": "2026-08-01T00:00:00Z",
+      "BucketEndEpoch": 1785628800,
+      "MetricType": "completions",
+      "Model": "claude-opus-5",
+      "InputTokens": 500,
+      "OutputTokens": 100,
+      "CompositeKey": "anthropic|completions|2026-08-01|claude-opus-5"
+    }
+  ],
+  "cost": [
+    {
+      "Title": "anthropic|cost|2026-08-01",
+      "Provider": "anthropic",
+      "BucketStartEpoch": 1785542400,
+      "BucketStart": "2026-08-01T00:00:00Z",
+      "BucketEndEpoch": 1785628800,
+      "MetricType": "cost",
+      "Amount": 1.2345,
+      "Currency": "USD",
+      "CompositeKey": "anthropic|cost|2026-08-01"
+    },
+    {
+      "Title": "anthropic|cost|2026-08-02",
+      "Provider": "anthropic",
+      "BucketStartEpoch": 1785628800,
+      "BucketStart": "2026-08-02T00:00:00Z",
+      "BucketEndEpoch": 1785715200,
+      "MetricType": "cost",
+      "Amount": 0.005,
+      "Currency": "USD",
+      "CompositeKey": "anthropic|cost|2026-08-02"
+    }
+  ],
+  "month_to_date_spend_usd": 1.2394999999999998
+}

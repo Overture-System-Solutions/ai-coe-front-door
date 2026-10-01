@@ -1,0 +1,84 @@
+OSS CloudWave Claude Case Analysis - version 1.0.0.0 (new solution)
+
+WHAT THIS IS
+One unmanaged solution, OSSCloudWaveClaudeCaseAnalysis_1_0_0_0.zip, holding one cloud flow,
+"OSS Demo - Claude Case Analysis", packaged Off. The web part posts an executive's question. The
+flow reads the open cases in the "AI CoE Use Cases" list on
+https://osscontact.sharepoint.com/sites/OSSAICoEDemo (structured fields and titles only),
+sends them to Claude through the EXISTING "OSS Claude Intake Draft" connector, and returns a ranked
+analysis for human review. It never creates, changes or decides a case. Synthetic demo data only.
+
+BEFORE YOU START
+- The OSS test environment must already have the Claude connector (solution
+  OSSCloudWaveClaudeDraftConnector 1.0.0.1) and a working Claude connection, the one the
+  "OSS Demo - Claude Intake Draft" flow uses. This package contains no connector; do not import one.
+- The SharePoint connection you map must be able to read EVERY row of "AI CoE Use Cases". If the
+  list uses item-level permissions (people read only their own items), the connection's account
+  needs Override List Behaviors (a site owner has it). Otherwise the analysis silently misses cases.
+
+IMPORT
+1. https://make.powerautomate.com > the OSS test environment > Solutions > Import solution >
+   OSSCloudWaveClaudeCaseAnalysis_1_0_0_0.zip. Do not unzip it. It imports as unmanaged.
+2. When asked for connections, map both connection references to EXISTING connections:
+     OSS Claude Case Analysis Connection  -> the existing Claude connection (OSS Claude Intake Draft)
+     OSS Case Analysis SharePoint         -> the existing SharePoint connection described above
+   These are new connection references, so the import asks for them; no other solution changes.
+3. Finish the import. The flow arrives Off.
+
+SAVE, TEST, TURN ON
+4. Solutions > OSS CloudWave Claude Case Analysis > open "OSS Demo - Claude Case Analysis" > Edit.
+   Click Save without changing anything. If Save fails, send the exact error text; it names the
+   action to fix.
+5. On the trigger, confirm "Who can trigger the flow?" is "Specific users in my tenant" and
+   Allowed users is Brian.Frerichs@osscontact.com;samuel.conrad@osscontact.com.
+   After the first Save, open Code view and confirm triggerAllowedUsers still holds both addresses
+   separated by a semicolon. To add an executive, append ;their.address@osscontact.com in Allowed
+   users and Save. Microsoft Learn documents email addresses for this field:
+   https://learn.microsoft.com/en-us/power-automate/oauth-authentication
+6. Test with synthetic-request.json: Test > Manually, then POST the file's contents to the trigger
+   URL with a Microsoft Entra token for an allowed user, using the same caller flow as the Claude
+   draft test (HTTP with Microsoft Entra ID (preauthorized) > Invoke an HTTP request, Base Resource
+   URL = the trigger URL's host; see ..\OSS_AI_CoE_Claude_Integration_1.0.0.4\TESTING.md).
+   If the caller gets 404 and no run appears, turn the flow On (step 7) and send it again.
+   Expect HTTP 200 with ok true, caseCount, truncated, asOf and analysis (analysis is null and
+   Claude is not called when no case is open). Keep the run result.
+7. Turn the flow On.
+8. Copy the trigger's HTTP URL (When an HTTP request is received > HTTP URL) into the web part's
+   "Case analysis flow URL" property. The URL has no signature parameter; callers need an Entra token.
+
+RESULTS
+  200  ok true; analysis {summary, priorities, patterns, gaps}, or analysis null when caseCount is 0
+  400  INVALID_REQUEST          body is not exactly the request.schema.json shape, or blank question
+  413  INPUT_TOO_LARGE          body over 4,000 characters
+  503  CASES_UNAVAILABLE        SharePoint read failed or took longer than 30 seconds
+  502  AI_ANALYSIS_UNAVAILABLE  Claude call failed or took longer than 60 seconds, was refused, stopped
+                                early, or returned an analysis outside analysis.schema.json
+  401/403 with no run: wrong token audience, or caller not in Allowed users.
+Contracts: request.schema.json (request), response.schema.json (200 body), analysis.schema.json
+(analysis checks), claude-request-body.json (the Claude request, with three synthetic cases).
+
+WHAT IS READ AND SENT
+Open cases only (Status not Closed or Declined), most recently updated first, at most 200
+(truncated is true when there were more): CoEID, Title, Status, RiskTier, DataSensitivity,
+ExternalUsers, AutonomousActions, EstimatedMonthlyCost, NextReviewDate, Created, Modified.
+Never the business problem, email addresses, approval comments or pilot measure.
+Run history (flow owners): the Claude step hides its inputs and outputs; Map cases, Case context and
+the three Parse JSON steps show the case fields, the question and the analysis.
+
+CLAUDE SETTINGS
+claude-opus-5, max_tokens 1600, thinking disabled, anthropic-version 2023-06-01, structured JSON
+output, no retries, 60-second timeout.
+Claude server-side fallbacks cannot be enabled: the existing connector's body schema has
+additionalProperties false, so a "fallbacks" field would be rejected. A refusal returns 502.
+The connector caps max_tokens at 1600; an answer that runs out of tokens also returns 502.
+
+VERIFICATION (LOCAL ONLY)
+Everything was checked on this PC only: no tenant import, no designer Save, no SharePoint read,
+no Claude call, and no network calls to Microsoft or Anthropic. The offline checks in
+source/checks.py passed (see VERIFICATION.json for counts and the ZIP's SHA-256).
+
+REBUILD (Python 3 with jsonschema)
+  pip install -r source/requirements.txt
+  python source/package.py --site-url https://osscontact.sharepoint.com/sites/OSSAICoEDemo --allowed-users "Brian.Frerichs@osscontact.com;samuel.conrad@osscontact.com" --out OSSCloudWaveClaudeCaseAnalysis_1_0_0_0.zip
+  python source/checks.py --write-verification
+The same arguments always produce the same ZIP bytes.

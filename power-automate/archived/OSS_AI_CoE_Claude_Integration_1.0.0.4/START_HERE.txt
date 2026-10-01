@@ -1,0 +1,36 @@
+Claude draft intake flow - Save repair 2, version 1.0.0.4
+
+WHY THE EDITOR CANNOT FIX THIS ONE
+The flow service also rejects "Secure outputs" on Response actions (the error now names
+"Invalid request response"). The designer shows no Security settings for Response actions and
+code view is read-only, so the rejected setting cannot be switched off in the editor. The only
+way to remove it is to import a corrected definition. This package is that definition.
+
+IMPORT (flow only; the connector is unchanged and does not need to be imported again)
+1. Close the flow editor tab. Unsaved edits are discarded; that is fine, this package already
+   contains them. If the flow is on, turn it off.
+2. Import 02_OSSCloudWaveClaudeDraftIntegration_1_0_0_4.zip into the same environment as an
+   UPDATE to "OSS CloudWave Claude Draft Integration". Select the existing Claude connection if
+   prompted. Do not import 1.0.0.2 or 1.0.0.3 again; both carry a rejected setting.
+3. Open the flow from Solutions and click Save without changing anything.
+4. Confirm the trigger still restricts callers to samuel.conrad@osscontact.com and the connection
+   is selected, then run the synthetic test (synthetic-request.json) and keep the run result.
+
+WHAT CHANGED (secure-data settings only; bindings, connector and logic are identical to 1.0.0.2)
+  Claude draft (connector call)            Secure inputs + outputs   kept; connector actions support both
+  Validate request / provider / draft      Secure inputs only        as in 1.0.0.3
+  All seven Response actions               none                      Response rejects secure outputs
+  Visible answers (Compose)                none                      duplicates Validate request output, which cannot be hidden
+  Trigger                                  none                      same reason; the concurrency limit is kept
+Run history (flow owners only) now shows the incoming synthetic request, the prepared answers,
+the raw Claude response and the draft. The prompt and payload of the Claude call itself stay
+hidden. This flow accepts synthetic demo data only.
+
+If Save still fails, send the exact error text; it names the next action to fix.
+Boundaries: hosted Save and a live Claude call were not executed here. Local checks: 15 passed,
+1 skipped (its evidence manifest is not in this snapshot). See VERIFICATION.json and CHANGES.md.
+
+Rebuild and re-check from source/ (Python 3 with jsonschema):
+  python repack.py
+  python checks.py
+  python binding_checks.py

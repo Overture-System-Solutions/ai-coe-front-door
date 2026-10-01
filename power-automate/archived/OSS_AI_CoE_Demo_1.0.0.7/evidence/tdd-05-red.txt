@@ -1,0 +1,25 @@
+test_01_all_sharepoint_operations_target_oss_demo (__main__.SolutionTests.test_01_all_sharepoint_operations_target_oss_demo) ... ok
+test_02_demo_routes_all_notifications_and_approvals_only_to_sam (__main__.SolutionTests.test_02_demo_routes_all_notifications_and_approvals_only_to_sam) ... ok
+test_03_preserve_front_door_id_through_intake_and_receipt (__main__.SolutionTests.test_03_preserve_front_door_id_through_intake_and_receipt) ... ok
+test_04_isolated_demo_solution_has_new_ids_and_disabled_flows (__main__.SolutionTests.test_04_isolated_demo_solution_has_new_ids_and_disabled_flows) ... ok
+test_05_provisioning_does_not_treat_permission_failure_as_missing_list (__main__.SolutionTests.test_05_provisioning_does_not_treat_permission_failure_as_missing_list) ... FAIL
+
+======================================================================
+FAIL: test_05_provisioning_does_not_treat_permission_failure_as_missing_list (__main__.SolutionTests.test_05_provisioning_does_not_treat_permission_failure_as_missing_list)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/far_cdx/.hermes/workspaces/oss-cloudwave-demo-solution/test_solution.py", line 60, in test_05_provisioning_does_not_treat_permission_failure_as_missing_list
+    self.assertEqual(a['If_list_exists']['runAfter']['Get_list'],['Succeeded'])
+AssertionError: Lists differ: ['Succeeded', 'Failed', 'TimedOut'] != ['Succeeded']
+
+First list contains 2 additional elements.
+First extra element 1:
+'Failed'
+
+- ['Succeeded', 'Failed', 'TimedOut']
++ ['Succeeded']
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.006s
+
+FAILED (failures=1)

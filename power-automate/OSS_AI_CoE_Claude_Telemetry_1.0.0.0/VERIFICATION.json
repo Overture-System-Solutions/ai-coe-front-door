@@ -1,0 +1,118 @@
+{
+  "status": "CONNECTOR_READY_FLOW_BINDING_PENDING",
+  "verified_at": "2026-09-28T14:15:46.895602+00:00",
+  "connector_zip": "01_OSSCloudWaveClaudeTelemetryConnector_1_0_0_0.zip",
+  "connector_zip_sha256": "7bf81a4b2bb762b58c4674138a87f74284adc1809bc3098c6c43ebdeca15391c",
+  "connector_zip_members": [
+    "customizations.xml",
+    "solution.xml",
+    "Connector/cwdd_ossclaudetelemetry_iconblob.Png",
+    "Connector/cwdd_ossclaudetelemetry_policytemplateinstances.json",
+    "Connector/cwdd_ossclaudetelemetry_connectionparameters.json",
+    "Connector/cwdd_ossclaudetelemetry_openapidefinition.json",
+    "[Content_Types].xml"
+  ],
+  "connector_solution": "OSSCloudWaveClaudeTelemetryConnector",
+  "connector_solution_version": "1.0.0.0",
+  "connector_logical_name": "cwdd_ossclaudetelemetry",
+  "connector_id": "a3299c63-ca70-50e5-b836-e86788be5250",
+  "connector_reimport_required": true,
+  "flow_zip": null,
+  "flow_zip_sha256": null,
+  "flow_solution": "OSSCloudWaveClaudeTelemetry",
+  "flow_solution_version": "1.0.0.0",
+  "flow_id": "0024bbee-d19d-50c5-a199-a5755c0c4044",
+  "flow_name": "OSS Demo - Claude Telemetry",
+  "connection_references": [
+    "cwdd_claudetelemetryconnection",
+    "cwdd_sharedsharepointonline"
+  ],
+  "runtime_api_name": null,
+  "runtime_api_name_source": null,
+  "flow_packaged_off": true,
+  "trigger": {
+    "frequency": "Hour",
+    "interval": 6,
+    "timeZone": "Eastern Standard Time",
+    "concurrency_runs": 1
+  },
+  "window_rule": "two windows per report: first day of the previous UTC month to the first day of the current month, and the first day of the current month to utcNow(); one page of at most 31 daily buckets each; has_more stops the run",
+  "foreach_concurrency_all_1": true,
+  "secure_data_by_action": {
+    "Get_usage_previous": [
+      "inputs",
+      "outputs"
+    ],
+    "Parse_usage_previous": [
+      "inputs"
+    ],
+    "Get_usage_current": [
+      "inputs",
+      "outputs"
+    ],
+    "Parse_usage_current": [
+      "inputs"
+    ],
+    "Get_cost_previous": [
+      "inputs",
+      "outputs"
+    ],
+    "Parse_cost_previous": [
+      "inputs"
+    ],
+    "Get_cost_current": [
+      "inputs",
+      "outputs"
+    ],
+    "Parse_cost_current": [
+      "inputs"
+    ]
+  },
+  "actions_with_secure_data": 8,
+  "list_targets": {
+    "site": "https://osscontact.sharepoint.com/sites/AI-CoE-Lab",
+    "usage_list": "AI Usage Daily",
+    "usage_columns_written": [
+      "Amount",
+      "BucketEndEpoch",
+      "BucketStart",
+      "BucketStartEpoch",
+      "CompositeKey",
+      "Currency",
+      "InputTokens",
+      "MetricType",
+      "Model",
+      "OutputTokens",
+      "Provider",
+      "Title"
+    ],
+    "configuration_list": "AI CoE Configuration",
+    "budget_setting": "ClaudeMonthlyBudgetUsd",
+    "incidents_list": "AI CoE Incidents",
+    "incident_category": "Cost"
+  },
+  "composite_key_formats": [
+    "anthropic|cost|YYYY-MM-DD",
+    "anthropic|completions|YYYY-MM-DD|<model>"
+  ],
+  "amount_unit_conversion": "cents string / 100 -> USD dollars",
+  "checks_py": {
+    "tests": 17,
+    "passed": 16,
+    "failed": 0,
+    "skipped": 1,
+    "skipped_reason": "flow ZIP not built: the connector's runtime API name is pending"
+  },
+  "donor_zips": {
+    "01_OSSCloudWaveClaudeDraftConnector_1_0_0_1.zip": "82fb8744123878a47675da1f95f4b5163df3fb9d2652936564834f66c3faac95",
+    "02_OSSCloudWaveClaudeDraftIntegration_1_0_0_4.zip": "2c7416f0ff6aaa2df09ce17cd5a97d2640d5024915231c9f272ff7c6f9ca9aa5"
+  },
+  "pac_pack_unpack": "NOT_RUN_pac_not_installed",
+  "designer_save_verified": false,
+  "live_admin_api_call_verified": false,
+  "list_rows_verified": false,
+  "key_collected": false,
+  "tenant_writes_performed": false,
+  "build_command": "py -3 source/build.py",
+  "accepted_at": null
+}

@@ -1,0 +1,21 @@
+{
+  "schemaVersion": "1.0",
+  "workflowId": "idea",
+  "requestId": "synthetic-demo-001",
+  "demoDataOnly": true,
+  "answers": {
+    "workToImprove": "Summarize a fictional training team's weekly status notes.",
+    "painPoints": "The same notes are rewritten in several formats.",
+    "peopleInvolved": "A fictional training team",
+    "frequency": "weekly",
+    "timeSpent": "underHour",
+    "systemsInvolved": "Synthetic SharePoint notes",
+    "informationCategories": [
+      "public"
+    ],
+    "aiAlreadyUsed": "no",
+    "desiredOutcome": "Prepare a short draft for human review.",
+    "successMeasure": "Reviewers compare the draft with the source notes.",
+    "hasDeadlineSponsor": "no"
+  }
+}

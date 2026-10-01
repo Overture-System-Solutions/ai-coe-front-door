@@ -1,0 +1,34 @@
+OSS CloudWave AI Integration — first import
+
+READY NOW
+  01_OSSCloudWaveAIDraftConnector_1_0_0_0.zip
+
+1. In the same OSS Power Automate environment, import that ZIP as an unmanaged solution.
+   Expected solution: OSS CloudWave AI Draft Connector.
+   Expected connector: OSS OpenAI Intake Draft (cwdd_ossopenaiintakedraft).
+   Do not replace or delete your existing AI CoE OpenAI Admin connector.
+
+2. Open the new custom connector. Its connection uses an OpenAI PROJECT API key with
+   permission to generate Responses, not an organization-admin usage/cost key.
+   In the Authorization connection field enter Bearer, one space, then the project key.
+   Keep the key in that connection; do not send it in chat or put it into flow inputs.
+   Confirm OSS policy and licensing permit this connector and synthetic OpenAI requests.
+
+3. Send Julianna the new connector's page URL (not the API key). Power Automate assigns
+   the runtime API name during registration. That exact non-secret name is needed to
+   finish the flow's connection-reference binding without inventing a resource ID.
+   If the import fails, send the actual error instead; do not make broad permission changes.
+
+SECOND ZIP
+The flow logic is built and locally checked, but the deliverable flow ZIP is pending
+that runtime API name. No fake or unbound flow ZIP is provided in this folder.
+Microsoft requires custom connectors to be imported before their connection references/flows.
+
+Scope: IDEA draft generation only, matching the recovered form's 12 string draft fields.
+No automatic case creation, approval, telemetry ingestion, email, or broader CoE automation.
+No SharePoint package/form changes have been deployed by this step.
+
+Local validation is not a live Microsoft/OpenAI test. The first connector package passed
+OpenAPI validation, Microsoft PAC pack/unpack and file/identity checks. PAC emits a
+connector-root warning that is also reproducible on your untouched export; XML identity
+links were independently checked, but actual tenant import remains the next gate.

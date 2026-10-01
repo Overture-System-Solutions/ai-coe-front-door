@@ -1,0 +1,93 @@
+AI CoE front door 1.0.0.19 for OvertureAICoE (OSS tenant) - do this one before CloudWave
+
+Site:     https://osscontact.sharepoint.com/sites/OvertureAICoE
+Package:  overture-ai-coe-front-door.sppkg, version 1.0.0.19
+          SHA-256 9ee18261890983ffcd0f19328efe730e1c933214f1ab67b1a92978bd71b4e460
+Replaces: 1.0.0.17 in the OSS app catalog. 1.0.0.18 was never uploaded; everything it added is in this package.
+          Same solution, feature and web part ids, so pages, instances and lists stay.
+Built:    2026-10-01 from commit 745aace on fix/coe-audit-server-drafts (npm run build: 1,360 tests pass;
+          npm run verify: PASS). Not uploaded. The package is tenant-neutral; nothing in it names OSS.
+
+NEW IN 1.0.0.19 (the tabbed view)
+  - Requests: "Start a request" has its own section at the top, its four cards in one row (two by two on a
+    medium screen, one per row on a phone). My requests sits below it in two columns of cards, so a long list is
+    half as tall.
+  - Home: the AI CoE Approved Tools list (read-only) now closes the Home page; it is no longer on Requests.
+  - Cases: the box that started "Your cases are saved through the configured service", with seven technical
+    reasons under it, is gone. It belonged to the business-case service (CORE), which this site does not have.
+  - Business cases (CORE) gained a "Started from request ..." line and a "From a request to a business case"
+    explanation, but both show only where CORE is connected, so not on this site. The worked example with made-up
+    business cases is in the offline preview only and never reaches a real site.
+
+ALSO IN THIS PACKAGE (first built as 1.0.0.18)
+  - Tabs: Home, Requests (was Engineering), Improvement, Marketing on the left; Cases, Metrics (was Enterprise
+    value) and Admin together on the right.
+  - Requests: My requests moved here from Cases and Register team AI use moved here from Improvement. Each of my
+    requests opens its SharePoint item in a new tab: the case when the request has one, otherwise the request row.
+  - The AI CoE Approved Tools list is shown read-only (on Home since 1.0.0.19).
+  - "What is going on?": the explanation panels of Requests, Improvement and Cases sit behind one closed
+    disclosure. Home no longer has "What matters now".
+  - Ask the AI CoE: copies the question and opens the AI CoE Concierge in Microsoft 365 Copilot chat, where the
+    person pastes it (Ctrl+V). The first time, it offers "Add it first" (the Teams add link) or "Open"; the browser
+    remembers that choice. No draft is saved. With no link set it says "The AI CoE Concierge isn't set up on this
+    site yet."
+  - After a saved request the next step is "Continue in the AI CoE Concierge" (copies the request reference), or
+    nothing when the concierge is not set up.
+  - AI idea, Check a tool or task and Register team AI use: five screens each, up to three related questions per
+    screen. The answers keep their old names, so the idea-draft flow and the lists are unchanged.
+  - Check a tool or task: picks the tool from AI CoE Approved Tools and answers from that tool's row. A tool that
+    is not on the list gets the usual guidance plus "isn't on the AI CoE approved-tools list yet". The
+    "Guidance prototype" label is gone.
+  - Claude's case analysis: short readable paragraphs, each case card opens its record, Patterns and "What the
+    records cannot tell you" side by side.
+  - Colours: each request card, the three Home choices, the approved tools and the analysis cards use the
+    front door's palette tones.
+
+BEFORE YOU START
+  The AI CoE Approved Tools list must exist on the site. If you have not done it yet, do
+  ..\START_HERE_OvertureAICoE_1.0.0.2.txt first (import OvertureAICoE_1_0_0_2.zip, run SharePoint Provisioning
+  once, check the list's permissions). Without the list the front door still works: the approved-tools panel says
+  "The approved tools could not be read on this site." and the tool check treats every tool as not on the list.
+
+STEPS
+  1. SharePoint admin center > More features > Apps > App Catalog > Apps for SharePoint > Upload
+     overture-ai-coe-front-door.sppkg > Replace it. In the dialog, keep "Enable this app and add it to all sites"
+     as it was for 1.0.0.17, then Enable. No new API access request comes with this version.
+  2. On the OvertureAICoE page that holds the front door: Edit > select the web part > edit (pencil) > the
+     "AI drafting" group:
+       AI CoE Concierge chat link:
+         https://m365.cloud.microsoft/chat/?titleId=T_90a94581-0aa2-7ff7-625d-5fe358e84502&source=agentCenterDialog
+       AI CoE Concierge add link (Teams):
+         https://teams.microsoft.com/l/app/?titleId=T_90a94581-0aa2-7ff7-625d-5fe358e84502
+     Leave the other fields as they are. Republish the page.
+  3. Hard-refresh the page (Ctrl+F5). The tabs should read Home, Requests, Improvement, Marketing ... Cases,
+     Metrics, Admin. If they still say Engineering, the old bundle is cached: wait a few minutes and refresh again.
+  4. Add the tools the AI CoE has reviewed to AI CoE Approved Tools (Site contents > AI CoE Approved Tools > New).
+     Status is Approved, Approved with conditions, Not approved or Under review. Fill what it is approved for, the
+     yes/no allowances, conditions and Last reviewed. A blank yes/no means no. Add at least one row so step 6 has
+     something to show.
+  5. In Copilot Studio, add the AI CoE Approved Tools list to the AI CoE Concierge's knowledge if it is not there
+     yet (development/copilot-agent/OvertureAICoE_AI_CoE_Assistant/START_HERE.md, step 3), then publish the agent
+     again.
+  6. Check it as a member, not only as an owner:
+     a. Requests: "Start a request" at the top with its four cards in a row; My requests below in two columns; a
+        request's title opens its item in a new tab.
+     b. Home: Approved tools at the bottom lists your rows with the right status.
+     c. Check a tool or task: the first screen lists your tools by name. Pick one and finish; the result matches its
+        row (for example a Not approved tool says a review is needed).
+     d. Home: type a question, Ask the AI CoE. The first time choose "Open the AI CoE Concierge"; Copilot chat opens
+        on the agent; paste with Ctrl+V and send.
+     e. Submit one short request; the receipt offers "Continue in the AI CoE Concierge".
+     f. As a member, open the AI CoE Approved Tools list: rows can be read, New is refused or missing.
+     g. Cases: no box about cases being saved through a configured service.
+  7. Tell Julianna what you saw (or a screenshot of anything wrong). Then CloudWave gets the same package.
+
+ROLLBACK
+  Upload the 1.0.0.17 package again (Replace). The two concierge settings stay in the page but do nothing in
+  1.0.0.17; the AI CoE Approved Tools list and its rows stay. Nothing else to undo.
+
+NOT CLAIMED
+  Nothing here has been uploaded or tried on the site. The offline preview used made-up concierge links, tools,
+  requests and business cases. Your test of a prefilled Teams link did not put the question in the chat, which is
+  why the question is copied and pasted; whether the clipboard copy works can depend on the browser's permissions on
+  the site.

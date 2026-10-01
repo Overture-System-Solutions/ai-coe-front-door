@@ -1,0 +1,36 @@
+test_fail_closed_identity_snapshot_and_qualification (test_helper.BasicTests.test_fail_closed_identity_snapshot_and_qualification) ... ok
+test_unknown_mode_refuses (test_helper.BasicTests.test_unknown_mode_refuses) ... ok
+test_work_list_and_preflight (test_helper.BasicTests.test_work_list_and_preflight) ... ok
+test_entire_snapshot_rejects_malformed_supported_record_families (test_helper.IntegrityHardeningTests.test_entire_snapshot_rejects_malformed_supported_record_families) ... ok
+test_pending_provider_never_reissues_on_restart (test_helper.IntegrityHardeningTests.test_pending_provider_never_reissues_on_restart) ... ok
+test_preflight_includes_plan_sources_and_parent_sources (test_helper.IntegrityHardeningTests.test_preflight_includes_plan_sources_and_parent_sources) ... ok
+test_projection_cannot_bypass_operation_shape (test_helper.IntegrityHardeningTests.test_projection_cannot_bypass_operation_shape) ... ok
+test_unicode_hashes_are_node_json_stringify_bytes (test_helper.IntegrityHardeningTests.test_unicode_hashes_are_node_json_stringify_bytes) ... ok
+test_manual_brief_exact_envelope_and_readback_bound_version (test_helper.ManualAndModesTests.test_manual_brief_exact_envelope_and_readback_bound_version) ... ok
+test_missing_source_after_read_refuses (test_helper.ManualAndModesTests.test_missing_source_after_read_refuses) ... ok
+test_page_and_projection_acl (test_helper.ManualAndModesTests.test_page_and_projection_acl) ... ok
+test_reference_safe_reads (test_helper.ManualAndModesTests.test_reference_safe_reads) ... ok
+test_storage_create_cas_and_verify (test_helper.ManualAndModesTests.test_storage_create_cas_and_verify) ... ok
+test_all_ai_and_completed_recovery_reference_values (test_helper.ProviderRecoveryTests.test_all_ai_and_completed_recovery_reference_values) ... ok
+test_provider_output_identity_claim_and_delivery_refusals (test_helper.ProviderRecoveryTests.test_provider_output_identity_claim_and_delivery_refusals) ... ok
+test_provider_wire_and_truncation (test_helper.ProviderRecoveryTests.test_provider_wire_and_truncation) ... ok
+test_recovery_is_not_cached_source_disclosure (test_helper.ProviderRecoveryTests.test_recovery_is_not_cached_source_disclosure) ... ok
+test_all_manual_reference_values (test_helper.ReviewAndParentTests.test_all_manual_reference_values) ... ok
+test_finalization_uses_actual_etag_and_preserves_original (test_helper.ReviewAndParentTests.test_finalization_uses_actual_etag_and_preserves_original) ... ok
+test_review_fails_without_current_authority (test_helper.ReviewAndParentTests.test_review_fails_without_current_authority) ... ok
+test_bad_nextlink_is_not_silently_truncated (test_native_interop.NativeInteropTests.test_bad_nextlink_is_not_silently_truncated) ... ok
+test_completed_original_recovery_retained_without_new_writes (test_native_interop.NativeInteropTests.test_completed_original_recovery_retained_without_new_writes) ... ok
+test_finalized_plan_rechecks_every_retained_write (test_native_interop.NativeInteropTests.test_finalized_plan_rechecks_every_retained_write) ... ok
+test_native_created_modified_precision (test_native_interop.NativeInteropTests.test_native_created_modified_precision) ... ok
+test_new_mutation_plan_still_refuses_changed_state (test_native_interop.NativeInteropTests.test_new_mutation_plan_still_refuses_changed_state) ... ok
+test_pending_plan_does_not_recompute_or_hide_conflicting_writes (test_native_interop.NativeInteropTests.test_pending_plan_does_not_recompute_or_hide_conflicting_writes) ... ok
+test_projection_validates_operation_payload_and_result_shape (test_native_interop.NativeInteropTests.test_projection_validates_operation_payload_and_result_shape) ... ok
+test_real_sharepoint_continuations_and_etag_aliases (test_native_interop.NativeInteropTests.test_real_sharepoint_continuations_and_etag_aliases) ... ok
+test_compiled_script_hash_matches_final_source (test_registration.RegistrationTests.test_compiled_script_hash_matches_final_source) ... ok
+test_exact_script_alias_hash_size_and_supported_namespace_surface (test_registration.RegistrationTests.test_exact_script_alias_hash_size_and_supported_namespace_surface) ... ok
+test_openapi_and_properties_exact_wire (test_registration.RegistrationTests.test_openapi_and_properties_exact_wire) ... ok
+
+----------------------------------------------------------------------
+Ran 31 tests in 43.106s
+
+OK

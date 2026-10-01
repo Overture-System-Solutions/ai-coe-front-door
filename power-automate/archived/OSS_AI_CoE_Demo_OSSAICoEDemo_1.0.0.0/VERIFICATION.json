@@ -1,0 +1,38 @@
+{
+  "status": "LOCAL_CHECKS_PASS_IMPORT_AND_SAVE_PENDING",
+  "verified_at": "2026-09-28T11:35:58+00:00",
+  "target": "ossaicoedemo",
+  "zip": "OSSAICoEDemo_1_0_0_0.zip",
+  "zip_sha256": "a1dcda5bfb4c740b6ed8698b7c68283f123b7b20db8f69c342efc7a4ef2824e3",
+  "zip_bytes": 15320,
+  "solution": "OSSAICoEDemo",
+  "version": "1.0.0.0",
+  "display_name": "OSS AI CoE Demo",
+  "baseline": "OSSCloudWaveDashboardDemo 1.0.0.8 live OSS export (project home source S780)",
+  "baseline_sha256": "70e986266d63337e06d66229304a5caf54e4035c3e581208283d6979f407233f",
+  "site_url": "https://osscontact.sharepoint.com/sites/OSSAICoEDemo",
+  "replaces_site_url": "https://osscontact.sharepoint.com/sites/CloudWaveDashboardDemo",
+  "recipients": "Brian.Frerichs@osscontact.com;samuel.conrad@osscontact.com",
+  "decision_approver_email": "@coalesce(first(outputs('Start_and_wait_for_approval')?['body/responses'])?['responder']?['email'],'')",
+  "wording_changes": [],
+  "workflow_ids": {
+    "db957f8c-1b01-5551-95de-4c6ab24aaaba": "77794a9e-f711-57a9-aa7a-0351882a2793",
+    "0854bca4-b39f-554c-aa45-aff95f23d8b9": "b0fef63c-a54a-5b3d-a98e-26ff30f96880",
+    "7ba84077-10d0-5077-a09a-c274b10972ba": "d7fa3057-9b2e-5aec-978e-9527864020b9",
+    "03505a5f-e573-588a-92fe-d0405ef0da5f": "db98bafa-aec5-54e4-a1ee-e7117d516118",
+    "6d470257-0283-519a-af5f-f736bc7e48fb": "a59f99fa-0612-5a66-b193-526b01eb7a5e"
+  },
+  "connection_references": {
+    "cwdd_aicoedemosharepoint": "OSS AI CoE Demo SharePoint",
+    "cwdd_aicoedemooffice365": "OSS AI CoE Demo Office 365 Outlook",
+    "cwdd_aicoedemoapprovals": "OSS AI CoE Demo Approvals"
+  },
+  "flows_packaged_off": true,
+  "tests": {
+    "run": 7,
+    "failed": 0,
+    "skipped": 0
+  },
+  "build_command": "python build_solution.py --target ossaicoedemo",
+  "not_verified": "Not imported, saved, run or tested against SharePoint, Outlook or Approvals."
+}

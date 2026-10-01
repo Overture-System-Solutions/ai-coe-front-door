@@ -1,0 +1,24 @@
+2026-09-10 13:45:44.934 - Info	
+Packing /home/far_cdx/.hermes/workspaces/oss-cloudwave-demo-solution/pac-source to /mnt/c/Users/scfre/Downloads/OSS_CloudWave_Demo_1.0.0.7/OSSCloudWaveDashboardDemo_1_0_0_7.zip
+
+2026-09-10 13:45:44.943 - Info	Processing Component: Entities
+2026-09-10 13:45:44.944 - Info	Processing Component: Roles
+2026-09-10 13:45:44.948 - Info	Processing Component: Workflows
+2026-09-10 13:45:44.951 - Info	 - OSS Demo — Intake Processing
+2026-09-10 13:45:44.952 - Info	 - OSS Demo — Review and Decision
+2026-09-10 13:45:44.952 - Info	 - OSS Demo — SharePoint Provisioning
+2026-09-10 13:45:44.952 - Info	 - OSS Demo — Triage and Routing
+2026-09-10 13:45:44.952 - Info	 - OSS Demo — Weekly Portfolio Control
+2026-09-10 13:45:44.952 - Info	Processing Component: FieldSecurityProfiles
+2026-09-10 13:45:44.952 - Info	Processing Component: Templates
+2026-09-10 13:45:44.953 - Info	Processing Component: EntityMaps
+2026-09-10 13:45:44.953 - Info	Processing Component: EntityRelationships
+2026-09-10 13:45:44.953 - Info	Processing Component: OrganizationSettings
+2026-09-10 13:45:44.954 - Info	Processing Component: optionsets
+2026-09-10 13:45:44.954 - Info	Processing Component: CustomControls
+2026-09-10 13:45:44.955 - Info	Processing Component: EntityDataProviders
+2026-09-10 13:45:44.955 - Info	Processing Component: Connectors
+2026-09-10 13:45:44.956 - Info	Processing Sharded Component Files
+2026-09-10 13:45:45.023 - Info	
+Unmanaged Pack complete.
+

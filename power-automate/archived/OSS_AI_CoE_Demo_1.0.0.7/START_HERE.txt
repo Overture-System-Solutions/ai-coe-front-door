@@ -1,0 +1,31 @@
+OSS CloudWave demo — import steps
+
+1. In https://make.powerautomate.com/, select your OSS test environment.
+   Choose Solutions > Import > OSSCloudWaveDashboardDemo_1_0_0_7.zip.
+   Do not unzip it. The environment needs Dataverse/solution support.
+
+2. Bind the three OSS Demo connections: SharePoint, Office 365 Outlook, Approvals.
+   Sign in normally; no passwords or API keys belong in this package.
+
+3. Check all five flows are OFF. Turn on only SharePoint Provisioning and run
+   it once. Verify its run and the created core lists in your demo site:
+   https://osscontact.sharepoint.com/sites/CloudWaveDashboardDemo
+   Then turn provisioning off. Stop on any permission or schema error.
+
+4. Turn on Intake Processing, Triage and Routing, and Review and Decision.
+   Leave Weekly Portfolio Control off unless you want its weekly demo email.
+   All approval assignments and notification recipients are pinned to:
+   samuel.conrad@osscontact.com
+
+5. In your existing front door 1.0.0.7, submit one made-up AI idea.
+   It already writes the matching core record; no extra adapter is required
+   for this route. Intake/triage/review poll every 5/10/15 minutes.
+   Approve the request, reopen its saved decision and refresh the admin dashboard.
+
+The ZIP is locally checked, NOT yet imported/tested in your tenant.
+It does not add live AI: the app's model connection is still separate work.
+New flow IDs avoid replacing Jordan's original flows; do not run both copies
+against the same demo lists. Verify actual flow states even on re-import.
+
+DETAILS_AND_LIMITS.txt has prerequisites, troubleshooting and remaining limits.
+VERIFICATION.json contains the exact local test and Microsoft packaging results.

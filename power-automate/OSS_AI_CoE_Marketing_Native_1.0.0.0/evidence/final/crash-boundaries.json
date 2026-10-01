@@ -1,0 +1,359 @@
+{
+  "scope": "FAKE_EXTERNALS_ACTUAL_WDL_COMPILED_CSHARP",
+  "count": 44,
+  "cases": [
+    {
+      "scenario": "manual brief",
+      "boundary": 1,
+      "effect": "update:canonical:98a01058df5a91eba3f3b32c952b9974ce9fefca7d1c1ff770fab73c09f7eb76",
+      "providerCalls": 0,
+      "projectionCount": 0,
+      "pass": true
+    },
+    {
+      "scenario": "manual brief",
+      "boundary": 2,
+      "effect": "insert:canonical:2dd2290d0855037111f5dbc00e663627cdcd0e576b62dbd1b87613204dfdedb7",
+      "providerCalls": 0,
+      "projectionCount": 0,
+      "pass": true
+    },
+    {
+      "scenario": "manual brief",
+      "boundary": 3,
+      "effect": "insert:canonical:046e4a43e967f21c0886599d8dd74dca6ccd5195bc3d9ba44d16ee6c9a8b9e78",
+      "providerCalls": 0,
+      "projectionCount": 0,
+      "pass": true
+    },
+    {
+      "scenario": "manual brief",
+      "boundary": 4,
+      "effect": "insert:canonical:96c601a326f819ee45c71605a50f202a133f3eb3b6857fb1768feb8ae3deefb7",
+      "providerCalls": 0,
+      "projectionCount": 0,
+      "pass": true
+    },
+    {
+      "scenario": "manual brief",
+      "boundary": 5,
+      "effect": "insert:canonical:57c4f07b686e367475b8a28af22afd16ec6a7c9db267947b24bf1aa2fa1f06fe",
+      "providerCalls": 0,
+      "projectionCount": 0,
+      "pass": true
+    },
+    {
+      "scenario": "manual brief",
+      "boundary": 6,
+      "effect": "insert:canonical:0499d6b6103d1bb1abc0aa81538047e64d66ece455a9ca3e018efafce1386740",
+      "providerCalls": 0,
+      "projectionCount": 0,
+      "pass": true
+    },
+    {
+      "scenario": "manual brief",
+      "boundary": 7,
+      "effect": "insert:canonical:2b083edc1a7aa125d0764d51ca0a4c07c338a70f994e0122c0df2e5efc00dbc5",
+      "providerCalls": 0,
+      "projectionCount": 0,
+      "pass": true
+    },
+    {
+      "scenario": "manual brief",
+      "boundary": 8,
+      "effect": "update:canonical:046e4a43e967f21c0886599d8dd74dca6ccd5195bc3d9ba44d16ee6c9a8b9e78",
+      "providerCalls": 0,
+      "projectionCount": 0,
+      "pass": true
+    },
+    {
+      "scenario": "manual brief",
+      "boundary": 9,
+      "effect": "insert:result:00000000-0000-4000-8000-000000000002",
+      "providerCalls": 0,
+      "projectionCount": 1,
+      "pass": true
+    },
+    {
+      "scenario": "manual brief",
+      "boundary": 10,
+      "effect": "private-acl:1",
+      "providerCalls": 0,
+      "projectionCount": 1,
+      "pass": true
+    },
+    {
+      "scenario": "manual brief",
+      "boundary": 11,
+      "effect": "grant:7",
+      "providerCalls": 0,
+      "projectionCount": 1,
+      "pass": true
+    },
+    {
+      "scenario": "manual brief",
+      "boundary": 12,
+      "effect": "update:canonical:2dd2290d0855037111f5dbc00e663627cdcd0e576b62dbd1b87613204dfdedb7",
+      "providerCalls": 0,
+      "projectionCount": 1,
+      "pass": true
+    },
+    {
+      "scenario": "manual brief",
+      "boundary": 13,
+      "effect": "update:canonical:046e4a43e967f21c0886599d8dd74dca6ccd5195bc3d9ba44d16ee6c9a8b9e78",
+      "providerCalls": 0,
+      "projectionCount": 1,
+      "pass": true
+    },
+    {
+      "scenario": "manual brief",
+      "boundary": 14,
+      "effect": "update:canonical:98a01058df5a91eba3f3b32c952b9974ce9fefca7d1c1ff770fab73c09f7eb76",
+      "providerCalls": 0,
+      "projectionCount": 1,
+      "pass": true
+    },
+    {
+      "scenario": "provider brief",
+      "boundary": 1,
+      "effect": "insert:canonical:98a01058df5a91eba3f3b32c952b9974ce9fefca7d1c1ff770fab73c09f7eb76",
+      "providerCalls": 0,
+      "projectionCount": 0,
+      "pass": true
+    },
+    {
+      "scenario": "provider brief",
+      "boundary": 2,
+      "effect": "insert:canonical:973380957116ca3d220252d1c9f7da013cde74e0d75bfc0d21383c1dc0b11de0",
+      "providerCalls": 0,
+      "projectionCount": 0,
+      "pass": true
+    },
+    {
+      "scenario": "provider brief",
+      "boundary": 3,
+      "effect": "insert:canonical:bdccaf278c9ed2c1ce6c9f2ca8076d14184322a7919a226106c707bb2a89dc5c",
+      "providerCalls": 0,
+      "projectionCount": 0,
+      "pass": true
+    },
+    {
+      "scenario": "provider brief",
+      "boundary": 4,
+      "effect": "provider-call",
+      "providerCalls": 1,
+      "projectionCount": 0,
+      "pass": true
+    },
+    {
+      "scenario": "provider brief",
+      "boundary": 5,
+      "effect": "update:canonical:bdccaf278c9ed2c1ce6c9f2ca8076d14184322a7919a226106c707bb2a89dc5c",
+      "providerCalls": 1,
+      "projectionCount": 0,
+      "pass": true
+    },
+    {
+      "scenario": "provider brief",
+      "boundary": 6,
+      "effect": "insert:canonical:e2a3caea6fc46f9a4c03ba8e2cdf8ba1a70946d35308e2b5fdad78637df5fc0c",
+      "providerCalls": 1,
+      "projectionCount": 0,
+      "pass": true
+    },
+    {
+      "scenario": "provider brief",
+      "boundary": 7,
+      "effect": "insert:canonical:96c601a326f819ee45c71605a50f202a133f3eb3b6857fb1768feb8ae3deefb7",
+      "providerCalls": 1,
+      "projectionCount": 0,
+      "pass": true
+    },
+    {
+      "scenario": "provider brief",
+      "boundary": 8,
+      "effect": "insert:canonical:f60f30cdb474ae0be96f7110d54008d7ebc04f3e85478a8a499ed264a2948a3c",
+      "providerCalls": 1,
+      "projectionCount": 0,
+      "pass": true
+    },
+    {
+      "scenario": "provider brief",
+      "boundary": 9,
+      "effect": "insert:canonical:6b6ed88000001efa16ad9c6285c25a8b6eafea8d018881e124a4a5feac8550a2",
+      "providerCalls": 1,
+      "projectionCount": 0,
+      "pass": true
+    },
+    {
+      "scenario": "provider brief",
+      "boundary": 10,
+      "effect": "insert:canonical:099119d29ed8a485325cffb8c3b7d4eea0bd4fa2272544fc6ee9bb4ff0cf1e29",
+      "providerCalls": 1,
+      "projectionCount": 0,
+      "pass": true
+    },
+    {
+      "scenario": "provider brief",
+      "boundary": 11,
+      "effect": "update:canonical:e2a3caea6fc46f9a4c03ba8e2cdf8ba1a70946d35308e2b5fdad78637df5fc0c",
+      "providerCalls": 1,
+      "projectionCount": 0,
+      "pass": true
+    },
+    {
+      "scenario": "provider brief",
+      "boundary": 12,
+      "effect": "insert:result:00000000-0000-4000-8000-000000000101",
+      "providerCalls": 1,
+      "projectionCount": 1,
+      "pass": true
+    },
+    {
+      "scenario": "provider brief",
+      "boundary": 13,
+      "effect": "private-acl:1",
+      "providerCalls": 1,
+      "projectionCount": 1,
+      "pass": true
+    },
+    {
+      "scenario": "provider brief",
+      "boundary": 14,
+      "effect": "grant:7",
+      "providerCalls": 1,
+      "projectionCount": 1,
+      "pass": true
+    },
+    {
+      "scenario": "provider brief",
+      "boundary": 15,
+      "effect": "update:canonical:973380957116ca3d220252d1c9f7da013cde74e0d75bfc0d21383c1dc0b11de0",
+      "providerCalls": 1,
+      "projectionCount": 1,
+      "pass": true
+    },
+    {
+      "scenario": "provider brief",
+      "boundary": 16,
+      "effect": "update:canonical:e2a3caea6fc46f9a4c03ba8e2cdf8ba1a70946d35308e2b5fdad78637df5fc0c",
+      "providerCalls": 1,
+      "projectionCount": 1,
+      "pass": true
+    },
+    {
+      "scenario": "provider brief",
+      "boundary": 17,
+      "effect": "update:canonical:98a01058df5a91eba3f3b32c952b9974ce9fefca7d1c1ff770fab73c09f7eb76",
+      "providerCalls": 1,
+      "projectionCount": 1,
+      "pass": true
+    },
+    {
+      "scenario": "accept brief",
+      "boundary": 1,
+      "effect": "update:canonical:98a01058df5a91eba3f3b32c952b9974ce9fefca7d1c1ff770fab73c09f7eb76",
+      "providerCalls": 0,
+      "projectionCount": 0,
+      "pass": true
+    },
+    {
+      "scenario": "accept brief",
+      "boundary": 2,
+      "effect": "insert:canonical:4d526073e660645e3c5a3f839618449b875a72fbd3e1e20f7402745723184a4b",
+      "providerCalls": 0,
+      "projectionCount": 0,
+      "pass": true
+    },
+    {
+      "scenario": "accept brief",
+      "boundary": 3,
+      "effect": "insert:canonical:e4e2b06792e4dd730c6de226a97908ac0205d4b009e896a7243b7e266790d348",
+      "providerCalls": 0,
+      "projectionCount": 0,
+      "pass": true
+    },
+    {
+      "scenario": "accept brief",
+      "boundary": 4,
+      "effect": "insert:canonical:96064d95fa0f8e98b171356b401241937d9533bbdc927719bf6371c988776c59",
+      "providerCalls": 0,
+      "projectionCount": 0,
+      "pass": true
+    },
+    {
+      "scenario": "accept brief",
+      "boundary": 5,
+      "effect": "insert:canonical:687f163460c625ada82f4a563647f3f5c19367af6d2546ee0dcce256706964aa",
+      "providerCalls": 0,
+      "projectionCount": 0,
+      "pass": true
+    },
+    {
+      "scenario": "accept brief",
+      "boundary": 6,
+      "effect": "insert:canonical:35fc0dee83f06a3ae78735f01790bc06bad0c58ef41ff3923490535f6b0e92df",
+      "providerCalls": 0,
+      "projectionCount": 0,
+      "pass": true
+    },
+    {
+      "scenario": "accept brief",
+      "boundary": 7,
+      "effect": "update:canonical:e4e2b06792e4dd730c6de226a97908ac0205d4b009e896a7243b7e266790d348",
+      "providerCalls": 0,
+      "projectionCount": 0,
+      "pass": true
+    },
+    {
+      "scenario": "accept brief",
+      "boundary": 8,
+      "effect": "insert:result:00000000-0000-4000-8000-000000000006",
+      "providerCalls": 0,
+      "projectionCount": 1,
+      "pass": true
+    },
+    {
+      "scenario": "accept brief",
+      "boundary": 9,
+      "effect": "private-acl:1",
+      "providerCalls": 0,
+      "projectionCount": 1,
+      "pass": true
+    },
+    {
+      "scenario": "accept brief",
+      "boundary": 10,
+      "effect": "grant:8",
+      "providerCalls": 0,
+      "projectionCount": 1,
+      "pass": true
+    },
+    {
+      "scenario": "accept brief",
+      "boundary": 11,
+      "effect": "update:canonical:4d526073e660645e3c5a3f839618449b875a72fbd3e1e20f7402745723184a4b",
+      "providerCalls": 0,
+      "projectionCount": 1,
+      "pass": true
+    },
+    {
+      "scenario": "accept brief",
+      "boundary": 12,
+      "effect": "update:canonical:e4e2b06792e4dd730c6de226a97908ac0205d4b009e896a7243b7e266790d348",
+      "providerCalls": 0,
+      "projectionCount": 1,
+      "pass": true
+    },
+    {
+      "scenario": "accept brief",
+      "boundary": 13,
+      "effect": "update:canonical:98a01058df5a91eba3f3b32c952b9974ce9fefca7d1c1ff770fab73c09f7eb76",
+      "providerCalls": 0,
+      "projectionCount": 1,
+      "pass": true
+    }
+  ],
+  "nativeAcceptance": false
+}

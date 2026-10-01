@@ -1,0 +1,28 @@
+{
+  "data": [
+    {
+      "starting_at": "2026-08-01T00:00:00Z",
+      "ending_at": "2026-08-02T00:00:00Z",
+      "results": [
+        {
+          "currency": "USD",
+          "amount": "123.45",
+          "description": null,
+          "cost_type": null
+        }
+      ]
+    },
+    {
+      "starting_at": "2026-08-02T00:00:00Z",
+      "ending_at": "2026-08-03T00:00:00Z",
+      "results": [
+        {
+          "currency": "USD",
+          "amount": "0.5"
+        }
+      ]
+    }
+  ],
+  "has_more": false,
+  "next_page": null
+}

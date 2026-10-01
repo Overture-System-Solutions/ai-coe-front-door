@@ -1,0 +1,61 @@
+OSS AI CoE Demo - intake, triage and review flows for OSSAICoEDemo, version 1.0.0.0
+
+WHAT THIS IS
+The live OSS governance flows (OSS CloudWave Dashboard Demo 1.0.0.8, exported 2026-09-23) re-pointed
+at a new site, as a separate solution so they install beside the existing flows instead of replacing
+them:
+  Site:        https://osscontact.sharepoint.com/sites/OSSAICoEDemo
+  Recipients:  Brian.Frerichs@osscontact.com;samuel.conrad@osscontact.com
+               (intake receipts, information requests, approvals, expiry notices, weekly digest and
+               the configured default approver)
+  Decisions:   the AI CoE Decisions row records the email of whoever answered the approval.
+               The approval is "first to respond": either of you can approve or decline.
+Everything else in the five flows is unchanged from the live export; the shared builder's checks prove it.
+Flows are packaged OFF. Nothing here was imported, saved or run.
+
+BEFORE YOU START
+1. The site must exist. This package creates lists, not the site. Use a communication site at
+   https://osscontact.sharepoint.com/sites/OSSAICoEDemo with you as an owner.
+2. Add the front-door app to the site (Site contents > New > App). That creates AI CoE Pilot
+   Intakes, AI CoE Pilot Decisions and AI CoE Pilot Policies; the flows below create the rest.
+
+IMPORT
+3. make.powerautomate.com > the OSS environment that already runs the Claude draft flow >
+   Solutions > Import > OSSAICoEDemo_1_0_0_0.zip (leave it zipped). Expect "OSS AI CoE Demo",
+   1.0.0.0, unmanaged, publisher OSS CloudWave Demo (the existing one).
+4. Map the three connection references to existing connections:
+     OSS AI CoE Demo SharePoint          -> a SharePoint connection that is an owner of the new site
+     OSS AI CoE Demo Office 365 Outlook  -> the mailbox the notices should come from
+     OSS AI CoE Demo Approvals           -> an Approvals connection
+   If the request lists get item-level security, the SharePoint connection needs Full Control or
+   Design on them, or it will only see its own rows.
+
+PROVISION THE LISTS (once)
+5. Open "OSS AI CoE Demo — SharePoint Provisioning", Save without changes, turn it On, Run it once,
+   check the run succeeded, then turn it Off. It creates AI CoE Use Cases, AI CoE Decisions,
+   AI CoE Configuration and the other core lists, and seeds DefaultApproverEmail/NotificationEmail
+   with both addresses. Stop on any permission or schema error; do not rerun blindly.
+
+TURN ON THE INTAKE CHAIN
+6. Open each, Save without changes, and turn it On:
+     OSS AI CoE Demo — Intake Processing     (every 5 minutes; receipt to both of you)
+     OSS AI CoE Demo — Triage and Routing    (every 10 minutes; Ready for Review or Needs Information)
+     OSS AI CoE Demo — Review and Decision   (every 15 minutes; approval to both, 5-day timeout)
+   Leave "OSS AI CoE Demo — Weekly Portfolio Control" Off unless you want the Monday 08:00 Eastern
+   digest (to both of you).
+
+THE OLD SITE
+7. The existing "OSS Demo —" flows keep processing CloudWaveDashboardDemo until you turn them Off.
+   They never touch the new site and these never touch the old one. Turn the old ones Off when you
+   no longer need that demo; they are not deleted by this package.
+
+WHAT TO CHECK ON THE FIRST RUN
+- Review and Decision: after an approval, the new AI CoE Decisions row's ApproverEmail should be
+  the responder's address. That expression is new relative to the live export; if the column comes
+  back empty, send the run's output of "Start and wait for an approval".
+
+REBUILD AND RE-CHECK
+  python ../AI_CoE_Governance_Flow_Builder/build_solution.py --target ossaicoedemo
+  python ../AI_CoE_Governance_Flow_Builder/checks.py --target ossaicoedemo --write-verification
+The shared builder's baseline is the live 1.0.0.8 export (SHA-256 checked).
+VERIFICATION.json records the ZIP hash, IDs and check results.

@@ -1,0 +1,30 @@
+Overture AI CoE workflows 1.0.0.2 - adds the AI CoE Approved Tools list to SharePoint Provisioning
+
+Site:     https://osscontact.sharepoint.com/sites/OvertureAICoE (OSS tenant)
+Package:  OvertureAICoE_1_0_0_2.zip (built from the governance builder; SHA-256 in the builder's output)
+Replaces: OvertureAICoE_1_0_0_1.zip, your live export of 2026-09-30. Its five flows are unchanged except SharePoint
+          Provisioning; the other four are byte-for-byte the live definitions.
+Not imported, saved or run.
+
+WHAT CHANGED
+  SharePoint Provisioning now also creates "AI CoE Approved Tools": one row per AI tool the AI CoE has reviewed
+  (status, what it is approved for, eight yes/no information allowances, conditions, not approved for, how to get
+  access, last reviewed, reviewed by). Everyone on the site reads every row; only site owners and the "AI CoE
+  Operators" group can add or change rows, so nobody can approve their own tool:
+    1. the list's permission inheritance is broken, keeping every existing grant (only if it still inherits);
+    2. the "AI CoE Operators" site group gets Full Control on the list (if the group is missing, this step is
+       skipped and the run carries on; owners can still edit);
+    3. Item-level permissions: Read all items / Create and edit: None (ReadSecurity 1, WriteSecurity 4).
+  The front door's own installer (New-FrontDoorPages.ps1 -ListsOnly) creates the same list the same way.
+  Existing lists and rows are not touched; Provisioning only adds what is missing.
+
+STEPS
+  1. make.powerautomate.com > the OSS environment > Solutions > Import > OvertureAICoE_1_0_0_2.zip (it upgrades
+     1.0.0.1; keep the same connections).
+  2. Open "Overture AI CoE — SharePoint Provisioning", Save, turn On, Run once, confirm success, turn Off.
+  3. Check that Intake Processing, Triage and Routing, and Review and Decision are still On (the package carries
+     them Off; your live ones were On). Turn any that went Off back On.
+  4. On the site: Site contents > AI CoE Approved Tools > List settings > Permissions for this list: Owners and
+     AI CoE Operators show Full Control. Advanced settings shows "Read all items" and "Create and Edit access: None".
+  5. Add the tools the AI CoE has reviewed. ToolId is a short fixed key (for example m365-copilot-chat); Title is the
+     name people use; OtherNames are the other names they might type, comma-separated. A yes/no left blank means no.

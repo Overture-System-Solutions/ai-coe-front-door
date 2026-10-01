@@ -1,0 +1,58 @@
+Claude telemetry - Anthropic usage and cost into AI Usage Daily, version 1.0.0.0
+
+READY NOW:  01_OSSCloudWaveClaudeTelemetryConnector_1_0_0_0.zip (connector only)
+SECOND ZIP: 02_OSSCloudWaveClaudeTelemetry_1_0_0_0.zip is built only after the connector's
+            tenant-assigned runtime API name is known. No placeholder or unbound flow ZIP is
+            provided, for the same reason as the Claude draft delivery.
+
+WHAT THIS ADDS
+A read-only custom connector for the Anthropic Admin API (usage report and cost report) and a
+scheduled flow, "OSS Demo - Claude Telemetry", that every six hours writes one AI Usage Daily row
+per day (cost, USD) and per day and model (completions: input and output tokens) with Provider =
+anthropic, for the previous month and the month to date. It also keeps a settable spend alert:
+the ClaudeMonthlyBudgetUsd row of AI CoE Configuration (created empty on the first run) is the
+budget; when month-to-date spend exceeds it a Cost incident opens in AI CoE Incidents, and it is
+resolved once spend is back under budget. The front door web part 1.0.0.9 shows these rows and
+the incident when its "Usage metrics provider" property is Claude (the default) or both.
+
+STAGE 1 (now)
+1. Import 01_OSSCloudWaveClaudeTelemetryConnector_1_0_0_0.zip as an unmanaged solution into the
+   demo environment. Expect solution "OSS CloudWave Claude Telemetry Connector" with the custom
+   connector "OSS Claude Telemetry". Nothing else is touched.
+2. In Anthropic Console (organization admin role): Organization settings > Admin keys > create an
+   Admin API key (it starts with sk-ant-admin01-). Open the connector > Test > New connection and
+   paste the raw key, without "Bearer". Keep the key there only; never send it to me or store it
+   in SharePoint or a flow input.
+3. Run both Test operations as described in TESTING.md (GetUsageReport, then GetCostReport, for
+   the previous month) and note the HTTP status and whether the cost report has one result per
+   bucket.
+4. Send the connector page URL (the browser address while the connector is open). The segment
+   starting with shared_cwdd-5foss-20claude-20telemetry-5f is the runtime API name; the flow ZIP
+   is then bound to it exactly.
+
+STAGE 2 (after the URL; this file is updated with the second ZIP)
+5. Import 02_OSSCloudWaveClaudeTelemetry_1_0_0_0.zip. Map "OSS Claude Telemetry Connection" to the
+   admin-key connection and "OSS Demo SharePoint" to the existing SharePoint connection.
+6. Open "OSS Demo - Claude Telemetry" (imported Off), confirm both connections, click Save without
+   changing anything. If Save fails, send the exact error text.
+7. Test > Manually. Check the run and the list rows per TESTING.md, run it once more and confirm
+   the row count does not change.
+8. Set the budget: AI CoE Configuration > row ClaudeMonthlyBudgetUsd > Value = a number in USD,
+   for example 40. Blank disables the alert. The next run opens or resolves the incident.
+9. Turn the flow On.
+
+SCOPE AND BOUNDARIES
+- Anthropic: read-only (Admin API usage_report/messages and cost_report). No Messages, keys or
+  members are touched. The connection holds the only copy of the admin key.
+- SharePoint writes: AI Usage Daily rows with Provider anthropic (upserted by CompositeKey), the
+  ClaudeMonthlyBudgetUsd row of AI CoE Configuration, and one Cost incident in AI CoE Incidents.
+- No draft, case, approval or email changes. The Claude draft connector and flow, the OpenAI
+  files and the demo flows are unchanged; the OpenAI usage feed is not ingested by this package.
+- Locally checked only: 17 checks, 16 passed and 1 skipped until the flow is bound. Nothing was
+  imported, no key collected, no tenant write performed. See VERIFICATION.json, CHANGES.md and
+  TESTING.md.
+
+Rebuild and re-check from source/ (Python 3 with jsonschema; use py -3 on this machine):
+  py -3 build.py
+  py -3 checks.py
+  py -3 build.py --api-name shared_cwdd-5foss-20claude-20telemetry-5f<hex>   (stage 2 binding)

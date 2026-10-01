@@ -1,0 +1,21 @@
+test_abrupt_interruption_at_every_business_effect_never_duplicates_paid_calls (test_execution.Execution.test_abrupt_interruption_at_every_business_effect_never_duplicates_paid_calls) ... ok
+test_actual_pagination_is_complete_not_deduplicated (test_execution.Execution.test_actual_pagination_is_complete_not_deduplicated) ... ok
+test_before_provider_permission_and_membership_revocation_prevent_disclosure (test_execution.Execution.test_before_provider_permission_and_membership_revocation_prevent_disclosure) ... ok
+test_complete_values_match_every_reference_operation (test_execution.Execution.test_complete_values_match_every_reference_operation) ... ok
+test_existing_author_grant_is_not_erased_or_redeclared_private (test_execution.Execution.test_existing_author_grant_is_not_erased_or_redeclared_private) ... ok
+test_operator_reconciled_partial_review_uses_same_durable_plan (test_execution.Execution.test_operator_reconciled_partial_review_uses_same_durable_plan) ... ok
+test_operator_reconciled_writer_can_resume_original_private_plan (test_execution.Execution.test_operator_reconciled_writer_can_resume_original_private_plan) ... ok
+test_prepublication_revocation_and_malformed_readback_refuse (test_execution.Execution.test_prepublication_revocation_and_malformed_readback_refuse) ... ok
+test_real_etag_cas_conflict_does_not_overwrite_or_complete (test_execution.Execution.test_real_etag_cas_conflict_does_not_overwrite_or_complete) ... ok
+test_review_authority_revoked_before_publication_holds_success (test_execution.Execution.test_review_authority_revoked_before_publication_holds_success) ... ok
+test_source_permission_changed_during_bytes_prevents_provider (test_execution.Execution.test_source_permission_changed_during_bytes_prevents_provider) ... ok
+test_actual_generated_flow_refuses_unqualified_configuration_before_external_actions (test_harness.Boundary.test_actual_generated_flow_refuses_unqualified_configuration_before_external_actions) ... ok
+test_generated_timestamp_format_evaluates_as_milliseconds (test_harness.Boundary.test_generated_timestamp_format_evaluates_as_milliseconds) ... ok
+test_private_result_is_not_public_until_explicit_author_read_grant (test_harness.Boundary.test_private_result_is_not_public_until_explicit_author_read_grant) ... ok
+test_snapshot_paging_and_source_observations_are_real_boundary_operations (test_harness.Boundary.test_snapshot_paging_and_source_observations_are_real_boundary_operations) ... ok
+test_write_then_exact_etag_and_schema_checks (test_harness.Boundary.test_write_then_exact_etag_and_schema_checks) ... ok
+
+----------------------------------------------------------------------
+Ran 16 tests in 8.102s
+
+OK

@@ -1,0 +1,8 @@
+Copilot Studio > the agent > Overview > Suggested prompts (up to six). Title | Prompt
+
+Is this tool okay?      | Can I use an AI tool for a task at work, and what do I need to check first?
+I have an idea          | I have an idea for using AI in my work. How do I share it with the AI CoE?
+My team already uses AI | My team already uses an AI tool. Do we need to tell the AI CoE?
+What info is sensitive? | Which kinds of information need an AI CoE review before I use AI with them?
+Get help or training    | I want to get better at using AI. What help or training can I ask for?
+How did it go?          | How do I tell the AI CoE how an AI task turned out?

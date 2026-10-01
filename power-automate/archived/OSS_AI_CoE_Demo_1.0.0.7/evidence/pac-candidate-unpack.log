@@ -1,0 +1,13 @@
+2026-09-10 13:45:43.469 - Info	
+Extracting /home/far_cdx/.hermes/workspaces/oss-cloudwave-demo-solution/evidence/candidate-layout.zip to /home/far_cdx/.hermes/workspaces/oss-cloudwave-demo-solution/pac-source
+
+2026-09-10 13:45:43.518 - Info	Skipping localization
+2026-09-10 13:45:43.519 - Info	Processing Component: Workflows
+2026-09-10 13:45:43.520 - Info	 - OSS Demo — Intake Processing
+2026-09-10 13:45:43.523 - Info	 - OSS Demo — Review and Decision
+2026-09-10 13:45:43.523 - Info	 - OSS Demo — SharePoint Provisioning
+2026-09-10 13:45:43.524 - Info	 - OSS Demo — Triage and Routing
+2026-09-10 13:45:43.524 - Info	 - OSS Demo — Weekly Portfolio Control
+2026-09-10 13:45:43.526 - Info	
+Unmanaged Extract complete.
+

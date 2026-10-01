@@ -1,0 +1,98 @@
+{
+  "status": "LOCAL_CHECKS_PASS_IMPORT_AND_SAVE_PENDING",
+  "verified_at": "2026-09-27T20:46:44+00:00",
+  "zip": "OSSCloudWaveClaudeCaseAnalysis_1_0_0_0.zip",
+  "zip_sha256": "af1c170e10a7580478cb75a62feabf6e082ea53f089efc99f10cadf1a30f445b",
+  "zip_bytes": 7413,
+  "zip_members": [
+    "customizations.xml",
+    "solution.xml",
+    "Workflows/ClaudeCaseAnalysis-BB292274-AB94-57AA-9AC1-0541255D1BDA.json",
+    "[Content_Types].xml"
+  ],
+  "solution": "OSSCloudWaveClaudeCaseAnalysis",
+  "solution_version": "1.0.0.0",
+  "solution_display_name": "OSS CloudWave Claude Case Analysis",
+  "managed": false,
+  "flow_name": "OSS Demo - Claude Case Analysis",
+  "flow_id": "bb292274-ab94-57aa-9ac1-0541255d1bda",
+  "flow_packaged_off": true,
+  "build_command": "python source/package.py --site-url https://osscontact.sharepoint.com/sites/OSSAICoEDemo --allowed-users \"Brian.Frerichs@osscontact.com;samuel.conrad@osscontact.com\" --out OSSCloudWaveClaudeCaseAnalysis_1_0_0_0.zip",
+  "site_url": "https://osscontact.sharepoint.com/sites/OSSAICoEDemo",
+  "sharepoint_list": "AI CoE Use Cases",
+  "sharepoint_query": "_api/web/lists/getbytitle('AI CoE Use Cases')/items?$select=CoEID,Title,Status,RiskTier,DataSensitivity,ExternalUsers,AutonomousActions,EstimatedMonthlyCost,NextReviewDate,Created,Modified&$filter=Status%20ne%20'Closed'%20and%20Status%20ne%20'Declined'&$orderby=Modified%20desc&$top=201",
+  "trigger_allowed_users": "Brian.Frerichs@osscontact.com;samuel.conrad@osscontact.com",
+  "allowed_users_decision": "Brian Frerichs and Samuel Conrad, semicolon-separated as the designer stores them. Microsoft Learn documents email addresses for Allowed users; the semicolon separator comes from independent trigger references. Confirm the stored value in Code view after the first Save.",
+  "allowed_users_source": "https://learn.microsoft.com/en-us/power-automate/oauth-authentication",
+  "allowed_users_separator_sources": "https://manueltgomes.com/reference/power-automate-trigger-reference/when-an-http-request-is-received-trigger/ ; https://www.inogic.com/blog/2025/03/how-to-secure-http-requests-using-oauth-authentication-in-power-automate/",
+  "claude_connector": {
+    "reused": true,
+    "runtime_api_name": "shared_cwdd-5foss-20claude-20intake-20draft-5f55b0e9f278ac89c6",
+    "logical_name": "cwdd_ossclaudeintakedraft",
+    "connector_id": "9d027c49-6154-5783-9503-a0e9f0458709",
+    "operation_id": "GenerateIntakeDraft"
+  },
+  "connection_references": {
+    "cwdd_claudecaseanalysisconnection": "OSS Claude Case Analysis Connection",
+    "cwdd_caseanalysissharepoint": "OSS Case Analysis SharePoint"
+  },
+  "model": "claude-opus-5",
+  "max_tokens": 1600,
+  "thinking": "disabled",
+  "anthropic_version": "2023-06-01",
+  "server_side_fallbacks": "not possible: connector body schema has additionalProperties false",
+  "actions": 23,
+  "actions_by_type": {
+    "Compose": 1,
+    "If": 5,
+    "OpenApiConnection": 2,
+    "ParseJson": 3,
+    "Response": 9,
+    "Scope": 2,
+    "Select": 1
+  },
+  "secure_data_by_action": {
+    "Validate_request": [
+      "inputs"
+    ],
+    "Claude_analysis": [
+      "inputs",
+      "outputs"
+    ],
+    "Validate_provider": [
+      "inputs"
+    ],
+    "Validate_analysis": [
+      "inputs"
+    ]
+  },
+  "trigger_runtime_configuration": {
+    "concurrency": {
+      "runs": 1
+    }
+  },
+  "template_package": "source/template/02_OSSCloudWaveClaudeDraftIntegration_1_0_0_4.zip",
+  "template_sha256": "2c7416f0ff6aaa2df09ce17cd5a97d2640d5024915231c9f272ff7c6f9ca9aa5",
+  "checks_py": {
+    "tests": 18,
+    "passed": 18,
+    "failed": 0,
+    "skipped": 0,
+    "skipped_reasons": []
+  },
+  "python": "3.14.2",
+  "jsonschema_installed": "4.23.0",
+  "jsonschema_pinned": "jsonschema==4.26.0",
+  "designer_save_verified": "NOT_RUN",
+  "live_sharepoint_read_verified": "NOT_RUN",
+  "live_model_call_verified": "NOT_RUN",
+  "pac_pack_unpack": "NOT_RUN_pac_not_installed",
+  "tenant_import_performed": false,
+  "network_calls_to_microsoft_or_anthropic": false,
+  "key_collected": false,
+  "limits": [
+    "Checks inspect JSON/XML shapes and a Python reference of the guards; they do not run the Power Automate expression engine.",
+    "Hosted designer Save, the SharePoint read and the Claude call are only proven by import, Save and a synthetic test run.",
+    "max_tokens is capped at 1600 by the existing connector; a long answer ends with max_tokens and returns 502."
+  ]
+}

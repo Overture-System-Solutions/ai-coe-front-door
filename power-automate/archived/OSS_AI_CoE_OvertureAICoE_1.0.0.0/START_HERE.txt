@@ -1,0 +1,91 @@
+Overture AI CoE - flows for the OvertureAICoE site, version 1.0.0.0
+
+Site:    https://osscontact.sharepoint.com/sites/OvertureAICoE
+Owners:  Brian.Frerichs@osscontact.com;samuel.conrad@osscontact.com
+         (receipts, information requests, approvals, expiry notices, the digest and the configured
+         default approver go to both; either one can answer an approval; they are the only callers
+         allowed on the case-analysis flow)
+Front door: overture-ai-coe-front-door-audit-fixes/sharepoint/solution/overture-ai-coe-front-door.sppkg
+         (1.0.0.17)
+Same configuration as ../OSS_AI_CoE_Lab_1.0.0.0 (front-door lists, no demo wording), with its own
+solution names, so it installs beside the lab and the older OSS solutions.
+Nothing here was imported, saved or run. All flows are packaged Off.
+
+FILES (import in this order)
+  02_OvertureAICoE_Workflows_1_0_0_0.zip                         intake, triage, review, provisioning (+ front-door lists), digest
+  04_case_analysis/OvertureAICoEClaudeCaseAnalysis_1_0_0_0.zip   Claude case analysis
+Not needed:
+  Claude connector   already in the OSS environment ("OSS Claude Intake Draft", runtime name
+                     shared_cwdd-5foss-20claude-20intake-20draft-5f55b0e9f278ac89c6); 04 is bound to it.
+  Idea draft         the live OSS flow "OSS Demo - Claude Intake Draft" has no site in it and accepts any
+                     OSS user, so this page uses its trigger URL too.
+
+BEFORE YOU START - POWER AUTOMATE PREMIUM
+  02 uses standard connectors only and runs without Premium. The case analysis (04) and the idea draft
+  are Premium (HTTP trigger and the custom Claude connector), and OSS has no Premium licenses. Choose one
+  before relying on them: the 90-day self-service trial, the admin trial (25 seats, 30 days, extendable
+  once), pay-as-you-go ($0.60 per Premium run, environment linked to an Azure subscription), or Premium
+  for the people who use them. Power Automate can suspend (turn off) a Premium flow whose owner has no
+  license or whose trial ended: check the live idea-draft flow's status and run history first if AI
+  summaries fail.
+
+0. THE SITE
+   Create or confirm https://osscontact.sharepoint.com/sites/OvertureAICoE with Brian and Sam as owners.
+   The account behind the flows' SharePoint connections must be a site owner.
+1. IMPORT THE INTAKE WORKFLOWS (02)
+   make.powerautomate.com > the OSS environment > Solutions > Import > 02. Map: Overture AI CoE
+   SharePoint (a site owner), Overture AI CoE Office 365 Outlook (the sending mailbox), Overture AI CoE
+   Approvals. Open "Overture AI CoE — SharePoint Provisioning", Save, turn On, Run once, confirm success,
+   turn Off. Then Save and turn On: Intake Processing, Triage and Routing, Review and Decision.
+   Leave Weekly Portfolio Control Off unless you want the Monday digest.
+2. IMPORT THE CASE ANALYSIS (04)
+   Map "Overture AI CoE Claude Case Analysis Connection" to the existing Claude connection and "Overture
+   AI CoE Case Analysis SharePoint" to a site owner's SharePoint connection (it must read every row of AI
+   CoE Use Cases). Save; in Code view confirm triggerAllowedUsers is
+   Brian.Frerichs@osscontact.com;samuel.conrad@osscontact.com. Optional test: POST
+   04_case_analysis/synthetic-request.json as in ../OSS_AI_CoE_Claude_Case_Analysis_1.0.0.0/START_HERE.txt
+   step 6. Turn On, copy the trigger URL: CaseAnalysisUrl.
+   Shared references (found 2026-09-29): every OSS case-analysis solution (OSSAICoEDemo, lab,
+   OvertureAICoE) ships the same two references, cwdd_claudecaseanalysisconnection and
+   cwdd_caseanalysissharepoint, so the environment holds one record of each. Whatever you map here, or in
+   any later 04 import, applies to all three case-analysis flows; the display name is the last import's.
+   Map it to one Claude connection whose key you have tested, and a SharePoint connection whose account
+   owns every one of those sites.
+3. IDEA DRAFT
+   Open the live "OSS Demo - Claude Intake Draft" flow and copy its trigger URL: DraftServiceUrl.
+4. FRONT DOOR APP
+   The 1.0.0.17 .sppkg is in the OSS app catalog for the lab (Replace it if a newer build exists); add
+   the app to this site (this creates AI CoE Pilot Intakes). API access "Microsoft Flow Service / User"
+   is tenant-wide: approve it once in the SharePoint admin center if it is still pending.
+5. THE FRONT DOOR'S OWN LISTS - done by step 1, no PnP needed
+   Provisioning also creates AI CoE Program Measures, AI CoE Outcome Records (each person sees only their
+   own) and AI CoE User Drafts (each person reads and edits only their own; it inherits the site's
+   permissions, so users must be site Members). Recommended, in the SharePoint UI, on AI CoE Pilot
+   Intakes and AI CoE Use Cases: List settings > Advanced settings > Item-level permissions: "Read items
+   that were created by the user" and "Create items and edit items that were created by the user".
+6. PAGE - in the SharePoint editor, no PnP needed
+   Server draft list ID: Site contents > AI CoE User Drafts > Settings > List settings; the address ends
+   with List=%7B<ID>%7D (enter the bare GUID). Then New > Page, add "AI CoE Front Door", open its settings
+   and fill in: Organization name; Role groups leader=AI CoE Leaders;operator=AI CoE Operators; AI draft
+   flow URL (step 3); Case analysis flow URL (step 2); Server draft list ID; Qualified server draft policy
+   (JSON). Publish. Brian and Sam need to be in AI CoE Leaders or AI CoE Operators to see Enterprise value
+   and the case analysis.
+
+SYNTHETIC LIST DATA
+  ../../../deliverables/CloudWave_PrivatePilot_Synthetic_List_Data_2026-09-28 fits these lists too; its
+  START_HERE covers lists made by this Provisioning flow (add the columns to the view before pasting).
+
+NOT INCLUDED
+  Claude telemetry (../OSS_AI_CoE_Claude_Telemetry_1.0.0.0) is aimed at AI-CoE-Lab; one flow serves one
+  site. Marketing native keeps its recorded CloudWaveDashboardDemo destination (review-only).
+
+CHECK ON THE FIRST RUNS
+- An approval: the AI CoE Decisions row's ApproverEmail should be the responder's address.
+- A submission receipt reads "[Overture AI CoE] Submission received."
+
+REBUILD
+  python ../AI_CoE_Governance_Flow_Builder/build_solution.py --target overture-ai-coe
+  python ../AI_CoE_Governance_Flow_Builder/checks.py --target overture-ai-coe --write-verification
+  python build-source/build_case_analysis.py
+To change the owners, edit "recipients" for overture-ai-coe in ../AI_CoE_Governance_Flow_Builder/build_solution.py
+and USERS in build-source/build_case_analysis.py, then rebuild.

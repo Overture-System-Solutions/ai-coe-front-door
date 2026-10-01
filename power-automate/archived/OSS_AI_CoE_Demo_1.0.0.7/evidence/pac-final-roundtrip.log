@@ -1,0 +1,13 @@
+2026-09-10 13:47:58.565 - Info	
+Extracting /mnt/c/Users/scfre/Downloads/OSS_CloudWave_Demo_1.0.0.7/OSSCloudWaveDashboardDemo_1_0_0_7.zip to /home/far_cdx/.hermes/workspaces/oss-cloudwave-demo-solution/final-roundtrip
+
+2026-09-10 13:47:58.633 - Info	Skipping localization
+2026-09-10 13:47:58.635 - Info	Processing Component: Workflows
+2026-09-10 13:47:58.635 - Info	 - OSS Demo — Intake Processing
+2026-09-10 13:47:58.638 - Info	 - OSS Demo — Review and Decision
+2026-09-10 13:47:58.638 - Info	 - OSS Demo — SharePoint Provisioning
+2026-09-10 13:47:58.638 - Info	 - OSS Demo — Triage and Routing
+2026-09-10 13:47:58.639 - Info	 - OSS Demo — Weekly Portfolio Control
+2026-09-10 13:47:58.641 - Info	
+Unmanaged Extract complete.
+

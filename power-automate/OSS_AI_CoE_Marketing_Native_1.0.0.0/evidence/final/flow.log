@@ -1,0 +1,25 @@
+test_projection_uses_durably_finalized_result (test_finalization.Finalization.test_projection_uses_durably_finalized_result) ... ok
+test_validator_rejects_early_projection_or_finalization (test_finalization.Finalization.test_validator_rejects_early_projection_or_finalization) ... ok
+test_native_limits_privacy_and_real_bindings (test_flow.NativeDefinition.test_native_limits_privacy_and_real_bindings) ... ok
+test_real_source_acquisition_and_dispatch_boundary (test_flow.NativeDefinition.test_real_source_acquisition_and_dispatch_boundary) ... ok
+test_unqualified_candidate_stops_before_connectors (test_flow.NativeDefinition.test_unqualified_candidate_stops_before_connectors) ... ok
+test_common_payload_uses_seven_modes_and_null_until_actual_response (test_interoperability.Interoperability.test_common_payload_uses_seven_modes_and_null_until_actual_response) ... ok
+test_compact_lookup_checks_validity_and_page_completion (test_interoperability.Interoperability.test_compact_lookup_checks_validity_and_page_completion) ... ok
+test_flow_generated_times_use_milliseconds_for_helper_date_contract (test_interoperability.Interoperability.test_flow_generated_times_use_milliseconds_for_helper_date_contract) ... ok
+test_observation_fields_capture_both_sides_and_raw_etag (test_interoperability.Interoperability.test_observation_fields_capture_both_sides_and_raw_etag) ... ok
+test_pagination_preserves_duplicates_and_refuses_limits_or_cycles (test_interoperability.Interoperability.test_pagination_preserves_duplicates_and_refuses_limits_or_cycles) ... ok
+test_retained_plan_replays_original_result_and_writes (test_interoperability.Interoperability.test_retained_plan_replays_original_result_and_writes) ... ok
+test_sharepoint_fields_are_objects_then_exactly_once_json_encoded (test_interoperability.Interoperability.test_sharepoint_fields_are_objects_then_exactly_once_json_encoded) ... ok
+test_isolated_off_solution_and_exact_definitions (test_packaging.PackageDefinition.test_isolated_off_solution_and_exact_definitions) ... ok
+test_durable_order_validator_rejects_early_dispatch_or_completion (test_wdl_safety.WdlSafety.test_durable_order_validator_rejects_early_dispatch_or_completion) ... ok
+test_projected_provider_values_preserve_native_types (test_wdl_safety.WdlSafety.test_projected_provider_values_preserve_native_types) ... ok
+test_request_rereads_normalize_rest_envelope_without_masking_edits (test_wdl_safety.WdlSafety.test_request_rereads_normalize_rest_envelope_without_masking_edits) ... ok
+test_symbols_and_native_graph_validate (test_wdl_safety.WdlSafety.test_symbols_and_native_graph_validate) ... ok
+test_wdl_source_guard_refuses_mask_and_version_before_bytes (test_wdl_safety.WdlSafety.test_wdl_source_guard_refuses_mask_and_version_before_bytes) ... ok
+test_wdl_unknown_provider_and_held_writer_refuse (test_wdl_safety.WdlSafety.test_wdl_unknown_provider_and_held_writer_refuse) ... ok
+test_writer_cannot_be_participant_and_foreign_acl_blocks_grant (test_wdl_safety.WdlSafety.test_writer_cannot_be_participant_and_foreign_acl_blocks_grant) ... ok
+
+----------------------------------------------------------------------
+Ran 20 tests in 0.560s
+
+OK

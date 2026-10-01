@@ -1,0 +1,18 @@
+{
+  "status": "LOCAL_CHECKS_PASS_IMPORT_AND_SAVE_PENDING",
+  "verified_at": "2026-09-29T12:12:27+00:00",
+  "site_url": "https://osscontact.sharepoint.com/sites/OvertureAICoE",
+  "allowed_users": "Brian.Frerichs@osscontact.com;samuel.conrad@osscontact.com",
+  "connector_runtime_api_name": "shared_cwdd-5foss-20claude-20intake-20draft-5f55b0e9f278ac89c6",
+  "connector_runtime_api_name_source": "OSS's existing Claude Intake Draft connector (the live idea draft uses it)",
+  "case_analysis": {
+    "zip": "04_case_analysis/OvertureAICoEClaudeCaseAnalysis_1_0_0_0.zip",
+    "sha256": "adbc94485e3024ae565ffb5b5534ee02aab622f99d571cdc6e3144004552d136",
+    "solution": "OvertureAICoEClaudeCaseAnalysis",
+    "flow_id": "78bfd9b6-c77d-5e33-8668-61b69cc9be68",
+    "flow_name": "Overture AI CoE - Claude Case Analysis",
+    "checks_run": 18
+  },
+  "idea_draft": "not rebuilt: the live OSS flow (1.0.0.5, S779) has no site reference and accepts any tenant user",
+  "not_verified": "Not imported, saved or run in OSS."
+}

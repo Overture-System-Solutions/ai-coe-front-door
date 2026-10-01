@@ -1,0 +1,60 @@
+{
+  "status": "ACCEPTED_USER_REPORTED_HOSTED_SAVE_AND_LIVE_SYNTHETIC_TEST_PASSED",
+  "verified_at": "2026-09-12T01:29:11.412051+00:00",
+  "reported_error": "InvalidSecureDataConfiguration on Response action 'Invalid_request_response' ('outputs' not supported) at designer Save of 1.0.0.3; the designer exposes no Security settings for Response, so it could not be removed in the editor",
+  "fix": "secureData now only on Claude_draft (OpenApiConnection: inputs+outputs) and the three ParseJson actions (inputs). Response actions, the Compose and the trigger carry none. No other change versus 1.0.0.3.",
+  "secure_data_by_action": {
+    "Validate_request": [
+      "inputs"
+    ],
+    "Claude_draft": [
+      "inputs",
+      "outputs"
+    ],
+    "Validate_provider": [
+      "inputs"
+    ],
+    "Validate_draft": [
+      "inputs"
+    ]
+  },
+  "actions_with_secure_data": 4,
+  "trigger_runtime_configuration": {
+    "concurrency": {
+      "runs": 1
+    }
+  },
+  "flow_zip": "02_OSSCloudWaveClaudeDraftIntegration_1_0_0_4.zip",
+  "flow_zip_sha256": "2c7416f0ff6aaa2df09ce17cd5a97d2640d5024915231c9f272ff7c6f9ca9aa5",
+  "flow_solution_version": "1.0.0.4",
+  "connector_zip": "01_OSSCloudWaveClaudeDraftConnector_1_0_0_1.zip",
+  "connector_zip_sha256": "82fb8744123878a47675da1f95f4b5163df3fb9d2652936564834f66c3faac95",
+  "connector_solution_version": "1.0.0.1",
+  "connector_identical_to_previous_deliveries": true,
+  "connector_reimport_required": false,
+  "checks_py": {
+    "tests": 11,
+    "passed": 10,
+    "skipped": 1,
+    "skipped_reason": "evidence/openai-before.json not in snapshot"
+  },
+  "binding_checks_py": {
+    "tests": 5,
+    "passed": 5
+  },
+  "same_flow_id": "d227a436-d15f-5533-92db-ff80887f0bd8",
+  "same_connector_id": "9d027c49-6154-5783-9503-a0e9f0458709",
+  "same_connection_reference": "cwdd_claudeintakedraftconnection",
+  "runtime_api_name": "shared_cwdd-5foss-20claude-20intake-20draft-5f55b0e9f278ac89c6",
+  "model": "claude-sonnet-5",
+  "flow_packaged_off": true,
+  "baseline_1_0_0_3_flow_sha256": "68ae6040c50ba4173b726ea4c6623a8515b799907a994b1d3cb215472d3ad3ea",
+  "designer_save_verified": "USER_REPORTED_PASS_2026-09-12",
+  "live_model_call_verified": "USER_REPORTED_PASS_2026-09-12_synthetic-request.json",
+  "pac_pack_unpack": "NOT_RUN_pac_not_installed",
+  "key_collected": false,
+  "tenant_writes_performed": false,
+  "build_command": "python source/repack.py",
+  "test_method": "Caller flow: HTTP with Microsoft Entra ID (preauthorized) connector, Invoke an HTTP request; connection Base Resource URL = trigger host https://defaulte550987f2b7b4774bda109f6698f40.01.environment.api.powerplatform.com; POST full trigger URL with Content-Type application/json and the synthetic body. See TESTING.md.",
+  "accepted_at": "2026-09-12T02:13:27.442044+00:00"
+}

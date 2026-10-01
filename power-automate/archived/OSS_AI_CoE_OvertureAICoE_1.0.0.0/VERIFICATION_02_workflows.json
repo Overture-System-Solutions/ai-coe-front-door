@@ -1,0 +1,49 @@
+{
+  "status": "LOCAL_CHECKS_PASS_IMPORT_AND_SAVE_PENDING",
+  "verified_at": "2026-09-29T12:12:26+00:00",
+  "target": "overture-ai-coe",
+  "zip": "02_OvertureAICoE_Workflows_1_0_0_0.zip",
+  "zip_sha256": "9a70d06b7e519326306593215359f9144645409a8241a1f6da9a516df2344db6",
+  "zip_bytes": 17357,
+  "solution": "OvertureAICoE",
+  "version": "1.0.0.0",
+  "display_name": "Overture AI CoE",
+  "baseline": "OSSCloudWaveDashboardDemo 1.0.0.8 live OSS export (project home source S780)",
+  "baseline_sha256": "70e986266d63337e06d66229304a5caf54e4035c3e581208283d6979f407233f",
+  "site_url": "https://osscontact.sharepoint.com/sites/OvertureAICoE",
+  "replaces_site_url": "https://osscontact.sharepoint.com/sites/CloudWaveDashboardDemo",
+  "recipients": "Brian.Frerichs@osscontact.com;samuel.conrad@osscontact.com",
+  "decision_approver_email": "@coalesce(first(outputs('Start_and_wait_for_approval')?['body/responses'])?['responder']?['email'],'')",
+  "wording_changes": [
+    {
+      "flow": "IntakeProcessing",
+      "from": "[OSS DEMO] Submission received.",
+      "to": "[Overture AI CoE] Submission received."
+    },
+    {
+      "flow": "IntakeProcessing",
+      "from": "The synthetic case will move through triage and human review.",
+      "to": "Your case will move through triage and human review."
+    }
+  ],
+  "workflow_ids": {
+    "db957f8c-1b01-5551-95de-4c6ab24aaaba": "a5380d67-d534-5247-8f5f-ae1eef4133c6",
+    "0854bca4-b39f-554c-aa45-aff95f23d8b9": "5c3f011e-621f-5da3-be5e-29819bd1e244",
+    "7ba84077-10d0-5077-a09a-c274b10972ba": "cb0ab295-eeae-5d9d-93d6-a681bbf9f2b4",
+    "03505a5f-e573-588a-92fe-d0405ef0da5f": "1e47267b-bf1e-5492-80b9-cc8bdddfa3bc",
+    "6d470257-0283-519a-af5f-f736bc7e48fb": "db29eb3e-cebb-52a9-b72c-84fb44d79cf0"
+  },
+  "connection_references": {
+    "cwdd_overtureaicoesharepoint": "Overture AI CoE SharePoint",
+    "cwdd_overtureaicoeoffice365": "Overture AI CoE Office 365 Outlook",
+    "cwdd_overtureaicoeapprovals": "Overture AI CoE Approvals"
+  },
+  "flows_packaged_off": true,
+  "tests": {
+    "run": 8,
+    "failed": 0,
+    "skipped": 0
+  },
+  "build_command": "python build_solution.py --target overture-ai-coe",
+  "not_verified": "Not imported, saved, run or tested against SharePoint, Outlook or Approvals."
+}

@@ -1,0 +1,15 @@
+{
+  "package": "overture-ai-coe-front-door.sppkg",
+  "version": "1.0.0.18",
+  "sha256": "ffad37402c1c1572e4a8c3b916f588c5ff8bfdef31954bda7401eaa08eec1a0c",
+  "bundle": "ai-coe-front-door-web-part_00aaea3c68eb5e42fc96.js",
+  "built": "2026-10-01",
+  "source": "fix/coe-audit-server-drafts commit d42fdb6 (development/overture-ai-coe-front-door-audit-fixes)",
+  "build": "npm run build: 1334 passed, 0 failed",
+  "verify": "node scripts/verify-package.mjs --tests \"1334 passed (npm run build on 2026-10-01)\": PASS, 186 runtime components",
+  "verificationRecord": "development/overture-ai-coe-front-door-audit-fixes/evidence/port-verification.json",
+  "preview": "Offline preview (simulated host, made-up concierge links and tools): tab order, Requests two columns with approved tools and closed disclosure, concierge first-use dialog, tool picker from the register without the prototype label, case analysis paragraphs, linked cases and side-by-side lists, Improvement without Register team AI use, Metrics heading; no console errors.",
+  "target": "OvertureAICoE (OSS tenant) first; CloudWave later",
+  "uploaded": false,
+  "tenantAcceptance": "not claimed"
+}
