@@ -9,21 +9,22 @@ import { StepRenderer } from '../../controls/StepRenderer';
 import { WorkflowHeader } from '../../controls/WorkflowHeader';
 import { buildReviewRequestExportText } from '../../services/toolPolicyEvaluator';
 import type { IPolicyEvaluation, IReviewContact } from '../../services/toolPolicyEvaluator';
+import type { ISubmissionResult } from '../../services/types';
 import { validateStep } from '../../workflows/formEngine';
 import { buildReviewRequestPayload, CONTACT_REQUIRED_MESSAGE, createToolCheckSession, toolCheckReducer, toStoredToolCheckDraft } from '../../workflows/toolCheckSession';
 import type { IToolCheckDraft, IToolCheckSession, ToolCheckSessionAction } from '../../workflows/toolCheckSession';
-import type { IWorkflowDefinition } from '../../workflows/types';
+import type { IAnswers, IWorkflowDefinition } from '../../workflows/types';
 import { GuidanceResult } from './GuidanceResult';
 import { ReviewRequestContactForm } from './ReviewRequestContactForm';
-import { IntroParagraph, SETTING_UP_TEXT, StartOverDialog, stepPosition, useClearDraft, useDraftBoot, useSaveDraft, WorkflowCard } from './shared';
+import { IntroParagraph, SETTING_UP_TEXT, settleDraft, StartOverDialog, stepPosition, useClearDraft, useDraftBoot, useSaveDraft, WorkflowCard } from './shared';
 import type { IStepPosition, IWorkflowProps } from './shared';
 
 const WORKFLOW_ID: 'toolCheck' = 'toolCheck';
 
 /** Tool or task check: questions, the local routing "guidance prototype", and an optional CoE review request. */
 export function ToolCheckWorkflow({ resumeDraft, onExit, onDraftsChanged }: IWorkflowProps): React.ReactElement {
-  const { branding, catalog, services } = useFrontDoor();
-  const { submit } = useSubmission();
+  const { branding, catalog, services, pageView } = useFrontDoor();
+  const { submit, retryLast } = useSubmission();
   const definition: IWorkflowDefinition = catalog.toolCheck;
   const [session, dispatch] = React.useReducer(
     toolCheckReducer,
@@ -38,6 +39,8 @@ export function ToolCheckWorkflow({ resumeDraft, onExit, onDraftsChanged }: IWor
   });
 
   const position: IStepPosition = React.useMemo((): IStepPosition => stepPosition(definition, session), [definition, session]);
+  // The register's view of a picked tool (tabbed view, 1.0.0.18); the full form derives nothing.
+  const derived = (answers: IAnswers): IAnswers => (definition.deriveAnswers === undefined ? answers : definition.deriveAnswers(answers));
   const { steps, index, step } = position;
 
   if (loading) {
@@ -53,7 +56,7 @@ export function ToolCheckWorkflow({ resumeDraft, onExit, onDraftsChanged }: IWor
 
   const evaluate = (): void => {
     dispatch({ type: 'SET_PHASE', phase: 'evaluating' });
-    services.toolPolicyEvaluator.evaluate(session.answers).then(
+    services.toolPolicyEvaluator.evaluate(derived(session.answers)).then(
       (decision: IPolicyEvaluation): void => dispatch({ type: 'SET_DECISION', decision }),
       (error: unknown): void => {
         console.error('AI CoE guidance evaluation failed', error);
@@ -90,11 +93,32 @@ export function ToolCheckWorkflow({ resumeDraft, onExit, onDraftsChanged }: IWor
     );
   };
 
+  /** After an outcome: the legacy shell clears the draft; a page view keeps the guidance as a draft unless the request is saved. */
+  const settle = (result: ISubmissionResult): Promise<void> =>
+    settleDraft(result, pageView, (): Promise<string> => saveDraft({ ...toStoredToolCheckDraft(session), phase: 'result' }), clearDraft);
+
   const submitReviewRequest = async (decision: IPolicyEvaluation): Promise<void> => {
     dispatch({ type: 'SET_PHASE', phase: 'reviewSubmitting' });
-    await submit('toolCheck-review-request', buildReviewRequestPayload(definition, session.answers, decision, session.contact));
-    await clearDraft();
+    const result: ISubmissionResult = await submit('toolCheck-review-request', buildReviewRequestPayload(definition, derived(session.answers), decision, session.contact));
+    await settle(result);
     dispatch({ type: 'SET_PHASE', phase: 'reviewResult' });
+  };
+
+  /** Sends the last attempt again under its reference (page views: a pending or failed request completes, nothing duplicates). */
+  const confirmAgain = async (): Promise<void> => {
+    dispatch({ type: 'SET_PHASE', phase: 'reviewSubmitting' });
+    const result: ISubmissionResult | undefined = await retryLast();
+    if (result !== undefined) {
+      await settle(result);
+    }
+    dispatch({ type: 'SET_PHASE', phase: 'reviewResult' });
+  };
+
+  const retry = (): void => {
+    confirmAgain().catch((error: unknown): void => {
+      console.error('AI CoE submission failed', error);
+      dispatch({ type: 'SET_PHASE', phase: 'reviewResult' });
+    });
   };
 
   const requestReview = (): void => {
@@ -127,9 +151,11 @@ export function ToolCheckWorkflow({ resumeDraft, onExit, onDraftsChanged }: IWor
   return (
     <div>
       <WorkflowHeader workflow={definition} onExit={onExit} />
-      <div className="mb-5">
-        <span className="overture-badge inline-block rounded-full px-3 py-1 text-xs font-medium">Guidance prototype — routing only, not a policy decision</span>
-      </div>
+      {definition.approvedToolList !== true && (
+        <div className="mb-5">
+          <span className="overture-badge inline-block rounded-full px-3 py-1 text-xs font-medium">Guidance prototype — routing only, not a policy decision</span>
+        </div>
+      )}
       {inForm && <ProgressBar current={index} total={steps.length} phase="form" />}
       <WorkflowCard>
         {index === 0 && inForm && session.editReturnTarget === undefined && <IntroParagraph />}
@@ -143,6 +169,8 @@ export function ToolCheckWorkflow({ resumeDraft, onExit, onDraftsChanged }: IWor
                 dispatch({ type: 'ANSWER', stepId: step.id, value });
               }
             }}
+            answers={session.answers}
+            onAnswerField={(fieldId: string, fieldValue: string | string[]): void => dispatch({ type: 'ANSWER', stepId: fieldId, value: fieldValue })}
           />
         )}
         {session.phase === 'evaluating' && <LoadingState text="Looking at your answers…" />}
@@ -175,6 +203,8 @@ export function ToolCheckWorkflow({ resumeDraft, onExit, onDraftsChanged }: IWor
             downloadFilename="overture-ai-coe-review-request.txt"
             onStartOver={(): void => setConfirmingRestart(true)}
             onDone={onExit}
+            onRetry={retry}
+            onSendAnswers={requestReview}
           />
         )}
         {inForm && (

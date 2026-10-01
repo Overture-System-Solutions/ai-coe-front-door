@@ -1,11 +1,13 @@
 import * as React from 'react';
+import { resolveContentHref } from '../../../content/pageContent';
 import type { IPieceBlock } from '../../../content/pageContent';
-import { PAGE_TARGETS, resolvePageUrl } from '../../../content/pageViews';
-import type { PageLinks, PageTarget } from '../../../content/pageViews';
+import { PAGE_LINK_TARGETS } from '../../../content/pageViews';
+import type { PageLinks, PageLinkTarget } from '../../../content/pageViews';
 import { useFrontDoor } from '../../../context/FrontDoorContext';
 import { HomePage } from '../../HomePage';
 import type { DraftFlags } from '../../LandingPage';
 import { UsageTelemetryStrip } from '../../UsageTelemetryStrip';
+import { MyWork } from '../MyWork';
 
 export interface IPieceBlockProps {
   block: IPieceBlock;
@@ -13,17 +15,25 @@ export interface IPieceBlockProps {
   drafts: DraftFlags;
 }
 
-/** A front-door piece between the content blocks: the home tiles (one per page) or the telemetry strip. */
+/**
+ * A front-door piece between the content blocks: the home tiles (one per page), the telemetry strip
+ * (with the document's kicker when it names one) or the person's own requests. The page links come
+ * from the document, so each passes the same href guard as every other block link: a blank target is
+ * no tile, a forbidden scheme or a protocol-less host is a dead anchor.
+ */
 export function PieceBlock({ block, drafts }: IPieceBlockProps): React.ReactElement {
   const { siteUrl } = useFrontDoor();
   if (block.piece === 'telemetry') {
-    return <UsageTelemetryStrip />;
+    return <UsageTelemetryStrip kicker={block.kicker} />;
+  }
+  if (block.piece === 'myWork') {
+    return <MyWork />;
   }
   const pages: PageLinks = {};
-  for (const target of PAGE_TARGETS) {
-    const url: string | undefined = resolvePageUrl(siteUrl, block.pages[target as PageTarget]);
-    if (url !== undefined) {
-      pages[target as PageTarget] = url;
+  for (const target of PAGE_LINK_TARGETS) {
+    const link: string | undefined = block.pages[target as PageLinkTarget];
+    if (link !== undefined && link.trim() !== '') {
+      pages[target as PageLinkTarget] = resolveContentHref(siteUrl, link);
     }
   }
   return <HomePage drafts={drafts} pages={pages} />;

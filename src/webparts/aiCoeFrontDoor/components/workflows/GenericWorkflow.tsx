@@ -9,14 +9,16 @@ import { StepNav } from '../../controls/StepNav';
 import { StepRenderer } from '../../controls/StepRenderer';
 import { WorkflowHeader } from '../../controls/WorkflowHeader';
 import type { ISubmissionResult } from '../../services/types';
+import { pieceWorkflow } from '../../content/workflows/catalog';
 import { buildGenericExportText, createGenericSession, genericReducer, validateStep, whatHappensNextText } from '../../workflows/formEngine';
 import type { GenericSessionAction, IGenericDraft, IGenericSession } from '../../workflows/formEngine';
-import type { IWorkflowDefinition, WorkflowId } from '../../workflows/types';
-import { IntroParagraph, SETTING_UP_TEXT, StartOverDialog, stepPosition, SUBMITTING_TEXT, useClearDraft, useDraftBoot, useSaveDraft, WorkflowCard } from './shared';
+import type { IPieceWorkflowDefinition, PieceWorkflowId } from '../../workflows/types';
+import { IntroParagraph, SETTING_UP_TEXT, settleDraft, StartOverDialog, stepPosition, SUBMITTING_TEXT, useClearDraft, useDraftBoot, useSaveDraft, WorkflowCard } from './shared';
 import type { IStepPosition, IWorkflowProps } from './shared';
 
 export interface IGenericWorkflowProps extends IWorkflowProps {
-  workflowId: WorkflowId;
+  /** The outcome record walks the same way as the shipped generic workflows, with its own definition (decision 16). */
+  workflowId: PieceWorkflowId;
 }
 
 function continueLabel(session: IGenericSession, position: IStepPosition): string {
@@ -31,13 +33,13 @@ function continueLabel(session: IGenericSession, position: IStepPosition): strin
 
 /** Question-by-question form, review page and submission for the workflows without a bespoke summary. */
 export function GenericWorkflow({ workflowId, resumeDraft, onExit, onDraftsChanged }: IGenericWorkflowProps): React.ReactElement {
-  const { branding, catalog } = useFrontDoor();
-  const { submit } = useSubmission();
-  const definition: IWorkflowDefinition = catalog[workflowId];
+  const { branding, catalog, pageView } = useFrontDoor();
+  const { submit, retryLast } = useSubmission();
+  const definition: IPieceWorkflowDefinition = pieceWorkflow(catalog, workflowId);
   const [session, dispatch] = React.useReducer(
     genericReducer,
     definition,
-    (initial: IWorkflowDefinition): IGenericSession => createGenericSession(initial, undefined)
+    (initial: IPieceWorkflowDefinition): IGenericSession => createGenericSession(initial, undefined)
   );
   const [confirmingRestart, setConfirmingRestart] = React.useState<boolean>(false);
   const saveDraft: (draft: unknown) => Promise<string> = useSaveDraft(workflowId, onDraftsChanged);
@@ -72,20 +74,47 @@ export function GenericWorkflow({ workflowId, resumeDraft, onExit, onDraftsChang
     }
   };
 
+  /** After an outcome: the legacy shell clears the draft; a page view keeps the answers as a review-stage draft unless the record is saved. */
+  const settle = (result: ISubmissionResult): Promise<void> =>
+    settleDraft(result, pageView, (): Promise<string> => saveDraft({ answers: session.answers, currentStepId: session.currentStepId, phase: 'review' }), clearDraft);
+
   const submitAnswers = async (): Promise<void> => {
     dispatch({ type: 'SET_PHASE', phase: 'submitting' });
     const result: ISubmissionResult = await submit(workflowId, session.answers);
-    await clearDraft();
+    await settle(result);
     dispatch({ type: 'SET_RESULT', result });
+  };
+
+  const confirm = (): void => {
+    // The governance service reports failures as results; a rejection here is a programming error.
+    submitAnswers().catch((error: unknown): void => {
+      console.error('AI CoE submission failed', error);
+      dispatch({ type: 'SET_PHASE', phase: 'review' });
+    });
+  };
+
+  /** Sends the last attempt again under its reference (page views: a pending or failed record completes, nothing duplicates). */
+  const confirmAgain = async (): Promise<void> => {
+    dispatch({ type: 'SET_PHASE', phase: 'submitting' });
+    const result: ISubmissionResult | undefined = await retryLast();
+    if (result === undefined) {
+      dispatch({ type: 'SET_PHASE', phase: 'result' });
+      return;
+    }
+    await settle(result);
+    dispatch({ type: 'SET_RESULT', result });
+  };
+
+  const retry = (): void => {
+    confirmAgain().catch((error: unknown): void => {
+      console.error('AI CoE submission failed', error);
+      dispatch({ type: 'SET_PHASE', phase: 'result' });
+    });
   };
 
   const next = (): void => {
     if (session.phase === 'review') {
-      // The governance service reports failures as results; a rejection here is a programming error.
-      submitAnswers().catch((error: unknown): void => {
-        console.error('AI CoE submission failed', error);
-        dispatch({ type: 'SET_PHASE', phase: 'review' });
-      });
+      confirm();
       return;
     }
     const message: string | undefined = validateStep(step, session.answers);
@@ -132,6 +161,8 @@ export function GenericWorkflow({ workflowId, resumeDraft, onExit, onDraftsChang
                 dispatch({ type: 'ANSWER', stepId: step.id, value });
               }
             }}
+            answers={session.answers}
+            onAnswerField={(fieldId: string, fieldValue: string | string[]): void => dispatch({ type: 'ANSWER', stepId: fieldId, value: fieldValue })}
           />
         )}
         {inReview && (
@@ -151,6 +182,8 @@ export function GenericWorkflow({ workflowId, resumeDraft, onExit, onDraftsChang
             downloadFilename={`overture-ai-coe-${definition.id}-summary.txt`}
             onStartOver={(): void => setConfirmingRestart(true)}
             onDone={onExit}
+            onRetry={retry}
+            onSendAnswers={confirm}
           />
         )}
         {(inForm || inReview) && (

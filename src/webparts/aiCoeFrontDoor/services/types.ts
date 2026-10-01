@@ -1,14 +1,59 @@
-import type { SubmissionWorkflowType } from '../workflows/types';
+import type { SubmissionPieceType, SubmissionWorkflowType } from '../workflows/types';
+import type { FailureClass } from './failureClass';
 
-/** Outcome of writing a submission to SharePoint. `connected` is false when the write failed. */
-export interface ISubmissionResult {
+/**
+ * What a failed read or write carries beside its shipped `message`: the class of the failure and a
+ * sentence with no response body in it. Absent when the call succeeded.
+ */
+export interface IFailureFields {
+  failureClass?: FailureClass;
+  userMessage?: string;
+}
+
+/**
+ * What a submission came to: `saved` once the row was written and read back, `pending` when the
+ * write was accepted but the readback did not confirm it (the row may exist; a retry under the same
+ * identifier finds it and never writes twice), `failed` when nothing was accepted.
+ */
+export type SubmissionState = 'saved' | 'pending' | 'failed';
+
+export interface ISubmitOptions {
+  /**
+   * The identifier of an earlier attempt. The service looks for the rows that attempt may have left
+   * before writing anything, so a retry completes the record instead of duplicating it.
+   */
+  intakeId?: string;
+}
+
+/**
+ * Outcome of writing a submission to SharePoint. `connected` is true only for a saved submission;
+ * `state` says which of the three outcomes it was (absent on a result from before the readback,
+ * which `submissionState` reads through `connected`).
+ */
+export interface ISubmissionResult extends IFailureFields {
   connected: boolean;
+  state?: SubmissionState;
   intakeId?: string;
   itemId?: number;
   itemUrl?: string;
   governanceItemId?: number;
   governanceItemUrl?: string;
+  /** When the row was confirmed: its `Modified` stamp as read back, else the moment of the submission. */
+  savedAt?: string;
+  /** The workflow version written with the row. */
+  version?: string;
+  /**
+   * True when the result is about an earlier attempt, not the answers just sent: the server recovery record holds
+   * an unconfirmed attempt and refuses any other submission until it is confirmed. The answers on screen were not
+   * sent, so a result like this never settles their draft; the reference is that earlier attempt's.
+   */
+  earlierAttempt?: boolean;
   message: string;
+}
+
+/** The state of any result, including one that predates `state`: connected means saved, anything else failed. */
+export function submissionState(result: ISubmissionResult): SubmissionState {
+  return result.state ?? (result.connected ? 'saved' : 'failed');
 }
 
 /** A SharePoint list item as returned by the REST API with `odata=nometadata`. */
@@ -16,7 +61,7 @@ export interface IListItem {
   [field: string]: unknown;
 }
 
-export interface IAdminDashboardData {
+export interface IAdminDashboardData extends IFailureFields {
   connected: boolean;
   intakes: IListItem[];
   useCases: IListItem[];
@@ -24,8 +69,27 @@ export interface IAdminDashboardData {
   message: string;
 }
 
+export interface IRecoveredSubmission {
+  attempt: { workflowType: SubmissionPieceType; payload: unknown; intakeId: string };
+  result: ISubmissionResult;
+}
+
 export interface IGovernanceService {
-  submitWorkflow(workflowType: SubmissionWorkflowType, payload: unknown): Promise<ISubmissionResult>;
+  /** Recover an unfinished, server-stored intent without submitting a new request. */
+  restoreSubmission?(): Promise<IRecoveredSubmission | undefined>;
+  /**
+   * The payload a new submission is sent as, when the service adds to what the form built (the consolidated view's
+   * gate marks a leader's business case to be reviewed sooner). A caller keeps what this returns as the attempt, so
+   * a retry, which is never prepared again, sends exactly what its first attempt recorded. Absent: sent as built.
+   */
+  prepareSubmission?(workflowType: SubmissionPieceType, payload: unknown): unknown;
+  submitWorkflow(workflowType: SubmissionWorkflowType, payload: unknown, options?: ISubmitOptions): Promise<ISubmissionResult>;
+  /**
+   * Writes one outcome record (the answers of the outcome piece) to its own list: choices only, no
+   * person named, keyed by `OutcomeId` and read back before it is reported saved. `options.intakeId`
+   * carries that key on a retry, so a pending record completes instead of being written twice.
+   */
+  submitOutcome(payload: unknown, options?: ISubmitOptions): Promise<ISubmissionResult>;
   getAdminDashboardData(): Promise<IAdminDashboardData>;
 }
 
@@ -61,7 +125,7 @@ export interface IUsageAlert {
   details: string;
 }
 
-export interface IUsageMetricsResult {
+export interface IUsageMetricsResult extends IFailureFields {
   connected: boolean;
   metrics: IUsageMetric[];
   alerts: IUsageAlert[];

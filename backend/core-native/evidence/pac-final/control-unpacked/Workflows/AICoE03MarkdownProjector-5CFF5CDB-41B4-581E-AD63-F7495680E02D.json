@@ -1,0 +1,641 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_sharepointonline": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "aicoe_sharepointonline"
+        },
+        "api": {
+          "name": "shared_sharepointonline"
+        }
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        },
+        "aicoe_SiteUrl (aicoe_SiteUrl)": {
+          "defaultValue": "https://parkplace.sharepoint.com/sites/AICoE-PrivatePilot",
+          "type": "String",
+          "metadata": {
+            "schemaName": "aicoe_SiteUrl",
+            "description": "SharePoint site that hosts the AI CoE lists. Set per environment."
+          }
+        },
+        "aicoe_NotificationEmail (aicoe_NotificationEmail)": {
+          "defaultValue": "REPLACE-BEFORE-ENABLING.invalid",
+          "type": "String",
+          "metadata": {
+            "schemaName": "aicoe_NotificationEmail",
+            "description": "Alert address. Invalid on purpose until set."
+          }
+        },
+        "aicoe_EnvironmentLabel (aicoe_EnvironmentLabel)": {
+          "defaultValue": "Pilot",
+          "type": "String",
+          "metadata": {
+            "schemaName": "aicoe_EnvironmentLabel",
+            "description": "Appears in log rows and outbox subjects."
+          }
+        }
+      },
+      "triggers": {
+        "Trigger": {
+          "type": "Recurrence",
+          "recurrence": {
+            "frequency": "Minute",
+            "interval": 15,
+            "timeZone": "Eastern Standard Time"
+          },
+          "runtimeConfiguration": {
+            "concurrency": {
+              "runs": 1
+            }
+          }
+        }
+      },
+      "actions": {
+        "Get_Definitions": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_sharepointonline",
+              "operationId": "GetItems",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+            },
+            "parameters": {
+              "dataset": "@parameters('aicoe_SiteUrl (aicoe_SiteUrl)')",
+              "table": "AI CoE Definitions",
+              "$top": 500
+            },
+            "authentication": "@parameters('$authentication')"
+          },
+          "runAfter": {}
+        },
+        "Select_Cfg": {
+          "type": "Select",
+          "inputs": {
+            "from": "@body('Get_Definitions')?['value']",
+            "select": "@concat('\"', item()?['Title'], '\":', item()?['Value'])"
+          },
+          "runAfter": {
+            "Get_Definitions": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Cfg": {
+          "type": "Compose",
+          "inputs": "@json(concat('{', join(body('Select_Cfg'), ','), '}'))",
+          "runAfter": {
+            "Select_Cfg": [
+              "Succeeded"
+            ]
+          }
+        },
+        "RunStart": {
+          "type": "Compose",
+          "inputs": "@utcNow()",
+          "runAfter": {
+            "Cfg": [
+              "Succeeded"
+            ]
+          }
+        },
+        "SiteRel": {
+          "type": "Compose",
+          "inputs": "@uriPath(parameters('aicoe_SiteUrl (aicoe_SiteUrl)'))",
+          "runAfter": {
+            "RunStart": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Get_Changed": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_sharepointonline",
+              "operationId": "GetItems",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+            },
+            "parameters": {
+              "dataset": "@parameters('aicoe_SiteUrl (aicoe_SiteUrl)')",
+              "table": "@outputs('Cfg')?['ListId_Cases']",
+              "$top": 200,
+              "$filter": "@concat('Modified gt ''', outputs('Cfg')?['Projector_LastRun'], '''')",
+              "$orderby": "Modified asc"
+            },
+            "authentication": "@parameters('$authentication')"
+          },
+          "runAfter": {
+            "SiteRel": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Scope_Project": {
+          "type": "Scope",
+          "actions": {
+            "For_each_case": {
+              "type": "Foreach",
+              "foreach": "@body('Get_Changed')?['value']",
+              "actions": {
+                "Case_Packets": {
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "host": {
+                      "connectionName": "shared_sharepointonline",
+                      "operationId": "GetItems",
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+                    },
+                    "parameters": {
+                      "dataset": "@parameters('aicoe_SiteUrl (aicoe_SiteUrl)')",
+                      "table": "@outputs('Cfg')?['ListId_Evidence']",
+                      "$top": 50,
+                      "$filter": "@concat('WorkID eq ''', items('For_each_case')?['Title'], '''')"
+                    },
+                    "authentication": "@parameters('$authentication')"
+                  },
+                  "runAfter": {}
+                },
+                "Case_Decisions": {
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "host": {
+                      "connectionName": "shared_sharepointonline",
+                      "operationId": "GetItems",
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+                    },
+                    "parameters": {
+                      "dataset": "@parameters('aicoe_SiteUrl (aicoe_SiteUrl)')",
+                      "table": "@outputs('Cfg')?['ListId_Decisions']",
+                      "$top": 20,
+                      "$filter": "@concat('WorkID eq ''', items('For_each_case')?['Title'], '''')",
+                      "$orderby": "Created desc"
+                    },
+                    "authentication": "@parameters('$authentication')"
+                  },
+                  "runAfter": {
+                    "Case_Packets": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "Packet_Lines": {
+                  "type": "Select",
+                  "inputs": {
+                    "from": "@body('Case_Packets')?['value']",
+                    "select": "@concat('| ', item()?['Title'], ' | ', item()?['EvidenceType'], ' | ', item()?['Status']?['Value'], ' | ', coalesce(item()?['AssignedRole'], ''), ' | ', coalesce(item()?['FreshnessState']?['Value'], ''), ' |')"
+                  },
+                  "runAfter": {
+                    "Case_Decisions": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "Decision_Lines": {
+                  "type": "Select",
+                  "inputs": {
+                    "from": "@body('Case_Decisions')?['value']",
+                    "select": "@concat('| ', item()?['Title'], ' | ', item()?['Status']?['Value'], ' | ', coalesce(item()?['Lane'], ''), ' | ', coalesce(item()?['PayloadHash'], ''), ' | ', coalesce(item()?['HashProvenance']?['Value'], ''), ' |')"
+                  },
+                  "runAfter": {
+                    "Packet_Lines": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "Markdown": {
+                  "type": "Compose",
+                  "inputs": "@concat('# ', items('For_each_case')?['Title'], ' \u2014 ', items('For_each_case')?['WorkTitle'], '\n\n', '**Canonical record:** AI CoE Cases \u00b7 version ', string(coalesce(items('For_each_case')?['Version'], 1)), ' \u00b7 release ', coalesce(items('For_each_case')?['CurrentRelease'], ''), ' \u00b7 projected ', utcNow(), '\n\n', '**This file is a projection. The list row and its RecordJson are the source of truth; do not edit this file.**\n\n', '| Field | Value |\n|---|---|\n', '| Stage / State | ', items('For_each_case')?['Stage']?['Value'], ' / ', items('For_each_case')?['State']?['Value'], ' |\n', '| Employee status | ', coalesce(items('For_each_case')?['EmployeeStatus'], ''), ' |\n', '| Lane | ', coalesce(items('For_each_case')?['Lane']?['Value'], ''), ' |\n', '| Requester / Sponsor / Accountable | ', coalesce(items('For_each_case')?['Requester'], ''), ' / ', coalesce(items('For_each_case')?['Sponsor'], ''), ' / ', coalesce(items('For_each_case')?['AccountableOwner'], ''), ' |\n', '| Decision requested | ', coalesce(items('For_each_case')?['DecisionRequested'], ''), ' |\n', '| Decision readiness | ', coalesce(items('For_each_case')?['DecisionReadiness'], ''), ' (', coalesce(items('For_each_case')?['DecisionReadinessState']?['Value'], ''), ', ', coalesce(items('For_each_case')?['ReadinessVersion'], ''), ') |\n', '| P-Score / Lift | ', coalesce(items('For_each_case')?['PScoreCandidate'], ''), ' / ', coalesce(items('For_each_case')?['Lift'], ''), ' |\n', '| Open evidence gaps | ', coalesce(items('For_each_case')?['OpenEvidenceGaps'], '[]'), ' |\n', '| Next action | ', coalesce(items('For_each_case')?['NextAction'], ''), ' \u2014 ', coalesce(items('For_each_case')?['NextOwner'], ''), ' |\n\n', '## Problem\n\n', coalesce(items('For_each_case')?['ProblemStatement'], '_not yet provided_'), '\n\n## Desired outcome\n\n', coalesce(items('For_each_case')?['DesiredOutcome'], '_not yet provided_'), '\n\n', '## Evidence packets\n\n| Packet | Type | Status | Role | Freshness |\n|---|---|---|---|---|\n', join(body('Packet_Lines'), '\n'), '\n\n', '## Decision packets\n\n| Packet | Status | Lane | PayloadHash | Hash provenance |\n|---|---|---|---|---|\n', join(body('Decision_Lines'), '\n'), '\n\n', '## Canonical record (work-record.v2)\n\n```json\n', coalesce(items('For_each_case')?['RecordJson'], '{}'), '\n```\n')",
+                  "runAfter": {
+                    "Decision_Lines": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "Write_File": {
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "host": {
+                      "connectionName": "shared_sharepointonline",
+                      "operationId": "HttpRequest",
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+                    },
+                    "parameters": {
+                      "dataset": "@parameters('aicoe_SiteUrl (aicoe_SiteUrl)')",
+                      "parameters/method": "POST",
+                      "parameters/uri": "@concat('_api/web/GetFolderByServerRelativeUrl(''', outputs('SiteRel'), '/AI CoE Work Packets'')/Files/add(url=''', items('For_each_case')?['Title'], '.md'',overwrite=true)')",
+                      "parameters/headers": {
+                        "Accept": "application/json;odata=nometadata",
+                        "Content-Type": "text/plain"
+                      },
+                      "parameters/body": "@outputs('Markdown')"
+                    },
+                    "authentication": "@parameters('$authentication')"
+                  },
+                  "runAfter": {
+                    "Markdown": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "If_Surface_Unset": {
+                  "type": "If",
+                  "expression": {
+                    "and": [
+                      {
+                        "not": {
+                          "equals": [
+                            "@coalesce(items('For_each_case')?['CollaborationSurface'], '')",
+                            "@concat(outputs('SiteRel'), '/AI CoE Work Packets/', items('For_each_case')?['Title'], '.md')"
+                          ]
+                        }
+                      }
+                    ]
+                  },
+                  "actions": {
+                    "Stamp_Surface": {
+                      "type": "OpenApiConnection",
+                      "inputs": {
+                        "host": {
+                          "connectionName": "shared_sharepointonline",
+                          "operationId": "PatchItem",
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+                        },
+                        "parameters": {
+                          "dataset": "@parameters('aicoe_SiteUrl (aicoe_SiteUrl)')",
+                          "table": "@outputs('Cfg')?['ListId_Cases']",
+                          "id": "@items('For_each_case')?['ID']",
+                          "item": {
+                            "CollaborationSurface": "@concat(outputs('SiteRel'), '/AI CoE Work Packets/', items('For_each_case')?['Title'], '.md')"
+                          }
+                        },
+                        "authentication": "@parameters('$authentication')"
+                      },
+                      "runAfter": {}
+                    }
+                  },
+                  "runAfter": {
+                    "Write_File": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "Find_Projected_Event": {
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "host": {
+                      "connectionName": "shared_sharepointonline",
+                      "operationId": "GetItems",
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+                    },
+                    "parameters": {
+                      "dataset": "@parameters('aicoe_SiteUrl (aicoe_SiteUrl)')",
+                      "table": "@outputs('Cfg')?['ListId_Events']",
+                      "$top": 1,
+                      "$filter": "@concat('IdempotencyKey eq ''', items('For_each_case')?['Title'], ':MARKDOWN_PROJECTED:', string(coalesce(items('For_each_case')?['Version'], 1)), '''')"
+                    },
+                    "authentication": "@parameters('$authentication')"
+                  },
+                  "runAfter": {
+                    "If_Surface_Unset": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "If_Not_Yet_Projected": {
+                  "type": "If",
+                  "expression": {
+                    "and": [
+                      {
+                        "equals": [
+                          "@empty(body('Find_Projected_Event')?['value'])",
+                          true
+                        ]
+                      }
+                    ]
+                  },
+                  "actions": {
+                    "Evt_Projected": {
+                      "type": "Compose",
+                      "inputs": {
+                        "EventID": "@concat('EVT-', formatDateTime(utcNow(),'yyyyMMddHHmmss'), '-', toUpper(substring(replace(guid(),'-',''),0,6)))",
+                        "WorkID": "@items('For_each_case')?['Title']",
+                        "EventType": "MARKDOWN_PROJECTED",
+                        "OccurredAt": "@utcNow()",
+                        "ActorType": "SERVICE",
+                        "ActorID": "AI CoE 03 Markdown Projector",
+                        "Provider": null,
+                        "SourceRef": "svc:AI CoE 03 Markdown Projector",
+                        "SourceVersion": "1",
+                        "CorrelationID": "@concat('CORR-', replace(items('For_each_case')?['Title'], 'CW-', ''))",
+                        "CausationID": null,
+                        "IdempotencyKey": "@concat(items('For_each_case')?['Title'], ':MARKDOWN_PROJECTED:', string(coalesce(items('For_each_case')?['Version'], 1)))",
+                        "PayloadVersion": "1",
+                        "Payload": {
+                          "File": "@concat(outputs('SiteRel'), '/AI CoE Work Packets/', items('For_each_case')?['Title'], '.md')",
+                          "CaseVersion": "@string(coalesce(items('For_each_case')?['Version'], 1))"
+                        },
+                        "AuthorityClass": "WRITE_BUSINESS_RECORD",
+                        "ReceiptID": "@concat('RCPT-', formatDateTime(utcNow(),'yyyyMMddHHmmss'), '-', toUpper(substring(replace(guid(),'-',''),0,6)))",
+                        "SchemaVersion": "2.0.0"
+                      },
+                      "runAfter": {}
+                    },
+                    "Event_Projected": {
+                      "type": "OpenApiConnection",
+                      "inputs": {
+                        "host": {
+                          "connectionName": "shared_sharepointonline",
+                          "operationId": "PostItem",
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+                        },
+                        "parameters": {
+                          "dataset": "@parameters('aicoe_SiteUrl (aicoe_SiteUrl)')",
+                          "table": "@outputs('Cfg')?['ListId_Events']",
+                          "item": {
+                            "Title": "@outputs('Evt_Projected')?['EventID']",
+                            "WorkID": "@items('For_each_case')?['Title']",
+                            "EventType": "MARKDOWN_PROJECTED",
+                            "OccurredAt": "@utcNow()",
+                            "ActorType": {
+                              "Value": "SERVICE"
+                            },
+                            "ActorID": "AI CoE 03 Markdown Projector",
+                            "CorrelationID": "@outputs('Evt_Projected')?['CorrelationID']",
+                            "IdempotencyKey": "@outputs('Evt_Projected')?['IdempotencyKey']",
+                            "AuthorityClass": "WRITE_BUSINESS_RECORD",
+                            "ReceiptID": "@outputs('Evt_Projected')?['ReceiptID']",
+                            "SourceVersion": "1",
+                            "Payload": "@string(outputs('Evt_Projected'))",
+                            "TestRecord": "@coalesce(items('For_each_case')?['TestRecord'], false)"
+                          }
+                        },
+                        "authentication": "@parameters('$authentication')"
+                      },
+                      "runAfter": {
+                        "Evt_Projected": [
+                          "Succeeded"
+                        ]
+                      }
+                    }
+                  },
+                  "runAfter": {
+                    "Find_Projected_Event": [
+                      "Succeeded"
+                    ]
+                  }
+                }
+              },
+              "runtimeConfiguration": {
+                "concurrency": {
+                  "repetitions": 1
+                }
+              },
+              "runAfter": {}
+            }
+          },
+          "runAfter": {
+            "Get_Changed": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Find_Watermark": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_sharepointonline",
+              "operationId": "GetItems",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+            },
+            "parameters": {
+              "dataset": "@parameters('aicoe_SiteUrl (aicoe_SiteUrl)')",
+              "table": "@outputs('Cfg')?['ListId_Definitions']",
+              "$top": 1,
+              "$filter": "Title eq 'Projector_LastRun'"
+            },
+            "authentication": "@parameters('$authentication')"
+          },
+          "runAfter": {
+            "Scope_Project": [
+              "Succeeded"
+            ]
+          }
+        },
+        "If_Watermark": {
+          "type": "If",
+          "expression": {
+            "and": [
+              {
+                "greater": [
+                  "@length(body('Find_Watermark')?['value'])",
+                  0
+                ]
+              }
+            ]
+          },
+          "actions": {
+            "Update_Watermark": {
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_sharepointonline",
+                  "operationId": "PatchItem",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+                },
+                "parameters": {
+                  "dataset": "@parameters('aicoe_SiteUrl (aicoe_SiteUrl)')",
+                  "table": "@outputs('Cfg')?['ListId_Definitions']",
+                  "id": "@first(body('Find_Watermark')?['value'])?['ID']",
+                  "item": {
+                    "Value": "@concat('\"', if(equals(length(body('Get_Changed')?['value']), 200), addSeconds(last(body('Get_Changed')?['value'])?['Modified'], -1), outputs('RunStart')), '\"')"
+                  }
+                },
+                "authentication": "@parameters('$authentication')"
+              },
+              "runAfter": {}
+            }
+          },
+          "runAfter": {
+            "Find_Watermark": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Find_Heartbeat": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_sharepointonline",
+              "operationId": "GetItems",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+            },
+            "parameters": {
+              "dataset": "@parameters('aicoe_SiteUrl (aicoe_SiteUrl)')",
+              "table": "@outputs('Cfg')?['ListId_Definitions']",
+              "$top": 1,
+              "$filter": "Title eq 'Heartbeat_03_Projector'"
+            },
+            "authentication": "@parameters('$authentication')"
+          },
+          "runAfter": {
+            "If_Watermark": [
+              "Succeeded"
+            ]
+          }
+        },
+        "If_Heartbeat_Exists": {
+          "type": "If",
+          "expression": {
+            "and": [
+              {
+                "greater": [
+                  "@length(body('Find_Heartbeat')?['value'])",
+                  0
+                ]
+              }
+            ]
+          },
+          "actions": {
+            "Update_Heartbeat": {
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_sharepointonline",
+                  "operationId": "PatchItem",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+                },
+                "parameters": {
+                  "dataset": "@parameters('aicoe_SiteUrl (aicoe_SiteUrl)')",
+                  "table": "@outputs('Cfg')?['ListId_Definitions']",
+                  "id": "@first(body('Find_Heartbeat')?['value'])?['ID']",
+                  "item": {
+                    "Value": "@concat('\"', utcNow(), '\"')"
+                  }
+                },
+                "authentication": "@parameters('$authentication')"
+              },
+              "runAfter": {}
+            }
+          },
+          "runAfter": {
+            "Find_Heartbeat": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Log_Flow_Failure": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_sharepointonline",
+              "operationId": "PostItem",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+            },
+            "parameters": {
+              "dataset": "@parameters('aicoe_SiteUrl (aicoe_SiteUrl)')",
+              "table": "@outputs('Cfg')?['ListId_Log']",
+              "item": {
+                "Title": "@concat('LOG-', formatDateTime(utcNow(),'yyyyMMddHHmmss'), '-', toUpper(substring(replace(guid(),'-',''),0,6)))",
+                "Flow": "AI CoE 03 Markdown Projector",
+                "RunId": "@workflow()?['run']?['name']",
+                "Level": {
+                  "Value": "Error"
+                },
+                "Message": "AI CoE 03 Markdown Projector: projection scope failed; watermark not advanced, cases will be re-projected next cycle.",
+                "CorrelationID": "",
+                "WorkID": "",
+                "LoggedAt": "@utcNow()"
+              }
+            },
+            "authentication": "@parameters('$authentication')"
+          },
+          "runAfter": {
+            "Scope_Project": [
+              "Failed",
+              "TimedOut"
+            ]
+          }
+        },
+        "Terminate_Failed": {
+          "type": "Terminate",
+          "inputs": {
+            "runStatus": "Failed",
+            "runError": {
+              "code": "FLOW_FAILURE",
+              "message": "AI CoE 03 Markdown Projector: projection scope failed; watermark not advanced, cases will be re-projected next cycle."
+            }
+          },
+          "runAfter": {
+            "Log_Flow_Failure": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Log_Cfg_Failure": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_sharepointonline",
+              "operationId": "PostItem",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+            },
+            "parameters": {
+              "dataset": "@parameters('aicoe_SiteUrl (aicoe_SiteUrl)')",
+              "table": "AI Automation Log",
+              "item": {
+                "Title": "@concat('LOG-', formatDateTime(utcNow(),'yyyyMMddHHmmss'), '-', toUpper(substring(replace(guid(),'-',''),0,6)))",
+                "Flow": "AI CoE 03 Markdown Projector",
+                "RunId": "@workflow()?['run']?['name']",
+                "Level": {
+                  "Value": "Error"
+                },
+                "Message": "@concat('Configuration load failed (AI CoE Definitions unreadable or a Value is not a JSON literal): ', string(coalesce(actions('Cfg')?['error'], actions('Select_Cfg')?['error'], actions('Get_Definitions')?['error'], 'unknown')))",
+                "CorrelationID": "",
+                "WorkID": "",
+                "LoggedAt": "@utcNow()"
+              }
+            },
+            "authentication": "@parameters('$authentication')"
+          },
+          "runAfter": {
+            "Cfg": [
+              "Failed",
+              "Skipped"
+            ]
+          }
+        },
+        "Terminate_Cfg": {
+          "type": "Terminate",
+          "inputs": {
+            "runStatus": "Failed",
+            "runError": {
+              "code": "CONFIG_LOAD_FAILED",
+              "message": "AI CoE Definitions must contain valid JSON literals in Value."
+            }
+          },
+          "runAfter": {
+            "Log_Cfg_Failure": [
+              "Succeeded"
+            ]
+          }
+        }
+      },
+      "description": "Regenerates the versioned Markdown companion <WorkID>.md in AI CoE Work Packets for every case modified since the last run (FL-06). Records a MARKDOWN_PROJECTED event. Polls every 15 minutes."
+    },
+    "templateName": null
+  },
+  "schemaVersion": "1.0.0.0"
+}

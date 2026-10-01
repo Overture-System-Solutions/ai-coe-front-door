@@ -3,7 +3,7 @@
  * Shared by the component tests and the original-versus-port parity suite.
  */
 import { fireEvent, within } from '@testing-library/react';
-import { visibleSteps } from '../webparts/aiCoeFrontDoor/workflows/formEngine';
+import { groupFields, visibleSteps } from '../webparts/aiCoeFrontDoor/workflows/formEngine';
 import { isChoiceStep } from '../webparts/aiCoeFrontDoor/workflows/types';
 import type { IAnswers, IStep, IStepOption, IWorkflowDefinition, WorkflowId } from '../webparts/aiCoeFrontDoor/workflows/types';
 
@@ -179,11 +179,28 @@ export function playJourney(journey: IJourney, definition: IWorkflowDefinition, 
       return;
     }
     const step: IStep = steps[index];
-    if (step.type !== 'notice') {
-      const answer: IJourneyAnswer | undefined = journey.answers.filter((candidate: IJourneyAnswer): boolean => candidate.stepId === step.id)[0];
-      if (answer === undefined) {
-        throw new Error(`Journey "${journey.workflowId}" has no answer for step "${step.id}".`);
+    const answerOf = (question: IStep): IJourneyAnswer => {
+      const found: IJourneyAnswer | undefined = journey.answers.filter((candidate: IJourneyAnswer): boolean => candidate.stepId === question.id)[0];
+      if (found === undefined) {
+        throw new Error(`Journey "${journey.workflowId}" has no answer for step "${question.id}".`);
       }
+      return found;
+    };
+    if (step.type === 'group') {
+      // A grouped screen (1.0.0.18): answer every showing field, then any follow-up an answer brought into view.
+      const done: { [id: string]: true } = {};
+      for (let pending: IStep[] = groupFields(step, answers); pending.length > 0; pending = groupFields(step, answers).filter((field: IStep): boolean => done[field.id] === undefined)) {
+        for (const field of pending) {
+          done[field.id] = true;
+          if (field.type !== 'notice') {
+            const answer: IJourneyAnswer = answerOf(field);
+            enterAnswer(field, answer.value, root);
+            answers[field.id] = answer.value;
+          }
+        }
+      }
+    } else if (step.type !== 'notice') {
+      const answer: IJourneyAnswer = answerOf(step);
       enterAnswer(step, answer.value, root);
       answers[step.id] = answer.value;
     }

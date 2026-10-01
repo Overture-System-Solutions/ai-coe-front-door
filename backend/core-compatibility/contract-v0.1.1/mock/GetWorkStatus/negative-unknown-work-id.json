@@ -1,0 +1,19 @@
+{
+ "request": {
+  "Context": {
+   "CorrelationID": "CORR-UAT-NONE",
+   "IdempotencyKey": "status:neg:2",
+   "ClientVersion": "spfx-candidate-0.1",
+   "TenantLabel": "CloudWave-PrivatePilot",
+   "TestRecord": true
+  },
+  "WorkID": "CW-UAT-NONE-999"
+ },
+ "response": {
+  "Result": "FAIL",
+  "ErrorClass": "NOT_FOUND",
+  "Message": "No Work record with this ID.",
+  "ReceiptID": "RCPT-UAT-NEG-002",
+  "RetryAllowed": false
+ }
+}

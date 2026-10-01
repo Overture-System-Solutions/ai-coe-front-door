@@ -6,9 +6,21 @@
  * list store. Every response is simulated and all external network access is blocked; nothing here
  * contacts a tenant. Compiled to lib/preview/previewHost.js and served as /host.js.
  *
+ * Query switches beside `view=` and `page=`: `deny=intakes` makes every read of the intake list answer
+ * 403, so the my-work piece and the status strip show their refused state; `readback=fail` makes the
+ * GET by id that follows a POST answer 503, so a submission from a form page shows the pending receipt
+ * ("Saved, not yet confirmed" with the confirm-again button) instead of the confirmed one; `role=`
+ * names the role to simulate, which the host answers as site group membership and as the one
+ * permission check. The role switch exists here and nowhere else: the shipped bundle resolves the
+ * role from identity and reads nothing out of the address. `palette=` is read by the mount script
+ * alone and reaches the bundle as the `paletteOverrides` property, the way the script writes it.
+ *
  * Written without spread, rest or async/await on purpose: the ES5 build would otherwise import
  * tslib helpers, which a browser cannot resolve from a bare module specifier.
  */
+
+import { PRACTICE_CORE_STORE_KEY, practiceJourney, withPracticeCases } from './practiceCases.js';
+import type { IPracticeJourney } from './practiceCases';
 
 interface IPreviewItem {
   Id: number;
@@ -44,6 +56,8 @@ interface IPreviewApi {
   setOrganizationName(name: string): void;
   /** Points the web part at the simulated draft flow (any non-empty URL) or back to plain summaries. */
   setDraftServiceUrl(url: string): void;
+  /** Points the web part at the simulated case analysis flow (any non-empty URL) or leaves the Cases panel unbound. */
+  setCaseAnalysisUrl(url: string): void;
   /** Switches the telemetry strip between the Claude, OpenAI and combined tile sets. */
   setTelemetryProvider(mode: string): void;
   /** Switches the piece this instance renders (the view property) without reloading. */
@@ -52,6 +66,8 @@ interface IPreviewApi {
   setLayout(layout: string): void;
   /** Switches the page of the simulated content document a content page shows. */
   setPageKey(pageKey: string): void;
+  /** Sets the tenant colours the way the script writes them (`accent=#008B83;ink=#102B3D`); blank clears them. */
+  setPaletteOverrides(overrides: string): void;
 }
 
 type AmdFactory = (...modules: unknown[]) => { default: new () => IPreviewWebPart };
@@ -63,7 +79,7 @@ interface IPreviewWindow {
   FrontDoorPreview: IPreviewApi;
 }
 
-const LIST_TITLES: string[] = ['AI CoE Pilot Intakes', 'AI CoE Use Cases', 'AI CoE Decisions', 'AI Usage Daily', 'AI CoE Incidents'];
+const LIST_TITLES: string[] = ['AI CoE Pilot Intakes', 'AI CoE Use Cases', 'AI CoE Decisions', 'AI Usage Daily', 'AI CoE Incidents', 'AI CoE Program Measures', 'AI CoE Outcome Records', 'AI CoE Approved Tools'];
 const previewWindow: IPreviewWindow = window as unknown as IPreviewWindow;
 const lists: { [title: string]: IPreviewItem[] } = {};
 const requests: IPreviewRequest[] = [];
@@ -133,26 +149,316 @@ function seedTelemetry(): void {
 }
 seedTelemetry();
 
+/** Fictional requests of the preview person, so the my-work piece and the status strip have rows to count. */
+function seedIntakes(): void {
+  const intakes: IPreviewItem[] = lists['AI CoE Pilot Intakes'];
+  const rows: { suffix: string; workflowType: string; status: string; daysAgo: number }[] = [
+    { suffix: 'PREVIEW1', workflowType: 'idea', status: 'Submitted - Pilot', daysAgo: 2 },
+    { suffix: 'PREVIEW2', workflowType: 'helpTraining', status: 'In Review - Pilot', daysAgo: 9 },
+    { suffix: 'PREVIEW3', workflowType: 'feedback', status: 'Closed - Pilot', daysAgo: 20 }
+  ];
+  for (let index: number = 0; index < rows.length; index++) {
+    const submitted: Date = new Date(Date.now() - rows[index].daysAgo * 86400000);
+    const intakeId: string = `OVT-AICOE-${submitted.toISOString().slice(0, 10).replace(/-/g, '')}-${rows[index].suffix}`;
+    intakes.push({
+      Id: nextId++,
+      Title: `${rows[index].workflowType} — ${intakeId}`,
+      IntakeId: intakeId,
+      WorkflowType: rows[index].workflowType,
+      Status: rows[index].status,
+      RequestorName: 'Local Preview (fictional)',
+      RequestorEmail: 'preview@example.invalid',
+      SubmittedAt: submitted.toISOString(),
+      Modified: new Date(submitted.getTime() + 3600000).toISOString(),
+      PayloadJson: '{"simulated":true}'
+    });
+  }
+  // Another person's row: the simulated item-level security below keeps it out of the preview person's reads.
+  intakes.push({
+    Id: nextId++,
+    Title: 'idea — OVT-AICOE-20260101-OTHERONE',
+    IntakeId: 'OVT-AICOE-20260101-OTHERONE',
+    WorkflowType: 'idea',
+    Status: 'Submitted - Pilot',
+    RequestorName: 'Someone Else (fictional)',
+    RequestorEmail: 'someone.else@example.invalid',
+    SubmittedAt: '2026-01-01T09:00:00Z',
+    Modified: '2026-01-01T09:00:00Z',
+    PayloadJson: '{"simulated":true}'
+  });
+}
+seedIntakes();
+
+/**
+ * Fictional governance records, so the leaders' case analysis has open business cases to rank offline. Their business
+ * problem text is kept here only to show that the analysis never reads it.
+ */
+function seedUseCases(): void {
+  const useCases: IPreviewItem[] = lists['AI CoE Use Cases'];
+  const day: number = 86400000;
+  const rows: { suffix: string; title: string; status: string; risk: string; sensitivity: string; external: boolean; autonomous: boolean; cost: number; age: number; review?: number }[] = [
+    { suffix: 'PREVCASE1', title: 'Draft replies to hospital service tickets (fictional)', status: 'Ready for Review', risk: 'High', sensitivity: 'Restricted', external: true, autonomous: false, cost: 1200, age: 12, review: -2 },
+    { suffix: 'PREVCASE2', title: 'Summarize weekly change-advisory notes (fictional)', status: 'Needs Information', risk: 'Medium', sensitivity: 'Confidential', external: false, autonomous: false, cost: 300, age: 20 },
+    { suffix: 'PREVCASE3', title: 'Tag knowledge articles by product line (fictional)', status: 'Under Review', risk: 'Low', sensitivity: 'Internal', external: false, autonomous: false, cost: 60, age: 5, review: 3 },
+    { suffix: 'PREVCASE4', title: 'Route after-hours alerts to on-call (fictional)', status: 'Submitted', risk: '', sensitivity: 'Confidential', external: false, autonomous: true, cost: 450, age: 1 }
+  ];
+  for (const row of rows) {
+    const created: Date = new Date(Date.now() - row.age * day);
+    useCases.push({
+      Id: nextId++,
+      Title: row.title,
+      CoEID: `OVT-AICOE-${created.toISOString().slice(0, 10).replace(/-/g, '')}-${row.suffix}`,
+      Status: row.status,
+      RiskTier: row.risk,
+      DataSensitivity: row.sensitivity,
+      ExternalUsers: row.external,
+      AutonomousActions: row.autonomous,
+      EstimatedMonthlyCost: row.cost,
+      NextReviewDate: row.review === undefined ? null : new Date(Date.now() + row.review * day).toISOString(),
+      BusinessProblem: 'Fictional business problem text. The case analysis never sends this field.',
+      SubmitterEmail: 'someone.else@example.invalid',
+      Created: created.toISOString(),
+      Modified: new Date(created.getTime() + day).toISOString()
+    });
+  }
+}
+seedUseCases();
+
+/** A list row from a record of the worked example, with the preview's own id. */
+function previewRow(record: object, extra: { [field: string]: unknown }): IPreviewItem {
+  const row: IPreviewItem = { Id: nextId++ };
+  const fields: { [field: string]: unknown } = record as { [field: string]: unknown };
+  for (const key of Object.keys(fields)) {
+    row[key] = fields[key];
+  }
+  for (const key of Object.keys(extra)) {
+    row[key] = extra[key];
+  }
+  return row;
+}
+
+/**
+ * The worked example from a request to a business case (1.0.0.19, see practiceCases.ts): four requests of the preview
+ * person with their AI CoE cases, and two business cases added to what the practice case service has saved in this
+ * browser, so Cases opens with one business case in progress and one ready for the review board.
+ */
+function seedPracticeJourney(): void {
+  const journey: IPracticeJourney = practiceJourney();
+  for (const intake of journey.intakes) {
+    lists['AI CoE Pilot Intakes'].push(previewRow(intake, { PayloadJson: '{"simulated":true}' }));
+  }
+  for (const useCase of journey.useCases) {
+    lists['AI CoE Use Cases'].push(previewRow(useCase, {}));
+  }
+  try {
+    window.localStorage.setItem(PRACTICE_CORE_STORE_KEY, withPracticeCases(window.localStorage.getItem(PRACTICE_CORE_STORE_KEY), journey.works));
+  } catch {
+    // Storage refused: Cases opens without the example business cases.
+  }
+}
+seedPracticeJourney();
+
+/**
+ * Fictional rows of the measures list an operator fills in by hand, so the Enterprise value page shows
+ * the three answers a tile can give offline: a measured rate with its period and evidence reference, a
+ * measure whose baseline period is not complete (its evidence note under the placeholder), and a measured
+ * row covering fewer people than the document's minimum, which is held back whatever it claims.
+ */
+function seedMeasures(): void {
+  const measures: IPreviewItem[] = lists['AI CoE Program Measures'];
+  const rows: IPreviewItem[] = [
+    {
+      Id: nextId++,
+      Title: 'Useful safe completion rate',
+      MeasureId: 'useful-safe-completion-rate',
+      State: 'MEASURED',
+      Value: 0.62,
+      Unit: '%',
+      PeriodStart: isoDaysAgo(60),
+      PeriodEnd: isoDaysAgo(30),
+      EvidenceRef: 'PREVIEW-EV-01 (simulated)',
+      CohortSize: 48
+    },
+    {
+      Id: nextId++,
+      Title: 'Median time to a useful outcome',
+      MeasureId: 'median-time-to-useful-outcome',
+      State: 'PENDING_BASELINE',
+      EvidenceNote: 'Simulated preview data: the first period closes at the end of the pilot; no number is shown until it does.'
+    },
+    {
+      Id: nextId++,
+      Title: 'Repeat-use useful completion rate',
+      MeasureId: 'repeat-use-useful-completion-rate',
+      State: 'MEASURED',
+      Value: 0.71,
+      Unit: '%',
+      PeriodStart: isoDaysAgo(60),
+      PeriodEnd: isoDaysAgo(30),
+      EvidenceRef: 'PREVIEW-EV-02 (simulated)',
+      EvidenceNote: 'Simulated preview data: too few people took part for this period to be shown.',
+      CohortSize: 3
+    }
+  ];
+  for (let index: number = 0; index < rows.length; index++) {
+    measures.push(rows[index]);
+  }
+}
+
 /** A page of this preview showing another piece or content page. */
 function previewLink(query: string): string {
   return `/?${query}`;
 }
 
+/** The YYYY-MM-DD date that many days before today (UTC), so the preview's dated facts stay current or stale by design, whenever it runs. */
+function isoDaysAgo(days: number): string {
+  const date: Date = new Date(Date.now() - days * 86400000);
+  const month: number = date.getUTCMonth() + 1;
+  const day: number = date.getUTCDate();
+  return `${date.getUTCFullYear()}-${month < 10 ? '0' : ''}${month}-${day < 10 ? '0' : ''}${day}`;
+}
+// Seeded here rather than beside the other lists: the rows carry dated periods, which this helper writes.
+seedMeasures();
+
+/**
+ * Fictional rows of the approved-tools register (1.0.0.18), so the Requests panel and the tool check's picker show the
+ * three kinds of answer offline: approved for internal information, approved with conditions, and not approved.
+ */
+function seedApprovedTools(): void {
+  const tools: IPreviewItem[] = lists['AI CoE Approved Tools'];
+  const rows: IPreviewItem[] = [
+    {
+      Id: nextId++,
+      Title: 'Workplace Chat Assistant (simulated)',
+      ToolId: 'workplace-chat',
+      OtherNames: 'Chat assistant, Work chat',
+      Vendor: 'Example vendor',
+      Status: 'Approved',
+      ApprovedFor: 'Drafting, summarising and brainstorming with internal information.',
+      CompanyInfoAllowed: true,
+      LastReviewed: isoDaysAgo(10),
+      ReviewedBy: 'AI CoE (simulated)'
+    },
+    {
+      Id: nextId++,
+      Title: 'Meeting Notes Helper (simulated)',
+      ToolId: 'meeting-notes',
+      Status: 'Approved with conditions',
+      ApprovedFor: 'Summarising internal meetings.',
+      CompanyInfoAllowed: true,
+      FileUploadsAllowed: true,
+      Conditions: 'Tell everyone in the meeting before it records.',
+      LastReviewed: isoDaysAgo(20)
+    },
+    {
+      Id: nextId++,
+      Title: 'Free Image Generator (simulated)',
+      ToolId: 'image-generator',
+      Status: 'Not approved',
+      NotApprovedFor: 'Any work material; its terms let the vendor keep uploads.',
+      LastReviewed: isoDaysAgo(5)
+    }
+  ];
+  for (const row of rows) {
+    tools.push(row);
+  }
+}
+
+seedApprovedTools();
+
 // Simulated preview data: the content document a site would keep in Site Assets, with Contoso wording and links
-// back into this preview. Every block type appears at least once.
+// back into this preview. Every block type appears at least once. The route table shows the three answers a route
+// can give: an on-site route that is available, an off-site one still awaiting its tenant receipt (closed, with the
+// guided intake as fallback), and one with no link at all.
 const SAMPLE_PAGE_DOCUMENT: { [key: string]: unknown } = {
   version: 1,
+  // What a provisioning run writes on the document it uploads: the content it named, and every tenant input it
+  // was given or still owes, by name, kind and state. A value never travels with a binding; the one exception is
+  // the reference of a qualification receipt, which names a record.
+  release: { id: 'preview-1.0.0.14 (simulated)', publishedAt: isoDaysAgo(1), source: 'SiteAssets/ai-coe-pages.json' },
+  bindings: [
+    { name: 'AssistantUrl', kind: 'url', state: 'bound' },
+    { name: 'AssistantReceiptRef', kind: 'optional', state: 'bound', receiptRef: 'PREVIEW-RECEIPT-01 (simulated)' },
+    { name: 'WorkCommandUrl', kind: 'url', state: 'awaiting' },
+    { name: 'LeadersGroup', kind: 'group', state: 'bound' },
+    { name: 'OperatorsGroup', kind: 'group', state: 'bound' },
+    { name: 'DesignAuthorityGroup', kind: 'group', state: 'awaiting' }
+  ],
+  // How old a dated fact may be before it needs refreshing, and the smallest group a measure may be shown for.
+  settings: { freshnessDays: 30, minimumCohort: 5 },
+  routes: {
+    guidedIntake: { label: 'Start a guided request', href: previewLink('view=idea'), state: 'availableNow' },
+    work: { label: 'Get work done', state: 'availableNow', note: 'The work command is not yet proved in this environment.' },
+    // carriesReference: the hand-off card after a saved request would append the record reference once the route opens.
+    assistant: { label: 'the assistant', href: 'https://assistant.example/chat', state: 'availableNow', carriesReference: true, note: 'Opens in a new tab once the tenant receipt is recorded.' },
+    improve: { label: 'Improve a task', href: previewLink('view=toolCheck'), state: 'availableNow' },
+    // A route with roles: a leader or an operator reaches the Enterprise value page, anyone else its fallback row.
+    value: { label: 'Enterprise AI value', href: previewLink('page=value'), state: 'availableNow', roles: ['leader', 'operator'], fallback: 'valueFallback' },
+    valueFallback: { label: 'Check status', href: previewLink('page=status'), state: 'availableNow', note: 'Leaders and operators see the evidence-backed view; measured results also appear on Status.' }
+  },
+  // Telemetry tile labels by metric key: read only by a telemetry piece that names its own kicker, so the page names the feed.
+  vocabulary: {
+    telemetry: {
+      anthropic_api_spend_mtd: 'Usage feed A: spend this month',
+      anthropic_api_tokens_mtd: 'Usage feed A: tokens this month',
+      anthropic_api_output_tokens_mtd: 'Usage feed A: output tokens this month',
+      open_coe_alerts: 'Open incidents'
+    }
+  },
+  // The shared footer: the same support route below every page view, the five wizard views included (open "?view=idea").
+  shared: {
+    footer: [
+      {
+        type: 'supportRoute',
+        label: 'Ask in the pilot channel in Teams',
+        href: 'https://teams.microsoft.com/l/channel/contoso',
+        stopWhen: [
+          'the signed-in account or destination is unclear',
+          'someone else\'s information appears',
+          'a source is missing or a claim cannot be verified',
+          'the system appears ready to take an external action you did not approve'
+        ],
+        reportFields: ['the task type', 'the time', 'the status shown', 'what you expected', 'never a secret or private content you do not need to share'],
+        // kind: which row the failure notice of a wizard page names as owner (identity for an access failure, support for the rest).
+        routes: [
+          { issue: 'Wrong identity, audience or access', owner: 'Identity owner (simulated)', action: 'Stop; do not widen access', kind: 'identity' },
+          { issue: 'Someone else\'s information appears', owner: 'Privacy owner (simulated)', action: 'Stop the affected workflow; preserve minimal evidence', kind: 'privacy' },
+          { issue: 'A claim looks incorrect or unsupported', action: 'Remove or label the claim; correct the source binding', kind: 'claims' },
+          { issue: 'Send, publish or record change is proposed', owner: 'Business approver (simulated)', action: 'Keep draft-only until separately approved', kind: 'approval' },
+          { issue: 'Outcome is uncertain after an action', owner: 'Recovery owner (simulated)', action: 'Reconcile the native state before retrying', kind: 'recovery' },
+          { issue: 'Anything else', owner: 'Support owner (simulated)', action: 'Report it as it is: the task, the time, the status shown', kind: 'support' }
+        ]
+      }
+    ]
+  },
   pages: {
     startHere: {
       title: 'Start here',
       blocks: [
         {
+          // The operating promise, no call to action: the work command below is the page's one primary control.
           type: 'hero',
           title: 'What do you need done?',
-          text: 'Ask the AI CoE in [Teams](https://teams.microsoft.com/l/channel/contoso), [learn the basics](/?page=learn) or [start a request](/?page=requests).',
-          cta: { label: 'Start a request', href: previewLink('page=requests') }
+          text: 'Ask the AI CoE in [Teams](https://teams.microsoft.com/l/channel/contoso), [learn the basics](/?page=learn) or [start a request](/?page=requests).'
+        },
+        {
+          type: 'workCommand',
+          prompt: 'What do you need done?',
+          placeholder: 'Say it in one sentence, for example: prepare me for a customer meeting.',
+          submitLabel: 'Start',
+          route: 'work',
+          note: 'Your sentence is saved as a draft request on this device and is never sent anywhere else. Until the work command is proved here, the guided request opens with it filled in.'
         },
         { type: 'heading', level: 2, text: 'What do you want to do?' },
+        {
+          type: 'tiles',
+          prominent: true,
+          items: [
+            { title: 'Get work done', kicker: 'Do', route: 'work', description: 'Say what you need and the right path opens.', icon: 'Lightbulb' },
+            { title: 'Ask the assistant', kicker: 'Ask', route: 'assistant', description: 'Questions answered from approved sources.', icon: 'MessageSquare', tone: 'blue' },
+            { title: 'Improve a task', kicker: 'Improve', route: 'improve', description: 'Check a tool or a task before you rely on it.', icon: 'BriefcaseBusiness', tone: 'gold' }
+          ]
+        },
         {
           type: 'tiles',
           items: [
@@ -161,6 +467,29 @@ const SAMPLE_PAGE_DOCUMENT: { [key: string]: unknown } = {
             { title: 'Start a request', href: previewLink('page=requests'), description: 'Ideas, tools, team use, training, feedback.', icon: 'Inbox', tone: 'blue' },
             { title: 'Check status', href: previewLink('page=status'), description: 'What is running, what is not, what is next.', icon: 'LayoutDashboard', tone: 'gold' }
           ]
+        },
+        { type: 'heading', level: 2, text: 'Three rules for the pilot' },
+        {
+          type: 'rules',
+          items: [
+            { title: 'You decide', text: 'The tool *suggests*; you decide, and you sign what goes out.' },
+            { title: 'Check every number', text: 'Against the source, every time, before it leaves your hands.' },
+            { title: 'Say when you used it', text: 'One line is enough: "drafted with AI, checked by me".' }
+          ]
+        },
+        {
+          type: 'notice',
+          tone: 'caution',
+          title: 'Data boundary',
+          text: 'Keep **personal data**, contracts and anything regulated out of every prompt. If you are not sure, [check the tool or task](/?view=toolCheck) first.'
+        },
+        {
+          // What the outcome record keeps, in the words the shipped Start here page uses (1.0.0.15, decision 16).
+          type: 'notice',
+          tone: 'info',
+          title: 'What this site records',
+          text:
+            'When you record how a task went, only the task type, outcome, review state, correction category and route availability are saved, together with SharePoint\'s own record of who saved it, which only operators can see. Your prompt and the output are never stored. The feedback form is different: what you type there is kept as text.'
         },
         { type: 'heading', level: 2, text: 'Three prompts to try today' },
         {
@@ -173,10 +502,23 @@ const SAMPLE_PAGE_DOCUMENT: { [key: string]: unknown } = {
           ]
         },
         {
-          type: 'statusRow',
+          // The status strip: the person's own request counts (read from the simulated intake list; add "&deny=intakes" to see the refused state) beside two labelled lines.
+          type: 'statusStrip',
           items: [
-            { label: 'Status', text: 'Green. Nothing is blocked this week; see [Status](/?page=status).' },
-            { label: 'Support', text: 'Ask in [Teams](https://teams.microsoft.com/l/channel/contoso) or reply to any AI CoE mail.' }
+            { kind: 'myRequests', label: 'My requests', href: previewLink('page=status') },
+            // A source with no read-back date: the line says "Awaiting source. Do not infer progress." instead of inventing one.
+            { kind: 'text', label: 'Assistant', text: 'Answering from approved sources.', route: 'assistant', source: 'AI CoE check (simulated)' },
+            { kind: 'text', label: 'Support', text: 'Ask in [Teams](https://teams.microsoft.com/l/channel/contoso) or reply to any AI CoE mail.' }
+          ]
+        },
+        {
+          // The leader block: shown only to someone holding the leader role ("?role=leader"), two static links and no figure.
+          type: 'cards',
+          columns: 2,
+          audience: ['leader'],
+          items: [
+            { title: 'Decisions waiting on you', kicker: 'For leaders', body: 'What the AI CoE needs a decision on, with the evidence behind each one.', route: 'value' },
+            { title: 'Material changes', kicker: 'For leaders', body: 'What changed since the last review, and what is still running.', href: previewLink('page=status'), tone: 'gold' }
           ]
         }
       ]
@@ -185,6 +527,17 @@ const SAMPLE_PAGE_DOCUMENT: { [key: string]: unknown } = {
       title: 'Learn',
       blocks: [
         { type: 'paragraph', text: 'Four exercises, about ten minutes in total. Do them in Copilot Chat with your own work; nothing is graded.' },
+        {
+          type: 'rules',
+          title: 'Before you start',
+          ordered: false,
+          items: [
+            { title: 'Use your own work', text: 'A document you have read, a message you need to send.' },
+            { title: 'Keep the boundary', text: 'Public information and your own notes only.' },
+            { title: 'Expect mistakes', text: 'Finding them is the exercise.' }
+          ]
+        },
+        { type: 'notice', tone: 'info', text: 'Nothing here is recorded. The exercises stay on your device and in your own chat history.' },
         {
           type: 'cards',
           columns: 2,
@@ -239,7 +592,9 @@ const SAMPLE_PAGE_DOCUMENT: { [key: string]: unknown } = {
             teamUsage: previewLink('view=teamUsage'),
             helpTraining: previewLink('view=helpTraining'),
             feedback: previewLink('view=feedback'),
-            telemetry: previewLink('page=status'),
+            // The sixth card since 1.0.0.15: the outcome record, a page of its own that asks for choices alone.
+            outcome: previewLink('view=outcome'),
+            // No snapshot link: the telemetry strip sits on the operator-plane Operations page since 1.0.0.13.
             admin: previewLink('view=admin')
           }
         }
@@ -264,22 +619,91 @@ const SAMPLE_PAGE_DOCUMENT: { [key: string]: unknown } = {
     status: {
       title: 'Status',
       blocks: [
-        { type: 'paragraph', text: 'Updated every Friday by the AI CoE. Numbers below come from the simulated telemetry lists of this preview.' },
+        { type: 'paragraph', text: 'Updated every Friday by the AI CoE. Your own requests below come from the simulated request list of this preview.' },
+        // The person's own requests, read from the simulated intake list (add "&deny=intakes" to see the refused state).
+        { type: 'piece', piece: 'myWork', pages: {} },
+        {
+          // The one illustrative case card: an example, its source read 45 days ago, so the example and needs-refresh pills both show.
+          type: 'caseCards',
+          items: [
+            {
+              id: 'EXAMPLE-01',
+              title: 'Example case: a proof-of-value programme',
+              description: 'Shows how a case looks when its latest evidence is older than the freshness threshold.',
+              state: 'AWAITING_SOURCE',
+              historicalStage: 'Validate',
+              historicalHealth: 'amber',
+              sourceDate: isoDaysAgo(45),
+              nextAction: 'Read the latest authoritative source before updating the case.',
+              caption: 'Do not infer progress',
+              illustrative: true
+            }
+          ]
+        },
         {
           type: 'cards',
           columns: 2,
           items: [
-            { title: 'What is running', body: ['**Copilot Chat** for everyone in the pilot.', '**Prompt library** with tested prompts.'] },
-            { title: 'What is not running', body: ['**Agents** are still in review.', '**Connectors to line-of-business systems** are not enabled.'], tone: 'cyan' }
+            // Dated facts: the first was read back this week (current), the second long ago (the needs-refresh pill).
+            { title: 'What is running', body: ['**Copilot Chat** for everyone in the pilot.', '**Prompt library** with tested prompts.'], asOf: isoDaysAgo(3), source: 'AI CoE check (simulated)' },
+            { title: 'What is not running', body: ['**Agents** are still in review.', '**Connectors to line-of-business systems** are not enabled.'], tone: 'cyan', asOf: isoDaysAgo(45), source: 'AI CoE check (simulated)' }
           ]
         },
-        { type: 'piece', piece: 'telemetry', pages: {} },
         {
           type: 'cards',
           columns: 2,
           items: [
             { title: 'Checking a request you sent', body: 'Reply to the confirmation mail you received; it carries the request id.' },
             { title: 'If something is wrong', body: 'Say so in [Teams](https://teams.microsoft.com/l/channel/contoso) or use [Share feedback](/?view=feedback).', tone: 'gold' }
+          ]
+        }
+      ]
+    },
+    // The operator-plane page (owners-only on a site): the telemetry strip left Status for it in 1.0.0.13. On the
+    // operator plane a case card or request row also shows its status code beside the plain wording.
+    operations: {
+      title: 'Operations',
+      plane: 'operator',
+      requiredRole: ['operator'],
+      blocks: [
+        { type: 'heading', level: 2, text: 'Operations diagnostics' },
+        { type: 'paragraph', text: 'Usage and cost of the AI services this site reads about, for the people who run the pilot. Numbers below come from the simulated telemetry lists of this preview.' },
+        // The kicker names the strip as diagnostics; with it set, the tiles take their labels from the document's vocabulary above.
+        { type: 'piece', piece: 'telemetry', pages: {}, kicker: 'Diagnostics: usage and cost, not a measure of value (simulated)' },
+        // The release and the bindings above, as the run wrote them: names, kinds and states, never a value.
+        { type: 'bindings', title: 'This content and what it is bound to' }
+      ]
+    },
+    // The leaders' page (site owners, the leaders group and the operators group on a site): a number appears only
+    // where a row of the simulated measures list says it was measured and the group is large enough to show.
+    value: {
+      title: 'Enterprise value',
+      plane: 'operator',
+      requiredRole: ['leader', 'operator'],
+      blocks: [
+        { type: 'heading', level: 2, text: 'Enterprise AI value' },
+        {
+          type: 'notice',
+          tone: 'info',
+          title: 'How to read this page',
+          text: 'A number appears only when it has been measured against a baseline. Pending baseline means the measure is defined but the first period is not complete. Not established means no baseline exists yet. Nothing here is estimated.'
+        },
+        {
+          type: 'kpi',
+          unavailableText: 'Measures unavailable: the program measures list could not be read on this site. Nothing on this page is a measured result.',
+          items: [
+            { id: 'useful-safe-completion-rate', label: 'Useful safe completion rate' },
+            { id: 'median-time-to-useful-outcome', label: 'Median time to a useful outcome' },
+            { id: 'repeat-use-useful-completion-rate', label: 'Repeat-use useful completion rate' }
+          ]
+        },
+        {
+          type: 'cards',
+          columns: 3,
+          items: [
+            { title: 'Hypothesis', body: 'What the AI CoE expects a measure to show, written before the period starts, with the baseline it will be read against.', illustrative: true, tone: 'teal' },
+            { title: 'Forecast', body: 'What the hypothesis implies for the period, kept apart from the measures above so a forecast is never read as a result.', illustrative: true, tone: 'gold' },
+            { title: 'Realised', body: 'What the period actually produced, once the measure has been recorded with its evidence and the group is large enough to show.', illustrative: true, tone: 'cyan' }
           ]
         }
       ]
@@ -299,7 +723,12 @@ window.XMLHttpRequest = function XMLHttpRequest(): void {
   blocked();
 } as unknown as typeof XMLHttpRequest;
 window.WebSocket = blocked as unknown as typeof WebSocket;
-window.open = blocked;
+// The work command opens an available route in a new tab after saving the draft (the sample document keeps that route
+// closed, so the guided request opens instead). A stub records the call and opens nothing: the preview stays offline.
+window.open = function open(url?: string | URL): undefined {
+  requests.push({ method: 'GET', list: `new tab (${String(url)})`, body: undefined, simulated: true });
+  return undefined;
+} as unknown as typeof window.open;
 document.addEventListener('click', (event: MouseEvent): void => {
   const target: Element | null = event.target as Element | null;
   const link: HTMLAnchorElement | null = target === null ? null : target.closest('a[href]');
@@ -312,6 +741,61 @@ document.addEventListener('click', (event: MouseEvent): void => {
   }
   event.preventDefault();
 });
+
+/**
+ * The simulated identity of this preview. Production resolves the role from the site groups the
+ * signed-in person belongs to; here the address says which role to simulate, so every protected page
+ * and every leader block can be seen offline. Without `role=` the simulated person is a site owner
+ * (an operator by permission) in no group at all, which is how this preview always behaved.
+ */
+const PREVIEW_ROLE_GROUPS: { role: string; title: string }[] = [
+  { role: 'leader', title: 'Preview Leaders' },
+  { role: 'operator', title: 'Preview Operators' },
+  { role: 'designAuthority', title: 'Preview Design Authority' },
+  { role: 'marketingParticipant', title: 'Preview Marketing Participants' },
+  { role: 'marketingReviewer', title: 'Preview Marketing Reviewers' }
+];
+
+/** The simulated role named in the address (`?role=leader`); blank for the site owner this preview signs in as. */
+function previewRole(): string {
+  const match: RegExpMatchArray | null = location.search.match(/[?&]role=([A-Za-z]+)/);
+  return match === null ? '' : match[1];
+}
+
+/** The site groups `_api/web/currentuser/groups` reports for the simulated person. */
+function previewGroupTitles(): string[] {
+  const role: string = previewRole();
+  const titles: string[] = [];
+  for (let index: number = 0; index < PREVIEW_ROLE_GROUPS.length; index++) {
+    if (PREVIEW_ROLE_GROUPS[index].role === role) {
+      titles.push(PREVIEW_ROLE_GROUPS[index].title);
+    }
+  }
+  return titles;
+}
+
+/** The simulated answer to the web part's one `manageWeb` check: only the site owner. An operator without that permission is not an owner. */
+function previewIsAdmin(): boolean {
+  const role: string = previewRole();
+  return role === '' || role === 'owner';
+}
+
+/** The simulated site groups behind `_api/web/currentuser/groups`. */
+function groupsResponse(method: 'GET' | 'POST'): Promise<IPreviewResponse> {
+  const titles: string[] = previewGroupTitles();
+  const value: { Id: number; Title: string }[] = [];
+  for (let index: number = 0; index < titles.length; index++) {
+    value.push({ Id: nextId++, Title: titles[index] });
+  }
+  requests.push({ method, list: 'site groups (simulated)', body: undefined, simulated: true });
+  const result: unknown = { value };
+  return Promise.resolve({
+    ok: true,
+    status: 200,
+    json: (): Promise<unknown> => Promise.resolve(result),
+    text: (): Promise<string> => Promise.resolve(JSON.stringify(result))
+  });
+}
 
 /** The simulated file behind `GetFileByServerRelativeUrl('<path>')/$value`: matched on the trailing site path, 404 otherwise. */
 function fileResponse(method: 'GET' | 'POST', path: string): Promise<IPreviewResponse> {
@@ -329,9 +813,20 @@ function fileResponse(method: 'GET' | 'POST', path: string): Promise<IPreviewRes
 }
 
 function request(method: 'GET' | 'POST', url: string, options: { body?: string } | undefined): Promise<IPreviewResponse> {
+  if (String(url).match(/\/_api\/web\/currentuser\/groups/i) !== null) {
+    return groupsResponse(method);
+  }
   const fileMatch: RegExpMatchArray | null = String(url).match(/GetFileByServerRelativeUrl\('((?:[^']|'')+)'\)\/\$value/i);
   if (fileMatch !== null) {
     return fileResponse(method, fileMatch[1].replace(/''/g, "'"));
+  }
+  // A list's own display-form address (1.0.0.18 card links), as SharePoint answers it: server-relative.
+  const formMatch: RegExpMatchArray | null = String(url).match(/getbytitle\('((?:[^']|'')+)'\)\?\$select=DefaultDisplayFormUrl/);
+  if (formMatch !== null && lists[formMatch[1].replace(/''/g, "'")] !== undefined) {
+    const title: string = formMatch[1].replace(/''/g, "'");
+    requests.push({ method, list: title, body: undefined, simulated: true });
+    const form: unknown = { DefaultDisplayFormUrl: `/simulated-site/Lists/${title}/DispForm.aspx` };
+    return Promise.resolve({ ok: true, status: 200, json: (): Promise<unknown> => Promise.resolve(form), text: (): Promise<string> => Promise.resolve(JSON.stringify(form)) });
   }
   const match: RegExpMatchArray | null = String(url).match(/getbytitle\('((?:[^']|'')+)'\)\/items/);
   const list: string | undefined = match === null ? undefined : match[1].replace(/''/g, "'");
@@ -341,22 +836,49 @@ function request(method: 'GET' | 'POST', url: string, options: { body?: string }
   const body: unknown = options !== undefined && options.body ? JSON.parse(options.body) : undefined;
   requests.push({ method, list, body, simulated: true });
   let result: unknown;
-  if (method === 'POST') {
+  let status: number = 200;
+  const itemMatch: RegExpMatchArray | null = String(url).match(/\/items\((\d+)\)/);
+  const filterMatch: RegExpMatchArray | null = String(url).match(/[?&]\$filter=([^&]*)/);
+  if (method === 'GET' && list === 'AI CoE Pilot Intakes' && location.search.indexOf('deny=intakes') >= 0) {
+    // "?deny=intakes": the list refuses every read, as it does for a person without permission on it.
+    result = 'Access denied (simulated)';
+    status = 403;
+  } else if (method === 'POST') {
     const item: IPreviewItem = Object.assign({}, body as object, { Id: nextId++ }) as IPreviewItem;
     lists[list].push(item);
     result = item;
+    status = 201;
+  } else if (itemMatch !== null && list === 'AI CoE Pilot Intakes' && location.search.indexOf('readback=fail') >= 0) {
+    // "?readback=fail": the row was written but the read that should confirm it fails, so the receipt reads pending.
+    result = 'Service unavailable (simulated readback failure)';
+    status = 503;
+  } else if (itemMatch !== null) {
+    // The readback that follows a write: one row by id, 404 when the list holds no such row.
+    const id: number = Number(itemMatch[1]);
+    const found: IPreviewItem | undefined = lists[list].filter((item: IPreviewItem): boolean => item.Id === id)[0];
+    result = found === undefined ? 'Item does not exist' : found;
+    status = found === undefined ? 404 : 200;
+  } else if (filterMatch !== null) {
+    // The pre-read of a retry and the my-work read: a one-field `<Field> eq '<value>'` filter; any other shape matches
+    // nothing. The intake list also simulates item-level read security: only the preview person's own rows come back.
+    const clause: RegExpExecArray | null = /^\s*([A-Za-z_][A-Za-z0-9_]*)\s+eq\s+'((?:[^']|'')*)'\s*$/.exec(decodeURIComponent(filterMatch[1]));
+    const rows: IPreviewItem[] =
+      clause === null ? [] : lists[list].filter((item: IPreviewItem): boolean => item[clause[1]] !== undefined && String(item[clause[1]]) === clause[2].replace(/''/g, "'"));
+    const visible: IPreviewItem[] =
+      list === 'AI CoE Pilot Intakes' ? rows.filter((item: IPreviewItem): boolean => item.RequestorEmail === undefined || item.RequestorEmail === 'preview@example.invalid') : rows;
+    result = { value: visible };
   } else {
     result = { value: lists[list].slice() };
   }
   return Promise.resolve({
-    ok: true,
-    status: method === 'POST' ? 201 : 200,
+    ok: status < 300,
+    status,
     json: (): Promise<unknown> => Promise.resolve(result),
-    text: (): Promise<string> => Promise.resolve(JSON.stringify(result))
+    text: (): Promise<string> => Promise.resolve(typeof result === 'string' ? result : JSON.stringify(result))
   });
 }
 
-/** Stands in for the Claude draft flow: echoes the answers into the twelve draft fields, no model involved. */
+/** Stands in for the AI draft flow: echoes the answers into the twelve draft fields, no model involved. */
 function simulatedDraft(url: string, options: { body?: string } | undefined): Promise<IPreviewResponse> {
   const draftRequest: { requestId?: string; answers?: { [key: string]: unknown } } = options !== undefined && options.body ? JSON.parse(options.body) : {};
   const answers: { [key: string]: unknown } = draftRequest.answers ?? {};
@@ -395,10 +917,75 @@ function simulatedDraft(url: string, options: { body?: string } | undefined): Pr
   });
 }
 
+/** The fields the case analysis flow selects; nothing a submitter wrote beyond the title. */
+const CASE_ANALYSIS_FIELDS: string[] = ['CoEID', 'Title', 'Status', 'RiskTier', 'DataSensitivity', 'ExternalUsers', 'AutonomousActions', 'EstimatedMonthlyCost', 'NextReviewDate', 'Created', 'Modified'];
+
+/**
+ * Stands in for the case analysis flow: reads the open simulated records by the same fields the flow selects and ranks
+ * them by a fixed rule (risk tier, then estimated cost). No model is called; the answer says so.
+ */
+function simulatedCaseAnalysis(url: string, analysisRequest: { requestId?: string; question?: string }): Promise<IPreviewResponse> {
+  requests.push({ method: 'POST', list: `simulated case analysis flow (${url})`, body: analysisRequest, simulated: true });
+  const weight: { [tier: string]: number } = { high: 3, medium: 2, low: 1 };
+  type Picked = { [field: string]: unknown };
+  const open: Picked[] = lists['AI CoE Use Cases']
+    .filter((item: IPreviewItem): boolean => ['closed', 'declined'].indexOf(String(item.Status || '').toLowerCase()) < 0)
+    .map((item: IPreviewItem): Picked => {
+      const picked: Picked = {};
+      for (const field of CASE_ANALYSIS_FIELDS) {
+        picked[field] = item[field];
+      }
+      return picked;
+    });
+  const tier = (item: Picked): number => weight[String(item.RiskTier || '').toLowerCase()] ?? 0;
+  const ranked: Picked[] = open.slice().sort((a: Picked, b: Picked): number => tier(b) - tier(a) || Number(b.EstimatedMonthlyCost || 0) - Number(a.EstimatedMonthlyCost || 0));
+  const unrated: number = open.filter((item: Picked): boolean => tier(item) === 0).length;
+  const plural: string = unrated === 1 ? ' has' : 's have';
+  const envelope: unknown = {
+    ok: true,
+    schemaVersion: '1.0',
+    requestId: analysisRequest.requestId,
+    draftOnly: true,
+    humanReviewRequired: true,
+    provider: 'offline-preview-simulation',
+    model: open.length === 0 ? '' : 'none',
+    responseId: open.length === 0 ? '' : `preview-${Date.now()}`,
+    caseCount: open.length,
+    truncated: false,
+    asOf: new Date().toISOString(),
+    analysis:
+      open.length === 0
+        ? null
+        : {
+            summary: `Simulated ranking of ${open.length} open business cases by risk tier, then estimated monthly cost. The offline preview called no model, so this does not answer your question.`,
+            priorities: ranked.slice(0, 5).map((item: Picked) => ({
+              coeId: String(item.CoEID || 'Not recorded'),
+              title: String(item.Title || 'Not recorded'),
+              whyItMatters: `Risk tier ${String(item.RiskTier || 'not recorded')}, ${String(item.DataSensitivity || 'sensitivity not recorded')} data, estimated $${String(item.EstimatedMonthlyCost ?? 'not recorded')} a month, status ${String(item.Status || 'not recorded')}.`,
+              suggestedNextStep: 'Confirm the status with the AI CoE reviewer (simulated).'
+            })),
+            patterns: [`${ranked.filter((item: Picked): boolean => tier(item) === 3).length} of ${open.length} open cases are rated High risk (simulated).`],
+            gaps: unrated === 0 ? [] : [`${unrated} open case${plural} no risk tier yet (simulated).`]
+          }
+  };
+  return Promise.resolve({
+    ok: true,
+    status: 200,
+    json: (): Promise<unknown> => Promise.resolve(envelope),
+    text: (): Promise<string> => Promise.resolve(JSON.stringify(envelope))
+  });
+}
+
+/** Both simulated flows sit behind the one flow-service client, told apart by the contract each request names. */
+function simulatedFlow(url: string, options: { body?: string } | undefined): Promise<IPreviewResponse> {
+  const body: { workflowId?: string; requestId?: string; question?: string } = options !== undefined && options.body ? JSON.parse(options.body) : {};
+  return body.workflowId === 'caseAnalysis' ? simulatedCaseAnalysis(url, body) : simulatedDraft(url, options);
+}
+
 const context: unknown = {
   pageContext: {
     user: { displayName: 'Local Preview (fictional)', email: 'preview@example.invalid' },
-    web: { absoluteUrl: `${location.origin}/simulated-site`, permissions: { hasPermission: (): boolean => true } }
+    web: { absoluteUrl: `${location.origin}/simulated-site`, permissions: { hasPermission: (): boolean => previewIsAdmin() } }
   },
   spHttpClient: {
     get: (url: string, _configuration: unknown, options?: { body?: string }): Promise<IPreviewResponse> => request('GET', url, options),
@@ -407,7 +994,7 @@ const context: unknown = {
   aadHttpClientFactory: {
     getClient: (): Promise<unknown> =>
       Promise.resolve({
-        post: (url: string, _configuration: unknown, options?: { body?: string }): Promise<IPreviewResponse> => simulatedDraft(url, options)
+        post: (url: string, _configuration: unknown, options?: { body?: string }): Promise<IPreviewResponse> => simulatedFlow(url, options)
       })
   }
 };
@@ -471,7 +1058,15 @@ previewWindow.FrontDoorPreview = {
     if (webPartClass === undefined) {
       return Promise.reject(new Error('Load the built bundle before mounting.'));
     }
-    pendingProperties = Object.assign({}, properties);
+    // The AI CoE Concierge links (1.0.0.18) are simulated so the Ask box and its first-time message can be seen; opening
+    // them leaves the preview for the real Microsoft address, which the preview cannot answer.
+    pendingProperties = Object.assign(
+      {
+        conciergeChatUrl: 'https://m365.cloud.microsoft/chat/?titleId=T_PREVIEW-SIMULATED',
+        conciergeAddUrl: 'https://teams.microsoft.com/l/app/?titleId=T_PREVIEW-SIMULATED'
+      },
+      properties
+    );
     const webPart: IPreviewWebPart = new webPartClass();
     mounted = webPart;
     return webPart.onInit().then((): IPreviewWebPart => {
@@ -491,6 +1086,13 @@ previewWindow.FrontDoorPreview = {
       throw new Error('Mount the web part first.');
     }
     mounted.properties.draftServiceUrl = url;
+    mounted.render();
+  },
+  setCaseAnalysisUrl: (url: string): void => {
+    if (mounted === undefined) {
+      throw new Error('Mount the web part first.');
+    }
+    mounted.properties.caseAnalysisUrl = url;
     mounted.render();
   },
   setTelemetryProvider: (mode: string): void => {
@@ -519,6 +1121,15 @@ previewWindow.FrontDoorPreview = {
       throw new Error('Mount the web part first.');
     }
     mounted.properties.pageKey = pageKey;
+    mounted.render();
+  },
+  setPaletteOverrides: (overrides: string): void => {
+    if (mounted === undefined) {
+      throw new Error('Mount the web part first.');
+    }
+    // The property the script writes from the Palette parameter; the web part sets each pair on its own
+    // element when it renders and removes the ones a new value drops, so a blank restores the shipped colours.
+    mounted.properties.paletteOverrides = overrides;
     mounted.render();
   }
 };

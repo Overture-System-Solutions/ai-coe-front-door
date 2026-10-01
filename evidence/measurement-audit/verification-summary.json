@@ -1,0 +1,93 @@
+{
+  "status": "verified-local-only",
+  "suites": 7,
+  "tests": 144,
+  "failed": 0,
+  "skipped": 0,
+  "focusedTests": 43,
+  "cliExitCode": 0,
+  "typecheckExitCode": 0,
+  "reports": [
+    {
+      "file": "synthetic-report-verified.json",
+      "status": "review-required",
+      "sha256": "f89018f70e9dc8bb85b781bfcd2a9b939ced299bc0aa16efaf5a928c2a61f780",
+      "observed": {
+        "outcomes": {
+          "Accepted": 5,
+          "Corrected": 5,
+          "Unavailable": 0,
+          "Stopped": 0
+        },
+        "correctionThemes": {
+          "fact": 5,
+          "source": 0,
+          "audience": 0,
+          "policy": 0,
+          "brand": 0,
+          "action boundary": 0
+        },
+        "reviewStates": {
+          "Reviewed by me": 10,
+          "Reviewed by someone else": 0,
+          "Not reviewed": 0
+        },
+        "routeAvailability": {
+          "Available now": 0,
+          "Draft only": 10,
+          "Needs approval": 0,
+          "Needs access": 0,
+          "Not supported": 0
+        },
+        "reviewedOutputs": 10,
+        "reviewedOutputPass": 0.5,
+        "materialCorrectionRate": 0.5
+      },
+      "reconciliation": {
+        "input": 11,
+        "unique": 10,
+        "duplicates": 1
+      }
+    },
+    {
+      "file": "synthetic-unknown-report-verified.json",
+      "status": "blocked",
+      "sha256": "6d30ff08b6c59ef899999a4ae3cab82d36f8ff483878711988e7cfad3ba0ca11"
+    },
+    {
+      "file": "synthetic-suppressed-report-verified.json",
+      "status": "suppressed",
+      "sha256": "d42b8c68c20b54225a1bcd18980189e08b0f6dc121e7be724d24ee3406a2657f"
+    }
+  ],
+  "files": [
+    {
+      "file": "src/webparts/aiCoeFrontDoor/components/app/AppSections.tsx",
+      "sha256": "c64cdb647b4017d668cfc4c3fb407aec8968c951d5233452d5c4d6bf45ceada7"
+    },
+    {
+      "file": "src/webparts/aiCoeFrontDoor/components/app/AppSections.test.tsx",
+      "sha256": "2233ed88ff2cbff0a63d0a9686b4a00f82e48c4c90b16d6ae174266f4029349e"
+    },
+    {
+      "file": "src/webparts/aiCoeFrontDoor/services/workflowOutcomeAggregation.ts",
+      "sha256": "59f8eb2cf346015cbd63060b5119b77ecd7221d27afdc86e9679d011e1106014"
+    },
+    {
+      "file": "src/webparts/aiCoeFrontDoor/services/workflowOutcomeAggregation.test.ts",
+      "sha256": "2f071efd3afd522b548ee50f1c63132b1528780e26c003591d0797f845a757c0"
+    },
+    {
+      "file": "scripts/aggregate-workflow-outcomes.cjs",
+      "sha256": "fbc5bf030a1d4b838574482023b73964ec2684c7ce364bb1352ed764f5acf5fa"
+    },
+    {
+      "file": "scripts/aggregate-workflow-outcomes.test.cjs",
+      "sha256": "289a07885a8b7978e0d113b1b6f740af12803ef78c9f79e02231e822850574de"
+    },
+    {
+      "file": "docs/MEASUREMENT-AND-TEACHING.md",
+      "sha256": "b5a1ecb6d9122a012d0b7235f4cd1567b3117470d7fcff558c1c8d127754f069"
+    }
+  ]
+}

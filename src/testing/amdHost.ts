@@ -9,6 +9,7 @@ import * as path from 'path';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { createFakeListClient, InMemoryListStore } from './listStore';
+import type { AfterPostHook } from './listStore';
 
 export const LIST_TITLES: readonly string[] = ['AI CoE Pilot Intakes', 'AI CoE Use Cases', 'AI CoE Decisions', 'AI Usage Daily', 'AI CoE Incidents'];
 export const MANAGE_WEB_PERMISSION: string = 'simulated:manageWeb';
@@ -38,7 +39,17 @@ export interface IAmdHostOptions {
   store?: InMemoryListStore;
   /** Files readable through the REST API, keyed by server-relative path (for example the page content document). */
   files?: { [serverRelativePath: string]: string };
-  /** Simulated Claude draft flow behind the Entra-authenticated client; answers 404 when absent. */
+  /** Lists the simulated reader holds no permission on, keyed by title: the status each answers (403 for a plain refusal, 404 for a list the reader cannot see). */
+  deny?: { [title: string]: number };
+  /** Simulates item-level read security: GETs return only the rows whose person column matches this email. */
+  trimTo?: string;
+  /** Site group titles the simulated person belongs to, as `_api/web/currentuser/groups` reports them. */
+  groups?: string[];
+  /** Status the site groups route answers with instead of the membership (403 for a refusal). */
+  denyGroups?: number;
+  /** Hooks that run after a POST to the list is committed, keyed by title (for example to fail the readback that follows). */
+  afterPost?: { [title: string]: AfterPostHook };
+  /** Simulated AI draft flow behind the Entra-authenticated client; answers 404 when absent. */
   draftFlow?: (request: unknown) => IFlowReply;
   /** The context's property pane accessor; absent by default, like a page whose pane is closed. */
   propertyPane?: { refresh(): void };
@@ -167,6 +178,23 @@ export function loadWebPartBundle(bundlePath: string, stringsPath?: string): IWe
       const files: { [serverRelativePath: string]: string } = options.files ?? {};
       for (const serverRelativePath of Object.keys(files)) {
         store.seedFile(serverRelativePath, files[serverRelativePath]);
+      }
+      const deny: { [title: string]: number } = options.deny ?? {};
+      for (const title of Object.keys(deny)) {
+        store.deny(title, deny[title]);
+      }
+      const afterPost: { [title: string]: AfterPostHook } = options.afterPost ?? {};
+      for (const title of Object.keys(afterPost)) {
+        store.afterPost(title, afterPost[title]);
+      }
+      if (options.trimTo !== undefined) {
+        store.trimTo(options.trimTo);
+      }
+      if (options.groups !== undefined) {
+        store.setGroups(options.groups);
+      }
+      if (options.denyGroups !== undefined) {
+        store.denyGroups(options.denyGroups);
       }
       const permissionChecks: unknown[] = [];
       const flowResources: string[] = [];

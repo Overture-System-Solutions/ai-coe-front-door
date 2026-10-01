@@ -1,0 +1,60 @@
+{
+  "status": "PASS",
+  "scope": "BUILT_BUNDLE_LOCAL_SYNTHETIC_UAT",
+  "systemMapRemovedOwnerAndOperator": true,
+  "commissioningCardRemoved": true,
+  "engineeringPadding": {
+    "top": "24px",
+    "bottom": "24px"
+  },
+  "caseCreateSaveResponseSelectAndNew": true,
+  "caseUnsavedGuard": true,
+  "readableFullWidthFields": [
+    {
+      "id": "ai-core-title",
+      "width": 1356,
+      "parentWidth": 1356,
+      "height": 46.5,
+      "labelAbove": true,
+      "border": "1px",
+      "display": "block"
+    },
+    {
+      "id": "ai-core-problem",
+      "width": 668,
+      "parentWidth": 668,
+      "height": 126,
+      "labelAbove": true,
+      "border": "1px",
+      "display": "block"
+    },
+    {
+      "id": "ai-core-outcome",
+      "width": 668,
+      "parentWidth": 668,
+      "height": 126,
+      "labelAbove": true,
+      "border": "1px",
+      "display": "block"
+    },
+    {
+      "id": "ai-core-sponsor",
+      "width": 1356,
+      "parentWidth": 1356,
+      "height": 46.5,
+      "labelAbove": true,
+      "border": "1px",
+      "display": "block"
+    }
+  ],
+  "mobile": {
+    "scroll": 390,
+    "viewport": 390
+  },
+  "javascriptErrors": [],
+  "externalRequests": [],
+  "screenshots": [
+    "cases-desktop.png",
+    "cases-mobile.png"
+  ]
+}

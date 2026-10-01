@@ -1,0 +1,96 @@
+{
+  "kind": "marketing.bootstrap-input.v1",
+  "siteUrl": "https://synthetic.sharepoint.com/sites/marketing",
+  "records": [
+    {
+      "Value": {
+        "enabled": false,
+        "actorId": "requester@example.invalid",
+        "workIds": [
+          "CW-TEST"
+        ],
+        "roles": [
+          "marketingParticipant"
+        ],
+        "audience": "Synthetic internal"
+      },
+      "Key": "member:200"
+    },
+    {
+      "Value": {
+        "scope": [
+          "sourceRegister"
+        ],
+        "tenantScope": "https://synthetic.sharepoint.com/sites/marketing",
+        "label": "SYNTHETIC TEST ONLY",
+        "synthetic": false,
+        "bindingRef": "binding-owner",
+        "actorId": "owner@example.invalid",
+        "expiresAt": "2000-01-01T00:00:00Z",
+        "revoked": true
+      },
+      "Key": "authority:binding-owner"
+    },
+    {
+      "Value": {
+        "revoked": true,
+        "contentHash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "audiences": [
+          "Synthetic internal"
+        ],
+        "entry": {
+          "location": "https://synthetic.sharepoint.com/sites/marketing/Shared%20Documents/test.txt",
+          "asOf": "2000-01-01",
+          "versionOrETag": "\"1\"",
+          "classification": "Synthetic",
+          "id": "source-test",
+          "mayNotProve": "Anything real",
+          "audience": "Synthetic internal",
+          "owner": "Synthetic owner"
+        },
+        "actors": [
+          "requester@example.invalid"
+        ],
+        "purposes": [
+          "campaignBrief"
+        ]
+      },
+      "Key": "source:source-test"
+    },
+    {
+      "Value": {
+        "bindingHash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "result": "INCONCLUSIVE",
+        "expiresAt": "2000-01-01T00:00:00Z"
+      },
+      "Key": "qualification:QUAL-native-test"
+    },
+    {
+      "Value": {
+        "operation": "approveSourceRegister",
+        "result": "INCONCLUSIVE",
+        "observedAt": "2000-01-01T00:00:00Z",
+        "actorId": "owner@example.invalid",
+        "receiptId": "RCP-test",
+        "readbackHash": null,
+        "targetRef": "snapshot:REGISTER-test:v1",
+        "payloadHash": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+      },
+      "Key": "receipt:RCP-test"
+    },
+    {
+      "Value": {
+        "enabled": false,
+        "actorId": "requester@example.invalid",
+        "workIds": [
+          "CW-TEST"
+        ],
+        "roles": [
+          "marketingParticipant"
+        ],
+        "audience": "Synthetic internal"
+      },
+      "Key": "member:201"
+    }
+  ]
+}

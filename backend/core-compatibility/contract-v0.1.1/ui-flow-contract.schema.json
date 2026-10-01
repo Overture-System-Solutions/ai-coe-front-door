@@ -1,0 +1,1615 @@
+{
+ "$schema": "https://json-schema.org/draft/2020-12/schema",
+ "$id": "cw-aicoe/ui-flow-contract/v0.1.1",
+ "title": "CloudWave AI CoE \u2014 UI <-> flow interface contract v0.1.1 (CANDIDATE; payloads bound to RC2 3.4.0-rc2 schemas; implemented by AICoECoreAutomation 3.0.0.0)",
+ "$defs": {
+  "CreateOrResumeWork": {
+   "type": "object",
+   "additionalProperties": false,
+   "required": [
+    "request",
+    "response"
+   ],
+   "properties": {
+    "request": {
+     "type": "object",
+     "additionalProperties": false,
+     "required": [
+      "Context",
+      "S1"
+     ],
+     "properties": {
+      "Context": {
+       "type": "object",
+       "additionalProperties": false,
+       "required": [
+        "CorrelationID",
+        "IdempotencyKey",
+        "ClientVersion",
+        "TenantLabel"
+       ],
+       "properties": {
+        "CorrelationID": {
+         "type": "string",
+         "minLength": 1,
+         "pattern": "^[A-Z][A-Z0-9_-]{2,127}$"
+        },
+        "IdempotencyKey": {
+         "type": "string",
+         "minLength": 8
+        },
+        "ClientVersion": {
+         "type": "string",
+         "minLength": 1
+        },
+        "TenantLabel": {
+         "type": "string",
+         "minLength": 1
+        },
+        "TestRecord": {
+         "type": "boolean"
+        }
+       }
+      },
+      "S1": {
+       "type": "object",
+       "additionalProperties": false,
+       "required": [
+        "Title",
+        "SourceChannel"
+       ],
+       "properties": {
+        "Title": {
+         "type": "string",
+         "minLength": 1
+        },
+        "ProblemStatement": {
+         "type": [
+          "string",
+          "null"
+         ]
+        },
+        "DesiredOutcome": {
+         "type": [
+          "string",
+          "null"
+         ]
+        },
+        "Requester": {
+         "type": [
+          "string",
+          "null"
+         ]
+        },
+        "Department": {
+         "type": [
+          "string",
+          "null"
+         ]
+        },
+        "Sponsor": {
+         "type": [
+          "string",
+          "null"
+         ]
+        },
+        "AccountableOwner": {
+         "type": [
+          "string",
+          "null"
+         ]
+        },
+        "SourceRefs": {
+         "type": "array",
+         "items": {
+          "type": "string",
+          "minLength": 1
+         },
+         "minItems": 0,
+         "uniqueItems": true
+        },
+        "DecisionRequested": {
+         "type": [
+          "string",
+          "null"
+         ]
+        },
+        "Risks": {
+         "type": "array",
+         "items": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^[A-Z][A-Z0-9_-]{2,127}$"
+         },
+         "minItems": 0,
+         "uniqueItems": true
+        },
+        "SourceChannel": {
+         "type": "string",
+         "minLength": 1
+        },
+        "DataClassification": {
+         "type": "string",
+         "enum": [
+          "PUBLIC",
+          "INTERNAL",
+          "CONFIDENTIAL",
+          "RESTRICTED"
+         ]
+        }
+       }
+      },
+      "WorkID": {
+       "anyOf": [
+        {
+         "type": "string",
+         "minLength": 1,
+         "pattern": "^CW-[A-Z0-9_-]{2,124}$"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      }
+     }
+    },
+    "response": {
+     "oneOf": [
+      {
+       "type": "object",
+       "additionalProperties": false,
+       "required": [
+        "Result",
+        "ReceiptID",
+        "Work",
+        "Created",
+        "ClarificationRequired"
+       ],
+       "properties": {
+        "Result": {
+         "const": "PASS"
+        },
+        "ReceiptID": {
+         "type": "string",
+         "minLength": 1,
+         "pattern": "^[A-Z][A-Z0-9_-]{2,127}$"
+        },
+        "Work": {
+         "type": "object",
+         "additionalProperties": false,
+         "required": [
+          "WorkID",
+          "Title",
+          "Stage",
+          "State",
+          "EmployeeStatus",
+          "Lane",
+          "NextAction",
+          "NextOwner",
+          "NextDate",
+          "Version",
+          "LastValidatedAt"
+         ],
+         "properties": {
+          "WorkID": {
+           "type": "string",
+           "minLength": 1,
+           "pattern": "^CW-[A-Z0-9_-]{2,124}$"
+          },
+          "Title": {
+           "type": "string"
+          },
+          "Stage": {
+           "type": "string",
+           "enum": [
+            "INTAKE",
+            "EVIDENCE",
+            "DECISION",
+            "DELIVERY",
+            "VALUE",
+            "IMPROVEMENT",
+            "CLOSED"
+           ]
+          },
+          "State": {
+           "type": "string",
+           "enum": [
+            "DRAFT",
+            "CLARIFYING",
+            "READY_FOR_TRIAGE",
+            "EVIDENCE_BUILDING",
+            "AWAITING_SME",
+            "NOT_DECISION_READY",
+            "DECISION_READY",
+            "READY_FOR_AI_COE",
+            "READY_FOR_ARB",
+            "READY_FOR_ELT",
+            "APPROVED",
+            "APPROVED_WITH_CONDITIONS",
+            "DEFERRED",
+            "REJECTED",
+            "PROJECT_ACTIVATING",
+            "IN_DELIVERY",
+            "AT_RISK",
+            "BLOCKED",
+            "VALUE_REVIEW",
+            "OPERATING",
+            "IMPROVEMENT_PROPOSED",
+            "REVALIDATION_REQUIRED",
+            "RETIRED"
+           ]
+          },
+          "EmployeeStatus": {
+           "enum": [
+            "Done",
+            "Need one answer",
+            "Ready for you",
+            "Started",
+            "With the right reviewer",
+            "Working"
+           ]
+          },
+          "Lane": {
+           "type": [
+            "string",
+            "null"
+           ]
+          },
+          "NextAction": {
+           "type": [
+            "string",
+            "null"
+           ]
+          },
+          "NextOwner": {
+           "type": [
+            "string",
+            "null"
+           ]
+          },
+          "NextDate": {
+           "type": [
+            "string",
+            "null"
+           ]
+          },
+          "Version": {
+           "type": "integer",
+           "minimum": 1
+          },
+          "LastValidatedAt": {
+           "type": "string",
+           "format": "date-time"
+          },
+          "OpenEvidenceGaps": {
+           "type": "array",
+           "items": {
+            "type": "string"
+           }
+          },
+          "DuplicateStatus": {
+           "type": "string",
+           "enum": [
+            "NOT_CHECKED",
+            "UNIQUE",
+            "POSSIBLE_DUPLICATE",
+            "CONFIRMED_DUPLICATE",
+            "RELATED_NOT_DUPLICATE"
+           ]
+          },
+          "RelatedWorkIDs": {
+           "type": "array",
+           "items": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "^CW-[A-Z0-9_-]{2,124}$"
+           },
+           "minItems": 0,
+           "uniqueItems": true
+          }
+         }
+        },
+        "Created": {
+         "type": "boolean"
+        },
+        "ClarificationRequired": {
+         "type": "array",
+         "items": {
+          "type": "string"
+         }
+        }
+       }
+      },
+      {
+       "type": "object",
+       "additionalProperties": false,
+       "required": [
+        "Result",
+        "ErrorClass",
+        "Message",
+        "ReceiptID",
+        "RetryAllowed"
+       ],
+       "properties": {
+        "Result": {
+         "enum": [
+          "FAIL",
+          "DENIED",
+          "INCONCLUSIVE",
+          "RECONCILIATION_REQUIRED"
+         ]
+        },
+        "ErrorClass": {
+         "type": "string",
+         "minLength": 1
+        },
+        "Message": {
+         "type": "string"
+        },
+        "ReceiptID": {
+         "type": "string",
+         "minLength": 1,
+         "pattern": "^[A-Z][A-Z0-9_-]{2,127}$"
+        },
+        "RetryAllowed": {
+         "type": "boolean"
+        },
+        "RetryAfterSeconds": {
+         "type": "integer",
+         "minimum": 0
+        }
+       }
+      }
+     ]
+    }
+   }
+  },
+  "GetWorkStatus": {
+   "type": "object",
+   "additionalProperties": false,
+   "required": [
+    "request",
+    "response"
+   ],
+   "properties": {
+    "request": {
+     "type": "object",
+     "additionalProperties": false,
+     "required": [
+      "Context",
+      "WorkID"
+     ],
+     "properties": {
+      "Context": {
+       "type": "object",
+       "additionalProperties": false,
+       "required": [
+        "CorrelationID",
+        "IdempotencyKey",
+        "ClientVersion",
+        "TenantLabel"
+       ],
+       "properties": {
+        "CorrelationID": {
+         "type": "string",
+         "minLength": 1,
+         "pattern": "^[A-Z][A-Z0-9_-]{2,127}$"
+        },
+        "IdempotencyKey": {
+         "type": "string",
+         "minLength": 8
+        },
+        "ClientVersion": {
+         "type": "string",
+         "minLength": 1
+        },
+        "TenantLabel": {
+         "type": "string",
+         "minLength": 1
+        },
+        "TestRecord": {
+         "type": "boolean"
+        }
+       }
+      },
+      "WorkID": {
+       "type": "string",
+       "minLength": 1,
+       "pattern": "^CW-[A-Z0-9_-]{2,124}$"
+      }
+     }
+    },
+    "response": {
+     "oneOf": [
+      {
+       "type": "object",
+       "additionalProperties": false,
+       "required": [
+        "Result",
+        "ReceiptID",
+        "Work"
+       ],
+       "properties": {
+        "Result": {
+         "const": "PASS"
+        },
+        "ReceiptID": {
+         "type": "string",
+         "minLength": 1,
+         "pattern": "^[A-Z][A-Z0-9_-]{2,127}$"
+        },
+        "Work": {
+         "type": "object",
+         "additionalProperties": false,
+         "required": [
+          "WorkID",
+          "Title",
+          "Stage",
+          "State",
+          "EmployeeStatus",
+          "Lane",
+          "NextAction",
+          "NextOwner",
+          "NextDate",
+          "Version",
+          "LastValidatedAt"
+         ],
+         "properties": {
+          "WorkID": {
+           "type": "string",
+           "minLength": 1,
+           "pattern": "^CW-[A-Z0-9_-]{2,124}$"
+          },
+          "Title": {
+           "type": "string"
+          },
+          "Stage": {
+           "type": "string",
+           "enum": [
+            "INTAKE",
+            "EVIDENCE",
+            "DECISION",
+            "DELIVERY",
+            "VALUE",
+            "IMPROVEMENT",
+            "CLOSED"
+           ]
+          },
+          "State": {
+           "type": "string",
+           "enum": [
+            "DRAFT",
+            "CLARIFYING",
+            "READY_FOR_TRIAGE",
+            "EVIDENCE_BUILDING",
+            "AWAITING_SME",
+            "NOT_DECISION_READY",
+            "DECISION_READY",
+            "READY_FOR_AI_COE",
+            "READY_FOR_ARB",
+            "READY_FOR_ELT",
+            "APPROVED",
+            "APPROVED_WITH_CONDITIONS",
+            "DEFERRED",
+            "REJECTED",
+            "PROJECT_ACTIVATING",
+            "IN_DELIVERY",
+            "AT_RISK",
+            "BLOCKED",
+            "VALUE_REVIEW",
+            "OPERATING",
+            "IMPROVEMENT_PROPOSED",
+            "REVALIDATION_REQUIRED",
+            "RETIRED"
+           ]
+          },
+          "EmployeeStatus": {
+           "enum": [
+            "Done",
+            "Need one answer",
+            "Ready for you",
+            "Started",
+            "With the right reviewer",
+            "Working"
+           ]
+          },
+          "Lane": {
+           "type": [
+            "string",
+            "null"
+           ]
+          },
+          "NextAction": {
+           "type": [
+            "string",
+            "null"
+           ]
+          },
+          "NextOwner": {
+           "type": [
+            "string",
+            "null"
+           ]
+          },
+          "NextDate": {
+           "type": [
+            "string",
+            "null"
+           ]
+          },
+          "Version": {
+           "type": "integer",
+           "minimum": 1
+          },
+          "LastValidatedAt": {
+           "type": "string",
+           "format": "date-time"
+          },
+          "OpenEvidenceGaps": {
+           "type": "array",
+           "items": {
+            "type": "string"
+           }
+          },
+          "DuplicateStatus": {
+           "type": "string",
+           "enum": [
+            "NOT_CHECKED",
+            "UNIQUE",
+            "POSSIBLE_DUPLICATE",
+            "CONFIRMED_DUPLICATE",
+            "RELATED_NOT_DUPLICATE"
+           ]
+          },
+          "RelatedWorkIDs": {
+           "type": "array",
+           "items": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "^CW-[A-Z0-9_-]{2,124}$"
+           },
+           "minItems": 0,
+           "uniqueItems": true
+          }
+         }
+        }
+       }
+      },
+      {
+       "type": "object",
+       "additionalProperties": false,
+       "required": [
+        "Result",
+        "ErrorClass",
+        "Message",
+        "ReceiptID",
+        "RetryAllowed"
+       ],
+       "properties": {
+        "Result": {
+         "enum": [
+          "FAIL",
+          "DENIED",
+          "INCONCLUSIVE",
+          "RECONCILIATION_REQUIRED"
+         ]
+        },
+        "ErrorClass": {
+         "type": "string",
+         "minLength": 1
+        },
+        "Message": {
+         "type": "string"
+        },
+        "ReceiptID": {
+         "type": "string",
+         "minLength": 1,
+         "pattern": "^[A-Z][A-Z0-9_-]{2,127}$"
+        },
+        "RetryAllowed": {
+         "type": "boolean"
+        },
+        "RetryAfterSeconds": {
+         "type": "integer",
+         "minimum": 0
+        }
+       }
+      }
+     ]
+    }
+   }
+  },
+  "ListMyWork": {
+   "type": "object",
+   "additionalProperties": false,
+   "required": [
+    "request",
+    "response"
+   ],
+   "properties": {
+    "request": {
+     "type": "object",
+     "additionalProperties": false,
+     "required": [
+      "Context",
+      "Requester"
+     ],
+     "properties": {
+      "Context": {
+       "type": "object",
+       "additionalProperties": false,
+       "required": [
+        "CorrelationID",
+        "IdempotencyKey",
+        "ClientVersion",
+        "TenantLabel"
+       ],
+       "properties": {
+        "CorrelationID": {
+         "type": "string",
+         "minLength": 1,
+         "pattern": "^[A-Z][A-Z0-9_-]{2,127}$"
+        },
+        "IdempotencyKey": {
+         "type": "string",
+         "minLength": 8
+        },
+        "ClientVersion": {
+         "type": "string",
+         "minLength": 1
+        },
+        "TenantLabel": {
+         "type": "string",
+         "minLength": 1
+        },
+        "TestRecord": {
+         "type": "boolean"
+        }
+       }
+      },
+      "Requester": {
+       "type": "string",
+       "minLength": 1
+      }
+     }
+    },
+    "response": {
+     "oneOf": [
+      {
+       "type": "object",
+       "additionalProperties": false,
+       "required": [
+        "Result",
+        "ReceiptID",
+        "Items"
+       ],
+       "properties": {
+        "Result": {
+         "const": "PASS"
+        },
+        "ReceiptID": {
+         "type": "string",
+         "minLength": 1,
+         "pattern": "^[A-Z][A-Z0-9_-]{2,127}$"
+        },
+        "Work": {
+         "type": "object",
+         "additionalProperties": false,
+         "required": [
+          "WorkID",
+          "Title",
+          "Stage",
+          "State",
+          "EmployeeStatus",
+          "Lane",
+          "NextAction",
+          "NextOwner",
+          "NextDate",
+          "Version",
+          "LastValidatedAt"
+         ],
+         "properties": {
+          "WorkID": {
+           "type": "string",
+           "minLength": 1,
+           "pattern": "^CW-[A-Z0-9_-]{2,124}$"
+          },
+          "Title": {
+           "type": "string"
+          },
+          "Stage": {
+           "type": "string",
+           "enum": [
+            "INTAKE",
+            "EVIDENCE",
+            "DECISION",
+            "DELIVERY",
+            "VALUE",
+            "IMPROVEMENT",
+            "CLOSED"
+           ]
+          },
+          "State": {
+           "type": "string",
+           "enum": [
+            "DRAFT",
+            "CLARIFYING",
+            "READY_FOR_TRIAGE",
+            "EVIDENCE_BUILDING",
+            "AWAITING_SME",
+            "NOT_DECISION_READY",
+            "DECISION_READY",
+            "READY_FOR_AI_COE",
+            "READY_FOR_ARB",
+            "READY_FOR_ELT",
+            "APPROVED",
+            "APPROVED_WITH_CONDITIONS",
+            "DEFERRED",
+            "REJECTED",
+            "PROJECT_ACTIVATING",
+            "IN_DELIVERY",
+            "AT_RISK",
+            "BLOCKED",
+            "VALUE_REVIEW",
+            "OPERATING",
+            "IMPROVEMENT_PROPOSED",
+            "REVALIDATION_REQUIRED",
+            "RETIRED"
+           ]
+          },
+          "EmployeeStatus": {
+           "enum": [
+            "Done",
+            "Need one answer",
+            "Ready for you",
+            "Started",
+            "With the right reviewer",
+            "Working"
+           ]
+          },
+          "Lane": {
+           "type": [
+            "string",
+            "null"
+           ]
+          },
+          "NextAction": {
+           "type": [
+            "string",
+            "null"
+           ]
+          },
+          "NextOwner": {
+           "type": [
+            "string",
+            "null"
+           ]
+          },
+          "NextDate": {
+           "type": [
+            "string",
+            "null"
+           ]
+          },
+          "Version": {
+           "type": "integer",
+           "minimum": 1
+          },
+          "LastValidatedAt": {
+           "type": "string",
+           "format": "date-time"
+          },
+          "OpenEvidenceGaps": {
+           "type": "array",
+           "items": {
+            "type": "string"
+           }
+          },
+          "DuplicateStatus": {
+           "type": "string",
+           "enum": [
+            "NOT_CHECKED",
+            "UNIQUE",
+            "POSSIBLE_DUPLICATE",
+            "CONFIRMED_DUPLICATE",
+            "RELATED_NOT_DUPLICATE"
+           ]
+          },
+          "RelatedWorkIDs": {
+           "type": "array",
+           "items": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "^CW-[A-Z0-9_-]{2,124}$"
+           },
+           "minItems": 0,
+           "uniqueItems": true
+          }
+         }
+        },
+        "Items": {
+         "type": "array",
+         "items": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+           "WorkID",
+           "Title",
+           "Stage",
+           "State",
+           "EmployeeStatus",
+           "Lane",
+           "NextAction",
+           "NextOwner",
+           "NextDate",
+           "Version",
+           "LastValidatedAt"
+          ],
+          "properties": {
+           "WorkID": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "^CW-[A-Z0-9_-]{2,124}$"
+           },
+           "Title": {
+            "type": "string"
+           },
+           "Stage": {
+            "type": "string",
+            "enum": [
+             "INTAKE",
+             "EVIDENCE",
+             "DECISION",
+             "DELIVERY",
+             "VALUE",
+             "IMPROVEMENT",
+             "CLOSED"
+            ]
+           },
+           "State": {
+            "type": "string",
+            "enum": [
+             "DRAFT",
+             "CLARIFYING",
+             "READY_FOR_TRIAGE",
+             "EVIDENCE_BUILDING",
+             "AWAITING_SME",
+             "NOT_DECISION_READY",
+             "DECISION_READY",
+             "READY_FOR_AI_COE",
+             "READY_FOR_ARB",
+             "READY_FOR_ELT",
+             "APPROVED",
+             "APPROVED_WITH_CONDITIONS",
+             "DEFERRED",
+             "REJECTED",
+             "PROJECT_ACTIVATING",
+             "IN_DELIVERY",
+             "AT_RISK",
+             "BLOCKED",
+             "VALUE_REVIEW",
+             "OPERATING",
+             "IMPROVEMENT_PROPOSED",
+             "REVALIDATION_REQUIRED",
+             "RETIRED"
+            ]
+           },
+           "EmployeeStatus": {
+            "enum": [
+             "Done",
+             "Need one answer",
+             "Ready for you",
+             "Started",
+             "With the right reviewer",
+             "Working"
+            ]
+           },
+           "Lane": {
+            "type": [
+             "string",
+             "null"
+            ]
+           },
+           "NextAction": {
+            "type": [
+             "string",
+             "null"
+            ]
+           },
+           "NextOwner": {
+            "type": [
+             "string",
+             "null"
+            ]
+           },
+           "NextDate": {
+            "type": [
+             "string",
+             "null"
+            ]
+           },
+           "Version": {
+            "type": "integer",
+            "minimum": 1
+           },
+           "LastValidatedAt": {
+            "type": "string",
+            "format": "date-time"
+           },
+           "OpenEvidenceGaps": {
+            "type": "array",
+            "items": {
+             "type": "string"
+            }
+           },
+           "DuplicateStatus": {
+            "type": "string",
+            "enum": [
+             "NOT_CHECKED",
+             "UNIQUE",
+             "POSSIBLE_DUPLICATE",
+             "CONFIRMED_DUPLICATE",
+             "RELATED_NOT_DUPLICATE"
+            ]
+           },
+           "RelatedWorkIDs": {
+            "type": "array",
+            "items": {
+             "type": "string",
+             "minLength": 1,
+             "pattern": "^CW-[A-Z0-9_-]{2,124}$"
+            },
+            "minItems": 0,
+            "uniqueItems": true
+           }
+          }
+         }
+        }
+       }
+      },
+      {
+       "type": "object",
+       "additionalProperties": false,
+       "required": [
+        "Result",
+        "ErrorClass",
+        "Message",
+        "ReceiptID",
+        "RetryAllowed"
+       ],
+       "properties": {
+        "Result": {
+         "enum": [
+          "FAIL",
+          "DENIED",
+          "INCONCLUSIVE",
+          "RECONCILIATION_REQUIRED"
+         ]
+        },
+        "ErrorClass": {
+         "type": "string",
+         "minLength": 1
+        },
+        "Message": {
+         "type": "string"
+        },
+        "ReceiptID": {
+         "type": "string",
+         "minLength": 1,
+         "pattern": "^[A-Z][A-Z0-9_-]{2,127}$"
+        },
+        "RetryAllowed": {
+         "type": "boolean"
+        },
+        "RetryAfterSeconds": {
+         "type": "integer",
+         "minimum": 0
+        }
+       }
+      }
+     ]
+    }
+   }
+  },
+  "SubmitEvidenceResponse": {
+   "type": "object",
+   "additionalProperties": false,
+   "required": [
+    "request",
+    "response"
+   ],
+   "properties": {
+    "request": {
+     "type": "object",
+     "additionalProperties": false,
+     "required": [
+      "Context",
+      "WorkID",
+      "EvidencePacketID",
+      "Response",
+      "KnownAssumedUnknown"
+     ],
+     "properties": {
+      "Context": {
+       "type": "object",
+       "additionalProperties": false,
+       "required": [
+        "CorrelationID",
+        "IdempotencyKey",
+        "ClientVersion",
+        "TenantLabel"
+       ],
+       "properties": {
+        "CorrelationID": {
+         "type": "string",
+         "minLength": 1,
+         "pattern": "^[A-Z][A-Z0-9_-]{2,127}$"
+        },
+        "IdempotencyKey": {
+         "type": "string",
+         "minLength": 8
+        },
+        "ClientVersion": {
+         "type": "string",
+         "minLength": 1
+        },
+        "TenantLabel": {
+         "type": "string",
+         "minLength": 1
+        },
+        "TestRecord": {
+         "type": "boolean"
+        }
+       }
+      },
+      "WorkID": {
+       "type": "string",
+       "minLength": 1,
+       "pattern": "^CW-[A-Z0-9_-]{2,124}$"
+      },
+      "EvidencePacketID": {
+       "type": "string",
+       "minLength": 1,
+       "pattern": "^[A-Z][A-Z0-9_-]{2,127}$"
+      },
+      "Response": {
+       "type": "string",
+       "minLength": 1
+      },
+      "KnownAssumedUnknown": {
+       "type": "string",
+       "enum": [
+        "KNOWN",
+        "ASSUMED",
+        "UNKNOWN",
+        "MIXED"
+       ]
+      }
+     }
+    },
+    "response": {
+     "oneOf": [
+      {
+       "type": "object",
+       "additionalProperties": false,
+       "required": [
+        "Result",
+        "ReceiptID",
+        "Work",
+        "PacketStatus"
+       ],
+       "properties": {
+        "Result": {
+         "const": "PASS"
+        },
+        "ReceiptID": {
+         "type": "string",
+         "minLength": 1,
+         "pattern": "^[A-Z][A-Z0-9_-]{2,127}$"
+        },
+        "Work": {
+         "type": "object",
+         "additionalProperties": false,
+         "required": [
+          "WorkID",
+          "Title",
+          "Stage",
+          "State",
+          "EmployeeStatus",
+          "Lane",
+          "NextAction",
+          "NextOwner",
+          "NextDate",
+          "Version",
+          "LastValidatedAt"
+         ],
+         "properties": {
+          "WorkID": {
+           "type": "string",
+           "minLength": 1,
+           "pattern": "^CW-[A-Z0-9_-]{2,124}$"
+          },
+          "Title": {
+           "type": "string"
+          },
+          "Stage": {
+           "type": "string",
+           "enum": [
+            "INTAKE",
+            "EVIDENCE",
+            "DECISION",
+            "DELIVERY",
+            "VALUE",
+            "IMPROVEMENT",
+            "CLOSED"
+           ]
+          },
+          "State": {
+           "type": "string",
+           "enum": [
+            "DRAFT",
+            "CLARIFYING",
+            "READY_FOR_TRIAGE",
+            "EVIDENCE_BUILDING",
+            "AWAITING_SME",
+            "NOT_DECISION_READY",
+            "DECISION_READY",
+            "READY_FOR_AI_COE",
+            "READY_FOR_ARB",
+            "READY_FOR_ELT",
+            "APPROVED",
+            "APPROVED_WITH_CONDITIONS",
+            "DEFERRED",
+            "REJECTED",
+            "PROJECT_ACTIVATING",
+            "IN_DELIVERY",
+            "AT_RISK",
+            "BLOCKED",
+            "VALUE_REVIEW",
+            "OPERATING",
+            "IMPROVEMENT_PROPOSED",
+            "REVALIDATION_REQUIRED",
+            "RETIRED"
+           ]
+          },
+          "EmployeeStatus": {
+           "enum": [
+            "Done",
+            "Need one answer",
+            "Ready for you",
+            "Started",
+            "With the right reviewer",
+            "Working"
+           ]
+          },
+          "Lane": {
+           "type": [
+            "string",
+            "null"
+           ]
+          },
+          "NextAction": {
+           "type": [
+            "string",
+            "null"
+           ]
+          },
+          "NextOwner": {
+           "type": [
+            "string",
+            "null"
+           ]
+          },
+          "NextDate": {
+           "type": [
+            "string",
+            "null"
+           ]
+          },
+          "Version": {
+           "type": "integer",
+           "minimum": 1
+          },
+          "LastValidatedAt": {
+           "type": "string",
+           "format": "date-time"
+          },
+          "OpenEvidenceGaps": {
+           "type": "array",
+           "items": {
+            "type": "string"
+           }
+          },
+          "DuplicateStatus": {
+           "type": "string",
+           "enum": [
+            "NOT_CHECKED",
+            "UNIQUE",
+            "POSSIBLE_DUPLICATE",
+            "CONFIRMED_DUPLICATE",
+            "RELATED_NOT_DUPLICATE"
+           ]
+          },
+          "RelatedWorkIDs": {
+           "type": "array",
+           "items": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "^CW-[A-Z0-9_-]{2,124}$"
+           },
+           "minItems": 0,
+           "uniqueItems": true
+          }
+         }
+        },
+        "PacketStatus": {
+         "type": "string",
+         "enum": [
+          "OPEN",
+          "ASSIGNED",
+          "AWAITING_RESPONSE",
+          "RETURNED",
+          "VALIDATED",
+          "REJECTED",
+          "EXPIRED",
+          "NOT_APPLICABLE"
+         ]
+        }
+       }
+      },
+      {
+       "type": "object",
+       "additionalProperties": false,
+       "required": [
+        "Result",
+        "ErrorClass",
+        "Message",
+        "ReceiptID",
+        "RetryAllowed"
+       ],
+       "properties": {
+        "Result": {
+         "enum": [
+          "FAIL",
+          "DENIED",
+          "INCONCLUSIVE",
+          "RECONCILIATION_REQUIRED"
+         ]
+        },
+        "ErrorClass": {
+         "type": "string",
+         "minLength": 1
+        },
+        "Message": {
+         "type": "string"
+        },
+        "ReceiptID": {
+         "type": "string",
+         "minLength": 1,
+         "pattern": "^[A-Z][A-Z0-9_-]{2,127}$"
+        },
+        "RetryAllowed": {
+         "type": "boolean"
+        },
+        "RetryAfterSeconds": {
+         "type": "integer",
+         "minimum": 0
+        }
+       }
+      }
+     ]
+    }
+   }
+  },
+  "RequestDecisionReadiness": {
+   "type": "object",
+   "additionalProperties": false,
+   "required": [
+    "request",
+    "response"
+   ],
+   "properties": {
+    "request": {
+     "type": "object",
+     "additionalProperties": false,
+     "required": [
+      "Context",
+      "WorkID"
+     ],
+     "properties": {
+      "Context": {
+       "type": "object",
+       "additionalProperties": false,
+       "required": [
+        "CorrelationID",
+        "IdempotencyKey",
+        "ClientVersion",
+        "TenantLabel"
+       ],
+       "properties": {
+        "CorrelationID": {
+         "type": "string",
+         "minLength": 1,
+         "pattern": "^[A-Z][A-Z0-9_-]{2,127}$"
+        },
+        "IdempotencyKey": {
+         "type": "string",
+         "minLength": 8
+        },
+        "ClientVersion": {
+         "type": "string",
+         "minLength": 1
+        },
+        "TenantLabel": {
+         "type": "string",
+         "minLength": 1
+        },
+        "TestRecord": {
+         "type": "boolean"
+        }
+       }
+      },
+      "WorkID": {
+       "type": "string",
+       "minLength": 1,
+       "pattern": "^CW-[A-Z0-9_-]{2,124}$"
+      },
+      "PayloadHash": {
+       "type": "string",
+       "pattern": "^[a-f0-9]{64}$"
+      },
+      "EvidenceSetHash": {
+       "type": "string",
+       "pattern": "^[a-f0-9]{64}$"
+      }
+     }
+    },
+    "response": {
+     "oneOf": [
+      {
+       "type": "object",
+       "additionalProperties": false,
+       "required": [
+        "Result",
+        "ReceiptID",
+        "Work",
+        "DecisionReadinessState",
+        "BlockingGates",
+        "DecisionPacketID"
+       ],
+       "properties": {
+        "Result": {
+         "const": "PASS"
+        },
+        "ReceiptID": {
+         "type": "string",
+         "minLength": 1,
+         "pattern": "^[A-Z][A-Z0-9_-]{2,127}$"
+        },
+        "Work": {
+         "type": "object",
+         "additionalProperties": false,
+         "required": [
+          "WorkID",
+          "Title",
+          "Stage",
+          "State",
+          "EmployeeStatus",
+          "Lane",
+          "NextAction",
+          "NextOwner",
+          "NextDate",
+          "Version",
+          "LastValidatedAt"
+         ],
+         "properties": {
+          "WorkID": {
+           "type": "string",
+           "minLength": 1,
+           "pattern": "^CW-[A-Z0-9_-]{2,124}$"
+          },
+          "Title": {
+           "type": "string"
+          },
+          "Stage": {
+           "type": "string",
+           "enum": [
+            "INTAKE",
+            "EVIDENCE",
+            "DECISION",
+            "DELIVERY",
+            "VALUE",
+            "IMPROVEMENT",
+            "CLOSED"
+           ]
+          },
+          "State": {
+           "type": "string",
+           "enum": [
+            "DRAFT",
+            "CLARIFYING",
+            "READY_FOR_TRIAGE",
+            "EVIDENCE_BUILDING",
+            "AWAITING_SME",
+            "NOT_DECISION_READY",
+            "DECISION_READY",
+            "READY_FOR_AI_COE",
+            "READY_FOR_ARB",
+            "READY_FOR_ELT",
+            "APPROVED",
+            "APPROVED_WITH_CONDITIONS",
+            "DEFERRED",
+            "REJECTED",
+            "PROJECT_ACTIVATING",
+            "IN_DELIVERY",
+            "AT_RISK",
+            "BLOCKED",
+            "VALUE_REVIEW",
+            "OPERATING",
+            "IMPROVEMENT_PROPOSED",
+            "REVALIDATION_REQUIRED",
+            "RETIRED"
+           ]
+          },
+          "EmployeeStatus": {
+           "enum": [
+            "Done",
+            "Need one answer",
+            "Ready for you",
+            "Started",
+            "With the right reviewer",
+            "Working"
+           ]
+          },
+          "Lane": {
+           "type": [
+            "string",
+            "null"
+           ]
+          },
+          "NextAction": {
+           "type": [
+            "string",
+            "null"
+           ]
+          },
+          "NextOwner": {
+           "type": [
+            "string",
+            "null"
+           ]
+          },
+          "NextDate": {
+           "type": [
+            "string",
+            "null"
+           ]
+          },
+          "Version": {
+           "type": "integer",
+           "minimum": 1
+          },
+          "LastValidatedAt": {
+           "type": "string",
+           "format": "date-time"
+          },
+          "OpenEvidenceGaps": {
+           "type": "array",
+           "items": {
+            "type": "string"
+           }
+          },
+          "DuplicateStatus": {
+           "type": "string",
+           "enum": [
+            "NOT_CHECKED",
+            "UNIQUE",
+            "POSSIBLE_DUPLICATE",
+            "CONFIRMED_DUPLICATE",
+            "RELATED_NOT_DUPLICATE"
+           ]
+          },
+          "RelatedWorkIDs": {
+           "type": "array",
+           "items": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "^CW-[A-Z0-9_-]{2,124}$"
+           },
+           "minItems": 0,
+           "uniqueItems": true
+          }
+         }
+        },
+        "DecisionReadinessState": {
+         "type": "string",
+         "enum": [
+          "NOT_READY",
+          "READY",
+          "REVALIDATION_REQUIRED",
+          "NOT_APPLICABLE"
+         ]
+        },
+        "BlockingGates": {
+         "type": "array",
+         "items": {
+          "type": "string"
+         }
+        },
+        "DecisionPacketID": {
+         "anyOf": [
+          {
+           "type": "string",
+           "minLength": 1,
+           "pattern": "^[A-Z][A-Z0-9_-]{2,127}$"
+          },
+          {
+           "type": "null"
+          }
+         ]
+        }
+       }
+      },
+      {
+       "type": "object",
+       "additionalProperties": false,
+       "required": [
+        "Result",
+        "ErrorClass",
+        "Message",
+        "ReceiptID",
+        "RetryAllowed"
+       ],
+       "properties": {
+        "Result": {
+         "enum": [
+          "FAIL",
+          "DENIED",
+          "INCONCLUSIVE",
+          "RECONCILIATION_REQUIRED"
+         ]
+        },
+        "ErrorClass": {
+         "type": "string",
+         "minLength": 1
+        },
+        "Message": {
+         "type": "string"
+        },
+        "ReceiptID": {
+         "type": "string",
+         "minLength": 1,
+         "pattern": "^[A-Z][A-Z0-9_-]{2,127}$"
+        },
+        "RetryAllowed": {
+         "type": "boolean"
+        },
+        "RetryAfterSeconds": {
+         "type": "integer",
+         "minimum": 0
+        }
+       }
+      }
+     ]
+    }
+   }
+  }
+ },
+ "oneOf": [
+  {
+   "$ref": "#/$defs/CreateOrResumeWork"
+  },
+  {
+   "$ref": "#/$defs/GetWorkStatus"
+  },
+  {
+   "$ref": "#/$defs/ListMyWork"
+  },
+  {
+   "$ref": "#/$defs/SubmitEvidenceResponse"
+  },
+  {
+   "$ref": "#/$defs/RequestDecisionReadiness"
+  }
+ ]
+}

@@ -1,0 +1,2729 @@
+{
+  "numFailedTestSuites": 1,
+  "numFailedTests": 1,
+  "numPassedTestSuites": 6,
+  "numPassedTests": 143,
+  "numPendingTestSuites": 0,
+  "numPendingTests": 0,
+  "numRuntimeErrorTestSuites": 0,
+  "numTodoTests": 0,
+  "numTotalTestSuites": 7,
+  "numTotalTests": 144,
+  "openHandles": [],
+  "snapshot": {
+    "added": 0,
+    "didUpdate": false,
+    "failure": false,
+    "filesAdded": 0,
+    "filesRemoved": 0,
+    "filesRemovedList": [],
+    "filesUnmatched": 0,
+    "filesUpdated": 0,
+    "matched": 0,
+    "total": 0,
+    "unchecked": 0,
+    "uncheckedKeysByFile": [],
+    "unmatched": 0,
+    "updated": 0
+  },
+  "startTime": 1790173206058,
+  "success": false,
+  "testResults": [
+    {
+      "leaks": false,
+      "numFailingTests": 0,
+      "numPassingTests": 35,
+      "numPendingTests": 0,
+      "numTodoTests": 0,
+      "openHandles": [],
+      "perfStats": {
+        "end": 1790173207493,
+        "loadTestEnvironmentEnd": 1790173206845,
+        "loadTestEnvironmentStart": 1790173206211,
+        "runtime": 647,
+        "setupAfterEnvEnd": 1790173207170,
+        "setupAfterEnvStart": 1790173206999,
+        "setupFilesEnd": 1790173206857,
+        "setupFilesStart": 1790173206846,
+        "slow": false,
+        "start": 1790173206846
+      },
+      "skipped": false,
+      "snapshot": {
+        "added": 0,
+        "fileDeleted": false,
+        "matched": 0,
+        "unchecked": 0,
+        "uncheckedKeys": [],
+        "unmatched": 0,
+        "updated": 0
+      },
+      "testFilePath": "C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-audit-fixes\\src\\webparts\\aiCoeFrontDoor\\services\\GovernanceService.test.ts",
+      "testResults": [
+        {
+          "ancestorTitles": [
+            "list helpers"
+          ],
+          "duration": 3,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "list helpers builds the items endpoint and escapes apostrophes in titles",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 2,
+          "retryReasons": [],
+          "startAt": 1790173207446,
+          "status": "passed",
+          "title": "builds the items endpoint and escapes apostrophes in titles"
+        },
+        {
+          "ancestorTitles": [
+            "list helpers"
+          ],
+          "duration": 1,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "list helpers labels workflow types and classifies governance routes",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 13,
+          "retryReasons": [],
+          "startAt": 1790173207450,
+          "status": "passed",
+          "title": "labels workflow types and classifies governance routes"
+        },
+        {
+          "ancestorTitles": [
+            "GovernanceService.submitWorkflow"
+          ],
+          "duration": 2,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "GovernanceService.submitWorkflow writes a service-queue submission to the pilot intakes list only",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 6,
+          "retryReasons": [],
+          "startAt": 1790173207452,
+          "status": "passed",
+          "title": "writes a service-queue submission to the pilot intakes list only"
+        },
+        {
+          "ancestorTitles": [
+            "GovernanceService.submitWorkflow"
+          ],
+          "duration": 1,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "GovernanceService.submitWorkflow also creates a use case for governance routes with the same identifier",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 13,
+          "retryReasons": [],
+          "startAt": 1790173207455,
+          "status": "passed",
+          "title": "also creates a use case for governance routes with the same identifier"
+        },
+        {
+          "ancestorTitles": [
+            "GovernanceService.submitWorkflow"
+          ],
+          "duration": 4,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "GovernanceService.submitWorkflow falls back to the page user, the outcome routing and a default business problem",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 11,
+          "retryReasons": [],
+          "startAt": 1790173207456,
+          "status": "passed",
+          "title": "falls back to the page user, the outcome routing and a default business problem"
+        },
+        {
+          "ancestorTitles": [
+            "GovernanceService.submitWorkflow"
+          ],
+          "duration": 1,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "GovernanceService.submitWorkflow uses Unknown when no name is available anywhere",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 4,
+          "retryReasons": [],
+          "startAt": 1790173207460,
+          "status": "passed",
+          "title": "uses Unknown when no name is available anywhere"
+        },
+        {
+          "ancestorTitles": [
+            "GovernanceService.submitWorkflow"
+          ],
+          "duration": 1,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "GovernanceService.submitWorkflow truncates oversized payloads exactly as shipped",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 3,
+          "retryReasons": [],
+          "startAt": 1790173207462,
+          "status": "passed",
+          "title": "truncates oversized payloads exactly as shipped"
+        },
+        {
+          "ancestorTitles": [
+            "GovernanceService.submitWorkflow"
+          ],
+          "duration": 2,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "GovernanceService.submitWorkflow reports a failed write without throwing",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 4,
+          "retryReasons": [],
+          "startAt": 1790173207463,
+          "status": "passed",
+          "title": "reports a failed write without throwing"
+        },
+        {
+          "ancestorTitles": [
+            "GovernanceService.submitWorkflow"
+          ],
+          "duration": 1,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "GovernanceService.submitWorkflow classifies a refused write and keeps the response body out of the user message and the console",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 7,
+          "retryReasons": [],
+          "startAt": 1790173207465,
+          "status": "passed",
+          "title": "classifies a refused write and keeps the response body out of the user message and the console"
+        },
+        {
+          "ancestorTitles": [
+            "GovernanceService.submitWorkflow"
+          ],
+          "duration": 1,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "GovernanceService.submitWorkflow classifies a missing list as a source failure and a rejected client as transient",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 9,
+          "retryReasons": [],
+          "startAt": 1790173207467,
+          "status": "passed",
+          "title": "classifies a missing list as a source failure and a rejected client as transient"
+        },
+        {
+          "ancestorTitles": [
+            "GovernanceService.submitWorkflow"
+          ],
+          "duration": 1,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "GovernanceService.submitWorkflow carries no failure class on a successful write",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 4,
+          "retryReasons": [],
+          "startAt": 1790173207468,
+          "status": "passed",
+          "title": "carries no failure class on a successful write"
+        },
+        {
+          "ancestorTitles": [
+            "GovernanceService.submitWorkflow readback and retry"
+          ],
+          "duration": 2,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "GovernanceService.submitWorkflow readback and retry reads the intake row back after the POST and reports it saved with the time and version",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 9,
+          "retryReasons": [],
+          "startAt": 1790173207469,
+          "status": "passed",
+          "title": "reads the intake row back after the POST and reports it saved with the time and version"
+        },
+        {
+          "ancestorTitles": [
+            "GovernanceService.submitWorkflow readback and retry"
+          ],
+          "duration": 1,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "GovernanceService.submitWorkflow readback and retry takes the saved time from the row when the readback carries a Modified stamp",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 3,
+          "retryReasons": [],
+          "startAt": 1790173207471,
+          "status": "passed",
+          "title": "takes the saved time from the row when the readback carries a Modified stamp"
+        },
+        {
+          "ancestorTitles": [
+            "GovernanceService.submitWorkflow readback and retry"
+          ],
+          "duration": 2,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "GovernanceService.submitWorkflow readback and retry reports pending, not failed, when the POST was accepted but the readback fails",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 7,
+          "retryReasons": [],
+          "startAt": 1790173207472,
+          "status": "passed",
+          "title": "reports pending, not failed, when the POST was accepted but the readback fails"
+        },
+        {
+          "ancestorTitles": [
+            "GovernanceService.submitWorkflow readback and retry"
+          ],
+          "duration": 1,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "GovernanceService.submitWorkflow readback and retry reports pending when the row read back does not carry the identifier that was written",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 5,
+          "retryReasons": [],
+          "startAt": 1790173207474,
+          "status": "passed",
+          "title": "reports pending when the row read back does not carry the identifier that was written"
+        },
+        {
+          "ancestorTitles": [
+            "GovernanceService.submitWorkflow readback and retry"
+          ],
+          "duration": 2,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "GovernanceService.submitWorkflow readback and retry reuses the identifier on a retry, finds the row by IntakeId and posts nothing twice",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 12,
+          "retryReasons": [],
+          "startAt": 1790173207475,
+          "status": "passed",
+          "title": "reuses the identifier on a retry, finds the row by IntakeId and posts nothing twice"
+        },
+        {
+          "ancestorTitles": [
+            "GovernanceService.submitWorkflow readback and retry"
+          ],
+          "duration": 1,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "GovernanceService.submitWorkflow readback and retry posts the same body under the same identifier when the retry finds no row",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 6,
+          "retryReasons": [],
+          "startAt": 1790173207477,
+          "status": "passed",
+          "title": "posts the same body under the same identifier when the retry finds no row"
+        },
+        {
+          "ancestorTitles": [
+            "GovernanceService.submitWorkflow readback and retry"
+          ],
+          "duration": 0,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "GovernanceService.submitWorkflow readback and retry never pre-reads on a first attempt, so the shipped request sequence gains only the readback",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 2,
+          "retryReasons": [],
+          "startAt": 1790173207478,
+          "status": "passed",
+          "title": "never pre-reads on a first attempt, so the shipped request sequence gains only the readback"
+        },
+        {
+          "ancestorTitles": [
+            "GovernanceService.submitWorkflow readback and retry"
+          ],
+          "duration": 3,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "GovernanceService.submitWorkflow readback and retry completes a governance submission on retry: the intake row is found, only the missing use case is written",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 17,
+          "retryReasons": [],
+          "startAt": 1790173207478,
+          "status": "passed",
+          "title": "completes a governance submission on retry: the intake row is found, only the missing use case is written"
+        },
+        {
+          "ancestorTitles": [
+            "GovernanceService.submitWorkflow readback and retry"
+          ],
+          "duration": 0,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "GovernanceService.submitWorkflow readback and retry skips both writes when a retry finds both rows",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 6,
+          "retryReasons": [],
+          "startAt": 1790173207481,
+          "status": "passed",
+          "title": "skips both writes when a retry finds both rows"
+        },
+        {
+          "ancestorTitles": [
+            "GovernanceService.submitWorkflow readback and retry"
+          ],
+          "duration": 1,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "GovernanceService.submitWorkflow readback and retry classifies a refused write as failed with PERMISSION and a missing list as SOURCE, carrying the state",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 5,
+          "retryReasons": [],
+          "startAt": 1790173207482,
+          "status": "passed",
+          "title": "classifies a refused write as failed with PERMISSION and a missing list as SOURCE, carrying the state"
+        },
+        {
+          "ancestorTitles": [
+            "GovernanceService.submitWorkflow readback and retry"
+          ],
+          "duration": 1,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "GovernanceService.submitWorkflow readback and retry reports a failed pre-read as failed rather than writing blind",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 5,
+          "retryReasons": [],
+          "startAt": 1790173207483,
+          "status": "passed",
+          "title": "reports a failed pre-read as failed rather than writing blind"
+        },
+        {
+          "ancestorTitles": [
+            "GovernanceService.submitWorkflow readback and retry"
+          ],
+          "duration": 0,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "GovernanceService.submitWorkflow readback and retry confirms through the identifier when the POST answer carries no Id",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 5,
+          "retryReasons": [],
+          "startAt": 1790173207484,
+          "status": "passed",
+          "title": "confirms through the identifier when the POST answer carries no Id"
+        },
+        {
+          "ancestorTitles": [
+            "GovernanceService.submitOutcome"
+          ],
+          "duration": 0,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "GovernanceService.submitOutcome writes one row of choices to the outcome records list, with no email and no display name",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 10,
+          "retryReasons": [],
+          "startAt": 1790173207485,
+          "status": "passed",
+          "title": "writes one row of choices to the outcome records list, with no email and no display name"
+        },
+        {
+          "ancestorTitles": [
+            "GovernanceService.submitOutcome"
+          ],
+          "duration": 0,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "GovernanceService.submitOutcome reads the row back by its key before reporting it saved",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 3,
+          "retryReasons": [],
+          "startAt": 1790173207486,
+          "status": "passed",
+          "title": "reads the row back by its key before reporting it saved"
+        },
+        {
+          "ancestorTitles": [
+            "GovernanceService.submitOutcome"
+          ],
+          "duration": 1,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "GovernanceService.submitOutcome writes nothing but declared choices, whatever the answers carry",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 5,
+          "retryReasons": [],
+          "startAt": 1790173207486,
+          "status": "passed",
+          "title": "writes nothing but declared choices, whatever the answers carry"
+        },
+        {
+          "ancestorTitles": [
+            "GovernanceService.submitOutcome"
+          ],
+          "duration": 0,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "GovernanceService.submitOutcome reports pending when the write was accepted but the readback fails, and keeps the body out of the message",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 5,
+          "retryReasons": [],
+          "startAt": 1790173207487,
+          "status": "passed",
+          "title": "reports pending when the write was accepted but the readback fails, and keeps the body out of the message"
+        },
+        {
+          "ancestorTitles": [
+            "GovernanceService.submitOutcome"
+          ],
+          "duration": 1,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "GovernanceService.submitOutcome reports a refused write as failed with the class and no response body in the user message",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 3,
+          "retryReasons": [],
+          "startAt": 1790173207487,
+          "status": "passed",
+          "title": "reports a refused write as failed with the class and no response body in the user message"
+        },
+        {
+          "ancestorTitles": [
+            "GovernanceService.submitOutcome"
+          ],
+          "duration": 0,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "GovernanceService.submitOutcome completes a pending record on retry under the same key instead of writing a second row",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 7,
+          "retryReasons": [],
+          "startAt": 1790173207488,
+          "status": "passed",
+          "title": "completes a pending record on retry under the same key instead of writing a second row"
+        },
+        {
+          "ancestorTitles": [
+            "GovernanceService.submitOutcome"
+          ],
+          "duration": 1,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "GovernanceService.submitOutcome reports pending when the row read back does not carry the key that was written",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 4,
+          "retryReasons": [],
+          "startAt": 1790173207488,
+          "status": "passed",
+          "title": "reports pending when the row read back does not carry the key that was written"
+        },
+        {
+          "ancestorTitles": [
+            "submissionState"
+          ],
+          "duration": 0,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "submissionState keeps the meaning of every shipped result: connected means saved, anything else failed",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 5,
+          "retryReasons": [],
+          "startAt": 1790173207489,
+          "status": "passed",
+          "title": "keeps the meaning of every shipped result: connected means saved, anything else failed"
+        },
+        {
+          "ancestorTitles": [
+            "GovernanceService.getAdminDashboardData"
+          ],
+          "duration": 1,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "GovernanceService.getAdminDashboardData queries the three lists with the shipped select, order and top options",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 8,
+          "retryReasons": [],
+          "startAt": 1790173207489,
+          "status": "passed",
+          "title": "queries the three lists with the shipped select, order and top options"
+        },
+        {
+          "ancestorTitles": [
+            "GovernanceService.getAdminDashboardData"
+          ],
+          "duration": 1,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "GovernanceService.getAdminDashboardData returns empty lists with a message when a query fails",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 3,
+          "retryReasons": [],
+          "startAt": 1790173207490,
+          "status": "passed",
+          "title": "returns empty lists with a message when a query fails"
+        },
+        {
+          "ancestorTitles": [
+            "GovernanceService.getAdminDashboardData"
+          ],
+          "duration": 1,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "GovernanceService.getAdminDashboardData classifies a missing list and a rejected client without exposing a body",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 9,
+          "retryReasons": [],
+          "startAt": 1790173207491,
+          "status": "passed",
+          "title": "classifies a missing list and a rejected client without exposing a body"
+        },
+        {
+          "ancestorTitles": [
+            "GovernanceService.getAdminDashboardData"
+          ],
+          "duration": 0,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "GovernanceService.getAdminDashboardData carries no failure class when every list answered",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 4,
+          "retryReasons": [],
+          "startAt": 1790173207492,
+          "status": "passed",
+          "title": "carries no failure class when every list answered"
+        }
+      ],
+      "failureMessage": null
+    },
+    {
+      "leaks": false,
+      "numFailingTests": 1,
+      "numPassingTests": 35,
+      "numPendingTests": 0,
+      "numTodoTests": 0,
+      "openHandles": [],
+      "perfStats": {
+        "end": 1790173210619,
+        "loadTestEnvironmentEnd": 1790173207505,
+        "loadTestEnvironmentStart": 1790173207497,
+        "runtime": 3114,
+        "setupAfterEnvEnd": 1790173207571,
+        "setupAfterEnvStart": 1790173207532,
+        "setupFilesEnd": 1790173207505,
+        "setupFilesStart": 1790173207505,
+        "slow": false,
+        "start": 1790173207505
+      },
+      "skipped": false,
+      "snapshot": {
+        "added": 0,
+        "fileDeleted": false,
+        "matched": 0,
+        "unchecked": 0,
+        "uncheckedKeys": [],
+        "unmatched": 0,
+        "updated": 0
+      },
+      "testFilePath": "C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-audit-fixes\\src\\webparts\\aiCoeFrontDoor\\components\\app\\AppShell.test.tsx",
+      "testResults": [
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": 38,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell opens on the first screen with the entry panel and the three ways in",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 4,
+          "retryReasons": [],
+          "startAt": 1790173209495,
+          "status": "passed",
+          "title": "opens on the first screen with the entry panel and the three ways in"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": 11,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell keeps a section a person may not use out of the tab list entirely",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 6,
+          "retryReasons": [],
+          "startAt": 1790173209534,
+          "status": "passed",
+          "title": "keeps a section a person may not use out of the tab list entirely"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": 14,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell opens the measured view to a leader but still not the operator surface",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 5,
+          "retryReasons": [],
+          "startAt": 1790173209545,
+          "status": "passed",
+          "title": "opens the measured view to a leader but still not the operator surface"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": 8,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell shows nothing narrowed while the membership is unresolved, rather than guessing",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 2,
+          "retryReasons": [],
+          "startAt": 1790173209559,
+          "status": "passed",
+          "title": "shows nothing narrowed while the membership is unresolved, rather than guessing"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": 50,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell moves along the tabs with the arrow keys, and wraps at both ends",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 7,
+          "retryReasons": [],
+          "startAt": 1790173209567,
+          "status": "passed",
+          "title": "moves along the tabs with the arrow keys, and wraps at both ends"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": 54,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell keeps sequential keyboard navigation on the actual focused tab, but pointer entry focuses the heading",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 8,
+          "retryReasons": [],
+          "startAt": 1790173209617,
+          "status": "passed",
+          "title": "keeps sequential keyboard navigation on the actual focused tab, but pointer entry focuses the heading"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": 7,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell ignores a key the tab list does not own, so typing is not swallowed",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 2,
+          "retryReasons": [],
+          "startAt": 1790173209671,
+          "status": "passed",
+          "title": "ignores a key the tab list does not own, so typing is not swallowed"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": 8,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell keeps one tab in the tab order and points each panel at its tab",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 3,
+          "retryReasons": [],
+          "startAt": 1790173209678,
+          "status": "passed",
+          "title": "keeps one tab in the tab order and points each panel at its tab"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": 7,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell gives the section a heading that can take focus, so a change is announced",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 4,
+          "retryReasons": [],
+          "startAt": 1790173209686,
+          "status": "passed",
+          "title": "gives the section a heading that can take focus, so a change is announced"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": 9,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell names the person and what the view can say about their access",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 3,
+          "retryReasons": [],
+          "startAt": 1790173209693,
+          "status": "passed",
+          "title": "names the person and what the view can say about their access"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": 13,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell says so when the membership could not be confirmed, rather than staying quiet about it",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 2,
+          "retryReasons": [],
+          "startAt": 1790173209702,
+          "status": "passed",
+          "title": "says so when the membership could not be confirmed, rather than staying quiet about it"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": 301,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell supplies the configured document route to the actual submission receipt",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 4,
+          "retryReasons": [],
+          "startAt": 1790173209715,
+          "status": "passed",
+          "title": "supplies the configured document route to the actual submission receipt"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": 6,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell carries the footer promise on every section",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 2,
+          "retryReasons": [],
+          "startAt": 1790173210016,
+          "status": "passed",
+          "title": "carries the footer promise on every section"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": 12,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell does not mount Enterprise value or call getMeasures when an employee clicks the Home card",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 8,
+          "retryReasons": [],
+          "startAt": 1790173210022,
+          "status": "passed",
+          "title": "does not mount Enterprise value or call getMeasures when an employee clicks the Home card"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": 18,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell does not fetch measures or usage while membership is unresolved, including from the Home card",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 9,
+          "retryReasons": [],
+          "startAt": 1790173210034,
+          "status": "passed",
+          "title": "does not fetch measures or usage while membership is unresolved, including from the Home card"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": 21,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell shows Usage on Enterprise value for an operator and not on System map",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 11,
+          "retryReasons": [],
+          "startAt": 1790173210052,
+          "status": "passed",
+          "title": "shows Usage on Enterprise value for an operator and not on System map"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": 13,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell lets a leader open Enterprise value without mounting usage or calling getMetrics",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 6,
+          "retryReasons": [],
+          "startAt": 1790173210073,
+          "status": "passed",
+          "title": "lets a leader open Enterprise value without mounting usage or calling getMetrics"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": 34,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell keeps the Home sentence as the idea draft and opens the guided request with the same wording",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 4,
+          "retryReasons": [],
+          "startAt": 1790173210087,
+          "status": "passed",
+          "title": "keeps the Home sentence as the idea draft and opens the guided request with the same wording"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": 85,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell keeps guided edits mounted when navigation needs an unsaved draft and saving is refused",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 9,
+          "retryReasons": [],
+          "startAt": 1790173210122,
+          "status": "passed",
+          "title": "keeps guided edits mounted when navigation needs an unsaved draft and saving is refused"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": 106,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell keeps guided edits mounted when navigation needs an unsaved draft and saving is rejected",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 9,
+          "retryReasons": [],
+          "startAt": 1790173210207,
+          "status": "passed",
+          "title": "keeps guided edits mounted when navigation needs an unsaved draft and saving is rejected"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": 27,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell keeps the sentence in the box and opens nothing when the draft cannot be saved",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 4,
+          "retryReasons": [],
+          "startAt": 1790173210313,
+          "status": "passed",
+          "title": "keeps the sentence in the box and opens nothing when the draft cannot be saved"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": 43,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell opens Marketing for a reviewer without granting drafting controls",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 4,
+          "retryReasons": [],
+          "startAt": 1790173210340,
+          "status": "passed",
+          "title": "opens Marketing for a reviewer without granting drafting controls"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": 26,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell shows Marketing to a bounded participant and keeps the synthetic workspace across a Home round-trip",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 4,
+          "retryReasons": [],
+          "startAt": 1790173210383,
+          "status": "passed",
+          "title": "shows Marketing to a bounded participant and keeps the synthetic workspace across a Home round-trip"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": 13,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell tells an operator without site-owner permission that the queue was not read",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 4,
+          "retryReasons": [],
+          "startAt": 1790173210409,
+          "status": "passed",
+          "title": "tells an operator without site-owner permission that the queue was not read"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": 7,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell says the support route is unbound when the content document does not name one",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 2,
+          "retryReasons": [],
+          "startAt": 1790173210423,
+          "status": "passed",
+          "title": "says the support route is unbound when the content document does not name one"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": 10,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell does not expose an unsafe support link: javascript:void(0)",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 3,
+          "retryReasons": [],
+          "startAt": 1790173210430,
+          "status": "passed",
+          "title": "does not expose an unsafe support link: javascript:void(0)"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": 16,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell does not expose an unsafe support link: data:text/html,unsafe",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 3,
+          "retryReasons": [],
+          "startAt": 1790173210440,
+          "status": "passed",
+          "title": "does not expose an unsafe support link: data:text/html,unsafe"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": 13,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell does not expose an unsafe support link: //untrusted.invalid/path",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 3,
+          "retryReasons": [],
+          "startAt": 1790173210456,
+          "status": "passed",
+          "title": "does not expose an unsafe support link: //untrusted.invalid/path"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": 10,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell resolves site-relative support links against the site rather than the hosting page",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 2,
+          "retryReasons": [],
+          "startAt": 1790173210470,
+          "status": "passed",
+          "title": "resolves site-relative support links against the site rather than the hosting page"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": 14,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell renders a configured support route from the page content document",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 3,
+          "retryReasons": [],
+          "startAt": 1790173210481,
+          "status": "passed",
+          "title": "renders a configured support route from the page content document"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": 16,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell places the administrator control last, apart from the section tabs, for a site owner",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 11,
+          "retryReasons": [],
+          "startAt": 1790173210495,
+          "status": "passed",
+          "title": "places the administrator control last, apart from the section tabs, for a site owner"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": 22,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell opens the administrator queue from that control and still opens a section tab",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 5,
+          "retryReasons": [],
+          "startAt": 1790173210511,
+          "status": "passed",
+          "title": "opens the administrator queue from that control and still opens a section tab"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": 11,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell does not keep the administrator queue on System map once it has its own control",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 6,
+          "retryReasons": [],
+          "startAt": 1790173210533,
+          "status": "passed",
+          "title": "does not keep the administrator queue on System map once it has its own control"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": 17,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell moves to the administrator control with End when the person may open it",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 2,
+          "retryReasons": [],
+          "startAt": 1790173210544,
+          "status": "passed",
+          "title": "moves to the administrator control with End when the person may open it"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": 9,
+          "failing": false,
+          "failureDetails": [
+            {
+              "matcherResult": {
+                "message": "expect(received).toContain(expected) // indexOf\n\nExpected substring: \"What happens to what you record\"\nReceived string:    \"OvertureAI Center of ExcellenceEmployeeAccess not confirmedSigned in as Pat ExampleHomeCasesEngineeringImprovementImprovementRecord how an AI task turned out, or tell the AI CoE what is not working.Tell the AI CoE what happenedHow a task turned out, how your team is using AI, or what is not working.Getting started: safe task and reviewRegister team AI useTell the AI CoE how your team is already using AI, so it is counted and supported.Record a task outcomeSay how one AI task turned out. Every answer is a choice; nothing you typed or produced is saved.Share feedbackTell the AI CoE what is not working, or what should exist and does not.Proposed manual improvement pathNotice→Evidence→Propose→Test→Approve→MeasureNo automatic policy change or enterprise learning loop is implemented here. A proposal is not a policy.Record a task outcome above: fixed choices only, not prompts or output.Use Share feedback above to propose the smallest correction. Name the confusing step or correction category, not private work. Save its receipt.An authorized owner links that feedback reference to the existing decision record, permitted evidence, proposed change, approver and retest scope. This is manual follow-through, not automatic assignment.After an approved repair, repeat the same permitted task and a failure/recovery case. Keep the retest receipt with the original feedback reference; report another outcome only for a distinct task attempt.The decision authority reviews evidence before any change is approved. An operator reconciles measurement separately; no click here promotes feedback or expands permissions.Operator commissioning: manual review and publicationWhat an outcome keepsEvery answer is a choice from a fixed list, so the row holds no prompt, no output and no text of the work itself. Your name is not written to it either; the list records who saved the row, as it does for every row.Overture AI Center of ExcellenceNothing on this page is sent or published without a person deciding it.Support route: not bound on this site yet.\"",
+                "pass": false
+              }
+            }
+          ],
+          "failureMessages": [
+            "Error: expect(received).toContain(expected) // indexOf\n\nExpected substring: \"What happens to what you record\"\nReceived string:    \"OvertureAI Center of ExcellenceEmployeeAccess not confirmedSigned in as Pat ExampleHomeCasesEngineeringImprovementImprovementRecord how an AI task turned out, or tell the AI CoE what is not working.Tell the AI CoE what happenedHow a task turned out, how your team is using AI, or what is not working.Getting started: safe task and reviewRegister team AI useTell the AI CoE how your team is already using AI, so it is counted and supported.Record a task outcomeSay how one AI task turned out. Every answer is a choice; nothing you typed or produced is saved.Share feedbackTell the AI CoE what is not working, or what should exist and does not.Proposed manual improvement pathNotice→Evidence→Propose→Test→Approve→MeasureNo automatic policy change or enterprise learning loop is implemented here. A proposal is not a policy.Record a task outcome above: fixed choices only, not prompts or output.Use Share feedback above to propose the smallest correction. Name the confusing step or correction category, not private work. Save its receipt.An authorized owner links that feedback reference to the existing decision record, permitted evidence, proposed change, approver and retest scope. This is manual follow-through, not automatic assignment.After an approved repair, repeat the same permitted task and a failure/recovery case. Keep the retest receipt with the original feedback reference; report another outcome only for a distinct task attempt.The decision authority reviews evidence before any change is approved. An operator reconciles measurement separately; no click here promotes feedback or expands permissions.Operator commissioning: manual review and publicationWhat an outcome keepsEvery answer is a choice from a fixed list, so the row holds no prompt, no output and no text of the work itself. Your name is not written to it either; the list records who saved the row, as it does for every row.Overture AI Center of ExcellenceNothing on this page is sent or published without a person deciding it.Support route: not bound on this site yet.\"\n    at Object.<anonymous> (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-audit-fixes\\src\\webparts\\aiCoeFrontDoor\\components\\app\\AppShell.test.tsx:507:35)"
+          ],
+          "fullName": "AppShell spaces Register team AI use from the other Improvement cards and keeps the larger panels below",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 4,
+          "retryReasons": [],
+          "startAt": 1790173210562,
+          "status": "failed",
+          "title": "spaces Register team AI use from the other Improvement cards and keeps the larger panels below"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": 7,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell does not mount the administrator queue or read it for an employee",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 5,
+          "retryReasons": [],
+          "startAt": 1790173210586,
+          "status": "passed",
+          "title": "does not mount the administrator queue or read it for an employee"
+        }
+      ],
+      "failureMessage": "  ● AppShell › spaces Register team AI use from the other Improvement cards and keeps the larger panels below\n\n    expect(received).toContain(expected) // indexOf\n\n    Expected substring: \"What happens to what you record\"\n    Received string:    \"OvertureAI Center of ExcellenceEmployeeAccess not confirmedSigned in as Pat ExampleHomeCasesEngineeringImprovementImprovementRecord how an AI task turned out, or tell the AI CoE what is not working.Tell the AI CoE what happenedHow a task turned out, how your team is using AI, or what is not working.Getting started: safe task and reviewRegister team AI useTell the AI CoE how your team is already using AI, so it is counted and supported.Record a task outcomeSay how one AI task turned out. Every answer is a choice; nothing you typed or produced is saved.Share feedbackTell the AI CoE what is not working, or what should exist and does not.Proposed manual improvement pathNotice→Evidence→Propose→Test→Approve→MeasureNo automatic policy change or enterprise learning loop is implemented here. A proposal is not a policy.Record a task outcome above: fixed choices only, not prompts or output.Use Share feedback above to propose the smallest correction. Name the confusing step or correction category, not private work. Save its receipt.An authorized owner links that feedback reference to the existing decision record, permitted evidence, proposed change, approver and retest scope. This is manual follow-through, not automatic assignment.After an approved repair, repeat the same permitted task and a failure/recovery case. Keep the retest receipt with the original feedback reference; report another outcome only for a distinct task attempt.The decision authority reviews evidence before any change is approved. An operator reconciles measurement separately; no click here promotes feedback or expands permissions.Operator commissioning: manual review and publicationWhat an outcome keepsEvery answer is a choice from a fixed list, so the row holds no prompt, no output and no text of the work itself. Your name is not written to it either; the list records who saved the row, as it does for every row.Overture AI Center of ExcellenceNothing on this page is sent or published without a person deciding it.Support route: not bound on this site yet.\"\n\n    \u001b[0m \u001b[90m 505 |\u001b[39m     expect(titles)\u001b[33m.\u001b[39mtoEqual([\u001b[32m'Register team AI use'\u001b[39m\u001b[33m,\u001b[39m \u001b[32m'Record a task outcome'\u001b[39m\u001b[33m,\u001b[39m \u001b[32m'Share feedback'\u001b[39m])\u001b[33m;\u001b[39m\n     \u001b[90m 506 |\u001b[39m     expect(container\u001b[33m.\u001b[39mquerySelector(\u001b[32m'.ai-app-split'\u001b[39m))\u001b[33m.\u001b[39mnot\u001b[33m.\u001b[39mtoBeNull()\u001b[33m;\u001b[39m\n    \u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 507 |\u001b[39m     expect(container\u001b[33m.\u001b[39mtextContent)\u001b[33m.\u001b[39mtoContain(\u001b[32m'What happens to what you record'\u001b[39m)\u001b[33m;\u001b[39m\n     \u001b[90m     |\u001b[39m                                   \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n     \u001b[90m 508 |\u001b[39m     expect(container\u001b[33m.\u001b[39mtextContent)\u001b[33m.\u001b[39mtoContain(\u001b[32m'What an outcome keeps'\u001b[39m)\u001b[33m;\u001b[39m\n     \u001b[90m 509 |\u001b[39m   })\u001b[33m;\u001b[39m\n     \u001b[90m 510 |\u001b[39m\u001b[0m\n\n      at Object.<anonymous> (src/webparts/aiCoeFrontDoor/components/app/AppShell.test.tsx:507:35)\n"
+    },
+    {
+      "leaks": false,
+      "numFailingTests": 0,
+      "numPassingTests": 11,
+      "numPendingTests": 0,
+      "numTodoTests": 0,
+      "openHandles": [],
+      "perfStats": {
+        "end": 1790173211362,
+        "loadTestEnvironmentEnd": 1790173210630,
+        "loadTestEnvironmentStart": 1790173210621,
+        "runtime": 732,
+        "setupAfterEnvEnd": 1790173210720,
+        "setupAfterEnvStart": 1790173210669,
+        "setupFilesEnd": 1790173210630,
+        "setupFilesStart": 1790173210630,
+        "slow": false,
+        "start": 1790173210630
+      },
+      "skipped": false,
+      "snapshot": {
+        "added": 0,
+        "fileDeleted": false,
+        "matched": 0,
+        "unchecked": 0,
+        "uncheckedKeys": [],
+        "unmatched": 0,
+        "updated": 0
+      },
+      "testFilePath": "C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-audit-fixes\\src\\webparts\\aiCoeFrontDoor\\content\\workflows\\outcome.test.ts",
+      "testResults": [
+        {
+          "ancestorTitles": [
+            "the outcome record asks for choices only"
+          ],
+          "duration": 6,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "the outcome record asks for choices only is five select steps, each required, with at least two options and no free-text step",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 25,
+          "retryReasons": [],
+          "startAt": 1790173211122,
+          "status": "passed",
+          "title": "is five select steps, each required, with at least two options and no free-text step"
+        },
+        {
+          "ancestorTitles": [
+            "the outcome record asks for choices only"
+          ],
+          "duration": 2,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "the outcome record asks for choices only offers the four outcome words of the quick start with their meanings as help (MKT-16)",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 8,
+          "retryReasons": [],
+          "startAt": 1790173211128,
+          "status": "passed",
+          "title": "offers the four outcome words of the quick start with their meanings as help (MKT-16)"
+        },
+        {
+          "ancestorTitles": [
+            "the outcome record asks for choices only"
+          ],
+          "duration": 0,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "the outcome record asks for choices only offers the three review states the plan enumerates (decision 16)",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 3,
+          "retryReasons": [],
+          "startAt": 1790173211130,
+          "status": "passed",
+          "title": "offers the three review states the plan enumerates (decision 16)"
+        },
+        {
+          "ancestorTitles": [
+            "the outcome record asks for choices only"
+          ],
+          "duration": 1,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "the outcome record asks for choices only asks for a correction category only after a corrected outcome, from the six of the scorecard (MKT-53)",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 8,
+          "retryReasons": [],
+          "startAt": 1790173211130,
+          "status": "passed",
+          "title": "asks for a correction category only after a corrected outcome, from the six of the scorecard (MKT-53)"
+        },
+        {
+          "ancestorTitles": [
+            "the outcome record asks for choices only"
+          ],
+          "duration": 1,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "the outcome record asks for choices only asks what the route showed, in the five truth labels (MKT-59, MKT-13)",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 4,
+          "retryReasons": [],
+          "startAt": 1790173211131,
+          "status": "passed",
+          "title": "asks what the route showed, in the five truth labels (MKT-59, MKT-13)"
+        },
+        {
+          "ancestorTitles": [
+            "the outcome record asks for choices only"
+          ],
+          "duration": 0,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "the outcome record asks for choices only asks for the kind of task from a short fixed list, never for the task itself",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 4,
+          "retryReasons": [],
+          "startAt": 1790173211132,
+          "status": "passed",
+          "title": "asks for the kind of task from a short fixed list, never for the task itself"
+        },
+        {
+          "ancestorTitles": [
+            "the fields a walk records"
+          ],
+          "duration": 0,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "the fields a walk records records the MKT-17 field set plus route availability, and nothing else",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 3,
+          "retryReasons": [],
+          "startAt": 1790173211133,
+          "status": "passed",
+          "title": "records the MKT-17 field set plus route availability, and nothing else"
+        },
+        {
+          "ancestorTitles": [
+            "the fields a walk records"
+          ],
+          "duration": 0,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "the fields a walk records keeps a correction category only behind a corrected outcome",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 2,
+          "retryReasons": [],
+          "startAt": 1790173211133,
+          "status": "passed",
+          "title": "keeps a correction category only behind a corrected outcome"
+        },
+        {
+          "ancestorTitles": [
+            "the fields a walk records"
+          ],
+          "duration": 1,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "the fields a walk records drops anything that is not one of the declared choices, so no typed text can reach the record",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 2,
+          "retryReasons": [],
+          "startAt": 1790173211133,
+          "status": "passed",
+          "title": "drops anything that is not one of the declared choices, so no typed text can reach the record"
+        },
+        {
+          "ancestorTitles": [
+            "the piece in its page view"
+          ],
+          "duration": 116,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "the piece in its page view walks on options alone and hands the service the five answers, with the receipt after it",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 8,
+          "retryReasons": [],
+          "startAt": 1790173211134,
+          "status": "passed",
+          "title": "walks on options alone and hands the service the five answers, with the receipt after it"
+        },
+        {
+          "ancestorTitles": [
+            "the piece in its page view"
+          ],
+          "duration": 112,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "the piece in its page view asks the correction category on the way through after a corrected outcome",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 4,
+          "retryReasons": [],
+          "startAt": 1790173211250,
+          "status": "passed",
+          "title": "asks the correction category on the way through after a corrected outcome"
+        }
+      ],
+      "failureMessage": null
+    },
+    {
+      "leaks": false,
+      "numFailingTests": 0,
+      "numPassingTests": 39,
+      "numPendingTests": 0,
+      "numTodoTests": 0,
+      "openHandles": [],
+      "perfStats": {
+        "end": 1790173211516,
+        "loadTestEnvironmentEnd": 1790173211368,
+        "loadTestEnvironmentStart": 1790173211363,
+        "runtime": 147,
+        "setupAfterEnvEnd": 1790173211440,
+        "setupAfterEnvStart": 1790173211396,
+        "setupFilesEnd": 1790173211369,
+        "setupFilesStart": 1790173211369,
+        "slow": false,
+        "start": 1790173211369
+      },
+      "skipped": false,
+      "snapshot": {
+        "added": 0,
+        "fileDeleted": false,
+        "matched": 0,
+        "unchecked": 0,
+        "uncheckedKeys": [],
+        "unmatched": 0,
+        "updated": 0
+      },
+      "testFilePath": "C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-audit-fixes\\src\\webparts\\aiCoeFrontDoor\\services\\workflowOutcomeAggregation.test.ts",
+      "testResults": [
+        {
+          "ancestorTitles": [
+            "content-free offline outcome aggregation"
+          ],
+          "duration": 3,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "content-free offline outcome aggregation consumes the existing writer fields after actual local save/readback, without a second tracker",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 10,
+          "retryReasons": [],
+          "startAt": 1790173211483,
+          "status": "passed",
+          "title": "consumes the existing writer fields after actual local save/readback, without a second tracker"
+        },
+        {
+          "ancestorTitles": [
+            "content-free offline outcome aggregation"
+          ],
+          "duration": 1,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "content-free offline outcome aggregation blocks missing qualification without publishing counts or reflecting input",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 4,
+          "retryReasons": [],
+          "startAt": 1790173211486,
+          "status": "passed",
+          "title": "blocks missing qualification without publishing counts or reflecting input"
+        },
+        {
+          "ancestorTitles": [
+            "content-free offline outcome aggregation"
+          ],
+          "duration": 0,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "content-free offline outcome aggregation blocks missing receipt without publishing counts or reflecting input",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 4,
+          "retryReasons": [],
+          "startAt": 1790173211487,
+          "status": "passed",
+          "title": "blocks missing receipt without publishing counts or reflecting input"
+        },
+        {
+          "ancestorTitles": [
+            "content-free offline outcome aggregation"
+          ],
+          "duration": 1,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "content-free offline outcome aggregation blocks untrusted receipt bytes without publishing counts or reflecting input",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 4,
+          "retryReasons": [],
+          "startAt": 1790173211487,
+          "status": "passed",
+          "title": "blocks untrusted receipt bytes without publishing counts or reflecting input"
+        },
+        {
+          "ancestorTitles": [
+            "content-free offline outcome aggregation"
+          ],
+          "duration": 0,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "content-free offline outcome aggregation blocks incomplete export without publishing counts or reflecting input",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 4,
+          "retryReasons": [],
+          "startAt": 1790173211488,
+          "status": "passed",
+          "title": "blocks incomplete export without publishing counts or reflecting input"
+        },
+        {
+          "ancestorTitles": [
+            "content-free offline outcome aggregation"
+          ],
+          "duration": 1,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "content-free offline outcome aggregation blocks string boolean without publishing counts or reflecting input",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 4,
+          "retryReasons": [],
+          "startAt": 1790173211488,
+          "status": "passed",
+          "title": "blocks string boolean without publishing counts or reflecting input"
+        },
+        {
+          "ancestorTitles": [
+            "content-free offline outcome aggregation"
+          ],
+          "duration": 0,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "content-free offline outcome aggregation blocks missing method approval without publishing counts or reflecting input",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 4,
+          "retryReasons": [],
+          "startAt": 1790173211489,
+          "status": "passed",
+          "title": "blocks missing method approval without publishing counts or reflecting input"
+        },
+        {
+          "ancestorTitles": [
+            "content-free offline outcome aggregation"
+          ],
+          "duration": 1,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "content-free offline outcome aggregation blocks unrecognized method without publishing counts or reflecting input",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 4,
+          "retryReasons": [],
+          "startAt": 1790173211489,
+          "status": "passed",
+          "title": "blocks unrecognized method without publishing counts or reflecting input"
+        },
+        {
+          "ancestorTitles": [
+            "content-free offline outcome aggregation"
+          ],
+          "duration": 0,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "content-free offline outcome aggregation blocks cross-scope export without publishing counts or reflecting input",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 4,
+          "retryReasons": [],
+          "startAt": 1790173211490,
+          "status": "passed",
+          "title": "blocks cross-scope export without publishing counts or reflecting input"
+        },
+        {
+          "ancestorTitles": [
+            "content-free offline outcome aggregation"
+          ],
+          "duration": 1,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "content-free offline outcome aggregation blocks cross-scope receipt without publishing counts or reflecting input",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 4,
+          "retryReasons": [],
+          "startAt": 1790173211490,
+          "status": "passed",
+          "title": "blocks cross-scope receipt without publishing counts or reflecting input"
+        },
+        {
+          "ancestorTitles": [
+            "content-free offline outcome aggregation"
+          ],
+          "duration": 0,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "content-free offline outcome aggregation blocks invalid date without publishing counts or reflecting input",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 4,
+          "retryReasons": [],
+          "startAt": 1790173211491,
+          "status": "passed",
+          "title": "blocks invalid date without publishing counts or reflecting input"
+        },
+        {
+          "ancestorTitles": [
+            "content-free offline outcome aggregation"
+          ],
+          "duration": 1,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "content-free offline outcome aggregation blocks reversed period without publishing counts or reflecting input",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 4,
+          "retryReasons": [],
+          "startAt": 1790173211491,
+          "status": "passed",
+          "title": "blocks reversed period without publishing counts or reflecting input"
+        },
+        {
+          "ancestorTitles": [
+            "content-free offline outcome aggregation"
+          ],
+          "duration": 0,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "content-free offline outcome aggregation blocks future period without publishing counts or reflecting input",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 4,
+          "retryReasons": [],
+          "startAt": 1790173211492,
+          "status": "passed",
+          "title": "blocks future period without publishing counts or reflecting input"
+        },
+        {
+          "ancestorTitles": [
+            "content-free offline outcome aggregation"
+          ],
+          "duration": 4,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "content-free offline outcome aggregation blocks stale period without publishing counts or reflecting input",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 4,
+          "retryReasons": [],
+          "startAt": 1790173211492,
+          "status": "passed",
+          "title": "blocks stale period without publishing counts or reflecting input"
+        },
+        {
+          "ancestorTitles": [
+            "content-free offline outcome aggregation"
+          ],
+          "duration": 0,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "content-free offline outcome aggregation blocks privacy approval absent without publishing counts or reflecting input",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 4,
+          "retryReasons": [],
+          "startAt": 1790173211496,
+          "status": "passed",
+          "title": "blocks privacy approval absent without publishing counts or reflecting input"
+        },
+        {
+          "ancestorTitles": [
+            "content-free offline outcome aggregation"
+          ],
+          "duration": 1,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "content-free offline outcome aggregation blocks cohort unknown without publishing counts or reflecting input",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 4,
+          "retryReasons": [],
+          "startAt": 1790173211496,
+          "status": "passed",
+          "title": "blocks cohort unknown without publishing counts or reflecting input"
+        },
+        {
+          "ancestorTitles": [
+            "content-free offline outcome aggregation"
+          ],
+          "duration": 1,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "content-free offline outcome aggregation blocks non-person exemption for task outcomes without publishing counts or reflecting input",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 4,
+          "retryReasons": [],
+          "startAt": 1790173211497,
+          "status": "passed",
+          "title": "blocks non-person exemption for task outcomes without publishing counts or reflecting input"
+        },
+        {
+          "ancestorTitles": [
+            "content-free offline outcome aggregation"
+          ],
+          "duration": 1,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "content-free offline outcome aggregation blocks unexpected raw content without publishing counts or reflecting input",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 4,
+          "retryReasons": [],
+          "startAt": 1790173211498,
+          "status": "passed",
+          "title": "blocks unexpected raw content without publishing counts or reflecting input"
+        },
+        {
+          "ancestorTitles": [
+            "content-free offline outcome aggregation"
+          ],
+          "duration": 1,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "content-free offline outcome aggregation rejects the entire export for invalid choice rather than hiding invalid rows",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 4,
+          "retryReasons": [],
+          "startAt": 1790173211499,
+          "status": "passed",
+          "title": "rejects the entire export for invalid choice rather than hiding invalid rows"
+        },
+        {
+          "ancestorTitles": [
+            "content-free offline outcome aggregation"
+          ],
+          "duration": 1,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "content-free offline outcome aggregation rejects the entire export for missing choice rather than hiding invalid rows",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 4,
+          "retryReasons": [],
+          "startAt": 1790173211500,
+          "status": "passed",
+          "title": "rejects the entire export for missing choice rather than hiding invalid rows"
+        },
+        {
+          "ancestorTitles": [
+            "content-free offline outcome aggregation"
+          ],
+          "duration": 0,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "content-free offline outcome aggregation rejects the entire export for raw work content rather than hiding invalid rows",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 4,
+          "retryReasons": [],
+          "startAt": 1790173211501,
+          "status": "passed",
+          "title": "rejects the entire export for raw work content rather than hiding invalid rows"
+        },
+        {
+          "ancestorTitles": [
+            "content-free offline outcome aggregation"
+          ],
+          "duration": 0,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "content-free offline outcome aggregation rejects the entire export for author data rather than hiding invalid rows",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 4,
+          "retryReasons": [],
+          "startAt": 1790173211502,
+          "status": "passed",
+          "title": "rejects the entire export for author data rather than hiding invalid rows"
+        },
+        {
+          "ancestorTitles": [
+            "content-free offline outcome aggregation"
+          ],
+          "duration": 1,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "content-free offline outcome aggregation rejects the entire export for unknown version rather than hiding invalid rows",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 4,
+          "retryReasons": [],
+          "startAt": 1790173211502,
+          "status": "passed",
+          "title": "rejects the entire export for unknown version rather than hiding invalid rows"
+        },
+        {
+          "ancestorTitles": [
+            "content-free offline outcome aggregation"
+          ],
+          "duration": 1,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "content-free offline outcome aggregation rejects the entire export for invalid recorded day rather than hiding invalid rows",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 4,
+          "retryReasons": [],
+          "startAt": 1790173211503,
+          "status": "passed",
+          "title": "rejects the entire export for invalid recorded day rather than hiding invalid rows"
+        },
+        {
+          "ancestorTitles": [
+            "content-free offline outcome aggregation"
+          ],
+          "duration": 0,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "content-free offline outcome aggregation rejects the entire export for before period rather than hiding invalid rows",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 4,
+          "retryReasons": [],
+          "startAt": 1790173211504,
+          "status": "passed",
+          "title": "rejects the entire export for before period rather than hiding invalid rows"
+        },
+        {
+          "ancestorTitles": [
+            "content-free offline outcome aggregation"
+          ],
+          "duration": 0,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "content-free offline outcome aggregation rejects the entire export for after period rather than hiding invalid rows",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 4,
+          "retryReasons": [],
+          "startAt": 1790173211504,
+          "status": "passed",
+          "title": "rejects the entire export for after period rather than hiding invalid rows"
+        },
+        {
+          "ancestorTitles": [
+            "content-free offline outcome aggregation"
+          ],
+          "duration": 0,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "content-free offline outcome aggregation rejects the entire export for unreviewed acceptance rather than hiding invalid rows",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 4,
+          "retryReasons": [],
+          "startAt": 1790173211505,
+          "status": "passed",
+          "title": "rejects the entire export for unreviewed acceptance rather than hiding invalid rows"
+        },
+        {
+          "ancestorTitles": [
+            "content-free offline outcome aggregation"
+          ],
+          "duration": 0,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "content-free offline outcome aggregation rejects the entire export for unexpected category rather than hiding invalid rows",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 4,
+          "retryReasons": [],
+          "startAt": 1790173211505,
+          "status": "passed",
+          "title": "rejects the entire export for unexpected category rather than hiding invalid rows"
+        },
+        {
+          "ancestorTitles": [
+            "content-free offline outcome aggregation"
+          ],
+          "duration": 1,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "content-free offline outcome aggregation rejects the entire export for missing correction category rather than hiding invalid rows",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 4,
+          "retryReasons": [],
+          "startAt": 1790173211505,
+          "status": "passed",
+          "title": "rejects the entire export for missing correction category rather than hiding invalid rows"
+        },
+        {
+          "ancestorTitles": [
+            "content-free offline outcome aggregation"
+          ],
+          "duration": 0,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "content-free offline outcome aggregation rejects the entire export for wrong identity format rather than hiding invalid rows",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 4,
+          "retryReasons": [],
+          "startAt": 1790173211506,
+          "status": "passed",
+          "title": "rejects the entire export for wrong identity format rather than hiding invalid rows"
+        },
+        {
+          "ancestorTitles": [
+            "content-free offline outcome aggregation"
+          ],
+          "duration": 1,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "content-free offline outcome aggregation deduplicates identical ids regardless of key order and refuses conflicting duplicates",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 5,
+          "retryReasons": [],
+          "startAt": 1790173211506,
+          "status": "passed",
+          "title": "deduplicates identical ids regardless of key order and refuses conflicting duplicates"
+        },
+        {
+          "ancestorTitles": [
+            "content-free offline outcome aggregation"
+          ],
+          "duration": 1,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "content-free offline outcome aggregation withholds the whole report for a small or unsafely partitioned cohort {\"cohortSize\":4,\"minimumCellCohort\":4}",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 4,
+          "retryReasons": [],
+          "startAt": 1790173211507,
+          "status": "passed",
+          "title": "withholds the whole report for a small or unsafely partitioned cohort {\"cohortSize\":4,\"minimumCellCohort\":4}"
+        },
+        {
+          "ancestorTitles": [
+            "content-free offline outcome aggregation"
+          ],
+          "duration": 1,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "content-free offline outcome aggregation withholds the whole report for a small or unsafely partitioned cohort {\"minimumCellCohort\":4}",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 4,
+          "retryReasons": [],
+          "startAt": 1790173211508,
+          "status": "passed",
+          "title": "withholds the whole report for a small or unsafely partitioned cohort {\"minimumCellCohort\":4}"
+        },
+        {
+          "ancestorTitles": [
+            "content-free offline outcome aggregation"
+          ],
+          "duration": 0,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "content-free offline outcome aggregation withholds the whole report for a small or unsafely partitioned cohort {\"minimumCohort\":6}",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 4,
+          "retryReasons": [],
+          "startAt": 1790173211509,
+          "status": "passed",
+          "title": "withholds the whole report for a small or unsafely partitioned cohort {\"minimumCohort\":6}"
+        },
+        {
+          "ancestorTitles": [
+            "content-free offline outcome aggregation"
+          ],
+          "duration": 1,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "content-free offline outcome aggregation withholds the whole report for a small or unsafely partitioned cohort {\"cohortSize\":1,\"minimumCellCohort\":1,\"minimumCohort\":1}",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 4,
+          "retryReasons": [],
+          "startAt": 1790173211509,
+          "status": "passed",
+          "title": "withholds the whole report for a small or unsafely partitioned cohort {\"cohortSize\":1,\"minimumCellCohort\":1,\"minimumCohort\":1}"
+        },
+        {
+          "ancestorTitles": [
+            "content-free offline outcome aggregation"
+          ],
+          "duration": 0,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "content-free offline outcome aggregation blocks impossible people attestations and suppresses a tiny correction cell",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 3,
+          "retryReasons": [],
+          "startAt": 1790173211510,
+          "status": "passed",
+          "title": "blocks impossible people attestations and suppresses a tiny correction cell"
+        },
+        {
+          "ancestorTitles": [
+            "content-free offline outcome aggregation"
+          ],
+          "duration": 1,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "content-free offline outcome aggregation keeps unavailable reports distinct from tested fallback and omits zero-denominator rates",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 5,
+          "retryReasons": [],
+          "startAt": 1790173211510,
+          "status": "passed",
+          "title": "keeps unavailable reports distinct from tested fallback and omits zero-denominator rates"
+        },
+        {
+          "ancestorTitles": [
+            "content-free offline outcome aggregation"
+          ],
+          "duration": 0,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "content-free offline outcome aggregation accepts timestamps through the inclusive end day and binds output evidence without raw rows",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 3,
+          "retryReasons": [],
+          "startAt": 1790173211511,
+          "status": "passed",
+          "title": "accepts timestamps through the inclusive end day and binds output evidence without raw rows"
+        },
+        {
+          "ancestorTitles": [
+            "content-free offline outcome aggregation"
+          ],
+          "duration": 3,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "content-free offline outcome aggregation computes only qualified observed task statistics and keeps unsupported scorecard claims unknown",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 7,
+          "retryReasons": [],
+          "startAt": 1790173211512,
+          "status": "passed",
+          "title": "computes only qualified observed task statistics and keeps unsupported scorecard claims unknown"
+        }
+      ],
+      "failureMessage": null
+    },
+    {
+      "leaks": false,
+      "numFailingTests": 0,
+      "numPassingTests": 7,
+      "numPendingTests": 0,
+      "numTodoTests": 0,
+      "openHandles": [],
+      "perfStats": {
+        "end": 1790173211670,
+        "loadTestEnvironmentEnd": 1790173211525,
+        "loadTestEnvironmentStart": 1790173211518,
+        "runtime": 145,
+        "setupAfterEnvEnd": 1790173211601,
+        "setupAfterEnvStart": 1790173211560,
+        "setupFilesEnd": 1790173211526,
+        "setupFilesStart": 1790173211525,
+        "slow": false,
+        "start": 1790173211525
+      },
+      "skipped": false,
+      "snapshot": {
+        "added": 0,
+        "fileDeleted": false,
+        "matched": 0,
+        "unchecked": 0,
+        "uncheckedKeys": [],
+        "unmatched": 0,
+        "updated": 0
+      },
+      "testFilePath": "C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-audit-fixes\\src\\webparts\\aiCoeFrontDoor\\services\\programMeasuresService.test.ts",
+      "testResults": [
+        {
+          "ancestorTitles": [
+            "measures url"
+          ],
+          "duration": 2,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "measures url projects the declared columns of the measures list and asks for one page of rows",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 5,
+          "retryReasons": [],
+          "startAt": 1790173211662,
+          "status": "passed",
+          "title": "projects the declared columns of the measures list and asks for one page of rows"
+        },
+        {
+          "ancestorTitles": [
+            "ProgramMeasuresService"
+          ],
+          "duration": 2,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "ProgramMeasuresService reads the measures once and keys them by their measure id",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 10,
+          "retryReasons": [],
+          "startAt": 1790173211664,
+          "status": "passed",
+          "title": "reads the measures once and keys them by their measure id"
+        },
+        {
+          "ancestorTitles": [
+            "ProgramMeasuresService"
+          ],
+          "duration": 1,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "ProgramMeasuresService reads a state it does not know as not available, never as a number",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 5,
+          "retryReasons": [],
+          "startAt": 1790173211666,
+          "status": "passed",
+          "title": "reads a state it does not know as not available, never as a number"
+        },
+        {
+          "ancestorTitles": [
+            "ProgramMeasuresService"
+          ],
+          "duration": 0,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "ProgramMeasuresService drops a row with no measure id and keeps the first of two that share one",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 3,
+          "retryReasons": [],
+          "startAt": 1790173211667,
+          "status": "passed",
+          "title": "drops a row with no measure id and keeps the first of two that share one"
+        },
+        {
+          "ancestorTitles": [
+            "ProgramMeasuresService"
+          ],
+          "duration": 1,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "ProgramMeasuresService reports a list that is not on the site as unavailable, with no measures at all",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 4,
+          "retryReasons": [],
+          "startAt": 1790173211667,
+          "status": "passed",
+          "title": "reports a list that is not on the site as unavailable, with no measures at all"
+        },
+        {
+          "ancestorTitles": [
+            "ProgramMeasuresService"
+          ],
+          "duration": 1,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "ProgramMeasuresService reports a refused or broken read as unavailable with its class, without the body",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 8,
+          "retryReasons": [],
+          "startAt": 1790173211668,
+          "status": "passed",
+          "title": "reports a refused or broken read as unavailable with its class, without the body"
+        },
+        {
+          "ancestorTitles": [
+            "ProgramMeasuresService"
+          ],
+          "duration": 0,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "ProgramMeasuresService never throws when the client fails or answers nonsense",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 4,
+          "retryReasons": [],
+          "startAt": 1790173211669,
+          "status": "passed",
+          "title": "never throws when the client fails or answers nonsense"
+        }
+      ],
+      "failureMessage": null
+    },
+    {
+      "leaks": false,
+      "numFailingTests": 0,
+      "numPassingTests": 4,
+      "numPendingTests": 0,
+      "numTodoTests": 0,
+      "openHandles": [],
+      "perfStats": {
+        "end": 1790173212161,
+        "loadTestEnvironmentEnd": 1790173211676,
+        "loadTestEnvironmentStart": 1790173211671,
+        "runtime": 485,
+        "setupAfterEnvEnd": 1790173211745,
+        "setupAfterEnvStart": 1790173211704,
+        "setupFilesEnd": 1790173211677,
+        "setupFilesStart": 1790173211676,
+        "slow": false,
+        "start": 1790173211676
+      },
+      "skipped": false,
+      "snapshot": {
+        "added": 0,
+        "fileDeleted": false,
+        "matched": 0,
+        "unchecked": 0,
+        "uncheckedKeys": [],
+        "unmatched": 0,
+        "updated": 0
+      },
+      "testFilePath": "C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-audit-fixes\\src\\webparts\\aiCoeFrontDoor\\components\\app\\AppSections.test.tsx",
+      "testResults": [
+        {
+          "ancestorTitles": [
+            "same-app measurement and teaching entry"
+          ],
+          "duration": 78,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "same-app measurement and teaching entry opens and closes the guidance with keyboard controls in the narrow layout",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 6,
+          "retryReasons": [],
+          "startAt": 1790173211928,
+          "status": "passed",
+          "title": "opens and closes the guidance with keyboard controls in the narrow layout"
+        },
+        {
+          "ancestorTitles": [
+            "same-app measurement and teaching entry"
+          ],
+          "duration": 40,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "same-app measurement and teaching entry opens source, role, stop and recovery quick-start guidance from Engineering without a private source link",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 11,
+          "retryReasons": [],
+          "startAt": 1790173212007,
+          "status": "passed",
+          "title": "opens source, role, stop and recovery quick-start guidance from Engineering without a private source link"
+        },
+        {
+          "ancestorTitles": [
+            "same-app measurement and teaching entry"
+          ],
+          "duration": 66,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "same-app measurement and teaching entry connects Improvement guidance to the existing outcome form, not another tracker",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 4,
+          "retryReasons": [],
+          "startAt": 1790173212047,
+          "status": "passed",
+          "title": "connects Improvement guidance to the existing outcome form, not another tracker"
+        },
+        {
+          "ancestorTitles": [
+            "same-app measurement and teaching entry"
+          ],
+          "duration": 47,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "same-app measurement and teaching entry makes manual commissioning and proposal/retest instructions reachable without publishing or claiming approval",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 8,
+          "retryReasons": [],
+          "startAt": 1790173212113,
+          "status": "passed",
+          "title": "makes manual commissioning and proposal/retest instructions reachable without publishing or claiming approval"
+        }
+      ],
+      "failureMessage": null
+    },
+    {
+      "leaks": false,
+      "numFailingTests": 0,
+      "numPassingTests": 12,
+      "numPendingTests": 0,
+      "numTodoTests": 0,
+      "openHandles": [],
+      "perfStats": {
+        "end": 1790173212367,
+        "loadTestEnvironmentEnd": 1790173212170,
+        "loadTestEnvironmentStart": 1790173212162,
+        "runtime": 196,
+        "setupAfterEnvEnd": 1790173212240,
+        "setupAfterEnvStart": 1790173212200,
+        "setupFilesEnd": 1790173212171,
+        "setupFilesStart": 1790173212171,
+        "slow": false,
+        "start": 1790173212171
+      },
+      "skipped": false,
+      "snapshot": {
+        "added": 0,
+        "fileDeleted": false,
+        "matched": 0,
+        "unchecked": 0,
+        "uncheckedKeys": [],
+        "unmatched": 0,
+        "updated": 0
+      },
+      "testFilePath": "C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-audit-fixes\\src\\webparts\\aiCoeFrontDoor\\components\\app\\AppValue.test.tsx",
+      "testResults": [
+        {
+          "ancestorTitles": [
+            "AppValue evidence gate"
+          ],
+          "duration": 10,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppValue evidence gate withholds a number without current evidence, a valid period and privacy metadata: {}",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 4,
+          "retryReasons": [],
+          "startAt": 1790173212325,
+          "status": "passed",
+          "title": "withholds a number without current evidence, a valid period and privacy metadata: {}"
+        },
+        {
+          "ancestorTitles": [
+            "AppValue evidence gate"
+          ],
+          "duration": 2,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppValue evidence gate withholds a number without current evidence, a valid period and privacy metadata: {\"evidenceRef\":\" \"}",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 4,
+          "retryReasons": [],
+          "startAt": 1790173212335,
+          "status": "passed",
+          "title": "withholds a number without current evidence, a valid period and privacy metadata: {\"evidenceRef\":\" \"}"
+        },
+        {
+          "ancestorTitles": [
+            "AppValue evidence gate"
+          ],
+          "duration": 1,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppValue evidence gate withholds a number without current evidence, a valid period and privacy metadata: {}",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 4,
+          "retryReasons": [],
+          "startAt": 1790173212338,
+          "status": "passed",
+          "title": "withholds a number without current evidence, a valid period and privacy metadata: {}"
+        },
+        {
+          "ancestorTitles": [
+            "AppValue evidence gate"
+          ],
+          "duration": 2,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppValue evidence gate withholds a number without current evidence, a valid period and privacy metadata: {}",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 4,
+          "retryReasons": [],
+          "startAt": 1790173212339,
+          "status": "passed",
+          "title": "withholds a number without current evidence, a valid period and privacy metadata: {}"
+        },
+        {
+          "ancestorTitles": [
+            "AppValue evidence gate"
+          ],
+          "duration": 4,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppValue evidence gate withholds a number without current evidence, a valid period and privacy metadata: {\"periodStart\":\"2026-09-23\"}",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 4,
+          "retryReasons": [],
+          "startAt": 1790173212341,
+          "status": "passed",
+          "title": "withholds a number without current evidence, a valid period and privacy metadata: {\"periodStart\":\"2026-09-23\"}"
+        },
+        {
+          "ancestorTitles": [
+            "AppValue evidence gate"
+          ],
+          "duration": 2,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppValue evidence gate withholds a number without current evidence, a valid period and privacy metadata: {\"periodEnd\":\"2026-09-24\"}",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 4,
+          "retryReasons": [],
+          "startAt": 1790173212346,
+          "status": "passed",
+          "title": "withholds a number without current evidence, a valid period and privacy metadata: {\"periodEnd\":\"2026-09-24\"}"
+        },
+        {
+          "ancestorTitles": [
+            "AppValue evidence gate"
+          ],
+          "duration": 3,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppValue evidence gate withholds a number without current evidence, a valid period and privacy metadata: {\"periodStart\":\"2026-08-01\",\"periodEnd\":\"2026-08-10\"}",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 4,
+          "retryReasons": [],
+          "startAt": 1790173212348,
+          "status": "passed",
+          "title": "withholds a number without current evidence, a valid period and privacy metadata: {\"periodStart\":\"2026-08-01\",\"periodEnd\":\"2026-08-10\"}"
+        },
+        {
+          "ancestorTitles": [
+            "AppValue evidence gate"
+          ],
+          "duration": 2,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppValue evidence gate withholds a number without current evidence, a valid period and privacy metadata: {}",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 4,
+          "retryReasons": [],
+          "startAt": 1790173212352,
+          "status": "passed",
+          "title": "withholds a number without current evidence, a valid period and privacy metadata: {}"
+        },
+        {
+          "ancestorTitles": [
+            "AppValue evidence gate"
+          ],
+          "duration": 2,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppValue evidence gate withholds a number without current evidence, a valid period and privacy metadata: {\"cohortSize\":null}",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 4,
+          "retryReasons": [],
+          "startAt": 1790173212354,
+          "status": "passed",
+          "title": "withholds a number without current evidence, a valid period and privacy metadata: {\"cohortSize\":null}"
+        },
+        {
+          "ancestorTitles": [
+            "AppValue evidence gate"
+          ],
+          "duration": 6,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppValue evidence gate withholds a number without current evidence, a valid period and privacy metadata: {\"value\":null}",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 4,
+          "retryReasons": [],
+          "startAt": 1790173212356,
+          "status": "passed",
+          "title": "withholds a number without current evidence, a valid period and privacy metadata: {\"value\":null}"
+        },
+        {
+          "ancestorTitles": [
+            "AppValue evidence gate"
+          ],
+          "duration": 3,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppValue evidence gate shows the recorded measure with evidence AND period, without calling the value verified",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 6,
+          "retryReasons": [],
+          "startAt": 1790173212362,
+          "status": "passed",
+          "title": "shows the recorded measure with evidence AND period, without calling the value verified"
+        },
+        {
+          "ancestorTitles": [
+            "AppValue evidence gate"
+          ],
+          "duration": 1,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppValue evidence gate suppresses a sensitive small cohort even if its row claims to be measured",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 3,
+          "retryReasons": [],
+          "startAt": 1790173212365,
+          "status": "passed",
+          "title": "suppresses a sensitive small cohort even if its row claims to be measured"
+        }
+      ],
+      "failureMessage": null
+    }
+  ],
+  "wasInterrupted": false
+}

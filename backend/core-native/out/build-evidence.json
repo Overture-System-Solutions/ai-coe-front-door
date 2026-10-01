@@ -1,0 +1,245 @@
+{
+  "solution": "AICoECoreAutomation",
+  "version": "3.0.0.1",
+  "transportVersion": "v0.2.0",
+  "binding": {
+    "runtimeApiName": "UNBOUND_CORE_INTEGRITY",
+    "connectorId": null,
+    "logicalName": "aicoe_coreintegrity",
+    "qualificationReceipt": null,
+    "scriptSha256": "cc87f233b3aedcc3a022d40ae40a77387d7bd4684253c3dbebdd3d2fb6aa8c1a",
+    "deployable": false,
+    "bindingStatus": "UNBOUND_REVIEW_ONLY"
+  },
+  "packages": {
+    "AICoECoreAutomation_3_0_0_1_UNBOUND_REVIEW_ONLY.zip": {
+      "sha256": "b2f7e7717de5436a9ba132d9d3c96dd2afa0a3fc2300dbeb679657fec4eabfb4",
+      "bytes": 44303,
+      "members": {
+        "Workflows/AICoE00Provisioning-99538EE6-ADDE-5CAC-A8DC-78E2D9F2B417.json": {
+          "sha256": "90cc785ad9dd3bb52484df635ea6e87f301f2cf7281fbd07f373d25b317eb862",
+          "bytes": 113269
+        },
+        "Workflows/AICoE01CaseCommand-BBB2F816-2ABE-5216-8FC8-23452056573B.json": {
+          "sha256": "336deecbab5f0b5ec1ea37c53320f638c1339e1f2072395b250f7c1f218c131f",
+          "bytes": 203904
+        },
+        "Workflows/AICoE02EvidenceandReadiness-9C7A7513-4787-5FDC-9C2F-ED9E00CE7B10.json": {
+          "sha256": "a74f8cc171d88c8167401d76b7d2ddd85568599e4a493cd912a4e709a85338e7",
+          "bytes": 38813
+        },
+        "Workflows/AICoE03MarkdownProjector-5CFF5CDB-41B4-581E-AD63-F7495680E02D.json": {
+          "sha256": "256737f4ae3d447fb7251b7e48d63d88c618c63dbf4822dba299acba59080045",
+          "bytes": 45470
+        },
+        "Workflows/AICoE04NotificationOutbox-41303D3C-0CAB-5668-8B02-B638FB361AB0.json": {
+          "sha256": "8aaa25c9ae09924919da0d403a1fbc0df86d7b17423822ad876a82640474851b",
+          "bytes": 38807
+        },
+        "Workflows/AICoE05HealthMonitor-ABA74ECA-505E-5F1D-A3DF-F157499E7DBF.json": {
+          "sha256": "d385dd1a94a1a8b6570eda7d4b5e7b55bf92db399b789ab4183d26033660da81",
+          "bytes": 30572
+        },
+        "[Content_Types].xml": {
+          "sha256": "adb3ad9765864f31075247e6f757bec2ef844cb9037fdccbb93983b98b3db16c",
+          "bytes": 264
+        },
+        "customizations.xml": {
+          "sha256": "a252a69d687e1105ea79ff1c5d6a2b978308c813bcb85deb2eb0e3a693192d2a",
+          "bytes": 8119
+        },
+        "environmentvariabledefinitions/aicoe_EnvironmentLabel/environmentvariabledefinition.xml": {
+          "sha256": "23124428c0c1b8e992f6922e055e91dfc7f59a8f119f16dfe40b1e7700b14d0b",
+          "bytes": 714
+        },
+        "environmentvariabledefinitions/aicoe_NotificationEmail/environmentvariabledefinition.xml": {
+          "sha256": "7d1f60bc123cc9744a5e4e2e0aabd5119e233826e89f0df476cb7dbe1e9d5298",
+          "bytes": 751
+        },
+        "environmentvariabledefinitions/aicoe_SiteUrl/environmentvariabledefinition.xml": {
+          "sha256": "27451eaf6298a5e1237636f1292fb9980d74fccc2eacb8ebbd42db7b4392c062",
+          "bytes": 789
+        },
+        "solution.xml": {
+          "sha256": "7ff3599eb80a5a2ada9686008f4685708adfd1f8a740a0c249c4eb1268f2a522",
+          "bytes": 3621
+        }
+      }
+    },
+    "AICoECoreAutomation_3_0_0_1_UNBOUND_REVIEW_ONLY_literal-fallback.zip": {
+      "sha256": "067df0118be2e2c4e6d78f7742708f4c699bfcec425a70a75a13d3fa237fe3c6",
+      "bytes": 41340,
+      "members": {
+        "Workflows/AICoE00Provisioning-99538EE6-ADDE-5CAC-A8DC-78E2D9F2B417.json": {
+          "sha256": "a88842077c18a4e286381c481569c041136af76646354d9827485ef8d5b2be4b",
+          "bytes": 112557
+        },
+        "Workflows/AICoE01CaseCommand-BBB2F816-2ABE-5216-8FC8-23452056573B.json": {
+          "sha256": "a99edddd2beb53a48631921eedf15513d3d5c3341f5cc422bfe761a10079a3c6",
+          "bytes": 203618
+        },
+        "Workflows/AICoE02EvidenceandReadiness-9C7A7513-4787-5FDC-9C2F-ED9E00CE7B10.json": {
+          "sha256": "ab500b32bb111a8fd55d722981fc73d6b8c1ea16bfdd0f2782ef08c35310b193",
+          "bytes": 37981
+        },
+        "Workflows/AICoE03MarkdownProjector-5CFF5CDB-41B4-581E-AD63-F7495680E02D.json": {
+          "sha256": "81dc2766006953150f7367fc67daa2a54173908208b45d5a04b5ee866a74f310",
+          "bytes": 44677
+        },
+        "Workflows/AICoE04NotificationOutbox-41303D3C-0CAB-5668-8B02-B638FB361AB0.json": {
+          "sha256": "969f5dc9f147590f394d102e393d0b809cfcdea6e35a0a676423340e9f5f4f80",
+          "bytes": 37975
+        },
+        "Workflows/AICoE05HealthMonitor-ABA74ECA-505E-5F1D-A3DF-F157499E7DBF.json": {
+          "sha256": "906e8b1820d56062362955d0d9b295aa8ea7e2bd154faf519779b671d17a66b2",
+          "bytes": 29714
+        },
+        "[Content_Types].xml": {
+          "sha256": "adb3ad9765864f31075247e6f757bec2ef844cb9037fdccbb93983b98b3db16c",
+          "bytes": 264
+        },
+        "customizations.xml": {
+          "sha256": "a252a69d687e1105ea79ff1c5d6a2b978308c813bcb85deb2eb0e3a693192d2a",
+          "bytes": 8119
+        },
+        "solution.xml": {
+          "sha256": "3b70c92e440433af99538da21daa4fe027d21d5d7c8497f936cef99e2662c9e3",
+          "bytes": 3452
+        }
+      }
+    },
+    "AICoECoreIntegrity_3_0_0_1_REGISTRATION_CANDIDATE.zip": {
+      "sha256": "2cc4336a59d220e5b50e8c3a7a58e86fa5bbada7989e5e438a2ccf534a3d4b85",
+      "bytes": 28395,
+      "members": {
+        "README.md": {
+          "sha256": "9bdfddd57f2bf27f80738536d7e8aff2ec50df1c3ae2588d6648241b5b5856df",
+          "bytes": 2932
+        },
+        "Script.cs": {
+          "sha256": "cc87f233b3aedcc3a022d40ae40a77387d7bd4684253c3dbebdd3d2fb6aa8c1a",
+          "bytes": 47917
+        },
+        "Script.csx": {
+          "sha256": "cc87f233b3aedcc3a022d40ae40a77387d7bd4684253c3dbebdd3d2fb6aa8c1a",
+          "bytes": 47917
+        },
+        "apiDefinition.swagger.json": {
+          "sha256": "5d1277880d9627ed1b79fe886ec03e506016d1db790ab6d0f38a16c22caeb832",
+          "bytes": 1720
+        },
+        "apiProperties.json": {
+          "sha256": "6924f3674e96205dbac22eafbb11f5d8b5fa5e029f81ebb6e7c63070960b822a",
+          "bytes": 219
+        },
+        "deployment.json": {
+          "sha256": "ad449762298e18440f513b730d305e5e34853f912905cda3ddcf363dfb5d7ed9",
+          "bytes": 641
+        }
+      }
+    }
+  },
+  "flows": [
+    {
+      "name": "AI CoE 00 Provisioning",
+      "workflowId": "99538ee6-adde-5cac-a8dc-78e2d9f2b417",
+      "actions": 44,
+      "definitionSha256": "90cc785ad9dd3bb52484df635ea6e87f301f2cf7281fbd07f373d25b317eb862",
+      "stateCode": 0,
+      "nativeExecuted": false
+    },
+    {
+      "name": "AI CoE 01 Case Command",
+      "workflowId": "bbb2f816-2abe-5216-8fc8-23452056573b",
+      "actions": 229,
+      "definitionSha256": "336deecbab5f0b5ec1ea37c53320f638c1339e1f2072395b250f7c1f218c131f",
+      "stateCode": 0,
+      "nativeExecuted": false
+    },
+    {
+      "name": "AI CoE 02 Evidence and Readiness",
+      "workflowId": "9c7a7513-4787-5fdc-9c2f-ed9e00ce7b10",
+      "actions": 51,
+      "definitionSha256": "a74f8cc171d88c8167401d76b7d2ddd85568599e4a493cd912a4e709a85338e7",
+      "stateCode": 0,
+      "nativeExecuted": false
+    },
+    {
+      "name": "AI CoE 03 Markdown Projector",
+      "workflowId": "5cff5cdb-41b4-581e-ad63-f7495680e02d",
+      "actions": 57,
+      "definitionSha256": "256737f4ae3d447fb7251b7e48d63d88c618c63dbf4822dba299acba59080045",
+      "stateCode": 0,
+      "nativeExecuted": false
+    },
+    {
+      "name": "AI CoE 04 Notification Outbox",
+      "workflowId": "41303d3c-0cab-5668-8b02-b638fb361ab0",
+      "actions": 51,
+      "definitionSha256": "8aaa25c9ae09924919da0d403a1fbc0df86d7b17423822ad876a82640474851b",
+      "stateCode": 0,
+      "nativeExecuted": false
+    },
+    {
+      "name": "AI CoE 05 Health Monitor",
+      "workflowId": "aba74eca-505e-5f1d-a3df-f157499e7dbf",
+      "actions": 41,
+      "definitionSha256": "d385dd1a94a1a8b6570eda7d4b5e7b55bf92db399b789ab4183d26033660da81",
+      "stateCode": 0,
+      "nativeExecuted": false
+    }
+  ],
+  "validation": {
+    "primary": {
+      "AI CoE 00 Provisioning": [],
+      "AI CoE 01 Case Command": [],
+      "AI CoE 02 Evidence and Readiness": [],
+      "AI CoE 03 Markdown Projector": [],
+      "AI CoE 04 Notification Outbox": [],
+      "AI CoE 05 Health Monitor": []
+    },
+    "literal": {
+      "AI CoE 00 Provisioning": [],
+      "AI CoE 01 Case Command": [],
+      "AI CoE 02 Evidence and Readiness": [],
+      "AI CoE 03 Markdown Projector": [],
+      "AI CoE 04 Notification Outbox": [],
+      "AI CoE 05 Health Monitor": []
+    }
+  },
+  "sourceHashes": {
+    "generator/binding.py": "1c1116f1226467837cda2b8c18ab55ee757d67a28b3455d820f883987f9f5444",
+    "generator/build.py": "52ae339e6b059e48e21ad0a69e5a48381a706ed11616fe9b5448035d0845b33b",
+    "generator/flows.py": "87e9dbb061dbafb63f43d809625fd1b002656cca6476069ea8a84a47aa87b094",
+    "generator/model.py": "bb4561841e14750cbab456d034c3b87ef8d37ca70829c09bf14d9cd0f1b25d7e",
+    "generator/native_runtime.py": "77c525b6fab434c9379b4d609d5f48e21aa96849b9658afeb77f27b2b3697e75",
+    "generator/package.py": "bb39ae86413b684eba5f05b90b1c9876b20e5b5a28d74285e74e82bb8ac0a430",
+    "generator/reference.py": "1f1291aa16ad15d06da5b2dc3f0d3f2e4712ddd55f911e837db45f0e9d45bb76",
+    "generator/validate.py": "7c5af369a90ff54d3826118a52c6fb966223018c990b8eaa885e66a3e9549197",
+    "generator/wdl.py": "e4a1bd55c5402dee025170551113010ae481580dd9372036b047bd9ba9e9df92",
+    "connector/README.md": "9bdfddd57f2bf27f80738536d7e8aff2ec50df1c3ae2588d6648241b5b5856df",
+    "connector/Script.cs": "cc87f233b3aedcc3a022d40ae40a77387d7bd4684253c3dbebdd3d2fb6aa8c1a",
+    "connector/apiDefinition.swagger.json": "5d1277880d9627ed1b79fe886ec03e506016d1db790ab6d0f38a16c22caeb832",
+    "connector/apiProperties.json": "6924f3674e96205dbac22eafbb11f5d8b5fa5e029f81ebb6e7c63070960b822a",
+    "connector/deployment.json": "ad449762298e18440f513b730d305e5e34853f912905cda3ddcf363dfb5d7ed9",
+    "provisioning/Set-CoreIsolation.ps1": "28faf85b5302ac1ee510936ca0a28b1ec693b7f77352b16098f8a70864110d05",
+    "contract/routing-policy.json": "d85043582897ae093dd381ea88713aa69f5afb5e26e392cd32fb73b9e0c3fab4",
+    "tests/conftest.py": "c386d87cc747843843aba5c5c3f3f1bab398cde8a4e7225355ad3eb8693d1d6e",
+    "tests/provisioning_harness.py": "2d366bedb1ca8e3bad0b69abf8006d2657a3b789c9e5dc5eee426a18597ed5ee",
+    "tests/test_connector.py": "90efd5965b4bd5adabb3cc6473346b4c6caa20bf0bbe1e531a2a3dbb5fdc0fde",
+    "tests/test_flows.py": "c57be3a76e4d382e3c21dade7589c5cdaed5aa67e49d64373a6c9275031b9052",
+    "tests/test_packaging.py": "13a35e2135bfa71e8d6941e380adaf567499b597f180ad40492b63592e2f6ede",
+    "tests/test_provisioning.py": "ef0bd861258b27883255f1bc22b228801b4e67f8c3d76661492a352b2fe1579b",
+    "tests/test_wdl_execution.py": "0099824d122a584fe3404d28e2ed3f23f579092d5db208958478c810de4a3ad1",
+    "tests/wdl_harness.py": "86e0519b40944efdadd0b42640bb7086697101956f6b305f242e480efffcf3c9"
+  },
+  "not_claimed": [
+    "registered or qualified helper connector",
+    "flow designer Save",
+    "tenant import or execution",
+    "real ACLs/two-account isolation",
+    "model calls",
+    "Send",
+    "production or business acceptance"
+  ]
+}

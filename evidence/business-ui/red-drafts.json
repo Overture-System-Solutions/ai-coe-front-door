@@ -1,0 +1,202 @@
+{
+  "numFailedTestSuites": 1,
+  "numFailedTests": 1,
+  "numPassedTestSuites": 0,
+  "numPassedTests": 2,
+  "numPendingTestSuites": 1,
+  "numPendingTests": 3,
+  "numRuntimeErrorTestSuites": 0,
+  "numTodoTests": 0,
+  "numTotalTestSuites": 2,
+  "numTotalTests": 6,
+  "openHandles": [],
+  "snapshot": {
+    "added": 0,
+    "didUpdate": false,
+    "failure": false,
+    "filesAdded": 0,
+    "filesRemoved": 0,
+    "filesRemovedList": [],
+    "filesUnmatched": 0,
+    "filesUpdated": 0,
+    "matched": 0,
+    "total": 0,
+    "unchecked": 0,
+    "uncheckedKeysByFile": [],
+    "unmatched": 0,
+    "updated": 0
+  },
+  "startTime": 1790173818876,
+  "success": false,
+  "testResults": [
+    {
+      "leaks": false,
+      "numFailingTests": 1,
+      "numPassingTests": 2,
+      "numPendingTests": 1,
+      "numTodoTests": 0,
+      "openHandles": [],
+      "perfStats": {
+        "end": 1790173821999,
+        "loadTestEnvironmentEnd": 1790173819670,
+        "loadTestEnvironmentStart": 1790173819016,
+        "runtime": 2327,
+        "setupAfterEnvEnd": 1790173820006,
+        "setupAfterEnvStart": 1790173819830,
+        "setupFilesEnd": 1790173819685,
+        "setupFilesStart": 1790173819672,
+        "slow": false,
+        "start": 1790173819672
+      },
+      "skipped": false,
+      "snapshot": {
+        "added": 0,
+        "fileDeleted": false,
+        "matched": 0,
+        "unchecked": 0,
+        "uncheckedKeys": [],
+        "unmatched": 0,
+        "updated": 0
+      },
+      "testFilePath": "C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-audit-fixes\\src\\webparts\\aiCoeFrontDoor\\components\\app\\AppBusinessMarketingWorkspace.test.tsx",
+      "testResults": [
+        {
+          "ancestorTitles": [],
+          "duration": 1106,
+          "failing": false,
+          "failureDetails": [
+            {
+              "name": "TestingLibraryElementError"
+            }
+          ],
+          "failureMessages": [
+            "Error: Unable to find a label with the text of: Approved objective\n\nIgnored nodes: comments, script, style\n\u001b[36m<body>\u001b[39m\n  \u001b[36m<div>\u001b[39m\n    \u001b[36m<div\u001b[39m\n      \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-marketing\"\u001b[39m\n    \u001b[36m>\u001b[39m\n      \u001b[36m<div\u001b[39m\n        \u001b[33maria-label\u001b[39m=\u001b[32m\"Marketing mode\"\u001b[39m\n        \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-modes\"\u001b[39m\n        \u001b[33mrole\u001b[39m=\u001b[32m\"group\"\u001b[39m\n      \u001b[36m>\u001b[39m\n        \u001b[36m<button\u001b[39m\n          \u001b[33maria-pressed\u001b[39m=\u001b[32m\"true\"\u001b[39m\n          \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-mode ai-app-mode--on\"\u001b[39m\n          \u001b[33mtype\u001b[39m=\u001b[32m\"button\"\u001b[39m\n        \u001b[36m>\u001b[39m\n          \u001b[0mBusiness workspace\u001b[0m\n        \u001b[36m</button>\u001b[39m\n        \u001b[36m<button\u001b[39m\n          \u001b[33maria-pressed\u001b[39m=\u001b[32m\"false\"\u001b[39m\n          \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-mode\"\u001b[39m\n          \u001b[33mtype\u001b[39m=\u001b[32m\"button\"\u001b[39m\n        \u001b[36m>\u001b[39m\n          \u001b[0mLabelled demonstration\u001b[0m\n        \u001b[36m</button>\u001b[39m\n      \u001b[36m</div>\u001b[39m\n      \u001b[36m<div\u001b[39m\n        \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-workspace\"\u001b[39m\n      \u001b[36m>\u001b[39m\n        \u001b[36m<p\u001b[39m\n          \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-aside ai-app-aside--caution\"\u001b[39m\n          \u001b[33mrole\u001b[39m=\u001b[32m\"note\"\u001b[39m\n        \u001b[36m>\u001b[39m\n          \u001b[0mBusiness workspace. Draft and review only; nothing is sent, published, assigned or scheduled.\u001b[0m\n        \u001b[36m</p>\u001b[39m\n        \u001b[36m<p>\u001b[39m\n          \u001b[0mBusiness server records\u001b[0m\n        \u001b[36m</p>\u001b[39m\n        \u001b[36m<label\u001b[39m\n          \u001b[33mfor\u001b[39m=\u001b[32m\"business-marketing-case\"\u001b[39m\n        \u001b[36m>\u001b[39m\n          \u001b[0mMarketing case\u001b[0m\n        \u001b[36m</label>\u001b[39m\n        \u001b[36m<select\u001b[39m\n          \u001b[33mid\u001b[39m=\u001b[32m\"business-marketing-case\"\u001b[39m\n        \u001b[36m>\u001b[39m\n          \u001b[36m<option\u001b[39m\n            \u001b[33mvalue\u001b[39m=\u001b[32m\"\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[0mSelect an authorized case\u001b[0m\n          \u001b[36m</option>\u001b[39m\n          \u001b[36m<option\u001b[39m\n            \u001b[33mvalue\u001b[39m=\u001b[32m\"CW-BUSINESS_42\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[0mCW-BUSINESS_42\u001b[0m\n          \u001b[36m</option>\u001b[39m\n          \u001b[36m<option\u001b[39m\n            \u001b[33mvalue\u001b[39m=\u001b[32m\"CW-BUSINESS_43\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[0mCW-BUSINESS_43\u001b[0m\n          \u001b[36m</option>\u001b[39m\n        \u001b[36m</select>\u001b[39m\n        \u001b[36m<p\u001b[39m\n          \u001b[33mrole\u001b[39m=\u001b[32m\"status\"\u001b[39m\n        \u001b[36m>\u001b[39m\n          \u001b[0mSelect an authorized case.\u001b[0m\n        \u001b[36m</p>\u001b[39m\n      \u001b[36m</div>\u001b[39m\n    \u001b[36m</div>\u001b[39m\n  \u001b[36m</div>\u001b[39m\n\u001b[36m</body>\u001b[39m\n    at waitForWrapper (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\@testing-library\\react\\node_modules\\@testing-library\\dom\\dist\\wait-for.js:166:27)\n    at C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\@testing-library\\react\\node_modules\\@testing-library\\dom\\dist\\query-helpers.js:86:33\n    at Object.<anonymous> (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-audit-fixes\\src\\webparts\\aiCoeFrontDoor\\components\\app\\AppBusinessMarketingWorkspace.test.tsx:47:31)"
+          ],
+          "fullName": "runs all three drafts with selected business sources and source-only meeting evidence",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 3,
+          "retryReasons": [],
+          "startAt": 1790173820872,
+          "status": "failed",
+          "title": "runs all three drafts with selected business sources and source-only meeting evidence"
+        },
+        {
+          "ancestorTitles": [],
+          "duration": 4,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "unauthorized users make zero business or working-draft calls: {\"roles\":[\"employee\"],\"resolution\":\"resolved\"}",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 6,
+          "retryReasons": [],
+          "startAt": 1790173821978,
+          "status": "passed",
+          "title": "unauthorized users make zero business or working-draft calls: {\"roles\":[\"employee\"],\"resolution\":\"resolved\"}"
+        },
+        {
+          "ancestorTitles": [],
+          "duration": 4,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "unauthorized users make zero business or working-draft calls: {\"roles\":[\"marketingParticipant\"],\"resolution\":\"unresolved\"}",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 6,
+          "retryReasons": [],
+          "startAt": 1790173821983,
+          "status": "passed",
+          "title": "unauthorized users make zero business or working-draft calls: {\"roles\":[\"marketingParticipant\"],\"resolution\":\"unresolved\"}"
+        },
+        {
+          "ancestorTitles": [],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "live mode selects only server-authorized Work IDs and never mounts the synthetic workspace",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790173821987,
+          "status": "pending",
+          "title": "live mode selects only server-authorized Work IDs and never mounts the synthetic workspace"
+        }
+      ],
+      "failureMessage": "  ● runs all three drafts with selected business sources and source-only meeting evidence\n\n    Unable to find a label with the text of: Approved objective\n\n    Ignored nodes: comments, script, style\n    \u001b[36m<body>\u001b[39m\n      \u001b[36m<div>\u001b[39m\n        \u001b[36m<div\u001b[39m\n          \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-marketing\"\u001b[39m\n        \u001b[36m>\u001b[39m\n          \u001b[36m<div\u001b[39m\n            \u001b[33maria-label\u001b[39m=\u001b[32m\"Marketing mode\"\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-modes\"\u001b[39m\n            \u001b[33mrole\u001b[39m=\u001b[32m\"group\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[36m<button\u001b[39m\n              \u001b[33maria-pressed\u001b[39m=\u001b[32m\"true\"\u001b[39m\n              \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-mode ai-app-mode--on\"\u001b[39m\n              \u001b[33mtype\u001b[39m=\u001b[32m\"button\"\u001b[39m\n            \u001b[36m>\u001b[39m\n              \u001b[0mBusiness workspace\u001b[0m\n            \u001b[36m</button>\u001b[39m\n            \u001b[36m<button\u001b[39m\n              \u001b[33maria-pressed\u001b[39m=\u001b[32m\"false\"\u001b[39m\n              \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-mode\"\u001b[39m\n              \u001b[33mtype\u001b[39m=\u001b[32m\"button\"\u001b[39m\n            \u001b[36m>\u001b[39m\n              \u001b[0mLabelled demonstration\u001b[0m\n            \u001b[36m</button>\u001b[39m\n          \u001b[36m</div>\u001b[39m\n          \u001b[36m<div\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-workspace\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[36m<p\u001b[39m\n              \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-aside ai-app-aside--caution\"\u001b[39m\n              \u001b[33mrole\u001b[39m=\u001b[32m\"note\"\u001b[39m\n            \u001b[36m>\u001b[39m\n              \u001b[0mBusiness workspace. Draft and review only; nothing is sent, published, assigned or scheduled.\u001b[0m\n            \u001b[36m</p>\u001b[39m\n            \u001b[36m<p>\u001b[39m\n              \u001b[0mBusiness server records\u001b[0m\n            \u001b[36m</p>\u001b[39m\n            \u001b[36m<label\u001b[39m\n              \u001b[33mfor\u001b[39m=\u001b[32m\"business-marketing-case\"\u001b[39m\n            \u001b[36m>\u001b[39m\n              \u001b[0mMarketing case\u001b[0m\n            \u001b[36m</label>\u001b[39m\n            \u001b[36m<select\u001b[39m\n              \u001b[33mid\u001b[39m=\u001b[32m\"business-marketing-case\"\u001b[39m\n            \u001b[36m>\u001b[39m\n              \u001b[36m<option\u001b[39m\n                \u001b[33mvalue\u001b[39m=\u001b[32m\"\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[0mSelect an authorized case\u001b[0m\n              \u001b[36m</option>\u001b[39m\n              \u001b[36m<option\u001b[39m\n                \u001b[33mvalue\u001b[39m=\u001b[32m\"CW-BUSINESS_42\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[0mCW-BUSINESS_42\u001b[0m\n              \u001b[36m</option>\u001b[39m\n              \u001b[36m<option\u001b[39m\n                \u001b[33mvalue\u001b[39m=\u001b[32m\"CW-BUSINESS_43\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[0mCW-BUSINESS_43\u001b[0m\n              \u001b[36m</option>\u001b[39m\n            \u001b[36m</select>\u001b[39m\n            \u001b[36m<p\u001b[39m\n              \u001b[33mrole\u001b[39m=\u001b[32m\"status\"\u001b[39m\n            \u001b[36m>\u001b[39m\n              \u001b[0mSelect an authorized case.\u001b[0m\n            \u001b[36m</p>\u001b[39m\n          \u001b[36m</div>\u001b[39m\n        \u001b[36m</div>\u001b[39m\n      \u001b[36m</div>\u001b[39m\n    \u001b[36m</body>\u001b[39m\n\n    \u001b[0m \u001b[90m 45 |\u001b[39m   \u001b[36mconst\u001b[39m view \u001b[33m=\u001b[39m show(marketing)\u001b[33m;\u001b[39m\n     \u001b[90m 46 |\u001b[39m   \u001b[36mawait\u001b[39m choose(view)\u001b[33m;\u001b[39m\n    \u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 47 |\u001b[39m   fireEvent\u001b[33m.\u001b[39mchange(\u001b[36mawait\u001b[39m view\u001b[33m.\u001b[39mfindByLabelText(\u001b[32m'Approved objective'\u001b[39m)\u001b[33m,\u001b[39m { target\u001b[33m:\u001b[39m { value\u001b[33m:\u001b[39m \u001b[32m'Business objective'\u001b[39m } })\u001b[33m;\u001b[39m\n     \u001b[90m    |\u001b[39m                               \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n     \u001b[90m 48 |\u001b[39m   fireEvent\u001b[33m.\u001b[39mchange(view\u001b[33m.\u001b[39mgetByLabelText(\u001b[32m'Audience context'\u001b[39m)\u001b[33m,\u001b[39m { target\u001b[33m:\u001b[39m { value\u001b[33m:\u001b[39m \u001b[32m'Real audience'\u001b[39m } })\u001b[33m;\u001b[39m\n     \u001b[90m 49 |\u001b[39m   fireEvent\u001b[33m.\u001b[39mclick(view\u001b[33m.\u001b[39mgetByLabelText(\u001b[32m`Use source ${source.id}`\u001b[39m))\u001b[33m;\u001b[39m\n     \u001b[90m 50 |\u001b[39m   fireEvent\u001b[33m.\u001b[39mclick(view\u001b[33m.\u001b[39mgetByRole(\u001b[32m'button'\u001b[39m\u001b[33m,\u001b[39m { name\u001b[33m:\u001b[39m \u001b[32m'Draft a campaign brief'\u001b[39m }))\u001b[33m;\u001b[39m\u001b[0m\n\n      at waitForWrapper (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/wait-for.js:166:27)\n      at ../overture-ai-coe-front-door-rc2-single-webpart/node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/query-helpers.js:86:33\n      at Object.<anonymous> (src/webparts/aiCoeFrontDoor/components/app/AppBusinessMarketingWorkspace.test.tsx:47:31)\n"
+    },
+    {
+      "leaks": false,
+      "numFailingTests": 0,
+      "numPassingTests": 0,
+      "numPendingTests": 2,
+      "numTodoTests": 0,
+      "openHandles": [],
+      "perfStats": {
+        "end": 1790173822329,
+        "loadTestEnvironmentEnd": 1790173822009,
+        "loadTestEnvironmentStart": 1790173822002,
+        "runtime": 319,
+        "setupAfterEnvEnd": 1790173822083,
+        "setupAfterEnvStart": 1790173822039,
+        "setupFilesEnd": 1790173822010,
+        "setupFilesStart": 1790173822010,
+        "slow": false,
+        "start": 1790173822010
+      },
+      "skipped": true,
+      "snapshot": {
+        "added": 0,
+        "fileDeleted": false,
+        "matched": 0,
+        "unchecked": 0,
+        "uncheckedKeys": [],
+        "unmatched": 0,
+        "updated": 0
+      },
+      "testFilePath": "C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-audit-fixes\\src\\webparts\\aiCoeFrontDoor\\components\\app\\AppMarketingWorkspace.test.tsx",
+      "testResults": [
+        {
+          "ancestorTitles": [
+            "AppMarketingWorkspace review boundaries"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppMarketingWorkspace review boundaries creates a meaningful objective correction as a new revision after changes are requested",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790173822328,
+          "status": "pending",
+          "title": "creates a meaningful objective correction as a new revision after changes are requested"
+        },
+        {
+          "ancestorTitles": [
+            "AppMarketingWorkspace review boundaries"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppMarketingWorkspace review boundaries does not offer participant-to-reviewer switching or a decision without the service capability",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790173822328,
+          "status": "pending",
+          "title": "does not offer participant-to-reviewer switching or a decision without the service capability"
+        }
+      ],
+      "failureMessage": null
+    }
+  ],
+  "wasInterrupted": false
+}

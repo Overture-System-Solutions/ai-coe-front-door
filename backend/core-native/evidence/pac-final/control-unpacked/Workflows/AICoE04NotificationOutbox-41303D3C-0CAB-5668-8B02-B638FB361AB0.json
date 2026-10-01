@@ -1,0 +1,450 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_sharepointonline": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "aicoe_sharepointonline"
+        },
+        "api": {
+          "name": "shared_sharepointonline"
+        }
+      },
+      "shared_office365": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "aicoe_office365outlook"
+        },
+        "api": {
+          "name": "shared_office365"
+        }
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        },
+        "aicoe_SiteUrl (aicoe_SiteUrl)": {
+          "defaultValue": "https://parkplace.sharepoint.com/sites/AICoE-PrivatePilot",
+          "type": "String",
+          "metadata": {
+            "schemaName": "aicoe_SiteUrl",
+            "description": "SharePoint site that hosts the AI CoE lists. Set per environment."
+          }
+        },
+        "aicoe_NotificationEmail (aicoe_NotificationEmail)": {
+          "defaultValue": "REPLACE-BEFORE-ENABLING.invalid",
+          "type": "String",
+          "metadata": {
+            "schemaName": "aicoe_NotificationEmail",
+            "description": "Alert address. Invalid on purpose until set."
+          }
+        },
+        "aicoe_EnvironmentLabel (aicoe_EnvironmentLabel)": {
+          "defaultValue": "Pilot",
+          "type": "String",
+          "metadata": {
+            "schemaName": "aicoe_EnvironmentLabel",
+            "description": "Appears in log rows and outbox subjects."
+          }
+        }
+      },
+      "triggers": {
+        "Trigger": {
+          "type": "Recurrence",
+          "recurrence": {
+            "frequency": "Minute",
+            "interval": 15,
+            "timeZone": "Eastern Standard Time"
+          },
+          "runtimeConfiguration": {
+            "concurrency": {
+              "runs": 1
+            }
+          }
+        }
+      },
+      "actions": {
+        "Get_Definitions": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_sharepointonline",
+              "operationId": "GetItems",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+            },
+            "parameters": {
+              "dataset": "@parameters('aicoe_SiteUrl (aicoe_SiteUrl)')",
+              "table": "AI CoE Definitions",
+              "$top": 500
+            },
+            "authentication": "@parameters('$authentication')"
+          },
+          "runAfter": {}
+        },
+        "Select_Cfg": {
+          "type": "Select",
+          "inputs": {
+            "from": "@body('Get_Definitions')?['value']",
+            "select": "@concat('\"', item()?['Title'], '\":', item()?['Value'])"
+          },
+          "runAfter": {
+            "Get_Definitions": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Cfg": {
+          "type": "Compose",
+          "inputs": "@json(concat('{', join(body('Select_Cfg'), ','), '}'))",
+          "runAfter": {
+            "Select_Cfg": [
+              "Succeeded"
+            ]
+          }
+        },
+        "RunStart": {
+          "type": "Compose",
+          "inputs": "@utcNow()",
+          "runAfter": {
+            "Cfg": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Get_Queued": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_sharepointonline",
+              "operationId": "GetItems",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+            },
+            "parameters": {
+              "dataset": "@parameters('aicoe_SiteUrl (aicoe_SiteUrl)')",
+              "table": "@outputs('Cfg')?['ListId_Outbox']",
+              "$top": 50,
+              "$filter": "State eq 'QUEUED'",
+              "$orderby": "Created asc"
+            },
+            "authentication": "@parameters('$authentication')"
+          },
+          "runAfter": {
+            "RunStart": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Scope_Outbox": {
+          "type": "Scope",
+          "actions": {
+            "For_each_queued": {
+              "type": "Foreach",
+              "foreach": "@body('Get_Queued')?['value']",
+              "actions": {
+                "If_Send_Enabled": {
+                  "type": "If",
+                  "expression": {
+                    "and": [
+                      {
+                        "equals": [
+                          "@outputs('Cfg')?['SendEnabled']",
+                          true
+                        ]
+                      }
+                    ]
+                  },
+                  "actions": {
+                    "Send": {
+                      "type": "OpenApiConnection",
+                      "inputs": {
+                        "host": {
+                          "connectionName": "shared_office365",
+                          "operationId": "SendEmailV2",
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365"
+                        },
+                        "parameters": {
+                          "emailMessage/To": "@items('For_each_queued')?['Recipient']",
+                          "emailMessage/Subject": "@items('For_each_queued')?['Subject']",
+                          "emailMessage/Body": "@replace(items('For_each_queued')?['Body'], decodeUriComponent('%0A'), '<br>')",
+                          "emailMessage/Importance": "Normal"
+                        },
+                        "authentication": "@parameters('$authentication')"
+                      },
+                      "runAfter": {}
+                    },
+                    "Mark_Sent": {
+                      "type": "OpenApiConnection",
+                      "inputs": {
+                        "host": {
+                          "connectionName": "shared_sharepointonline",
+                          "operationId": "PatchItem",
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+                        },
+                        "parameters": {
+                          "dataset": "@parameters('aicoe_SiteUrl (aicoe_SiteUrl)')",
+                          "table": "@outputs('Cfg')?['ListId_Outbox']",
+                          "id": "@items('For_each_queued')?['ID']",
+                          "item": {
+                            "State": {
+                              "Value": "SENT"
+                            },
+                            "Attempts": "@add(int(coalesce(items('For_each_queued')?['Attempts'], 0)), 1)",
+                            "ReceiptID": "@concat('RCPT-', formatDateTime(utcNow(),'yyyyMMddHHmmss'), '-', toUpper(substring(replace(guid(),'-',''),0,6)))"
+                          }
+                        },
+                        "authentication": "@parameters('$authentication')"
+                      },
+                      "runAfter": {
+                        "Send": [
+                          "Succeeded"
+                        ]
+                      }
+                    },
+                    "Mark_Failed": {
+                      "type": "OpenApiConnection",
+                      "inputs": {
+                        "host": {
+                          "connectionName": "shared_sharepointonline",
+                          "operationId": "PatchItem",
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+                        },
+                        "parameters": {
+                          "dataset": "@parameters('aicoe_SiteUrl (aicoe_SiteUrl)')",
+                          "table": "@outputs('Cfg')?['ListId_Outbox']",
+                          "id": "@items('For_each_queued')?['ID']",
+                          "item": {
+                            "State": {
+                              "Value": "FAILED"
+                            },
+                            "Attempts": "@add(int(coalesce(items('For_each_queued')?['Attempts'], 0)), 1)"
+                          }
+                        },
+                        "authentication": "@parameters('$authentication')"
+                      },
+                      "runAfter": {
+                        "Send": [
+                          "Failed",
+                          "TimedOut"
+                        ]
+                      }
+                    }
+                  },
+                  "else": {
+                    "actions": {
+                      "Suppress": {
+                        "type": "OpenApiConnection",
+                        "inputs": {
+                          "host": {
+                            "connectionName": "shared_sharepointonline",
+                            "operationId": "PatchItem",
+                            "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+                          },
+                          "parameters": {
+                            "dataset": "@parameters('aicoe_SiteUrl (aicoe_SiteUrl)')",
+                            "table": "@outputs('Cfg')?['ListId_Outbox']",
+                            "id": "@items('For_each_queued')?['ID']",
+                            "item": {
+                              "State": {
+                                "Value": "SUPPRESSED"
+                              },
+                              "SuppressionReason": "SendEnabled=false",
+                              "Attempts": "@add(int(coalesce(items('For_each_queued')?['Attempts'], 0)), 1)"
+                            }
+                          },
+                          "authentication": "@parameters('$authentication')"
+                        },
+                        "runAfter": {}
+                      }
+                    }
+                  },
+                  "runAfter": {}
+                }
+              },
+              "runtimeConfiguration": {
+                "concurrency": {
+                  "repetitions": 1
+                }
+              },
+              "runAfter": {}
+            }
+          },
+          "runAfter": {
+            "Get_Queued": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Find_Heartbeat": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_sharepointonline",
+              "operationId": "GetItems",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+            },
+            "parameters": {
+              "dataset": "@parameters('aicoe_SiteUrl (aicoe_SiteUrl)')",
+              "table": "@outputs('Cfg')?['ListId_Definitions']",
+              "$top": 1,
+              "$filter": "Title eq 'Heartbeat_04_Outbox'"
+            },
+            "authentication": "@parameters('$authentication')"
+          },
+          "runAfter": {
+            "Scope_Outbox": [
+              "Succeeded"
+            ]
+          }
+        },
+        "If_Heartbeat_Exists": {
+          "type": "If",
+          "expression": {
+            "and": [
+              {
+                "greater": [
+                  "@length(body('Find_Heartbeat')?['value'])",
+                  0
+                ]
+              }
+            ]
+          },
+          "actions": {
+            "Update_Heartbeat": {
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_sharepointonline",
+                  "operationId": "PatchItem",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+                },
+                "parameters": {
+                  "dataset": "@parameters('aicoe_SiteUrl (aicoe_SiteUrl)')",
+                  "table": "@outputs('Cfg')?['ListId_Definitions']",
+                  "id": "@first(body('Find_Heartbeat')?['value'])?['ID']",
+                  "item": {
+                    "Value": "@concat('\"', utcNow(), '\"')"
+                  }
+                },
+                "authentication": "@parameters('$authentication')"
+              },
+              "runAfter": {}
+            }
+          },
+          "runAfter": {
+            "Find_Heartbeat": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Log_Flow_Failure": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_sharepointonline",
+              "operationId": "PostItem",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+            },
+            "parameters": {
+              "dataset": "@parameters('aicoe_SiteUrl (aicoe_SiteUrl)')",
+              "table": "@outputs('Cfg')?['ListId_Log']",
+              "item": {
+                "Title": "@concat('LOG-', formatDateTime(utcNow(),'yyyyMMddHHmmss'), '-', toUpper(substring(replace(guid(),'-',''),0,6)))",
+                "Flow": "AI CoE 04 Notification Outbox",
+                "RunId": "@workflow()?['run']?['name']",
+                "Level": {
+                  "Value": "Error"
+                },
+                "Message": "AI CoE 04 Notification Outbox: scope failed; rows stay QUEUED.",
+                "CorrelationID": "",
+                "WorkID": "",
+                "LoggedAt": "@utcNow()"
+              }
+            },
+            "authentication": "@parameters('$authentication')"
+          },
+          "runAfter": {
+            "Scope_Outbox": [
+              "Failed",
+              "TimedOut"
+            ]
+          }
+        },
+        "Terminate_Failed": {
+          "type": "Terminate",
+          "inputs": {
+            "runStatus": "Failed",
+            "runError": {
+              "code": "FLOW_FAILURE",
+              "message": "AI CoE 04 Notification Outbox: scope failed; rows stay QUEUED."
+            }
+          },
+          "runAfter": {
+            "Log_Flow_Failure": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Log_Cfg_Failure": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_sharepointonline",
+              "operationId": "PostItem",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+            },
+            "parameters": {
+              "dataset": "@parameters('aicoe_SiteUrl (aicoe_SiteUrl)')",
+              "table": "AI Automation Log",
+              "item": {
+                "Title": "@concat('LOG-', formatDateTime(utcNow(),'yyyyMMddHHmmss'), '-', toUpper(substring(replace(guid(),'-',''),0,6)))",
+                "Flow": "AI CoE 04 Notification Outbox",
+                "RunId": "@workflow()?['run']?['name']",
+                "Level": {
+                  "Value": "Error"
+                },
+                "Message": "@concat('Configuration load failed (AI CoE Definitions unreadable or a Value is not a JSON literal): ', string(coalesce(actions('Cfg')?['error'], actions('Select_Cfg')?['error'], actions('Get_Definitions')?['error'], 'unknown')))",
+                "CorrelationID": "",
+                "WorkID": "",
+                "LoggedAt": "@utcNow()"
+              }
+            },
+            "authentication": "@parameters('$authentication')"
+          },
+          "runAfter": {
+            "Cfg": [
+              "Failed",
+              "Skipped"
+            ]
+          }
+        },
+        "Terminate_Cfg": {
+          "type": "Terminate",
+          "inputs": {
+            "runStatus": "Failed",
+            "runError": {
+              "code": "CONFIG_LOAD_FAILED",
+              "message": "AI CoE Definitions must contain valid JSON literals in Value."
+            }
+          },
+          "runAfter": {
+            "Log_Cfg_Failure": [
+              "Succeeded"
+            ]
+          }
+        }
+      },
+      "description": "Processes QUEUED outbox rows. While SendEnabled=false (default) every row is marked SUPPRESSED and nothing is sent. Ships OFF. Polls every 15 minutes when enabled."
+    },
+    "templateName": null
+  },
+  "schemaVersion": "1.0.0.0"
+}

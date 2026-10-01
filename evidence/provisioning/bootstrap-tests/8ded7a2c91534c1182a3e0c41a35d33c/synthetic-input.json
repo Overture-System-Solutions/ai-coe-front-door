@@ -1,0 +1,82 @@
+{
+  "kind": "marketing.bootstrap-input.v1",
+  "siteUrl": "https://synthetic.sharepoint.com/sites/marketing",
+  "records": [
+    {
+      "Value": {
+        "enabled": false,
+        "workIds": [
+          "CW-TEST"
+        ],
+        "actorId": "requester@example.invalid",
+        "roles": [
+          "marketingParticipant"
+        ],
+        "audience": "Synthetic internal"
+      },
+      "Key": "member:200"
+    },
+    {
+      "Value": {
+        "revoked": true,
+        "synthetic": false,
+        "label": "SYNTHETIC TEST ONLY",
+        "expiresAt": "2000-01-01T00:00:00Z",
+        "bindingRef": "binding-owner",
+        "scope": [
+          "sourceRegister"
+        ],
+        "actorId": "owner@example.invalid",
+        "tenantScope": "https://synthetic.sharepoint.com/sites/marketing"
+      },
+      "Key": "authority:binding-owner"
+    },
+    {
+      "Value": {
+        "actors": [
+          "requester@example.invalid"
+        ],
+        "contentHash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "audiences": [
+          "Synthetic internal"
+        ],
+        "entry": {
+          "classification": "Synthetic",
+          "id": "source-test",
+          "asOf": "2000-01-01",
+          "versionOrETag": "\"1\"",
+          "audience": "Synthetic internal",
+          "owner": "Synthetic owner",
+          "mayNotProve": "Anything real",
+          "location": "https://synthetic.sharepoint.com/sites/marketing/Shared%20Documents/../test.txt"
+        },
+        "purposes": [
+          "campaignBrief"
+        ],
+        "revoked": true
+      },
+      "Key": "source:source-test"
+    },
+    {
+      "Value": {
+        "result": "INCONCLUSIVE",
+        "bindingHash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "expiresAt": "2000-01-01T00:00:00Z"
+      },
+      "Key": "qualification:QUAL-native-test"
+    },
+    {
+      "Value": {
+        "operation": "approveSourceRegister",
+        "payloadHash": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "observedAt": "2000-01-01T00:00:00Z",
+        "targetRef": "snapshot:REGISTER-test:v1",
+        "result": "INCONCLUSIVE",
+        "readbackHash": null,
+        "actorId": "owner@example.invalid",
+        "receiptId": "RCP-test"
+      },
+      "Key": "receipt:RCP-test"
+    }
+  ]
+}

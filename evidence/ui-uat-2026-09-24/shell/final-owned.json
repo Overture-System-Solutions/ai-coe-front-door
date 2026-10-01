@@ -1,0 +1,408 @@
+{
+  "numFailedTestSuites": 3,
+  "numFailedTests": 0,
+  "numPassedTestSuites": 1,
+  "numPassedTests": 14,
+  "numPendingTestSuites": 0,
+  "numPendingTests": 0,
+  "numRuntimeErrorTestSuites": 3,
+  "numTodoTests": 0,
+  "numTotalTestSuites": 4,
+  "numTotalTests": 14,
+  "openHandles": [],
+  "snapshot": {
+    "added": 0,
+    "didUpdate": false,
+    "failure": false,
+    "filesAdded": 0,
+    "filesRemoved": 0,
+    "filesRemovedList": [],
+    "filesUnmatched": 0,
+    "filesUpdated": 0,
+    "matched": 0,
+    "total": 0,
+    "unchecked": 0,
+    "uncheckedKeysByFile": [],
+    "unmatched": 0,
+    "updated": 0
+  },
+  "startTime": 1790271757828,
+  "success": false,
+  "testResults": [
+    {
+      "failureMessage": "  ● Test suite failed to run\n\n    ',' expected.\n    JSX element 'section' has no corresponding closing tag.\n\n    \u001b[0m \u001b[90m 4 |\u001b[39m   \u001b[36mconst\u001b[39m result \u001b[33m=\u001b[39m ts\u001b[33m.\u001b[39mtranspileModule(src\u001b[33m,\u001b[39m {fileName\u001b[33m:\u001b[39mfilename\u001b[33m,\u001b[39m reportDiagnostics\u001b[33m:\u001b[39m\u001b[36mtrue\u001b[39m\u001b[33m,\u001b[39m compilerOptions\u001b[33m:\u001b[39m {module\u001b[33m:\u001b[39mts\u001b[33m.\u001b[39m\u001b[33mModuleKind\u001b[39m\u001b[33m.\u001b[39m\u001b[33mCommonJS\u001b[39m\u001b[33m,\u001b[39mtarget\u001b[33m:\u001b[39mts\u001b[33m.\u001b[39m\u001b[33mScriptTarget\u001b[39m\u001b[33m.\u001b[39m\u001b[33mES2020\u001b[39m\u001b[33m,\u001b[39mjsx\u001b[33m:\u001b[39mts\u001b[33m.\u001b[39m\u001b[33mJsxEmit\u001b[39m\u001b[33m.\u001b[39m\u001b[33mReact\u001b[39m\u001b[33m,\u001b[39mesModuleInterop\u001b[33m:\u001b[39m\u001b[36mtrue\u001b[39m\u001b[33m,\u001b[39minlineSourceMap\u001b[33m:\u001b[39m\u001b[36mtrue\u001b[39m\u001b[33m,\u001b[39minlineSources\u001b[33m:\u001b[39m\u001b[36mtrue\u001b[39m}})\u001b[33m;\u001b[39m\n     \u001b[90m 5 |\u001b[39m   \u001b[36mconst\u001b[39m errors \u001b[33m=\u001b[39m (result\u001b[33m.\u001b[39mdiagnostics \u001b[33m||\u001b[39m [])\u001b[33m.\u001b[39mfilter(d \u001b[33m=>\u001b[39m d\u001b[33m.\u001b[39mcategory \u001b[33m===\u001b[39m ts\u001b[33m.\u001b[39m\u001b[33mDiagnosticCategory\u001b[39m\u001b[33m.\u001b[39m\u001b[33mError\u001b[39m)\u001b[33m;\u001b[39m\n    \u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 6 |\u001b[39m   \u001b[36mif\u001b[39m (errors\u001b[33m.\u001b[39mlength) \u001b[36mthrow\u001b[39m \u001b[36mnew\u001b[39m \u001b[33mError\u001b[39m(errors\u001b[33m.\u001b[39mmap(d \u001b[33m=>\u001b[39m ts\u001b[33m.\u001b[39mflattenDiagnosticMessageText(d\u001b[33m.\u001b[39mmessageText\u001b[33m,\u001b[39m \u001b[32m'\\n'\u001b[39m))\u001b[33m.\u001b[39mjoin(\u001b[32m'\\n'\u001b[39m))\u001b[33m;\u001b[39m\n     \u001b[90m   |\u001b[39m                            \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n     \u001b[90m 7 |\u001b[39m   \u001b[36mreturn\u001b[39m {code\u001b[33m:\u001b[39m result\u001b[33m.\u001b[39moutputText}\u001b[33m;\u001b[39m\n     \u001b[90m 8 |\u001b[39m }}\u001b[33m;\u001b[39m\n     \u001b[90m 9 |\u001b[39m\u001b[0m\n\n      at Object.process (evidence/frontend-audit/source-transform.cjs:6:28)\n      at ScriptTransformer.transformSource (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/@jest/transform/build/index.js:415:31)\n      at ScriptTransformer._transformAndBuildScript (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/@jest/transform/build/index.js:512:40)\n      at ScriptTransformer.transform (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/@jest/transform/build/index.js:551:19)\n      at Object.<anonymous> (src/webparts/aiCoeFrontDoor/components/app/AppSections.tsx:5:1)\n      at Object.<anonymous> (src/webparts/aiCoeFrontDoor/components/app/AppShell.tsx:34:1)\n      at Object.<anonymous> (src/webparts/aiCoeFrontDoor/components/app/AppShell.test.tsx:10:1)\n",
+      "leaks": false,
+      "numFailingTests": 0,
+      "numPassingTests": 0,
+      "numPendingTests": 0,
+      "numTodoTests": 0,
+      "openHandles": [],
+      "perfStats": {
+        "end": 0,
+        "loadTestEnvironmentEnd": 0,
+        "loadTestEnvironmentStart": 0,
+        "runtime": 0,
+        "setupAfterEnvEnd": 0,
+        "setupAfterEnvStart": 0,
+        "setupFilesEnd": 0,
+        "setupFilesStart": 0,
+        "slow": false,
+        "start": 0
+      },
+      "skipped": false,
+      "snapshot": {
+        "added": 0,
+        "fileDeleted": false,
+        "matched": 0,
+        "unchecked": 0,
+        "uncheckedKeys": [],
+        "unmatched": 0,
+        "updated": 0
+      },
+      "testExecError": {},
+      "testFilePath": "C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-audit-fixes\\src\\webparts\\aiCoeFrontDoor\\components\\app\\AppShell.test.tsx",
+      "testResults": []
+    },
+    {
+      "failureMessage": "  ● Test suite failed to run\n\n    ',' expected.\n    JSX element 'section' has no corresponding closing tag.\n\n    \u001b[0m \u001b[90m 4 |\u001b[39m   \u001b[36mconst\u001b[39m result \u001b[33m=\u001b[39m ts\u001b[33m.\u001b[39mtranspileModule(src\u001b[33m,\u001b[39m {fileName\u001b[33m:\u001b[39mfilename\u001b[33m,\u001b[39m reportDiagnostics\u001b[33m:\u001b[39m\u001b[36mtrue\u001b[39m\u001b[33m,\u001b[39m compilerOptions\u001b[33m:\u001b[39m {module\u001b[33m:\u001b[39mts\u001b[33m.\u001b[39m\u001b[33mModuleKind\u001b[39m\u001b[33m.\u001b[39m\u001b[33mCommonJS\u001b[39m\u001b[33m,\u001b[39mtarget\u001b[33m:\u001b[39mts\u001b[33m.\u001b[39m\u001b[33mScriptTarget\u001b[39m\u001b[33m.\u001b[39m\u001b[33mES2020\u001b[39m\u001b[33m,\u001b[39mjsx\u001b[33m:\u001b[39mts\u001b[33m.\u001b[39m\u001b[33mJsxEmit\u001b[39m\u001b[33m.\u001b[39m\u001b[33mReact\u001b[39m\u001b[33m,\u001b[39mesModuleInterop\u001b[33m:\u001b[39m\u001b[36mtrue\u001b[39m\u001b[33m,\u001b[39minlineSourceMap\u001b[33m:\u001b[39m\u001b[36mtrue\u001b[39m\u001b[33m,\u001b[39minlineSources\u001b[33m:\u001b[39m\u001b[36mtrue\u001b[39m}})\u001b[33m;\u001b[39m\n     \u001b[90m 5 |\u001b[39m   \u001b[36mconst\u001b[39m errors \u001b[33m=\u001b[39m (result\u001b[33m.\u001b[39mdiagnostics \u001b[33m||\u001b[39m [])\u001b[33m.\u001b[39mfilter(d \u001b[33m=>\u001b[39m d\u001b[33m.\u001b[39mcategory \u001b[33m===\u001b[39m ts\u001b[33m.\u001b[39m\u001b[33mDiagnosticCategory\u001b[39m\u001b[33m.\u001b[39m\u001b[33mError\u001b[39m)\u001b[33m;\u001b[39m\n    \u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 6 |\u001b[39m   \u001b[36mif\u001b[39m (errors\u001b[33m.\u001b[39mlength) \u001b[36mthrow\u001b[39m \u001b[36mnew\u001b[39m \u001b[33mError\u001b[39m(errors\u001b[33m.\u001b[39mmap(d \u001b[33m=>\u001b[39m ts\u001b[33m.\u001b[39mflattenDiagnosticMessageText(d\u001b[33m.\u001b[39mmessageText\u001b[33m,\u001b[39m \u001b[32m'\\n'\u001b[39m))\u001b[33m.\u001b[39mjoin(\u001b[32m'\\n'\u001b[39m))\u001b[33m;\u001b[39m\n     \u001b[90m   |\u001b[39m                            \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n     \u001b[90m 7 |\u001b[39m   \u001b[36mreturn\u001b[39m {code\u001b[33m:\u001b[39m result\u001b[33m.\u001b[39moutputText}\u001b[33m;\u001b[39m\n     \u001b[90m 8 |\u001b[39m }}\u001b[33m;\u001b[39m\n     \u001b[90m 9 |\u001b[39m\u001b[0m\n\n      at Object.process (evidence/frontend-audit/source-transform.cjs:6:28)\n      at ScriptTransformer.transformSource (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/@jest/transform/build/index.js:415:31)\n      at ScriptTransformer._transformAndBuildScript (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/@jest/transform/build/index.js:512:40)\n      at ScriptTransformer.transform (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/@jest/transform/build/index.js:551:19)\n      at Object.<anonymous> (src/webparts/aiCoeFrontDoor/components/app/AppSections.tsx:5:1)\n      at Object.<anonymous> (src/webparts/aiCoeFrontDoor/components/app/AppShell.tsx:34:1)\n      at Object.<anonymous> (src/webparts/aiCoeFrontDoor/components/app/AppSections.test.tsx:7:1)\n",
+      "leaks": false,
+      "numFailingTests": 0,
+      "numPassingTests": 0,
+      "numPendingTests": 0,
+      "numTodoTests": 0,
+      "openHandles": [],
+      "perfStats": {
+        "end": 0,
+        "loadTestEnvironmentEnd": 0,
+        "loadTestEnvironmentStart": 0,
+        "runtime": 0,
+        "setupAfterEnvEnd": 0,
+        "setupAfterEnvStart": 0,
+        "setupFilesEnd": 0,
+        "setupFilesStart": 0,
+        "slow": false,
+        "start": 0
+      },
+      "skipped": false,
+      "snapshot": {
+        "added": 0,
+        "fileDeleted": false,
+        "matched": 0,
+        "unchecked": 0,
+        "uncheckedKeys": [],
+        "unmatched": 0,
+        "updated": 0
+      },
+      "testExecError": {},
+      "testFilePath": "C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-audit-fixes\\src\\webparts\\aiCoeFrontDoor\\components\\app\\AppSections.test.tsx",
+      "testResults": []
+    },
+    {
+      "failureMessage": "  ● Test suite failed to run\n\n    ',' expected.\n    JSX element 'section' has no corresponding closing tag.\n\n    \u001b[0m \u001b[90m 4 |\u001b[39m   \u001b[36mconst\u001b[39m result \u001b[33m=\u001b[39m ts\u001b[33m.\u001b[39mtranspileModule(src\u001b[33m,\u001b[39m {fileName\u001b[33m:\u001b[39mfilename\u001b[33m,\u001b[39m reportDiagnostics\u001b[33m:\u001b[39m\u001b[36mtrue\u001b[39m\u001b[33m,\u001b[39m compilerOptions\u001b[33m:\u001b[39m {module\u001b[33m:\u001b[39mts\u001b[33m.\u001b[39m\u001b[33mModuleKind\u001b[39m\u001b[33m.\u001b[39m\u001b[33mCommonJS\u001b[39m\u001b[33m,\u001b[39mtarget\u001b[33m:\u001b[39mts\u001b[33m.\u001b[39m\u001b[33mScriptTarget\u001b[39m\u001b[33m.\u001b[39m\u001b[33mES2020\u001b[39m\u001b[33m,\u001b[39mjsx\u001b[33m:\u001b[39mts\u001b[33m.\u001b[39m\u001b[33mJsxEmit\u001b[39m\u001b[33m.\u001b[39m\u001b[33mReact\u001b[39m\u001b[33m,\u001b[39mesModuleInterop\u001b[33m:\u001b[39m\u001b[36mtrue\u001b[39m\u001b[33m,\u001b[39minlineSourceMap\u001b[33m:\u001b[39m\u001b[36mtrue\u001b[39m\u001b[33m,\u001b[39minlineSources\u001b[33m:\u001b[39m\u001b[36mtrue\u001b[39m}})\u001b[33m;\u001b[39m\n     \u001b[90m 5 |\u001b[39m   \u001b[36mconst\u001b[39m errors \u001b[33m=\u001b[39m (result\u001b[33m.\u001b[39mdiagnostics \u001b[33m||\u001b[39m [])\u001b[33m.\u001b[39mfilter(d \u001b[33m=>\u001b[39m d\u001b[33m.\u001b[39mcategory \u001b[33m===\u001b[39m ts\u001b[33m.\u001b[39m\u001b[33mDiagnosticCategory\u001b[39m\u001b[33m.\u001b[39m\u001b[33mError\u001b[39m)\u001b[33m;\u001b[39m\n    \u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 6 |\u001b[39m   \u001b[36mif\u001b[39m (errors\u001b[33m.\u001b[39mlength) \u001b[36mthrow\u001b[39m \u001b[36mnew\u001b[39m \u001b[33mError\u001b[39m(errors\u001b[33m.\u001b[39mmap(d \u001b[33m=>\u001b[39m ts\u001b[33m.\u001b[39mflattenDiagnosticMessageText(d\u001b[33m.\u001b[39mmessageText\u001b[33m,\u001b[39m \u001b[32m'\\n'\u001b[39m))\u001b[33m.\u001b[39mjoin(\u001b[32m'\\n'\u001b[39m))\u001b[33m;\u001b[39m\n     \u001b[90m   |\u001b[39m                            \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n     \u001b[90m 7 |\u001b[39m   \u001b[36mreturn\u001b[39m {code\u001b[33m:\u001b[39m result\u001b[33m.\u001b[39moutputText}\u001b[33m;\u001b[39m\n     \u001b[90m 8 |\u001b[39m }}\u001b[33m;\u001b[39m\n     \u001b[90m 9 |\u001b[39m\u001b[0m\n\n      at Object.process (evidence/frontend-audit/source-transform.cjs:6:28)\n      at ScriptTransformer.transformSource (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/@jest/transform/build/index.js:415:31)\n      at ScriptTransformer._transformAndBuildScript (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/@jest/transform/build/index.js:512:40)\n      at ScriptTransformer.transform (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/@jest/transform/build/index.js:551:19)\n      at Object.<anonymous> (src/webparts/aiCoeFrontDoor/components/app/AppShell.cases.test.tsx:5:1)\n",
+      "leaks": false,
+      "numFailingTests": 0,
+      "numPassingTests": 0,
+      "numPendingTests": 0,
+      "numTodoTests": 0,
+      "openHandles": [],
+      "perfStats": {
+        "end": 0,
+        "loadTestEnvironmentEnd": 0,
+        "loadTestEnvironmentStart": 0,
+        "runtime": 0,
+        "setupAfterEnvEnd": 0,
+        "setupAfterEnvStart": 0,
+        "setupFilesEnd": 0,
+        "setupFilesStart": 0,
+        "slow": false,
+        "start": 0
+      },
+      "skipped": false,
+      "snapshot": {
+        "added": 0,
+        "fileDeleted": false,
+        "matched": 0,
+        "unchecked": 0,
+        "uncheckedKeys": [],
+        "unmatched": 0,
+        "updated": 0
+      },
+      "testExecError": {},
+      "testFilePath": "C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-audit-fixes\\src\\webparts\\aiCoeFrontDoor\\components\\app\\AppShell.cases.test.tsx",
+      "testResults": []
+    },
+    {
+      "leaks": false,
+      "numFailingTests": 0,
+      "numPassingTests": 14,
+      "numPendingTests": 0,
+      "numTodoTests": 0,
+      "openHandles": [],
+      "perfStats": {
+        "end": 1790271760856,
+        "loadTestEnvironmentEnd": 1790271760763,
+        "loadTestEnvironmentStart": 1790271760754,
+        "runtime": 93,
+        "setupAfterEnvEnd": 1790271760830,
+        "setupAfterEnvStart": 1790271760790,
+        "setupFilesEnd": 1790271760764,
+        "setupFilesStart": 1790271760763,
+        "slow": false,
+        "start": 1790271760763
+      },
+      "skipped": false,
+      "snapshot": {
+        "added": 0,
+        "fileDeleted": false,
+        "matched": 0,
+        "unchecked": 0,
+        "uncheckedKeys": [],
+        "unmatched": 0,
+        "updated": 0
+      },
+      "testFilePath": "C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-audit-fixes\\src\\webparts\\aiCoeFrontDoor\\content\\appSections.test.ts",
+      "testResults": [
+        {
+          "ancestorTitles": [
+            "consolidated section routes"
+          ],
+          "duration": 4,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "consolidated section routes removes System map from every section route while retaining guarded Admin and value",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 7,
+          "retryReasons": [],
+          "startAt": 1790271760841,
+          "status": "passed",
+          "title": "removes System map from every section route while retaining guarded Admin and value"
+        },
+        {
+          "ancestorTitles": [
+            "consolidated section routes"
+          ],
+          "duration": 1,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "consolidated section routes returns Home for stale or unknown route map",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 2,
+          "retryReasons": [],
+          "startAt": 1790271760845,
+          "status": "passed",
+          "title": "returns Home for stale or unknown route map"
+        },
+        {
+          "ancestorTitles": [
+            "consolidated section routes"
+          ],
+          "duration": 1,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "consolidated section routes returns Home for stale or unknown route  MAP ",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 2,
+          "retryReasons": [],
+          "startAt": 1790271760846,
+          "status": "passed",
+          "title": "returns Home for stale or unknown route  MAP "
+        },
+        {
+          "ancestorTitles": [
+            "consolidated section routes"
+          ],
+          "duration": 0,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "consolidated section routes returns Home for stale or unknown route System map",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 2,
+          "retryReasons": [],
+          "startAt": 1790271760847,
+          "status": "passed",
+          "title": "returns Home for stale or unknown route System map"
+        },
+        {
+          "ancestorTitles": [
+            "consolidated section routes"
+          ],
+          "duration": 1,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "consolidated section routes returns Home for stale or unknown route undefined",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 2,
+          "retryReasons": [],
+          "startAt": 1790271760847,
+          "status": "passed",
+          "title": "returns Home for stale or unknown route undefined"
+        },
+        {
+          "ancestorTitles": [
+            "consolidated section routes"
+          ],
+          "duration": 1,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "consolidated section routes returns Home for stale or unknown route null",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 2,
+          "retryReasons": [],
+          "startAt": 1790271760848,
+          "status": "passed",
+          "title": "returns Home for stale or unknown route null"
+        },
+        {
+          "ancestorTitles": [
+            "consolidated section routes"
+          ],
+          "duration": 0,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "consolidated section routes returns Home for stale or unknown route 3",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 2,
+          "retryReasons": [],
+          "startAt": 1790271760849,
+          "status": "passed",
+          "title": "returns Home for stale or unknown route 3"
+        },
+        {
+          "ancestorTitles": [
+            "consolidated section routes"
+          ],
+          "duration": 1,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "consolidated section routes keeps supported route home addressable",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 3,
+          "retryReasons": [],
+          "startAt": 1790271760849,
+          "status": "passed",
+          "title": "keeps supported route home addressable"
+        },
+        {
+          "ancestorTitles": [
+            "consolidated section routes"
+          ],
+          "duration": 0,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "consolidated section routes keeps supported route cases addressable",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 3,
+          "retryReasons": [],
+          "startAt": 1790271760850,
+          "status": "passed",
+          "title": "keeps supported route cases addressable"
+        },
+        {
+          "ancestorTitles": [
+            "consolidated section routes"
+          ],
+          "duration": 0,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "consolidated section routes keeps supported route engineering addressable",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 3,
+          "retryReasons": [],
+          "startAt": 1790271760851,
+          "status": "passed",
+          "title": "keeps supported route engineering addressable"
+        },
+        {
+          "ancestorTitles": [
+            "consolidated section routes"
+          ],
+          "duration": 1,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "consolidated section routes keeps supported route marketing addressable",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 3,
+          "retryReasons": [],
+          "startAt": 1790271760851,
+          "status": "passed",
+          "title": "keeps supported route marketing addressable"
+        },
+        {
+          "ancestorTitles": [
+            "consolidated section routes"
+          ],
+          "duration": 0,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "consolidated section routes keeps supported route improvement addressable",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 3,
+          "retryReasons": [],
+          "startAt": 1790271760852,
+          "status": "passed",
+          "title": "keeps supported route improvement addressable"
+        },
+        {
+          "ancestorTitles": [
+            "consolidated section routes"
+          ],
+          "duration": 1,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "consolidated section routes keeps supported route value addressable",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 3,
+          "retryReasons": [],
+          "startAt": 1790271760852,
+          "status": "passed",
+          "title": "keeps supported route value addressable"
+        },
+        {
+          "ancestorTitles": [
+            "consolidated section routes"
+          ],
+          "duration": 1,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "consolidated section routes keeps supported route admin addressable",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 3,
+          "retryReasons": [],
+          "startAt": 1790271760853,
+          "status": "passed",
+          "title": "keeps supported route admin addressable"
+        }
+      ],
+      "failureMessage": null
+    }
+  ],
+  "wasInterrupted": false
+}

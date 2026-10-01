@@ -34,6 +34,13 @@ function readManifest(file: string): IManifest {
 
 const LEGACY_PROPERTIES: { [name: string]: unknown } = {
   organizationName: '',
+  // Blank reproduces the shipped wording in the legacy view and neutral wording in page views (decision 21).
+  governanceReference: '',
+  reviewSystemName: '',
+  // Blank binds no site group, so every person keeps the employee role and a site owner the operator role (decision 8).
+  roleGroups: '',
+  // Blank sets no palette token, so the shipped colours stand; a tenant's colours are a parameter, never code (decision 11).
+  paletteOverrides: '',
   draftServiceUrl: '',
   telemetryProvider: 'claude',
   view: 'legacy',
@@ -47,6 +54,9 @@ const LEGACY_PROPERTIES: { [name: string]: unknown } = {
   pageTelemetry: '',
   pageAdmin: '',
   pagePolicy: '',
+  // The outcome record is a page link like the others (decision 16). A provisioned content page carries the link in
+  // its home piece block instead; this property is for a hand-placed Home tiles instance, which reads no document.
+  pageOutcome: '',
   pageKey: '',
   contentUrl: 'SiteAssets/ai-coe-pages.json'
 };
@@ -64,10 +74,18 @@ describe('AiCoeFrontDoorWebPart manifest', () => {
     expect(source.supportsThemeVariants).toBe(true);
   });
 
-  it('presets the legacy view with blank page properties on the default entry', () => {
+  it('presets the consolidated view with blank page properties on the default entry', () => {
+    // The first entry is what an author gets when they add the part, so the consolidated application is the normal
+    // experience. Its property bag is otherwise the legacy one: only `view` differs, so nothing else changed shape.
     const entry: IManifestEntry = source.preconfiguredEntries[0];
     expect(entry.title.default).toBe('AI CoE Front Door');
     expect(entry.groupId).toBe('5c03119e-3074-46fd-976b-c60198311f70');
+    expect(entry.properties).toEqual({ ...LEGACY_PROPERTIES, view: 'app' });
+  });
+
+  it('keeps the single-page view on its own entry, so an author can still place it deliberately', () => {
+    const entry: IManifestEntry = source.preconfiguredEntries[1];
+    expect(entry.title.default).toBe('AI CoE Front Door (single page, as shipped)');
     expect(entry.properties).toEqual(LEGACY_PROPERTIES);
   });
 
@@ -76,6 +94,7 @@ describe('AiCoeFrontDoorWebPart manifest', () => {
     expect(entries.map((entry: IManifestEntry): unknown => entry.properties.view)).toEqual(FRONT_DOOR_VIEWS);
     expect(entries.map((entry: IManifestEntry): string => entry.title.default)).toEqual([
       'AI CoE Front Door',
+      'AI CoE Front Door (single page, as shipped)',
       'AI CoE: Home tiles',
       'AI CoE: Explore an AI idea',
       'AI CoE: Check a tool or task',
@@ -84,8 +103,10 @@ describe('AiCoeFrontDoorWebPart manifest', () => {
       'AI CoE: Share feedback',
       'AI CoE: AI operations snapshot',
       'AI CoE: Administrator dashboard',
-      'AI CoE: Content page'
+      'AI CoE: Content page',
+      'AI CoE: Record a task outcome'
     ]);
+    expect(entries).toHaveLength(12);
     for (const entry of entries) {
       expect(entry.groupId).toBe('5c03119e-3074-46fd-976b-c60198311f70');
       expect(entry.group.default).toBe('AI Center of Excellence');

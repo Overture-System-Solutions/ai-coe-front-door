@@ -1,0 +1,373 @@
+/**
+ * Palette tokens (1.0.0.14, decision 11). A tenant's colours are a parameter, never code: the script writes them to
+ * the `paletteOverrides` property and the web part sets them as `--fd-*` custom properties on its own `domElement`,
+ * exactly as `onThemeChanged` sets `--bodyText`. That only works while no stylesheet declares a `--fd-*` value of its
+ * own: a declaration on `#overture-ai-coe-pilot .ai-view` would win over the value inherited from the element above
+ * it, and every override would be dead. So the rules read a token through `var(--fd-x, <literal>)` alone, with a
+ * fallback literal the front door already draws (the shipped colour, or for the draft blue the page-view pair of
+ * 1.0.0.12), and this test reads every compiled stylesheet to prove it.
+ */
+import * as fs from 'fs';
+import * as path from 'path';
+import postcss from 'postcss';
+import type { Declaration, Root, Rule } from 'postcss';
+import { PALETTE_KEYS, paletteCustomProperty } from '../content/palette';
+import type { PaletteKey } from '../content/palette';
+
+const ROOT: string = process.cwd();
+const COMPILED: string = path.join(ROOT, 'lib-commonjs/webparts/aiCoeFrontDoor');
+const WEB_PART_ROOT: string = '#overture-ai-coe-pilot';
+
+/** The fallback each token carries wherever it is read: the colour the front door draws when no tenant sets one. */
+const FALLBACKS: { [name: string]: string } = {
+  '--fd-accent': '#087f83',
+  '--fd-ink': '#10243e',
+  '--fd-muted': '#5b6878',
+  '--fd-bg': '#f7fafc',
+  '--fd-paper': '#fff',
+  '--fd-focus': '#0b66d4',
+  '--fd-state-green': '#ddf6f0',
+  '--fd-state-blue': '#e7f0fb',
+  '--fd-state-amber': '#fff4cf',
+  '--fd-state-red': '#fde8e8',
+  // Added with the consolidated view. Each fallback is a colour the shipped stylesheet already draws, so the rule
+  // below still holds without an exception: a site that sets no palette sees the front door's own colours.
+  '--fd-line': '#d6e0e8',
+  '--fd-soft': '#e5ebf0',
+  '--fd-hero-from': '#10243e',
+  '--fd-hero-to': '#087f83',
+  '--fd-hero-glow': '#edf8f8',
+  // The pressed and tinted accent. The consolidated view points the shipped theme variables at the palette for its
+  // own subtree, so the parts it reuses follow the tenant's colour instead of staying the shipped teal beside it;
+  // these two are the states those parts draw that the accent alone does not cover.
+  '--fd-accent-dark': '#055d66',
+  '--fd-accent-soft': '#e8f7f6'
+};
+
+/**
+ * The nine colours of the reference palette (`08_FRONT-DOOR-AND-ENGINEERING-COCKPIT-SPEC-v3.3.md`, "Visual system").
+ * They are an example override in the README and never a value in the repository. Paper (#FFFFFF) is left out: white
+ * is white, and the shipped stylesheets are full of it.
+ */
+const REFERENCE_PALETTE: string[] = ['#062A46', '#0B4267', '#0878D1', '#21B5D8', '#008B83', '#102B3D', '#5B7180', '#EDF5F9'];
+
+/** Every `var(--fd-…)` a stylesheet reads, as written. */
+const TOKEN_READ: RegExp = /var\(\s*(--fd-[a-z-]*)\s*([^)]*)\)/g;
+/** Any `--fd-…` declaration: the thing no stylesheet may carry. */
+const TOKEN_DECLARATION: RegExp = /^--fd-/;
+
+function cssFiles(suffix: string): string[] {
+  const found: string[] = [];
+  const walk = (directory: string): void => {
+    for (const entry of fs.readdirSync(directory)) {
+      const full: string = path.join(directory, entry);
+      if (fs.statSync(full).isDirectory()) {
+        walk(full);
+      } else if (entry.slice(-suffix.length) === suffix) {
+        found.push(full);
+      }
+    }
+  };
+  walk(COMPILED);
+  return found.sort();
+}
+
+interface ITokenRead {
+  file: string;
+  selector: string;
+  name: string;
+  rest: string;
+}
+
+/** Every token a declaration reads, with what follows the name; comments are left out, as postcss walks rules only. */
+function tokenReads(files: string[]): ITokenRead[] {
+  const reads: ITokenRead[] = [];
+  for (const file of files) {
+    const root: Root = postcss.parse(fs.readFileSync(file, 'utf8'));
+    root.walkDecls((declaration: Declaration): void => {
+      const selector: string =
+        declaration.parent === undefined || declaration.parent.type !== 'rule'
+          ? ''
+          : (declaration.parent as Rule).selector.replace(/\s+/g, ' ').trim();
+      let match: RegExpExecArray | null = TOKEN_READ.exec(declaration.value);
+      while (match !== null) {
+        reads.push({ file: path.basename(file), selector, name: match[1], rest: match[2].trim() });
+        match = TOKEN_READ.exec(declaration.value);
+      }
+    });
+  }
+  return reads;
+}
+
+describe('Palette tokens', () => {
+  const globalSheets: string[] = cssFiles('.global.scss.css');
+  const allSheets: string[] = cssFiles('.css');
+  const reads: ITokenRead[] = tokenReads(globalSheets);
+
+  it('compiles the seven global stylesheets the web part imports', () => {
+    // appShell.global.scss arrives with the consolidated view. It is a sixth file rather than rules added to the
+    // shipped stylesheet on purpose: frontDoor.global.scss and theme.global.scss are reproduced rule for rule
+    // against package 1.0.0.7 and may gain nothing, so every new rule lives in an additive scoped sheet.
+    expect(globalSheets.map((file: string): string => path.basename(file))).toEqual([
+      'appShell.global.scss.css',
+      'coreWorkspace.global.scss.css',
+      'frontDoor.global.scss.css',
+      'pageResponsive.global.scss.css',
+      'pageViews.global.scss.css',
+      'tailwind.generated.global.scss.css',
+      'theme.global.scss.css'
+    ]);
+  });
+
+  it('declares no --fd- custom property anywhere, so an override set on the element above is never beaten', () => {
+    const declared: string[] = [];
+    for (const file of allSheets) {
+      const root: Root = postcss.parse(fs.readFileSync(file, 'utf8'));
+      root.walkDecls((declaration: Declaration): void => {
+        if (TOKEN_DECLARATION.test(declaration.prop)) {
+          declared.push(`${path.basename(file)} ${declaration.prop}`);
+        }
+      });
+    }
+    expect(declared).toEqual([]);
+  });
+
+  it('reads every token through a fallback literal the shipped stylesheets already carry', () => {
+    expect(reads.length).toBeGreaterThan(9);
+    for (const read of reads) {
+      expect({ name: read.name, fallback: read.rest }).toEqual({ name: read.name, fallback: `, ${FALLBACKS[read.name]}` });
+    }
+    const shipped: string = fs.readFileSync(path.join(ROOT, 'parity/AiCoeFrontDoor.global.1.0.0.7.css'), 'utf8').toLowerCase();
+    for (const name of Object.keys(FALLBACKS)) {
+      // The draft blue is the one pair the shipped stylesheet never drew (1.0.0.12); every other fallback is its colour.
+      const expected: boolean = name !== '--fd-state-blue';
+      expect({ name, inShipped: shipped.indexOf(FALLBACKS[name]) >= 0 }).toEqual({ name, inShipped: expected });
+    }
+  });
+
+  it('reads each of the ten keys of the property at least once, under the name the web part sets', () => {
+    const names: string[] = PALETTE_KEYS.map((key: PaletteKey): string => paletteCustomProperty(key));
+    expect(names.slice().sort()).toEqual(Object.keys(FALLBACKS).sort());
+    for (const name of names) {
+      expect({ name, read: reads.filter((entry: ITokenRead): boolean => entry.name === name).length > 0 }).toEqual({ name, read: true });
+    }
+  });
+
+  it('reads each token only in the rules the README names', () => {
+    const read: { [selector: string]: string[] } = {};
+    for (const entry of reads) {
+      for (const selector of entry.selector.split(',')) {
+        const key: string = selector.trim().replace(`${WEB_PART_ROOT} `, '');
+        read[key] = (read[key] ?? []).concat([entry.name]).sort();
+      }
+    }
+    expect(read).toEqual({
+      // The one accent in a page view: the button back to the front door on the administration bar.
+      '.ai-view--home .ai-home-adminbar .ai-admin-back': ['--fd-accent', '--fd-accent'],
+      '.ai-view--page .ai-home-adminbar .ai-admin-back': ['--fd-accent', '--fd-accent'],
+      // The status pill and the case tag carry the same four tones and read the same four tokens.
+      '.ai-view .ai-pill--green': ['--fd-state-green'],
+      '.ai-view .ai-pill--blue': ['--fd-state-blue'],
+      '.ai-view .ai-pill--amber': ['--fd-state-amber'],
+      '.ai-view .ai-pill--red': ['--fd-state-red'],
+      '.ai-view--page .ai-case-tag--green': ['--fd-state-green'],
+      '.ai-view--page .ai-case-tag--amber': ['--fd-state-amber'],
+      '.ai-view--page .ai-case-tag--red': ['--fd-state-red'],
+      // The work command, the notice, the measure tiles and the quiet surface of a closed hand-off card.
+      '.ai-view--page .ai-page-command-label': ['--fd-ink'],
+      '.ai-view--page .ai-page-command-note': ['--fd-muted'],
+      '.ai-view--page .ai-page-notice': ['--fd-paper'],
+      '.ai-view--page .ai-page-notice--info': ['--fd-focus'],
+      '.ai-view--page .ai-page-notice-title': ['--fd-ink'],
+      '.ai-view--page .ai-metric-evidence': ['--fd-muted'],
+      '.ai-view--page .ai-page-kpi-note': ['--fd-muted'],
+      // The bindings of the run (1.0.0.14): the operator page reads the same ink and muted tokens as the rest.
+      '.ai-view--page .ai-page-bindings-title': ['--fd-ink'],
+      '.ai-view--page .ai-page-bindings-release': ['--fd-ink'],
+      '.ai-view--page .ai-page-bindings-source': ['--fd-muted'],
+      '.ai-view--page .ai-page-binding-name': ['--fd-ink'],
+      '.ai-view--page .ai-page-binding-kind': ['--fd-ink'],
+      '.ai-view--page .ai-page-binding-receipt': ['--fd-muted'],
+      '.ai-view--page .ai-page-bindings-empty': ['--fd-muted'],
+      '.ai-view .ai-route-card--closed': ['--fd-bg'],
+      // The consolidated view, its chrome, its component kit and its demonstration surface. None carries colour
+      // of its own beyond soft depth, the pill inks and the two chip dots: every hairline, surface, tab, panel,
+      // card, chip, button and entry-panel stop reads a token, so a tenant palette repaints the whole view
+      // and the reference palette stays out of the repository. Generated by the README recipe, not hand-edited.
+      // The view's own ink, and the theme variables it points at the palette so every reused part follows it.
+      '.ai-view--app': [
+        '--fd-accent',
+        '--fd-accent-dark',
+        '--fd-accent-soft',
+        '--fd-bg',
+        '--fd-focus',
+        '--fd-ink',
+        '--fd-ink',
+        '--fd-ink',
+        '--fd-line',
+        '--fd-line',
+        '--fd-muted',
+        '--fd-paper',
+        '--fd-state-blue'
+      ],
+      '.ai-view--app .ai-app-aside--info': ['--fd-focus', '--fd-ink', '--fd-state-blue'],
+      '.ai-view--app .ai-app-back': ['--fd-ink', '--fd-line'],
+      // The reused requests list, given the kit's surface inside this view only.
+      '.ai-view--app .ai-app-requests-mine .ai-mywork-dates': ['--fd-muted'],
+      '.ai-view--app .ai-app-requests-mine .ai-mywork-label': ['--fd-ink'],
+      '.ai-view--app .ai-app-requests-mine .ai-mywork-note': ['--fd-muted'],
+      '.ai-view--app .ai-app-requests-mine .ai-mywork-reference': ['--fd-muted'],
+      '.ai-view--app .ai-app-requests-mine .ai-mywork-row': ['--fd-accent', '--fd-line', '--fd-paper'],
+      '.ai-view--app .ai-app-requests-mine .ai-mywork-row code': ['--fd-ink', '--fd-soft'],
+      '.ai-view--app .ai-app-requests-mine .ai-page-mywork-title': ['--fd-ink'],
+      '.ai-view--app .ai-app-requests-mine .ai-mywork-link': ['--fd-ink', '--fd-line'],
+      '.ai-view--app .ai-app-requests-mine .ai-mywork-open': ['--fd-accent-dark'],
+      '.ai-view--app .ai-app-case-foot': ['--fd-muted', '--fd-soft'],
+      '.ai-view--app .ai-app-case-ref': ['--fd-muted'],
+      '.ai-view--app .ai-app-case-summary': ['--fd-muted'],
+      '.ai-view--app .ai-app-case-title': ['--fd-ink'],
+      '.ai-view--app .ai-app-chip': ['--fd-soft'],
+      '.ai-view--app .ai-app-chip-line': ['--fd-line', '--fd-muted', '--fd-paper'],
+      '.ai-view--app .ai-app-choice-button': ['--fd-line', '--fd-paper'],
+      '.ai-view--app .ai-app-choice-step': ['--fd-accent'],
+      '.ai-view--app .ai-app-choice-text': ['--fd-muted'],
+      '.ai-view--app .ai-app-choice-title': ['--fd-ink'],
+      '.ai-view--app .ai-app-cite': ['--fd-muted'],
+      '.ai-view--app .ai-app-claim': ['--fd-soft'],
+      '.ai-view--app .ai-app-claim-text': ['--fd-ink'],
+      '.ai-view--app .ai-app-command-input': ['--fd-ink'],
+      '.ai-view--app .ai-app-command-row': ['--fd-paper'],
+      '.ai-view--app .ai-app-contract': ['--fd-soft'],
+      '.ai-view--app .ai-app-contract dd': ['--fd-ink'],
+      '.ai-view--app .ai-app-contract dt': ['--fd-muted'],
+      '.ai-view--app .ai-app-detail-title': ['--fd-ink'],
+      '.ai-view--app .ai-app-detail-title:focus-visible': ['--fd-focus'],
+      '.ai-view--app .ai-app-draft-badge': ['--fd-accent-dark', '--fd-accent-soft'],
+      '.ai-view--app .ai-app-empty': ['--fd-muted'],
+      '.ai-view--app .ai-app-field-label': ['--fd-muted'],
+      '.ai-view--app .ai-app-flow-name': ['--fd-ink', '--fd-line', '--fd-soft'],
+      '.ai-view--app .ai-app-flow-sep': ['--fd-muted'],
+      '.ai-view--app .ai-app-foot': ['--fd-line', '--fd-muted'],
+      '.ai-view--app .ai-app-ghost': ['--fd-ink', '--fd-line', '--fd-paper'],
+      '.ai-view--app .ai-app-head-note': ['--fd-muted'],
+      '.ai-view--app .ai-app-head-title': ['--fd-ink'],
+      '.ai-view--app .ai-app-heading': ['--fd-ink'],
+      '.ai-view--app .ai-app-heading:focus-visible': ['--fd-focus'],
+      '.ai-view--app .ai-app-hero': ['--fd-hero-from', '--fd-hero-glow', '--fd-hero-to'],
+      '.ai-view--app .ai-app-layer-kind': ['--fd-accent'],
+      '.ai-view--app .ai-app-layer-note': ['--fd-muted'],
+      '.ai-view--app .ai-app-layer-title': ['--fd-ink'],
+      '.ai-view--app .ai-app-list li': ['--fd-ink', '--fd-soft'],
+      '.ai-view--app .ai-app-lock': ['--fd-muted'],
+      '.ai-view--app .ai-app-measure': ['--fd-line', '--fd-paper'],
+      '.ai-view--app .ai-app-measure-evidence': ['--fd-muted'],
+      '.ai-view--app .ai-app-measure-label': ['--fd-muted'],
+      '.ai-view--app .ai-app-measure-period': ['--fd-muted'],
+      '.ai-view--app .ai-app-measure-value': ['--fd-ink'],
+      '.ai-view--app .ai-app-metric-label': ['--fd-muted'],
+      '.ai-view--app .ai-app-metric-note': ['--fd-muted'],
+      '.ai-view--app .ai-app-metric-value': ['--fd-ink'],
+      '.ai-view--app .ai-app-metric-value--placeholder': ['--fd-muted'],
+      '.ai-view--app .ai-app-note': ['--fd-muted'],
+      '.ai-view--app .ai-app-panel': ['--fd-line', '--fd-paper'],
+      '.ai-view--app .ai-app-pill--block': ['--fd-state-red'],
+      '.ai-view--app .ai-app-pill--design': ['--fd-soft'],
+      '.ai-view--app .ai-app-pill--good': ['--fd-state-green'],
+      '.ai-view--app .ai-app-pill--info': ['--fd-state-blue'],
+      '.ai-view--app .ai-app-pill--wait': ['--fd-state-amber'],
+      '.ai-view--app .ai-app-primary': ['--fd-accent', '--fd-accent'],
+      '.ai-view--app .ai-app-quote': ['--fd-ink', '--fd-line'],
+      '.ai-view--app .ai-app-reference': ['--fd-muted'],
+      '.ai-view--app .ai-app-secondary': ['--fd-ink', '--fd-line'],
+      '.ai-view--app .ai-app-source': ['--fd-soft'],
+      '.ai-view--app .ai-app-source-id': ['--fd-ink'],
+      '.ai-view--app .ai-app-source-note': ['--fd-muted'],
+      '.ai-view--app .ai-app-starter-button': ['--fd-line', '--fd-paper'],
+      '.ai-view--app .ai-app-starter-text': ['--fd-muted'],
+      '.ai-view--app .ai-app-starter-title': ['--fd-ink'],
+      '.ai-view--app .ai-app-status-label': ['--fd-ink'],
+      '.ai-view--app .ai-app-status-note': ['--fd-muted'],
+      '.ai-view--app .ai-app-status-row': ['--fd-soft'],
+      '.ai-view--app .ai-app-status-title': ['--fd-ink'],
+      '.ai-view--app .ai-app-step': ['--fd-line'],
+      '.ai-view--app .ai-app-step-marker': ['--fd-accent', '--fd-state-blue'],
+      '.ai-view--app .ai-app-step-note': ['--fd-muted'],
+      '.ai-view--app .ai-app-step-title': ['--fd-ink'],
+      '.ai-view--app .ai-app-subheading': ['--fd-ink'],
+      '.ai-view--app .ai-app-summary': ['--fd-muted'],
+      '.ai-view--app .ai-app-surface': ['--fd-line', '--fd-paper'],
+      '.ai-view--app .ai-app-tab': ['--fd-muted'],
+      '.ai-view--app .ai-app-tab[aria-selected=true]': ['--fd-accent'],
+      '.ai-view--app .ai-app-tabrow': ['--fd-line'],
+      '.ai-view--app .ai-app-tabs': ['--fd-line'],
+      '.ai-view--app .ai-app-variant': ['--fd-soft'],
+      '.ai-view--app .ai-app-variant-headline': ['--fd-ink'],
+      '.ai-view--app .ai-page-identity': ['--fd-muted'],
+      // 1.0.0.18: the closed "What is going on?" disclosure, the per-form tones of the request and Home choice cards,
+      // the concierge box and hand-off card, the readable analysis summary, linked cases, the approved-tools panel
+      // and the separators inside a grouped form screen. Every tone is a palette token, so a tenant palette repaints them.
+      '.ai-view--app .ai-app-going-on': ['--fd-line'],
+      '.ai-view--app .ai-app-going-on-toggle': ['--fd-accent-dark'],
+      '.ai-view--app .ai-app-starter--teal .ai-app-starter-button': ['--fd-accent', '--fd-accent-soft', '--fd-paper'],
+      '.ai-view--app .ai-app-starter--teal .ai-app-starter-icon': ['--fd-accent', '--fd-accent-soft'],
+      '.ai-view--app .ai-app-starter--blue .ai-app-starter-button': ['--fd-focus', '--fd-paper', '--fd-state-blue'],
+      '.ai-view--app .ai-app-starter--blue .ai-app-starter-icon': ['--fd-focus', '--fd-state-blue'],
+      '.ai-view--app .ai-app-starter--navy .ai-app-starter-button': ['--fd-hero-from', '--fd-paper', '--fd-soft'],
+      '.ai-view--app .ai-app-starter--navy .ai-app-starter-icon': ['--fd-hero-from', '--fd-soft'],
+      '.ai-view--app .ai-app-starter--gold .ai-app-starter-button': ['--fd-paper', '--fd-state-amber'],
+      '.ai-view--app .ai-app-starter--gold .ai-app-starter-icon': ['--fd-state-amber'],
+      '.ai-view--app .ai-app-starter--green .ai-app-starter-button': ['--fd-paper', '--fd-state-green'],
+      '.ai-view--app .ai-app-starter--green .ai-app-starter-icon': ['--fd-state-green'],
+      '.ai-view--app .ai-app-starter--slate .ai-app-starter-button': ['--fd-paper', '--fd-soft'],
+      '.ai-view--app .ai-app-starter--slate .ai-app-starter-icon': ['--fd-soft'],
+      '.ai-view--app .ai-app-choice--teal .ai-app-choice-button': ['--fd-accent', '--fd-accent-soft', '--fd-paper'],
+      '.ai-view--app .ai-app-choice--blue .ai-app-choice-button': ['--fd-focus', '--fd-paper', '--fd-state-blue'],
+      '.ai-view--app .ai-app-choice--green .ai-app-choice-button': ['--fd-paper', '--fd-state-green'],
+      '.ai-view--app .ai-app-concierge': ['--fd-ink', '--fd-paper'],
+      '.ai-view--app .ai-app-link-button': ['--fd-muted'],
+      '.ai-view--app .ai-concierge-card': ['--fd-accent', '--fd-accent-soft', '--fd-paper'],
+      '.ai-view--app .ai-concierge-card .ai-route-card-link': ['--fd-accent'],
+      '.ai-view--app .ai-app-analysis-summary': ['--fd-accent'],
+      '.ai-view--app .ai-app-analysis-summary p': ['--fd-ink'],
+      '.ai-view--app .ai-app-case-link': ['--fd-line'],
+      '.ai-view--app .ai-app-case-link:hover': ['--fd-accent'],
+      '.ai-view--app .ai-app-tool': ['--fd-line'],
+      '.ai-view--app .ai-app-tool-name': ['--fd-ink'],
+      '.ai-view--app .ai-app-tool-line': ['--fd-ink'],
+      '.ai-view--app .ai-app-tool-muted': ['--fd-muted'],
+      '.ai-view--app .ai-step-group .ai-step-field + .ai-step-field': ['--fd-line'],
+      // Cases-only colors: generated from the compiled scoped sheet, per the README recipe.
+      '.ai-view--app .ai-case-workspace .ai-case-choice': ['--fd-ink', '--fd-line', '--fd-paper'],
+      '.ai-view--app .ai-case-workspace .ai-case-choice small': ['--fd-muted'],
+      '.ai-view--app .ai-case-workspace .ai-case-choice[aria-pressed=true]': ['--fd-accent', '--fd-accent-soft'],
+      '.ai-view--app .ai-case-workspace .ai-case-feedback': ['--fd-ink'],
+      '.ai-view--app .ai-case-workspace .ai-case-field label': ['--fd-ink'],
+      '.ai-view--app .ai-case-workspace .ai-case-help': ['--fd-muted'],
+      '.ai-view--app .ai-case-workspace .ai-case-overview': ['--fd-bg', '--fd-line'],
+      '.ai-view--app .ai-case-workspace .ai-case-request': ['--fd-bg'],
+      '.ai-view--app .ai-case-workspace .ai-case-status': ['--fd-soft'],
+      '.ai-view--app .ai-case-workspace .ai-case-technical': ['--fd-line', '--fd-muted'],
+      '.ai-view--app .ai-case-workspace .ai-case-validation': ['--fd-line'],
+      '.ai-view--app .ai-case-workspace .ai-case-validation label': ['--fd-ink'],
+      '.ai-view--app .ai-case-workspace button:focus-visible': ['--fd-focus'],
+      '.ai-view--app .ai-case-workspace input': ['--fd-ink', '--fd-line', '--fd-paper'],
+      '.ai-view--app .ai-case-workspace input::placeholder': ['--fd-muted'],
+      '.ai-view--app .ai-case-workspace input:focus-visible': ['--fd-focus'],
+      '.ai-view--app .ai-case-workspace select': ['--fd-ink', '--fd-line', '--fd-paper'],
+      '.ai-view--app .ai-case-workspace select:focus-visible': ['--fd-focus'],
+      '.ai-view--app .ai-case-workspace summary:focus-visible': ['--fd-focus'],
+      '.ai-view--app .ai-case-workspace textarea': ['--fd-ink', '--fd-line', '--fd-paper'],
+      '.ai-view--app .ai-case-workspace textarea::placeholder': ['--fd-muted'],
+      '.ai-view--app .ai-case-workspace textarea:focus-visible': ['--fd-focus'],
+    });
+  });
+
+  it('keeps the reference palette out of the stylesheets: those nine colours are an example override, never code', () => {
+    for (const file of allSheets) {
+      const css: string = fs.readFileSync(file, 'utf8').toLowerCase();
+      for (const colour of REFERENCE_PALETTE) {
+        expect({ file: path.basename(file), colour, present: css.indexOf(colour.toLowerCase()) >= 0 }).toEqual({ file: path.basename(file), colour, present: false });
+      }
+    }
+  });
+});

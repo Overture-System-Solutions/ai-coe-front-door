@@ -1,0 +1,131 @@
+{
+  "verifiedAt": "2026-09-23T14:08:22.061894+00:00",
+  "scope": "Offline synthetic boundaries; no live tenant/provider/ACL execution",
+  "native": {
+    "tests": 30,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "originalUnmodifiedTests": 29,
+    "excludedBuildTest": [
+      "test_review_build_has_current_bytes_no_reference_model_claims"
+    ],
+    "existingByteReplacement": [
+      "test_existing_review_packages_have_current_bytes_without_rebuilding"
+    ]
+  },
+  "marketingSource": {
+    "tests": 30,
+    "pass": 30,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0,
+    "testNames": [
+      "business factory uses immutable ingress, no client authority and fresh read ids across restart",
+      "M01 refuses acceptance after a cited source is revoked",
+      "M02 parent supersession invalidates an accepted child",
+      "M03 receipt outage stays inconclusive and recovers the same review",
+      "M03 completion outage stays inconclusive and recovers the same review",
+      "M04 rejects a review kind which cannot accept this artifact",
+      "M04 meeting acceptance requires every artifact review kind",
+      "draft intent outage cannot report saved",
+      "draft receipt outage cannot report saved",
+      "draft completion outage cannot report saved",
+      "qualified provider provenance retains the server qualification receipt",
+      "meeting notes are retrieved at their reference, never replaced by caller text",
+      "tenant substitution cannot request a review or redraft an artifact",
+      "tampered payload is quarantined rather than trusting its declared hash",
+      "authority revoked between decision write and verification cannot accept",
+      "dispatcher drafts with real server source/provider adapters at a fake external boundary",
+      "all three dispatcher journeys retain parent/review/source lineage; revocation removes acceptance",
+      "completed command replay and recovery recheck current Author work membership",
+      "source endpoint refuses revoked register references and malformed approval expiry",
+      "lost provider outcome stays uncertain and never invokes a second model attempt",
+      "durable draft receipt outage recovers the same draft without provider replay",
+      "dispatcher blocks altered ingress, cross-author recovery, wrong review kind and permission-denied sources",
+      "result publication requires readback of private Author-only ACLs",
+      "offline candidate builds dependency-complete runtime and exports a disabled-safe host invocation",
+      "qualified provider uses frozen Claude wire shape and refuses truncation/tool/refusal",
+      "server source retrieval pins permission, ETag and content hash instead of client text",
+      "executable dispatcher derives identity from request Author and rejects payload authority",
+      "canonical enumeration is bounded even when continuation URLs never repeat",
+      "server SharePoint HTTP supplies a finite network deadline and disallows redirects",
+      "server canonical adapter persists across instances and rejects stale ETags"
+    ],
+    "logSha256": "6190b7bf282b4cee8fd5457d12481fce2e5ec2b138108bbe2c5f96a747e8fa62"
+  },
+  "marketingExactZipSmoke": {
+    "tests": 1,
+    "pass": 1,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0,
+    "testNames": [
+      "offline candidate builds dependency-complete runtime and exports a disabled-safe host invocation"
+    ],
+    "logSha256": "9d0b507643c4d227f3c9c2999e8a9c50f23095cba7ba318e0c3f4e447923e759"
+  },
+  "clientAndDraft": {
+    "tests": 14,
+    "pass": 14,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0,
+    "testNames": [
+      "v0.2.0 preserves an unvalidated null time without weakening v0.1.1",
+      "native create/read/clarification/readiness uses split ingress and fresh validated versions",
+      "native evidence reads actual packet identities and submits the observed packet version",
+      "unknown create survives reload and recovers without another POST or browser business text",
+      "human evidence validation uses current packet version and leaves authority to server",
+      "a terminal-looking inconclusive body cannot discard the original mutation intent",
+      "material clarification invalidates the previously observed packet version",
+      "current native caller and result request-author identity are verified, not just payload scope",
+      "business draft content is stored and recovered only from the server",
+      "business draft writes require current retention/access qualification, not just a list GUID",
+      "an uncertain update cannot be silently erased by loading an older server draft",
+      "stale ETags, foreign authors and duplicate keys never become successful draft saves",
+      "an uncertain clear is not confused with an empty but uncleared draft",
+      "a lost create response recovers exactly once from server readback after restart"
+    ],
+    "logSha256": "74500475b6127a17706d8c969ff3e18f5435eb6b0e4259101c0e13927d210686"
+  },
+  "typecheck": {
+    "rootFiles": 2,
+    "diagnostics": 0
+  },
+  "packagedCoreSmoke": {
+    "kind": "SIMULATED_EXTERNAL_SHAREPOINT_AND_LOCAL_WDL_ENGINE",
+    "packagedFlowCountExecuted": 6,
+    "names": [
+      "AI CoE 00 Provisioning",
+      "AI CoE 01 Case Command",
+      "AI CoE 02 Evidence and Readiness",
+      "AI CoE 03 Markdown Projector",
+      "AI CoE 04 Notification Outbox",
+      "AI CoE 05 Health Monitor"
+    ],
+    "createDurableBoundariesCoveredByCrashRegression": 20,
+    "publishedResult": true,
+    "freshProvisionedListCount": 15
+  },
+  "independentProbeObservations": 6,
+  "independentDefectGroups": [
+    "DRAFT-RECOVERY-CONCURRENCY",
+    "MARKETING-REVOKED-SOURCE-REPLAY",
+    "MARKETING-LATE-REVOKED-SOURCE"
+  ],
+  "sourceChangesSinceProbes": {},
+  "marketingInputChangesSinceArchive": [],
+  "protectedFiles": 13,
+  "protectedFilesUnchanged": true,
+  "notClaimed": [
+    "unmodified execution of native rebuilding test",
+    "new PAC execution",
+    "full Heft/shared build",
+    "browser end-to-end or tenant acceptance",
+    "Marketing execution-host binding completion"
+  ]
+}

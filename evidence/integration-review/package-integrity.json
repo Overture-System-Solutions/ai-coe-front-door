@@ -1,0 +1,48 @@
+{
+  "checkedAt": "2026-09-23T13:58:56.701472+00:00",
+  "nativePackages": [
+    {
+      "path": "backend/core-native/out/AICoECoreAutomation_3_0_0_1_UNBOUND_REVIEW_ONLY.zip",
+      "bytes": 44303,
+      "sha256": "b2f7e7717de5436a9ba132d9d3c96dd2afa0a3fc2300dbeb679657fec4eabfb4",
+      "matchesFinalReceipt": true
+    },
+    {
+      "path": "backend/core-native/out/AICoECoreAutomation_3_0_0_1_UNBOUND_REVIEW_ONLY_literal-fallback.zip",
+      "bytes": 41340,
+      "sha256": "067df0118be2e2c4e6d78f7742708f4c699bfcec425a70a75a13d3fa237fe3c6",
+      "matchesFinalReceipt": true
+    },
+    {
+      "path": "backend/core-native/out/AICoECoreIntegrity_3_0_0_1_REGISTRATION_CANDIDATE.zip",
+      "bytes": 28395,
+      "sha256": "2cc4336a59d220e5b50e8c3a7a58e86fa5bbada7989e5e438a2ccf534a3d4b85",
+      "matchesFinalReceipt": true
+    },
+    {
+      "path": "backend/core-native/out/pac-roundtrip/primary.zip",
+      "bytes": 42525,
+      "sha256": "4762072aad9ab8bc72e0548255c784fc5fa952c33c52482f6e9f0c42f2829b37",
+      "matchesFinalReceipt": true
+    },
+    {
+      "path": "backend/core-native/out/pac-roundtrip/literal.zip",
+      "bytes": 39520,
+      "sha256": "9a569c1147d80b741addd34a8b328fc7dfaac3085960b5bf6c2d5815dda38590",
+      "matchesFinalReceipt": true
+    }
+  ],
+  "marketing": {
+    "path": "backend/power-automate/marketing-runtime/out/marketing-runtime-offline-0.1.0.zip",
+    "bytes": 88406,
+    "sha256": "fd7a8ade1ff49d0dc5a36bb3318d2e0e5e25d74cf015db91b04fd9fd80b5da48",
+    "members": 36,
+    "manifestFiles": 35,
+    "sourceInputs": 34,
+    "sourceInputsMatch": true
+  },
+  "compiledHelper": {
+    "bytes": 61952,
+    "sha256": "7ecb0e833db16ca7fa81ce98c49c199c7be770ca1fa8579729b38b48629ef96d"
+  }
+}

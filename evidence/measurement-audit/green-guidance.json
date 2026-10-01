@@ -1,0 +1,811 @@
+{
+  "numFailedTestSuites": 1,
+  "numFailedTests": 3,
+  "numPassedTestSuites": 1,
+  "numPassedTests": 38,
+  "numPendingTestSuites": 0,
+  "numPendingTests": 0,
+  "numRuntimeErrorTestSuites": 0,
+  "numTodoTests": 0,
+  "numTotalTestSuites": 2,
+  "numTotalTests": 41,
+  "openHandles": [],
+  "snapshot": {
+    "added": 0,
+    "didUpdate": false,
+    "failure": false,
+    "filesAdded": 0,
+    "filesRemoved": 0,
+    "filesRemovedList": [],
+    "filesUnmatched": 0,
+    "filesUpdated": 0,
+    "matched": 0,
+    "total": 0,
+    "unchecked": 0,
+    "uncheckedKeysByFile": [],
+    "unmatched": 0,
+    "updated": 0
+  },
+  "startTime": 1790172451058,
+  "success": false,
+  "testResults": [
+    {
+      "leaks": false,
+      "numFailingTests": 0,
+      "numPassingTests": 38,
+      "numPendingTests": 0,
+      "numTodoTests": 0,
+      "openHandles": [],
+      "perfStats": {
+        "end": 1790172452344,
+        "loadTestEnvironmentEnd": 1790172451810,
+        "loadTestEnvironmentStart": 1790172451206,
+        "runtime": 530,
+        "setupAfterEnvEnd": 1790172452138,
+        "setupAfterEnvStart": 1790172451957,
+        "setupFilesEnd": 1790172451824,
+        "setupFilesStart": 1790172451814,
+        "slow": false,
+        "start": 1790172451814
+      },
+      "skipped": false,
+      "snapshot": {
+        "added": 0,
+        "fileDeleted": false,
+        "matched": 0,
+        "unchecked": 0,
+        "uncheckedKeys": [],
+        "unmatched": 0,
+        "updated": 0
+      },
+      "testFilePath": "C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-audit-fixes\\src\\webparts\\aiCoeFrontDoor\\services\\workflowOutcomeAggregation.test.ts",
+      "testResults": [
+        {
+          "ancestorTitles": [
+            "content-free offline outcome aggregation"
+          ],
+          "duration": 3,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "content-free offline outcome aggregation blocks missing qualification without publishing counts or reflecting input",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 4,
+          "retryReasons": [],
+          "startAt": 1790172452311,
+          "status": "passed",
+          "title": "blocks missing qualification without publishing counts or reflecting input"
+        },
+        {
+          "ancestorTitles": [
+            "content-free offline outcome aggregation"
+          ],
+          "duration": 1,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "content-free offline outcome aggregation blocks missing receipt without publishing counts or reflecting input",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 4,
+          "retryReasons": [],
+          "startAt": 1790172452315,
+          "status": "passed",
+          "title": "blocks missing receipt without publishing counts or reflecting input"
+        },
+        {
+          "ancestorTitles": [
+            "content-free offline outcome aggregation"
+          ],
+          "duration": 1,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "content-free offline outcome aggregation blocks untrusted receipt bytes without publishing counts or reflecting input",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 4,
+          "retryReasons": [],
+          "startAt": 1790172452316,
+          "status": "passed",
+          "title": "blocks untrusted receipt bytes without publishing counts or reflecting input"
+        },
+        {
+          "ancestorTitles": [
+            "content-free offline outcome aggregation"
+          ],
+          "duration": 1,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "content-free offline outcome aggregation blocks incomplete export without publishing counts or reflecting input",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 4,
+          "retryReasons": [],
+          "startAt": 1790172452317,
+          "status": "passed",
+          "title": "blocks incomplete export without publishing counts or reflecting input"
+        },
+        {
+          "ancestorTitles": [
+            "content-free offline outcome aggregation"
+          ],
+          "duration": 1,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "content-free offline outcome aggregation blocks string boolean without publishing counts or reflecting input",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 4,
+          "retryReasons": [],
+          "startAt": 1790172452318,
+          "status": "passed",
+          "title": "blocks string boolean without publishing counts or reflecting input"
+        },
+        {
+          "ancestorTitles": [
+            "content-free offline outcome aggregation"
+          ],
+          "duration": 0,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "content-free offline outcome aggregation blocks missing method approval without publishing counts or reflecting input",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 4,
+          "retryReasons": [],
+          "startAt": 1790172452319,
+          "status": "passed",
+          "title": "blocks missing method approval without publishing counts or reflecting input"
+        },
+        {
+          "ancestorTitles": [
+            "content-free offline outcome aggregation"
+          ],
+          "duration": 0,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "content-free offline outcome aggregation blocks unrecognized method without publishing counts or reflecting input",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 4,
+          "retryReasons": [],
+          "startAt": 1790172452320,
+          "status": "passed",
+          "title": "blocks unrecognized method without publishing counts or reflecting input"
+        },
+        {
+          "ancestorTitles": [
+            "content-free offline outcome aggregation"
+          ],
+          "duration": 1,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "content-free offline outcome aggregation blocks cross-scope export without publishing counts or reflecting input",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 4,
+          "retryReasons": [],
+          "startAt": 1790172452320,
+          "status": "passed",
+          "title": "blocks cross-scope export without publishing counts or reflecting input"
+        },
+        {
+          "ancestorTitles": [
+            "content-free offline outcome aggregation"
+          ],
+          "duration": 1,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "content-free offline outcome aggregation blocks cross-scope receipt without publishing counts or reflecting input",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 4,
+          "retryReasons": [],
+          "startAt": 1790172452321,
+          "status": "passed",
+          "title": "blocks cross-scope receipt without publishing counts or reflecting input"
+        },
+        {
+          "ancestorTitles": [
+            "content-free offline outcome aggregation"
+          ],
+          "duration": 1,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "content-free offline outcome aggregation blocks invalid date without publishing counts or reflecting input",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 4,
+          "retryReasons": [],
+          "startAt": 1790172452322,
+          "status": "passed",
+          "title": "blocks invalid date without publishing counts or reflecting input"
+        },
+        {
+          "ancestorTitles": [
+            "content-free offline outcome aggregation"
+          ],
+          "duration": 1,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "content-free offline outcome aggregation blocks reversed period without publishing counts or reflecting input",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 4,
+          "retryReasons": [],
+          "startAt": 1790172452323,
+          "status": "passed",
+          "title": "blocks reversed period without publishing counts or reflecting input"
+        },
+        {
+          "ancestorTitles": [
+            "content-free offline outcome aggregation"
+          ],
+          "duration": 1,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "content-free offline outcome aggregation blocks future period without publishing counts or reflecting input",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 4,
+          "retryReasons": [],
+          "startAt": 1790172452324,
+          "status": "passed",
+          "title": "blocks future period without publishing counts or reflecting input"
+        },
+        {
+          "ancestorTitles": [
+            "content-free offline outcome aggregation"
+          ],
+          "duration": 0,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "content-free offline outcome aggregation blocks stale period without publishing counts or reflecting input",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 4,
+          "retryReasons": [],
+          "startAt": 1790172452325,
+          "status": "passed",
+          "title": "blocks stale period without publishing counts or reflecting input"
+        },
+        {
+          "ancestorTitles": [
+            "content-free offline outcome aggregation"
+          ],
+          "duration": 1,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "content-free offline outcome aggregation blocks privacy approval absent without publishing counts or reflecting input",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 4,
+          "retryReasons": [],
+          "startAt": 1790172452325,
+          "status": "passed",
+          "title": "blocks privacy approval absent without publishing counts or reflecting input"
+        },
+        {
+          "ancestorTitles": [
+            "content-free offline outcome aggregation"
+          ],
+          "duration": 0,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "content-free offline outcome aggregation blocks cohort unknown without publishing counts or reflecting input",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 4,
+          "retryReasons": [],
+          "startAt": 1790172452326,
+          "status": "passed",
+          "title": "blocks cohort unknown without publishing counts or reflecting input"
+        },
+        {
+          "ancestorTitles": [
+            "content-free offline outcome aggregation"
+          ],
+          "duration": 1,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "content-free offline outcome aggregation blocks non-person exemption for task outcomes without publishing counts or reflecting input",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 4,
+          "retryReasons": [],
+          "startAt": 1790172452326,
+          "status": "passed",
+          "title": "blocks non-person exemption for task outcomes without publishing counts or reflecting input"
+        },
+        {
+          "ancestorTitles": [
+            "content-free offline outcome aggregation"
+          ],
+          "duration": 0,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "content-free offline outcome aggregation blocks unexpected raw content without publishing counts or reflecting input",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 4,
+          "retryReasons": [],
+          "startAt": 1790172452327,
+          "status": "passed",
+          "title": "blocks unexpected raw content without publishing counts or reflecting input"
+        },
+        {
+          "ancestorTitles": [
+            "content-free offline outcome aggregation"
+          ],
+          "duration": 3,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "content-free offline outcome aggregation rejects the entire export for invalid choice rather than hiding invalid rows",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 4,
+          "retryReasons": [],
+          "startAt": 1790172452327,
+          "status": "passed",
+          "title": "rejects the entire export for invalid choice rather than hiding invalid rows"
+        },
+        {
+          "ancestorTitles": [
+            "content-free offline outcome aggregation"
+          ],
+          "duration": 1,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "content-free offline outcome aggregation rejects the entire export for missing choice rather than hiding invalid rows",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 4,
+          "retryReasons": [],
+          "startAt": 1790172452330,
+          "status": "passed",
+          "title": "rejects the entire export for missing choice rather than hiding invalid rows"
+        },
+        {
+          "ancestorTitles": [
+            "content-free offline outcome aggregation"
+          ],
+          "duration": 1,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "content-free offline outcome aggregation rejects the entire export for raw work content rather than hiding invalid rows",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 4,
+          "retryReasons": [],
+          "startAt": 1790172452331,
+          "status": "passed",
+          "title": "rejects the entire export for raw work content rather than hiding invalid rows"
+        },
+        {
+          "ancestorTitles": [
+            "content-free offline outcome aggregation"
+          ],
+          "duration": 0,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "content-free offline outcome aggregation rejects the entire export for author data rather than hiding invalid rows",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 4,
+          "retryReasons": [],
+          "startAt": 1790172452332,
+          "status": "passed",
+          "title": "rejects the entire export for author data rather than hiding invalid rows"
+        },
+        {
+          "ancestorTitles": [
+            "content-free offline outcome aggregation"
+          ],
+          "duration": 1,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "content-free offline outcome aggregation rejects the entire export for unknown version rather than hiding invalid rows",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 4,
+          "retryReasons": [],
+          "startAt": 1790172452332,
+          "status": "passed",
+          "title": "rejects the entire export for unknown version rather than hiding invalid rows"
+        },
+        {
+          "ancestorTitles": [
+            "content-free offline outcome aggregation"
+          ],
+          "duration": 0,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "content-free offline outcome aggregation rejects the entire export for invalid recorded day rather than hiding invalid rows",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 4,
+          "retryReasons": [],
+          "startAt": 1790172452333,
+          "status": "passed",
+          "title": "rejects the entire export for invalid recorded day rather than hiding invalid rows"
+        },
+        {
+          "ancestorTitles": [
+            "content-free offline outcome aggregation"
+          ],
+          "duration": 1,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "content-free offline outcome aggregation rejects the entire export for before period rather than hiding invalid rows",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 4,
+          "retryReasons": [],
+          "startAt": 1790172452333,
+          "status": "passed",
+          "title": "rejects the entire export for before period rather than hiding invalid rows"
+        },
+        {
+          "ancestorTitles": [
+            "content-free offline outcome aggregation"
+          ],
+          "duration": 0,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "content-free offline outcome aggregation rejects the entire export for after period rather than hiding invalid rows",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 4,
+          "retryReasons": [],
+          "startAt": 1790172452334,
+          "status": "passed",
+          "title": "rejects the entire export for after period rather than hiding invalid rows"
+        },
+        {
+          "ancestorTitles": [
+            "content-free offline outcome aggregation"
+          ],
+          "duration": 1,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "content-free offline outcome aggregation rejects the entire export for unreviewed acceptance rather than hiding invalid rows",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 4,
+          "retryReasons": [],
+          "startAt": 1790172452334,
+          "status": "passed",
+          "title": "rejects the entire export for unreviewed acceptance rather than hiding invalid rows"
+        },
+        {
+          "ancestorTitles": [
+            "content-free offline outcome aggregation"
+          ],
+          "duration": 0,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "content-free offline outcome aggregation rejects the entire export for unexpected category rather than hiding invalid rows",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 4,
+          "retryReasons": [],
+          "startAt": 1790172452335,
+          "status": "passed",
+          "title": "rejects the entire export for unexpected category rather than hiding invalid rows"
+        },
+        {
+          "ancestorTitles": [
+            "content-free offline outcome aggregation"
+          ],
+          "duration": 1,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "content-free offline outcome aggregation rejects the entire export for missing correction category rather than hiding invalid rows",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 4,
+          "retryReasons": [],
+          "startAt": 1790172452335,
+          "status": "passed",
+          "title": "rejects the entire export for missing correction category rather than hiding invalid rows"
+        },
+        {
+          "ancestorTitles": [
+            "content-free offline outcome aggregation"
+          ],
+          "duration": 0,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "content-free offline outcome aggregation rejects the entire export for wrong identity format rather than hiding invalid rows",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 4,
+          "retryReasons": [],
+          "startAt": 1790172452336,
+          "status": "passed",
+          "title": "rejects the entire export for wrong identity format rather than hiding invalid rows"
+        },
+        {
+          "ancestorTitles": [
+            "content-free offline outcome aggregation"
+          ],
+          "duration": 2,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "content-free offline outcome aggregation deduplicates identical ids regardless of key order and refuses conflicting duplicates",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 5,
+          "retryReasons": [],
+          "startAt": 1790172452336,
+          "status": "passed",
+          "title": "deduplicates identical ids regardless of key order and refuses conflicting duplicates"
+        },
+        {
+          "ancestorTitles": [
+            "content-free offline outcome aggregation"
+          ],
+          "duration": 0,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "content-free offline outcome aggregation withholds the whole report for a small or unsafely partitioned cohort {\"cohortSize\":4,\"minimumCellCohort\":4}",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 4,
+          "retryReasons": [],
+          "startAt": 1790172452338,
+          "status": "passed",
+          "title": "withholds the whole report for a small or unsafely partitioned cohort {\"cohortSize\":4,\"minimumCellCohort\":4}"
+        },
+        {
+          "ancestorTitles": [
+            "content-free offline outcome aggregation"
+          ],
+          "duration": 1,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "content-free offline outcome aggregation withholds the whole report for a small or unsafely partitioned cohort {\"minimumCellCohort\":4}",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 4,
+          "retryReasons": [],
+          "startAt": 1790172452338,
+          "status": "passed",
+          "title": "withholds the whole report for a small or unsafely partitioned cohort {\"minimumCellCohort\":4}"
+        },
+        {
+          "ancestorTitles": [
+            "content-free offline outcome aggregation"
+          ],
+          "duration": 0,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "content-free offline outcome aggregation withholds the whole report for a small or unsafely partitioned cohort {\"minimumCohort\":6}",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 4,
+          "retryReasons": [],
+          "startAt": 1790172452339,
+          "status": "passed",
+          "title": "withholds the whole report for a small or unsafely partitioned cohort {\"minimumCohort\":6}"
+        },
+        {
+          "ancestorTitles": [
+            "content-free offline outcome aggregation"
+          ],
+          "duration": 0,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "content-free offline outcome aggregation withholds the whole report for a small or unsafely partitioned cohort {\"cohortSize\":1,\"minimumCellCohort\":1,\"minimumCohort\":1}",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 4,
+          "retryReasons": [],
+          "startAt": 1790172452339,
+          "status": "passed",
+          "title": "withholds the whole report for a small or unsafely partitioned cohort {\"cohortSize\":1,\"minimumCellCohort\":1,\"minimumCohort\":1}"
+        },
+        {
+          "ancestorTitles": [
+            "content-free offline outcome aggregation"
+          ],
+          "duration": 0,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "content-free offline outcome aggregation blocks impossible people attestations and suppresses a tiny correction cell",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 3,
+          "retryReasons": [],
+          "startAt": 1790172452340,
+          "status": "passed",
+          "title": "blocks impossible people attestations and suppresses a tiny correction cell"
+        },
+        {
+          "ancestorTitles": [
+            "content-free offline outcome aggregation"
+          ],
+          "duration": 1,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "content-free offline outcome aggregation keeps unavailable reports distinct from tested fallback and omits zero-denominator rates",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 5,
+          "retryReasons": [],
+          "startAt": 1790172452340,
+          "status": "passed",
+          "title": "keeps unavailable reports distinct from tested fallback and omits zero-denominator rates"
+        },
+        {
+          "ancestorTitles": [
+            "content-free offline outcome aggregation"
+          ],
+          "duration": 0,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "content-free offline outcome aggregation accepts timestamps through the inclusive end day and binds output evidence without raw rows",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 3,
+          "retryReasons": [],
+          "startAt": 1790172452341,
+          "status": "passed",
+          "title": "accepts timestamps through the inclusive end day and binds output evidence without raw rows"
+        },
+        {
+          "ancestorTitles": [
+            "content-free offline outcome aggregation"
+          ],
+          "duration": 1,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "content-free offline outcome aggregation computes only qualified observed task statistics and keeps unsupported scorecard claims unknown",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 7,
+          "retryReasons": [],
+          "startAt": 1790172452341,
+          "status": "passed",
+          "title": "computes only qualified observed task statistics and keeps unsupported scorecard claims unknown"
+        }
+      ],
+      "failureMessage": null
+    },
+    {
+      "leaks": false,
+      "numFailingTests": 3,
+      "numPassingTests": 0,
+      "numPendingTests": 0,
+      "numTodoTests": 0,
+      "openHandles": [],
+      "perfStats": {
+        "end": 1790172454680,
+        "loadTestEnvironmentEnd": 1790172452356,
+        "loadTestEnvironmentStart": 1790172452348,
+        "runtime": 2324,
+        "setupAfterEnvEnd": 1790172452440,
+        "setupAfterEnvStart": 1790172452384,
+        "setupFilesEnd": 1790172452356,
+        "setupFilesStart": 1790172452356,
+        "slow": false,
+        "start": 1790172452356
+      },
+      "skipped": false,
+      "snapshot": {
+        "added": 0,
+        "fileDeleted": false,
+        "matched": 0,
+        "unchecked": 0,
+        "uncheckedKeys": [],
+        "unmatched": 0,
+        "updated": 0
+      },
+      "testFilePath": "C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-audit-fixes\\src\\webparts\\aiCoeFrontDoor\\components\\app\\AppSections.test.tsx",
+      "testResults": [
+        {
+          "ancestorTitles": [
+            "same-app measurement and teaching entry"
+          ],
+          "duration": 177,
+          "failing": false,
+          "failureDetails": [
+            {}
+          ],
+          "failureMessages": [
+            "Error: expect(received).not.toHaveBeenCalled()\n\nMatcher error: received value must be a mock or spy function\n\nReceived has type:  function\nReceived has value: [Function submitWorkflow]\n    at Object.<anonymous> (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-audit-fixes\\src\\webparts\\aiCoeFrontDoor\\components\\app\\AppSections.test.tsx:29:48)"
+          ],
+          "fullName": "same-app measurement and teaching entry opens source, role, stop and recovery quick-start guidance from Engineering without a private source link",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 10,
+          "retryReasons": [],
+          "startAt": 1790172454297,
+          "status": "failed",
+          "title": "opens source, role, stop and recovery quick-start guidance from Engineering without a private source link"
+        },
+        {
+          "ancestorTitles": [
+            "same-app measurement and teaching entry"
+          ],
+          "duration": 118,
+          "failing": false,
+          "failureDetails": [
+            {}
+          ],
+          "failureMessages": [
+            "Error: expect(received).not.toHaveBeenCalled()\n\nMatcher error: received value must be a mock or spy function\n\nReceived has type:  function\nReceived has value: [Function submitOutcome]\n    at Object.<anonymous> (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-audit-fixes\\src\\webparts\\aiCoeFrontDoor\\components\\app\\AppSections.test.tsx:39:47)"
+          ],
+          "fullName": "same-app measurement and teaching entry connects Improvement guidance to the existing outcome form, not another tracker",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 3,
+          "retryReasons": [],
+          "startAt": 1790172454482,
+          "status": "failed",
+          "title": "connects Improvement guidance to the existing outcome form, not another tracker"
+        },
+        {
+          "ancestorTitles": [
+            "same-app measurement and teaching entry"
+          ],
+          "duration": 62,
+          "failing": false,
+          "failureDetails": [
+            {}
+          ],
+          "failureMessages": [
+            "Error: expect(received).not.toHaveBeenCalled()\n\nMatcher error: received value must be a mock or spy function\n\nReceived has type:  function\nReceived has value: [Function submitWorkflow]\n    at Object.<anonymous> (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-audit-fixes\\src\\webparts\\aiCoeFrontDoor\\components\\app\\AppSections.test.tsx:54:48)"
+          ],
+          "fullName": "same-app measurement and teaching entry makes manual commissioning and proposal/retest instructions reachable without publishing or claiming approval",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 7,
+          "retryReasons": [],
+          "startAt": 1790172454600,
+          "status": "failed",
+          "title": "makes manual commissioning and proposal/retest instructions reachable without publishing or claiming approval"
+        }
+      ],
+      "failureMessage": "  ● same-app measurement and teaching entry › opens source, role, stop and recovery quick-start guidance from Engineering without a private source link\n\n    expect(received).not.toHaveBeenCalled()\n\n    Matcher error: received value must be a mock or spy function\n\n    Received has type:  function\n    Received has value: [Function submitWorkflow]\n\n    \u001b[0m \u001b[90m 27 |\u001b[39m     fireEvent\u001b[33m.\u001b[39mclick(view\u001b[33m.\u001b[39mgetByRole(\u001b[32m'button'\u001b[39m\u001b[33m,\u001b[39m { name\u001b[33m:\u001b[39m \u001b[35m/Get help or training/\u001b[39m }))\u001b[33m;\u001b[39m\n     \u001b[90m 28 |\u001b[39m     \u001b[36mawait\u001b[39m waitFor(() \u001b[33m=>\u001b[39m expect(view\u001b[33m.\u001b[39mcontainer\u001b[33m.\u001b[39mquerySelector(\u001b[32m'.ai-app-starters'\u001b[39m))\u001b[33m.\u001b[39mtoBeNull())\u001b[33m;\u001b[39m\n    \u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 29 |\u001b[39m     expect(view\u001b[33m.\u001b[39mgovernance\u001b[33m.\u001b[39msubmitWorkflow)\u001b[33m.\u001b[39mnot\u001b[33m.\u001b[39mtoHaveBeenCalled()\u001b[33m;\u001b[39m\n     \u001b[90m    |\u001b[39m                                                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n     \u001b[90m 30 |\u001b[39m   })\u001b[33m;\u001b[39m\n     \u001b[90m 31 |\u001b[39m\n     \u001b[90m 32 |\u001b[39m   it(\u001b[32m'connects Improvement guidance to the existing outcome form, not another tracker'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m () \u001b[33m=>\u001b[39m {\u001b[0m\n\n      at Object.<anonymous> (src/webparts/aiCoeFrontDoor/components/app/AppSections.test.tsx:29:48)\n\n  ● same-app measurement and teaching entry › connects Improvement guidance to the existing outcome form, not another tracker\n\n    expect(received).not.toHaveBeenCalled()\n\n    Matcher error: received value must be a mock or spy function\n\n    Received has type:  function\n    Received has value: [Function submitOutcome]\n\n    \u001b[0m \u001b[90m 37 |\u001b[39m     fireEvent\u001b[33m.\u001b[39mclick(view\u001b[33m.\u001b[39mgetByRole(\u001b[32m'button'\u001b[39m\u001b[33m,\u001b[39m { name\u001b[33m:\u001b[39m \u001b[35m/Record a task outcome/\u001b[39m }))\u001b[33m;\u001b[39m\n     \u001b[90m 38 |\u001b[39m     \u001b[36mawait\u001b[39m waitFor(() \u001b[33m=>\u001b[39m expect(view\u001b[33m.\u001b[39mgetByText(\u001b[32m'What kind of task was it?'\u001b[39m))\u001b[33m.\u001b[39mtoBeInTheDocument())\u001b[33m;\u001b[39m\n    \u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 39 |\u001b[39m     expect(view\u001b[33m.\u001b[39mgovernance\u001b[33m.\u001b[39msubmitOutcome)\u001b[33m.\u001b[39mnot\u001b[33m.\u001b[39mtoHaveBeenCalled()\u001b[33m;\u001b[39m\n     \u001b[90m    |\u001b[39m                                               \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n     \u001b[90m 40 |\u001b[39m   })\u001b[33m;\u001b[39m\n     \u001b[90m 41 |\u001b[39m\n     \u001b[90m 42 |\u001b[39m   it(\u001b[32m'makes manual commissioning and proposal/retest instructions reachable without publishing or claiming approval'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m () \u001b[33m=>\u001b[39m {\u001b[0m\n\n      at Object.<anonymous> (src/webparts/aiCoeFrontDoor/components/app/AppSections.test.tsx:39:47)\n\n  ● same-app measurement and teaching entry › makes manual commissioning and proposal/retest instructions reachable without publishing or claiming approval\n\n    expect(received).not.toHaveBeenCalled()\n\n    Matcher error: received value must be a mock or spy function\n\n    Received has type:  function\n    Received has value: [Function submitWorkflow]\n\n    \u001b[0m \u001b[90m 52 |\u001b[39m     fireEvent\u001b[33m.\u001b[39mclick(view\u001b[33m.\u001b[39mgetByRole(\u001b[32m'button'\u001b[39m\u001b[33m,\u001b[39m { name\u001b[33m:\u001b[39m \u001b[35m/Share feedback/\u001b[39m }))\u001b[33m;\u001b[39m\n     \u001b[90m 53 |\u001b[39m     \u001b[36mawait\u001b[39m waitFor(() \u001b[33m=>\u001b[39m expect(view\u001b[33m.\u001b[39mcontainer\u001b[33m.\u001b[39mquerySelector(\u001b[32m'.ai-app-starters'\u001b[39m))\u001b[33m.\u001b[39mtoBeNull())\u001b[33m;\u001b[39m\n    \u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 54 |\u001b[39m     expect(view\u001b[33m.\u001b[39mgovernance\u001b[33m.\u001b[39msubmitWorkflow)\u001b[33m.\u001b[39mnot\u001b[33m.\u001b[39mtoHaveBeenCalled()\u001b[33m;\u001b[39m\n     \u001b[90m    |\u001b[39m                                                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n     \u001b[90m 55 |\u001b[39m   })\u001b[33m;\u001b[39m\n     \u001b[90m 56 |\u001b[39m })\u001b[33m;\u001b[39m\n     \u001b[90m 57 |\u001b[39m\u001b[0m\n\n      at Object.<anonymous> (src/webparts/aiCoeFrontDoor/components/app/AppSections.test.tsx:54:48)\n"
+    }
+  ],
+  "wasInterrupted": false
+}

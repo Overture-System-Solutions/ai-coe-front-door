@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Info } from '../icons';
-import type { AnswerValue, IStep } from '../workflows/types';
+import { groupFields } from '../workflows/formEngine';
+import type { AnswerValue, IAnswers, IFieldStep, IStep } from '../workflows/types';
 import { ChoiceGroup } from './ChoiceGroup';
 import { NoticeBanner } from './NoticeBanner';
 import type { OptionalElement } from './render';
@@ -14,10 +15,42 @@ export interface IStepRendererProps {
   value: AnswerValue;
   error: string | undefined;
   onAnswer: (value: string | string[]) => void;
+  /** Every answer so far, for a grouped step's fields and follow-ups (1.0.0.18). */
+  answers?: IAnswers;
+  /** Records the answer of one field of a grouped step under its own key (1.0.0.18). */
+  onAnswerField?: (stepId: string, value: string | string[]) => void;
+}
+
+/** One question inside a grouped step: its own label, help, input and optional note. */
+function GroupField({ field, value, onAnswer }: { field: IFieldStep; value: AnswerValue; onAnswer: (value: string | string[]) => void }): React.ReactElement {
+  if (field.type === 'notice') {
+    return <NoticeBanner icon={Info}>{field.body}</NoticeBanner>;
+  }
+  return (
+    <div className="ai-step-field space-y-3">
+      <div>
+        <h3 className="ai-step-field-title text-base font-semibold leading-snug">{field.title}</h3>
+        {field.help && (
+          <p className="mt-1.5 text-[15px]" style={{ color: 'var(--color-ink-muted)' }}>
+            {field.help}
+          </p>
+        )}
+      </div>
+      {field.showSafetyNotice && <NoticeBanner icon={Info}>{SAFETY_NOTICE}</NoticeBanner>}
+      {(field.type === 'select' || field.type === 'multiselect') && <ChoiceGroup step={field} value={value} onChange={onAnswer} />}
+      {field.type === 'text' && <TextInput step={field} value={value} onChange={onAnswer} />}
+      {field.type === 'textarea' && <TextArea step={field} value={value} onChange={onAnswer} />}
+      {!field.required && (
+        <p className="text-sm" style={{ color: 'var(--color-ink-muted)' }}>
+          This question is optional.
+        </p>
+      )}
+    </div>
+  );
 }
 
 /** One question: title, help text, the matching input control and any validation message. */
-export function StepRenderer({ step, value, error, onAnswer }: IStepRendererProps): OptionalElement {
+export function StepRenderer({ step, value, error, onAnswer, answers = {}, onAnswerField }: IStepRendererProps): OptionalElement {
   if (step === undefined) {
     return null;
   }
@@ -31,7 +64,24 @@ export function StepRenderer({ step, value, error, onAnswer }: IStepRendererProp
           </p>
         )}
       </div>
-      {step.type === 'notice' ? (
+      {step.type === 'group' ? (
+        <div className="ai-step-group space-y-6">
+          {groupFields(step, answers).map(
+            (field: IFieldStep): React.ReactElement => (
+              <GroupField
+                key={field.id}
+                field={field}
+                value={answers[field.id]}
+                onAnswer={(fieldValue: string | string[]): void => {
+                  if (onAnswerField !== undefined) {
+                    onAnswerField(field.id, fieldValue);
+                  }
+                }}
+              />
+            )
+          )}
+        </div>
+      ) : step.type === 'notice' ? (
         <NoticeBanner icon={Info}>{step.body}</NoticeBanner>
       ) : (
         <>

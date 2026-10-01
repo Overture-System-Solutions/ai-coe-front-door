@@ -1,6 +1,7 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { InMemoryDraftStore } from '../../../testing/fakeServices';
+import { playJourney, TEAM_USAGE_JOURNEY } from '../../../testing/journeys';
 import { createTestFrontDoor } from '../../../testing/renderWithFrontDoor';
 import type { ITestFrontDoor } from '../../../testing/renderWithFrontDoor';
 import { firstStepOf } from '../../../testing/workflowHarness';
@@ -68,6 +69,15 @@ describe('AiCoeFrontDoor', () => {
     await waitFor((): void => expect(screen.queryByText('Resume draft')).not.toBeInTheDocument());
   });
 
+  it('tells the pages they are a page view, so the summary review shows its draft state', async () => {
+    const { value }: ITestFrontDoor = createTestFrontDoor();
+    renderRoot(false, { pageView: { view: 'teamUsage', layout: 'wide', pages: {} }, navigate: jest.fn() });
+    await firstStepOf(value.catalog.teamUsage);
+    playJourney(TEAM_USAGE_JOURNEY, value.catalog.teamUsage);
+    expect(screen.getByRole('heading', { name: "Here's a summary of what you shared" })).toBeInTheDocument();
+    expect(screen.getByText('Draft only').closest('.ai-pill')).not.toBeNull();
+  });
+
   it('hands navigate to the page views', async () => {
     const navigate: jest.Mock = jest.fn();
     const { value }: ITestFrontDoor = createTestFrontDoor();
@@ -86,6 +96,17 @@ describe('AiCoeFrontDoor', () => {
     const signedIn: HTMLElement = screen.getByText('Signed in as Pat Example');
     expect(signedIn.className).toMatch(/^signedInUser(_|$)/);
     expect(screen.getByRole('heading', { level: 1, name: 'AI, safely put to work.' })).toBeInTheDocument();
+  });
+
+  it('announces the signed-in person once in a page view, as the visible identity line and not the hidden span', async () => {
+    const section: HTMLElement = renderRoot(false, { pageView: { view: 'feedback', layout: 'wide', pages: {} } });
+    // The page view names the role beside the person; with no resolver behind it, the line says the role is not set.
+    const lines: HTMLElement[] = screen.getAllByText('Signed in as Pat Example · role not set');
+    expect(lines).toHaveLength(1);
+    expect(lines[0]).toHaveClass('ai-page-identity');
+    expect(lines[0].tagName).toBe('P');
+    expect(section.querySelector('[class^="signedInUser"]')).toBeNull();
+    await firstStepOf(createTestFrontDoor().value.catalog.feedback);
   });
 
   it('marks the dark theme', () => {

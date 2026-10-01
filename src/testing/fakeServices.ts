@@ -5,17 +5,22 @@
 import type { IBranding } from '../webparts/aiCoeFrontDoor/branding/branding';
 import type { IIdeaDraftResult, IIdeaDraftService } from '../webparts/aiCoeFrontDoor/services/draftService';
 import type { IDraftStore } from '../webparts/aiCoeFrontDoor/services/draftStorage';
+import type { IMyWorkResult, IMyWorkService } from '../webparts/aiCoeFrontDoor/services/myWorkService';
 import type { IPageContentResult, IPageContentService } from '../webparts/aiCoeFrontDoor/services/pageContentService';
+import type { IProgramMeasuresResult, IProgramMeasuresService } from '../webparts/aiCoeFrontDoor/services/programMeasuresService';
+import type { IRoleResolution, IRoleResolver } from '../webparts/aiCoeFrontDoor/services/roleResolver';
 import { createToolPolicyEvaluator } from '../webparts/aiCoeFrontDoor/services/toolPolicyEvaluator';
 import type { IToolPolicyEvaluator } from '../webparts/aiCoeFrontDoor/services/toolPolicyEvaluator';
 import type {
   IAdminDashboardData,
   IGovernanceService,
+  IRecoveredSubmission,
   ISubmissionResult,
+  ISubmitOptions,
   IUsageMetricsResult,
   IUsageMetricsService
 } from '../webparts/aiCoeFrontDoor/services/types';
-import type { IAnswers, IWorkflowDefinition, SubmissionWorkflowType } from '../webparts/aiCoeFrontDoor/workflows/types';
+import type { IAnswers, IWorkflowDefinition, SubmissionPieceType } from '../webparts/aiCoeFrontDoor/workflows/types';
 import { SAMPLE_PAGE_DOCUMENT } from './pageDocument';
 
 export interface IDeferred<T> {
@@ -35,8 +40,10 @@ export function createDeferred<T>(): IDeferred<T> {
 }
 
 export interface IRecordedSubmission {
-  workflowType: SubmissionWorkflowType;
+  workflowType: SubmissionPieceType;
   payload: unknown;
+  /** The identifier of the attempt being retried; absent on a first attempt. */
+  intakeId?: string;
 }
 
 export interface IFakeGovernanceService extends IGovernanceService {
@@ -61,8 +68,12 @@ export function createFakeGovernanceService(): IFakeGovernanceService {
     },
     dashboard: { connected: true, intakes: [], useCases: [], decisions: [], message: 'Loaded.' },
     dashboardCalls: 0,
-    submitWorkflow: async (workflowType: SubmissionWorkflowType, payload: unknown): Promise<ISubmissionResult> => {
-      service.submissions.push({ workflowType, payload });
+    submitWorkflow: async (workflowType: SubmissionPieceType, payload: unknown, options?: ISubmitOptions): Promise<ISubmissionResult> => {
+      service.submissions.push({ workflowType, payload, intakeId: options === undefined ? undefined : options.intakeId });
+      return service.result;
+    },
+    submitOutcome: async (payload: unknown, options?: ISubmitOptions): Promise<ISubmissionResult> => {
+      service.submissions.push({ workflowType: 'outcome', payload, intakeId: options === undefined ? undefined : options.intakeId });
       return service.result;
     },
     getAdminDashboardData: async (): Promise<IAdminDashboardData> => {
@@ -72,6 +83,26 @@ export function createFakeGovernanceService(): IFakeGovernanceService {
   };
   return service;
 }
+
+/** An unconfirmed feedback attempt the server recovery record holds, made before the form under test. */
+export const EARLIER_ATTEMPT: IRecoveredSubmission['attempt'] = {
+  workflowType: 'feedback',
+  payload: { summary: 'An earlier request' },
+  intakeId: 'OVT-AICOE-20260929-EARLIER1'
+};
+
+/**
+ * Answers as the durable submission service does while its recovery record holds `EARLIER_ATTEMPT` unconfirmed:
+ * `restoreSubmission` returns that attempt, and every submission is refused with a pending result about it.
+ */
+export function holdEarlierAttempt(governance: IFakeGovernanceService): void {
+  const pending: ISubmissionResult = { connected: false, state: 'pending', intakeId: EARLIER_ATTEMPT.intakeId, message: 'An earlier server-stored attempt needs confirmation.' };
+  governance.restoreSubmission = async (): Promise<IRecoveredSubmission> => ({ attempt: EARLIER_ATTEMPT, result: pending });
+  governance.result = { ...pending, earlierAttempt: true, message: 'Confirm the earlier attempt before starting a different submission. Its saved content was not replaced.' };
+}
+
+/** What the list answers once the earlier attempt is confirmed under its own reference. */
+export const EARLIER_ATTEMPT_SAVED: ISubmissionResult = { connected: true, state: 'saved', intakeId: EARLIER_ATTEMPT.intakeId, message: 'Submission received and added to the AI CoE service queue.' };
 
 export interface IFakeUsageMetricsService extends IUsageMetricsService {
   calls: number;
@@ -117,6 +148,68 @@ export function createFakePageContentService(result: IPageContentResult | Promis
 /** Never answers: for asserting the loading state of a content page. */
 export function createPendingPageContentService(): IFakePageContentService {
   return createFakePageContentService(new Promise<IPageContentResult>((): void => undefined));
+}
+
+export interface IFakeMyWorkService extends IMyWorkService {
+  calls: number;
+}
+
+export const EMPTY_MY_WORK_RESULT: IMyWorkResult = { state: 'ok', items: [], message: 'Read 0 requests.' };
+
+/** Resolves with `result` (a value or a promise the test controls) on every call; no requests by default. */
+export function createFakeMyWorkService(result: IMyWorkResult | Promise<IMyWorkResult> = EMPTY_MY_WORK_RESULT): IFakeMyWorkService {
+  const service: IFakeMyWorkService = {
+    calls: 0,
+    getMine: async (): Promise<IMyWorkResult> => {
+      service.calls += 1;
+      return result;
+    }
+  };
+  return service;
+}
+
+/** Never answers: for asserting the loading state of the my-work piece and the status strip. */
+export function createPendingMyWorkService(): IFakeMyWorkService {
+  return createFakeMyWorkService(new Promise<IMyWorkResult>((): void => undefined));
+}
+
+export interface IFakeProgramMeasuresService extends IProgramMeasuresService {
+  calls: number;
+}
+
+export const EMPTY_MEASURES_RESULT: IProgramMeasuresResult = { state: 'ok', measures: {}, message: 'Read 0 measures.' };
+
+/** Resolves with `result` (a value or a promise the test controls) on every call; no measures by default. */
+export function createFakeProgramMeasuresService(result: IProgramMeasuresResult | Promise<IProgramMeasuresResult> = EMPTY_MEASURES_RESULT): IFakeProgramMeasuresService {
+  const service: IFakeProgramMeasuresService = {
+    calls: 0,
+    getMeasures: async (): Promise<IProgramMeasuresResult> => {
+      service.calls += 1;
+      return result;
+    }
+  };
+  return service;
+}
+
+/** Never answers: for asserting the loading state of the measure tiles. */
+export function createPendingProgramMeasuresService(): IFakeProgramMeasuresService {
+  return createFakeProgramMeasuresService(new Promise<IProgramMeasuresResult>((): void => undefined));
+}
+
+export interface IFakeRoleResolver extends IRoleResolver {
+  calls: number;
+}
+
+/** Answers with the given membership on every call, as the real resolver does after its one read. */
+export function createFakeRoleResolver(resolution: IRoleResolution | Promise<IRoleResolution>): IFakeRoleResolver {
+  const resolver: IFakeRoleResolver = {
+    calls: 0,
+    resolve: async (): Promise<IRoleResolution> => {
+      resolver.calls += 1;
+      return resolution;
+    }
+  };
+  return resolver;
 }
 
 /** Draft store that keeps JSON copies in memory, so tests see exactly what localStorage would. */

@@ -1,0 +1,452 @@
+{
+  "boundary": "ACTUAL_GENERATED_WDL_AND_COMPILED_HELPER_WITH_EXPLICIT_FAKE_EXTERNALS",
+  "helperSha256": "a5639ac34ced8408f284ab62705c1c3852f4f37c7b42e9d6cce89e4be8797991",
+  "flowSha256": "d65946575cd3c94c5f08c99d34f592c0a37410042b0219e495d3602835eb7767",
+  "count": 22,
+  "passed": 22,
+  "results": [
+    {
+      "name": "authorized work list",
+      "operation": "ListMarketingWorkV1",
+      "pass": true,
+      "actionsExecuted": 377,
+      "durableEffects": [
+        "insert:canonical:98a01058df5a91eba3f3b32c952b9974ce9fefca7d1c1ff770fab73c09f7eb76",
+        "insert:canonical:654a46f14f2442a80d7f9275666c6c636c74b3934f7bee69d9d7c9bbee77d7ed",
+        "insert:canonical:0e5fd692286ddb7c6b6e69a0467d4595811e60afd67fecb7d524ba5b6fabd2a1",
+        "insert:result:00000000-0000-4000-8000-000000000001",
+        "private-acl:1",
+        "grant:7",
+        "update:canonical:654a46f14f2442a80d7f9275666c6c636c74b3934f7bee69d9d7c9bbee77d7ed",
+        "update:canonical:0e5fd692286ddb7c6b6e69a0467d4595811e60afd67fecb7d524ba5b6fabd2a1",
+        "update:canonical:98a01058df5a91eba3f3b32c952b9974ce9fefca7d1c1ff770fab73c09f7eb76"
+      ],
+      "simulatedProviderCalls": 0
+    },
+    {
+      "name": "manual brief",
+      "operation": "SaveManualMarketingDraftV1",
+      "pass": true,
+      "actionsExecuted": 491,
+      "durableEffects": [
+        "update:canonical:98a01058df5a91eba3f3b32c952b9974ce9fefca7d1c1ff770fab73c09f7eb76",
+        "insert:canonical:2dd2290d0855037111f5dbc00e663627cdcd0e576b62dbd1b87613204dfdedb7",
+        "insert:canonical:046e4a43e967f21c0886599d8dd74dca6ccd5195bc3d9ba44d16ee6c9a8b9e78",
+        "insert:canonical:96c601a326f819ee45c71605a50f202a133f3eb3b6857fb1768feb8ae3deefb7",
+        "insert:canonical:57c4f07b686e367475b8a28af22afd16ec6a7c9db267947b24bf1aa2fa1f06fe",
+        "insert:canonical:0499d6b6103d1bb1abc0aa81538047e64d66ece455a9ca3e018efafce1386740",
+        "insert:canonical:2b083edc1a7aa125d0764d51ca0a4c07c338a70f994e0122c0df2e5efc00dbc5",
+        "update:canonical:046e4a43e967f21c0886599d8dd74dca6ccd5195bc3d9ba44d16ee6c9a8b9e78",
+        "insert:result:00000000-0000-4000-8000-000000000002",
+        "private-acl:1",
+        "grant:7",
+        "update:canonical:2dd2290d0855037111f5dbc00e663627cdcd0e576b62dbd1b87613204dfdedb7",
+        "update:canonical:046e4a43e967f21c0886599d8dd74dca6ccd5195bc3d9ba44d16ee6c9a8b9e78",
+        "update:canonical:98a01058df5a91eba3f3b32c952b9974ce9fefca7d1c1ff770fab73c09f7eb76"
+      ],
+      "simulatedProviderCalls": 0
+    },
+    {
+      "name": "read brief",
+      "operation": "GetArtifactV1",
+      "pass": true,
+      "actionsExecuted": 436,
+      "durableEffects": [
+        "update:canonical:98a01058df5a91eba3f3b32c952b9974ce9fefca7d1c1ff770fab73c09f7eb76",
+        "insert:canonical:f56ddc721f1d3ed97f3e7b8f6bf84f0a7544d5c2fd823a5f1efa88c23b35d07f",
+        "insert:canonical:bd94f0ab7e8f271f0405144e6cfbc5eed32d2ad045e560965354400647846d32",
+        "insert:result:00000000-0000-4000-8000-000000000003",
+        "private-acl:1",
+        "grant:7",
+        "update:canonical:f56ddc721f1d3ed97f3e7b8f6bf84f0a7544d5c2fd823a5f1efa88c23b35d07f",
+        "update:canonical:bd94f0ab7e8f271f0405144e6cfbc5eed32d2ad045e560965354400647846d32",
+        "update:canonical:98a01058df5a91eba3f3b32c952b9974ce9fefca7d1c1ff770fab73c09f7eb76"
+      ],
+      "simulatedProviderCalls": 0
+    },
+    {
+      "name": "request brief review",
+      "operation": "RequestReviewV1",
+      "pass": true,
+      "actionsExecuted": 467,
+      "durableEffects": [
+        "update:canonical:98a01058df5a91eba3f3b32c952b9974ce9fefca7d1c1ff770fab73c09f7eb76",
+        "insert:canonical:fa7006e9e7229bfd7679f8dbb16045bfeecaa95d52f5179729816fd3676e5683",
+        "insert:canonical:c39f8493753baa2d45208ce94ac0bb717dd267b8398a7acfce32e0876ed47c52",
+        "insert:canonical:308133830a87a837e04a429c72112f6a3b6b9c90ec75f128411dc8e6a478754c",
+        "update:canonical:c39f8493753baa2d45208ce94ac0bb717dd267b8398a7acfce32e0876ed47c52",
+        "insert:result:00000000-0000-4000-8000-000000000004",
+        "private-acl:1",
+        "grant:7",
+        "update:canonical:fa7006e9e7229bfd7679f8dbb16045bfeecaa95d52f5179729816fd3676e5683",
+        "update:canonical:c39f8493753baa2d45208ce94ac0bb717dd267b8398a7acfce32e0876ed47c52",
+        "update:canonical:98a01058df5a91eba3f3b32c952b9974ce9fefca7d1c1ff770fab73c09f7eb76"
+      ],
+      "simulatedProviderCalls": 0
+    },
+    {
+      "name": "reviewer reads brief",
+      "operation": "GetArtifactV1",
+      "pass": true,
+      "actionsExecuted": 457,
+      "durableEffects": [
+        "update:canonical:98a01058df5a91eba3f3b32c952b9974ce9fefca7d1c1ff770fab73c09f7eb76",
+        "insert:canonical:217a6871b9f45a790aaeb8f5207a8b3cb26bf8cb605116cfb4cc6bff64b2fa08",
+        "insert:canonical:c4d1170671d4dbc93ce38f3eda54d76a21cc4bef33355bbc414a76fd76f13519",
+        "insert:result:00000000-0000-4000-8000-000000000005",
+        "private-acl:1",
+        "grant:8",
+        "update:canonical:217a6871b9f45a790aaeb8f5207a8b3cb26bf8cb605116cfb4cc6bff64b2fa08",
+        "update:canonical:c4d1170671d4dbc93ce38f3eda54d76a21cc4bef33355bbc414a76fd76f13519",
+        "update:canonical:98a01058df5a91eba3f3b32c952b9974ce9fefca7d1c1ff770fab73c09f7eb76"
+      ],
+      "simulatedProviderCalls": 0
+    },
+    {
+      "name": "accept brief",
+      "operation": "RecordReviewDecisionV1",
+      "pass": true,
+      "actionsExecuted": 532,
+      "durableEffects": [
+        "update:canonical:98a01058df5a91eba3f3b32c952b9974ce9fefca7d1c1ff770fab73c09f7eb76",
+        "insert:canonical:4d526073e660645e3c5a3f839618449b875a72fbd3e1e20f7402745723184a4b",
+        "insert:canonical:e4e2b06792e4dd730c6de226a97908ac0205d4b009e896a7243b7e266790d348",
+        "insert:canonical:96064d95fa0f8e98b171356b401241937d9533bbdc927719bf6371c988776c59",
+        "insert:canonical:687f163460c625ada82f4a563647f3f5c19367af6d2546ee0dcce256706964aa",
+        "insert:canonical:35fc0dee83f06a3ae78735f01790bc06bad0c58ef41ff3923490535f6b0e92df",
+        "update:canonical:e4e2b06792e4dd730c6de226a97908ac0205d4b009e896a7243b7e266790d348",
+        "insert:result:00000000-0000-4000-8000-000000000006",
+        "private-acl:1",
+        "grant:8",
+        "update:canonical:4d526073e660645e3c5a3f839618449b875a72fbd3e1e20f7402745723184a4b",
+        "update:canonical:e4e2b06792e4dd730c6de226a97908ac0205d4b009e896a7243b7e266790d348",
+        "update:canonical:98a01058df5a91eba3f3b32c952b9974ce9fefca7d1c1ff770fab73c09f7eb76"
+      ],
+      "simulatedProviderCalls": 0
+    },
+    {
+      "name": "manual content plan",
+      "operation": "SaveManualMarketingDraftV1",
+      "pass": true,
+      "actionsExecuted": 577,
+      "durableEffects": [
+        "update:canonical:98a01058df5a91eba3f3b32c952b9974ce9fefca7d1c1ff770fab73c09f7eb76",
+        "insert:canonical:fbf59d9afeaac2e3e638374ebc4e841f09c120dcaad712d91f18ad33fc33c6a1",
+        "insert:canonical:dfe4d2a4735f769ffae24a0913ec09d2647a8d7516743a7029c5382346291c69",
+        "insert:canonical:112f3c396ac16ebbf9417730f137f9c381c15e7f93d9055ffb49dfc57383772a",
+        "insert:canonical:6b664aa003cb2c872d40765180f57b846d4e351ceda1113ef8c205b203793708",
+        "insert:canonical:568802f18e49b0182d9bdf4d28632c03b5ddc6fa86c7aee8fc1df4d32439d834",
+        "update:canonical:dfe4d2a4735f769ffae24a0913ec09d2647a8d7516743a7029c5382346291c69",
+        "insert:result:00000000-0000-4000-8000-000000000007",
+        "private-acl:1",
+        "grant:7",
+        "update:canonical:fbf59d9afeaac2e3e638374ebc4e841f09c120dcaad712d91f18ad33fc33c6a1",
+        "update:canonical:dfe4d2a4735f769ffae24a0913ec09d2647a8d7516743a7029c5382346291c69",
+        "update:canonical:98a01058df5a91eba3f3b32c952b9974ce9fefca7d1c1ff770fab73c09f7eb76"
+      ],
+      "simulatedProviderCalls": 0
+    },
+    {
+      "name": "manual follow-through",
+      "operation": "SaveManualMarketingDraftV1",
+      "pass": true,
+      "actionsExecuted": 605,
+      "durableEffects": [
+        "update:canonical:98a01058df5a91eba3f3b32c952b9974ce9fefca7d1c1ff770fab73c09f7eb76",
+        "insert:canonical:447048f6d9bc0e3abed72c4f203f25ea1962229c348a16605bb9b35d5bee2d0d",
+        "insert:canonical:a7f27c63d3ce7573ef8f5e24e61f8f78e1ae1e1a8171ff5588d7be8a1780952e",
+        "insert:canonical:a01415b8b1146e7ae81296191ee5c80411765a21ff0c22261c3bddf05eea1591",
+        "insert:canonical:feb46b148a0e05540eea23321dab6b5023b3272a193269a047bd479f2b4c7f22",
+        "insert:canonical:bedb0bc7a856475ea71024a111a89ce795e11fa430a8e0508c7537d09d9311f4",
+        "update:canonical:a7f27c63d3ce7573ef8f5e24e61f8f78e1ae1e1a8171ff5588d7be8a1780952e",
+        "insert:result:00000000-0000-4000-8000-000000000008",
+        "private-acl:1",
+        "grant:7",
+        "update:canonical:447048f6d9bc0e3abed72c4f203f25ea1962229c348a16605bb9b35d5bee2d0d",
+        "update:canonical:a7f27c63d3ce7573ef8f5e24e61f8f78e1ae1e1a8171ff5588d7be8a1780952e",
+        "update:canonical:98a01058df5a91eba3f3b32c952b9974ce9fefca7d1c1ff770fab73c09f7eb76"
+      ],
+      "simulatedProviderCalls": 0
+    },
+    {
+      "name": "list author artifacts",
+      "operation": "ListArtifactsV1",
+      "pass": true,
+      "actionsExecuted": 548,
+      "durableEffects": [
+        "update:canonical:98a01058df5a91eba3f3b32c952b9974ce9fefca7d1c1ff770fab73c09f7eb76",
+        "insert:canonical:cd03e4fcadf120daca3d6b12e0b1513d00f6dfbfbed6672f91547e35591248e5",
+        "insert:canonical:ccead8b64a39ac7aa7507b3762ed25294fbdd110c7058d4f7f00fd250bbdd5de",
+        "insert:result:00000000-0000-4000-8000-000000000009",
+        "private-acl:1",
+        "grant:7",
+        "update:canonical:cd03e4fcadf120daca3d6b12e0b1513d00f6dfbfbed6672f91547e35591248e5",
+        "update:canonical:ccead8b64a39ac7aa7507b3762ed25294fbdd110c7058d4f7f00fd250bbdd5de",
+        "update:canonical:98a01058df5a91eba3f3b32c952b9974ce9fefca7d1c1ff770fab73c09f7eb76"
+      ],
+      "simulatedProviderCalls": 0
+    },
+    {
+      "name": "list own authorities",
+      "operation": "ListAuthoritiesV1",
+      "pass": true,
+      "actionsExecuted": 541,
+      "durableEffects": [
+        "update:canonical:98a01058df5a91eba3f3b32c952b9974ce9fefca7d1c1ff770fab73c09f7eb76",
+        "insert:canonical:5d1a9c53cab5d3899bdbdb0bca8b72d496580e8edfcda7c5cdeab09c56aa9864",
+        "insert:canonical:0818c8ac8c2e4fd5c1fa32504f96732df1eef151cabcfd663f6f839cb2df4606",
+        "insert:result:00000000-0000-4000-8000-000000000010",
+        "private-acl:1",
+        "grant:8",
+        "update:canonical:5d1a9c53cab5d3899bdbdb0bca8b72d496580e8edfcda7c5cdeab09c56aa9864",
+        "update:canonical:0818c8ac8c2e4fd5c1fa32504f96732df1eef151cabcfd663f6f839cb2df4606",
+        "update:canonical:98a01058df5a91eba3f3b32c952b9974ce9fefca7d1c1ff770fab73c09f7eb76"
+      ],
+      "simulatedProviderCalls": 0
+    },
+    {
+      "name": "list brief reviews",
+      "operation": "ListReviewDecisionsV1",
+      "pass": true,
+      "actionsExecuted": 562,
+      "durableEffects": [
+        "update:canonical:98a01058df5a91eba3f3b32c952b9974ce9fefca7d1c1ff770fab73c09f7eb76",
+        "insert:canonical:52d36d96dd0bee0c9f385e28d02aad3cc3afc995f28de7dda15acdcf4beeca27",
+        "insert:canonical:533eb58788f9f593c4ec1d769a1775aad1181ed375d6bf6dd407b934645038f3",
+        "insert:result:00000000-0000-4000-8000-000000000011",
+        "private-acl:1",
+        "grant:8",
+        "update:canonical:52d36d96dd0bee0c9f385e28d02aad3cc3afc995f28de7dda15acdcf4beeca27",
+        "update:canonical:533eb58788f9f593c4ec1d769a1775aad1181ed375d6bf6dd407b934645038f3",
+        "update:canonical:98a01058df5a91eba3f3b32c952b9974ce9fefca7d1c1ff770fab73c09f7eb76"
+      ],
+      "simulatedProviderCalls": 0
+    },
+    {
+      "name": "list brief requests",
+      "operation": "ListReviewRequestsV1",
+      "pass": true,
+      "actionsExecuted": 569,
+      "durableEffects": [
+        "update:canonical:98a01058df5a91eba3f3b32c952b9974ce9fefca7d1c1ff770fab73c09f7eb76",
+        "insert:canonical:7c882f996237c71301a0a2e97f13b6d8c6cf42507ab4776d49346a388dab2810",
+        "insert:canonical:0403ee3ba304795359350e5c7b3cafb41cf6b0f78074ebbd73ebbbe71a9e8b95",
+        "insert:result:00000000-0000-4000-8000-000000000012",
+        "private-acl:1",
+        "grant:8",
+        "update:canonical:7c882f996237c71301a0a2e97f13b6d8c6cf42507ab4776d49346a388dab2810",
+        "update:canonical:0403ee3ba304795359350e5c7b3cafb41cf6b0f78074ebbd73ebbbe71a9e8b95",
+        "update:canonical:98a01058df5a91eba3f3b32c952b9974ce9fefca7d1c1ff770fab73c09f7eb76"
+      ],
+      "simulatedProviderCalls": 0
+    },
+    {
+      "name": "get review",
+      "operation": "GetReviewV1",
+      "pass": true,
+      "actionsExecuted": 576,
+      "durableEffects": [
+        "update:canonical:98a01058df5a91eba3f3b32c952b9974ce9fefca7d1c1ff770fab73c09f7eb76",
+        "insert:canonical:070e4aa3cf14eb9bed69ec224d2a4186ba6a0b35242872d7dd59da79c680ee8e",
+        "insert:canonical:a6b8629ce8de0d27c12ab3b5cf88f2474e254970f089a70081b5e98e41aecf4c",
+        "insert:result:00000000-0000-4000-8000-000000000013",
+        "private-acl:1",
+        "grant:8",
+        "update:canonical:070e4aa3cf14eb9bed69ec224d2a4186ba6a0b35242872d7dd59da79c680ee8e",
+        "update:canonical:a6b8629ce8de0d27c12ab3b5cf88f2474e254970f089a70081b5e98e41aecf4c",
+        "update:canonical:98a01058df5a91eba3f3b32c952b9974ce9fefca7d1c1ff770fab73c09f7eb76"
+      ],
+      "simulatedProviderCalls": 0
+    },
+    {
+      "name": "read source register",
+      "operation": "ReadSourceRegisterV1",
+      "pass": true,
+      "actionsExecuted": 583,
+      "durableEffects": [
+        "update:canonical:98a01058df5a91eba3f3b32c952b9974ce9fefca7d1c1ff770fab73c09f7eb76",
+        "insert:canonical:1d4aaee269f56b991ee5975555aaceeda0c206e6fce8d6e4f5aa813fdb6f1dfe",
+        "insert:canonical:1d9e00895e8c4fd1396c21506215e34303c189b32224cecbb78004c7559286a5",
+        "insert:result:00000000-0000-4000-8000-000000000014",
+        "private-acl:1",
+        "grant:7",
+        "update:canonical:1d4aaee269f56b991ee5975555aaceeda0c206e6fce8d6e4f5aa813fdb6f1dfe",
+        "update:canonical:1d9e00895e8c4fd1396c21506215e34303c189b32224cecbb78004c7559286a5",
+        "update:canonical:98a01058df5a91eba3f3b32c952b9974ce9fefca7d1c1ff770fab73c09f7eb76"
+      ],
+      "simulatedProviderCalls": 0
+    },
+    {
+      "name": "read permitted source",
+      "operation": "ReadSourceExcerptV1",
+      "pass": true,
+      "actionsExecuted": 590,
+      "durableEffects": [
+        "update:canonical:98a01058df5a91eba3f3b32c952b9974ce9fefca7d1c1ff770fab73c09f7eb76",
+        "insert:canonical:365312a856bcba6ee098728a95f48c6814c0dd5841f02f77f4e743162d95d24c",
+        "insert:canonical:e4c23eda2a1d4da6481ebc860ddd20ac30fb52fd7d1654f54d55651d92162a8c",
+        "insert:result:00000000-0000-4000-8000-000000000015",
+        "private-acl:1",
+        "grant:7",
+        "update:canonical:365312a856bcba6ee098728a95f48c6814c0dd5841f02f77f4e743162d95d24c",
+        "update:canonical:e4c23eda2a1d4da6481ebc860ddd20ac30fb52fd7d1654f54d55651d92162a8c",
+        "update:canonical:98a01058df5a91eba3f3b32c952b9974ce9fefca7d1c1ff770fab73c09f7eb76"
+      ],
+      "simulatedProviderCalls": 0
+    },
+    {
+      "name": "manual new brief revision",
+      "operation": "SaveManualMarketingDraftV1",
+      "pass": true,
+      "actionsExecuted": 682,
+      "durableEffects": [
+        "update:canonical:98a01058df5a91eba3f3b32c952b9974ce9fefca7d1c1ff770fab73c09f7eb76",
+        "insert:canonical:e417a51a20145744453cd1ee74b62394681c725050a913749329c73b24af1e77",
+        "insert:canonical:d1082253f4ee11902f9d110222f5cb1a4ee034a256d65ae2bf1c57626c2371f8",
+        "insert:canonical:dd38a79338360ee0c5d30dbb2a0e65093303522c1391bb50df4a969625d21041",
+        "insert:canonical:d70981bfa19354a5ec9a3805efba7a3047d97d1300f0ae15dd247fd6e54bc9a0",
+        "insert:canonical:39b727727e516b79cecd709f19da058dd0ae429e74327472fd1c34748bcf4c13",
+        "update:canonical:d1082253f4ee11902f9d110222f5cb1a4ee034a256d65ae2bf1c57626c2371f8",
+        "insert:result:00000000-0000-4000-8000-000000000016",
+        "private-acl:1",
+        "grant:7",
+        "update:canonical:e417a51a20145744453cd1ee74b62394681c725050a913749329c73b24af1e77",
+        "update:canonical:d1082253f4ee11902f9d110222f5cb1a4ee034a256d65ae2bf1c57626c2371f8",
+        "update:canonical:98a01058df5a91eba3f3b32c952b9974ce9fefca7d1c1ff770fab73c09f7eb76"
+      ],
+      "simulatedProviderCalls": 0
+    },
+    {
+      "name": "stale parent invalidates content plan",
+      "operation": "GetArtifactV1",
+      "pass": true,
+      "actionsExecuted": 625,
+      "durableEffects": [
+        "update:canonical:98a01058df5a91eba3f3b32c952b9974ce9fefca7d1c1ff770fab73c09f7eb76",
+        "insert:canonical:2d4d34d890e1c98c828e53ea44cf39591c052ba5b6587011e73088f020a45051",
+        "insert:canonical:865a7837c82e27de42c3c07c0a076c725c1b3672dd14593c7944bfdab4f3c967",
+        "insert:result:00000000-0000-4000-8000-000000000017",
+        "private-acl:1",
+        "grant:7",
+        "update:canonical:2d4d34d890e1c98c828e53ea44cf39591c052ba5b6587011e73088f020a45051",
+        "update:canonical:865a7837c82e27de42c3c07c0a076c725c1b3672dd14593c7944bfdab4f3c967",
+        "update:canonical:98a01058df5a91eba3f3b32c952b9974ce9fefca7d1c1ff770fab73c09f7eb76"
+      ],
+      "simulatedProviderCalls": 0
+    },
+    {
+      "name": "reject stale manual revision",
+      "operation": "SaveManualMarketingDraftV1",
+      "pass": true,
+      "actionsExecuted": 632,
+      "durableEffects": [
+        "update:canonical:98a01058df5a91eba3f3b32c952b9974ce9fefca7d1c1ff770fab73c09f7eb76",
+        "insert:canonical:65975204b895cd5a3080c46fc787133f09bbc719bc01bcccab4eeaca5033634d",
+        "insert:canonical:f41c38dc086fa8316b38b08a169462e0ebb6f07a599adbe385e3b858125f366a",
+        "insert:result:00000000-0000-4000-8000-000000000018",
+        "private-acl:1",
+        "grant:7",
+        "update:canonical:65975204b895cd5a3080c46fc787133f09bbc719bc01bcccab4eeaca5033634d",
+        "update:canonical:f41c38dc086fa8316b38b08a169462e0ebb6f07a599adbe385e3b858125f366a",
+        "update:canonical:98a01058df5a91eba3f3b32c952b9974ce9fefca7d1c1ff770fab73c09f7eb76"
+      ],
+      "simulatedProviderCalls": 0
+    },
+    {
+      "name": "provider brief",
+      "operation": "DraftCampaignBriefV1",
+      "pass": true,
+      "actionsExecuted": 594,
+      "durableEffects": [
+        "insert:canonical:98a01058df5a91eba3f3b32c952b9974ce9fefca7d1c1ff770fab73c09f7eb76",
+        "insert:canonical:973380957116ca3d220252d1c9f7da013cde74e0d75bfc0d21383c1dc0b11de0",
+        "insert:canonical:bdccaf278c9ed2c1ce6c9f2ca8076d14184322a7919a226106c707bb2a89dc5c",
+        "provider-call",
+        "update:canonical:bdccaf278c9ed2c1ce6c9f2ca8076d14184322a7919a226106c707bb2a89dc5c",
+        "insert:canonical:e2a3caea6fc46f9a4c03ba8e2cdf8ba1a70946d35308e2b5fdad78637df5fc0c",
+        "insert:canonical:96c601a326f819ee45c71605a50f202a133f3eb3b6857fb1768feb8ae3deefb7",
+        "insert:canonical:f60f30cdb474ae0be96f7110d54008d7ebc04f3e85478a8a499ed264a2948a3c",
+        "insert:canonical:6b6ed88000001efa16ad9c6285c25a8b6eafea8d018881e124a4a5feac8550a2",
+        "insert:canonical:099119d29ed8a485325cffb8c3b7d4eea0bd4fa2272544fc6ee9bb4ff0cf1e29",
+        "update:canonical:e2a3caea6fc46f9a4c03ba8e2cdf8ba1a70946d35308e2b5fdad78637df5fc0c",
+        "insert:result:00000000-0000-4000-8000-000000000101",
+        "private-acl:1",
+        "grant:7",
+        "update:canonical:973380957116ca3d220252d1c9f7da013cde74e0d75bfc0d21383c1dc0b11de0",
+        "update:canonical:e2a3caea6fc46f9a4c03ba8e2cdf8ba1a70946d35308e2b5fdad78637df5fc0c",
+        "update:canonical:98a01058df5a91eba3f3b32c952b9974ce9fefca7d1c1ff770fab73c09f7eb76"
+      ],
+      "simulatedProviderCalls": 1
+    },
+    {
+      "name": "provider content plan",
+      "operation": "DraftContentPlanV1",
+      "pass": true,
+      "actionsExecuted": 709,
+      "durableEffects": [
+        "update:canonical:98a01058df5a91eba3f3b32c952b9974ce9fefca7d1c1ff770fab73c09f7eb76",
+        "insert:canonical:c7ceb6a67a847aa4ec675110a00fec9146038b1e0b44a20168efa82bd4ead2be",
+        "insert:canonical:21be9b8314854e554dcaf2bc81efb2ef3190aa090bbd7334c71cb4b1760b9ef9",
+        "provider-call",
+        "update:canonical:21be9b8314854e554dcaf2bc81efb2ef3190aa090bbd7334c71cb4b1760b9ef9",
+        "insert:canonical:00e2d22e343e91094971be24acc2f34fb02414d11f5ce26746ce04f14ef539ea",
+        "insert:canonical:c6a3fe6ba99a07f0a0cd5fc53e65aa4b7b2879abdff9736ecfa0c100756c0894",
+        "insert:canonical:8cd0f4c5a60989fd9e24afea1ed819ddf9e6113b9be6ab172b31a35769c18734",
+        "insert:canonical:1fca9a66dde5e99a2b499aa41875af2c40eed508d58933eb67e5ef2f2e700947",
+        "update:canonical:00e2d22e343e91094971be24acc2f34fb02414d11f5ce26746ce04f14ef539ea",
+        "insert:result:00000000-0000-4000-8000-000000000102",
+        "private-acl:1",
+        "grant:7",
+        "update:canonical:c7ceb6a67a847aa4ec675110a00fec9146038b1e0b44a20168efa82bd4ead2be",
+        "update:canonical:00e2d22e343e91094971be24acc2f34fb02414d11f5ce26746ce04f14ef539ea",
+        "update:canonical:98a01058df5a91eba3f3b32c952b9974ce9fefca7d1c1ff770fab73c09f7eb76"
+      ],
+      "simulatedProviderCalls": 1
+    },
+    {
+      "name": "provider meeting follow-through",
+      "operation": "DraftMeetingFollowThroughV1",
+      "pass": true,
+      "actionsExecuted": 754,
+      "durableEffects": [
+        "update:canonical:98a01058df5a91eba3f3b32c952b9974ce9fefca7d1c1ff770fab73c09f7eb76",
+        "insert:canonical:25cc52b557f3e694c7df3c2b5623ef1c5720e4e1790718f4e755d598cd3afdf9",
+        "insert:canonical:84a6ba0a8bec0e6d1f56d1949a362ea62a39ad97aa360389e88c715dd6afc65b",
+        "provider-call",
+        "update:canonical:84a6ba0a8bec0e6d1f56d1949a362ea62a39ad97aa360389e88c715dd6afc65b",
+        "insert:canonical:c3ad2a2c63798d104c16a29737e1d16aaf977469671c5bb993e8636385763e5f",
+        "insert:canonical:e17bb983c358a36cbfa37dee3f8db9b42a6355a4e022fa8ed27cbd0916314ca4",
+        "insert:canonical:73bc61cede52eba1aa4f6b56089a4220591335f712065f5475f3f600ffb8c63f",
+        "insert:canonical:155630737ac583d93b41bc2100fff479ebab3b1a5d4cec16a00412ae5aed5aa0",
+        "update:canonical:c3ad2a2c63798d104c16a29737e1d16aaf977469671c5bb993e8636385763e5f",
+        "insert:result:00000000-0000-4000-8000-000000000103",
+        "private-acl:1",
+        "grant:7",
+        "update:canonical:25cc52b557f3e694c7df3c2b5623ef1c5720e4e1790718f4e755d598cd3afdf9",
+        "update:canonical:c3ad2a2c63798d104c16a29737e1d16aaf977469671c5bb993e8636385763e5f",
+        "update:canonical:98a01058df5a91eba3f3b32c952b9974ce9fefca7d1c1ff770fab73c09f7eb76"
+      ],
+      "simulatedProviderCalls": 1
+    },
+    {
+      "name": "same original completed intent",
+      "operation": "RecoverMarketingIntentV1",
+      "pass": true,
+      "actionsExecuted": 555,
+      "durableEffects": [
+        "update:canonical:98a01058df5a91eba3f3b32c952b9974ce9fefca7d1c1ff770fab73c09f7eb76",
+        "insert:canonical:78164ccd291b504698f90f20526f2a4719efbdb3540acf9f67a9f0f60153d03f",
+        "insert:canonical:c2a426c21ca0cc8cea27fa3126b9cea91f18455615517b4295355d53d0cfc8b5",
+        "insert:result:00000000-0000-4000-8000-000000000104",
+        "private-acl:1",
+        "grant:7",
+        "update:canonical:78164ccd291b504698f90f20526f2a4719efbdb3540acf9f67a9f0f60153d03f",
+        "update:canonical:c2a426c21ca0cc8cea27fa3126b9cea91f18455615517b4295355d53d0cfc8b5",
+        "update:canonical:98a01058df5a91eba3f3b32c952b9974ce9fefca7d1c1ff770fab73c09f7eb76"
+      ],
+      "simulatedProviderCalls": 0
+    }
+  ],
+  "nativeAcceptance": false,
+  "flowZipSha256": "cfadb968f5544234aa34ce8d7c6e8d551737d8bfc0104db985a9ffc57119f872"
+}

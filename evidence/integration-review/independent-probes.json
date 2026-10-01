@@ -1,0 +1,63 @@
+{
+  "boundary": "Synthetic offline probes; passing assertions reproduce defects, not acceptance.",
+  "sourceHashes": {
+    "src/webparts/aiCoeFrontDoor/services/serverDraftStore.ts": "e528e014033bbbf0c56c87ca73dcdf221adaab3571fbd58daa94135c8ca64a56",
+    "src/webparts/aiCoeFrontDoor/services/core/nativeCoreWorkService.ts": "50915a2ad93c7d073f69aa15f459b0ae8585445167e8d66c897fbc303bf8af3a",
+    "src/webparts/aiCoeFrontDoor/services/marketing/marketingDraftService.ts": "90a60653d5cdfc541d875ccdd1e540961e60ae6370377cccae3749d3e016d5b8",
+    "backend/power-automate/marketing-runtime/server/runtime.cjs": "f2d3bdc094b8d4416f43b4bcdf2c61eba83e1e9b717c3201db5dea6c1b9f6a82",
+    "backend/power-automate/marketing-runtime/server/source-registry.cjs": "1f7104acb5943b00d14fc41f0722127c67c98d603e8829fb3a5438296d3f40b4"
+  },
+  "observations": [
+    {
+      "id": "DRAFT-RACE",
+      "verdict": "REPRODUCED",
+      "pendingBeforeStaleLoad": true,
+      "pendingAfterStaleLoad": false,
+      "restartReturnedOldDraft": true,
+      "browserBusinessText": false
+    },
+    {
+      "id": "DRAFT-CACHED-REFERENCE",
+      "verdict": "REPRODUCED",
+      "secondInstanceIgnoredSharedPending": true,
+      "pendingAfterNewWrite": false,
+      "browserBusinessText": false
+    },
+    {
+      "id": "MARKETING-REVOKED-SOURCE-REPLAY",
+      "boundary": "source",
+      "verdict": "REPRODUCED",
+      "freshReadRefused": true,
+      "oldCommandReplayReturnsExcerpt": true,
+      "recoveryNewProjectionReturnsExcerpt": true,
+      "providerCalls": 0
+    },
+    {
+      "id": "MARKETING-LATE-REVOKED-SOURCE",
+      "boundary": "source",
+      "verdict": "REPRODUCED",
+      "providerCalledAfterRevocation": true,
+      "sourceExcerptsOffered": 1,
+      "resultKind": "saved",
+      "resultState": "revalidationRequired"
+    },
+    {
+      "id": "MARKETING-REVOKED-SOURCE-REPLAY",
+      "boundary": "exact-ZIP",
+      "verdict": "REPRODUCED",
+      "freshReadRefused": true,
+      "oldCommandReplayReturnsExcerpt": true,
+      "recoveryNewProjectionReturnsExcerpt": true,
+      "providerCalls": 0
+    },
+    {
+      "id": "MARKETING-LATE-REVOKED-SOURCE",
+      "boundary": "exact-ZIP",
+      "verdict": "REPRODUCED",
+      "providerCalledAfterRevocation": true,
+      "sourceExcerptsOffered": 1,
+      "resultKind": "saved",
+      "resultState": "revalidationRequired"
+    }
+  ]
+}

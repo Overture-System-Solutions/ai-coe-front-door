@@ -1,0 +1,13 @@
+{
+  "capturedAt": "2026-09-23T13:47:27.434868+00:00",
+  "boundary": "fake SharePoint/provider; local execution only",
+  "testsCommand": "node.exe --test backend/power-automate/marketing-runtime/tests/*.test.cjs",
+  "testsExitCode": 0,
+  "typecheckExitCode": 0,
+  "tests": 30,
+  "pass": 30,
+  "fail": 0,
+  "skipped": 0,
+  "cancelled": 0,
+  "typecheckOutput": "{\"marketingFiles\":9,\"diagnostics\":0}"
+}

@@ -1,0 +1,674 @@
+[
+  {
+    "file": "src/provisioning/provisioningScript.test.ts",
+    "line": 151,
+    "warning": "(@rushstack/security/no-unsafe-regexp) Regular expressions should be constructed from string constants. Dynamically building strings at runtime may introduce security vulnerabilities, performance concerns, and bugs involving incorrect escaping of special characters.",
+    "flaggedLineExistedBefore": true
+  },
+  {
+    "file": "src/webparts/aiCoeFrontDoor/content/marketing/schema.ts",
+    "line": 238,
+    "warning": "(@rushstack/no-new-null) Usage of \"null\" is deprecated except when describing legacy APIs; use \"undefined\" instead",
+    "flaggedLineExistedBefore": true
+  },
+  {
+    "file": "src/webparts/aiCoeFrontDoor/content/marketing/artifactTypes.ts",
+    "line": 47,
+    "warning": "(@rushstack/no-new-null) Usage of \"null\" is deprecated except when describing legacy APIs; use \"undefined\" instead",
+    "flaggedLineExistedBefore": true
+  },
+  {
+    "file": "src/webparts/aiCoeFrontDoor/content/marketing/artifactTypes.ts",
+    "line": 62,
+    "warning": "(@rushstack/no-new-null) Usage of \"null\" is deprecated except when describing legacy APIs; use \"undefined\" instead",
+    "flaggedLineExistedBefore": true
+  },
+  {
+    "file": "src/webparts/aiCoeFrontDoor/content/marketing/artifactEnvelope.ts",
+    "line": 41,
+    "warning": "(@rushstack/no-new-null) Usage of \"null\" is deprecated except when describing legacy APIs; use \"undefined\" instead",
+    "flaggedLineExistedBefore": true
+  },
+  {
+    "file": "src/webparts/aiCoeFrontDoor/content/marketing/artifactEnvelope.ts",
+    "line": 71,
+    "warning": "(@rushstack/no-new-null) Usage of \"null\" is deprecated except when describing legacy APIs; use \"undefined\" instead",
+    "flaggedLineExistedBefore": true
+  },
+  {
+    "file": "src/webparts/aiCoeFrontDoor/content/marketing/contentPlan.ts",
+    "line": 38,
+    "warning": "(@rushstack/no-new-null) Usage of \"null\" is deprecated except when describing legacy APIs; use \"undefined\" instead",
+    "flaggedLineExistedBefore": true
+  },
+  {
+    "file": "src/webparts/aiCoeFrontDoor/content/marketing/contentPlan.ts",
+    "line": 58,
+    "warning": "(@rushstack/no-new-null) Usage of \"null\" is deprecated except when describing legacy APIs; use \"undefined\" instead",
+    "flaggedLineExistedBefore": true
+  },
+  {
+    "file": "src/webparts/aiCoeFrontDoor/content/marketing/contentPlan.ts",
+    "line": 67,
+    "warning": "(@rushstack/no-new-null) Usage of \"null\" is deprecated except when describing legacy APIs; use \"undefined\" instead",
+    "flaggedLineExistedBefore": true
+  },
+  {
+    "file": "src/webparts/aiCoeFrontDoor/content/marketing/meetingFollowThrough.ts",
+    "line": 44,
+    "warning": "(@rushstack/no-new-null) Usage of \"null\" is deprecated except when describing legacy APIs; use \"undefined\" instead",
+    "flaggedLineExistedBefore": true
+  },
+  {
+    "file": "src/webparts/aiCoeFrontDoor/content/marketing/meetingFollowThrough.ts",
+    "line": 51,
+    "warning": "(@rushstack/no-new-null) Usage of \"null\" is deprecated except when describing legacy APIs; use \"undefined\" instead",
+    "flaggedLineExistedBefore": true
+  },
+  {
+    "file": "src/webparts/aiCoeFrontDoor/content/marketing/meetingFollowThrough.ts",
+    "line": 95,
+    "warning": "(@rushstack/no-new-null) Usage of \"null\" is deprecated except when describing legacy APIs; use \"undefined\" instead",
+    "flaggedLineExistedBefore": true
+  },
+  {
+    "file": "src/webparts/aiCoeFrontDoor/content/marketing/meetingFollowThrough.ts",
+    "line": 104,
+    "warning": "(@rushstack/no-new-null) Usage of \"null\" is deprecated except when describing legacy APIs; use \"undefined\" instead",
+    "flaggedLineExistedBefore": true
+  },
+  {
+    "file": "src/webparts/aiCoeFrontDoor/content/marketing/meetingFollowThrough.ts",
+    "line": 140,
+    "warning": "(@rushstack/no-new-null) Usage of \"null\" is deprecated except when describing legacy APIs; use \"undefined\" instead",
+    "flaggedLineExistedBefore": true
+  },
+  {
+    "file": "src/webparts/aiCoeFrontDoor/services/marketing/artifactStore.ts",
+    "line": 25,
+    "warning": "(@rushstack/no-new-null) Usage of \"null\" is deprecated except when describing legacy APIs; use \"undefined\" instead",
+    "flaggedLineExistedBefore": true
+  },
+  {
+    "file": "src/webparts/aiCoeFrontDoor/services/marketing/artifactStore.ts",
+    "line": 28,
+    "warning": "(@rushstack/no-new-null) Usage of \"null\" is deprecated except when describing legacy APIs; use \"undefined\" instead",
+    "flaggedLineExistedBefore": true
+  },
+  {
+    "file": "src/webparts/aiCoeFrontDoor/services/marketing/artifactStore.ts",
+    "line": 85,
+    "warning": "(@rushstack/no-new-null) Usage of \"null\" is deprecated except when describing legacy APIs; use \"undefined\" instead",
+    "flaggedLineExistedBefore": true
+  },
+  {
+    "file": "src/webparts/aiCoeFrontDoor/services/marketing/artifactStore.ts",
+    "line": 107,
+    "warning": "(@rushstack/no-new-null) Usage of \"null\" is deprecated except when describing legacy APIs; use \"undefined\" instead",
+    "flaggedLineExistedBefore": true
+  },
+  {
+    "file": "src/webparts/aiCoeFrontDoor/services/marketing/artifactRepository.ts",
+    "line": 37,
+    "warning": "(@rushstack/no-new-null) Usage of \"null\" is deprecated except when describing legacy APIs; use \"undefined\" instead",
+    "flaggedLineExistedBefore": true
+  },
+  {
+    "file": "src/webparts/aiCoeFrontDoor/services/marketing/providers.ts",
+    "line": 57,
+    "warning": "(@rushstack/no-new-null) Usage of \"null\" is deprecated except when describing legacy APIs; use \"undefined\" instead",
+    "flaggedLineExistedBefore": true
+  },
+  {
+    "file": "src/webparts/aiCoeFrontDoor/services/marketing/marketingDraftService.ts",
+    "line": 45,
+    "warning": "(@typescript-eslint/no-unused-vars) 'IWriteOutcome' is defined but never used.",
+    "flaggedLineExistedBefore": true
+  },
+  {
+    "file": "src/webparts/aiCoeFrontDoor/services/marketing/businessTransport.ts",
+    "line": 27,
+    "warning": "(@rushstack/no-new-null) Usage of \"null\" is deprecated except when describing legacy APIs; use \"undefined\" instead",
+    "flaggedLineExistedBefore": true
+  },
+  {
+    "file": "src/webparts/aiCoeFrontDoor/services/core/coreContract.ts",
+    "line": 45,
+    "warning": "(@rushstack/no-new-null) Usage of \"null\" is deprecated except when describing legacy APIs; use \"undefined\" instead",
+    "flaggedLineExistedBefore": true
+  },
+  {
+    "file": "src/webparts/aiCoeFrontDoor/services/core/coreContract.ts",
+    "line": 46,
+    "warning": "(@rushstack/no-new-null) Usage of \"null\" is deprecated except when describing legacy APIs; use \"undefined\" instead",
+    "flaggedLineExistedBefore": true
+  },
+  {
+    "file": "src/webparts/aiCoeFrontDoor/services/core/coreContract.ts",
+    "line": 47,
+    "warning": "(@rushstack/no-new-null) Usage of \"null\" is deprecated except when describing legacy APIs; use \"undefined\" instead",
+    "flaggedLineExistedBefore": true
+  },
+  {
+    "file": "src/webparts/aiCoeFrontDoor/services/core/coreContract.ts",
+    "line": 48,
+    "warning": "(@rushstack/no-new-null) Usage of \"null\" is deprecated except when describing legacy APIs; use \"undefined\" instead",
+    "flaggedLineExistedBefore": true
+  },
+  {
+    "file": "src/webparts/aiCoeFrontDoor/services/core/coreContract.ts",
+    "line": 49,
+    "warning": "(@rushstack/no-new-null) Usage of \"null\" is deprecated except when describing legacy APIs; use \"undefined\" instead",
+    "flaggedLineExistedBefore": true
+  },
+  {
+    "file": "src/webparts/aiCoeFrontDoor/services/core/coreContract.ts",
+    "line": 50,
+    "warning": "(@rushstack/no-new-null) Usage of \"null\" is deprecated except when describing legacy APIs; use \"undefined\" instead",
+    "flaggedLineExistedBefore": true
+  },
+  {
+    "file": "src/webparts/aiCoeFrontDoor/services/core/coreContract.ts",
+    "line": 52,
+    "warning": "(@rushstack/no-new-null) Usage of \"null\" is deprecated except when describing legacy APIs; use \"undefined\" instead",
+    "flaggedLineExistedBefore": true
+  },
+  {
+    "file": "src/webparts/aiCoeFrontDoor/services/core/coreContract.ts",
+    "line": 60,
+    "warning": "(@rushstack/no-new-null) Usage of \"null\" is deprecated except when describing legacy APIs; use \"undefined\" instead",
+    "flaggedLineExistedBefore": true
+  },
+  {
+    "file": "src/webparts/aiCoeFrontDoor/services/core/coreContract.ts",
+    "line": 137,
+    "warning": "(@rushstack/no-new-null) Usage of \"null\" is deprecated except when describing legacy APIs; use \"undefined\" instead",
+    "flaggedLineExistedBefore": true
+  },
+  {
+    "file": "src/webparts/aiCoeFrontDoor/services/core/coreContract.ts",
+    "line": 138,
+    "warning": "(@rushstack/no-new-null) Usage of \"null\" is deprecated except when describing legacy APIs; use \"undefined\" instead",
+    "flaggedLineExistedBefore": true
+  },
+  {
+    "file": "src/webparts/aiCoeFrontDoor/services/core/coreContract.ts",
+    "line": 139,
+    "warning": "(@rushstack/no-new-null) Usage of \"null\" is deprecated except when describing legacy APIs; use \"undefined\" instead",
+    "flaggedLineExistedBefore": true
+  },
+  {
+    "file": "src/webparts/aiCoeFrontDoor/services/core/coreContract.ts",
+    "line": 140,
+    "warning": "(@rushstack/no-new-null) Usage of \"null\" is deprecated except when describing legacy APIs; use \"undefined\" instead",
+    "flaggedLineExistedBefore": true
+  },
+  {
+    "file": "src/webparts/aiCoeFrontDoor/services/core/coreContract.ts",
+    "line": 142,
+    "warning": "(@rushstack/no-new-null) Usage of \"null\" is deprecated except when describing legacy APIs; use \"undefined\" instead",
+    "flaggedLineExistedBefore": true
+  },
+  {
+    "file": "src/webparts/aiCoeFrontDoor/services/core/coreContract.ts",
+    "line": 155,
+    "warning": "(@rushstack/no-new-null) Usage of \"null\" is deprecated except when describing legacy APIs; use \"undefined\" instead",
+    "flaggedLineExistedBefore": true
+  },
+  {
+    "file": "src/webparts/aiCoeFrontDoor/services/core/coreContract.ts",
+    "line": 156,
+    "warning": "(@rushstack/no-new-null) Usage of \"null\" is deprecated except when describing legacy APIs; use \"undefined\" instead",
+    "flaggedLineExistedBefore": true
+  },
+  {
+    "file": "src/webparts/aiCoeFrontDoor/services/core/coreContract.ts",
+    "line": 157,
+    "warning": "(@rushstack/no-new-null) Usage of \"null\" is deprecated except when describing legacy APIs; use \"undefined\" instead",
+    "flaggedLineExistedBefore": true
+  },
+  {
+    "file": "src/webparts/aiCoeFrontDoor/services/core/coreContract.ts",
+    "line": 159,
+    "warning": "(@rushstack/no-new-null) Usage of \"null\" is deprecated except when describing legacy APIs; use \"undefined\" instead",
+    "flaggedLineExistedBefore": true
+  },
+  {
+    "file": "src/webparts/aiCoeFrontDoor/services/core/coreContract.ts",
+    "line": 207,
+    "warning": "(@rushstack/no-new-null) Usage of \"null\" is deprecated except when describing legacy APIs; use \"undefined\" instead",
+    "flaggedLineExistedBefore": true
+  },
+  {
+    "file": "src/webparts/aiCoeFrontDoor/services/core/coreContract.ts",
+    "line": 259,
+    "warning": "(@rushstack/no-new-null) Usage of \"null\" is deprecated except when describing legacy APIs; use \"undefined\" instead",
+    "flaggedLineExistedBefore": true
+  },
+  {
+    "file": "src/webparts/aiCoeFrontDoor/services/core/commandKey.ts",
+    "line": 49,
+    "warning": "(@rushstack/no-new-null) Usage of \"null\" is deprecated except when describing legacy APIs; use \"undefined\" instead",
+    "flaggedLineExistedBefore": true
+  },
+  {
+    "file": "src/webparts/aiCoeFrontDoor/services/core/commandTransport.ts",
+    "line": 23,
+    "warning": "(@rushstack/no-new-null) Usage of \"null\" is deprecated except when describing legacy APIs; use \"undefined\" instead",
+    "flaggedLineExistedBefore": true
+  },
+  {
+    "file": "src/webparts/aiCoeFrontDoor/services/core/commandTransport.ts",
+    "line": 30,
+    "warning": "(@rushstack/no-new-null) Usage of \"null\" is deprecated except when describing legacy APIs; use \"undefined\" instead",
+    "flaggedLineExistedBefore": true
+  },
+  {
+    "file": "src/webparts/aiCoeFrontDoor/services/core/packetProjection.ts",
+    "line": 21,
+    "warning": "(@rushstack/no-new-null) Usage of \"null\" is deprecated except when describing legacy APIs; use \"undefined\" instead",
+    "flaggedLineExistedBefore": true
+  },
+  {
+    "file": "src/webparts/aiCoeFrontDoor/services/core/packetProjection.ts",
+    "line": 22,
+    "warning": "(@rushstack/no-new-null) Usage of \"null\" is deprecated except when describing legacy APIs; use \"undefined\" instead",
+    "flaggedLineExistedBefore": true
+  },
+  {
+    "file": "src/webparts/aiCoeFrontDoor/services/core/packetProjection.ts",
+    "line": 23,
+    "warning": "(@rushstack/no-new-null) Usage of \"null\" is deprecated except when describing legacy APIs; use \"undefined\" instead",
+    "flaggedLineExistedBefore": true
+  },
+  {
+    "file": "src/webparts/aiCoeFrontDoor/services/core/coreWorkService.ts",
+    "line": 48,
+    "warning": "(@rushstack/no-new-null) Usage of \"null\" is deprecated except when describing legacy APIs; use \"undefined\" instead",
+    "flaggedLineExistedBefore": true
+  },
+  {
+    "file": "src/webparts/aiCoeFrontDoor/services/core/coreWorkService.ts",
+    "line": 68,
+    "warning": "(@rushstack/no-new-null) Usage of \"null\" is deprecated except when describing legacy APIs; use \"undefined\" instead",
+    "flaggedLineExistedBefore": true
+  },
+  {
+    "file": "src/webparts/aiCoeFrontDoor/services/core/coreWorkService.ts",
+    "line": 68,
+    "warning": "(@rushstack/no-new-null) Usage of \"null\" is deprecated except when describing legacy APIs; use \"undefined\" instead",
+    "flaggedLineExistedBefore": true
+  },
+  {
+    "file": "src/webparts/aiCoeFrontDoor/services/core/coreWorkService.ts",
+    "line": 167,
+    "warning": "(@rushstack/no-new-null) Usage of \"null\" is deprecated except when describing legacy APIs; use \"undefined\" instead",
+    "flaggedLineExistedBefore": true
+  },
+  {
+    "file": "src/webparts/aiCoeFrontDoor/services/core/coreWorkService.ts",
+    "line": 167,
+    "warning": "(@rushstack/no-new-null) Usage of \"null\" is deprecated except when describing legacy APIs; use \"undefined\" instead",
+    "flaggedLineExistedBefore": true
+  },
+  {
+    "file": "src/webparts/aiCoeFrontDoor/components/app/AppCoreWorkspace.tsx",
+    "line": 194,
+    "warning": "(no-void) Expected 'undefined' and instead saw 'void'.",
+    "flaggedLineExistedBefore": true
+  },
+  {
+    "file": "src/webparts/aiCoeFrontDoor/components/app/AppMarketingWorkspace.tsx",
+    "line": 305,
+    "warning": "(no-void) Expected 'undefined' and instead saw 'void'.",
+    "flaggedLineExistedBefore": true
+  },
+  {
+    "file": "src/webparts/aiCoeFrontDoor/components/app/AppMarketingWorkspace.tsx",
+    "line": 308,
+    "warning": "(no-void) Expected 'undefined' and instead saw 'void'.",
+    "flaggedLineExistedBefore": true
+  },
+  {
+    "file": "src/webparts/aiCoeFrontDoor/components/app/AppMarketingWorkspace.tsx",
+    "line": 318,
+    "warning": "(no-void) Expected 'undefined' and instead saw 'void'.",
+    "flaggedLineExistedBefore": true
+  },
+  {
+    "file": "src/webparts/aiCoeFrontDoor/components/app/AppMarketingWorkspace.tsx",
+    "line": 388,
+    "warning": "(no-void) Expected 'undefined' and instead saw 'void'.",
+    "flaggedLineExistedBefore": true
+  },
+  {
+    "file": "src/webparts/aiCoeFrontDoor/components/app/AppMarketingWorkspace.tsx",
+    "line": 403,
+    "warning": "(no-void) Expected 'undefined' and instead saw 'void'.",
+    "flaggedLineExistedBefore": true
+  },
+  {
+    "file": "src/webparts/aiCoeFrontDoor/components/app/AppMarketingWorkspace.tsx",
+    "line": 414,
+    "warning": "(no-void) Expected 'undefined' and instead saw 'void'.",
+    "flaggedLineExistedBefore": true
+  },
+  {
+    "file": "src/webparts/aiCoeFrontDoor/components/app/AppMarketingWorkspace.tsx",
+    "line": 417,
+    "warning": "(no-void) Expected 'undefined' and instead saw 'void'.",
+    "flaggedLineExistedBefore": true
+  },
+  {
+    "file": "src/webparts/aiCoeFrontDoor/components/app/AppMarketingWorkspace.tsx",
+    "line": 420,
+    "warning": "(no-void) Expected 'undefined' and instead saw 'void'.",
+    "flaggedLineExistedBefore": true
+  },
+  {
+    "file": "src/webparts/aiCoeFrontDoor/components/app/AppMarketingWorkspace.tsx",
+    "line": 441,
+    "warning": "(no-void) Expected 'undefined' and instead saw 'void'.",
+    "flaggedLineExistedBefore": true
+  },
+  {
+    "file": "src/webparts/aiCoeFrontDoor/components/app/AppMarketingWorkspace.tsx",
+    "line": 445,
+    "warning": "(@rushstack/no-new-null) Usage of \"null\" is deprecated except when describing legacy APIs; use \"undefined\" instead",
+    "flaggedLineExistedBefore": true
+  },
+  {
+    "file": "src/webparts/aiCoeFrontDoor/components/app/AppMarketingWorkspace.tsx",
+    "line": 482,
+    "warning": "(no-void) Expected 'undefined' and instead saw 'void'.",
+    "flaggedLineExistedBefore": true
+  },
+  {
+    "file": "src/webparts/aiCoeFrontDoor/components/app/AppBusinessMarketingWorkspace.tsx",
+    "line": 101,
+    "warning": "(no-void) Expected 'undefined' and instead saw 'void'.",
+    "flaggedLineExistedBefore": true
+  },
+  {
+    "file": "src/webparts/aiCoeFrontDoor/components/app/AppBusinessMarketingWorkspace.tsx",
+    "line": 175,
+    "warning": "(no-void) Expected 'undefined' and instead saw 'void'.",
+    "flaggedLineExistedBefore": true
+  },
+  {
+    "file": "src/webparts/aiCoeFrontDoor/components/app/AppBusinessMarketingWorkspace.tsx",
+    "line": 177,
+    "warning": "Unused eslint-disable directive (no problems were reported from 'react-hooks/exhaustive-deps').",
+    "flaggedLineExistedBefore": true
+  },
+  {
+    "file": "src/webparts/aiCoeFrontDoor/components/app/AppBusinessMarketingWorkspace.tsx",
+    "line": 181,
+    "warning": "(no-void) Expected 'undefined' and instead saw 'void'.",
+    "flaggedLineExistedBefore": true
+  },
+  {
+    "file": "src/webparts/aiCoeFrontDoor/components/app/AppBusinessMarketingWorkspace.tsx",
+    "line": 284,
+    "warning": "(no-void) Expected 'undefined' and instead saw 'void'.",
+    "flaggedLineExistedBefore": true
+  },
+  {
+    "file": "src/webparts/aiCoeFrontDoor/components/app/AppBusinessMarketingWorkspace.tsx",
+    "line": 291,
+    "warning": "(no-void) Expected 'undefined' and instead saw 'void'.",
+    "flaggedLineExistedBefore": true
+  },
+  {
+    "file": "src/webparts/aiCoeFrontDoor/components/app/AppBusinessMarketingWorkspace.tsx",
+    "line": 292,
+    "warning": "(no-void) Expected 'undefined' and instead saw 'void'.",
+    "flaggedLineExistedBefore": true
+  },
+  {
+    "file": "src/webparts/aiCoeFrontDoor/components/app/AppBusinessMarketingWorkspace.tsx",
+    "line": 298,
+    "warning": "(no-void) Expected 'undefined' and instead saw 'void'.",
+    "flaggedLineExistedBefore": true
+  },
+  {
+    "file": "src/webparts/aiCoeFrontDoor/components/app/AppBusinessMarketingWorkspace.tsx",
+    "line": 304,
+    "warning": "(no-void) Expected 'undefined' and instead saw 'void'.",
+    "flaggedLineExistedBefore": true
+  },
+  {
+    "file": "src/webparts/aiCoeFrontDoor/components/app/AppBusinessMarketingWorkspace.tsx",
+    "line": 314,
+    "warning": "(no-void) Expected 'undefined' and instead saw 'void'.",
+    "flaggedLineExistedBefore": true
+  },
+  {
+    "file": "src/webparts/aiCoeFrontDoor/components/app/AppBusinessMarketingWorkspace.tsx",
+    "line": 316,
+    "warning": "(react/no-unescaped-entities) `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`.",
+    "flaggedLineExistedBefore": true
+  },
+  {
+    "file": "src/webparts/aiCoeFrontDoor/components/app/AppBusinessMarketingWorkspace.tsx",
+    "line": 318,
+    "warning": "(no-void) Expected 'undefined' and instead saw 'void'.",
+    "flaggedLineExistedBefore": true
+  },
+  {
+    "file": "src/webparts/aiCoeFrontDoor/components/app/AppBusinessMarketingWorkspace.tsx",
+    "line": 319,
+    "warning": "(no-void) Expected 'undefined' and instead saw 'void'.",
+    "flaggedLineExistedBefore": true
+  },
+  {
+    "file": "src/webparts/aiCoeFrontDoor/components/app/AppBusinessMarketingWorkspace.tsx",
+    "line": 320,
+    "warning": "(no-void) Expected 'undefined' and instead saw 'void'.",
+    "flaggedLineExistedBefore": true
+  },
+  {
+    "file": "src/webparts/aiCoeFrontDoor/components/app/AppMarketing.tsx",
+    "line": 144,
+    "warning": "Unused eslint-disable directive (no problems were reported from 'react-hooks/exhaustive-deps').",
+    "flaggedLineExistedBefore": true
+  },
+  {
+    "file": "src/webparts/aiCoeFrontDoor/components/app/AppMarketing.tsx",
+    "line": 493,
+    "warning": "(react/no-unescaped-entities) `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`.",
+    "flaggedLineExistedBefore": true
+  },
+  {
+    "file": "src/webparts/aiCoeFrontDoor/services/serverDraftStore.ts",
+    "line": 7,
+    "warning": "(@rushstack/no-new-null) Usage of \"null\" is deprecated except when describing legacy APIs; use \"undefined\" instead",
+    "flaggedLineExistedBefore": true
+  },
+  {
+    "file": "src/webparts/aiCoeFrontDoor/services/serverDraftStore.ts",
+    "line": 109,
+    "warning": "(no-void) Expected 'undefined' and instead saw 'void'.",
+    "flaggedLineExistedBefore": true
+  },
+  {
+    "file": "src/webparts/aiCoeFrontDoor/services/core/nativeCoreWorkService.ts",
+    "line": 62,
+    "warning": "(@rushstack/no-new-null) Usage of \"null\" is deprecated except when describing legacy APIs; use \"undefined\" instead",
+    "flaggedLineExistedBefore": true
+  },
+  {
+    "file": "src/webparts/aiCoeFrontDoor/services/core/nativeCoreWorkService.ts",
+    "line": 62,
+    "warning": "(@rushstack/no-new-null) Usage of \"null\" is deprecated except when describing legacy APIs; use \"undefined\" instead",
+    "flaggedLineExistedBefore": true
+  },
+  {
+    "file": "src/webparts/aiCoeFrontDoor/services/workflowOutcomeAggregation.test.ts",
+    "line": 17,
+    "warning": "(@typescript-eslint/no-explicit-any) Unexpected any. Specify a different type.",
+    "flaggedLineExistedBefore": true
+  },
+  {
+    "file": "src/webparts/aiCoeFrontDoor/services/workflowOutcomeAggregation.test.ts",
+    "line": 17,
+    "warning": "(@typescript-eslint/no-explicit-any) Unexpected any. Specify a different type.",
+    "flaggedLineExistedBefore": true
+  },
+  {
+    "file": "src/webparts/aiCoeFrontDoor/services/core/coreConformance.test.ts",
+    "line": 20,
+    "warning": "(@rushstack/no-new-null) Usage of \"null\" is deprecated except when describing legacy APIs; use \"undefined\" instead",
+    "flaggedLineExistedBefore": true
+  },
+  {
+    "file": "src/webparts/aiCoeFrontDoor/components/app/AppBusinessMarketingWorkspace.test.tsx",
+    "line": 17,
+    "warning": "(@typescript-eslint/explicit-function-return-type) Missing return type on function.",
+    "flaggedLineExistedBefore": true
+  },
+  {
+    "file": "src/webparts/aiCoeFrontDoor/components/app/AppBusinessMarketingWorkspace.test.tsx",
+    "line": 29,
+    "warning": "(@typescript-eslint/explicit-function-return-type) Missing return type on function.",
+    "flaggedLineExistedBefore": true
+  },
+  {
+    "file": "src/webparts/aiCoeFrontDoor/components/app/AppBusinessMarketingWorkspace.test.tsx",
+    "line": 35,
+    "warning": "(@typescript-eslint/explicit-function-return-type) Missing return type on function.",
+    "flaggedLineExistedBefore": true
+  },
+  {
+    "file": "src/webparts/aiCoeFrontDoor/components/app/AppBusinessMarketingWorkspace.test.tsx",
+    "line": 38,
+    "warning": "(@typescript-eslint/explicit-function-return-type) Missing return type on function.",
+    "flaggedLineExistedBefore": true
+  },
+  {
+    "file": "src/webparts/aiCoeFrontDoor/components/app/AppCoreWorkspace.test.tsx",
+    "line": 28,
+    "warning": "(@rushstack/security/no-unsafe-regexp) Regular expressions should be constructed from string constants. Dynamically building strings at runtime may introduce security vulnerabilities, performance concerns, and bugs involving incorrect escaping of special characters.",
+    "flaggedLineExistedBefore": true
+  },
+  {
+    "file": "src/webparts/aiCoeFrontDoor/components/app/AppCoreWorkspace.test.tsx",
+    "line": 29,
+    "warning": "(@rushstack/security/no-unsafe-regexp) Regular expressions should be constructed from string constants. Dynamically building strings at runtime may introduce security vulnerabilities, performance concerns, and bugs involving incorrect escaping of special characters.",
+    "flaggedLineExistedBefore": true
+  },
+  {
+    "file": "src/webparts/aiCoeFrontDoor/components/app/AppCoreWorkspace.test.tsx",
+    "line": 49,
+    "warning": "(@rushstack/security/no-unsafe-regexp) Regular expressions should be constructed from string constants. Dynamically building strings at runtime may introduce security vulnerabilities, performance concerns, and bugs involving incorrect escaping of special characters.",
+    "flaggedLineExistedBefore": true
+  },
+  {
+    "file": "src/webparts/aiCoeFrontDoor/components/app/AppCoreWorkspace.test.tsx",
+    "line": 67,
+    "warning": "(@rushstack/security/no-unsafe-regexp) Regular expressions should be constructed from string constants. Dynamically building strings at runtime may introduce security vulnerabilities, performance concerns, and bugs involving incorrect escaping of special characters.",
+    "flaggedLineExistedBefore": true
+  },
+  {
+    "file": "src/webparts/aiCoeFrontDoor/components/app/AppCoreWorkspace.test.tsx",
+    "line": 68,
+    "warning": "(@rushstack/security/no-unsafe-regexp) Regular expressions should be constructed from string constants. Dynamically building strings at runtime may introduce security vulnerabilities, performance concerns, and bugs involving incorrect escaping of special characters.",
+    "flaggedLineExistedBefore": true
+  },
+  {
+    "file": "src/webparts/aiCoeFrontDoor/components/app/AppCoreWorkspace.test.tsx",
+    "line": 83,
+    "warning": "(@rushstack/security/no-unsafe-regexp) Regular expressions should be constructed from string constants. Dynamically building strings at runtime may introduce security vulnerabilities, performance concerns, and bugs involving incorrect escaping of special characters.",
+    "flaggedLineExistedBefore": true
+  },
+  {
+    "file": "src/webparts/aiCoeFrontDoor/components/app/AppCoreWorkspace.test.tsx",
+    "line": 84,
+    "warning": "(@rushstack/security/no-unsafe-regexp) Regular expressions should be constructed from string constants. Dynamically building strings at runtime may introduce security vulnerabilities, performance concerns, and bugs involving incorrect escaping of special characters.",
+    "flaggedLineExistedBefore": true
+  },
+  {
+    "file": "src/webparts/aiCoeFrontDoor/components/app/AppCoreWorkspace.test.tsx",
+    "line": 118,
+    "warning": "(@rushstack/security/no-unsafe-regexp) Regular expressions should be constructed from string constants. Dynamically building strings at runtime may introduce security vulnerabilities, performance concerns, and bugs involving incorrect escaping of special characters.",
+    "flaggedLineExistedBefore": true
+  },
+  {
+    "file": "src/webparts/aiCoeFrontDoor/components/app/AppCoreWorkspace.test.tsx",
+    "line": 119,
+    "warning": "(@rushstack/security/no-unsafe-regexp) Regular expressions should be constructed from string constants. Dynamically building strings at runtime may introduce security vulnerabilities, performance concerns, and bugs involving incorrect escaping of special characters.",
+    "flaggedLineExistedBefore": true
+  },
+  {
+    "file": "src/webparts/aiCoeFrontDoor/components/app/AppCoreWorkspace.test.tsx",
+    "line": 173,
+    "warning": "(@rushstack/security/no-unsafe-regexp) Regular expressions should be constructed from string constants. Dynamically building strings at runtime may introduce security vulnerabilities, performance concerns, and bugs involving incorrect escaping of special characters.",
+    "flaggedLineExistedBefore": true
+  },
+  {
+    "file": "src/webparts/aiCoeFrontDoor/components/app/AppCoreWorkspace.test.tsx",
+    "line": 174,
+    "warning": "(@rushstack/security/no-unsafe-regexp) Regular expressions should be constructed from string constants. Dynamically building strings at runtime may introduce security vulnerabilities, performance concerns, and bugs involving incorrect escaping of special characters.",
+    "flaggedLineExistedBefore": true
+  },
+  {
+    "file": "src/webparts/aiCoeFrontDoor/components/app/AppCoreWorkspace.test.tsx",
+    "line": 191,
+    "warning": "(@rushstack/security/no-unsafe-regexp) Regular expressions should be constructed from string constants. Dynamically building strings at runtime may introduce security vulnerabilities, performance concerns, and bugs involving incorrect escaping of special characters.",
+    "flaggedLineExistedBefore": true
+  },
+  {
+    "file": "src/webparts/aiCoeFrontDoor/components/app/AppCoreWorkspace.test.tsx",
+    "line": 192,
+    "warning": "(@rushstack/security/no-unsafe-regexp) Regular expressions should be constructed from string constants. Dynamically building strings at runtime may introduce security vulnerabilities, performance concerns, and bugs involving incorrect escaping of special characters.",
+    "flaggedLineExistedBefore": true
+  },
+  {
+    "file": "src/webparts/aiCoeFrontDoor/components/app/AppCoreWorkspace.test.tsx",
+    "line": 216,
+    "warning": "(@rushstack/security/no-unsafe-regexp) Regular expressions should be constructed from string constants. Dynamically building strings at runtime may introduce security vulnerabilities, performance concerns, and bugs involving incorrect escaping of special characters.",
+    "flaggedLineExistedBefore": true
+  },
+  {
+    "file": "src/webparts/aiCoeFrontDoor/components/app/AppCoreWorkspace.test.tsx",
+    "line": 217,
+    "warning": "(@rushstack/security/no-unsafe-regexp) Regular expressions should be constructed from string constants. Dynamically building strings at runtime may introduce security vulnerabilities, performance concerns, and bugs involving incorrect escaping of special characters.",
+    "flaggedLineExistedBefore": true
+  },
+  {
+    "file": "src/webparts/aiCoeFrontDoor/components/app/AppCoreWorkspace.test.tsx",
+    "line": 236,
+    "warning": "(@rushstack/security/no-unsafe-regexp) Regular expressions should be constructed from string constants. Dynamically building strings at runtime may introduce security vulnerabilities, performance concerns, and bugs involving incorrect escaping of special characters.",
+    "flaggedLineExistedBefore": true
+  },
+  {
+    "file": "src/webparts/aiCoeFrontDoor/components/app/AppMarketingWorkspace.test.tsx",
+    "line": 4,
+    "warning": "(@typescript-eslint/no-unused-vars) 'createDisabledLiveMarketingServices' is defined but never used.",
+    "flaggedLineExistedBefore": true
+  },
+  {
+    "file": "src/webparts/aiCoeFrontDoor/components/app/AppMarketingWorkspace.test.tsx",
+    "line": 14,
+    "warning": "(@typescript-eslint/explicit-function-return-type) Missing return type on function.",
+    "flaggedLineExistedBefore": true
+  },
+  {
+    "file": "src/webparts/aiCoeFrontDoor/components/app/AppMarketingWorkspace.test.tsx",
+    "line": 42,
+    "warning": "(@rushstack/security/no-unsafe-regexp) Regular expressions should be constructed from string constants. Dynamically building strings at runtime may introduce security vulnerabilities, performance concerns, and bugs involving incorrect escaping of special characters.",
+    "flaggedLineExistedBefore": true
+  },
+  {
+    "file": "src/webparts/aiCoeFrontDoor/components/app/AppMarketingWorkspace.test.tsx",
+    "line": 59,
+    "warning": "(@rushstack/security/no-unsafe-regexp) Regular expressions should be constructed from string constants. Dynamically building strings at runtime may introduce security vulnerabilities, performance concerns, and bugs involving incorrect escaping of special characters.",
+    "flaggedLineExistedBefore": true
+  },
+  {
+    "file": "src/webparts/aiCoeFrontDoor/components/app/AppShell.test.tsx",
+    "line": 418,
+    "warning": "(no-script-url) Script URL is a form of eval.",
+    "flaggedLineExistedBefore": true
+  }
+]

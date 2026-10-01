@@ -1,0 +1,16 @@
+{
+  "EnvironmentVariables": [],
+  "ConnectionReferences": [
+    {
+      "LogicalName": "aicoe_coreintegrity",
+      "ConnectionId": "",
+      "ConnectorId": "/providers/Microsoft.PowerApps/apis/UNBOUND_CORE_INTEGRITY"
+    },
+    {
+      "LogicalName": "aicoe_sharepointonline",
+      "ConnectionId": "",
+      "ConnectorId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+    }
+  ],
+  "CopilotAgents": []
+}

@@ -10,21 +10,22 @@ import { StepNav } from '../../controls/StepNav';
 import { StepRenderer } from '../../controls/StepRenderer';
 import { WorkflowHeader } from '../../controls/WorkflowHeader';
 import { Info } from '../../icons';
+import type { ISubmissionResult } from '../../services/types';
 import { buildFeedbackExportText, buildFeedbackRecord, feedbackWhatHappensNext } from '../../summaries/feedbackSummary';
 import { createFeedbackSession, feedbackReducer, toStoredFeedbackDraft } from '../../workflows/feedbackSession';
 import type { FeedbackSessionAction, IFeedbackDraft, IFeedbackSession } from '../../workflows/feedbackSession';
 import { validateStep } from '../../workflows/formEngine';
 import type { IWorkflowDefinition } from '../../workflows/types';
 import { FEEDBACK_NOTICE, FeedbackReview } from './FeedbackReview';
-import { SETTING_UP_TEXT, StartOverDialog, stepPosition, SummaryFooter, useClearDraft, useDraftBoot, useSaveDraft, WorkflowCard } from './shared';
+import { SETTING_UP_TEXT, settleDraft, StartOverDialog, stepPosition, SummaryFooter, useClearDraft, useDraftBoot, useSaveDraft, WorkflowCard } from './shared';
 import type { IStepPosition, IWorkflowProps } from './shared';
 
 const WORKFLOW_ID: 'feedback' = 'feedback';
 
 /** Feedback about the AI CoE services: questions, a review page and the confirmed record. */
 export function FeedbackWorkflow({ resumeDraft, onExit, onDraftsChanged }: IWorkflowProps): React.ReactElement {
-  const { branding, catalog } = useFrontDoor();
-  const { submit } = useSubmission();
+  const { branding, catalog, pageView } = useFrontDoor();
+  const { submit, retryLast } = useSubmission();
   const definition: IWorkflowDefinition = catalog.feedback;
   const [session, dispatch] = React.useReducer(
     feedbackReducer,
@@ -83,10 +84,14 @@ export function FeedbackWorkflow({ resumeDraft, onExit, onDraftsChanged }: IWork
     );
   };
 
+  /** After an outcome: the legacy shell clears the draft; a page view keeps the feedback as a review-stage draft unless the record is saved. */
+  const settle = (result: ISubmissionResult): Promise<void> =>
+    settleDraft(result, pageView, (): Promise<string> => saveDraft({ ...toStoredFeedbackDraft(session), phase: 'review' }), clearDraft);
+
   const submitFeedback = async (): Promise<void> => {
     dispatch({ type: 'SET_PHASE', phase: 'submitting' });
-    await submit(WORKFLOW_ID, buildFeedbackRecord(definition, session.answers, session.themes));
-    await clearDraft();
+    const result: ISubmissionResult = await submit(WORKFLOW_ID, buildFeedbackRecord(definition, session.answers, session.themes));
+    await settle(result);
     dispatch({ type: 'SET_PHASE', phase: 'result' });
   };
 
@@ -95,6 +100,23 @@ export function FeedbackWorkflow({ resumeDraft, onExit, onDraftsChanged }: IWork
     submitFeedback().catch((error: unknown): void => {
       console.error('AI CoE submission failed', error);
       dispatch({ type: 'SET_PHASE', phase: 'review' });
+    });
+  };
+
+  /** Sends the last attempt again under its reference (page views: a pending or failed record completes, nothing duplicates). */
+  const confirmAgain = async (): Promise<void> => {
+    dispatch({ type: 'SET_PHASE', phase: 'submitting' });
+    const result: ISubmissionResult | undefined = await retryLast();
+    if (result !== undefined) {
+      await settle(result);
+    }
+    dispatch({ type: 'SET_PHASE', phase: 'result' });
+  };
+
+  const retry = (): void => {
+    confirmAgain().catch((error: unknown): void => {
+      console.error('AI CoE submission failed', error);
+      dispatch({ type: 'SET_PHASE', phase: 'result' });
     });
   };
 
@@ -130,6 +152,8 @@ export function FeedbackWorkflow({ resumeDraft, onExit, onDraftsChanged }: IWork
                 dispatch({ type: 'ANSWER', stepId: step.id, value });
               }
             }}
+            answers={session.answers}
+            onAnswerField={(fieldId: string, fieldValue: string | string[]): void => dispatch({ type: 'ANSWER', stepId: fieldId, value: fieldValue })}
           />
         )}
         {inReview && (
@@ -149,6 +173,8 @@ export function FeedbackWorkflow({ resumeDraft, onExit, onDraftsChanged }: IWork
             downloadFilename="overture-ai-coe-feedback.txt"
             onStartOver={(): void => setConfirmingRestart(true)}
             onDone={onExit}
+            onRetry={retry}
+            onSendAnswers={confirm}
           />
         )}
         {inForm && (

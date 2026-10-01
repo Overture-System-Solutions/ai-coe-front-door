@@ -1,18 +1,19 @@
 import * as React from 'react';
 import type { IContentPage, IPageDocument, PageBlock } from '../../content/pageContent';
+import { holdsAnyRole, protectedPageText } from '../../content/roles';
 import { useFrontDoor } from '../../context/FrontDoorContext';
 import { LoadingState } from '../../controls/LoadingState';
 import { NoticeBanner } from '../../controls/NoticeBanner';
-import type { IPageContentResult, IPageContentService } from '../../services/pageContentService';
+import type { IPageContentService } from '../../services/pageContentService';
 import type { DraftFlags } from '../LandingPage';
 import { useDraftFlags } from '../useDraftFlags';
-import { CardsBlock } from './blocks/CardsBlock';
-import { HeroBlock } from './blocks/HeroBlock';
-import { LanesBlock } from './blocks/LanesBlock';
-import { PieceBlock } from './blocks/PieceBlock';
-import { StatusRowBlock } from './blocks/StatusRowBlock';
-import { HeadingBlock, ParagraphBlock } from './blocks/TextBlocks';
-import { TilesBlock } from './blocks/TilesBlock';
+import { BlockList } from './BlockList';
+import { usePageDocument } from './PageDocumentContext';
+import type { IPageDocumentContextValue } from './PageDocumentContext';
+import { useDocumentState } from './useDocumentState';
+import type { DocumentState } from './useDocumentState';
+
+export { NO_SERVICE_TEXT } from './useDocumentState';
 
 export interface IContentPageProps {
   /** Key of the page in the content document; absent when the instance is not configured yet. */
@@ -20,81 +21,54 @@ export interface IContentPageProps {
 }
 
 export const LOADING_PAGE_TEXT: string = 'Loading the page content…';
+/** Shown when a block was left out and the membership behind the roles was never read. */
+export const ROLE_NOTE_TEXT: string = 'Some sections are not shown because your role could not be confirmed.';
 export const NO_PAGE_KEY_TEXT: string = 'This web part has no page key configured. Enter the key of a page from the content document under Page content in the web part properties.';
 export const CONTENT_UNAVAILABLE_TEXT: string = 'The page content could not be loaded.';
-export const NO_SERVICE_TEXT: string = 'No content document is configured.';
 
 export function pageMissingText(pageKey: string): string {
   return `The content document has no page named "${pageKey}". Check the page key in the web part properties or add the page to the document.`;
 }
 
-type ContentState = { status: 'loading' } | { status: 'ready'; document: IPageDocument } | { status: 'unavailable'; message: string };
-
-function renderBlock(block: PageBlock, drafts: DraftFlags): React.ReactElement {
-  switch (block.type) {
-    case 'hero':
-      return <HeroBlock block={block} />;
-    case 'heading':
-      return <HeadingBlock block={block} />;
-    case 'paragraph':
-      return <ParagraphBlock block={block} />;
-    case 'tiles':
-      return <TilesBlock block={block} />;
-    case 'cards':
-      return <CardsBlock block={block} />;
-    case 'lanes':
-      return <LanesBlock block={block} />;
-    case 'statusRow':
-      return <StatusRowBlock block={block} />;
-    default:
-      return <PieceBlock block={block} drafts={drafts} />;
-  }
-}
-
-function findPage(document: IPageDocument, pageKey: string): IContentPage | undefined {
+/** The named page of a document, or undefined; own keys only, so `constructor` and its kin never match. */
+export function findPage(document: IPageDocument, pageKey: string): IContentPage | undefined {
   return Object.prototype.hasOwnProperty.call(document.pages, pageKey) ? document.pages[pageKey] : undefined;
 }
 
-function hasHomePiece(page: IContentPage | undefined): boolean {
-  return page !== undefined && page.blocks.some((block: PageBlock): boolean => block.type === 'piece' && block.piece === 'home');
+function hasHomePiece(blocks: readonly PageBlock[]): boolean {
+  return blocks.some((block: PageBlock): boolean => block.type === 'piece' && block.piece === 'home');
+}
+
+/** The blocks this reader is written for: those with no audience, and those naming a role they hold. */
+function blocksFor(page: IContentPage | undefined, roles: string[] | undefined): PageBlock[] {
+  return page === undefined ? [] : page.blocks.filter((block: PageBlock): boolean => holdsAnyRole(block.audience, roles));
 }
 
 /**
- * One page of the content document rendered as front-door blocks: the hero, headings, paragraphs,
- * tiles, cards, lanes and status lines in the order the document lists them, with the home tiles or
- * the telemetry strip embedded where the document places them.
+ * One page of the content document rendered as front-door blocks: the hero, the work command,
+ * headings, paragraphs, tiles, cards, lanes, status lines, notices and rules in the order the document lists them,
+ * with the home tiles or the telemetry strip embedded where the document places them. The document's route list,
+ * vocabulary, settings and shared sections reach the blocks through the page document context the page view
+ * shell provides, never through props; the shell also draws the shared footer below this page.
+ *
+ * The same context carries the roles the reader holds. A page written for a role they do not hold draws its
+ * protected wording and nothing else, so no piece of it starts a request; a block written for a role they do
+ * not hold is left out of the page. Neither is a protection: the site's own permissions decide what the server
+ * hands out, and a reader whose membership could never be read is told that a section is missing because of it.
  */
 export function ContentPage({ pageKey }: IContentPageProps): React.ReactElement {
   const { services } = useFrontDoor();
+  const { roles, rolesState, vocabulary }: IPageDocumentContextValue = usePageDocument();
   const pageContent: IPageContentService | undefined = services.pageContent;
-  const [state, setState] = React.useState<ContentState>(pageContent === undefined ? { status: 'unavailable', message: NO_SERVICE_TEXT } : { status: 'loading' });
   // Nothing to read until a page key is configured; the service memoises, so a later key costs no second request.
-  const needsDocument: boolean = pageKey !== undefined;
-
-  React.useEffect((): (() => void) => {
-    if (pageContent === undefined || !needsDocument) {
-      return (): void => undefined;
-    }
-    let cancelled: boolean = false;
-    pageContent.getDocument().then(
-      (result: IPageContentResult): void => {
-        if (!cancelled) {
-          setState(result.document !== undefined ? { status: 'ready', document: result.document } : { status: 'unavailable', message: result.message });
-        }
-      },
-      (): void => {
-        if (!cancelled) {
-          setState({ status: 'unavailable', message: '' });
-        }
-      }
-    );
-    return (): void => {
-      cancelled = true;
-    };
-  }, [pageContent, needsDocument]);
-
+  const state: DocumentState = useDocumentState(pageContent, pageKey !== undefined);
   const page: IContentPage | undefined = state.status === 'ready' && pageKey !== undefined ? findPage(state.document, pageKey) : undefined;
-  const drafts: DraftFlags = useDraftFlags(services.draftStore, hasHomePiece(page));
+  // A page written for a role the reader does not hold draws nothing at all, so no piece of it starts a request.
+  const permitted: boolean = page !== undefined && holdsAnyRole(page.requiredRole, roles);
+  const blocks: PageBlock[] = permitted ? blocksFor(page, roles) : [];
+  // Only a reader whose membership was never read is told that something is missing because of it.
+  const withheld: boolean = permitted && page !== undefined && blocks.length < page.blocks.length && rolesState === 'unresolved';
+  const drafts: DraftFlags = useDraftFlags(services.draftStore, hasHomePiece(blocks));
 
   let content: React.ReactNode;
   if (pageKey === undefined) {
@@ -109,13 +83,14 @@ export function ContentPage({ pageKey }: IContentPageProps): React.ReactElement 
     );
   } else if (page === undefined) {
     content = <NoticeBanner>{pageMissingText(pageKey)}</NoticeBanner>;
+  } else if (!permitted) {
+    content = <NoticeBanner>{protectedPageText(page.requiredRole, vocabulary)}</NoticeBanner>;
   } else {
-    content = page.blocks.map(
-      (block: PageBlock, index: number): React.ReactElement => (
-        <div key={index} className={`ai-page-block ai-page-block--${block.type}`}>
-          {renderBlock(block, drafts)}
-        </div>
-      )
+    content = (
+      <>
+        <BlockList blocks={blocks} drafts={drafts} />
+        {withheld && <p className="ai-page-role-note">{ROLE_NOTE_TEXT}</p>}
+      </>
     );
   }
 

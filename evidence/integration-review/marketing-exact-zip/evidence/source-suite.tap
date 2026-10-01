@@ -1,0 +1,190 @@
+TAP version 13
+# Subtest: business factory uses immutable ingress, no client authority and fresh read ids across restart
+ok 1 - business factory uses immutable ingress, no client authority and fresh read ids across restart
+  ---
+  duration_ms: 10.6359
+  type: 'test'
+  ...
+# Subtest: M01 refuses acceptance after a cited source is revoked
+ok 2 - M01 refuses acceptance after a cited source is revoked
+  ---
+  duration_ms: 35.8553
+  type: 'test'
+  ...
+# Subtest: M02 parent supersession invalidates an accepted child
+ok 3 - M02 parent supersession invalidates an accepted child
+  ---
+  duration_ms: 43.4499
+  type: 'test'
+  ...
+# Subtest: M03 receipt outage stays inconclusive and recovers the same review
+ok 4 - M03 receipt outage stays inconclusive and recovers the same review
+  ---
+  duration_ms: 10.5485
+  type: 'test'
+  ...
+# Subtest: M03 completion outage stays inconclusive and recovers the same review
+ok 5 - M03 completion outage stays inconclusive and recovers the same review
+  ---
+  duration_ms: 9.605
+  type: 'test'
+  ...
+# Subtest: M04 rejects a review kind which cannot accept this artifact
+ok 6 - M04 rejects a review kind which cannot accept this artifact
+  ---
+  duration_ms: 12.0347
+  type: 'test'
+  ...
+# Subtest: M04 meeting acceptance requires every artifact review kind
+ok 7 - M04 meeting acceptance requires every artifact review kind
+  ---
+  duration_ms: 28.2214
+  type: 'test'
+  ...
+# Subtest: draft intent outage cannot report saved
+ok 8 - draft intent outage cannot report saved
+  ---
+  duration_ms: 0.9139
+  type: 'test'
+  ...
+# Subtest: draft receipt outage cannot report saved
+ok 9 - draft receipt outage cannot report saved
+  ---
+  duration_ms: 4.3848
+  type: 'test'
+  ...
+# Subtest: draft completion outage cannot report saved
+ok 10 - draft completion outage cannot report saved
+  ---
+  duration_ms: 3.0188
+  type: 'test'
+  ...
+# Subtest: qualified provider provenance retains the server qualification receipt
+ok 11 - qualified provider provenance retains the server qualification receipt
+  ---
+  duration_ms: 2.3286
+  type: 'test'
+  ...
+# Subtest: meeting notes are retrieved at their reference, never replaced by caller text
+ok 12 - meeting notes are retrieved at their reference, never replaced by caller text
+  ---
+  duration_ms: 8.6466
+  type: 'test'
+  ...
+# Subtest: tenant substitution cannot request a review or redraft an artifact
+ok 13 - tenant substitution cannot request a review or redraft an artifact
+  ---
+  duration_ms: 2.4711
+  type: 'test'
+  ...
+# Subtest: tampered payload is quarantined rather than trusting its declared hash
+ok 14 - tampered payload is quarantined rather than trusting its declared hash
+  ---
+  duration_ms: 1.9833
+  type: 'test'
+  ...
+# Subtest: authority revoked between decision write and verification cannot accept
+ok 15 - authority revoked between decision write and verification cannot accept
+  ---
+  duration_ms: 4.662
+  type: 'test'
+  ...
+# Subtest: dispatcher drafts with real server source/provider adapters at a fake external boundary
+ok 16 - dispatcher drafts with real server source/provider adapters at a fake external boundary
+  ---
+  duration_ms: 46.6387
+  type: 'test'
+  ...
+# Subtest: all three dispatcher journeys retain parent/review/source lineage; revocation removes acceptance
+ok 17 - all three dispatcher journeys retain parent/review/source lineage; revocation removes acceptance
+  ---
+  duration_ms: 361.4029
+  type: 'test'
+  ...
+# Subtest: completed command replay and recovery recheck current Author work membership
+ok 18 - completed command replay and recovery recheck current Author work membership
+  ---
+  duration_ms: 11.4742
+  type: 'test'
+  ...
+# Subtest: source endpoint refuses revoked register references and malformed approval expiry
+ok 19 - source endpoint refuses revoked register references and malformed approval expiry
+  ---
+  duration_ms: 6.187
+  type: 'test'
+  ...
+# Subtest: lost provider outcome stays uncertain and never invokes a second model attempt
+ok 20 - lost provider outcome stays uncertain and never invokes a second model attempt
+  ---
+  duration_ms: 7.4331
+  type: 'test'
+  ...
+# Subtest: durable draft receipt outage recovers the same draft without provider replay
+ok 21 - durable draft receipt outage recovers the same draft without provider replay
+  ---
+  duration_ms: 11.9587
+  type: 'test'
+  ...
+# Subtest: dispatcher blocks altered ingress, cross-author recovery, wrong review kind and permission-denied sources
+ok 22 - dispatcher blocks altered ingress, cross-author recovery, wrong review kind and permission-denied sources
+  ---
+  duration_ms: 19.5393
+  type: 'test'
+  ...
+# Subtest: result publication requires readback of private Author-only ACLs
+ok 23 - result publication requires readback of private Author-only ACLs
+  ---
+  duration_ms: 3.4291
+  type: 'test'
+  ...
+# Subtest: offline candidate builds dependency-complete runtime and exports a disabled-safe host invocation
+ok 24 - offline candidate builds dependency-complete runtime and exports a disabled-safe host invocation
+  ---
+  duration_ms: 648.2631
+  type: 'test'
+  ...
+# Subtest: qualified provider uses frozen Claude wire shape and refuses truncation/tool/refusal
+ok 25 - qualified provider uses frozen Claude wire shape and refuses truncation/tool/refusal
+  ---
+  duration_ms: 2.7527
+  type: 'test'
+  ...
+# Subtest: server source retrieval pins permission, ETag and content hash instead of client text
+ok 26 - server source retrieval pins permission, ETag and content hash instead of client text
+  ---
+  duration_ms: 16.2266
+  type: 'test'
+  ...
+# Subtest: executable dispatcher derives identity from request Author and rejects payload authority
+ok 27 - executable dispatcher derives identity from request Author and rejects payload authority
+  ---
+  duration_ms: 16.6336
+  type: 'test'
+  ...
+# Subtest: canonical enumeration is bounded even when continuation URLs never repeat
+ok 28 - canonical enumeration is bounded even when continuation URLs never repeat
+  ---
+  duration_ms: 2.3951
+  type: 'test'
+  ...
+# Subtest: server SharePoint HTTP supplies a finite network deadline and disallows redirects
+ok 29 - server SharePoint HTTP supplies a finite network deadline and disallows redirects
+  ---
+  duration_ms: 0.4616
+  type: 'test'
+  ...
+# Subtest: server canonical adapter persists across instances and rejects stale ETags
+ok 30 - server canonical adapter persists across instances and rejects stale ETags
+  ---
+  duration_ms: 2.226
+  type: 'test'
+  ...
+1..30
+# tests 30
+# suites 0
+# pass 30
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1608.4849

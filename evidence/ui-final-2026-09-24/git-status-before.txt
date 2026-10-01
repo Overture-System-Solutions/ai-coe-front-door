@@ -1,0 +1,121 @@
+ M README.md
+ M config/package-solution.json
+ M docs/RC2-SINGLE-WEBPART-HANDOFF.md
+ M evidence/dependency-inventory.json
+ M evidence/port-verification.json
+ M preview/index.html
+ M preview/mount.js
+ M scripts/verify-package.mjs
+ M src/parity/journeys.parity.test.ts
+ M src/preview/previewHost.ts
+ M src/preview/previewServer.test.ts
+ M src/provisioning/provisioningScript.test.ts
+ M src/provisioning/verifyPackage.test.ts
+ M src/testing/renderWithFrontDoor.tsx
+ M src/testing/setupTests.ts
+ M src/webparts/aiCoeFrontDoor/AiCoeFrontDoorWebPart.test.ts
+ M src/webparts/aiCoeFrontDoor/AiCoeFrontDoorWebPart.ts
+ M src/webparts/aiCoeFrontDoor/components/FrontDoorShell.test.tsx
+ M src/webparts/aiCoeFrontDoor/components/app/AppChrome.tsx
+ M src/webparts/aiCoeFrontDoor/components/app/AppHero.tsx
+ M src/webparts/aiCoeFrontDoor/components/app/AppMarketing.tsx
+ M src/webparts/aiCoeFrontDoor/components/app/AppSections.tsx
+ M src/webparts/aiCoeFrontDoor/components/app/AppShell.test.tsx
+ M src/webparts/aiCoeFrontDoor/components/app/AppShell.tsx
+ M src/webparts/aiCoeFrontDoor/components/app/AppValue.tsx
+ M src/webparts/aiCoeFrontDoor/components/pages/blocks/WorkCommandBlock.test.tsx
+ M src/webparts/aiCoeFrontDoor/components/pages/blocks/WorkCommandBlock.tsx
+ M src/webparts/aiCoeFrontDoor/components/workflows/FeedbackWorkflow.test.tsx
+ M src/webparts/aiCoeFrontDoor/components/workflows/GenericWorkflow.test.tsx
+ M src/webparts/aiCoeFrontDoor/components/workflows/IdeaWorkflow.test.tsx
+ M src/webparts/aiCoeFrontDoor/components/workflows/TeamUsageWorkflow.test.tsx
+ M src/webparts/aiCoeFrontDoor/components/workflows/ToolCheckWorkflow.test.tsx
+ M src/webparts/aiCoeFrontDoor/components/workflows/shared.tsx
+ M src/webparts/aiCoeFrontDoor/content/appSections.ts
+ M src/webparts/aiCoeFrontDoor/content/marketing/campaignBrief.ts
+ M src/webparts/aiCoeFrontDoor/content/marketing/marketing.test.ts
+ M src/webparts/aiCoeFrontDoor/content/marketing/sourceRegister.ts
+ M src/webparts/aiCoeFrontDoor/content/measures.ts
+ M src/webparts/aiCoeFrontDoor/content/roles.test.ts
+ M src/webparts/aiCoeFrontDoor/content/roles.ts
+ M src/webparts/aiCoeFrontDoor/context/FrontDoorContext.tsx
+ M src/webparts/aiCoeFrontDoor/context/SubmissionContext.tsx
+ M src/webparts/aiCoeFrontDoor/controls/FailureNotice.test.tsx
+ M src/webparts/aiCoeFrontDoor/controls/FailureNotice.tsx
+ M src/webparts/aiCoeFrontDoor/controls/review.test.tsx
+ M src/webparts/aiCoeFrontDoor/loc/en-us.js
+ M src/webparts/aiCoeFrontDoor/services/authorization.test.ts
+ M src/webparts/aiCoeFrontDoor/services/authorization.ts
+ M src/webparts/aiCoeFrontDoor/services/types.ts
+ M src/webparts/aiCoeFrontDoor/styles/appShell.global.scss
+ M src/webparts/aiCoeFrontDoor/styles/palette.test.ts
+?? .idea/
+?? LIVE_BINDINGS_REQUIRED.md
+?? backend/
+?? docs/MEASUREMENT-AND-TEACHING.md
+?? docs/history/
+?? evidence/business-ui/
+?? evidence/final-node-suites.tap
+?? evidence/frontend-audit/
+?? evidence/installer-audit/
+?? evidence/integration-review/
+?? evidence/marketing-final-extension/
+?? evidence/marketing-native-start/
+?? evidence/measurement-audit/
+?? evidence/parent-marketing-exact-zip.tap
+?? evidence/parent-native-complete-tmp/
+?? evidence/parent-native-complete.xml
+?? evidence/parent-native-final.xml
+?? evidence/parent-native-tmp/
+?? evidence/preview-2026-09-22/
+?? evidence/provisioning/
+?? evidence/release-1.0.0.17/
+?? evidence/ui-final-2026-09-24/
+?? evidence/ui-uat-2026-09-24/
+?? scripts/aggregate-workflow-outcomes.cjs
+?? scripts/aggregate-workflow-outcomes.test.cjs
+?? sharepoint/pages/one-page/
+?? src/provisioning/onePageDefinition.test.ts
+?? src/webparts/aiCoeFrontDoor/components/app/AppBusinessMarketingWorkspace.test.tsx
+?? src/webparts/aiCoeFrontDoor/components/app/AppBusinessMarketingWorkspace.tsx
+?? src/webparts/aiCoeFrontDoor/components/app/AppCoreWorkspace.test.tsx
+?? src/webparts/aiCoeFrontDoor/components/app/AppCoreWorkspace.tsx
+?? src/webparts/aiCoeFrontDoor/components/app/AppCoreWorkspace.uat.test.tsx
+?? src/webparts/aiCoeFrontDoor/components/app/AppMarketingWorkspace.test.tsx
+?? src/webparts/aiCoeFrontDoor/components/app/AppMarketingWorkspace.tsx
+?? src/webparts/aiCoeFrontDoor/components/app/AppSections.test.tsx
+?? src/webparts/aiCoeFrontDoor/components/app/AppShell.cases.test.tsx
+?? src/webparts/aiCoeFrontDoor/components/app/AppValue.test.tsx
+?? src/webparts/aiCoeFrontDoor/content/appSections.test.ts
+?? src/webparts/aiCoeFrontDoor/content/marketing/artifactEnvelope.ts
+?? src/webparts/aiCoeFrontDoor/content/marketing/artifactTypes.ts
+?? src/webparts/aiCoeFrontDoor/content/marketing/contentPlan.ts
+?? src/webparts/aiCoeFrontDoor/content/marketing/manualDraft.ts
+?? src/webparts/aiCoeFrontDoor/content/marketing/meetingFollowThrough.ts
+?? src/webparts/aiCoeFrontDoor/content/marketing/schema.ts
+?? src/webparts/aiCoeFrontDoor/content/marketing/schemas.test.ts
+?? src/webparts/aiCoeFrontDoor/content/marketing/schemas/
+?? src/webparts/aiCoeFrontDoor/content/marketing/sourceGate.ts
+?? src/webparts/aiCoeFrontDoor/content/measures.app.test.ts
+?? src/webparts/aiCoeFrontDoor/services/core/
+?? src/webparts/aiCoeFrontDoor/services/durableSubmissionService.ts
+?? src/webparts/aiCoeFrontDoor/services/gatedServices.test.ts
+?? src/webparts/aiCoeFrontDoor/services/gatedServices.ts
+?? src/webparts/aiCoeFrontDoor/services/marketing/
+?? src/webparts/aiCoeFrontDoor/services/serverDraftStore.ts
+?? src/webparts/aiCoeFrontDoor/services/workflowOutcomeAggregation.test.ts
+?? src/webparts/aiCoeFrontDoor/services/workflowOutcomeAggregation.ts
+?? src/webparts/aiCoeFrontDoor/styles/coreWorkspace.global.scss
+?? tests/audit-core.test.cjs
+?? tests/audit-draft-concurrency.test.cjs
+?? tests/audit-draft-copy.test.cjs
+?? tests/audit-draft-provisioning.ps1
+?? tests/audit-host-privacy.test.cjs
+?? tests/audit-marketing-business.test.cjs
+?? tests/audit-native-client.test.cjs
+?? tests/audit-provisioning.ps1
+?? tests/audit-server-drafts.test.cjs
+?? tests/audit-source-loader.cjs
+?? tests/audit-submission-context.test.cjs
+?? tests/audit-submission.test.cjs
+?? tests/provisioning/

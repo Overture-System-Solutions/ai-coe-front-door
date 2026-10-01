@@ -1,0 +1,30 @@
+{
+  "findingIds": [
+    "F01",
+    "F02",
+    "F03",
+    "F04",
+    "F05",
+    "F06",
+    "F07",
+    "F08",
+    "F09",
+    "F10",
+    "F11",
+    "F12"
+  ],
+  "allCurrentPackageHashesInHandoff": true,
+  "documentHashes": {
+    "README.md": "88db42d7c2356eacbe868bcc7429605e2c06bc7a39d78ae1b0be8d8e54cba5e9",
+    "HANDOFF.md": "5153bba216b56e4d4e9762e1a93ca8d385b5b1885ab56cc23677897db847c1ee",
+    "evidence/RESUMPTION.md": "818167a42e40678624deb9ceaa54d58a514f17d2ea62cc53ab9bc84f4e89352e",
+    "evidence/IMPLEMENTATION_NOTES.md": "5add2d0459040b5f8a59c45dc9c750b26cd10361f252b1f440c803d67462d43d"
+  },
+  "tests": {
+    "tests": 30,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "scriptSha256": "cc87f233b3aedcc3a022d40ae40a77387d7bd4684253c3dbebdd3d2fb6aa8c1a"
+}

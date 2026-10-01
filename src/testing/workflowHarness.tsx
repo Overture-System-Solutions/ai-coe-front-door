@@ -1,7 +1,7 @@
 import { screen } from '@testing-library/react';
 import type * as React from 'react';
 import type { IWorkflowProps } from '../webparts/aiCoeFrontDoor/components/workflows/shared';
-import type { IWorkflowDefinition } from '../webparts/aiCoeFrontDoor/workflows/types';
+import type { IPieceWorkflowDefinition } from '../webparts/aiCoeFrontDoor/workflows/types';
 import { renderWithFrontDoor } from './renderWithFrontDoor';
 import type { FrontDoorRenderResult, ITestFrontDoorOptions } from './renderWithFrontDoor';
 
@@ -26,6 +26,6 @@ export function renderWorkflowPage(build: (props: IWorkflowProps) => React.React
 export const ISO_TIMESTAMP: RegExp = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/;
 
 /** Waits for the boot sequence to show the first question. */
-export async function firstStepOf(definition: IWorkflowDefinition): Promise<void> {
+export async function firstStepOf(definition: IPieceWorkflowDefinition): Promise<void> {
   await screen.findByRole('heading', { level: 2, name: definition.steps[0].title });
 }

@@ -1,0 +1,274 @@
+{
+  "boundary": "ACTUAL_GENERATED_WDL_AND_COMPILED_HELPER_WITH_EXPLICIT_FAKE_EXTERNALS",
+  "helperSha256": "536709e49cde799e54524a5fe8f28c625b9a22f9b8fd9ee2be7d12772c4ba381",
+  "flowSha256": "4de28a1cbe55b2d1685a9c04170fb864504af376015a238b1ff2d98b74c0e172",
+  "count": 22,
+  "passed": 0,
+  "results": [
+    {
+      "name": "authorized work list",
+      "operation": "ListMarketingWorkV1",
+      "pass": false,
+      "error": "{\"CommandStart\": \"Expression.eval.<locals>.<lambda>() takes 0 positional arguments but 1 was given\", \"For_each_command\": \"{\\\"CommandStart\\\": \\\"Expression.eval.<locals>.<lambda>() takes 0 positional arguments but 1 was given\\\"}\"}",
+      "failedActions": {
+        "CommandStart": "Expression.eval.<locals>.<lambda>() takes 0 positional arguments but 1 was given",
+        "For_each_command": "{\"CommandStart\": \"Expression.eval.<locals>.<lambda>() takes 0 positional arguments but 1 was given\"}"
+      },
+      "actionsExecuted": 57,
+      "durableEffects": []
+    },
+    {
+      "name": "manual brief",
+      "operation": "SaveManualMarketingDraftV1",
+      "pass": false,
+      "error": "{\"CommandStart\": \"Expression.eval.<locals>.<lambda>() takes 0 positional arguments but 1 was given\", \"For_each_command\": \"{\\\"CommandStart\\\": \\\"Expression.eval.<locals>.<lambda>() takes 0 positional arguments but 1 was given\\\"}\"}",
+      "failedActions": {
+        "CommandStart": "Expression.eval.<locals>.<lambda>() takes 0 positional arguments but 1 was given",
+        "For_each_command": "{\"CommandStart\": \"Expression.eval.<locals>.<lambda>() takes 0 positional arguments but 1 was given\"}"
+      },
+      "actionsExecuted": 59,
+      "durableEffects": []
+    },
+    {
+      "name": "read brief",
+      "operation": "GetArtifactV1",
+      "pass": false,
+      "error": "{\"CommandStart\": \"Expression.eval.<locals>.<lambda>() takes 0 positional arguments but 1 was given\", \"For_each_command\": \"{\\\"CommandStart\\\": \\\"Expression.eval.<locals>.<lambda>() takes 0 positional arguments but 1 was given\\\"}\"}",
+      "failedActions": {
+        "CommandStart": "Expression.eval.<locals>.<lambda>() takes 0 positional arguments but 1 was given",
+        "For_each_command": "{\"CommandStart\": \"Expression.eval.<locals>.<lambda>() takes 0 positional arguments but 1 was given\"}"
+      },
+      "actionsExecuted": 64,
+      "durableEffects": []
+    },
+    {
+      "name": "request brief review",
+      "operation": "RequestReviewV1",
+      "pass": false,
+      "error": "{\"CommandStart\": \"Expression.eval.<locals>.<lambda>() takes 0 positional arguments but 1 was given\", \"For_each_command\": \"{\\\"CommandStart\\\": \\\"Expression.eval.<locals>.<lambda>() takes 0 positional arguments but 1 was given\\\"}\"}",
+      "failedActions": {
+        "CommandStart": "Expression.eval.<locals>.<lambda>() takes 0 positional arguments but 1 was given",
+        "For_each_command": "{\"CommandStart\": \"Expression.eval.<locals>.<lambda>() takes 0 positional arguments but 1 was given\"}"
+      },
+      "actionsExecuted": 65,
+      "durableEffects": []
+    },
+    {
+      "name": "reviewer reads brief",
+      "operation": "GetArtifactV1",
+      "pass": false,
+      "error": "{\"CommandStart\": \"Expression.eval.<locals>.<lambda>() takes 0 positional arguments but 1 was given\", \"For_each_command\": \"{\\\"CommandStart\\\": \\\"Expression.eval.<locals>.<lambda>() takes 0 positional arguments but 1 was given\\\"}\"}",
+      "failedActions": {
+        "CommandStart": "Expression.eval.<locals>.<lambda>() takes 0 positional arguments but 1 was given",
+        "For_each_command": "{\"CommandStart\": \"Expression.eval.<locals>.<lambda>() takes 0 positional arguments but 1 was given\"}"
+      },
+      "actionsExecuted": 67,
+      "durableEffects": []
+    },
+    {
+      "name": "accept brief",
+      "operation": "RecordReviewDecisionV1",
+      "pass": false,
+      "error": "{\"CommandStart\": \"Expression.eval.<locals>.<lambda>() takes 0 positional arguments but 1 was given\", \"For_each_command\": \"{\\\"CommandStart\\\": \\\"Expression.eval.<locals>.<lambda>() takes 0 positional arguments but 1 was given\\\"}\"}",
+      "failedActions": {
+        "CommandStart": "Expression.eval.<locals>.<lambda>() takes 0 positional arguments but 1 was given",
+        "For_each_command": "{\"CommandStart\": \"Expression.eval.<locals>.<lambda>() takes 0 positional arguments but 1 was given\"}"
+      },
+      "actionsExecuted": 68,
+      "durableEffects": []
+    },
+    {
+      "name": "manual content plan",
+      "operation": "SaveManualMarketingDraftV1",
+      "pass": false,
+      "error": "{\"CommandStart\": \"Expression.eval.<locals>.<lambda>() takes 0 positional arguments but 1 was given\", \"For_each_command\": \"{\\\"CommandStart\\\": \\\"Expression.eval.<locals>.<lambda>() takes 0 positional arguments but 1 was given\\\"}\"}",
+      "failedActions": {
+        "CommandStart": "Expression.eval.<locals>.<lambda>() takes 0 positional arguments but 1 was given",
+        "For_each_command": "{\"CommandStart\": \"Expression.eval.<locals>.<lambda>() takes 0 positional arguments but 1 was given\"}"
+      },
+      "actionsExecuted": 72,
+      "durableEffects": []
+    },
+    {
+      "name": "manual follow-through",
+      "operation": "SaveManualMarketingDraftV1",
+      "pass": false,
+      "error": "{\"CommandStart\": \"Expression.eval.<locals>.<lambda>() takes 0 positional arguments but 1 was given\", \"For_each_command\": \"{\\\"CommandStart\\\": \\\"Expression.eval.<locals>.<lambda>() takes 0 positional arguments but 1 was given\\\"}\"}",
+      "failedActions": {
+        "CommandStart": "Expression.eval.<locals>.<lambda>() takes 0 positional arguments but 1 was given",
+        "For_each_command": "{\"CommandStart\": \"Expression.eval.<locals>.<lambda>() takes 0 positional arguments but 1 was given\"}"
+      },
+      "actionsExecuted": 76,
+      "durableEffects": []
+    },
+    {
+      "name": "list author artifacts",
+      "operation": "ListArtifactsV1",
+      "pass": false,
+      "error": "{\"CommandStart\": \"Expression.eval.<locals>.<lambda>() takes 0 positional arguments but 1 was given\", \"For_each_command\": \"{\\\"CommandStart\\\": \\\"Expression.eval.<locals>.<lambda>() takes 0 positional arguments but 1 was given\\\"}\"}",
+      "failedActions": {
+        "CommandStart": "Expression.eval.<locals>.<lambda>() takes 0 positional arguments but 1 was given",
+        "For_each_command": "{\"CommandStart\": \"Expression.eval.<locals>.<lambda>() takes 0 positional arguments but 1 was given\"}"
+      },
+      "actionsExecuted": 80,
+      "durableEffects": []
+    },
+    {
+      "name": "list own authorities",
+      "operation": "ListAuthoritiesV1",
+      "pass": false,
+      "error": "{\"CommandStart\": \"Expression.eval.<locals>.<lambda>() takes 0 positional arguments but 1 was given\", \"For_each_command\": \"{\\\"CommandStart\\\": \\\"Expression.eval.<locals>.<lambda>() takes 0 positional arguments but 1 was given\\\"}\"}",
+      "failedActions": {
+        "CommandStart": "Expression.eval.<locals>.<lambda>() takes 0 positional arguments but 1 was given",
+        "For_each_command": "{\"CommandStart\": \"Expression.eval.<locals>.<lambda>() takes 0 positional arguments but 1 was given\"}"
+      },
+      "actionsExecuted": 81,
+      "durableEffects": []
+    },
+    {
+      "name": "list brief reviews",
+      "operation": "ListReviewDecisionsV1",
+      "pass": false,
+      "error": "{\"CommandStart\": \"Expression.eval.<locals>.<lambda>() takes 0 positional arguments but 1 was given\", \"For_each_command\": \"{\\\"CommandStart\\\": \\\"Expression.eval.<locals>.<lambda>() takes 0 positional arguments but 1 was given\\\"}\"}",
+      "failedActions": {
+        "CommandStart": "Expression.eval.<locals>.<lambda>() takes 0 positional arguments but 1 was given",
+        "For_each_command": "{\"CommandStart\": \"Expression.eval.<locals>.<lambda>() takes 0 positional arguments but 1 was given\"}"
+      },
+      "actionsExecuted": 82,
+      "durableEffects": []
+    },
+    {
+      "name": "list brief requests",
+      "operation": "ListReviewRequestsV1",
+      "pass": false,
+      "error": "{\"CommandStart\": \"Expression.eval.<locals>.<lambda>() takes 0 positional arguments but 1 was given\", \"For_each_command\": \"{\\\"CommandStart\\\": \\\"Expression.eval.<locals>.<lambda>() takes 0 positional arguments but 1 was given\\\"}\"}",
+      "failedActions": {
+        "CommandStart": "Expression.eval.<locals>.<lambda>() takes 0 positional arguments but 1 was given",
+        "For_each_command": "{\"CommandStart\": \"Expression.eval.<locals>.<lambda>() takes 0 positional arguments but 1 was given\"}"
+      },
+      "actionsExecuted": 83,
+      "durableEffects": []
+    },
+    {
+      "name": "get review",
+      "operation": "GetReviewV1",
+      "pass": false,
+      "error": "{\"CommandStart\": \"Expression.eval.<locals>.<lambda>() takes 0 positional arguments but 1 was given\", \"For_each_command\": \"{\\\"CommandStart\\\": \\\"Expression.eval.<locals>.<lambda>() takes 0 positional arguments but 1 was given\\\"}\"}",
+      "failedActions": {
+        "CommandStart": "Expression.eval.<locals>.<lambda>() takes 0 positional arguments but 1 was given",
+        "For_each_command": "{\"CommandStart\": \"Expression.eval.<locals>.<lambda>() takes 0 positional arguments but 1 was given\"}"
+      },
+      "actionsExecuted": 84,
+      "durableEffects": []
+    },
+    {
+      "name": "read source register",
+      "operation": "ReadSourceRegisterV1",
+      "pass": false,
+      "error": "{\"CommandStart\": \"Expression.eval.<locals>.<lambda>() takes 0 positional arguments but 1 was given\", \"For_each_command\": \"{\\\"CommandStart\\\": \\\"Expression.eval.<locals>.<lambda>() takes 0 positional arguments but 1 was given\\\"}\"}",
+      "failedActions": {
+        "CommandStart": "Expression.eval.<locals>.<lambda>() takes 0 positional arguments but 1 was given",
+        "For_each_command": "{\"CommandStart\": \"Expression.eval.<locals>.<lambda>() takes 0 positional arguments but 1 was given\"}"
+      },
+      "actionsExecuted": 85,
+      "durableEffects": []
+    },
+    {
+      "name": "read permitted source",
+      "operation": "ReadSourceExcerptV1",
+      "pass": false,
+      "error": "{\"CommandStart\": \"Expression.eval.<locals>.<lambda>() takes 0 positional arguments but 1 was given\", \"For_each_command\": \"{\\\"CommandStart\\\": \\\"Expression.eval.<locals>.<lambda>() takes 0 positional arguments but 1 was given\\\"}\"}",
+      "failedActions": {
+        "CommandStart": "Expression.eval.<locals>.<lambda>() takes 0 positional arguments but 1 was given",
+        "For_each_command": "{\"CommandStart\": \"Expression.eval.<locals>.<lambda>() takes 0 positional arguments but 1 was given\"}"
+      },
+      "actionsExecuted": 86,
+      "durableEffects": []
+    },
+    {
+      "name": "manual new brief revision",
+      "operation": "SaveManualMarketingDraftV1",
+      "pass": false,
+      "error": "{\"CommandStart\": \"Expression.eval.<locals>.<lambda>() takes 0 positional arguments but 1 was given\", \"For_each_command\": \"{\\\"CommandStart\\\": \\\"Expression.eval.<locals>.<lambda>() takes 0 positional arguments but 1 was given\\\"}\"}",
+      "failedActions": {
+        "CommandStart": "Expression.eval.<locals>.<lambda>() takes 0 positional arguments but 1 was given",
+        "For_each_command": "{\"CommandStart\": \"Expression.eval.<locals>.<lambda>() takes 0 positional arguments but 1 was given\"}"
+      },
+      "actionsExecuted": 87,
+      "durableEffects": []
+    },
+    {
+      "name": "stale parent invalidates content plan",
+      "operation": "GetArtifactV1",
+      "pass": false,
+      "error": "{\"CommandStart\": \"Expression.eval.<locals>.<lambda>() takes 0 positional arguments but 1 was given\", \"For_each_command\": \"{\\\"CommandStart\\\": \\\"Expression.eval.<locals>.<lambda>() takes 0 positional arguments but 1 was given\\\"}\"}",
+      "failedActions": {
+        "CommandStart": "Expression.eval.<locals>.<lambda>() takes 0 positional arguments but 1 was given",
+        "For_each_command": "{\"CommandStart\": \"Expression.eval.<locals>.<lambda>() takes 0 positional arguments but 1 was given\"}"
+      },
+      "actionsExecuted": 91,
+      "durableEffects": []
+    },
+    {
+      "name": "reject stale manual revision",
+      "operation": "SaveManualMarketingDraftV1",
+      "pass": false,
+      "error": "{\"CommandStart\": \"Expression.eval.<locals>.<lambda>() takes 0 positional arguments but 1 was given\", \"For_each_command\": \"{\\\"CommandStart\\\": \\\"Expression.eval.<locals>.<lambda>() takes 0 positional arguments but 1 was given\\\"}\"}",
+      "failedActions": {
+        "CommandStart": "Expression.eval.<locals>.<lambda>() takes 0 positional arguments but 1 was given",
+        "For_each_command": "{\"CommandStart\": \"Expression.eval.<locals>.<lambda>() takes 0 positional arguments but 1 was given\"}"
+      },
+      "actionsExecuted": 92,
+      "durableEffects": []
+    },
+    {
+      "name": "provider brief",
+      "operation": "DraftCampaignBriefV1",
+      "pass": false,
+      "error": "{\"CommandStart\": \"Expression.eval.<locals>.<lambda>() takes 0 positional arguments but 1 was given\", \"For_each_command\": \"{\\\"CommandStart\\\": \\\"Expression.eval.<locals>.<lambda>() takes 0 positional arguments but 1 was given\\\"}\"}",
+      "failedActions": {
+        "CommandStart": "Expression.eval.<locals>.<lambda>() takes 0 positional arguments but 1 was given",
+        "For_each_command": "{\"CommandStart\": \"Expression.eval.<locals>.<lambda>() takes 0 positional arguments but 1 was given\"}"
+      },
+      "actionsExecuted": 57,
+      "durableEffects": []
+    },
+    {
+      "name": "provider content plan",
+      "operation": "DraftContentPlanV1",
+      "pass": false,
+      "error": "{\"CommandStart\": \"Expression.eval.<locals>.<lambda>() takes 0 positional arguments but 1 was given\", \"For_each_command\": \"{\\\"CommandStart\\\": \\\"Expression.eval.<locals>.<lambda>() takes 0 positional arguments but 1 was given\\\"}\"}",
+      "failedActions": {
+        "CommandStart": "Expression.eval.<locals>.<lambda>() takes 0 positional arguments but 1 was given",
+        "For_each_command": "{\"CommandStart\": \"Expression.eval.<locals>.<lambda>() takes 0 positional arguments but 1 was given\"}"
+      },
+      "actionsExecuted": 71,
+      "durableEffects": []
+    },
+    {
+      "name": "provider meeting follow-through",
+      "operation": "DraftMeetingFollowThroughV1",
+      "pass": false,
+      "error": "{\"CommandStart\": \"Expression.eval.<locals>.<lambda>() takes 0 positional arguments but 1 was given\", \"For_each_command\": \"{\\\"CommandStart\\\": \\\"Expression.eval.<locals>.<lambda>() takes 0 positional arguments but 1 was given\\\"}\"}",
+      "failedActions": {
+        "CommandStart": "Expression.eval.<locals>.<lambda>() takes 0 positional arguments but 1 was given",
+        "For_each_command": "{\"CommandStart\": \"Expression.eval.<locals>.<lambda>() takes 0 positional arguments but 1 was given\"}"
+      },
+      "actionsExecuted": 76,
+      "durableEffects": []
+    },
+    {
+      "name": "same original completed intent",
+      "operation": "RecoverMarketingIntentV1",
+      "pass": false,
+      "error": "{\"CommandStart\": \"Expression.eval.<locals>.<lambda>() takes 0 positional arguments but 1 was given\", \"For_each_command\": \"{\\\"CommandStart\\\": \\\"Expression.eval.<locals>.<lambda>() takes 0 positional arguments but 1 was given\\\"}\"}",
+      "failedActions": {
+        "CommandStart": "Expression.eval.<locals>.<lambda>() takes 0 positional arguments but 1 was given",
+        "For_each_command": "{\"CommandStart\": \"Expression.eval.<locals>.<lambda>() takes 0 positional arguments but 1 was given\"}"
+      },
+      "actionsExecuted": 81,
+      "durableEffects": []
+    }
+  ],
+  "nativeAcceptance": false
+}

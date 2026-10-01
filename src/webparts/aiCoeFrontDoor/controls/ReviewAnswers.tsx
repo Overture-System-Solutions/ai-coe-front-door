@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { whatHappensNextText } from '../workflows/formEngine';
-import type { IAnswers, IStep, IWorkflowDefinition } from '../workflows/types';
+import type { IAnswers, IPieceWorkflowDefinition, IStep } from '../workflows/types';
 import { AnswerList, answerableSteps } from './AnswerList';
 import { WhatHappensNext } from './WhatHappensNext';
 
 export interface IReviewAnswersProps {
-  workflow: IWorkflowDefinition;
+  workflow: IPieceWorkflowDefinition;
   /** The visible steps for the current answers; notices are skipped. */
   steps: IStep[];
   answers: IAnswers;
@@ -22,7 +22,7 @@ export function ReviewAnswers({ workflow, steps, answers, onEdit }: IReviewAnswe
           Take a look below. You can change anything before you confirm.
         </p>
       </div>
-      <AnswerList steps={answerableSteps(steps)} answers={answers} onEdit={onEdit} className="space-y-3" />
+      <AnswerList steps={answerableSteps(steps, answers)} answers={answers} onEdit={onEdit} className="space-y-3" />
       <WhatHappensNext text={whatHappensNextText(workflow, answers)} />
     </div>
   );

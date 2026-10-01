@@ -6,15 +6,18 @@
 <title>AI CoE Front Door — OFFLINE PREVIEW</title>
 <style>
 body { margin: 0; font-family: "Segoe UI", system-ui, sans-serif; }
-#preview-notice { position: sticky; top: 0; z-index: 9999; background: #fff0b3; color: #392600; border-bottom: 3px solid #9b6800; padding: 14px 20px; }
+#preview-notice { background: #fff0b3; color: #392600; border-bottom: 3px solid #9b6800; padding: 14px 20px; }
+#preview-mode-badge { position: fixed; bottom: 8px; right: 8px; z-index: 9999; pointer-events: none; background: #fff0b3; color: #392600; border: 1px solid #9b6800; border-radius: 4px; padding: 5px 8px; font-size: 12px; }
 #preview-notice p { margin: 4px 0; }
 #organization-form { display: flex; gap: 8px; align-items: center; margin-top: 8px; }
 #organization-form { flex-wrap: wrap; }
+#organization-form > * { box-sizing: border-box; min-width: 0; max-width: 100%; }
 #organization-form input, #organization-form select { padding: 4px 8px; font: inherit; }
 #preview-error { color: #a00; white-space: pre-wrap; }
 </style>
 </head>
 <body>
+<div id="preview-mode-badge" role="note">OFFLINE PREVIEW · SYNTHETIC DATA</div>
 <aside id="preview-notice" role="note">
 <strong>OFFLINE PREVIEW — NOT A SHAREPOINT SITE</strong>
 <p>This page runs the web part bundle from the last build against a simulated SharePoint host. Lists, permissions and the signed-in user are fictional, submissions stay in this tab, and all external network access is blocked.</p>
@@ -24,6 +27,7 @@ body { margin: 0; font-family: "Segoe UI", system-ui, sans-serif; }
 <input id="organization-name" type="text" placeholder="Leave blank for neutral wording">
 <button type="submit">Apply</button>
 <label for="simulate-draft"><input id="simulate-draft" type="checkbox"> Simulate the Claude draft flow (echoes your answers; no model is called)</label>
+<label for="simulate-analysis"><input id="simulate-analysis" type="checkbox"> Simulate the Claude case analysis flow (ranks the fictional open cases by risk and cost; no model is called)</label>
 <label for="telemetry-provider">Usage metrics provider (web part property):</label>
 <select id="telemetry-provider">
 <option value="claude">Claude (Anthropic API)</option>
@@ -32,6 +36,7 @@ body { margin: 0; font-family: "Segoe UI", system-ui, sans-serif; }
 </select>
 <label for="view">Piece shown (web part property):</label>
 <select id="view">
+<option value="app">Consolidated application with tabs</option>
 <option value="legacy">Whole front door on one page (default)</option>
 <option value="home">Home tiles</option>
 <option value="idea">Explore an AI idea</option>
@@ -42,6 +47,7 @@ body { margin: 0; font-family: "Segoe UI", system-ui, sans-serif; }
 <option value="telemetry">AI operations snapshot</option>
 <option value="admin">Administrator dashboard</option>
 <option value="page">Content page</option>
+<option value="outcome">Record a task outcome</option>
 </select>
 <label for="page-key">Content page (page key):</label>
 <select id="page-key">
@@ -51,14 +57,35 @@ body { margin: 0; font-family: "Segoe UI", system-ui, sans-serif; }
 <option value="requests">Requests</option>
 <option value="prompts">Prompts</option>
 <option value="status">Status</option>
+<option value="operations">Operations (operator plane)</option>
+<option value="value">Enterprise value (leaders and operators)</option>
 </select>
 <label for="layout">Layout (web part property):</label>
 <select id="layout">
 <option value="wide">Wide (full page width)</option>
 <option value="narrow">Narrow (one column)</option>
 </select>
+<label for="simulate-deny">Simulate a refused list (reloads):</label>
+<select id="simulate-deny">
+<option value="none">None: the request list answers</option>
+<option value="intakes">Request list refuses every read (403)</option>
+</select>
+<label for="simulate-readback"><input id="simulate-readback" type="checkbox"> Simulate a failed readback after a write (the pending receipt; reloads)</label>
+<label for="simulate-role">Simulate a role (reloads):</label>
+<select id="simulate-role">
+<option value="owner">Site owner: an operator by permission, in no group</option>
+<option value="employee">Employee only</option>
+<option value="leader">Leader (in the leaders group)</option>
+<option value="operator">AI CoE operator without site-owner permission (in the operators group)</option>
+<option value="designAuthority">Design authority (in the design authority group)</option>
+<option value="marketingParticipant">Marketing participant (in the marketing participant group)</option>
+<option value="marketingReviewer">Marketing reviewer (in the marketing reviewer group)</option>
+</select>
+<label for="simulate-palette">Palette override (web part property):</label>
+<input id="simulate-palette" type="text" placeholder="accent=#008B83;ink=#102B3D — blank keeps the shipped colours">
 </form>
-<p>Usage rows and the open incident shown in the telemetry strip are fictional sample data seeded by the simulation. Page views link to this page with another piece; add <code>?width=560</code> to the address to preview a narrow column, or <code>?page=learn</code> to open a content page from the simulated Site Assets document.</p>
+<p>Preview role simulation; production resolves the role from identity. The simulated site groups behind this switch answer the same request the web part makes on a real site, and the shipped bundle reads no role out of the address.</p>
+<p>Usage rows and the open incident shown in the telemetry strip are fictional sample data seeded by the simulation, as are the three requests of the preview person on Status. Page views link to this page with another piece; add <code>?width=560</code> to the address to preview a narrow column, <code>?page=learn</code> to open a content page from the simulated Site Assets document, <code>?page=operations</code> for the operator-plane page that carries the telemetry strip, <code>?page=value</code> for the leaders' Enterprise value page (its measures are seeded rows of a simulated measures list: one measured, one awaiting its baseline, one held back because the group is too small), <code>?deny=intakes</code> to see the refused request list on Status and the first screen, <code>?readback=fail</code> to see the pending receipt after a submission from a form page, or <code>?palette=accent%3D%23008B83</code> to try a tenant's colours.</p>
 </aside>
 <div id="preview-error" role="alert"></div>
 <div id="app"></div>

@@ -1,0 +1,45 @@
+{
+  "kind": "marketing-provisioning-local-verification.v1",
+  "phase": "green-role-identity",
+  "scope": "Offline process-local fake PnP; local installed command metadata only",
+  "nativeCalls": 0,
+  "tenantApplied": false,
+  "qualified": false,
+  "enabled": false,
+  "sourceHashes": "source-hashes.json",
+  "results": [
+    {
+      "name": "independent",
+      "command": [
+        "/mnt/c/Program Files/PowerShell/7/pwsh.exe",
+        "-NoProfile",
+        "-NonInteractive",
+        "-File",
+        "C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-audit-fixes\\tests\\provisioning\\Run-IndependentTests.ps1",
+        "-Case",
+        "role-id-drift"
+      ],
+      "startedAt": "2026-09-24T13:42:39.748930+00:00",
+      "durationSeconds": 0.999,
+      "exitCode": 0,
+      "passed": true,
+      "summary": {
+        "status": "PASS",
+        "checks": 1,
+        "failed": 0,
+        "scope": "Independent offline fake PnP fault injection",
+        "qualified": false,
+        "cases": [
+          {
+            "name": "role-id-drift",
+            "status": "PASS",
+            "observation": "Custom role identity drift.",
+            "requesterGranted": false,
+            "fakeWrites": 28
+          }
+        ]
+      }
+    }
+  ],
+  "allPassed": true
+}

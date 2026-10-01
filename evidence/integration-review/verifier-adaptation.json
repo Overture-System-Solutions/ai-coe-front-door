@@ -1,0 +1,9 @@
+{
+  "original": "backend/core-native/evidence/verify_delivery.py",
+  "sha256": "2d900ccda17549da903006c113f9a9a871cefa0b1db466d101c1758fcd70064a",
+  "changes": [
+    "redirect sole write_text at line 132 to evidence/integration-review/native-delivery-receipt.json",
+    "read fresh evidence/integration-review/native-tests.xml instead of historical final-tests.xml"
+  ],
+  "allVerificationLogicPreserved": true
+}

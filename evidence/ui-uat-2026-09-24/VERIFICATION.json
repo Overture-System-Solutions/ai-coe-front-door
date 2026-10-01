@@ -1,0 +1,105 @@
+{
+  "verifiedAt": "2026-09-24T18:15:16.525375+00:00",
+  "scope": "UI_UX_OFFLINE_UAT_ONLY",
+  "requestedChanges": [
+    "Remove Improvement operator commissioning card",
+    "Remove System map navbar",
+    "Engineering starter top/bottom padding",
+    "Redesign Cases forms and status"
+  ],
+  "productionTests": {
+    "suites": 123,
+    "passed": 1177,
+    "failed": 0,
+    "nonBlockingWarnings": 85,
+    "log": "heft-production-02.log"
+  },
+  "browser": {
+    "status": "PASS",
+    "scope": "BUILT_BUNDLE_LOCAL_SYNTHETIC_UAT",
+    "systemMapRemovedOwnerAndOperator": true,
+    "commissioningCardRemoved": true,
+    "engineeringPadding": {
+      "top": "24px",
+      "bottom": "24px"
+    },
+    "caseCreateSaveResponseSelectAndNew": true,
+    "caseUnsavedGuard": true,
+    "readableFullWidthFields": [
+      {
+        "id": "ai-core-title",
+        "width": 1356,
+        "parentWidth": 1356,
+        "height": 46.5,
+        "labelAbove": true,
+        "border": "1px",
+        "display": "block"
+      },
+      {
+        "id": "ai-core-problem",
+        "width": 668,
+        "parentWidth": 668,
+        "height": 126,
+        "labelAbove": true,
+        "border": "1px",
+        "display": "block"
+      },
+      {
+        "id": "ai-core-outcome",
+        "width": 668,
+        "parentWidth": 668,
+        "height": 126,
+        "labelAbove": true,
+        "border": "1px",
+        "display": "block"
+      },
+      {
+        "id": "ai-core-sponsor",
+        "width": 1356,
+        "parentWidth": 1356,
+        "height": 46.5,
+        "labelAbove": true,
+        "border": "1px",
+        "display": "block"
+      }
+    ],
+    "mobile": {
+      "scroll": 390,
+      "viewport": 390
+    },
+    "javascriptErrors": [],
+    "externalRequests": [],
+    "screenshots": [
+      "cases-desktop.png",
+      "cases-mobile.png"
+    ]
+  },
+  "servedBundle": "dist/ai-coe-front-door-web-part_3daecf9940ea7831bc5a.js",
+  "servedBundleSha256": "5bb8d3984ff9b9e11aedc35dcbb46c5f311f90d27e4db5ad16ea4e6cdce651de",
+  "previewUrl": "http://127.0.0.1:4173/?view=app&organization=CloudWave&role=marketingParticipant",
+  "previewProcess": "proc_0c7be0def8d9",
+  "previousPackageUnchanged": true,
+  "previousPackageSha256": "5a01fd5a6c40a3e2b71999de9cba44a2a7fe630148c9debc7d83885d2fc7a86b",
+  "nativeMarketingDeliveryUnchanged": true,
+  "beforeSnapshot": "before-uat.zip",
+  "beforeSnapshotSha256": "8be3605c818ac36ab570f0b4f7cb6e71cd82e2d702cfd00a9e8280780a964d90",
+  "sourceChangesSinceUatCapture": [
+    "src/webparts/aiCoeFrontDoor/content/appSections.ts",
+    "src/webparts/aiCoeFrontDoor/styles/appShell.global.scss",
+    "src/webparts/aiCoeFrontDoor/styles/palette.test.ts",
+    "src/webparts/aiCoeFrontDoor/components/app/AppCoreWorkspace.test.tsx",
+    "src/webparts/aiCoeFrontDoor/components/app/AppCoreWorkspace.tsx",
+    "src/webparts/aiCoeFrontDoor/components/app/AppSections.test.tsx",
+    "src/webparts/aiCoeFrontDoor/components/app/AppSections.tsx",
+    "src/webparts/aiCoeFrontDoor/components/app/AppShell.test.tsx",
+    "src/webparts/aiCoeFrontDoor/components/app/AppShell.tsx"
+  ],
+  "screenshots": {
+    "cases-desktop.png": "7d29cf3ae463b64e31b1989bfd2f20b9e839690a009eba2172b8f11936b1134e",
+    "cases-mobile.png": "92148f1239b1a6526afd88d16801a664ddf603f85e07f28e47c8f06cd34e70d0"
+  },
+  "deployment": false,
+  "newSppkgBuilt": false,
+  "liveModelCalls": false,
+  "committed": false
+}

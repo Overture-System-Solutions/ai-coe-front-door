@@ -1,0 +1,9 @@
+{
+  "exitCode": 0,
+  "command": [
+    "/mnt/c/Program Files/nodejs/node.exe",
+    "--test",
+    "backend/power-automate/marketing-runtime/tests/package.test.cjs"
+  ],
+  "log": "marketing-zip-smoke.log"
+}

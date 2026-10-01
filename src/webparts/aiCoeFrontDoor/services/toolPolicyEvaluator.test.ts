@@ -52,6 +52,27 @@ describe('policyOutcomes', () => {
       "Confirm the tool and task still match the organization's current approved-use guidance."
     );
   });
+
+  // Decision 21: the review system is named by the branding; blank keeps the shipped literal in the legacy view only.
+  it('names the review system from the branding in every next step that mentions it', () => {
+    const named = policyOutcomes(createBranding('Overture', { reviewSystemName: 'Contoso Review Desk' }));
+    expect(named.fits.defaultNextSteps[2]).toBe('If company information, workflow integration, or the task changes, submit a Contoso Review Desk review with manager endorsement before proceeding.');
+    expect(named.safeguards.defaultNextSteps[1]).toBe('If company information or a business workflow is involved, submit a Contoso Review Desk review with manager endorsement.');
+    expect(named.reviewNeeded.defaultNextSteps[1]).toBe('Submit the request through Contoso Review Desk with manager endorsement.');
+    expect(named.gap.defaultNextSteps[1]).toBe('Use Contoso Review Desk or contact the AI CoE to confirm the current approved-use guidance before proceeding.');
+    expect(JSON.stringify(named)).not.toContain('TESS');
+
+    const pageView = policyOutcomes(createBranding('Overture', { pageView: true }));
+    expect(pageView.fits.defaultNextSteps[2]).toBe('If company information, workflow integration, or the task changes, submit a review through the review system with manager endorsement before proceeding.');
+    expect(pageView.safeguards.defaultNextSteps[1]).toBe('If company information or a business workflow is involved, submit a review through the review system with manager endorsement.');
+    expect(pageView.reviewNeeded.defaultNextSteps[1]).toBe('Submit the request through the review system with manager endorsement.');
+    expect(pageView.gap.defaultNextSteps[1]).toBe('Use the review system or contact the AI CoE to confirm the current approved-use guidance before proceeding.');
+    expect(JSON.stringify(pageView)).not.toContain('TESS');
+
+    // The legacy view with blank properties is byte-identical to the shipped package.
+    expect(policyOutcomes(createBranding('Overture', { reviewSystemName: '', pageView: false }))).toEqual(policyOutcomes(overture));
+    expect(JSON.stringify(policyOutcomes(overture)).match(/TESS/g)).toHaveLength(4);
+  });
 });
 
 describe('evaluateToolPolicy', () => {

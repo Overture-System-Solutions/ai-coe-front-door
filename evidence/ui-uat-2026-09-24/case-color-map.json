@@ -1,0 +1,79 @@
+{
+  ".ai-view--app .ai-case-workspace .ai-case-overview": [
+    "--fd-bg",
+    "--fd-line"
+  ],
+  ".ai-view--app .ai-case-workspace .ai-case-status": [
+    "--fd-soft"
+  ],
+  ".ai-view--app .ai-case-workspace .ai-case-field label": [
+    "--fd-ink"
+  ],
+  ".ai-view--app .ai-case-workspace .ai-case-validation label": [
+    "--fd-ink"
+  ],
+  ".ai-view--app .ai-case-workspace input": [
+    "--fd-ink",
+    "--fd-line",
+    "--fd-paper"
+  ],
+  ".ai-view--app .ai-case-workspace textarea": [
+    "--fd-ink",
+    "--fd-line",
+    "--fd-paper"
+  ],
+  ".ai-view--app .ai-case-workspace select": [
+    "--fd-ink",
+    "--fd-line",
+    "--fd-paper"
+  ],
+  ".ai-view--app .ai-case-workspace input::placeholder": [
+    "--fd-muted"
+  ],
+  ".ai-view--app .ai-case-workspace textarea::placeholder": [
+    "--fd-muted"
+  ],
+  ".ai-view--app .ai-case-workspace input:focus-visible": [
+    "--fd-focus"
+  ],
+  ".ai-view--app .ai-case-workspace textarea:focus-visible": [
+    "--fd-focus"
+  ],
+  ".ai-view--app .ai-case-workspace select:focus-visible": [
+    "--fd-focus"
+  ],
+  ".ai-view--app .ai-case-workspace button:focus-visible": [
+    "--fd-focus"
+  ],
+  ".ai-view--app .ai-case-workspace summary:focus-visible": [
+    "--fd-focus"
+  ],
+  ".ai-view--app .ai-case-workspace .ai-case-help": [
+    "--fd-muted"
+  ],
+  ".ai-view--app .ai-case-workspace .ai-case-feedback": [
+    "--fd-ink"
+  ],
+  ".ai-view--app .ai-case-workspace .ai-case-choice": [
+    "--fd-ink",
+    "--fd-line",
+    "--fd-paper"
+  ],
+  ".ai-view--app .ai-case-workspace .ai-case-choice[aria-pressed=true]": [
+    "--fd-accent",
+    "--fd-accent-soft"
+  ],
+  ".ai-view--app .ai-case-workspace .ai-case-choice small": [
+    "--fd-muted"
+  ],
+  ".ai-view--app .ai-case-workspace .ai-case-request": [
+    "--fd-bg"
+  ],
+  ".ai-view--app .ai-case-workspace .ai-case-validation": [
+    "--fd-line"
+  ],
+  ".ai-view--app .ai-case-workspace .ai-case-technical": [
+    "--fd-line",
+    "--fd-muted"
+  ]
+}

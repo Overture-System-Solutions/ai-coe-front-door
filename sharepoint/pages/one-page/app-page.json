@@ -1,0 +1,47 @@
+{
+  "componentId": "cf2e5904-0703-4fe4-ae5a-ec012d6fa689",
+  "description": "Additive one-page definition: one view:app instance on an explicitly named page. Does not replace pages.json, QuickLaunch or existing pages.",
+  "parameters": {
+    "DraftListId": { "kind": "optional", "description": "Caller-secured server draft list GUID; blank disabled." },
+    "DraftPolicyJson": { "kind": "optional", "description": "IServerDraftPolicy JSON: qualified, qualificationReceiptRef, retentionPolicyRef, accessPolicyRef, retentionDays, qualifiedUntil. Blank disabled; commissioning is external." },
+    "CoreBindingJson": { "kind": "optional", "description": "CORE v0.2.0 binding JSON: contractVersion, requestListId, resultListId, tenantLabel, qualified, qualificationReceiptRef, testRecord. Blank disabled." },
+    "MarketingBindingJson": { "kind": "optional", "description": "Marketing binding JSON: enabled, siteUrl, requestListId, resultListId, qualificationReceiptRef. Blank disabled." },
+    "OrganizationName": { "kind": "text", "description": "Organization name written on the instance." },
+    "GovernanceReference": { "kind": "optional", "description": "Policy reference; blank keeps default wording and is reported AWAITING." },
+    "ReviewSystemName": { "kind": "optional", "description": "Review-system name; blank keeps default wording." },
+    "DraftServiceUrl": { "kind": "url", "description": "Idea-draft flow URL; blank keeps plain summaries." },
+    "CaseAnalysisUrl": { "kind": "url", "description": "Case analysis flow URL behind the leaders' Cases panel; blank leaves the panel unbound." },
+    "LeadersGroup": { "kind": "group", "description": "Site group for the leader role; blank leaves the role unbound." },
+    "OperatorsGroup": { "kind": "group", "description": "Site group for the operator role; blank leaves the role unbound." },
+    "DesignAuthorityGroup": { "kind": "group", "description": "Site group for design authority; blank leaves the role unbound." },
+    "MarketingParticipantsGroup": { "kind": "group", "description": "Site group for the bounded Marketing participant role; blank leaves it unbound." },
+    "MarketingReviewersGroup": { "kind": "group", "description": "Site group for Marketing reviewers; blank leaves it unbound. Not an approval identity." },
+    "SupportUrl": { "kind": "url", "description": "Support route; blank leaves the in-app footer unbound." },
+    "Palette": { "kind": "optional", "description": "Palette overrides as key=#hex pairs; blank keeps shipped colours." },
+    "PageFile": { "kind": "text", "description": "Site Pages file to place the instance on, for example Front-Door.aspx." }
+  },
+  "pages": [
+    {
+      "key": "app",
+      "title": "AI CoE Front Door",
+      "file": "{PageFile}",
+      "commentsEnabled": false,
+      "permissions": "inherit",
+      "instance": {
+        "view": "app",
+        "layout": "wide",
+        "contentUrl": "SiteAssets/ai-coe-pages.json",
+        "organizationName": "{OrganizationName}",
+        "governanceReference": "{GovernanceReference}",
+        "reviewSystemName": "{ReviewSystemName}",
+        "draftServiceUrl": "{DraftServiceUrl}",
+        "caseAnalysisUrl": "{CaseAnalysisUrl}",
+        "draftListId": "{DraftListId}",
+        "draftPolicyJson": "{DraftPolicyJson}",
+        "coreBindingJson": "{CoreBindingJson}",
+        "marketingBindingJson": "{MarketingBindingJson}",
+        "roleGroups": "leader={LeadersGroup};operator={OperatorsGroup};designAuthority={DesignAuthorityGroup};marketingParticipant={MarketingParticipantsGroup};marketingReviewer={MarketingReviewersGroup}"
+      }
+    }
+  ]
+}

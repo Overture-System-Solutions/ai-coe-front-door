@@ -1,0 +1,164 @@
+[
+  {
+    "form": "Explore an AI idea",
+    "layout": "desktop",
+    "geometry": {
+      "width": 768,
+      "parentWidth": 1398,
+      "maxWidth": "768px",
+      "font": 16,
+      "left": 315,
+      "right": 315
+    },
+    "outerPageWidthUnchanged": true,
+    "unsavedGuard": true,
+    "overflow": {
+      "scroll": 1440,
+      "width": 1440
+    }
+  },
+  {
+    "form": "Explore an AI idea",
+    "layout": "mobile",
+    "geometry": {
+      "width": 348,
+      "parentWidth": 348,
+      "maxWidth": "768px",
+      "font": 16,
+      "left": 0,
+      "right": 0
+    },
+    "outerPageWidthUnchanged": true,
+    "unsavedGuard": true,
+    "overflow": {
+      "scroll": 390,
+      "width": 390
+    }
+  },
+  {
+    "form": "Explore an AI idea",
+    "layout": "narrow",
+    "geometry": {
+      "width": 518,
+      "parentWidth": 518,
+      "maxWidth": "none",
+      "font": 16,
+      "left": 0,
+      "right": 0
+    },
+    "outerPageWidthUnchanged": true,
+    "unsavedGuard": true,
+    "overflow": {
+      "scroll": 900,
+      "width": 900
+    }
+  },
+  {
+    "form": "Check a tool or task",
+    "layout": "desktop",
+    "geometry": {
+      "width": 768,
+      "parentWidth": 1398,
+      "maxWidth": "768px",
+      "font": 16,
+      "left": 315,
+      "right": 315
+    },
+    "outerPageWidthUnchanged": true,
+    "unsavedGuard": true,
+    "overflow": {
+      "scroll": 1440,
+      "width": 1440
+    }
+  },
+  {
+    "form": "Check a tool or task",
+    "layout": "mobile",
+    "geometry": {
+      "width": 348,
+      "parentWidth": 348,
+      "maxWidth": "768px",
+      "font": 16,
+      "left": 0,
+      "right": 0
+    },
+    "outerPageWidthUnchanged": true,
+    "unsavedGuard": true,
+    "overflow": {
+      "scroll": 390,
+      "width": 390
+    }
+  },
+  {
+    "form": "Check a tool or task",
+    "layout": "narrow",
+    "geometry": {
+      "width": 518,
+      "parentWidth": 518,
+      "maxWidth": "none",
+      "font": 16,
+      "left": 0,
+      "right": 0
+    },
+    "outerPageWidthUnchanged": true,
+    "unsavedGuard": true,
+    "overflow": {
+      "scroll": 900,
+      "width": 900
+    }
+  },
+  {
+    "form": "Get help or training",
+    "layout": "desktop",
+    "geometry": {
+      "width": 768,
+      "parentWidth": 1398,
+      "maxWidth": "768px",
+      "font": 16,
+      "left": 315,
+      "right": 315
+    },
+    "outerPageWidthUnchanged": true,
+    "unsavedGuard": true,
+    "overflow": {
+      "scroll": 1440,
+      "width": 1440
+    }
+  },
+  {
+    "form": "Get help or training",
+    "layout": "mobile",
+    "geometry": {
+      "width": 348,
+      "parentWidth": 348,
+      "maxWidth": "768px",
+      "font": 16,
+      "left": 0,
+      "right": 0
+    },
+    "outerPageWidthUnchanged": true,
+    "unsavedGuard": true,
+    "overflow": {
+      "scroll": 390,
+      "width": 390
+    }
+  },
+  {
+    "form": "Get help or training",
+    "layout": "narrow",
+    "geometry": {
+      "width": 518,
+      "parentWidth": 518,
+      "maxWidth": "none",
+      "font": 16,
+      "left": 0,
+      "right": 0
+    },
+    "outerPageWidthUnchanged": true,
+    "unsavedGuard": true,
+    "overflow": {
+      "scroll": 900,
+      "width": 900
+    }
+  }
+]

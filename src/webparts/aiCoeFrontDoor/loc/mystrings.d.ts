@@ -3,9 +3,19 @@ declare interface IAiCoeFrontDoorWebPartStrings {
   BrandingGroupName: string;
   OrganizationNameFieldLabel: string;
   OrganizationNameFieldDescription: string;
+  GovernanceReferenceFieldLabel: string;
+  GovernanceReferenceFieldDescription: string;
+  ReviewSystemNameFieldLabel: string;
+  ReviewSystemNameFieldDescription: string;
+  RoleGroupsFieldLabel: string;
+  RoleGroupsFieldDescription: string;
+  PaletteOverridesFieldLabel: string;
+  PaletteOverridesFieldDescription: string;
   DraftingGroupName: string;
   DraftServiceUrlFieldLabel: string;
   DraftServiceUrlFieldDescription: string;
+  CaseAnalysisUrlFieldLabel: string;
+  CaseAnalysisUrlFieldDescription: string;
   TelemetryGroupName: string;
   TelemetryProviderFieldLabel: string;
   TelemetryProviderOptionClaude: string;
@@ -14,6 +24,7 @@ declare interface IAiCoeFrontDoorWebPartStrings {
   PageLayoutGroupName: string;
   ViewFieldLabel: string;
   ViewOptionLegacy: string;
+  ViewOptionApp: string;
   ViewOptionHome: string;
   ViewOptionIdea: string;
   ViewOptionToolCheck: string;
@@ -23,6 +34,7 @@ declare interface IAiCoeFrontDoorWebPartStrings {
   ViewOptionTelemetry: string;
   ViewOptionAdmin: string;
   ViewOptionPage: string;
+  ViewOptionOutcome: string;
   LayoutFieldLabel: string;
   LayoutOptionWide: string;
   LayoutOptionNarrow: string;
@@ -43,6 +55,7 @@ declare interface IAiCoeFrontDoorWebPartStrings {
   PageTelemetryFieldLabel: string;
   PageAdminFieldLabel: string;
   PagePolicyFieldLabel: string;
+  PageOutcomeFieldLabel: string;
 }
 
 declare module 'AiCoeFrontDoorWebPartStrings' {

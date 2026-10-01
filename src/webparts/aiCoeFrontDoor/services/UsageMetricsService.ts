@@ -1,3 +1,5 @@
+import { classifyError, failureLogDetail, failureUserMessage, statusError } from './failureClass';
+import type { FailureClass } from './failureClass';
 import { listItemsUrl } from './GovernanceService';
 import type { IListItem, IListResponse, IServiceContext, IUsageAlert, IUsageMetric, IUsageMetricsResult, IUsageMetricsService, UsageProvider } from './types';
 
@@ -194,11 +196,12 @@ export class UsageMetricsService implements IUsageMetricsService {
       this._tryGetAllItems(USAGE_LIST_TITLE, USAGE_QUERY),
       this._tryGetAllItems(INCIDENTS_LIST_TITLE, INCIDENTS_QUERY)
     ]);
+    // The console gets the status and the class only, never a response body.
     if (!usage.succeeded) {
-      console.warn('AI Usage Daily is unavailable', usage.error);
+      console.warn('AI Usage Daily is unavailable', failureLogDetail(usage.error));
     }
     if (!incidents.succeeded) {
-      console.warn('AI CoE Incidents is unavailable', incidents.error);
+      console.warn('AI CoE Incidents is unavailable', failureLogDetail(incidents.error));
     }
     const alerts: IUsageAlert[] = incidents.value
       .filter((item: IListItem): boolean => String(item.Status || '').toLowerCase() === 'open')
@@ -225,7 +228,12 @@ export class UsageMetricsService implements IUsageMetricsService {
       : usage.succeeded || incidents.succeeded
         ? 'One SharePoint data source is unavailable.'
         : 'SharePoint usage and incident data are unavailable.';
-    return { connected, metrics, alerts, message };
+    if (connected) {
+      return { connected, metrics, alerts, message };
+    }
+    // The usage feed is the strip's main source, so its failure names the class when both lists failed.
+    const failureClass: FailureClass = classifyError(usage.succeeded ? incidents.error : usage.error);
+    return { connected, metrics, alerts, message, failureClass, userMessage: failureUserMessage(failureClass) };
   }
 
   private async _tryGetAllItems(listTitle: string, query: string): Promise<IFetchOutcome> {
@@ -244,7 +252,7 @@ export class UsageMetricsService implements IUsageMetricsService {
       const response: IListResponse = await this._context.client.get(url, this._context.configuration, { headers: ACCEPT_HEADER });
       if (!response.ok) {
         const body: string = await response.text();
-        throw new Error(`${listTitle} returned ${response.status}: ${body.slice(0, 240)}`);
+        throw statusError(listTitle, response.status, body.slice(0, 240));
       }
       const page: { value?: IListItem[]; '@odata.nextLink'?: string; 'odata.nextLink'?: string } = (await response.json()) as {
         value?: IListItem[];

@@ -1,0 +1,13 @@
+{
+  "scope": "Strict no-emit native CORE client and server draft store; dependency graph included, not full host/build acceptance",
+  "compiler": "5.8.3",
+  "rootFiles": [
+    "src/webparts/aiCoeFrontDoor/services/core/nativeCoreWorkService.ts",
+    "src/webparts/aiCoeFrontDoor/services/serverDraftStore.ts"
+  ],
+  "sourceHashes": {
+    "src/webparts/aiCoeFrontDoor/services/core/nativeCoreWorkService.ts": "50915a2ad93c7d073f69aa15f459b0ae8585445167e8d66c897fbc303bf8af3a",
+    "src/webparts/aiCoeFrontDoor/services/serverDraftStore.ts": "e528e014033bbbf0c56c87ca73dcdf221adaab3571fbd58daa94135c8ca64a56"
+  },
+  "diagnostics": []
+}

@@ -9,7 +9,7 @@ import { FRONT_DOOR_VIEWS } from '../webparts/aiCoeFrontDoor/content/pageViews';
 
 jest.setTimeout(30000);
 
-const PAGE_PROPERTY_NAMES: string[] = ['pageIdea', 'pageToolCheck', 'pageTeamUsage', 'pageHelpTraining', 'pageFeedback', 'pageTelemetry', 'pageAdmin'];
+const PAGE_PROPERTY_NAMES: string[] = ['pageIdea', 'pageToolCheck', 'pageTeamUsage', 'pageHelpTraining', 'pageFeedback', 'pageTelemetry', 'pageAdmin', 'pageOutcome'];
 
 interface IResponse {
   status: number;
@@ -81,7 +81,7 @@ describe('offline preview server', () => {
     expect(page.body).toContain('option value="narrow"');
     const pageSelect: RegExpExecArray | null = /<select id="page-key">([\s\S]*?)<\/select>/.exec(page.body);
     expect(pageSelect).not.toBeNull();
-    for (const key of ['startHere', 'learn', 'useAi', 'requests', 'prompts', 'status']) {
+    for (const key of ['startHere', 'learn', 'useAi', 'requests', 'prompts', 'status', 'operations']) {
       expect((pageSelect as RegExpExecArray)[1]).toContain(`option value="${key}"`);
     }
     const directives: string[] = String(page.headers['content-security-policy'])
@@ -105,8 +105,82 @@ describe('offline preview server', () => {
     expect(mount.body).toContain('setPageKey');
   });
 
+  it('offers the 1.0.0.13 simulation switches: a refused intake list and a failed readback', async () => {
+    const page: IResponse = await get(`${base}/`);
+    const denySelect: RegExpExecArray | null = /<select id="simulate-deny">([\s\S]*?)<\/select>/.exec(page.body);
+    expect(denySelect).not.toBeNull();
+    expect((denySelect as RegExpExecArray)[1]).toContain('option value="none"');
+    expect((denySelect as RegExpExecArray)[1]).toContain('option value="intakes"');
+    expect(page.body).toContain('id="simulate-readback"');
+    // mount.js reads both switches from the query string and writes them back when the banner changes.
+    const mount: IResponse = await get(`${base}/mount.js`);
+    expect(mount.body).toContain("get('deny')");
+    expect(mount.body).toContain("get('readback')");
+    expect(mount.body).toContain('simulate-deny');
+    expect(mount.body).toContain('simulate-readback');
+    // The host answers the my-work filter and the readback by id, refuses the intake list under ?deny=intakes and
+    // fails the GET that follows a POST under ?readback=fail, so the pending receipt can be seen offline.
+    const host: IResponse = await get(`${base}/host.js`);
+    expect(host.body).toContain('$filter');
+    // The compiled host matches the readback URL with a regular expression, so the parenthesis is escaped in the source.
+    expect(host.body).toContain('items\\(');
+    expect(host.body).toContain('deny=intakes');
+    expect(host.body).toContain('readback=fail');
+    expect(host.body).toContain('403');
+  });
+
+  it('offers the 1.0.0.14 role simulation and says where the role really comes from', async () => {
+    const page: IResponse = await get(`${base}/`);
+    const roleSelect: RegExpExecArray | null = /<select id="simulate-role">([\s\S]*?)<\/select>/.exec(page.body);
+    expect(roleSelect).not.toBeNull();
+    for (const role of ['owner', 'employee', 'leader', 'operator', 'designAuthority', 'marketingParticipant', 'marketingReviewer']) {
+      expect((roleSelect as RegExpExecArray)[1]).toContain(`option value="${role}"`);
+    }
+    expect(page.body).toContain('Preview role simulation; production resolves the role from identity.');
+    // mount.js reads the switch from the query string, binds the simulated groups to the roles and reloads on a change.
+    const mount: IResponse = await get(`${base}/mount.js`);
+    expect(mount.body).toContain("get('role')");
+    expect(mount.body).toContain('simulate-role');
+    expect(mount.body).toContain('roleGroups');
+    expect(mount.body).toContain('Preview Leaders');
+    // The host answers the site groups request the resolver makes, and the same switch answers the permission check.
+    const host: IResponse = await get(`${base}/host.js`);
+    expect(host.body).toContain('currentuser/groups');
+    expect(host.body).toContain('role=');
+    expect(host.body).toContain('Preview Design Authority');
+    expect(host.body).toContain('previewIsAdmin');
+  });
+
+  it('offers the 1.0.0.14 palette switch, the Enterprise value page and the seeded measures rows', async () => {
+    const page: IResponse = await get(`${base}/`);
+    expect(page.body).toContain('id="simulate-palette"');
+    const pageSelect: RegExpExecArray | null = /<select id="page-key">([\s\S]*?)<\/select>/.exec(page.body);
+    expect(pageSelect).not.toBeNull();
+    expect((pageSelect as RegExpExecArray)[1]).toContain('option value="value"');
+    // mount.js reads the palette from the query string, writes it back and applies it without a reload.
+    const mount: IResponse = await get(`${base}/mount.js`);
+    expect(mount.body).toContain("get('palette')");
+    expect(mount.body).toContain('simulate-palette');
+    expect(mount.body).toContain('paletteOverrides');
+    expect(mount.body).toContain('setPaletteOverrides');
+    const host: IResponse = await get(`${base}/host.js`);
+    expect(host.body).toContain('setPaletteOverrides');
+    // The measures list the Enterprise value page reads is seeded: one measured row, one still awaiting its
+    // baseline and one whose group is smaller than the document's minimum.
+    expect(host.body).toContain('AI CoE Program Measures');
+    expect(host.body).toContain('MeasureId');
+    expect(host.body).toContain('useful-safe-completion-rate');
+    expect(host.body).toContain('PENDING_BASELINE');
+    expect(host.body).toContain('CohortSize');
+    // The 1.0.0.14 sections of the simulated document: the Enterprise value page with its measure tiles, the
+    // leader block on Start here, the release and the bindings a run writes, and the settings the tiles read.
+    for (const key of ['kpi', 'bindings', 'release:', 'settings:', 'minimumCohort', 'requiredRole', 'awaiting']) {
+      expect(host.body).toContain(key);
+    }
+  });
+
   it('serves only the allowlisted assets', async () => {
-    for (const route of ['/react.js', '/react-dom.js', '/host.js', '/strings.js', '/bundle.js', '/mount.js']) {
+    for (const route of ['/react.js', '/react-dom.js', '/host.js', '/practiceCases.js', '/strings.js', '/bundle.js', '/mount.js']) {
       const asset: IResponse = await get(`${base}${route}`);
       expect(asset.status).toBe(200);
       expect(asset.headers['content-type']).toBe('text/javascript');
@@ -130,8 +204,23 @@ describe('offline preview server', () => {
     expect(host.body).toContain('ai-coe-pages.json');
     expect(host.body).toContain('claude-sonnet-5');
     expect(host.body).toContain('Simulated preview data');
-    // Browsers cannot resolve bare specifiers such as "tslib"; the host must compile helper-free.
-    expect(host.body).not.toMatch(/^import\b/m);
+    // The simulated document carries the 1.0.0.12 sections (the route table, the work command, notices and the shared
+    // support route) and the 1.0.0.13 ones (the status strip, my work and the case card on Status, the telemetry piece
+    // under its kicker on the operator-plane Operations page, the feed labels in vocabulary.telemetry).
+    for (const key of ['workCommand', 'supportRoute', 'notice', 'routes', 'statusStrip', 'myWork', 'caseCards', 'operations', "plane: 'operator'", 'telemetry: {']) {
+      expect(host.body).toContain(key);
+    }
+    // Opening a new tab is stubbed, never blocked: the work command opens an available route after saving the draft.
+    expect(host.body).toContain('window.open = ');
+    expect(host.body).not.toContain('window.open = blocked');
+    // Browsers cannot resolve bare specifiers such as "tslib"; the host must compile helper-free. Its one import is the
+    // worked example from a request to a business case (1.0.0.19), by a relative path the server answers, and the
+    // example itself imports nothing.
+    expect(host.body.match(/^import\b.*$/gm)).toEqual(["import { PRACTICE_CORE_STORE_KEY, practiceJourney, withPracticeCases } from './practiceCases.js';"]);
+    const example: IResponse = await get(`${base}/practiceCases.js`);
+    expect(example.status).toBe(200);
+    expect(example.body).toContain('CW-PRACTICE-0001');
+    expect(example.body).not.toMatch(/^import\b/m);
   });
 
   it('refuses non-loopback host headers', async () => {

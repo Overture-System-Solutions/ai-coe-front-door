@@ -33,6 +33,7 @@ const routes = new Map([
   ['/react.js', ['node_modules/react/umd/react.development.js', 'text/javascript']],
   ['/react-dom.js', ['node_modules/react-dom/umd/react-dom.development.js', 'text/javascript']],
   ['/host.js', ['lib/preview/previewHost.js', 'text/javascript']],
+  ['/practiceCases.js', ['lib/preview/practiceCases.js', 'text/javascript']],
   ['/mount.js', ['preview/mount.js', 'text/javascript']],
   ['/strings.js', [await newestDistFile(/^AiCoeFrontDoorWebPartStrings_en-us.*\.js$/), 'text/javascript']],
   ['/bundle.js', [bundleOverride ?? (await newestDistFile(/^ai-coe-front-door-web-part.*\.js$/)), 'text/javascript']]

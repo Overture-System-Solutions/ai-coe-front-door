@@ -1,16 +1,37 @@
 import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import * as React from 'react';
-import { InMemoryDraftStore } from '../../../../testing/fakeServices';
+import { createFakeGovernanceService, EARLIER_ATTEMPT, EARLIER_ATTEMPT_SAVED, holdEarlierAttempt, InMemoryDraftStore } from '../../../../testing/fakeServices';
+import type { IFakeGovernanceService } from '../../../../testing/fakeServices';
 import { continueButton, enterAnswer, HELP_TRAINING_JOURNEY, journeyAnswers, playJourney } from '../../../../testing/journeys';
 import { renderWithFrontDoor } from '../../../../testing/renderWithFrontDoor';
 import type { FrontDoorRenderResult, ITestFrontDoorOptions } from '../../../../testing/renderWithFrontDoor';
 import { createBranding } from '../../branding/branding';
 import { createWorkflowCatalog } from '../../content/workflows/catalog';
+import type { ISubmissionResult } from '../../services/types';
 import type { IWorkflowDefinition } from '../../workflows/types';
 import { GenericWorkflow } from './GenericWorkflow';
 
 const helpTraining: IWorkflowDefinition = createWorkflowCatalog(createBranding('Overture')).helpTraining;
 const firstTitle: string = helpTraining.steps[0].title;
+
+const RETRY_ID: string = 'OVT-AICOE-20260911-RETRYME1';
+const OUTAGE: ISubmissionResult = {
+  connected: false,
+  state: 'failed',
+  intakeId: RETRY_ID,
+  message: 'SharePoint could not create the AI CoE record. AI CoE Pilot Intakes returned 503: boom',
+  failureClass: 'TRANSIENT',
+  userMessage: 'Not available right now; try again.'
+};
+const PENDING: ISubmissionResult = {
+  connected: false,
+  state: 'pending',
+  intakeId: RETRY_ID,
+  itemId: 9,
+  message: `SharePoint accepted the AI CoE record ${RETRY_ID} but did not confirm it back.`,
+  failureClass: 'INCONCLUSIVE',
+  userMessage: 'Saved, not yet confirmed.'
+};
 
 interface IHarness extends FrontDoorRenderResult {
   onExit: jest.Mock;
@@ -91,6 +112,102 @@ describe('GenericWorkflow', () => {
     expect(onExit).toHaveBeenCalledTimes(1);
   });
 
+  it('still clears the draft after a failed submission in the legacy view', async () => {
+    const draftStore: InMemoryDraftStore = new InMemoryDraftStore();
+    await draftStore.save('helpTraining', { answers: {} });
+    const { governance, onDraftsChanged } = renderWorkflow(false, { draftStore });
+    governance.result = OUTAGE;
+    await firstStep();
+    playJourney(HELP_TRAINING_JOURNEY, helpTraining);
+    fireEvent.click(screen.getByRole('button', { name: 'Confirm' }));
+    await screen.findByText('The AI CoE record was not created.');
+    expect(screen.getByText(OUTAGE.message)).toBeInTheDocument();
+    expect(screen.queryByRole('alert')).not.toBeInTheDocument();
+    expect(draftStore.keys()).toEqual([]);
+    expect(onDraftsChanged).toHaveBeenCalledWith('helpTraining', false);
+  });
+
+  describe('in a page view', () => {
+    it('keeps the answers as a draft after a failed submission and clears them after a saved retry under the same reference', async () => {
+      const draftStore: InMemoryDraftStore = new InMemoryDraftStore();
+      const { governance, onDraftsChanged } = renderWorkflow(false, { draftStore, pageView: true });
+      const saved: ISubmissionResult = governance.result;
+      governance.result = OUTAGE;
+      await firstStep();
+      playJourney(HELP_TRAINING_JOURNEY, helpTraining);
+      fireEvent.click(screen.getByRole('button', { name: 'Confirm' }));
+      const notice: HTMLElement = await screen.findByRole('alert');
+      expect(notice).toHaveTextContent('Not available right now; try again');
+      expect(notice).toHaveTextContent('Your answers remain on this screen. Save the draft before leaving.');
+      expect(screen.queryByText(/boom/)).not.toBeInTheDocument();
+      expect(screen.queryByText('The AI CoE record was not created.')).not.toBeInTheDocument();
+      expect(screen.getByRole('heading', { name: 'Thanks for reaching out.' })).toBeInTheDocument();
+      await waitFor((): void => expect(draftStore.keys()).toEqual(['helpTraining']));
+      expect(JSON.parse(draftStore.drafts.helpTraining)).toEqual({ answers: journeyAnswers(HELP_TRAINING_JOURNEY), currentStepId: 'email', phase: 'review' });
+      expect(onDraftsChanged).not.toHaveBeenCalledWith('helpTraining', false);
+
+      governance.result = saved;
+      fireEvent.click(within(notice).getByRole('button', { name: 'Try again' }));
+      expect(screen.getByRole('status')).toHaveTextContent('Putting your summary together…');
+      await screen.findByText('Saved and confirmed');
+      expect(governance.submissions).toHaveLength(2);
+      expect(governance.submissions[1]).toEqual({ workflowType: 'helpTraining', payload: journeyAnswers(HELP_TRAINING_JOURNEY), intakeId: RETRY_ID });
+      expect(draftStore.keys()).toEqual([]);
+      expect(onDraftsChanged).toHaveBeenCalledWith('helpTraining', false);
+      expect(screen.queryByRole('alert')).not.toBeInTheDocument();
+    });
+
+    it('keeps the draft after a pending submission and confirms again under the same reference', async () => {
+      const draftStore: InMemoryDraftStore = new InMemoryDraftStore();
+      const { governance } = renderWorkflow(false, { draftStore, pageView: true });
+      const saved: ISubmissionResult = governance.result;
+      governance.result = PENDING;
+      await firstStep();
+      playJourney(HELP_TRAINING_JOURNEY, helpTraining);
+      fireEvent.click(screen.getByRole('button', { name: 'Confirm' }));
+      await screen.findByText('Saved, not yet confirmed');
+      expect(screen.getByText(/Confirm again with the same reference; nothing is duplicated\./)).toBeInTheDocument();
+      await waitFor((): void => expect(draftStore.keys()).toEqual(['helpTraining']));
+
+      governance.result = saved;
+      fireEvent.click(screen.getByRole('button', { name: 'Confirm again' }));
+      await screen.findByText('Saved and confirmed');
+      expect(governance.submissions.map((submission): string | undefined => submission.intakeId)).toEqual([undefined, RETRY_ID]);
+      expect(draftStore.keys()).toEqual([]);
+    });
+
+    it('confirms an earlier attempt that held these answers back without settling their draft, then sends them on request', async () => {
+      const draftStore: InMemoryDraftStore = new InMemoryDraftStore();
+      const governance: IFakeGovernanceService = createFakeGovernanceService();
+      const saved: ISubmissionResult = governance.result;
+      holdEarlierAttempt(governance);
+      const { onDraftsChanged } = renderWorkflow(false, { draftStore, governance, pageView: true });
+      await firstStep();
+      playJourney(HELP_TRAINING_JOURNEY, helpTraining);
+      fireEvent.click(screen.getByRole('button', { name: 'Confirm' }));
+      await screen.findByText('Saved, not yet confirmed');
+      expect(screen.getByText('That reference is an earlier request. The answers on this page have not been sent yet; they can be sent once it is confirmed.')).toBeInTheDocument();
+      await waitFor((): void => expect(draftStore.keys()).toEqual(['helpTraining']));
+
+      governance.result = EARLIER_ATTEMPT_SAVED;
+      fireEvent.click(screen.getByRole('button', { name: 'Confirm again' }));
+      await screen.findByText('Earlier request confirmed');
+      expect(governance.submissions[1]).toEqual({ workflowType: EARLIER_ATTEMPT.workflowType, payload: EARLIER_ATTEMPT.payload, intakeId: EARLIER_ATTEMPT.intakeId });
+      expect(screen.getByText(EARLIER_ATTEMPT.intakeId)).toBeInTheDocument();
+      expect(screen.queryByText('Saved and confirmed')).not.toBeInTheDocument();
+      expect(draftStore.keys()).toEqual(['helpTraining']);
+      expect(onDraftsChanged).not.toHaveBeenCalledWith('helpTraining', false);
+
+      governance.result = saved;
+      fireEvent.click(screen.getByRole('button', { name: 'Send these answers' }));
+      await screen.findByText('Saved and confirmed');
+      expect(governance.submissions).toHaveLength(3);
+      expect(governance.submissions[2]).toEqual({ workflowType: 'helpTraining', payload: journeyAnswers(HELP_TRAINING_JOURNEY) });
+      expect(draftStore.keys()).toEqual([]);
+      expect(onDraftsChanged).toHaveBeenCalledWith('helpTraining', false);
+    });
+  });
+
   it('saves and resumes drafts', async () => {
     const draftStore: InMemoryDraftStore = new InMemoryDraftStore();
     const first: IHarness = renderWorkflow(false, { draftStore });
@@ -98,7 +215,7 @@ describe('GenericWorkflow', () => {
     enterAnswer(helpTraining.steps[0], 'new');
     fireEvent.click(continueButton());
     fireEvent.click(screen.getByRole('button', { name: 'Save draft' }));
-    await screen.findByText('Draft saved on this device.');
+    await screen.findByText('Draft saved.');
     expect(JSON.parse(draftStore.drafts.helpTraining)).toEqual({ answers: { helpCategory: 'new' }, currentStepId: 'newToAiFocus', phase: 'form' });
     expect(first.onDraftsChanged).toHaveBeenCalledWith('helpTraining', true);
     first.unmount();
@@ -128,7 +245,7 @@ describe('GenericWorkflow', () => {
     enterAnswer(helpTraining.steps[0], 'new');
     fireEvent.click(continueButton());
     fireEvent.click(screen.getByRole('button', { name: 'Save draft' }));
-    await screen.findByText('Draft saved on this device.');
+    await screen.findByText('Draft saved.');
     fireEvent.click(screen.getByRole('button', { name: 'Start over' }));
     expect(screen.getByRole('alertdialog', { name: 'Start over?' })).toBeInTheDocument();
     fireEvent.click(screen.getByRole('button', { name: 'Keep my answers' }));

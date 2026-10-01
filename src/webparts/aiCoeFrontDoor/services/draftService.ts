@@ -1,13 +1,13 @@
 /**
- * Client for the "OSS Demo - Claude Intake Draft" Power Automate flow, which turns the idea answers
- * into a twelve-field draft summary through the organization's Claude connector. The browser never
+ * Client for the intake drafting Power Automate flow, which turns the idea answers into a
+ * twelve-field draft summary through the organization's own model connection. The browser never
  * holds a model key: the flow is reached through an HTTP trigger that requires a Microsoft Entra
  * token for the flow service, which the web part obtains from the framework.
  */
 import { IDEA_SUMMARY_FIELDS } from '../summaries/ideaSummary';
 import type { IIdeaSummaryDraft } from '../summaries/ideaSummary';
 import { includes } from '../utils/collections';
-import { visibleSteps } from '../workflows/formEngine';
+import { answerSteps } from '../workflows/formEngine';
 import type { AnswerValue, IAnswers, IStep, IWorkflowDefinition } from '../workflows/types';
 import { createRecordId } from './recordId';
 
@@ -99,7 +99,7 @@ function hasContent(value: AnswerValue): boolean {
 /** Only the answers of visible questions the flow knows about; blanks and unshown conditional questions are left out. */
 export function buildIdeaDraftRequest(definition: IWorkflowDefinition, answers: IAnswers, requestId: string): IIdeaDraftRequest {
   const request: IIdeaDraftRequest = { schemaVersion: DRAFT_SCHEMA_VERSION, workflowId: 'idea', requestId, demoDataOnly: true, answers: {} };
-  for (const step of visibleSteps(definition, answers)) {
+  for (const step of answerSteps(definition, answers)) {
     const value: AnswerValue = answers[step.id];
     if (step.type !== 'notice' && includes(IDEA_DRAFT_ANSWER_KEYS, step.id) && value !== undefined && hasContent(value)) {
       request.answers[step.id] = value;
@@ -237,5 +237,5 @@ export function createIdeaDraftService(url: string | undefined, client: () => Pr
 
 /** Convenience for callers that only have the visible steps at hand. */
 export function draftAnswerSteps(definition: IWorkflowDefinition, answers: IAnswers): IStep[] {
-  return visibleSteps(definition, answers).filter((step: IStep): boolean => step.type !== 'notice' && includes(IDEA_DRAFT_ANSWER_KEYS, step.id));
+  return answerSteps(definition, answers).filter((step: IStep): boolean => includes(IDEA_DRAFT_ANSWER_KEYS, step.id));
 }

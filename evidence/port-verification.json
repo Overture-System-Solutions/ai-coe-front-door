@@ -1,10 +1,10 @@
 {
-  "verifiedAt": "2026-09-14T08:09:45.214Z",
+  "verifiedAt": "2026-10-01T20:52:50.349Z",
   "package": {
     "path": "sharepoint/solution/overture-ai-coe-front-door.sppkg",
-    "sha256": "1a3c2773183a690fa224bfa22ade19069dc28731d77ebdb12c7cc80ed727ff9c",
-    "bytes": 73544,
-    "version": "1.0.0.11",
+    "sha256": "9ee18261890983ffcd0f19328efe730e1c933214f1ab67b1a92978bd71b4e460",
+    "bytes": 200076,
+    "version": "1.0.0.19",
     "productId": "f125ebdf-4a9d-4e6e-8479-3a18874e7752",
     "isDomainIsolated": "false",
     "webApiPermissionRequest": {
@@ -17,9 +17,9 @@
       "AppManifest.xml",
       "ClientSideAssets.xml",
       "ClientSideAssets.xml.config.xml",
-      "ClientSideAssets/AiCoeFrontDoorWebPartStrings_en-us_9dfb7417a1849eff66ed6c5a4862b07e.js",
-      "ClientSideAssets/ai-coe-front-door-web-part_4ce9584ee265a0a1ce80.js",
-      "ClientSideAssets/ai-coe-front-door-web-part_4ce9584ee265a0a1ce80.js.LICENSE.txt",
+      "ClientSideAssets/AiCoeFrontDoorWebPartStrings_en-us_a4e61191c7d7e8df2437be0ae452af61.js",
+      "ClientSideAssets/ai-coe-front-door-web-part_da338feb004eaea04103.js",
+      "ClientSideAssets/ai-coe-front-door-web-part_da338feb004eaea04103.js.LICENSE.txt",
       "ClientSideAssets/cf2e5904-0703-4fe4-ae5a-ec012d6fa689_color.png",
       "ClientSideAssets/cf2e5904-0703-4fe4-ae5a-ec012d6fa689_outline.png",
       "[Content_Types].xml",
@@ -53,18 +53,22 @@
   "bundle": {
     "files": [
       {
-        "name": "ClientSideAssets/ai-coe-front-door-web-part_4ce9584ee265a0a1ce80.js",
-        "sha256": "d5041702d976effc88ec6d22501136836004693143b1bbcf57e3008159c0b077",
-        "bytes": 211329
+        "name": "ClientSideAssets/ai-coe-front-door-web-part_da338feb004eaea04103.js",
+        "sha256": "6cb9865f27c79b0198b5e9210203a893cb115550c62b362e1f0ee4f0514ef436",
+        "bytes": 716505
       },
       {
-        "name": "ClientSideAssets/AiCoeFrontDoorWebPartStrings_en-us_9dfb7417a1849eff66ed6c5a4862b07e.js",
-        "sha256": "f1e36d9bfc5c63e4b5dd670a81db2104b19e7b5518c375b891ff6852a488d4c1",
-        "bytes": 2993
+        "name": "ClientSideAssets/AiCoeFrontDoorWebPartStrings_en-us_a4e61191c7d7e8df2437be0ae452af61.js",
+        "sha256": "79ddd45560968e61242900caf90ddc04b1b9583205beb6bf2a101a50a3534d28",
+        "bytes": 4790
       }
     ],
+    "tenantWordList": "src/provisioning/tenantWords.json",
     "forbiddenWordCounts": {
-      "Overture": 0
+      "bundlePhrases": 0,
+      "hosts": 0,
+      "people": 0,
+      "secretPatterns": 0
     },
     "dataContractMarkers": [
       "OVT-AICOE-",
@@ -73,6 +77,7 @@
       "AI CoE Pilot Intakes"
     ],
     "preconfiguredViews": [
+      "app",
       "legacy",
       "home",
       "idea",
@@ -82,10 +87,58 @@
       "feedback",
       "telemetry",
       "admin",
-      "page"
+      "page",
+      "outcome"
     ]
   },
-  "tests": "351 passed (heft test --clean --production and npm run build on 2026-09-14)",
+  "packageScan": {
+    "lists": [
+      "clientWords",
+      "bundlePhrases",
+      "hosts",
+      "people",
+      "caseIds",
+      "secretPatterns"
+    ],
+    "exempt": [
+      "bundlePhrases and clientWords in elements.xml, intake-schema.xml, decision-schema.xml (byte-identical to the shipped 1.0.0.7 package)",
+      "every list in the <DeveloperProperties> element of AppManifest.xml (the publisher, from config/package-solution.json)",
+      "clientWords in the documented identifiers: the overture-ai-coe- family (package, solution name, draft key prefix, DOM scope id, download file names), overture-confirm-title and the .overture-* classes of parity/theme.1.0.0.7.css"
+    ],
+    "binarySkipped": [
+      "ClientSideAssets/cf2e5904-0703-4fe4-ae5a-ec012d6fa689_color.png",
+      "ClientSideAssets/cf2e5904-0703-4fe4-ae5a-ec012d6fa689_outline.png"
+    ],
+    "scanned": [
+      "AppManifest.xml",
+      "_rels/AppManifest.xml.rels",
+      "_rels/.rels",
+      "[Content_Types].xml",
+      "feature_69ab84b7-608c-47ee-9623-af8ebaf2cb10.xml",
+      "_rels/feature_69ab84b7-608c-47ee-9623-af8ebaf2cb10.xml.rels",
+      "feature_69ab84b7-608c-47ee-9623-af8ebaf2cb10.xml.config.xml",
+      "intake-schema.xml",
+      "decision-schema.xml",
+      "69ab84b7-608c-47ee-9623-af8ebaf2cb10/elements.xml",
+      "69ab84b7-608c-47ee-9623-af8ebaf2cb10/WebPart_cf2e5904-0703-4fe4-ae5a-ec012d6fa689.xml",
+      "ClientSideAssets.xml",
+      "_rels/ClientSideAssets.xml.rels",
+      "ClientSideAssets.xml.config.xml",
+      "ClientSideAssets/ai-coe-front-door-web-part_da338feb004eaea04103.js",
+      "ClientSideAssets/ai-coe-front-door-web-part_da338feb004eaea04103.js.LICENSE.txt",
+      "ClientSideAssets/AiCoeFrontDoorWebPartStrings_en-us_a4e61191c7d7e8df2437be0ae452af61.js"
+    ],
+    "findings": []
+  },
+  "dependencyInventory": {
+    "path": "evidence/dependency-inventory.json",
+    "sha256": "00ab69bed43babc85da0b03b590fde44aa4b23eae072b63f693effc08aa1885d",
+    "components": 186,
+    "fields": 16,
+    "awaitingToken": "AWAITING_TENANT_INVENTORY",
+    "fieldsSource": "13_SECURITY_AND_THREAT_MODEL/secrets-supply-chain.yaml required_inventory_fields"
+  },
+  "tests": "1360 passed (npm run build on 2026-10-01)",
   "scope": "Local build verification only: no tenant upload, deployment, SharePoint change or model call.",
   "failures": []
 }

@@ -1,0 +1,8 @@
+{
+  "command": "node.exe -e \"process.env.MEASUREMENT_REGRESSION='1'; process.argv=[process.argv[0],'run-tests','','regression-verified']; require('./evidence/measurement-audit/run-tests.cjs')\"",
+  "result": {
+    "output": "PASS src/webparts/aiCoeFrontDoor/services/GovernanceService.test.ts\nPASS src/webparts/aiCoeFrontDoor/components/app/AppShell.test.tsx\nPASS src/webparts/aiCoeFrontDoor/content/workflows/outcome.test.ts\nPASS src/webparts/aiCoeFrontDoor/services/workflowOutcomeAggregation.test.ts\nPASS src/webparts/aiCoeFrontDoor/services/programMeasuresService.test.ts\nPASS src/webparts/aiCoeFrontDoor/components/app/AppSections.test.tsx\nPASS src/webparts/aiCoeFrontDoor/components/app/AppValue.test.tsx\n\nTest Suites: 7 passed, 7 total\nTests:       144 passed, 144 total\nSnapshots:   0 total\nTime:        6.135 s\nRan all test suites.",
+    "exit_code": 0,
+    "error": null
+  }
+}

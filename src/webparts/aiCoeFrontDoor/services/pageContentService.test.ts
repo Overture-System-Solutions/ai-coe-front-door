@@ -1,9 +1,9 @@
 import { createFakeListClient, InMemoryListStore } from '../../../testing/listStore';
 import type { IRecordedRequest } from '../../../testing/listStore';
 import { SAMPLE_PAGE_DOCUMENT } from '../../../testing/pageDocument';
-import { fileContentUrl, PageContentService } from './pageContentService';
+import { fileContentUrl, MAX_DOCUMENT_CHARS, PageContentService } from './pageContentService';
 import type { IPageContentResult } from './pageContentService';
-import type { IListClient, IServiceContext } from './types';
+import type { IListClient, IListResponse, IServiceContext } from './types';
 
 const SITE: string = 'https://contoso.sharepoint.com/sites/ai';
 const FILE: string = '/sites/ai/SiteAssets/ai-coe-pages.json';
@@ -53,7 +53,39 @@ describe('PageContentService', () => {
   it('reports a missing file as not connected', async () => {
     const store: InMemoryListStore = new InMemoryListStore([]);
     const service: PageContentService = new PageContentService(contextFor(createFakeListClient(store)), CONTENT_URL);
-    expect(await service.getDocument()).toEqual({ connected: false, message: `The page document could not be read: ${CONTENT_URL} answered 404.` });
+    expect(await service.getDocument()).toEqual({
+      connected: false,
+      message: `The page document could not be read: ${CONTENT_URL} answered 404.`,
+      failureClass: 'SOURCE',
+      userMessage: 'Not available on this site.'
+    });
+  });
+
+  it('classifies a forbidden file as a permission failure without quoting the body', async () => {
+    const body: string = '{"error":{"message":"Access denied. token=eyJabc"}}';
+    const client: IListClient = {
+      get: (): Promise<IListResponse> => Promise.resolve({ ok: false, status: 403, text: (): Promise<string> => Promise.resolve(body), json: (): Promise<unknown> => Promise.resolve(JSON.parse(body)) }),
+      post: (): Promise<never> => Promise.reject(new Error('unexpected'))
+    };
+    const service: PageContentService = new PageContentService(contextFor(client), CONTENT_URL);
+    const result: IPageContentResult = await service.getDocument();
+    expect(result).toEqual({
+      connected: false,
+      message: `The page document could not be read: ${CONTENT_URL} answered 403.`,
+      failureClass: 'PERMISSION',
+      userMessage: 'Needs access.'
+    });
+    expect(result.userMessage).not.toContain('token');
+    expect(result.message).not.toContain('token');
+  });
+
+  it('carries no failure class when the document was read', async () => {
+    const store: InMemoryListStore = new InMemoryListStore([]);
+    store.seedFile(FILE, JSON.stringify(SAMPLE_PAGE_DOCUMENT));
+    const service: PageContentService = new PageContentService(contextFor(createFakeListClient(store)), CONTENT_URL);
+    const result: IPageContentResult = await service.getDocument();
+    expect(result.failureClass).toBeUndefined();
+    expect(result.userMessage).toBeUndefined();
   });
 
   it('reports a file that is not a page document as connected but without pages', async () => {
@@ -63,12 +95,39 @@ describe('PageContentService', () => {
     expect(await service.getDocument()).toEqual({ connected: true, message: `${CONTENT_URL} is not a version 1 page document.` });
   });
 
+  it('refuses a body over 512 kB before parsing it, as connected but without pages', async () => {
+    const store: InMemoryListStore = new InMemoryListStore([]);
+    const filler: string = new Array(512 * 1024 + 2).join('a');
+    store.seedFile(FILE, `{ "version": 1, "pages": {}, "filler": "${filler}" }`);
+    const service: PageContentService = new PageContentService(contextFor(createFakeListClient(store)), CONTENT_URL);
+    expect(await service.getDocument()).toEqual({ connected: true, document: undefined, message: 'The page document is too large (limit 512 kB).' });
+    expect(MAX_DOCUMENT_CHARS).toBe(512 * 1024);
+  });
+
+  it('accepts a body of exactly the limit', async () => {
+    const store: InMemoryListStore = new InMemoryListStore([]);
+    const head: string = '{ "version": 1, "pages": {}, "filler": "';
+    const tail: string = '" }';
+    const body: string = head + new Array(MAX_DOCUMENT_CHARS - head.length - tail.length + 1).join('a') + tail;
+    expect(body).toHaveLength(MAX_DOCUMENT_CHARS);
+    store.seedFile(FILE, body);
+    const service: PageContentService = new PageContentService(contextFor(createFakeListClient(store)), CONTENT_URL);
+    const result: IPageContentResult = await service.getDocument();
+    expect(result.connected).toBe(true);
+    expect(result.document?.pages).toEqual({});
+  });
+
   it('never throws when the client fails', async () => {
     const client: IListClient = {
       get: (): Promise<never> => Promise.reject(new Error('boom')),
       post: (): Promise<never> => Promise.reject(new Error('boom'))
     };
     const service: PageContentService = new PageContentService(contextFor(client), CONTENT_URL);
-    expect(await service.getDocument()).toEqual({ connected: false, message: 'The page document could not be read: boom' });
+    expect(await service.getDocument()).toEqual({
+      connected: false,
+      message: 'The page document could not be read: boom',
+      failureClass: 'TRANSIENT',
+      userMessage: 'Not available right now; try again.'
+    });
   });
 });

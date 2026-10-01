@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://local.invalid/marketing/content-plan.v1.json",
+  "title": "ContentPlan.v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "planId",
+    "workId",
+    "registerId",
+    "registerVersion",
+    "acceptedBrief",
+    "primaryDestination",
+    "primaryCta",
+    "assetRegister",
+    "copyVariants",
+    "contentCalendar",
+    "proposedOwners",
+    "dependencies",
+    "approvalRequirements",
+    "evidenceGaps",
+    "reviewNeeds",
+    "createdAt"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "1.0" },
+    "planId": { "type": "string", "minLength": 1 },
+    "workId": { "type": "string", "minLength": 1 },
+    "registerId": { "type": "string", "minLength": 1 },
+    "registerVersion": { "type": "string", "minLength": 1 },
+    "acceptedBrief": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "artifactId", "revision", "payloadHash", "acceptanceReceiptId"],
+      "properties": {
+        "kind": { "const": "campaignBrief" },
+        "artifactId": { "type": "string" },
+        "revision": { "type": "integer", "minimum": 1 },
+        "payloadHash": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "acceptanceReceiptId": { "type": "string" }
+      }
+    },
+    "primaryDestination": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["destinationId", "label", "href", "sourceRefs"],
+      "properties": {
+        "destinationId": { "const": "primary" },
+        "label": { "type": "string" },
+        "href": { "type": ["string", "null"] },
+        "sourceRefs": { "type": "array" },
+        "unknown": { "type": "string" }
+      }
+    },
+    "primaryCta": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ctaId", "label", "destinationId"],
+      "properties": {
+        "ctaId": { "const": "primary" },
+        "label": { "type": "string" },
+        "destinationId": { "const": "primary" }
+      }
+    },
+    "assetRegister": { "type": "array", "items": { "type": "object", "additionalProperties": false } },
+    "copyVariants": { "type": "array", "items": { "type": "object", "additionalProperties": false } },
+    "contentCalendar": { "type": "array", "items": { "type": "object", "additionalProperties": false } },
+    "proposedOwners": { "type": "array", "items": { "type": "object", "additionalProperties": false } },
+    "dependencies": { "type": "array", "items": { "type": "object", "additionalProperties": false } },
+    "approvalRequirements": { "type": "array", "items": { "type": "object", "additionalProperties": false } },
+    "evidenceGaps": { "type": "array", "items": { "type": "string" } },
+    "reviewNeeds": { "type": "array", "items": { "type": "string" } },
+    "createdAt": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,3})?Z$" }
+  }
+}

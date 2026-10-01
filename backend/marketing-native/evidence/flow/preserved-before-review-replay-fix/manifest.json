@@ -1,0 +1,9 @@
+{
+  "out/AICoEMarketingAutomation_1_0_0_0_UNBOUND_REVIEW_ONLY.zip": "629dde403c49cadfece35af92197ac559a1d2989f5139bd26a7f35729a4bfd74",
+  "out/AICoEMarketingIntegrity_1_0_0_0_REGISTRATION_CANDIDATE.zip": "0ece03b79b7c72a31c486a09afacf71f687bfe08ffe3a483cab89a9f7ed24b6b",
+  "out/build-manifest.json": "fc760b3b9e3ab5d3d8329a94287798da75ea5c45606e2a2d99c3fdf2040b400e",
+  "out/deployment-settings-template.json": "2e676a1daae5d4aa63050acdffcf82a20fee29d822c70e2d9e7fb9e0de2948da",
+  "out/flow-definitions/AICoEMarketing01Command.json": "5bacd59e02a472f200cb2152519f6e89b7ab7534f219a392bf5c1d6e24fdc116",
+  "out/native-status.json": "27c2fa059df41f8380d3a40587154b6feeb1cf20a441cc7171300bb789e5d9c2",
+  "out/pac-roundtrip/AICoEMarketingAutomation_1_0_0_0.zip": "592476af4e32c1969e63ff8dd67677daded5e4a3e3412bfef2b3a6e68f578165"
+}

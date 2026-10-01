@@ -1,0 +1,41 @@
+{
+  "status": "suppressed",
+  "publication": "manual-only",
+  "mode": "synthetic",
+  "reasons": [
+    "Whole report withheld: people or cell privacy threshold not met."
+  ],
+  "unknown": [
+    "eligible-cohort",
+    "first-useful-outcome",
+    "repeat-useful-outcome",
+    "useful-safe-completion-rate",
+    "median-time-to-useful-outcome",
+    "repeat-use-useful-completion-rate",
+    "baseline",
+    "cost",
+    "verified-savings",
+    "honest-unavailable-behavior",
+    "unauthorized-consequential-action",
+    "uncertain-outcome-reconciled",
+    "support-confidence",
+    "champion-teach-back"
+  ],
+  "notice": "SYNTHETIC FIXTURE OUTPUT — not business evidence or approval.",
+  "runReceipt": {
+    "sourceSha256": "c18c70eb377c69cde5570117e7c31be17858741ded3e1ef64fcfabb9bb2c52b4",
+    "qualificationSha256": "5654a528745dc1ff6fd3293ab272df44539773b44b25b65de283e3403a0e02ee",
+    "scopeSha256": "953d392e9a924bb95ae3e680fc35a902e0485af00d1ff2d425c2dc1ef9674abb",
+    "asOf": "2026-09-23",
+    "commandSha256": "fbc5bf030a1d4b838574482023b73964ec2684c7ce364bb1352ed764f5acf5fa",
+    "implementation": {
+      "src/webparts/aiCoeFrontDoor/services/workflowOutcomeAggregation.ts": "59f8eb2cf346015cbd63060b5119b77ecd7221d27afdc86e9679d011e1106014",
+      "src/webparts/aiCoeFrontDoor/content/workflows/outcome.ts": "98fba2a27062a965fc5a7b875423a2ff61ef3d7f21b93a455bfadb48982e5b14",
+      "src/webparts/aiCoeFrontDoor/icons/index.ts": "32805a8bf70859b9032418d0d9772de90575deb0968e0fd7e264fde96d30c1b8",
+      "src/webparts/aiCoeFrontDoor/utils/collections.ts": "039a29d1267887ed49d8cb5d97a1a3cb67379824cf1aef0d8166877413b372df",
+      "src/webparts/aiCoeFrontDoor/content/truthStates.ts": "7c922f996a892c38bf96c000d6278607b5f954a43f0f531ff65711eb6106688b"
+    },
+    "networkUsed": false,
+    "tenantWrites": false
+  }
+}

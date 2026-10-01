@@ -1,0 +1,27 @@
+{
+  "boundary": "Synthetic offline probes; passing assertions reproduce defects, not acceptance.",
+  "sourceHashes": {
+    "src/webparts/aiCoeFrontDoor/services/serverDraftStore.ts": "e528e014033bbbf0c56c87ca73dcdf221adaab3571fbd58daa94135c8ca64a56",
+    "src/webparts/aiCoeFrontDoor/services/core/nativeCoreWorkService.ts": "63e0f40af22dabfbd637c7be0676d8ed18577adcd9a5c35fababb533091c6a2b",
+    "src/webparts/aiCoeFrontDoor/services/marketing/marketingDraftService.ts": "b6fcea33fa75b3d3ff054ee1f28e4c758c7fe07d0d282458f37f1c0621f2116a",
+    "backend/power-automate/marketing-runtime/server/runtime.cjs": "35efd40ce72863856aab672d80f7216711b31328e9f6bd9a4be5ba764b1d7700",
+    "backend/power-automate/marketing-runtime/server/source-registry.cjs": "c4d9c0d2eac2e9d491e45ced2e2f44926f7613c562d62340d141406308d37779"
+  },
+  "observations": [
+    {
+      "id": "DRAFT-RACE",
+      "verdict": "REPRODUCED",
+      "pendingBeforeStaleLoad": true,
+      "pendingAfterStaleLoad": false,
+      "restartReturnedOldDraft": true,
+      "browserBusinessText": false
+    },
+    {
+      "id": "DRAFT-CACHED-REFERENCE",
+      "verdict": "REPRODUCED",
+      "secondInstanceIgnoredSharedPending": true,
+      "pendingAfterNewWrite": false,
+      "browserBusinessText": false
+    }
+  ]
+}

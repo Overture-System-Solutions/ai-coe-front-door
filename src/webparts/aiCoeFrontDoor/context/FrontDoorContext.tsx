@@ -1,12 +1,20 @@
 import * as React from 'react';
 import type { IBranding } from '../branding/branding';
 import type { TelemetryProvider } from '../content/telemetryTiles';
+import type { IApprovedToolsService } from '../services/approvedToolsService';
+import type { ICaseAnalysisService } from '../services/caseAnalysisService';
+import type { IConcierge } from '../services/concierge';
 import type { IIdeaDraftService } from '../services/draftService';
 import type { IDraftStore } from '../services/draftStorage';
+import type { IMyWorkService } from '../services/myWorkService';
 import type { Navigate } from '../services/navigation';
 import type { IPageContentService } from '../services/pageContentService';
+import type { IProgramMeasuresService } from '../services/programMeasuresService';
+import type { IRoleResolver } from '../services/roleResolver';
 import type { IToolPolicyEvaluator } from '../services/toolPolicyEvaluator';
 import type { IGovernanceService, IUsageMetricsService } from '../services/types';
+import type { IMarketingServices } from '../services/marketing/marketingServices';
+import type { ICoreWorkService } from '../services/core/coreWorkService';
 import type { IWorkflowCatalog } from '../workflows/types';
 
 export interface IFrontDoorUser {
@@ -19,10 +27,26 @@ export interface IFrontDoorServices {
   usage: IUsageMetricsService;
   draftStore: IDraftStore;
   toolPolicyEvaluator: IToolPolicyEvaluator;
-  /** Present only when the web part has a Claude draft flow configured; otherwise summaries stay deterministic. */
+  /** Present only when the web part has an AI draft flow configured; otherwise summaries stay deterministic. */
   ideaDrafts?: IIdeaDraftService;
   /** Reads the page content document; present for web parts, absent in the legacy-only test setups. */
   pageContent?: IPageContentService;
+  /** Reads the person's own requests; present for web parts, absent in the legacy-only test setups (the pieces then report the list as unavailable). */
+  myWork?: IMyWorkService;
+  /** Resolves the roles of the signed-in person from the site groups; absent in the legacy-only test setups (everyone is then an employee). */
+  roles?: IRoleResolver;
+  /** Reads the program measures; present for web parts, absent in the legacy-only test setups (every measure then reads as not available). */
+  programMeasures?: IProgramMeasuresService;
+  /** The Marketing drafting, review and persistence bundle (synthetic or disabled live); absent in the legacy-only test setups. */
+  marketing?: IMarketingServices;
+  /** The CORE Binding A case service (disabled until a command list is bound); absent in the legacy-only test setups. */
+  coreWork?: ICoreWorkService;
+  /** Claude's analysis of the open business cases, through the case analysis flow; present only when a flow URL is bound. */
+  caseAnalysis?: ICaseAnalysisService;
+  /** The AI CoE Concierge links the "Ask the AI CoE" box hands a question to (1.0.0.18); absent when none is set up. */
+  concierge?: IConcierge;
+  /** Reads the approved-tools register (1.0.0.18); absent in the legacy-only test setups (no tool is then approved). */
+  approvedTools?: IApprovedToolsService;
 }
 
 /** Everything the pages need from the host: who is looking, where they are, and the services to talk to. */
@@ -37,6 +61,12 @@ export interface IFrontDoorContextValue {
   services: IFrontDoorServices;
   /** Leaves the page for another URL. Absent in the legacy shell, which never navigates; page views fall back to the browser. */
   navigate?: Navigate;
+  /**
+   * True when the instance renders one piece on a native page (a page view); false in the legacy
+   * single-page shell. The receipt, the failure notice and the kept drafts exist in page views only,
+   * so the legacy screens stay as shipped.
+   */
+  pageView: boolean;
 }
 
 const FrontDoorContext: React.Context<IFrontDoorContextValue | undefined> = React.createContext<IFrontDoorContextValue | undefined>(undefined);
@@ -56,4 +86,10 @@ export function useFrontDoor(): IFrontDoorContextValue {
     throw new Error('useFrontDoor must be called inside a FrontDoorProvider.');
   }
   return value;
+}
+
+/** Whether the tree is a page view; false outside any provider, where only the shipped legacy controls are ever mounted. */
+export function usePageViewFlag(): boolean {
+  const value: IFrontDoorContextValue | undefined = React.useContext(FrontDoorContext);
+  return value !== undefined && value.pageView;
 }

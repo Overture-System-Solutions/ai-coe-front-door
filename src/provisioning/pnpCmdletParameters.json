@@ -1,0 +1,42 @@
+{
+  "module": "PnP.PowerShell",
+  "version": "3.1.0",
+  "note": "The parameters each cmdlet accepts in the module version the script pins, aliases included. Read by provisioningScript.test.ts so a parameter that version does not have fails the suite instead of the provisioning run. Regenerate with: Import-Module PnP.PowerShell -RequiredVersion <version>; (Get-Command <cmdlet>).Parameters.Keys. The version here and the #Requires line of New-FrontDoorPages.ps1 must name the same version.",
+  "dynamicNote": "A dynamic parameter exists only once another parameter is bound, so Get-Command does not list it. Each one below was confirmed against the pinned module by binding the call offline: a name that exists stops at 'You are not signed in', a name that does not raises a ParameterBindingException.",
+  "dynamic": {
+    "Add-PnPField": ["Choices"]
+  },
+  "common": ["Confirm","Debug","ErrorAction","ErrorVariable","InformationAction","InformationVariable","OutBuffer","OutVariable","PipelineVariable","ProgressAction","UseTransaction","Verbose","WarningAction","WarningVariable","WhatIf"],
+  "cmdlets": {
+    "Add-PnPField": ["AddToAllContentTypes","AddToDefaultView","ClientSideComponentId","ClientSideComponentProperties","Connection","DisplayName","Field","Group","Id","InternalName","List","Required","Type"],
+    "Add-PnPFile": ["Approve","ApproveComment","CheckInComment","CheckinType","Checkout","Connection","Content","ContentType","FileName","Folder","NewFileName","Path","Publish","PublishComment","Stream","UseWebDav","Values"],
+    "Add-PnPNavigationNode": ["AudienceIds","Connection","External","First","Location","OpenInNewTab","Parent","PreviousNode","Title","Url"],
+    "Add-PnPPage": ["CommentsEnabled","Connection","ContentType","HeaderLayoutType","LayoutType","Name","PromoteAs","Publish","ScheduledPublishDate","Title","Translate","TranslationLanguageCodes"],
+    "Add-PnPPageSection": ["Connection","Order","Page","SectionTemplate","VerticalZoneEmphasis","ZoneEmphasis"],
+    "Add-PnPPageWebPart": ["Column","Component","Connection","DefaultWebPartType","Order","Page","Section","WebPartProperties"],
+    "Connect-PnPOnline": ["AccessToken","ApplicationId","AzureADLoginEndPoint","AzureADWorkloadIdentity","AzureEnvironment","CertificateBase64Encoded","CertificatePassword","CertificatePath","ClientId","ClientSecret","Connection","CreateDrive","Credentials","CurrentCredentials","DeviceLogin","DriveName","EnvironmentVariable","ForceAuthentication","Interactive","ManagedIdentity","MicrosoftGraphEndPoint","OSLogin","PersistLogin","Realm","RedirectUri","ReturnConnection","Tenant","TenantAdminUrl","Thumbprint","TransformationOnPrem","Url","UserAssignedManagedIdentityAzureResourceId","UserAssignedManagedIdentityClientId","UserAssignedManagedIdentityObjectId","UserAssignedManagedIdentityPrincipalId","ValidateConnection","X509KeyStorageFlags"],
+    "Get-PnPContext": ["Connection"],
+    "Get-PnPField": ["Connection","Group","Identity","Includes","InSiteHierarchy","List"],
+    "Get-PnPFile": ["AsFile","AsFileObject","AsListItem","AsMemoryStream","AsString","Connection","Filename","Force","Path","ServerRelativeUrl","SiteRelativeUrl","ThrowExceptionIfFileNotFound","Url"],
+    "Get-PnPGroup": ["AssociatedMemberGroup","AssociatedOwnerGroup","AssociatedVisitorGroup","Connection","Identity","Includes"],
+    "Get-PnPHomePage": ["Connection"],
+    "Get-PnPList": ["Connection","Identity","Includes","ThrowExceptionIfListNotFound"],
+    "Get-PnPListItem": ["Connection","Fields","FolderServerRelativeUrl","Id","IncludeContentType","Includes","List","PageSize","Query","ScriptBlock","UniqueId"],
+    "Get-PnPListPermissions": ["Connection","Identity","PrincipalId"],
+    "Get-PnPNavigationNode": ["Connection","Id","Location","Tree"],
+    "Get-PnPPageComponent": ["Connection","InstanceId","ListAvailable","Page"],
+    "Get-PnPRoleDefinition": ["Connection","Identity"],
+    "Get-PnPWeb": ["Connection","Identity","Includes"],
+    "Invoke-PnPQuery": ["Connection","RetryCount"],
+    "New-PnPList": ["Connection","EnableContentTypes","EnableVersioning","Hidden","OnQuickLaunch","Template","Title","Url"],
+    "Remove-PnPNavigationNode": ["All","Connection","Force","Identity","Location"],
+    "Remove-PnPPage": ["Connection","Force","Identity","Recycle"],
+    "Set-PnPField": ["Connection","Identity","List","ShowInFiltersPane","UpdateExistingLists","Values"],
+    "Set-PnPHomePage": ["Connection","RootFolderRelativeUrl"],
+    "Set-PnPList": ["AllowDeletion","BreakRoleInheritance","ClearSubscopes","Color","Connection","CopyRoleAssignments","DefaultSensitivityLabelForLibrary","Description","DisableCommenting","DisableGridEditing","DraftVersionVisibility","EnableAttachments","EnableAutoExpirationVersionTrim","EnableClassicAudienceTargeting","EnableContentTypes","EnableFolderCreation","EnableMinorVersions","EnableModeration","EnableModernAudienceTargeting","EnableVersioning","ExemptFromBlockDownloadOfNonViewableFiles","ExpireVersionsAfterDays","ForceCheckout","Hidden","Icon","Identity","ListExperience","MajorVersions","MinorVersions","NoCrawl","OpenDocumentsMode","Path","ReadSecurity","ResetRoleInheritance","Title","WriteSecurity"],
+    "Set-PnPListItemPermission": ["AddRole","ClearExisting","Connection","Group","Identity","InheritPermissions","List","RemoveRole","SystemUpdate","User"],
+    "Set-PnPListPermission": ["AddRole","Connection","Group","Identity","RemoveRole","User"],
+    "Set-PnPPage": ["CommentsEnabled","Connection","ContentType","DemoteNewsArticle","HeaderLayoutType","HeaderType","Identity","LayoutType","Like","Name","PromoteAs","Publish","RemoveScheduledPublish","ScheduledPublishDate","ShowPublishDate","ThumbnailUrl","Title","Translate","TranslationLanguageCodes"],
+    "Set-PnPPageWebPart": ["Connection","Identity","Page","PropertiesJson","Title"]
+  }
+}

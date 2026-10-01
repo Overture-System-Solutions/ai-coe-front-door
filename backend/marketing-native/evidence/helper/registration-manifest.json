@@ -1,0 +1,40 @@
+{
+  "kind": "UNBOUND_PRIVATE_CONNECTOR_REGISTRATION_CANDIDATE_NOT_SOLUTION_IMPORT",
+  "boundary": "LOCAL_CSHARP73_NET10_SCRIPTBASE_SHIM_ONLY_NOT_HOSTED_QUALIFICATION",
+  "scriptSha256": "9dead8bb1670f64a517dee06d685ea1c789fed6ac0bef4a6cf9e644661f397f6",
+  "scriptBytes": 99901,
+  "localDllSha256": "7d6a76c4bb619d7fdab23ae35de724311a6ab4069d736302c257644b3eabfab2",
+  "members": {
+    "Script.cs": {
+      "sha256": "9dead8bb1670f64a517dee06d685ea1c789fed6ac0bef4a6cf9e644661f397f6",
+      "bytes": 99901
+    },
+    "Script.csx": {
+      "sha256": "9dead8bb1670f64a517dee06d685ea1c789fed6ac0bef4a6cf9e644661f397f6",
+      "bytes": 99901
+    },
+    "apiDefinition.swagger.json": {
+      "sha256": "2f9ad3804bf871198175084af3356b9ebd4a28be8dd07cbd325de74c78e08ab2",
+      "bytes": 6648
+    },
+    "apiProperties.json": {
+      "sha256": "6924f3674e96205dbac22eafbb11f5d8b5fa5e029f81ebb6e7c63070960b822a",
+      "bytes": 219
+    },
+    "deployment.json": {
+      "sha256": "9559f021abbc4a418d5951d933802e602be87a5ecd0f87fbabd828d0127d6160",
+      "bytes": 729
+    },
+    "README.md": {
+      "sha256": "a0f3d93a533d25966903a817a16df5e17be22fc5d46ebbfdfd85d06391682a0e",
+      "bytes": 6641
+    }
+  },
+  "nativeAcceptance": false,
+  "tenantWrites": false,
+  "providerCalls": false,
+  "zipSha256": "9ad1e16d880428340e00d1de4d0c107ed0ea674ef3afef71cc22ea294b29d047",
+  "zipBytes": 57132,
+  "zipPath": "connector/AICoEMarketingIntegrity_1_0_0_0_REGISTRATION_CANDIDATE.zip",
+  "zipReadbackVerified": true
+}

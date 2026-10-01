@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { formatAnswer } from '../workflows/formEngine';
+import { expandSteps, formatAnswer } from '../workflows/formEngine';
 import type { IAnswers, IStep } from '../workflows/types';
 
 export interface IAnswerListProps {
@@ -32,7 +32,7 @@ export function AnswerList({ steps, answers, onEdit, className }: IAnswerListPro
             </div>
             <button
               type="button"
-              onClick={(): void => onEdit(step.id)}
+              onClick={(): void => onEdit(step.parentId ?? step.id)}
               className="overture-btn-secondary flex-shrink-0 rounded-lg px-3 py-1.5 text-sm font-medium"
             >
               Edit
@@ -44,7 +44,7 @@ export function AnswerList({ steps, answers, onEdit, className }: IAnswerListPro
   );
 }
 
-/** The steps a review page lists: every visible step except notices. */
-export function answerableSteps(steps: IStep[]): IStep[] {
-  return steps.filter((step: IStep): boolean => step.type !== 'notice');
+/** The steps a review page lists: every visible step except notices, a group's showing fields in its place. */
+export function answerableSteps(steps: IStep[], answers: IAnswers = {}): IStep[] {
+  return expandSteps(steps, answers).filter((step: IStep): boolean => step.type !== 'notice');
 }

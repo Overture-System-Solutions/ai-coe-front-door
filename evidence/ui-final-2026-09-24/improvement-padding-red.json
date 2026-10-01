@@ -1,0 +1,2449 @@
+{
+  "numFailedTestSuites": 1,
+  "numFailedTests": 1,
+  "numPassedTestSuites": 0,
+  "numPassedTests": 0,
+  "numPendingTestSuites": 10,
+  "numPendingTests": 121,
+  "numRuntimeErrorTestSuites": 0,
+  "numTodoTests": 0,
+  "numTotalTestSuites": 11,
+  "numTotalTests": 122,
+  "openHandles": [],
+  "snapshot": {
+    "added": 0,
+    "didUpdate": false,
+    "failure": false,
+    "filesAdded": 0,
+    "filesRemoved": 0,
+    "filesRemovedList": [],
+    "filesUnmatched": 0,
+    "filesUpdated": 0,
+    "matched": 0,
+    "total": 0,
+    "unchecked": 0,
+    "uncheckedKeysByFile": [],
+    "unmatched": 0,
+    "updated": 0
+  },
+  "startTime": 1790283858653,
+  "success": false,
+  "testResults": [
+    {
+      "leaks": false,
+      "numFailingTests": 0,
+      "numPassingTests": 0,
+      "numPendingTests": 38,
+      "numTodoTests": 0,
+      "openHandles": [],
+      "perfStats": {
+        "end": 1790283861889,
+        "loadTestEnvironmentEnd": 1790283859423,
+        "loadTestEnvironmentStart": 1790283858801,
+        "runtime": 2465,
+        "setupAfterEnvEnd": 1790283859751,
+        "setupAfterEnvStart": 1790283859573,
+        "setupFilesEnd": 1790283859435,
+        "setupFilesStart": 1790283859424,
+        "slow": false,
+        "start": 1790283859424
+      },
+      "skipped": true,
+      "snapshot": {
+        "added": 0,
+        "fileDeleted": false,
+        "matched": 0,
+        "unchecked": 0,
+        "uncheckedKeys": [],
+        "unmatched": 0,
+        "updated": 0
+      },
+      "testFilePath": "C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-audit-fixes\\src\\webparts\\aiCoeFrontDoor\\components\\app\\AppShell.test.tsx",
+      "testResults": [
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell preserves transient synthetic objective and notes across section changes without a browser-text write",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790283861885,
+          "status": "pending",
+          "title": "preserves transient synthetic objective and notes across section changes without a browser-text write"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell blocks leaving unsaved business Marketing input until the server draft seam confirms it",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790283861885,
+          "status": "pending",
+          "title": "blocks leaving unsaved business Marketing input until the server draft seam confirms it"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell opens on the first screen with the entry panel and only the available ways in",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790283861885,
+          "status": "pending",
+          "title": "opens on the first screen with the entry panel and only the available ways in"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell keeps a section a person may not use out of the tab list entirely",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790283861885,
+          "status": "pending",
+          "title": "keeps a section a person may not use out of the tab list entirely"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell opens the measured view to a leader but still not the operator surface",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790283861885,
+          "status": "pending",
+          "title": "opens the measured view to a leader but still not the operator surface"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell shows nothing narrowed while the membership is unresolved, rather than guessing",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790283861886,
+          "status": "pending",
+          "title": "shows nothing narrowed while the membership is unresolved, rather than guessing"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell moves along the tabs with the arrow keys, and wraps at both ends",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790283861886,
+          "status": "pending",
+          "title": "moves along the tabs with the arrow keys, and wraps at both ends"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell keeps sequential keyboard navigation on the actual focused tab, but pointer entry focuses the heading",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790283861886,
+          "status": "pending",
+          "title": "keeps sequential keyboard navigation on the actual focused tab, but pointer entry focuses the heading"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell ignores a key the tab list does not own, so typing is not swallowed",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790283861886,
+          "status": "pending",
+          "title": "ignores a key the tab list does not own, so typing is not swallowed"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell keeps one tab in the tab order and points each panel at its tab",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790283861886,
+          "status": "pending",
+          "title": "keeps one tab in the tab order and points each panel at its tab"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell gives the section a heading that can take focus, so a change is announced",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790283861886,
+          "status": "pending",
+          "title": "gives the section a heading that can take focus, so a change is announced"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell names the person and what the view can say about their access",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790283861886,
+          "status": "pending",
+          "title": "names the person and what the view can say about their access"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell says so when the membership could not be confirmed, rather than staying quiet about it",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790283861886,
+          "status": "pending",
+          "title": "says so when the membership could not be confirmed, rather than staying quiet about it"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell supplies the configured document route to the actual submission receipt",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790283861886,
+          "status": "pending",
+          "title": "supplies the configured document route to the actual submission receipt"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell carries the footer promise on every section",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790283861886,
+          "status": "pending",
+          "title": "carries the footer promise on every section"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell hides the Enterprise value Home card for an employee without mounting or fetching it",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790283861886,
+          "status": "pending",
+          "title": "hides the Enterprise value Home card for an employee without mounting or fetching it"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell hides the Enterprise value Home card and fetches nothing while membership is unresolved",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790283861886,
+          "status": "pending",
+          "title": "hides the Enterprise value Home card and fetches nothing while membership is unresolved"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell shows Usage on Enterprise value for an operator without a System map route",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790283861886,
+          "status": "pending",
+          "title": "shows Usage on Enterprise value for an operator without a System map route"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell lets a leader open Enterprise value without mounting usage or calling getMetrics",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790283861886,
+          "status": "pending",
+          "title": "lets a leader open Enterprise value without mounting usage or calling getMetrics"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell keeps the Home sentence as the idea draft and opens the guided request with the same wording",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790283861886,
+          "status": "pending",
+          "title": "keeps the Home sentence as the idea draft and opens the guided request with the same wording"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell keeps guided edits mounted when navigation needs an unsaved draft and saving is refused",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790283861886,
+          "status": "pending",
+          "title": "keeps guided edits mounted when navigation needs an unsaved draft and saving is refused"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell keeps guided edits mounted when navigation needs an unsaved draft and saving is rejected",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790283861886,
+          "status": "pending",
+          "title": "keeps guided edits mounted when navigation needs an unsaved draft and saving is rejected"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell keeps the sentence in the box and opens nothing when the draft cannot be saved",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790283861886,
+          "status": "pending",
+          "title": "keeps the sentence in the box and opens nothing when the draft cannot be saved"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell opens Marketing for a reviewer without granting drafting controls",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790283861886,
+          "status": "pending",
+          "title": "opens Marketing for a reviewer without granting drafting controls"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell shows Marketing to a bounded participant and keeps the synthetic workspace across a Home round-trip",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790283861886,
+          "status": "pending",
+          "title": "shows Marketing to a bounded participant and keeps the synthetic workspace across a Home round-trip"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell keeps the administrator queue unread for an operator without site-owner permission and no System map route",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790283861886,
+          "status": "pending",
+          "title": "keeps the administrator queue unread for an operator without site-owner permission and no System map route"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell says the support route is unbound when the content document does not name one",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790283861886,
+          "status": "pending",
+          "title": "says the support route is unbound when the content document does not name one"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell does not expose an unsafe support link: javascript:void(0)",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790283861886,
+          "status": "pending",
+          "title": "does not expose an unsafe support link: javascript:void(0)"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell does not expose an unsafe support link: data:text/html,unsafe",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790283861886,
+          "status": "pending",
+          "title": "does not expose an unsafe support link: data:text/html,unsafe"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell does not expose an unsafe support link: //untrusted.invalid/path",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790283861887,
+          "status": "pending",
+          "title": "does not expose an unsafe support link: //untrusted.invalid/path"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell resolves site-relative support links against the site rather than the hosting page",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790283861887,
+          "status": "pending",
+          "title": "resolves site-relative support links against the site rather than the hosting page"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell renders a configured support route from the page content document",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790283861887,
+          "status": "pending",
+          "title": "renders a configured support route from the page content document"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell places the administrator control last, apart from the section tabs, for a site owner",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790283861887,
+          "status": "pending",
+          "title": "places the administrator control last, apart from the section tabs, for a site owner"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell opens the administrator queue from that control and still opens a section tab",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790283861887,
+          "status": "pending",
+          "title": "opens the administrator queue from that control and still opens a section tab"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell keeps System map absent and administrator reads lazy even for a site owner",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790283861887,
+          "status": "pending",
+          "title": "keeps System map absent and administrator reads lazy even for a site owner"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell moves to the administrator control with End when the person may open it",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790283861887,
+          "status": "pending",
+          "title": "moves to the administrator control with End when the person may open it"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell spaces Register team AI use from the other Improvement cards and keeps the larger panels below",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790283861887,
+          "status": "pending",
+          "title": "spaces Register team AI use from the other Improvement cards and keeps the larger panels below"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell does not mount the administrator queue or read it for an employee",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790283861887,
+          "status": "pending",
+          "title": "does not mount the administrator queue or read it for an employee"
+        }
+      ],
+      "failureMessage": null
+    },
+    {
+      "leaks": false,
+      "numFailingTests": 0,
+      "numPassingTests": 0,
+      "numPendingTests": 20,
+      "numTodoTests": 0,
+      "openHandles": [],
+      "perfStats": {
+        "end": 1790283862202,
+        "loadTestEnvironmentEnd": 1790283861899,
+        "loadTestEnvironmentStart": 1790283861892,
+        "runtime": 302,
+        "setupAfterEnvEnd": 1790283862027,
+        "setupAfterEnvStart": 1790283861948,
+        "setupFilesEnd": 1790283861900,
+        "setupFilesStart": 1790283861900,
+        "slow": false,
+        "start": 1790283861900
+      },
+      "skipped": true,
+      "snapshot": {
+        "added": 0,
+        "fileDeleted": false,
+        "matched": 0,
+        "unchecked": 0,
+        "uncheckedKeys": [],
+        "unmatched": 0,
+        "updated": 0
+      },
+      "testFilePath": "C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-audit-fixes\\src\\webparts\\aiCoeFrontDoor\\components\\app\\AppBusinessMarketingWorkspace.test.tsx",
+      "testResults": [
+        {
+          "ancestorTitles": [],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "runs all three drafts with selected business sources and source-only meeting evidence",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790283862199,
+          "status": "pending",
+          "title": "runs all three drafts with selected business sources and source-only meeting evidence"
+        },
+        {
+          "ancestorTitles": [],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "unauthorized users make zero business or working-draft calls: {\"roles\":[\"employee\"],\"resolution\":\"resolved\"}",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790283862199,
+          "status": "pending",
+          "title": "unauthorized users make zero business or working-draft calls: {\"roles\":[\"employee\"],\"resolution\":\"resolved\"}"
+        },
+        {
+          "ancestorTitles": [],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "unauthorized users make zero business or working-draft calls: {\"roles\":[\"marketingParticipant\"],\"resolution\":\"unresolved\"}",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790283862199,
+          "status": "pending",
+          "title": "unauthorized users make zero business or working-draft calls: {\"roles\":[\"marketingParticipant\"],\"resolution\":\"unresolved\"}"
+        },
+        {
+          "ancestorTitles": [],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "uses only the current authenticated reviewer and a matching backend authority",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790283862199,
+          "status": "pending",
+          "title": "uses only the current authenticated reviewer and a matching backend authority"
+        },
+        {
+          "ancestorTitles": [],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "keeps uncertain review requests pending across remount and repairs only on explicit action",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790283862199,
+          "status": "pending",
+          "title": "keeps uncertain review requests pending across remount and repairs only on explicit action"
+        },
+        {
+          "ancestorTitles": [],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "saves and loads unsubmitted objective audience and manual JSON only through the server draft seam",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790283862199,
+          "status": "pending",
+          "title": "saves and loads unsubmitted objective audience and manual JSON only through the server draft seam"
+        },
+        {
+          "ancestorTitles": [],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "edits a manual revision with its exact store version and rejects invalid JSON before calling the facade",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790283862199,
+          "status": "pending",
+          "title": "edits a manual revision with its exact store version and rejects invalid JSON before calling the facade"
+        },
+        {
+          "ancestorTitles": [],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "does not discard unsaved author text through the case or workspace-mode switchers",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790283862200,
+          "status": "pending",
+          "title": "does not discard unsaved author text through the case or workspace-mode switchers"
+        },
+        {
+          "ancestorTitles": [],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "lets a reviewer explicitly discard an unsent comment without mutating a saved record",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790283862200,
+          "status": "pending",
+          "title": "lets a reviewer explicitly discard an unsent comment without mutating a saved record"
+        },
+        {
+          "ancestorTitles": [],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "submits manual UI corrections through the real business facade using the server content-only contract",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790283862200,
+          "status": "pending",
+          "title": "submits manual UI corrections through the real business facade using the server content-only contract"
+        },
+        {
+          "ancestorTitles": [],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "offers the provider manual fallback as editable JSON without relabelling it AI output",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790283862200,
+          "status": "pending",
+          "title": "offers the provider manual fallback as editable JSON without relabelling it AI output"
+        },
+        {
+          "ancestorTitles": [],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "blocks overlapping draft clicks and performs no follow-up after unmount",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790283862200,
+          "status": "pending",
+          "title": "blocks overlapping draft clicks and performs no follow-up after unmount"
+        },
+        {
+          "ancestorTitles": [],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "fails closed when business work listing is not bound",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790283862200,
+          "status": "pending",
+          "title": "fails closed when business work listing is not bound"
+        },
+        {
+          "ancestorTitles": [],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "does not expose decisions for nonmatching authority {\"synthetic\":true}",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790283862200,
+          "status": "pending",
+          "title": "does not expose decisions for nonmatching authority {\"synthetic\":true}"
+        },
+        {
+          "ancestorTitles": [],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "does not expose decisions for nonmatching authority {\"actorId\":\"other@contoso.com\"}",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790283862200,
+          "status": "pending",
+          "title": "does not expose decisions for nonmatching authority {\"actorId\":\"other@contoso.com\"}"
+        },
+        {
+          "ancestorTitles": [],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "does not expose decisions for nonmatching authority {\"tenantScope\":\"https://another.example\"}",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790283862200,
+          "status": "pending",
+          "title": "does not expose decisions for nonmatching authority {\"tenantScope\":\"https://another.example\"}"
+        },
+        {
+          "ancestorTitles": [],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "does not expose decisions for nonmatching authority {\"expiresAt\":\"2000-01-01T00:00:00Z\"}",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790283862200,
+          "status": "pending",
+          "title": "does not expose decisions for nonmatching authority {\"expiresAt\":\"2000-01-01T00:00:00Z\"}"
+        },
+        {
+          "ancestorTitles": [],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "does not expose decisions for nonmatching authority {\"revoked\":true}",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790283862201,
+          "status": "pending",
+          "title": "does not expose decisions for nonmatching authority {\"revoked\":true}"
+        },
+        {
+          "ancestorTitles": [],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "does not expose decisions for nonmatching authority {\"scope\":[\"copyChannel\"]}",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790283862201,
+          "status": "pending",
+          "title": "does not expose decisions for nonmatching authority {\"scope\":[\"copyChannel\"]}"
+        },
+        {
+          "ancestorTitles": [],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "live mode selects only server-authorized Work IDs and never mounts the synthetic workspace",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790283862201,
+          "status": "pending",
+          "title": "live mode selects only server-authorized Work IDs and never mounts the synthetic workspace"
+        }
+      ],
+      "failureMessage": null
+    },
+    {
+      "leaks": false,
+      "numFailingTests": 0,
+      "numPassingTests": 0,
+      "numPendingTests": 15,
+      "numTodoTests": 0,
+      "openHandles": [],
+      "perfStats": {
+        "end": 1790283862490,
+        "loadTestEnvironmentEnd": 1790283862215,
+        "loadTestEnvironmentStart": 1790283862205,
+        "runtime": 274,
+        "setupAfterEnvEnd": 1790283862311,
+        "setupAfterEnvStart": 1790283862253,
+        "setupFilesEnd": 1790283862216,
+        "setupFilesStart": 1790283862216,
+        "slow": false,
+        "start": 1790283862216
+      },
+      "skipped": true,
+      "snapshot": {
+        "added": 0,
+        "fileDeleted": false,
+        "matched": 0,
+        "unchecked": 0,
+        "uncheckedKeys": [],
+        "unmatched": 0,
+        "updated": 0
+      },
+      "testFilePath": "C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-audit-fixes\\src\\webparts\\aiCoeFrontDoor\\components\\app\\AppCoreWorkspace.test.tsx",
+      "testResults": [
+        {
+          "ancestorTitles": [
+            "AppCoreWorkspace case journey"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppCoreWorkspace case journey saves only edited clarification fields instead of clearing unseen S1 values",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790283862488,
+          "status": "pending",
+          "title": "saves only edited clarification fields instead of clearing unseen S1 values"
+        },
+        {
+          "ancestorTitles": [
+            "AppCoreWorkspace case journey"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppCoreWorkspace case journey renders unvalidated native work without a fabricated date or synthetic write notice",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790283862488,
+          "status": "pending",
+          "title": "renders unvalidated native work without a fabricated date or synthetic write notice"
+        },
+        {
+          "ancestorTitles": [
+            "AppCoreWorkspace case journey"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppCoreWorkspace case journey does not call human validation for an unauthorized or unresolved reviewer context {\"roles\":[\"employee\"],\"rolesState\":\"resolved\"}",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790283862488,
+          "status": "pending",
+          "title": "does not call human validation for an unauthorized or unresolved reviewer context {\"roles\":[\"employee\"],\"rolesState\":\"resolved\"}"
+        },
+        {
+          "ancestorTitles": [
+            "AppCoreWorkspace case journey"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppCoreWorkspace case journey does not call human validation for an unauthorized or unresolved reviewer context {\"roles\":[\"operator\"],\"rolesState\":\"resolved\",\"isAdmin\":true}",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790283862488,
+          "status": "pending",
+          "title": "does not call human validation for an unauthorized or unresolved reviewer context {\"roles\":[\"operator\"],\"rolesState\":\"resolved\",\"isAdmin\":true}"
+        },
+        {
+          "ancestorTitles": [
+            "AppCoreWorkspace case journey"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppCoreWorkspace case journey does not call human validation for an unauthorized or unresolved reviewer context {\"roles\":[\"marketingReviewer\"],\"rolesState\":\"resolved\"}",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790283862488,
+          "status": "pending",
+          "title": "does not call human validation for an unauthorized or unresolved reviewer context {\"roles\":[\"marketingReviewer\"],\"rolesState\":\"resolved\"}"
+        },
+        {
+          "ancestorTitles": [
+            "AppCoreWorkspace case journey"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppCoreWorkspace case journey does not call human validation for an unauthorized or unresolved reviewer context {\"roles\":[\"designAuthority\"],\"rolesState\":\"pending\"}",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790283862488,
+          "status": "pending",
+          "title": "does not call human validation for an unauthorized or unresolved reviewer context {\"roles\":[\"designAuthority\"],\"rolesState\":\"pending\"}"
+        },
+        {
+          "ancestorTitles": [
+            "AppCoreWorkspace case journey"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppCoreWorkspace case journey does not call human validation for an unauthorized or unresolved reviewer context {\"roles\":[\"designAuthority\"],\"rolesState\":\"unresolved\"}",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790283862488,
+          "status": "pending",
+          "title": "does not call human validation for an unauthorized or unresolved reviewer context {\"roles\":[\"designAuthority\"],\"rolesState\":\"unresolved\"}"
+        },
+        {
+          "ancestorTitles": [
+            "AppCoreWorkspace case journey"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppCoreWorkspace case journey explains unavailable synthetic human validation instead of inventing authority",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790283862488,
+          "status": "pending",
+          "title": "explains unavailable synthetic human validation instead of inventing authority"
+        },
+        {
+          "ancestorTitles": [
+            "AppCoreWorkspace case journey"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppCoreWorkspace case journey keeps recovery failure fail-closed and makes no follow-up call after unmount",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790283862488,
+          "status": "pending",
+          "title": "keeps recovery failure fail-closed and makes no follow-up call after unmount"
+        },
+        {
+          "ancestorTitles": [
+            "AppCoreWorkspace case journey"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppCoreWorkspace case journey offers explicit human validation only to resolved design authority and refreshes the original packet after saving",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790283862489,
+          "status": "pending",
+          "title": "offers explicit human validation only to resolved design authority and refreshes the original packet after saving"
+        },
+        {
+          "ancestorTitles": [
+            "AppCoreWorkspace case journey"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppCoreWorkspace case journey recovers the original pending command before fresh reads and never resubmits an unknown mutation",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790283862489,
+          "status": "pending",
+          "title": "recovers the original pending command before fresh reads and never resubmits an unknown mutation"
+        },
+        {
+          "ancestorTitles": [
+            "AppCoreWorkspace case journey"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppCoreWorkspace case journey lets the person select a packet, read its questions and submit their own classified answer",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790283862489,
+          "status": "pending",
+          "title": "lets the person select a packet, read its questions and submit their own classified answer"
+        },
+        {
+          "ancestorTitles": [
+            "AppCoreWorkspace case journey"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppCoreWorkspace case journey restores only a scoped opaque selection by reading the service after remount",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790283862489,
+          "status": "pending",
+          "title": "restores only a scoped opaque selection by reading the service after remount"
+        },
+        {
+          "ancestorTitles": [
+            "AppCoreWorkspace case journey"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppCoreWorkspace case journey saves entered clarification against the selected WorkID rather than creating a second case",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790283862489,
+          "status": "pending",
+          "title": "saves entered clarification against the selected WorkID rather than creating a second case"
+        },
+        {
+          "ancestorTitles": [
+            "AppCoreWorkspace case journey"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppCoreWorkspace case journey renders public ListMyWork Items as selectable cases and reads status on selection",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790283862489,
+          "status": "pending",
+          "title": "renders public ListMyWork Items as selectable cases and reads status on selection"
+        }
+      ],
+      "failureMessage": null
+    },
+    {
+      "leaks": false,
+      "numFailingTests": 0,
+      "numPassingTests": 0,
+      "numPendingTests": 7,
+      "numTodoTests": 0,
+      "openHandles": [],
+      "perfStats": {
+        "end": 1790283862754,
+        "loadTestEnvironmentEnd": 1790283862498,
+        "loadTestEnvironmentStart": 1790283862492,
+        "runtime": 255,
+        "setupAfterEnvEnd": 1790283862602,
+        "setupAfterEnvStart": 1790283862538,
+        "setupFilesEnd": 1790283862499,
+        "setupFilesStart": 1790283862499,
+        "slow": false,
+        "start": 1790283862499
+      },
+      "skipped": true,
+      "snapshot": {
+        "added": 0,
+        "fileDeleted": false,
+        "matched": 0,
+        "unchecked": 0,
+        "uncheckedKeys": [],
+        "unmatched": 0,
+        "updated": 0
+      },
+      "testFilePath": "C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-audit-fixes\\src\\webparts\\aiCoeFrontDoor\\components\\app\\AppCoreWorkspace.uat.test.tsx",
+      "testResults": [
+        {
+          "ancestorTitles": [
+            "Cases UAT clarity"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "Cases UAT clarity toggles the saved-case list without losing unsaved answers (empty: false)",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790283862753,
+          "status": "pending",
+          "title": "toggles the saved-case list without losing unsaved answers (empty: false)"
+        },
+        {
+          "ancestorTitles": [
+            "Cases UAT clarity"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "Cases UAT clarity toggles the saved-case list without losing unsaved answers (empty: true)",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790283862753,
+          "status": "pending",
+          "title": "toggles the saved-case list without losing unsaved answers (empty: true)"
+        },
+        {
+          "ancestorTitles": [
+            "Cases UAT clarity"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "Cases UAT clarity starts with an empty, labelled case form rather than pre-entered fictional business text",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790283862753,
+          "status": "pending",
+          "title": "starts with an empty, labelled case form rather than pre-entered fictional business text"
+        },
+        {
+          "ancestorTitles": [
+            "Cases UAT clarity"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "Cases UAT clarity creates only the entered case and reports readable confirmed feedback",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790283862753,
+          "status": "pending",
+          "title": "creates only the entered case and reports readable confirmed feedback"
+        },
+        {
+          "ancestorTitles": [
+            "Cases UAT clarity"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "Cases UAT clarity can start a separate blank case without changing an existing one",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790283862753,
+          "status": "pending",
+          "title": "can start a separate blank case without changing an existing one"
+        },
+        {
+          "ancestorTitles": [
+            "Cases UAT clarity"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "Cases UAT clarity reports unsaved case edits to the shell and protects them from a fresh selection",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790283862753,
+          "status": "pending",
+          "title": "reports unsaved case edits to the shell and protects them from a fresh selection"
+        },
+        {
+          "ancestorTitles": [
+            "Cases UAT clarity"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "Cases UAT clarity names information requests plainly and keeps certainty choices explained",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790283862753,
+          "status": "pending",
+          "title": "names information requests plainly and keeps certainty choices explained"
+        }
+      ],
+      "failureMessage": null
+    },
+    {
+      "leaks": false,
+      "numFailingTests": 1,
+      "numPassingTests": 0,
+      "numPendingTests": 7,
+      "numTodoTests": 0,
+      "openHandles": [],
+      "perfStats": {
+        "end": 1790283863150,
+        "loadTestEnvironmentEnd": 1790283862763,
+        "loadTestEnvironmentStart": 1790283862757,
+        "runtime": 387,
+        "setupAfterEnvEnd": 1790283862833,
+        "setupAfterEnvStart": 1790283862789,
+        "setupFilesEnd": 1790283862763,
+        "setupFilesStart": 1790283862763,
+        "slow": false,
+        "start": 1790283862763
+      },
+      "skipped": false,
+      "snapshot": {
+        "added": 0,
+        "fileDeleted": false,
+        "matched": 0,
+        "unchecked": 0,
+        "uncheckedKeys": [],
+        "unmatched": 0,
+        "updated": 0
+      },
+      "testFilePath": "C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-audit-fixes\\src\\webparts\\aiCoeFrontDoor\\components\\app\\AppSections.test.tsx",
+      "testResults": [
+        {
+          "ancestorTitles": [
+            "same-app measurement and teaching entry"
+          ],
+          "duration": 107,
+          "failing": false,
+          "failureDetails": [
+            {
+              "matcherResult": {
+                "message": "expect(received).toMatch(expected)\n\nExpected pattern: /\\.ai-app-starters--spaced\\s*\\{[^}]*padding-top:\\s*24px;/\nReceived string:  \"// The consolidated view's own rules. Additive and scoped: every selector sits under .ai-view--app, so nothing here\n// can reach the legacy screens, whose stylesheet is reproduced rule for rule against the shipped package and may\n// gain nothing.\n//\n// On colour. The prototype's navy, blue and cyan are deliberately NOT written here. Those eight colours are the\n// reference palette of the engineering spec, and this repository treats them as an example tenant override rather\n// than as values in code - palette.test.ts fails the build if one appears in a stylesheet. So every colour that\n// carries meaning reads a --fd- token with the front door's own shipped colour as its fallback, and a tenant that\n// wants the prototype's look supplies it through the Palette parameter, which sets those same tokens. The result\n// is that this view repaints completely from configuration, which is what makes it portable to another tenant.\n// No rule declares a token; each only reads one, so an override set on the element above always wins.·\n// Carrying the palette into the parts this view reuses. The consolidated view mounts the front door's own guided\n// requests, its requests list, its usage strip and its operator dashboard, and every one of those colours itself\n// from the theme variables the shipped bundle declares (--color-*), not from the palette tokens (--fd-*). Left\n// alone, a site that sets a palette gets a repainted shell around reused buttons in the shipped teal: one page,\n// two accents. So this view points the theme variables at the matching token, for its own subtree only. The\n// shipped declarations on the element above are untouched and every legacy screen keeps exactly the colours it\n// shipped with.\n//\n// Seven of these fall back to the literal the variable already held, so with no palette set they are the same\n// colour. Five do not: the muted ink, the page backing and the three of an information notice fall back to the\n// front door's own token instead, because a notice or a grey that stayed on the shipped theme's value would sit a\n// shade off every other one on the screen. That is a deliberate, small change and it reaches this view alone.\n.ai-view--app {\n  --color-primary: var(--fd-accent, #087f83);\n  --color-primary-dark: var(--fd-accent-dark, #055d66);\n  --color-primary-soft: var(--fd-accent-soft, #e8f7f6);\n  --color-ink: var(--fd-ink, #10243e);\n  --color-ink-muted: var(--fd-muted, #5b6878);\n  --color-bg: var(--fd-bg, #f7fafc);\n  --color-surface: var(--fd-paper, #fff);\n  --color-line: var(--fd-line, #d6e0e8);\n  --color-focus: var(--fd-focus, #0b66d4);\n  // An information notice is the one place a reused part carries a colour of its own. It follows the kit's aside,\n  // which is the same notice drawn in the same place, rather than staying the shipped teal beside it.\n  --color-info-bg: var(--fd-state-blue, #e7f0fb);\n  --color-info-border: var(--fd-line, #d6e0e8);\n  --color-info-text: var(--fd-ink, #10243e);·\n  color: var(--fd-ink, #10243e);·\n  .ai-page-identity {\n    color: var(--fd-muted, #5b6878);\n    font-size: 12px;\n    margin: 0 0 12px;\n  }·\n  .ai-app-tabs {\n    margin: 0 0 20px;\n  }·\n  .ai-app-tabrow {\n    align-items: center;\n    border: 1px solid var(--fd-line, #d6e0e8);\n    border-radius: 999px;\n    display: flex;\n    flex-wrap: wrap;\n    gap: 4px;\n    padding: 5px;\n    width: 100%;\n  }·\n  .ai-app-tab {\n    background: transparent;\n    border: 0;\n    border-radius: 999px;\n    color: var(--fd-muted, #5b6878);\n    cursor: pointer;\n    font-size: 14px;\n    font-weight: 600;\n    padding: 9px 16px;\n  }·\n  // The queue control keeps the same tab face but sits at the far end of the bar, not in the section group.\n  .ai-app-tab--admin {\n    flex: 0 0 auto;\n    margin-left: auto;\n  }·\n  .ai-app-tab[aria-selected='true'] {\n    background: var(--fd-accent, #087f83);\n    color: #fff;\n  }·\n  .ai-app-heading {\n    color: var(--fd-ink, #10243e);\n    font-size: 24px;\n    font-weight: 700;\n    letter-spacing: -0.01em;\n    margin: 0 0 4px;\n  }·\n  .ai-app-heading:focus-visible {\n    outline: 3px solid var(--fd-focus, #0b66d4);\n    outline-offset: 3px;\n  }·\n  .ai-app-summary {\n    color: var(--fd-muted, #5b6878);\n    margin: 0 0 20px;\n    max-width: 68ch;\n  }·\n  .ai-app-note {\n    color: var(--fd-muted, #5b6878);\n    margin: 0;\n  }·\n  // The deep entry panel. Built from the ink and accent tokens rather than from the prototype's own navy, so a\n  // tenant palette repaints it whole.\n  .ai-app-hero {\n    background:\n      radial-gradient(circle at 82% 20%, var(--fd-hero-glow, #edf8f8) 0%, rgba(255, 255, 255, 0) 30%),\n      linear-gradient(135deg, var(--fd-hero-from, #10243e) 0%, var(--fd-hero-to, #087f83) 100%);\n    border-radius: 24px;\n    color: #fff;\n    margin: 0 0 22px;\n    padding: 40px;\n  }·\n  .ai-app-hero-eyebrow {\n    color: rgba(255, 255, 255, 0.82);\n    font-size: 12px;\n    font-weight: 700;\n    letter-spacing: 0.08em;\n    margin: 0 0 10px;\n    text-transform: uppercase;\n  }·\n  .ai-app-hero-title {\n    font-size: 38px;\n    font-weight: 750;\n    letter-spacing: -0.02em;\n    line-height: 1.1;\n    margin: 0 0 10px;\n  }·\n  .ai-app-hero-text {\n    color: rgba(255, 255, 255, 0.9);\n    margin: 0;\n    max-width: 56ch;\n  }·\n  .ai-app-choices,\n  .ai-app-starters,\n  .ai-app-measures {\n    display: grid;\n    gap: 14px;\n    list-style: none;\n    margin: 0;\n    padding: 0;\n  }·\n  .ai-app-choices,\n  .ai-app-starters,\n  .ai-app-measures {\n    grid-template-columns: repeat(3, minmax(0, 1fr));\n  }·\n  .ai-app-starters--engineering {\n    padding-block: 24px;\n  }·\n  .ai-app-cases-explanation {\n    padding-top: 24px;\n  }·\n  .ai-app-starters--marketing-demo {\n    padding-bottom: 24px;\n  }·\n  // Register team AI use sits with two siblings; 20px matches starter padding and is larger than the 14px grid.\n  .ai-app-starters--spaced {\n    gap: 20px;\n    margin: 0 0 20px;\n  }·\n  .ai-app-choice-button,\n  .ai-app-starter-button {\n    background: var(--fd-paper, #fff);\n    border: 1px solid var(--fd-line, #d6e0e8);\n    border-radius: 16px;\n    box-shadow: 0 8px 24px rgba(16, 36, 62, 0.09);\n    cursor: pointer;\n    display: block;\n    height: 100%;\n    padding: 20px;\n    text-align: left;\n    width: 100%;\n  }·\n  .ai-app-choice-button:hover,\n  .ai-app-starter-button:hover {\n    box-shadow: 0 18px 38px rgba(16, 36, 62, 0.13);\n  }·\n  .ai-app-choice-step {\n    color: var(--fd-accent, #087f83);\n    display: block;\n    font-size: 12px;\n    font-weight: 750;\n    letter-spacing: 0.08em;\n    margin: 0 0 8px;\n  }·\n  .ai-app-choice-title,\n  .ai-app-starter-title {\n    color: var(--fd-ink, #10243e);\n    display: block;\n    font-size: 17px;\n    font-weight: 700;\n    margin: 0 0 6px;\n  }·\n  .ai-app-choice-text,\n  .ai-app-starter-text {\n    color: var(--fd-muted, #5b6878);\n    display: block;\n    font-size: 14px;\n    line-height: 1.45;\n  }·\n  .ai-app-measure {\n    background: var(--fd-paper, #fff);\n    border: 1px solid var(--fd-line, #d6e0e8);\n    border-radius: 14px;\n    box-shadow: 0 8px 24px rgba(16, 36, 62, 0.09);\n    padding: 18px;\n  }·\n  .ai-app-measure-label {\n    color: var(--fd-muted, #5b6878);\n    display: block;\n    font-size: 13px;\n    margin: 0 0 6px;\n  }·\n  .ai-app-measure-value {\n    color: var(--fd-ink, #10243e);\n    display: block;\n    font-size: 22px;\n    font-weight: 750;\n  }·\n  .ai-app-measure-evidence,\n  .ai-app-measure-period {\n    color: var(--fd-muted, #5b6878);\n    display: block;\n    font-size: 12px;\n    margin: 6px 0 0;\n  }\n}·\n// One column where the part sits in a narrow column, and on a small screen.\n.ai-view--app.ai-view--narrow {\n  .ai-app-choices,\n  .ai-app-starters,\n  .ai-app-measures {\n    grid-template-columns: minmax(0, 1fr);\n  }·\n  .ai-app-hero {\n    padding: 26px;\n  }·\n  .ai-app-hero-title {\n    font-size: 28px;\n  }\n}·\n@media (max-width: 720px) {\n  .ai-view--app {\n    .ai-app-choices,\n    .ai-app-starters,\n    .ai-app-measures {\n      grid-template-columns: minmax(0, 1fr);\n    }·\n    // Wrapped over several rows a pill outline reads as one large rounded shape, so the row squares off.\n    .ai-app-tabrow {\n      border-radius: 14px;\n    }·\n    .ai-app-tab {\n      padding: 9px 12px;\n    }·\n    .ai-app-tab--admin {\n      flex: 0 0 auto;\n      margin-left: auto;\n    }·\n    .ai-app-actions button {\n      flex: 1 1 100%;\n    }·\n    .ai-app-hero {\n      padding: 26px;\n    }·\n    .ai-app-hero-title {\n      font-size: 28px;\n    }\n  }\n}·\n@media (prefers-reduced-motion: reduce) {\n  .ai-view--app {\n    .ai-app-choice-button,\n    .ai-app-starter-button {\n      transition: none;\n    }\n  }\n}·\n// The demonstration surface. Same token discipline as above: colour that carries meaning reads an --fd- token with\n// the shipped fallback, and the reference palette stays out of the repository.\n.ai-view--app {\n  .ai-app-demo-banner {\n    align-items: baseline;\n    background: #fff8e9;\n    border: 1px solid #e6d6b0;\n    border-radius: 12px;\n    display: flex;\n    flex-wrap: wrap;\n    gap: 10px;\n    margin: 0 0 18px;\n    padding: 12px 14px;\n  }·\n  .ai-app-demo-flag {\n    background: #664316;\n    border-radius: 999px;\n    color: #fff;\n    font-size: 11px;\n    font-weight: 750;\n    letter-spacing: 0.06em;\n    padding: 3px 10px;\n    text-transform: uppercase;\n    white-space: nowrap;\n  }·\n  .ai-app-demo-text {\n    color: #664316;\n    flex: 1 1 320px;\n    font-size: 13px;\n    line-height: 1.45;\n  }·\n  .ai-app-panel {\n    background: var(--fd-paper, #fff);\n    border: 1px solid var(--fd-line, #d6e0e8);\n    border-radius: 16px;\n    margin: 0 0 16px;\n    padding: 20px;\n  }·\n  .ai-app-panel--review {\n    border-color: #c8d8e4;\n  }·\n  .ai-app-panel--caution {\n    background: #fff8e9;\n    border-color: #e6d6b0;\n  }·\n  .ai-app-subheading {\n    color: var(--fd-ink, #10243e);\n    font-size: 15px;\n    font-weight: 700;\n    margin: 18px 0 8px;\n  }·\n  .ai-app-subheading:first-child {\n    margin-top: 0;\n  }·\n  .ai-app-field-label {\n    color: var(--fd-muted, #5b6878);\n    display: block;\n    font-size: 12px;\n    font-weight: 700;\n    letter-spacing: 0.04em;\n    margin: 12px 0 4px;\n    text-transform: uppercase;\n  }·\n  .ai-app-quote {\n    border-left: 3px solid var(--fd-line, #d6e0e8);\n    color: var(--fd-ink, #10243e);\n    margin: 0 0 8px;\n    padding: 2px 0 2px 12px;\n  }·\n  .ai-app-list,\n  .ai-app-sources,\n  .ai-app-claims,\n  .ai-app-variants {\n    list-style: none;\n    margin: 0 0 8px;\n    padding: 0;\n  }·\n  .ai-app-list li {\n    border-bottom: 1px solid var(--fd-soft, #e5ebf0);\n    color: var(--fd-ink, #10243e);\n    padding: 7px 0;\n  }·\n  .ai-app-list li:last-child {\n    border-bottom: 0;\n  }·\n  .ai-app-source,\n  .ai-app-claim,\n  .ai-app-variant {\n    border: 1px solid var(--fd-soft, #e5ebf0);\n    border-radius: 12px;\n    margin: 0 0 8px;\n    padding: 12px;\n  }·\n  .ai-app-source-id,\n  .ai-app-variant-headline {\n    color: var(--fd-ink, #10243e);\n    display: block;\n    font-weight: 700;\n  }·\n  .ai-app-source-note,\n  .ai-app-cite {\n    color: var(--fd-muted, #5b6878);\n    display: block;\n    font-size: 12px;\n    margin: 4px 0 0;\n  }·\n  .ai-app-claim-text {\n    color: var(--fd-ink, #10243e);\n    display: block;\n  }·\n  .ai-app-cite--gap {\n    align-items: center;\n    display: flex;\n    flex-wrap: wrap;\n    gap: 8px;\n  }·\n  .ai-app-finding {\n    color: #8a4b00;\n    display: block;\n    font-size: 12px;\n    margin: 6px 0 0;\n  }·\n  .ai-app-empty {\n    color: var(--fd-muted, #5b6878);\n    font-style: italic;\n    margin: 0;\n  }·\n  .ai-app-actions {\n    display: flex;\n    flex-wrap: wrap;\n    gap: 10px;\n    margin: 16px 0 0;\n  }·\n  .ai-app-primary,\n  .ai-app-secondary,\n  .ai-app-back {\n    border-radius: 11px;\n    cursor: pointer;\n    font-size: 14px;\n    font-weight: 700;\n    padding: 11px 18px;\n  }·\n  .ai-app-primary {\n    background: var(--fd-accent, #087f83);\n    border: 1px solid var(--fd-accent, #087f83);\n    color: #fff;\n  }·\n  .ai-app-secondary,\n  .ai-app-back {\n    background: transparent;\n    border: 1px solid var(--fd-line, #d6e0e8);\n    color: var(--fd-ink, #10243e);\n  }·\n  .ai-app-back {\n    margin: 0 0 14px;\n    padding: 8px 14px;\n  }·\n  .ai-app-primary:disabled,\n  .ai-app-starter-button:disabled {\n    cursor: not-allowed;\n    opacity: 0.55;\n  }·\n  .ai-app-detail-title {\n    color: var(--fd-ink, #10243e);\n    font-size: 20px;\n    font-weight: 700;\n    margin: 0 0 8px;\n  }·\n  .ai-app-detail-title:focus-visible {\n    outline: 3px solid var(--fd-focus, #0b66d4);\n    outline-offset: 3px;\n  }·\n  .ai-app-contract {\n    border: 1px solid var(--fd-soft, #e5ebf0);\n    border-radius: 12px;\n    margin: 14px 0 18px;\n    padding: 14px;\n  }·\n  .ai-app-contract dt {\n    color: var(--fd-muted, #5b6878);\n    font-size: 12px;\n    font-weight: 700;\n    letter-spacing: 0.04em;\n    text-transform: uppercase;\n  }·\n  .ai-app-contract dd {\n    color: var(--fd-ink, #10243e);\n    margin: 3px 0 10px;\n  }·\n  .ai-app-contract dd:last-child {\n    margin-bottom: 0;\n  }·\n  .ai-app-stage {\n    display: block;\n    margin: 0 0 8px;\n  }·\n  .ai-app-lock,\n  .ai-app-reference {\n    color: var(--fd-muted, #5b6878);\n    display: block;\n    font-size: 12px;\n    margin: 8px 0 0;\n  }\n}·\n// The component kit. Measurements follow the reference prototype: 20px panel radius, 16px case radius, 14px metric\n// radius, 999px pills, and the soft-depth value the reference uses throughout. Colour that carries meaning reads a\n// token; the pill inks stay literal because a tone's text must remain legible whatever an organization sets behind\n// it, and none of them is a reference-palette colour.\n.ai-view--app {\n  .ai-app-surface {\n    background: var(--fd-paper, #fff);\n    border: 1px solid var(--fd-line, #d6e0e8);\n    border-radius: 20px;\n    box-shadow: 0 8px 24px rgba(4, 42, 70, 0.09);\n    padding: 22px;\n  }·\n  .ai-app-pill {\n    align-items: center;\n    border: 1px solid;\n    border-radius: 999px;\n    display: inline-flex;\n    font-size: 10px;\n    font-weight: 800;\n    letter-spacing: 0.03em;\n    padding: 5px 8px;\n    white-space: nowrap;\n  }·\n  .ai-app-pill--good {\n    background: var(--fd-state-green, #ddf6f0);\n    border-color: #bce8d6;\n    color: #0c6f4a;\n  }·\n  .ai-app-pill--wait {\n    background: var(--fd-state-amber, #fff4cf);\n    border-color: #f3d097;\n    color: #8a4e00;\n  }·\n  .ai-app-pill--design {\n    background: var(--fd-soft, #e5ebf0);\n    border-color: #cedcea;\n    color: #435b77;\n  }·\n  .ai-app-pill--block {\n    background: var(--fd-state-red, #fde8e8);\n    border-color: #f3c0c0;\n    color: #942c2c;\n  }·\n  .ai-app-pill--info {\n    background: var(--fd-state-blue, #e7f0fb);\n    border-color: #b8e6f3;\n    color: #075f88;\n  }·\n  .ai-app-head {\n    align-items: flex-end;\n    display: flex;\n    flex-wrap: wrap;\n    gap: 16px;\n    justify-content: space-between;\n    margin: 0 0 12px;\n  }·\n  .ai-app-head-title {\n    color: var(--fd-ink, #10243e);\n    font-size: 23px;\n    font-weight: 700;\n    letter-spacing: -0.02em;\n    margin: 0;\n  }·\n  .ai-app-head-note {\n    color: var(--fd-muted, #5b6878);\n    font-size: 13px;\n    margin: 4px 0 0;\n    max-width: 70ch;\n  }·\n  .ai-app-status-title {\n    color: var(--fd-ink, #10243e);\n    font-size: 14px;\n    font-weight: 700;\n    margin: 0 0 15px;\n  }·\n  .ai-app-status-rows {\n    list-style: none;\n    margin: 0;\n    padding: 0;\n  }·\n  .ai-app-status-row {\n    align-items: center;\n    border-top: 1px solid var(--fd-soft, #e5ebf0);\n    display: flex;\n    gap: 10px;\n    justify-content: space-between;\n    padding: 12px 0;\n  }·\n  .ai-app-status-row:first-child {\n    border-top: 0;\n  }·\n  .ai-app-status-label {\n    color: var(--fd-ink, #10243e);\n    display: block;\n    font-size: 13px;\n  }·\n  .ai-app-status-note {\n    color: var(--fd-muted, #5b6878);\n    display: block;\n    font-size: 12px;\n    margin: 2px 0 0;\n  }·\n  .ai-app-metric {\n    border-radius: 14px;\n    padding: 16px;\n  }·\n  .ai-app-metric-label {\n    color: var(--fd-muted, #5b6878);\n    display: block;\n    font-size: 11px;\n    font-weight: 750;\n  }·\n  .ai-app-metric-value {\n    color: var(--fd-ink, #10243e);\n    display: block;\n    font-size: 27px;\n    font-weight: 850;\n    letter-spacing: -0.035em;\n    margin: 4px 0 0;\n  }·\n  .ai-app-metric-value--placeholder {\n    color: var(--fd-muted, #5b6878);\n    font-size: 16px;\n    font-weight: 700;\n    letter-spacing: 0;\n  }·\n  .ai-app-metric-note {\n    color: var(--fd-muted, #5b6878);\n    display: block;\n    font-size: 11px;\n    margin: 3px 0 0;\n  }·\n  .ai-app-case {\n    border-radius: 16px;\n    padding: 18px;\n  }·\n  .ai-app-case-top {\n    display: flex;\n    gap: 10px;\n    justify-content: space-between;\n  }·\n  .ai-app-case-ref {\n    color: var(--fd-muted, #5b6878);\n    font-size: 10px;\n    font-weight: 850;\n    letter-spacing: 0.08em;\n  }·\n  .ai-app-case-title {\n    color: var(--fd-ink, #10243e);\n    font-size: 17px;\n    font-weight: 700;\n    margin: 7px 0 5px;\n  }·\n  .ai-app-case-summary {\n    color: var(--fd-muted, #5b6878);\n    font-size: 12px;\n    margin: 0 0 12px;\n  }·\n  .ai-app-case-facts {\n    display: flex;\n    flex-wrap: wrap;\n    gap: 7px;\n  }·\n  .ai-app-chip {\n    background: var(--fd-soft, #e5ebf0);\n    border-radius: 7px;\n    color: #486576;\n    font-size: 10px;\n    padding: 5px 7px;\n  }·\n  .ai-app-case-foot {\n    border-top: 1px solid var(--fd-soft, #e5ebf0);\n    color: var(--fd-muted, #5b6878);\n    display: flex;\n    flex-wrap: wrap;\n    font-size: 11px;\n    gap: 8px;\n    justify-content: space-between;\n    margin: 14px 0 0;\n    padding: 12px 0 0;\n  }·\n  .ai-app-steps {\n    display: flex;\n    flex-direction: column;\n    gap: 10px;\n    list-style: none;\n    margin: 0;\n    padding: 0;\n  }·\n  .ai-app-step {\n    align-items: flex-start;\n    border: 1px solid var(--fd-line, #d6e0e8);\n    border-radius: 13px;\n    display: flex;\n    gap: 12px;\n    padding: 14px;\n  }·\n  .ai-app-step-marker {\n    align-items: center;\n    background: var(--fd-state-blue, #e7f0fb);\n    border-radius: 10px;\n    color: var(--fd-accent, #087f83);\n    display: flex;\n    font-weight: 850;\n    height: 34px;\n    justify-content: center;\n    width: 34px;\n  }·\n  .ai-app-step-text {\n    flex: 1 1 auto;\n  }·\n  .ai-app-step-title {\n    color: var(--fd-ink, #10243e);\n    display: block;\n    font-size: 13px;\n    margin: 1px 0 3px;\n  }·\n  .ai-app-step-note {\n    color: var(--fd-muted, #5b6878);\n    display: block;\n    font-size: 11px;\n  }·\n  .ai-app-flow {\n    align-items: center;\n    display: flex;\n    flex-wrap: wrap;\n    gap: 8px;\n    list-style: none;\n    margin: 16px 0;\n    padding: 0;\n  }·\n  .ai-app-flow-step {\n    align-items: center;\n    display: flex;\n    gap: 8px;\n  }·\n  .ai-app-flow-name {\n    background: var(--fd-soft, #e5ebf0);\n    border: 1px solid var(--fd-line, #d6e0e8);\n    border-radius: 9px;\n    color: var(--fd-ink, #10243e);\n    font-size: 11px;\n    font-weight: 700;\n    padding: 8px 10px;\n  }·\n  .ai-app-flow-sep {\n    color: var(--fd-muted, #5b6878);\n  }·\n  .ai-app-layer {\n    border-radius: 14px;\n    min-height: 150px;\n    padding: 16px;\n  }·\n  .ai-app-layer-kind {\n    color: var(--fd-accent, #087f83);\n    display: block;\n    font-size: 10px;\n    font-weight: 850;\n    letter-spacing: 0.09em;\n    text-transform: uppercase;\n  }·\n  .ai-app-layer-title {\n    color: var(--fd-ink, #10243e);\n    font-size: 15px;\n    font-weight: 700;\n    margin: 8px 0;\n  }·\n  .ai-app-layer-note {\n    color: var(--fd-muted, #5b6878);\n    font-size: 11px;\n    margin: 0;\n  }·\n  .ai-app-aside {\n    border-radius: 10px;\n    font-size: 12px;\n    margin: 15px 0;\n    padding: 13px 15px;\n  }·\n  .ai-app-aside--caution {\n    background: #fff8e9;\n    border-left: 4px solid #a55c00;\n    color: #664316;\n  }·\n  .ai-app-aside--info {\n    background: var(--fd-state-blue, #e7f0fb);\n    border-left: 4px solid var(--fd-focus, #0b66d4);\n    color: var(--fd-ink, #10243e);\n  }·\n  .ai-app-ghost {\n    background: var(--fd-paper, #fff);\n    border: 1px solid var(--fd-line, #d6e0e8);\n    border-radius: 10px;\n    color: var(--fd-ink, #10243e);\n    cursor: pointer;\n    font-size: 12px;\n    font-weight: 700;\n    padding: 8px 11px;\n  }·\n  .ai-app-threes,\n  .ai-app-fours {\n    display: grid;\n    gap: 15px;\n    list-style: none;\n    margin: 0;\n    padding: 0;\n  }·\n  .ai-app-threes {\n    grid-template-columns: repeat(3, minmax(0, 1fr));\n  }·\n  .ai-app-fours {\n    grid-template-columns: repeat(4, minmax(0, 1fr));\n  }·\n  .ai-app-split {\n    display: grid;\n    gap: 16px;\n    grid-template-columns: 1.1fr 0.9fr;\n  }\n}·\n@media (max-width: 1050px) {\n  .ai-view--app {\n    .ai-app-threes,\n    .ai-app-fours {\n      grid-template-columns: repeat(2, minmax(0, 1fr));\n    }·\n    .ai-app-split {\n      grid-template-columns: minmax(0, 1fr);\n    }\n  }\n}·\n@media (max-width: 720px) {\n  .ai-view--app {\n    .ai-app-threes,\n    .ai-app-fours {\n      grid-template-columns: minmax(0, 1fr);\n    }·\n    .ai-app-head-title {\n      font-size: 19px;\n    }\n  }\n}·\n.ai-view--app.ai-view--narrow {\n  .ai-app-threes,\n  .ai-app-fours,\n  .ai-app-split {\n    grid-template-columns: minmax(0, 1fr);\n  }\n}·\n// Chrome and the first screen. The nav is pinned to the top of the scroll with a frosted backing, as the reference\n// draws it; the offset keeps it clear of the host page's own command bar rather than fighting it for z-index.\n.ai-view--app {\n  .ai-app-top {\n    align-items: center;\n    display: flex;\n    flex-wrap: wrap;\n    gap: 16px;\n    justify-content: space-between;\n    min-height: 68px;\n    padding: 8px 0 14px;\n  }·\n  .ai-app-brand {\n    align-items: center;\n    display: flex;\n    gap: 14px;\n  }·\n  // Drawn rather than loaded: a gradient square with an arc cut from it, so there is no image request.\n  .ai-app-mark {\n    background: linear-gradient(135deg, var(--fd-hero-glow, #edf8f8), var(--fd-accent, #087f83) 52%, var(--fd-ink, #10243e));\n    border-radius: 12px;\n    box-shadow: 0 8px 18px rgba(4, 42, 70, 0.23);\n    display: block;\n    height: 38px;\n    position: relative;\n    width: 38px;\n  }·\n  .ai-app-mark::after {\n    border: 2px solid #fff;\n    border-left-color: transparent;\n    border-radius: 50%;\n    content: \\\"\\\";\n    inset: 9px 8px;\n    position: absolute;\n    transform: rotate(-18deg);\n  }·\n  .ai-app-brand-name {\n    color: var(--fd-ink, #10243e);\n    display: block;\n    font-size: 18px;\n    font-weight: 700;\n    letter-spacing: 0.01em;\n  }·\n  .ai-app-brand-note {\n    color: var(--fd-muted, #5b6878);\n    display: block;\n    font-size: 12px;\n    margin: 1px 0 0;\n  }·\n  .ai-app-chips {\n    display: flex;\n    flex-wrap: wrap;\n    gap: 10px;\n  }·\n  .ai-app-chip-line {\n    align-items: center;\n    background: var(--fd-paper, #fff);\n    border: 1px solid var(--fd-line, #d6e0e8);\n    border-radius: 999px;\n    color: var(--fd-muted, #5b6878);\n    display: inline-flex;\n    font-size: 12px;\n    gap: 7px;\n    padding: 7px 12px;\n    white-space: nowrap;\n  }·\n  .ai-app-dot {\n    background: #16845b;\n    border-radius: 50%;\n    height: 8px;\n    width: 8px;\n  }·\n  .ai-app-dot--wait {\n    background: #a55c00;\n  }·\n  .ai-app-tabs {\n    backdrop-filter: blur(14px);\n    background: rgba(255, 255, 255, 0.82);\n    border: 1px solid var(--fd-line, #d6e0e8);\n    border-radius: 14px;\n    box-shadow: 0 8px 20px rgba(4, 42, 70, 0.05);\n    margin: 0 0 20px;\n    padding: 6px;\n    position: sticky;\n    top: 8px;\n    z-index: 3;\n  }·\n  .ai-app-tabrow {\n    border: 0;\n    border-radius: 0;\n    padding: 0;\n    width: 100%;\n  }·\n  .ai-app-tab {\n    border-radius: 9px;\n    font-size: 13px;\n    font-weight: 650;\n    padding: 9px 14px;\n  }·\n  .ai-app-tab--admin {\n    flex: 0 0 auto;\n    margin-left: auto;\n  }·\n  .ai-app-tab[aria-selected=\\\"true\\\"] {\n    box-shadow: 0 4px 10px rgba(6, 42, 70, 0.15);\n  }·\n  .ai-app-first {\n    display: grid;\n    gap: 20px;\n    grid-template-columns: minmax(0, 1.45fr) minmax(320px, 0.55fr);\n    margin: 0 0 18px;\n  }·\n  .ai-app-hero {\n    margin: 0;\n    min-height: 380px;\n    overflow: hidden;\n    padding: 46px;\n    position: relative;\n  }·\n  // The halo the reference sets behind the panel's lower right.\n  .ai-app-hero::after {\n    border: 1px solid rgba(255, 255, 255, 0.13);\n    border-radius: 50%;\n    bottom: -180px;\n    box-shadow: 0 0 0 38px rgba(255, 255, 255, 0.025), 0 0 0 78px rgba(255, 255, 255, 0.02);\n    content: \\\"\\\";\n    height: 430px;\n    position: absolute;\n    right: -120px;\n    width: 430px;\n  }·\n  .ai-app-hero-eyebrow {\n    letter-spacing: 0.16em;\n    position: relative;\n    z-index: 2;\n  }·\n  .ai-app-hero-title {\n    font-size: clamp(38px, 4.4vw, 64px);\n    letter-spacing: -0.045em;\n    line-height: 0.99;\n    margin: 12px 0 16px;\n    max-width: 14ch;\n    position: relative;\n    z-index: 2;\n  }·\n  .ai-app-hero-text {\n    font-size: 17px;\n    margin: 0 0 24px;\n    position: relative;\n    z-index: 2;\n  }·\n  .ai-app-command {\n    display: block;\n    margin: 0;\n    max-width: 780px;\n    position: relative;\n    z-index: 2;\n  }·\n  .ai-app-command-label {\n    clip: rect(0, 0, 0, 0);\n    height: 1px;\n    margin: -1px;\n    overflow: hidden;\n    padding: 0;\n    position: absolute;\n    white-space: nowrap;\n    width: 1px;\n  }·\n  .ai-app-command-row {\n    background: var(--fd-paper, #fff);\n    border-radius: 16px;\n    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.16);\n    display: flex;\n    flex-wrap: wrap;\n    gap: 10px;\n    padding: 8px;\n  }·\n  .ai-app-command-input {\n    border: 0;\n    border-radius: 11px;\n    color: var(--fd-ink, #10243e);\n    flex: 1 1 260px;\n    font-size: 16px;\n    min-width: 0;\n    padding: 13px 14px;\n  }·\n  .ai-app-hero-micro {\n    color: rgba(255, 255, 255, 0.82);\n    font-size: 12px;\n    margin: 12px 0 0;\n    position: relative;\n    z-index: 2;\n  }·\n  .ai-app-first-side {\n    display: flex;\n    flex-direction: column;\n    gap: 14px;\n  }·\n  .ai-app-choices {\n    margin: 0 0 26px;\n  }·\n  .ai-app-foot {\n    border-top: 1px solid var(--fd-line, #d6e0e8);\n    color: var(--fd-muted, #5b6878);\n    display: flex;\n    flex-wrap: wrap;\n    font-size: 11px;\n    gap: 16px;\n    justify-content: space-between;\n    margin: 32px 0 0;\n    padding: 18px 0 0;\n  }\n}·\n@media (max-width: 1050px) {\n  .ai-view--app {\n    .ai-app-first {\n      grid-template-columns: minmax(0, 1fr);\n    }\n  }\n}·\n@media (max-width: 720px) {\n  .ai-view--app {\n    .ai-app-hero {\n      padding: 30px 22px;\n      min-height: 340px;\n    }·\n    .ai-app-top {\n      padding: 6px 0 12px;\n    }·\n    .ai-app-tabs {\n      position: static;\n    }\n  }\n}·\n.ai-view--app.ai-view--narrow {\n  .ai-app-first {\n    grid-template-columns: minmax(0, 1fr);\n  }·\n  .ai-app-tabs {\n    position: static;\n  }\n}·\n// A person's own requests. The list is the front door's own, reused unchanged, but the rules that made each row a\n// card are scoped to the page view it was written for, so inside this view it arrived as bare lines of text - the\n// one screen holding real records looking the least finished of the seven. These give it the kit's surface. They\n// are scoped to the section rather than to the class, so the legacy screens are untouched.\n.ai-view--app {\n  .ai-app-cases .ai-page-mywork-title {\n    color: var(--fd-ink, #10243e);\n    font-size: 18px;\n    font-weight: 700;\n    margin: 0 0 10px;\n  }·\n  .ai-app-cases .ai-page-mywork-list {\n    display: grid;\n    gap: 12px;\n    margin: 0;\n  }·\n  .ai-app-cases .ai-mywork-row {\n    background: var(--fd-paper, #fff);\n    border: 1px solid var(--fd-line, #d6e0e8);\n    border-radius: 14px;\n    box-shadow: 0 1px 2px rgba(16, 36, 62, 0.05);\n    padding: 16px 18px;\n  }·\n  .ai-app-cases .ai-mywork-head {\n    align-items: center;\n    display: flex;\n    flex-wrap: wrap;\n    gap: 8px 12px;\n    margin: 0 0 6px;\n  }·\n  .ai-app-cases .ai-mywork-label {\n    color: var(--fd-ink, #10243e);\n    font-size: 16px;\n    font-weight: 600;\n  }·\n  .ai-app-cases .ai-mywork-reference,\n  .ai-app-cases .ai-mywork-dates {\n    color: var(--fd-muted, #5b6878);\n    font-size: 13px;\n    margin: 2px 0 0;\n  }·\n  .ai-app-cases .ai-mywork-key {\n    margin: 0 6px 0 0;\n  }·\n  .ai-app-cases .ai-mywork-row code {\n    background: var(--fd-soft, #e5ebf0);\n    border-radius: 6px;\n    color: var(--fd-ink, #10243e);\n    font-family: consolas, menlo, monospace;\n    font-size: 13px;\n    padding: 1px 6px;\n  }·\n  .ai-app-cases .ai-mywork-note {\n    color: var(--fd-muted, #5b6878);\n    margin: 0;\n  }\n}·\n// The first screen names itself inside the entry panel, so its section heading is there for a reader and a focus\n// target only. It still takes focus on a section change, which is why it is offset rather than removed.\n.ai-view--app .ai-app-heading--quiet {\n  clip: rect(0, 0, 0, 0);\n  height: 1px;\n  margin: -1px;\n  overflow: hidden;\n  padding: 0;\n  position: absolute;\n  white-space: nowrap;\n  width: 1px;\n}·\n// Workspace and mode chrome: layout only. Colour stays on the existing kit tokens, so the palette map does not grow.\n.ai-view--app .ai-app-modes {\n  display: flex;\n  flex-wrap: wrap;\n  gap: 8px;\n  margin: 0 0 16px;\n}·\n.ai-view--app .ai-app-mode {\n  min-height: 40px;\n}·\n.ai-view--app .ai-app-mode--on {\n  font-weight: 600;\n}·\n.ai-view--app .ai-app-textarea,\n.ai-view--app .ai-app-workspace .ai-app-command-input {\n  width: 100%;\n  max-width: 40rem;\n}·\n.ai-view--app .ai-app-records {\n  list-style: none;\n  margin: 0;\n  padding: 0;\n}·\n.ai-view--app .ai-app-record {\n  display: block;\n  text-align: left;\n  width: 100%;\n}·\n.ai-view--app .ai-app-foot-support {\n  display: block;\n}\n\"",
+                "pass": false
+              }
+            }
+          ],
+          "failureMessages": [
+            "Error: expect(received).toMatch(expected)\n\nExpected pattern: /\\.ai-app-starters--spaced\\s*\\{[^}]*padding-top:\\s*24px;/\nReceived string:  \"// The consolidated view's own rules. Additive and scoped: every selector sits under .ai-view--app, so nothing here\n// can reach the legacy screens, whose stylesheet is reproduced rule for rule against the shipped package and may\n// gain nothing.\n//\n// On colour. The prototype's navy, blue and cyan are deliberately NOT written here. Those eight colours are the\n// reference palette of the engineering spec, and this repository treats them as an example tenant override rather\n// than as values in code - palette.test.ts fails the build if one appears in a stylesheet. So every colour that\n// carries meaning reads a --fd- token with the front door's own shipped colour as its fallback, and a tenant that\n// wants the prototype's look supplies it through the Palette parameter, which sets those same tokens. The result\n// is that this view repaints completely from configuration, which is what makes it portable to another tenant.\n// No rule declares a token; each only reads one, so an override set on the element above always wins.·\n// Carrying the palette into the parts this view reuses. The consolidated view mounts the front door's own guided\n// requests, its requests list, its usage strip and its operator dashboard, and every one of those colours itself\n// from the theme variables the shipped bundle declares (--color-*), not from the palette tokens (--fd-*). Left\n// alone, a site that sets a palette gets a repainted shell around reused buttons in the shipped teal: one page,\n// two accents. So this view points the theme variables at the matching token, for its own subtree only. The\n// shipped declarations on the element above are untouched and every legacy screen keeps exactly the colours it\n// shipped with.\n//\n// Seven of these fall back to the literal the variable already held, so with no palette set they are the same\n// colour. Five do not: the muted ink, the page backing and the three of an information notice fall back to the\n// front door's own token instead, because a notice or a grey that stayed on the shipped theme's value would sit a\n// shade off every other one on the screen. That is a deliberate, small change and it reaches this view alone.\n.ai-view--app {\n  --color-primary: var(--fd-accent, #087f83);\n  --color-primary-dark: var(--fd-accent-dark, #055d66);\n  --color-primary-soft: var(--fd-accent-soft, #e8f7f6);\n  --color-ink: var(--fd-ink, #10243e);\n  --color-ink-muted: var(--fd-muted, #5b6878);\n  --color-bg: var(--fd-bg, #f7fafc);\n  --color-surface: var(--fd-paper, #fff);\n  --color-line: var(--fd-line, #d6e0e8);\n  --color-focus: var(--fd-focus, #0b66d4);\n  // An information notice is the one place a reused part carries a colour of its own. It follows the kit's aside,\n  // which is the same notice drawn in the same place, rather than staying the shipped teal beside it.\n  --color-info-bg: var(--fd-state-blue, #e7f0fb);\n  --color-info-border: var(--fd-line, #d6e0e8);\n  --color-info-text: var(--fd-ink, #10243e);·\n  color: var(--fd-ink, #10243e);·\n  .ai-page-identity {\n    color: var(--fd-muted, #5b6878);\n    font-size: 12px;\n    margin: 0 0 12px;\n  }·\n  .ai-app-tabs {\n    margin: 0 0 20px;\n  }·\n  .ai-app-tabrow {\n    align-items: center;\n    border: 1px solid var(--fd-line, #d6e0e8);\n    border-radius: 999px;\n    display: flex;\n    flex-wrap: wrap;\n    gap: 4px;\n    padding: 5px;\n    width: 100%;\n  }·\n  .ai-app-tab {\n    background: transparent;\n    border: 0;\n    border-radius: 999px;\n    color: var(--fd-muted, #5b6878);\n    cursor: pointer;\n    font-size: 14px;\n    font-weight: 600;\n    padding: 9px 16px;\n  }·\n  // The queue control keeps the same tab face but sits at the far end of the bar, not in the section group.\n  .ai-app-tab--admin {\n    flex: 0 0 auto;\n    margin-left: auto;\n  }·\n  .ai-app-tab[aria-selected='true'] {\n    background: var(--fd-accent, #087f83);\n    color: #fff;\n  }·\n  .ai-app-heading {\n    color: var(--fd-ink, #10243e);\n    font-size: 24px;\n    font-weight: 700;\n    letter-spacing: -0.01em;\n    margin: 0 0 4px;\n  }·\n  .ai-app-heading:focus-visible {\n    outline: 3px solid var(--fd-focus, #0b66d4);\n    outline-offset: 3px;\n  }·\n  .ai-app-summary {\n    color: var(--fd-muted, #5b6878);\n    margin: 0 0 20px;\n    max-width: 68ch;\n  }·\n  .ai-app-note {\n    color: var(--fd-muted, #5b6878);\n    margin: 0;\n  }·\n  // The deep entry panel. Built from the ink and accent tokens rather than from the prototype's own navy, so a\n  // tenant palette repaints it whole.\n  .ai-app-hero {\n    background:\n      radial-gradient(circle at 82% 20%, var(--fd-hero-glow, #edf8f8) 0%, rgba(255, 255, 255, 0) 30%),\n      linear-gradient(135deg, var(--fd-hero-from, #10243e) 0%, var(--fd-hero-to, #087f83) 100%);\n    border-radius: 24px;\n    color: #fff;\n    margin: 0 0 22px;\n    padding: 40px;\n  }·\n  .ai-app-hero-eyebrow {\n    color: rgba(255, 255, 255, 0.82);\n    font-size: 12px;\n    font-weight: 700;\n    letter-spacing: 0.08em;\n    margin: 0 0 10px;\n    text-transform: uppercase;\n  }·\n  .ai-app-hero-title {\n    font-size: 38px;\n    font-weight: 750;\n    letter-spacing: -0.02em;\n    line-height: 1.1;\n    margin: 0 0 10px;\n  }·\n  .ai-app-hero-text {\n    color: rgba(255, 255, 255, 0.9);\n    margin: 0;\n    max-width: 56ch;\n  }·\n  .ai-app-choices,\n  .ai-app-starters,\n  .ai-app-measures {\n    display: grid;\n    gap: 14px;\n    list-style: none;\n    margin: 0;\n    padding: 0;\n  }·\n  .ai-app-choices,\n  .ai-app-starters,\n  .ai-app-measures {\n    grid-template-columns: repeat(3, minmax(0, 1fr));\n  }·\n  .ai-app-starters--engineering {\n    padding-block: 24px;\n  }·\n  .ai-app-cases-explanation {\n    padding-top: 24px;\n  }·\n  .ai-app-starters--marketing-demo {\n    padding-bottom: 24px;\n  }·\n  // Register team AI use sits with two siblings; 20px matches starter padding and is larger than the 14px grid.\n  .ai-app-starters--spaced {\n    gap: 20px;\n    margin: 0 0 20px;\n  }·\n  .ai-app-choice-button,\n  .ai-app-starter-button {\n    background: var(--fd-paper, #fff);\n    border: 1px solid var(--fd-line, #d6e0e8);\n    border-radius: 16px;\n    box-shadow: 0 8px 24px rgba(16, 36, 62, 0.09);\n    cursor: pointer;\n    display: block;\n    height: 100%;\n    padding: 20px;\n    text-align: left;\n    width: 100%;\n  }·\n  .ai-app-choice-button:hover,\n  .ai-app-starter-button:hover {\n    box-shadow: 0 18px 38px rgba(16, 36, 62, 0.13);\n  }·\n  .ai-app-choice-step {\n    color: var(--fd-accent, #087f83);\n    display: block;\n    font-size: 12px;\n    font-weight: 750;\n    letter-spacing: 0.08em;\n    margin: 0 0 8px;\n  }·\n  .ai-app-choice-title,\n  .ai-app-starter-title {\n    color: var(--fd-ink, #10243e);\n    display: block;\n    font-size: 17px;\n    font-weight: 700;\n    margin: 0 0 6px;\n  }·\n  .ai-app-choice-text,\n  .ai-app-starter-text {\n    color: var(--fd-muted, #5b6878);\n    display: block;\n    font-size: 14px;\n    line-height: 1.45;\n  }·\n  .ai-app-measure {\n    background: var(--fd-paper, #fff);\n    border: 1px solid var(--fd-line, #d6e0e8);\n    border-radius: 14px;\n    box-shadow: 0 8px 24px rgba(16, 36, 62, 0.09);\n    padding: 18px;\n  }·\n  .ai-app-measure-label {\n    color: var(--fd-muted, #5b6878);\n    display: block;\n    font-size: 13px;\n    margin: 0 0 6px;\n  }·\n  .ai-app-measure-value {\n    color: var(--fd-ink, #10243e);\n    display: block;\n    font-size: 22px;\n    font-weight: 750;\n  }·\n  .ai-app-measure-evidence,\n  .ai-app-measure-period {\n    color: var(--fd-muted, #5b6878);\n    display: block;\n    font-size: 12px;\n    margin: 6px 0 0;\n  }\n}·\n// One column where the part sits in a narrow column, and on a small screen.\n.ai-view--app.ai-view--narrow {\n  .ai-app-choices,\n  .ai-app-starters,\n  .ai-app-measures {\n    grid-template-columns: minmax(0, 1fr);\n  }·\n  .ai-app-hero {\n    padding: 26px;\n  }·\n  .ai-app-hero-title {\n    font-size: 28px;\n  }\n}·\n@media (max-width: 720px) {\n  .ai-view--app {\n    .ai-app-choices,\n    .ai-app-starters,\n    .ai-app-measures {\n      grid-template-columns: minmax(0, 1fr);\n    }·\n    // Wrapped over several rows a pill outline reads as one large rounded shape, so the row squares off.\n    .ai-app-tabrow {\n      border-radius: 14px;\n    }·\n    .ai-app-tab {\n      padding: 9px 12px;\n    }·\n    .ai-app-tab--admin {\n      flex: 0 0 auto;\n      margin-left: auto;\n    }·\n    .ai-app-actions button {\n      flex: 1 1 100%;\n    }·\n    .ai-app-hero {\n      padding: 26px;\n    }·\n    .ai-app-hero-title {\n      font-size: 28px;\n    }\n  }\n}·\n@media (prefers-reduced-motion: reduce) {\n  .ai-view--app {\n    .ai-app-choice-button,\n    .ai-app-starter-button {\n      transition: none;\n    }\n  }\n}·\n// The demonstration surface. Same token discipline as above: colour that carries meaning reads an --fd- token with\n// the shipped fallback, and the reference palette stays out of the repository.\n.ai-view--app {\n  .ai-app-demo-banner {\n    align-items: baseline;\n    background: #fff8e9;\n    border: 1px solid #e6d6b0;\n    border-radius: 12px;\n    display: flex;\n    flex-wrap: wrap;\n    gap: 10px;\n    margin: 0 0 18px;\n    padding: 12px 14px;\n  }·\n  .ai-app-demo-flag {\n    background: #664316;\n    border-radius: 999px;\n    color: #fff;\n    font-size: 11px;\n    font-weight: 750;\n    letter-spacing: 0.06em;\n    padding: 3px 10px;\n    text-transform: uppercase;\n    white-space: nowrap;\n  }·\n  .ai-app-demo-text {\n    color: #664316;\n    flex: 1 1 320px;\n    font-size: 13px;\n    line-height: 1.45;\n  }·\n  .ai-app-panel {\n    background: var(--fd-paper, #fff);\n    border: 1px solid var(--fd-line, #d6e0e8);\n    border-radius: 16px;\n    margin: 0 0 16px;\n    padding: 20px;\n  }·\n  .ai-app-panel--review {\n    border-color: #c8d8e4;\n  }·\n  .ai-app-panel--caution {\n    background: #fff8e9;\n    border-color: #e6d6b0;\n  }·\n  .ai-app-subheading {\n    color: var(--fd-ink, #10243e);\n    font-size: 15px;\n    font-weight: 700;\n    margin: 18px 0 8px;\n  }·\n  .ai-app-subheading:first-child {\n    margin-top: 0;\n  }·\n  .ai-app-field-label {\n    color: var(--fd-muted, #5b6878);\n    display: block;\n    font-size: 12px;\n    font-weight: 700;\n    letter-spacing: 0.04em;\n    margin: 12px 0 4px;\n    text-transform: uppercase;\n  }·\n  .ai-app-quote {\n    border-left: 3px solid var(--fd-line, #d6e0e8);\n    color: var(--fd-ink, #10243e);\n    margin: 0 0 8px;\n    padding: 2px 0 2px 12px;\n  }·\n  .ai-app-list,\n  .ai-app-sources,\n  .ai-app-claims,\n  .ai-app-variants {\n    list-style: none;\n    margin: 0 0 8px;\n    padding: 0;\n  }·\n  .ai-app-list li {\n    border-bottom: 1px solid var(--fd-soft, #e5ebf0);\n    color: var(--fd-ink, #10243e);\n    padding: 7px 0;\n  }·\n  .ai-app-list li:last-child {\n    border-bottom: 0;\n  }·\n  .ai-app-source,\n  .ai-app-claim,\n  .ai-app-variant {\n    border: 1px solid var(--fd-soft, #e5ebf0);\n    border-radius: 12px;\n    margin: 0 0 8px;\n    padding: 12px;\n  }·\n  .ai-app-source-id,\n  .ai-app-variant-headline {\n    color: var(--fd-ink, #10243e);\n    display: block;\n    font-weight: 700;\n  }·\n  .ai-app-source-note,\n  .ai-app-cite {\n    color: var(--fd-muted, #5b6878);\n    display: block;\n    font-size: 12px;\n    margin: 4px 0 0;\n  }·\n  .ai-app-claim-text {\n    color: var(--fd-ink, #10243e);\n    display: block;\n  }·\n  .ai-app-cite--gap {\n    align-items: center;\n    display: flex;\n    flex-wrap: wrap;\n    gap: 8px;\n  }·\n  .ai-app-finding {\n    color: #8a4b00;\n    display: block;\n    font-size: 12px;\n    margin: 6px 0 0;\n  }·\n  .ai-app-empty {\n    color: var(--fd-muted, #5b6878);\n    font-style: italic;\n    margin: 0;\n  }·\n  .ai-app-actions {\n    display: flex;\n    flex-wrap: wrap;\n    gap: 10px;\n    margin: 16px 0 0;\n  }·\n  .ai-app-primary,\n  .ai-app-secondary,\n  .ai-app-back {\n    border-radius: 11px;\n    cursor: pointer;\n    font-size: 14px;\n    font-weight: 700;\n    padding: 11px 18px;\n  }·\n  .ai-app-primary {\n    background: var(--fd-accent, #087f83);\n    border: 1px solid var(--fd-accent, #087f83);\n    color: #fff;\n  }·\n  .ai-app-secondary,\n  .ai-app-back {\n    background: transparent;\n    border: 1px solid var(--fd-line, #d6e0e8);\n    color: var(--fd-ink, #10243e);\n  }·\n  .ai-app-back {\n    margin: 0 0 14px;\n    padding: 8px 14px;\n  }·\n  .ai-app-primary:disabled,\n  .ai-app-starter-button:disabled {\n    cursor: not-allowed;\n    opacity: 0.55;\n  }·\n  .ai-app-detail-title {\n    color: var(--fd-ink, #10243e);\n    font-size: 20px;\n    font-weight: 700;\n    margin: 0 0 8px;\n  }·\n  .ai-app-detail-title:focus-visible {\n    outline: 3px solid var(--fd-focus, #0b66d4);\n    outline-offset: 3px;\n  }·\n  .ai-app-contract {\n    border: 1px solid var(--fd-soft, #e5ebf0);\n    border-radius: 12px;\n    margin: 14px 0 18px;\n    padding: 14px;\n  }·\n  .ai-app-contract dt {\n    color: var(--fd-muted, #5b6878);\n    font-size: 12px;\n    font-weight: 700;\n    letter-spacing: 0.04em;\n    text-transform: uppercase;\n  }·\n  .ai-app-contract dd {\n    color: var(--fd-ink, #10243e);\n    margin: 3px 0 10px;\n  }·\n  .ai-app-contract dd:last-child {\n    margin-bottom: 0;\n  }·\n  .ai-app-stage {\n    display: block;\n    margin: 0 0 8px;\n  }·\n  .ai-app-lock,\n  .ai-app-reference {\n    color: var(--fd-muted, #5b6878);\n    display: block;\n    font-size: 12px;\n    margin: 8px 0 0;\n  }\n}·\n// The component kit. Measurements follow the reference prototype: 20px panel radius, 16px case radius, 14px metric\n// radius, 999px pills, and the soft-depth value the reference uses throughout. Colour that carries meaning reads a\n// token; the pill inks stay literal because a tone's text must remain legible whatever an organization sets behind\n// it, and none of them is a reference-palette colour.\n.ai-view--app {\n  .ai-app-surface {\n    background: var(--fd-paper, #fff);\n    border: 1px solid var(--fd-line, #d6e0e8);\n    border-radius: 20px;\n    box-shadow: 0 8px 24px rgba(4, 42, 70, 0.09);\n    padding: 22px;\n  }·\n  .ai-app-pill {\n    align-items: center;\n    border: 1px solid;\n    border-radius: 999px;\n    display: inline-flex;\n    font-size: 10px;\n    font-weight: 800;\n    letter-spacing: 0.03em;\n    padding: 5px 8px;\n    white-space: nowrap;\n  }·\n  .ai-app-pill--good {\n    background: var(--fd-state-green, #ddf6f0);\n    border-color: #bce8d6;\n    color: #0c6f4a;\n  }·\n  .ai-app-pill--wait {\n    background: var(--fd-state-amber, #fff4cf);\n    border-color: #f3d097;\n    color: #8a4e00;\n  }·\n  .ai-app-pill--design {\n    background: var(--fd-soft, #e5ebf0);\n    border-color: #cedcea;\n    color: #435b77;\n  }·\n  .ai-app-pill--block {\n    background: var(--fd-state-red, #fde8e8);\n    border-color: #f3c0c0;\n    color: #942c2c;\n  }·\n  .ai-app-pill--info {\n    background: var(--fd-state-blue, #e7f0fb);\n    border-color: #b8e6f3;\n    color: #075f88;\n  }·\n  .ai-app-head {\n    align-items: flex-end;\n    display: flex;\n    flex-wrap: wrap;\n    gap: 16px;\n    justify-content: space-between;\n    margin: 0 0 12px;\n  }·\n  .ai-app-head-title {\n    color: var(--fd-ink, #10243e);\n    font-size: 23px;\n    font-weight: 700;\n    letter-spacing: -0.02em;\n    margin: 0;\n  }·\n  .ai-app-head-note {\n    color: var(--fd-muted, #5b6878);\n    font-size: 13px;\n    margin: 4px 0 0;\n    max-width: 70ch;\n  }·\n  .ai-app-status-title {\n    color: var(--fd-ink, #10243e);\n    font-size: 14px;\n    font-weight: 700;\n    margin: 0 0 15px;\n  }·\n  .ai-app-status-rows {\n    list-style: none;\n    margin: 0;\n    padding: 0;\n  }·\n  .ai-app-status-row {\n    align-items: center;\n    border-top: 1px solid var(--fd-soft, #e5ebf0);\n    display: flex;\n    gap: 10px;\n    justify-content: space-between;\n    padding: 12px 0;\n  }·\n  .ai-app-status-row:first-child {\n    border-top: 0;\n  }·\n  .ai-app-status-label {\n    color: var(--fd-ink, #10243e);\n    display: block;\n    font-size: 13px;\n  }·\n  .ai-app-status-note {\n    color: var(--fd-muted, #5b6878);\n    display: block;\n    font-size: 12px;\n    margin: 2px 0 0;\n  }·\n  .ai-app-metric {\n    border-radius: 14px;\n    padding: 16px;\n  }·\n  .ai-app-metric-label {\n    color: var(--fd-muted, #5b6878);\n    display: block;\n    font-size: 11px;\n    font-weight: 750;\n  }·\n  .ai-app-metric-value {\n    color: var(--fd-ink, #10243e);\n    display: block;\n    font-size: 27px;\n    font-weight: 850;\n    letter-spacing: -0.035em;\n    margin: 4px 0 0;\n  }·\n  .ai-app-metric-value--placeholder {\n    color: var(--fd-muted, #5b6878);\n    font-size: 16px;\n    font-weight: 700;\n    letter-spacing: 0;\n  }·\n  .ai-app-metric-note {\n    color: var(--fd-muted, #5b6878);\n    display: block;\n    font-size: 11px;\n    margin: 3px 0 0;\n  }·\n  .ai-app-case {\n    border-radius: 16px;\n    padding: 18px;\n  }·\n  .ai-app-case-top {\n    display: flex;\n    gap: 10px;\n    justify-content: space-between;\n  }·\n  .ai-app-case-ref {\n    color: var(--fd-muted, #5b6878);\n    font-size: 10px;\n    font-weight: 850;\n    letter-spacing: 0.08em;\n  }·\n  .ai-app-case-title {\n    color: var(--fd-ink, #10243e);\n    font-size: 17px;\n    font-weight: 700;\n    margin: 7px 0 5px;\n  }·\n  .ai-app-case-summary {\n    color: var(--fd-muted, #5b6878);\n    font-size: 12px;\n    margin: 0 0 12px;\n  }·\n  .ai-app-case-facts {\n    display: flex;\n    flex-wrap: wrap;\n    gap: 7px;\n  }·\n  .ai-app-chip {\n    background: var(--fd-soft, #e5ebf0);\n    border-radius: 7px;\n    color: #486576;\n    font-size: 10px;\n    padding: 5px 7px;\n  }·\n  .ai-app-case-foot {\n    border-top: 1px solid var(--fd-soft, #e5ebf0);\n    color: var(--fd-muted, #5b6878);\n    display: flex;\n    flex-wrap: wrap;\n    font-size: 11px;\n    gap: 8px;\n    justify-content: space-between;\n    margin: 14px 0 0;\n    padding: 12px 0 0;\n  }·\n  .ai-app-steps {\n    display: flex;\n    flex-direction: column;\n    gap: 10px;\n    list-style: none;\n    margin: 0;\n    padding: 0;\n  }·\n  .ai-app-step {\n    align-items: flex-start;\n    border: 1px solid var(--fd-line, #d6e0e8);\n    border-radius: 13px;\n    display: flex;\n    gap: 12px;\n    padding: 14px;\n  }·\n  .ai-app-step-marker {\n    align-items: center;\n    background: var(--fd-state-blue, #e7f0fb);\n    border-radius: 10px;\n    color: var(--fd-accent, #087f83);\n    display: flex;\n    font-weight: 850;\n    height: 34px;\n    justify-content: center;\n    width: 34px;\n  }·\n  .ai-app-step-text {\n    flex: 1 1 auto;\n  }·\n  .ai-app-step-title {\n    color: var(--fd-ink, #10243e);\n    display: block;\n    font-size: 13px;\n    margin: 1px 0 3px;\n  }·\n  .ai-app-step-note {\n    color: var(--fd-muted, #5b6878);\n    display: block;\n    font-size: 11px;\n  }·\n  .ai-app-flow {\n    align-items: center;\n    display: flex;\n    flex-wrap: wrap;\n    gap: 8px;\n    list-style: none;\n    margin: 16px 0;\n    padding: 0;\n  }·\n  .ai-app-flow-step {\n    align-items: center;\n    display: flex;\n    gap: 8px;\n  }·\n  .ai-app-flow-name {\n    background: var(--fd-soft, #e5ebf0);\n    border: 1px solid var(--fd-line, #d6e0e8);\n    border-radius: 9px;\n    color: var(--fd-ink, #10243e);\n    font-size: 11px;\n    font-weight: 700;\n    padding: 8px 10px;\n  }·\n  .ai-app-flow-sep {\n    color: var(--fd-muted, #5b6878);\n  }·\n  .ai-app-layer {\n    border-radius: 14px;\n    min-height: 150px;\n    padding: 16px;\n  }·\n  .ai-app-layer-kind {\n    color: var(--fd-accent, #087f83);\n    display: block;\n    font-size: 10px;\n    font-weight: 850;\n    letter-spacing: 0.09em;\n    text-transform: uppercase;\n  }·\n  .ai-app-layer-title {\n    color: var(--fd-ink, #10243e);\n    font-size: 15px;\n    font-weight: 700;\n    margin: 8px 0;\n  }·\n  .ai-app-layer-note {\n    color: var(--fd-muted, #5b6878);\n    font-size: 11px;\n    margin: 0;\n  }·\n  .ai-app-aside {\n    border-radius: 10px;\n    font-size: 12px;\n    margin: 15px 0;\n    padding: 13px 15px;\n  }·\n  .ai-app-aside--caution {\n    background: #fff8e9;\n    border-left: 4px solid #a55c00;\n    color: #664316;\n  }·\n  .ai-app-aside--info {\n    background: var(--fd-state-blue, #e7f0fb);\n    border-left: 4px solid var(--fd-focus, #0b66d4);\n    color: var(--fd-ink, #10243e);\n  }·\n  .ai-app-ghost {\n    background: var(--fd-paper, #fff);\n    border: 1px solid var(--fd-line, #d6e0e8);\n    border-radius: 10px;\n    color: var(--fd-ink, #10243e);\n    cursor: pointer;\n    font-size: 12px;\n    font-weight: 700;\n    padding: 8px 11px;\n  }·\n  .ai-app-threes,\n  .ai-app-fours {\n    display: grid;\n    gap: 15px;\n    list-style: none;\n    margin: 0;\n    padding: 0;\n  }·\n  .ai-app-threes {\n    grid-template-columns: repeat(3, minmax(0, 1fr));\n  }·\n  .ai-app-fours {\n    grid-template-columns: repeat(4, minmax(0, 1fr));\n  }·\n  .ai-app-split {\n    display: grid;\n    gap: 16px;\n    grid-template-columns: 1.1fr 0.9fr;\n  }\n}·\n@media (max-width: 1050px) {\n  .ai-view--app {\n    .ai-app-threes,\n    .ai-app-fours {\n      grid-template-columns: repeat(2, minmax(0, 1fr));\n    }·\n    .ai-app-split {\n      grid-template-columns: minmax(0, 1fr);\n    }\n  }\n}·\n@media (max-width: 720px) {\n  .ai-view--app {\n    .ai-app-threes,\n    .ai-app-fours {\n      grid-template-columns: minmax(0, 1fr);\n    }·\n    .ai-app-head-title {\n      font-size: 19px;\n    }\n  }\n}·\n.ai-view--app.ai-view--narrow {\n  .ai-app-threes,\n  .ai-app-fours,\n  .ai-app-split {\n    grid-template-columns: minmax(0, 1fr);\n  }\n}·\n// Chrome and the first screen. The nav is pinned to the top of the scroll with a frosted backing, as the reference\n// draws it; the offset keeps it clear of the host page's own command bar rather than fighting it for z-index.\n.ai-view--app {\n  .ai-app-top {\n    align-items: center;\n    display: flex;\n    flex-wrap: wrap;\n    gap: 16px;\n    justify-content: space-between;\n    min-height: 68px;\n    padding: 8px 0 14px;\n  }·\n  .ai-app-brand {\n    align-items: center;\n    display: flex;\n    gap: 14px;\n  }·\n  // Drawn rather than loaded: a gradient square with an arc cut from it, so there is no image request.\n  .ai-app-mark {\n    background: linear-gradient(135deg, var(--fd-hero-glow, #edf8f8), var(--fd-accent, #087f83) 52%, var(--fd-ink, #10243e));\n    border-radius: 12px;\n    box-shadow: 0 8px 18px rgba(4, 42, 70, 0.23);\n    display: block;\n    height: 38px;\n    position: relative;\n    width: 38px;\n  }·\n  .ai-app-mark::after {\n    border: 2px solid #fff;\n    border-left-color: transparent;\n    border-radius: 50%;\n    content: \\\"\\\";\n    inset: 9px 8px;\n    position: absolute;\n    transform: rotate(-18deg);\n  }·\n  .ai-app-brand-name {\n    color: var(--fd-ink, #10243e);\n    display: block;\n    font-size: 18px;\n    font-weight: 700;\n    letter-spacing: 0.01em;\n  }·\n  .ai-app-brand-note {\n    color: var(--fd-muted, #5b6878);\n    display: block;\n    font-size: 12px;\n    margin: 1px 0 0;\n  }·\n  .ai-app-chips {\n    display: flex;\n    flex-wrap: wrap;\n    gap: 10px;\n  }·\n  .ai-app-chip-line {\n    align-items: center;\n    background: var(--fd-paper, #fff);\n    border: 1px solid var(--fd-line, #d6e0e8);\n    border-radius: 999px;\n    color: var(--fd-muted, #5b6878);\n    display: inline-flex;\n    font-size: 12px;\n    gap: 7px;\n    padding: 7px 12px;\n    white-space: nowrap;\n  }·\n  .ai-app-dot {\n    background: #16845b;\n    border-radius: 50%;\n    height: 8px;\n    width: 8px;\n  }·\n  .ai-app-dot--wait {\n    background: #a55c00;\n  }·\n  .ai-app-tabs {\n    backdrop-filter: blur(14px);\n    background: rgba(255, 255, 255, 0.82);\n    border: 1px solid var(--fd-line, #d6e0e8);\n    border-radius: 14px;\n    box-shadow: 0 8px 20px rgba(4, 42, 70, 0.05);\n    margin: 0 0 20px;\n    padding: 6px;\n    position: sticky;\n    top: 8px;\n    z-index: 3;\n  }·\n  .ai-app-tabrow {\n    border: 0;\n    border-radius: 0;\n    padding: 0;\n    width: 100%;\n  }·\n  .ai-app-tab {\n    border-radius: 9px;\n    font-size: 13px;\n    font-weight: 650;\n    padding: 9px 14px;\n  }·\n  .ai-app-tab--admin {\n    flex: 0 0 auto;\n    margin-left: auto;\n  }·\n  .ai-app-tab[aria-selected=\\\"true\\\"] {\n    box-shadow: 0 4px 10px rgba(6, 42, 70, 0.15);\n  }·\n  .ai-app-first {\n    display: grid;\n    gap: 20px;\n    grid-template-columns: minmax(0, 1.45fr) minmax(320px, 0.55fr);\n    margin: 0 0 18px;\n  }·\n  .ai-app-hero {\n    margin: 0;\n    min-height: 380px;\n    overflow: hidden;\n    padding: 46px;\n    position: relative;\n  }·\n  // The halo the reference sets behind the panel's lower right.\n  .ai-app-hero::after {\n    border: 1px solid rgba(255, 255, 255, 0.13);\n    border-radius: 50%;\n    bottom: -180px;\n    box-shadow: 0 0 0 38px rgba(255, 255, 255, 0.025), 0 0 0 78px rgba(255, 255, 255, 0.02);\n    content: \\\"\\\";\n    height: 430px;\n    position: absolute;\n    right: -120px;\n    width: 430px;\n  }·\n  .ai-app-hero-eyebrow {\n    letter-spacing: 0.16em;\n    position: relative;\n    z-index: 2;\n  }·\n  .ai-app-hero-title {\n    font-size: clamp(38px, 4.4vw, 64px);\n    letter-spacing: -0.045em;\n    line-height: 0.99;\n    margin: 12px 0 16px;\n    max-width: 14ch;\n    position: relative;\n    z-index: 2;\n  }·\n  .ai-app-hero-text {\n    font-size: 17px;\n    margin: 0 0 24px;\n    position: relative;\n    z-index: 2;\n  }·\n  .ai-app-command {\n    display: block;\n    margin: 0;\n    max-width: 780px;\n    position: relative;\n    z-index: 2;\n  }·\n  .ai-app-command-label {\n    clip: rect(0, 0, 0, 0);\n    height: 1px;\n    margin: -1px;\n    overflow: hidden;\n    padding: 0;\n    position: absolute;\n    white-space: nowrap;\n    width: 1px;\n  }·\n  .ai-app-command-row {\n    background: var(--fd-paper, #fff);\n    border-radius: 16px;\n    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.16);\n    display: flex;\n    flex-wrap: wrap;\n    gap: 10px;\n    padding: 8px;\n  }·\n  .ai-app-command-input {\n    border: 0;\n    border-radius: 11px;\n    color: var(--fd-ink, #10243e);\n    flex: 1 1 260px;\n    font-size: 16px;\n    min-width: 0;\n    padding: 13px 14px;\n  }·\n  .ai-app-hero-micro {\n    color: rgba(255, 255, 255, 0.82);\n    font-size: 12px;\n    margin: 12px 0 0;\n    position: relative;\n    z-index: 2;\n  }·\n  .ai-app-first-side {\n    display: flex;\n    flex-direction: column;\n    gap: 14px;\n  }·\n  .ai-app-choices {\n    margin: 0 0 26px;\n  }·\n  .ai-app-foot {\n    border-top: 1px solid var(--fd-line, #d6e0e8);\n    color: var(--fd-muted, #5b6878);\n    display: flex;\n    flex-wrap: wrap;\n    font-size: 11px;\n    gap: 16px;\n    justify-content: space-between;\n    margin: 32px 0 0;\n    padding: 18px 0 0;\n  }\n}·\n@media (max-width: 1050px) {\n  .ai-view--app {\n    .ai-app-first {\n      grid-template-columns: minmax(0, 1fr);\n    }\n  }\n}·\n@media (max-width: 720px) {\n  .ai-view--app {\n    .ai-app-hero {\n      padding: 30px 22px;\n      min-height: 340px;\n    }·\n    .ai-app-top {\n      padding: 6px 0 12px;\n    }·\n    .ai-app-tabs {\n      position: static;\n    }\n  }\n}·\n.ai-view--app.ai-view--narrow {\n  .ai-app-first {\n    grid-template-columns: minmax(0, 1fr);\n  }·\n  .ai-app-tabs {\n    position: static;\n  }\n}·\n// A person's own requests. The list is the front door's own, reused unchanged, but the rules that made each row a\n// card are scoped to the page view it was written for, so inside this view it arrived as bare lines of text - the\n// one screen holding real records looking the least finished of the seven. These give it the kit's surface. They\n// are scoped to the section rather than to the class, so the legacy screens are untouched.\n.ai-view--app {\n  .ai-app-cases .ai-page-mywork-title {\n    color: var(--fd-ink, #10243e);\n    font-size: 18px;\n    font-weight: 700;\n    margin: 0 0 10px;\n  }·\n  .ai-app-cases .ai-page-mywork-list {\n    display: grid;\n    gap: 12px;\n    margin: 0;\n  }·\n  .ai-app-cases .ai-mywork-row {\n    background: var(--fd-paper, #fff);\n    border: 1px solid var(--fd-line, #d6e0e8);\n    border-radius: 14px;\n    box-shadow: 0 1px 2px rgba(16, 36, 62, 0.05);\n    padding: 16px 18px;\n  }·\n  .ai-app-cases .ai-mywork-head {\n    align-items: center;\n    display: flex;\n    flex-wrap: wrap;\n    gap: 8px 12px;\n    margin: 0 0 6px;\n  }·\n  .ai-app-cases .ai-mywork-label {\n    color: var(--fd-ink, #10243e);\n    font-size: 16px;\n    font-weight: 600;\n  }·\n  .ai-app-cases .ai-mywork-reference,\n  .ai-app-cases .ai-mywork-dates {\n    color: var(--fd-muted, #5b6878);\n    font-size: 13px;\n    margin: 2px 0 0;\n  }·\n  .ai-app-cases .ai-mywork-key {\n    margin: 0 6px 0 0;\n  }·\n  .ai-app-cases .ai-mywork-row code {\n    background: var(--fd-soft, #e5ebf0);\n    border-radius: 6px;\n    color: var(--fd-ink, #10243e);\n    font-family: consolas, menlo, monospace;\n    font-size: 13px;\n    padding: 1px 6px;\n  }·\n  .ai-app-cases .ai-mywork-note {\n    color: var(--fd-muted, #5b6878);\n    margin: 0;\n  }\n}·\n// The first screen names itself inside the entry panel, so its section heading is there for a reader and a focus\n// target only. It still takes focus on a section change, which is why it is offset rather than removed.\n.ai-view--app .ai-app-heading--quiet {\n  clip: rect(0, 0, 0, 0);\n  height: 1px;\n  margin: -1px;\n  overflow: hidden;\n  padding: 0;\n  position: absolute;\n  white-space: nowrap;\n  width: 1px;\n}·\n// Workspace and mode chrome: layout only. Colour stays on the existing kit tokens, so the palette map does not grow.\n.ai-view--app .ai-app-modes {\n  display: flex;\n  flex-wrap: wrap;\n  gap: 8px;\n  margin: 0 0 16px;\n}·\n.ai-view--app .ai-app-mode {\n  min-height: 40px;\n}·\n.ai-view--app .ai-app-mode--on {\n  font-weight: 600;\n}·\n.ai-view--app .ai-app-textarea,\n.ai-view--app .ai-app-workspace .ai-app-command-input {\n  width: 100%;\n  max-width: 40rem;\n}·\n.ai-view--app .ai-app-records {\n  list-style: none;\n  margin: 0;\n  padding: 0;\n}·\n.ai-view--app .ai-app-record {\n  display: block;\n  text-align: left;\n  width: 100%;\n}·\n.ai-view--app .ai-app-foot-support {\n  display: block;\n}\n\"\n    at Object.<anonymous> (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-audit-fixes\\src\\webparts\\aiCoeFrontDoor\\components\\app\\AppSections.test.tsx:23:20)"
+          ],
+          "fullName": "same-app measurement and teaching entry pads the Improvement starter row above its cards without narrowing the overview",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 3,
+          "retryReasons": [],
+          "startAt": 1790283863025,
+          "status": "failed",
+          "title": "pads the Improvement starter row above its cards without narrowing the overview"
+        },
+        {
+          "ancestorTitles": [
+            "same-app measurement and teaching entry"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "same-app measurement and teaching entry adds top padding to the Cases explanation row, not inside its cards",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790283863139,
+          "status": "pending",
+          "title": "adds top padding to the Cases explanation row, not inside its cards"
+        },
+        {
+          "ancestorTitles": [
+            "same-app measurement and teaching entry"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "same-app measurement and teaching entry pads the Engineering starter region vertically in the wide layout without changing the cards",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790283863139,
+          "status": "pending",
+          "title": "pads the Engineering starter region vertically in the wide layout without changing the cards"
+        },
+        {
+          "ancestorTitles": [
+            "same-app measurement and teaching entry"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "same-app measurement and teaching entry pads the Engineering starter region vertically in the narrow layout without changing the cards",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790283863139,
+          "status": "pending",
+          "title": "pads the Engineering starter region vertically in the narrow layout without changing the cards"
+        },
+        {
+          "ancestorTitles": [
+            "same-app measurement and teaching entry"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "same-app measurement and teaching entry opens and closes the guidance with keyboard controls in the narrow layout",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790283863139,
+          "status": "pending",
+          "title": "opens and closes the guidance with keyboard controls in the narrow layout"
+        },
+        {
+          "ancestorTitles": [
+            "same-app measurement and teaching entry"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "same-app measurement and teaching entry opens source, role, stop and recovery quick-start guidance from Engineering without a private source link",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790283863139,
+          "status": "pending",
+          "title": "opens source, role, stop and recovery quick-start guidance from Engineering without a private source link"
+        },
+        {
+          "ancestorTitles": [
+            "same-app measurement and teaching entry"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "same-app measurement and teaching entry connects Improvement guidance to the existing outcome form, not another tracker",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790283863139,
+          "status": "pending",
+          "title": "connects Improvement guidance to the existing outcome form, not another tracker"
+        },
+        {
+          "ancestorTitles": [
+            "same-app measurement and teaching entry"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "same-app measurement and teaching entry keeps Improvement proposal/retest guidance without the misplaced operator commissioning control",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790283863139,
+          "status": "pending",
+          "title": "keeps Improvement proposal/retest guidance without the misplaced operator commissioning control"
+        }
+      ],
+      "failureMessage": "  ● same-app measurement and teaching entry › pads the Improvement starter row above its cards without narrowing the overview\n\n    expect(received).toMatch(expected)\n\n    Expected pattern: /\\.ai-app-starters--spaced\\s*\\{[^}]*padding-top:\\s*24px;/\n    Received string:  \"// The consolidated view's own rules. Additive and scoped: every selector sits under .ai-view--app, so nothing here\n    // can reach the legacy screens, whose stylesheet is reproduced rule for rule against the shipped package and may\n    // gain nothing.\n    //\n    // On colour. The prototype's navy, blue and cyan are deliberately NOT written here. Those eight colours are the\n    // reference palette of the engineering spec, and this repository treats them as an example tenant override rather\n    // than as values in code - palette.test.ts fails the build if one appears in a stylesheet. So every colour that\n    // carries meaning reads a --fd- token with the front door's own shipped colour as its fallback, and a tenant that\n    // wants the prototype's look supplies it through the Palette parameter, which sets those same tokens. The result\n    // is that this view repaints completely from configuration, which is what makes it portable to another tenant.\n    // No rule declares a token; each only reads one, so an override set on the element above always wins.·\n    // Carrying the palette into the parts this view reuses. The consolidated view mounts the front door's own guided\n    // requests, its requests list, its usage strip and its operator dashboard, and every one of those colours itself\n    // from the theme variables the shipped bundle declares (--color-*), not from the palette tokens (--fd-*). Left\n    // alone, a site that sets a palette gets a repainted shell around reused buttons in the shipped teal: one page,\n    // two accents. So this view points the theme variables at the matching token, for its own subtree only. The\n    // shipped declarations on the element above are untouched and every legacy screen keeps exactly the colours it\n    // shipped with.\n    //\n    // Seven of these fall back to the literal the variable already held, so with no palette set they are the same\n    // colour. Five do not: the muted ink, the page backing and the three of an information notice fall back to the\n    // front door's own token instead, because a notice or a grey that stayed on the shipped theme's value would sit a\n    // shade off every other one on the screen. That is a deliberate, small change and it reaches this view alone.\n    .ai-view--app {\n      --color-primary: var(--fd-accent, #087f83);\n      --color-primary-dark: var(--fd-accent-dark, #055d66);\n      --color-primary-soft: var(--fd-accent-soft, #e8f7f6);\n      --color-ink: var(--fd-ink, #10243e);\n      --color-ink-muted: var(--fd-muted, #5b6878);\n      --color-bg: var(--fd-bg, #f7fafc);\n      --color-surface: var(--fd-paper, #fff);\n      --color-line: var(--fd-line, #d6e0e8);\n      --color-focus: var(--fd-focus, #0b66d4);\n      // An information notice is the one place a reused part carries a colour of its own. It follows the kit's aside,\n      // which is the same notice drawn in the same place, rather than staying the shipped teal beside it.\n      --color-info-bg: var(--fd-state-blue, #e7f0fb);\n      --color-info-border: var(--fd-line, #d6e0e8);\n      --color-info-text: var(--fd-ink, #10243e);·\n      color: var(--fd-ink, #10243e);·\n      .ai-page-identity {\n        color: var(--fd-muted, #5b6878);\n        font-size: 12px;\n        margin: 0 0 12px;\n      }·\n      .ai-app-tabs {\n        margin: 0 0 20px;\n      }·\n      .ai-app-tabrow {\n        align-items: center;\n        border: 1px solid var(--fd-line, #d6e0e8);\n        border-radius: 999px;\n        display: flex;\n        flex-wrap: wrap;\n        gap: 4px;\n        padding: 5px;\n        width: 100%;\n      }·\n      .ai-app-tab {\n        background: transparent;\n        border: 0;\n        border-radius: 999px;\n        color: var(--fd-muted, #5b6878);\n        cursor: pointer;\n        font-size: 14px;\n        font-weight: 600;\n        padding: 9px 16px;\n      }·\n      // The queue control keeps the same tab face but sits at the far end of the bar, not in the section group.\n      .ai-app-tab--admin {\n        flex: 0 0 auto;\n        margin-left: auto;\n      }·\n      .ai-app-tab[aria-selected='true'] {\n        background: var(--fd-accent, #087f83);\n        color: #fff;\n      }·\n      .ai-app-heading {\n        color: var(--fd-ink, #10243e);\n        font-size: 24px;\n        font-weight: 700;\n        letter-spacing: -0.01em;\n        margin: 0 0 4px;\n      }·\n      .ai-app-heading:focus-visible {\n        outline: 3px solid var(--fd-focus, #0b66d4);\n        outline-offset: 3px;\n      }·\n      .ai-app-summary {\n        color: var(--fd-muted, #5b6878);\n        margin: 0 0 20px;\n        max-width: 68ch;\n      }·\n      .ai-app-note {\n        color: var(--fd-muted, #5b6878);\n        margin: 0;\n      }·\n      // The deep entry panel. Built from the ink and accent tokens rather than from the prototype's own navy, so a\n      // tenant palette repaints it whole.\n      .ai-app-hero {\n        background:\n          radial-gradient(circle at 82% 20%, var(--fd-hero-glow, #edf8f8) 0%, rgba(255, 255, 255, 0) 30%),\n          linear-gradient(135deg, var(--fd-hero-from, #10243e) 0%, var(--fd-hero-to, #087f83) 100%);\n        border-radius: 24px;\n        color: #fff;\n        margin: 0 0 22px;\n        padding: 40px;\n      }·\n      .ai-app-hero-eyebrow {\n        color: rgba(255, 255, 255, 0.82);\n        font-size: 12px;\n        font-weight: 700;\n        letter-spacing: 0.08em;\n        margin: 0 0 10px;\n        text-transform: uppercase;\n      }·\n      .ai-app-hero-title {\n        font-size: 38px;\n        font-weight: 750;\n        letter-spacing: -0.02em;\n        line-height: 1.1;\n        margin: 0 0 10px;\n      }·\n      .ai-app-hero-text {\n        color: rgba(255, 255, 255, 0.9);\n        margin: 0;\n        max-width: 56ch;\n      }·\n      .ai-app-choices,\n      .ai-app-starters,\n      .ai-app-measures {\n        display: grid;\n        gap: 14px;\n        list-style: none;\n        margin: 0;\n        padding: 0;\n      }·\n      .ai-app-choices,\n      .ai-app-starters,\n      .ai-app-measures {\n        grid-template-columns: repeat(3, minmax(0, 1fr));\n      }·\n      .ai-app-starters--engineering {\n        padding-block: 24px;\n      }·\n      .ai-app-cases-explanation {\n        padding-top: 24px;\n      }·\n      .ai-app-starters--marketing-demo {\n        padding-bottom: 24px;\n      }·\n      // Register team AI use sits with two siblings; 20px matches starter padding and is larger than the 14px grid.\n      .ai-app-starters--spaced {\n        gap: 20px;\n        margin: 0 0 20px;\n      }·\n      .ai-app-choice-button,\n      .ai-app-starter-button {\n        background: var(--fd-paper, #fff);\n        border: 1px solid var(--fd-line, #d6e0e8);\n        border-radius: 16px;\n        box-shadow: 0 8px 24px rgba(16, 36, 62, 0.09);\n        cursor: pointer;\n        display: block;\n        height: 100%;\n        padding: 20px;\n        text-align: left;\n        width: 100%;\n      }·\n      .ai-app-choice-button:hover,\n      .ai-app-starter-button:hover {\n        box-shadow: 0 18px 38px rgba(16, 36, 62, 0.13);\n      }·\n      .ai-app-choice-step {\n        color: var(--fd-accent, #087f83);\n        display: block;\n        font-size: 12px;\n        font-weight: 750;\n        letter-spacing: 0.08em;\n        margin: 0 0 8px;\n      }·\n      .ai-app-choice-title,\n      .ai-app-starter-title {\n        color: var(--fd-ink, #10243e);\n        display: block;\n        font-size: 17px;\n        font-weight: 700;\n        margin: 0 0 6px;\n      }·\n      .ai-app-choice-text,\n      .ai-app-starter-text {\n        color: var(--fd-muted, #5b6878);\n        display: block;\n        font-size: 14px;\n        line-height: 1.45;\n      }·\n      .ai-app-measure {\n        background: var(--fd-paper, #fff);\n        border: 1px solid var(--fd-line, #d6e0e8);\n        border-radius: 14px;\n        box-shadow: 0 8px 24px rgba(16, 36, 62, 0.09);\n        padding: 18px;\n      }·\n      .ai-app-measure-label {\n        color: var(--fd-muted, #5b6878);\n        display: block;\n        font-size: 13px;\n        margin: 0 0 6px;\n      }·\n      .ai-app-measure-value {\n        color: var(--fd-ink, #10243e);\n        display: block;\n        font-size: 22px;\n        font-weight: 750;\n      }·\n      .ai-app-measure-evidence,\n      .ai-app-measure-period {\n        color: var(--fd-muted, #5b6878);\n        display: block;\n        font-size: 12px;\n        margin: 6px 0 0;\n      }\n    }·\n    // One column where the part sits in a narrow column, and on a small screen.\n    .ai-view--app.ai-view--narrow {\n      .ai-app-choices,\n      .ai-app-starters,\n      .ai-app-measures {\n        grid-template-columns: minmax(0, 1fr);\n      }·\n      .ai-app-hero {\n        padding: 26px;\n      }·\n      .ai-app-hero-title {\n        font-size: 28px;\n      }\n    }·\n    @media (max-width: 720px) {\n      .ai-view--app {\n        .ai-app-choices,\n        .ai-app-starters,\n        .ai-app-measures {\n          grid-template-columns: minmax(0, 1fr);\n        }·\n        // Wrapped over several rows a pill outline reads as one large rounded shape, so the row squares off.\n        .ai-app-tabrow {\n          border-radius: 14px;\n        }·\n        .ai-app-tab {\n          padding: 9px 12px;\n        }·\n        .ai-app-tab--admin {\n          flex: 0 0 auto;\n          margin-left: auto;\n        }·\n        .ai-app-actions button {\n          flex: 1 1 100%;\n        }·\n        .ai-app-hero {\n          padding: 26px;\n        }·\n        .ai-app-hero-title {\n          font-size: 28px;\n        }\n      }\n    }·\n    @media (prefers-reduced-motion: reduce) {\n      .ai-view--app {\n        .ai-app-choice-button,\n        .ai-app-starter-button {\n          transition: none;\n        }\n      }\n    }·\n    // The demonstration surface. Same token discipline as above: colour that carries meaning reads an --fd- token with\n    // the shipped fallback, and the reference palette stays out of the repository.\n    .ai-view--app {\n      .ai-app-demo-banner {\n        align-items: baseline;\n        background: #fff8e9;\n        border: 1px solid #e6d6b0;\n        border-radius: 12px;\n        display: flex;\n        flex-wrap: wrap;\n        gap: 10px;\n        margin: 0 0 18px;\n        padding: 12px 14px;\n      }·\n      .ai-app-demo-flag {\n        background: #664316;\n        border-radius: 999px;\n        color: #fff;\n        font-size: 11px;\n        font-weight: 750;\n        letter-spacing: 0.06em;\n        padding: 3px 10px;\n        text-transform: uppercase;\n        white-space: nowrap;\n      }·\n      .ai-app-demo-text {\n        color: #664316;\n        flex: 1 1 320px;\n        font-size: 13px;\n        line-height: 1.45;\n      }·\n      .ai-app-panel {\n        background: var(--fd-paper, #fff);\n        border: 1px solid var(--fd-line, #d6e0e8);\n        border-radius: 16px;\n        margin: 0 0 16px;\n        padding: 20px;\n      }·\n      .ai-app-panel--review {\n        border-color: #c8d8e4;\n      }·\n      .ai-app-panel--caution {\n        background: #fff8e9;\n        border-color: #e6d6b0;\n      }·\n      .ai-app-subheading {\n        color: var(--fd-ink, #10243e);\n        font-size: 15px;\n        font-weight: 700;\n        margin: 18px 0 8px;\n      }·\n      .ai-app-subheading:first-child {\n        margin-top: 0;\n      }·\n      .ai-app-field-label {\n        color: var(--fd-muted, #5b6878);\n        display: block;\n        font-size: 12px;\n        font-weight: 700;\n        letter-spacing: 0.04em;\n        margin: 12px 0 4px;\n        text-transform: uppercase;\n      }·\n      .ai-app-quote {\n        border-left: 3px solid var(--fd-line, #d6e0e8);\n        color: var(--fd-ink, #10243e);\n        margin: 0 0 8px;\n        padding: 2px 0 2px 12px;\n      }·\n      .ai-app-list,\n      .ai-app-sources,\n      .ai-app-claims,\n      .ai-app-variants {\n        list-style: none;\n        margin: 0 0 8px;\n        padding: 0;\n      }·\n      .ai-app-list li {\n        border-bottom: 1px solid var(--fd-soft, #e5ebf0);\n        color: var(--fd-ink, #10243e);\n        padding: 7px 0;\n      }·\n      .ai-app-list li:last-child {\n        border-bottom: 0;\n      }·\n      .ai-app-source,\n      .ai-app-claim,\n      .ai-app-variant {\n        border: 1px solid var(--fd-soft, #e5ebf0);\n        border-radius: 12px;\n        margin: 0 0 8px;\n        padding: 12px;\n      }·\n      .ai-app-source-id,\n      .ai-app-variant-headline {\n        color: var(--fd-ink, #10243e);\n        display: block;\n        font-weight: 700;\n      }·\n      .ai-app-source-note,\n      .ai-app-cite {\n        color: var(--fd-muted, #5b6878);\n        display: block;\n        font-size: 12px;\n        margin: 4px 0 0;\n      }·\n      .ai-app-claim-text {\n        color: var(--fd-ink, #10243e);\n        display: block;\n      }·\n      .ai-app-cite--gap {\n        align-items: center;\n        display: flex;\n        flex-wrap: wrap;\n        gap: 8px;\n      }·\n      .ai-app-finding {\n        color: #8a4b00;\n        display: block;\n        font-size: 12px;\n        margin: 6px 0 0;\n      }·\n      .ai-app-empty {\n        color: var(--fd-muted, #5b6878);\n        font-style: italic;\n        margin: 0;\n      }·\n      .ai-app-actions {\n        display: flex;\n        flex-wrap: wrap;\n        gap: 10px;\n        margin: 16px 0 0;\n      }·\n      .ai-app-primary,\n      .ai-app-secondary,\n      .ai-app-back {\n        border-radius: 11px;\n        cursor: pointer;\n        font-size: 14px;\n        font-weight: 700;\n        padding: 11px 18px;\n      }·\n      .ai-app-primary {\n        background: var(--fd-accent, #087f83);\n        border: 1px solid var(--fd-accent, #087f83);\n        color: #fff;\n      }·\n      .ai-app-secondary,\n      .ai-app-back {\n        background: transparent;\n        border: 1px solid var(--fd-line, #d6e0e8);\n        color: var(--fd-ink, #10243e);\n      }·\n      .ai-app-back {\n        margin: 0 0 14px;\n        padding: 8px 14px;\n      }·\n      .ai-app-primary:disabled,\n      .ai-app-starter-button:disabled {\n        cursor: not-allowed;\n        opacity: 0.55;\n      }·\n      .ai-app-detail-title {\n        color: var(--fd-ink, #10243e);\n        font-size: 20px;\n        font-weight: 700;\n        margin: 0 0 8px;\n      }·\n      .ai-app-detail-title:focus-visible {\n        outline: 3px solid var(--fd-focus, #0b66d4);\n        outline-offset: 3px;\n      }·\n      .ai-app-contract {\n        border: 1px solid var(--fd-soft, #e5ebf0);\n        border-radius: 12px;\n        margin: 14px 0 18px;\n        padding: 14px;\n      }·\n      .ai-app-contract dt {\n        color: var(--fd-muted, #5b6878);\n        font-size: 12px;\n        font-weight: 700;\n        letter-spacing: 0.04em;\n        text-transform: uppercase;\n      }·\n      .ai-app-contract dd {\n        color: var(--fd-ink, #10243e);\n        margin: 3px 0 10px;\n      }·\n      .ai-app-contract dd:last-child {\n        margin-bottom: 0;\n      }·\n      .ai-app-stage {\n        display: block;\n        margin: 0 0 8px;\n      }·\n      .ai-app-lock,\n      .ai-app-reference {\n        color: var(--fd-muted, #5b6878);\n        display: block;\n        font-size: 12px;\n        margin: 8px 0 0;\n      }\n    }·\n    // The component kit. Measurements follow the reference prototype: 20px panel radius, 16px case radius, 14px metric\n    // radius, 999px pills, and the soft-depth value the reference uses throughout. Colour that carries meaning reads a\n    // token; the pill inks stay literal because a tone's text must remain legible whatever an organization sets behind\n    // it, and none of them is a reference-palette colour.\n    .ai-view--app {\n      .ai-app-surface {\n        background: var(--fd-paper, #fff);\n        border: 1px solid var(--fd-line, #d6e0e8);\n        border-radius: 20px;\n        box-shadow: 0 8px 24px rgba(4, 42, 70, 0.09);\n        padding: 22px;\n      }·\n      .ai-app-pill {\n        align-items: center;\n        border: 1px solid;\n        border-radius: 999px;\n        display: inline-flex;\n        font-size: 10px;\n        font-weight: 800;\n        letter-spacing: 0.03em;\n        padding: 5px 8px;\n        white-space: nowrap;\n      }·\n      .ai-app-pill--good {\n        background: var(--fd-state-green, #ddf6f0);\n        border-color: #bce8d6;\n        color: #0c6f4a;\n      }·\n      .ai-app-pill--wait {\n        background: var(--fd-state-amber, #fff4cf);\n        border-color: #f3d097;\n        color: #8a4e00;\n      }·\n      .ai-app-pill--design {\n        background: var(--fd-soft, #e5ebf0);\n        border-color: #cedcea;\n        color: #435b77;\n      }·\n      .ai-app-pill--block {\n        background: var(--fd-state-red, #fde8e8);\n        border-color: #f3c0c0;\n        color: #942c2c;\n      }·\n      .ai-app-pill--info {\n        background: var(--fd-state-blue, #e7f0fb);\n        border-color: #b8e6f3;\n        color: #075f88;\n      }·\n      .ai-app-head {\n        align-items: flex-end;\n        display: flex;\n        flex-wrap: wrap;\n        gap: 16px;\n        justify-content: space-between;\n        margin: 0 0 12px;\n      }·\n      .ai-app-head-title {\n        color: var(--fd-ink, #10243e);\n        font-size: 23px;\n        font-weight: 700;\n        letter-spacing: -0.02em;\n        margin: 0;\n      }·\n      .ai-app-head-note {\n        color: var(--fd-muted, #5b6878);\n        font-size: 13px;\n        margin: 4px 0 0;\n        max-width: 70ch;\n      }·\n      .ai-app-status-title {\n        color: var(--fd-ink, #10243e);\n        font-size: 14px;\n        font-weight: 700;\n        margin: 0 0 15px;\n      }·\n      .ai-app-status-rows {\n        list-style: none;\n        margin: 0;\n        padding: 0;\n      }·\n      .ai-app-status-row {\n        align-items: center;\n        border-top: 1px solid var(--fd-soft, #e5ebf0);\n        display: flex;\n        gap: 10px;\n        justify-content: space-between;\n        padding: 12px 0;\n      }·\n      .ai-app-status-row:first-child {\n        border-top: 0;\n      }·\n      .ai-app-status-label {\n        color: var(--fd-ink, #10243e);\n        display: block;\n        font-size: 13px;\n      }·\n      .ai-app-status-note {\n        color: var(--fd-muted, #5b6878);\n        display: block;\n        font-size: 12px;\n        margin: 2px 0 0;\n      }·\n      .ai-app-metric {\n        border-radius: 14px;\n        padding: 16px;\n      }·\n      .ai-app-metric-label {\n        color: var(--fd-muted, #5b6878);\n        display: block;\n        font-size: 11px;\n        font-weight: 750;\n      }·\n      .ai-app-metric-value {\n        color: var(--fd-ink, #10243e);\n        display: block;\n        font-size: 27px;\n        font-weight: 850;\n        letter-spacing: -0.035em;\n        margin: 4px 0 0;\n      }·\n      .ai-app-metric-value--placeholder {\n        color: var(--fd-muted, #5b6878);\n        font-size: 16px;\n        font-weight: 700;\n        letter-spacing: 0;\n      }·\n      .ai-app-metric-note {\n        color: var(--fd-muted, #5b6878);\n        display: block;\n        font-size: 11px;\n        margin: 3px 0 0;\n      }·\n      .ai-app-case {\n        border-radius: 16px;\n        padding: 18px;\n      }·\n      .ai-app-case-top {\n        display: flex;\n        gap: 10px;\n        justify-content: space-between;\n      }·\n      .ai-app-case-ref {\n        color: var(--fd-muted, #5b6878);\n        font-size: 10px;\n        font-weight: 850;\n        letter-spacing: 0.08em;\n      }·\n      .ai-app-case-title {\n        color: var(--fd-ink, #10243e);\n        font-size: 17px;\n        font-weight: 700;\n        margin: 7px 0 5px;\n      }·\n      .ai-app-case-summary {\n        color: var(--fd-muted, #5b6878);\n        font-size: 12px;\n        margin: 0 0 12px;\n      }·\n      .ai-app-case-facts {\n        display: flex;\n        flex-wrap: wrap;\n        gap: 7px;\n      }·\n      .ai-app-chip {\n        background: var(--fd-soft, #e5ebf0);\n        border-radius: 7px;\n        color: #486576;\n        font-size: 10px;\n        padding: 5px 7px;\n      }·\n      .ai-app-case-foot {\n        border-top: 1px solid var(--fd-soft, #e5ebf0);\n        color: var(--fd-muted, #5b6878);\n        display: flex;\n        flex-wrap: wrap;\n        font-size: 11px;\n        gap: 8px;\n        justify-content: space-between;\n        margin: 14px 0 0;\n        padding: 12px 0 0;\n      }·\n      .ai-app-steps {\n        display: flex;\n        flex-direction: column;\n        gap: 10px;\n        list-style: none;\n        margin: 0;\n        padding: 0;\n      }·\n      .ai-app-step {\n        align-items: flex-start;\n        border: 1px solid var(--fd-line, #d6e0e8);\n        border-radius: 13px;\n        display: flex;\n        gap: 12px;\n        padding: 14px;\n      }·\n      .ai-app-step-marker {\n        align-items: center;\n        background: var(--fd-state-blue, #e7f0fb);\n        border-radius: 10px;\n        color: var(--fd-accent, #087f83);\n        display: flex;\n        font-weight: 850;\n        height: 34px;\n        justify-content: center;\n        width: 34px;\n      }·\n      .ai-app-step-text {\n        flex: 1 1 auto;\n      }·\n      .ai-app-step-title {\n        color: var(--fd-ink, #10243e);\n        display: block;\n        font-size: 13px;\n        margin: 1px 0 3px;\n      }·\n      .ai-app-step-note {\n        color: var(--fd-muted, #5b6878);\n        display: block;\n        font-size: 11px;\n      }·\n      .ai-app-flow {\n        align-items: center;\n        display: flex;\n        flex-wrap: wrap;\n        gap: 8px;\n        list-style: none;\n        margin: 16px 0;\n        padding: 0;\n      }·\n      .ai-app-flow-step {\n        align-items: center;\n        display: flex;\n        gap: 8px;\n      }·\n      .ai-app-flow-name {\n        background: var(--fd-soft, #e5ebf0);\n        border: 1px solid var(--fd-line, #d6e0e8);\n        border-radius: 9px;\n        color: var(--fd-ink, #10243e);\n        font-size: 11px;\n        font-weight: 700;\n        padding: 8px 10px;\n      }·\n      .ai-app-flow-sep {\n        color: var(--fd-muted, #5b6878);\n      }·\n      .ai-app-layer {\n        border-radius: 14px;\n        min-height: 150px;\n        padding: 16px;\n      }·\n      .ai-app-layer-kind {\n        color: var(--fd-accent, #087f83);\n        display: block;\n        font-size: 10px;\n        font-weight: 850;\n        letter-spacing: 0.09em;\n        text-transform: uppercase;\n      }·\n      .ai-app-layer-title {\n        color: var(--fd-ink, #10243e);\n        font-size: 15px;\n        font-weight: 700;\n        margin: 8px 0;\n      }·\n      .ai-app-layer-note {\n        color: var(--fd-muted, #5b6878);\n        font-size: 11px;\n        margin: 0;\n      }·\n      .ai-app-aside {\n        border-radius: 10px;\n        font-size: 12px;\n        margin: 15px 0;\n        padding: 13px 15px;\n      }·\n      .ai-app-aside--caution {\n        background: #fff8e9;\n        border-left: 4px solid #a55c00;\n        color: #664316;\n      }·\n      .ai-app-aside--info {\n        background: var(--fd-state-blue, #e7f0fb);\n        border-left: 4px solid var(--fd-focus, #0b66d4);\n        color: var(--fd-ink, #10243e);\n      }·\n      .ai-app-ghost {\n        background: var(--fd-paper, #fff);\n        border: 1px solid var(--fd-line, #d6e0e8);\n        border-radius: 10px;\n        color: var(--fd-ink, #10243e);\n        cursor: pointer;\n        font-size: 12px;\n        font-weight: 700;\n        padding: 8px 11px;\n      }·\n      .ai-app-threes,\n      .ai-app-fours {\n        display: grid;\n        gap: 15px;\n        list-style: none;\n        margin: 0;\n        padding: 0;\n      }·\n      .ai-app-threes {\n        grid-template-columns: repeat(3, minmax(0, 1fr));\n      }·\n      .ai-app-fours {\n        grid-template-columns: repeat(4, minmax(0, 1fr));\n      }·\n      .ai-app-split {\n        display: grid;\n        gap: 16px;\n        grid-template-columns: 1.1fr 0.9fr;\n      }\n    }·\n    @media (max-width: 1050px) {\n      .ai-view--app {\n        .ai-app-threes,\n        .ai-app-fours {\n          grid-template-columns: repeat(2, minmax(0, 1fr));\n        }·\n        .ai-app-split {\n          grid-template-columns: minmax(0, 1fr);\n        }\n      }\n    }·\n    @media (max-width: 720px) {\n      .ai-view--app {\n        .ai-app-threes,\n        .ai-app-fours {\n          grid-template-columns: minmax(0, 1fr);\n        }·\n        .ai-app-head-title {\n          font-size: 19px;\n        }\n      }\n    }·\n    .ai-view--app.ai-view--narrow {\n      .ai-app-threes,\n      .ai-app-fours,\n      .ai-app-split {\n        grid-template-columns: minmax(0, 1fr);\n      }\n    }·\n    // Chrome and the first screen. The nav is pinned to the top of the scroll with a frosted backing, as the reference\n    // draws it; the offset keeps it clear of the host page's own command bar rather than fighting it for z-index.\n    .ai-view--app {\n      .ai-app-top {\n        align-items: center;\n        display: flex;\n        flex-wrap: wrap;\n        gap: 16px;\n        justify-content: space-between;\n        min-height: 68px;\n        padding: 8px 0 14px;\n      }·\n      .ai-app-brand {\n        align-items: center;\n        display: flex;\n        gap: 14px;\n      }·\n      // Drawn rather than loaded: a gradient square with an arc cut from it, so there is no image request.\n      .ai-app-mark {\n        background: linear-gradient(135deg, var(--fd-hero-glow, #edf8f8), var(--fd-accent, #087f83) 52%, var(--fd-ink, #10243e));\n        border-radius: 12px;\n        box-shadow: 0 8px 18px rgba(4, 42, 70, 0.23);\n        display: block;\n        height: 38px;\n        position: relative;\n        width: 38px;\n      }·\n      .ai-app-mark::after {\n        border: 2px solid #fff;\n        border-left-color: transparent;\n        border-radius: 50%;\n        content: \\\"\\\";\n        inset: 9px 8px;\n        position: absolute;\n        transform: rotate(-18deg);\n      }·\n      .ai-app-brand-name {\n        color: var(--fd-ink, #10243e);\n        display: block;\n        font-size: 18px;\n        font-weight: 700;\n        letter-spacing: 0.01em;\n      }·\n      .ai-app-brand-note {\n        color: var(--fd-muted, #5b6878);\n        display: block;\n        font-size: 12px;\n        margin: 1px 0 0;\n      }·\n      .ai-app-chips {\n        display: flex;\n        flex-wrap: wrap;\n        gap: 10px;\n      }·\n      .ai-app-chip-line {\n        align-items: center;\n        background: var(--fd-paper, #fff);\n        border: 1px solid var(--fd-line, #d6e0e8);\n        border-radius: 999px;\n        color: var(--fd-muted, #5b6878);\n        display: inline-flex;\n        font-size: 12px;\n        gap: 7px;\n        padding: 7px 12px;\n        white-space: nowrap;\n      }·\n      .ai-app-dot {\n        background: #16845b;\n        border-radius: 50%;\n        height: 8px;\n        width: 8px;\n      }·\n      .ai-app-dot--wait {\n        background: #a55c00;\n      }·\n      .ai-app-tabs {\n        backdrop-filter: blur(14px);\n        background: rgba(255, 255, 255, 0.82);\n        border: 1px solid var(--fd-line, #d6e0e8);\n        border-radius: 14px;\n        box-shadow: 0 8px 20px rgba(4, 42, 70, 0.05);\n        margin: 0 0 20px;\n        padding: 6px;\n        position: sticky;\n        top: 8px;\n        z-index: 3;\n      }·\n      .ai-app-tabrow {\n        border: 0;\n        border-radius: 0;\n        padding: 0;\n        width: 100%;\n      }·\n      .ai-app-tab {\n        border-radius: 9px;\n        font-size: 13px;\n        font-weight: 650;\n        padding: 9px 14px;\n      }·\n      .ai-app-tab--admin {\n        flex: 0 0 auto;\n        margin-left: auto;\n      }·\n      .ai-app-tab[aria-selected=\\\"true\\\"] {\n        box-shadow: 0 4px 10px rgba(6, 42, 70, 0.15);\n      }·\n      .ai-app-first {\n        display: grid;\n        gap: 20px;\n        grid-template-columns: minmax(0, 1.45fr) minmax(320px, 0.55fr);\n        margin: 0 0 18px;\n      }·\n      .ai-app-hero {\n        margin: 0;\n        min-height: 380px;\n        overflow: hidden;\n        padding: 46px;\n        position: relative;\n      }·\n      // The halo the reference sets behind the panel's lower right.\n      .ai-app-hero::after {\n        border: 1px solid rgba(255, 255, 255, 0.13);\n        border-radius: 50%;\n        bottom: -180px;\n        box-shadow: 0 0 0 38px rgba(255, 255, 255, 0.025), 0 0 0 78px rgba(255, 255, 255, 0.02);\n        content: \\\"\\\";\n        height: 430px;\n        position: absolute;\n        right: -120px;\n        width: 430px;\n      }·\n      .ai-app-hero-eyebrow {\n        letter-spacing: 0.16em;\n        position: relative;\n        z-index: 2;\n      }·\n      .ai-app-hero-title {\n        font-size: clamp(38px, 4.4vw, 64px);\n        letter-spacing: -0.045em;\n        line-height: 0.99;\n        margin: 12px 0 16px;\n        max-width: 14ch;\n        position: relative;\n        z-index: 2;\n      }·\n      .ai-app-hero-text {\n        font-size: 17px;\n        margin: 0 0 24px;\n        position: relative;\n        z-index: 2;\n      }·\n      .ai-app-command {\n        display: block;\n        margin: 0;\n        max-width: 780px;\n        position: relative;\n        z-index: 2;\n      }·\n      .ai-app-command-label {\n        clip: rect(0, 0, 0, 0);\n        height: 1px;\n        margin: -1px;\n        overflow: hidden;\n        padding: 0;\n        position: absolute;\n        white-space: nowrap;\n        width: 1px;\n      }·\n      .ai-app-command-row {\n        background: var(--fd-paper, #fff);\n        border-radius: 16px;\n        box-shadow: 0 16px 36px rgba(0, 0, 0, 0.16);\n        display: flex;\n        flex-wrap: wrap;\n        gap: 10px;\n        padding: 8px;\n      }·\n      .ai-app-command-input {\n        border: 0;\n        border-radius: 11px;\n        color: var(--fd-ink, #10243e);\n        flex: 1 1 260px;\n        font-size: 16px;\n        min-width: 0;\n        padding: 13px 14px;\n      }·\n      .ai-app-hero-micro {\n        color: rgba(255, 255, 255, 0.82);\n        font-size: 12px;\n        margin: 12px 0 0;\n        position: relative;\n        z-index: 2;\n      }·\n      .ai-app-first-side {\n        display: flex;\n        flex-direction: column;\n        gap: 14px;\n      }·\n      .ai-app-choices {\n        margin: 0 0 26px;\n      }·\n      .ai-app-foot {\n        border-top: 1px solid var(--fd-line, #d6e0e8);\n        color: var(--fd-muted, #5b6878);\n        display: flex;\n        flex-wrap: wrap;\n        font-size: 11px;\n        gap: 16px;\n        justify-content: space-between;\n        margin: 32px 0 0;\n        padding: 18px 0 0;\n      }\n    }·\n    @media (max-width: 1050px) {\n      .ai-view--app {\n        .ai-app-first {\n          grid-template-columns: minmax(0, 1fr);\n        }\n      }\n    }·\n    @media (max-width: 720px) {\n      .ai-view--app {\n        .ai-app-hero {\n          padding: 30px 22px;\n          min-height: 340px;\n        }·\n        .ai-app-top {\n          padding: 6px 0 12px;\n        }·\n        .ai-app-tabs {\n          position: static;\n        }\n      }\n    }·\n    .ai-view--app.ai-view--narrow {\n      .ai-app-first {\n        grid-template-columns: minmax(0, 1fr);\n      }·\n      .ai-app-tabs {\n        position: static;\n      }\n    }·\n    // A person's own requests. The list is the front door's own, reused unchanged, but the rules that made each row a\n    // card are scoped to the page view it was written for, so inside this view it arrived as bare lines of text - the\n    // one screen holding real records looking the least finished of the seven. These give it the kit's surface. They\n    // are scoped to the section rather than to the class, so the legacy screens are untouched.\n    .ai-view--app {\n      .ai-app-cases .ai-page-mywork-title {\n        color: var(--fd-ink, #10243e);\n        font-size: 18px;\n        font-weight: 700;\n        margin: 0 0 10px;\n      }·\n      .ai-app-cases .ai-page-mywork-list {\n        display: grid;\n        gap: 12px;\n        margin: 0;\n      }·\n      .ai-app-cases .ai-mywork-row {\n        background: var(--fd-paper, #fff);\n        border: 1px solid var(--fd-line, #d6e0e8);\n        border-radius: 14px;\n        box-shadow: 0 1px 2px rgba(16, 36, 62, 0.05);\n        padding: 16px 18px;\n      }·\n      .ai-app-cases .ai-mywork-head {\n        align-items: center;\n        display: flex;\n        flex-wrap: wrap;\n        gap: 8px 12px;\n        margin: 0 0 6px;\n      }·\n      .ai-app-cases .ai-mywork-label {\n        color: var(--fd-ink, #10243e);\n        font-size: 16px;\n        font-weight: 600;\n      }·\n      .ai-app-cases .ai-mywork-reference,\n      .ai-app-cases .ai-mywork-dates {\n        color: var(--fd-muted, #5b6878);\n        font-size: 13px;\n        margin: 2px 0 0;\n      }·\n      .ai-app-cases .ai-mywork-key {\n        margin: 0 6px 0 0;\n      }·\n      .ai-app-cases .ai-mywork-row code {\n        background: var(--fd-soft, #e5ebf0);\n        border-radius: 6px;\n        color: var(--fd-ink, #10243e);\n        font-family: consolas, menlo, monospace;\n        font-size: 13px;\n        padding: 1px 6px;\n      }·\n      .ai-app-cases .ai-mywork-note {\n        color: var(--fd-muted, #5b6878);\n        margin: 0;\n      }\n    }·\n    // The first screen names itself inside the entry panel, so its section heading is there for a reader and a focus\n    // target only. It still takes focus on a section change, which is why it is offset rather than removed.\n    .ai-view--app .ai-app-heading--quiet {\n      clip: rect(0, 0, 0, 0);\n      height: 1px;\n      margin: -1px;\n      overflow: hidden;\n      padding: 0;\n      position: absolute;\n      white-space: nowrap;\n      width: 1px;\n    }·\n    // Workspace and mode chrome: layout only. Colour stays on the existing kit tokens, so the palette map does not grow.\n    .ai-view--app .ai-app-modes {\n      display: flex;\n      flex-wrap: wrap;\n      gap: 8px;\n      margin: 0 0 16px;\n    }·\n    .ai-view--app .ai-app-mode {\n      min-height: 40px;\n    }·\n    .ai-view--app .ai-app-mode--on {\n      font-weight: 600;\n    }·\n    .ai-view--app .ai-app-textarea,\n    .ai-view--app .ai-app-workspace .ai-app-command-input {\n      width: 100%;\n      max-width: 40rem;\n    }·\n    .ai-view--app .ai-app-records {\n      list-style: none;\n      margin: 0;\n      padding: 0;\n    }·\n    .ai-view--app .ai-app-record {\n      display: block;\n      text-align: left;\n      width: 100%;\n    }·\n    .ai-view--app .ai-app-foot-support {\n      display: block;\n    }\n    \"\n\n    \u001b[0m \u001b[90m 21 |\u001b[39m     expect(row\u001b[33m?\u001b[39m\u001b[33m.\u001b[39mclosest(\u001b[32m'.ai-workflow-shell'\u001b[39m))\u001b[33m.\u001b[39mtoBeNull()\u001b[33m;\u001b[39m\n     \u001b[90m 22 |\u001b[39m     \u001b[36mconst\u001b[39m styles \u001b[33m=\u001b[39m fs\u001b[33m.\u001b[39mreadFileSync(path\u001b[33m.\u001b[39mjoin(process\u001b[33m.\u001b[39mcwd()\u001b[33m,\u001b[39m \u001b[32m'src/webparts/aiCoeFrontDoor/styles/appShell.global.scss'\u001b[39m)\u001b[33m,\u001b[39m \u001b[32m'utf8'\u001b[39m)\u001b[33m;\u001b[39m\n    \u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 23 |\u001b[39m     expect(styles)\u001b[33m.\u001b[39mtoMatch(\u001b[35m/\\.ai-app-starters--spaced\\s*\\{[^}]*padding-top:\\s*24px;/\u001b[39m)\u001b[33m;\u001b[39m\n     \u001b[90m    |\u001b[39m                    \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n     \u001b[90m 24 |\u001b[39m   })\u001b[33m;\u001b[39m\n     \u001b[90m 25 |\u001b[39m\n     \u001b[90m 26 |\u001b[39m\u001b[0m\n\n      at Object.<anonymous> (src/webparts/aiCoeFrontDoor/components/app/AppSections.test.tsx:23:20)\n"
+    },
+    {
+      "leaks": false,
+      "numFailingTests": 0,
+      "numPassingTests": 0,
+      "numPendingTests": 9,
+      "numTodoTests": 0,
+      "openHandles": [],
+      "perfStats": {
+        "end": 1790283863264,
+        "loadTestEnvironmentEnd": 1790283863161,
+        "loadTestEnvironmentStart": 1790283863155,
+        "runtime": 103,
+        "setupAfterEnvEnd": 1790283863247,
+        "setupAfterEnvStart": 1790283863203,
+        "setupFilesEnd": 1790283863161,
+        "setupFilesStart": 1790283863161,
+        "slow": false,
+        "start": 1790283863161
+      },
+      "skipped": true,
+      "snapshot": {
+        "added": 0,
+        "fileDeleted": false,
+        "matched": 0,
+        "unchecked": 0,
+        "uncheckedKeys": [],
+        "unmatched": 0,
+        "updated": 0
+      },
+      "testFilePath": "C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-audit-fixes\\src\\webparts\\aiCoeFrontDoor\\services\\authorization.test.ts",
+      "testResults": [
+        {
+          "ancestorTitles": [
+            "capability gate"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "capability gate lets everyone signed in do their own work",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790283863264,
+          "status": "pending",
+          "title": "lets everyone signed in do their own work"
+        },
+        {
+          "ancestorTitles": [
+            "capability gate"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "capability gate refuses the operator surfaces to an employee, and says so without naming a group or a role",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790283863264,
+          "status": "pending",
+          "title": "refuses the operator surfaces to an employee, and says so without naming a group or a role"
+        },
+        {
+          "ancestorTitles": [
+            "capability gate"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "capability gate gives the measured view to a leader and to an operator, and the queue only to an operator",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790283863264,
+          "status": "pending",
+          "title": "gives the measured view to a leader and to an operator, and the queue only to an operator"
+        },
+        {
+          "ancestorTitles": [
+            "capability gate"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "capability gate fails closed while the membership is unresolved, however many roles the resolution claims",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790283863264,
+          "status": "pending",
+          "title": "fails closed while the membership is unresolved, however many roles the resolution claims"
+        },
+        {
+          "ancestorTitles": [
+            "capability gate"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "capability gate never calls the service when the capability is refused",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790283863264,
+          "status": "pending",
+          "title": "never calls the service when the capability is refused"
+        },
+        {
+          "ancestorTitles": [
+            "capability gate"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "capability gate calls the service exactly once when the capability is allowed, and hands its answer back untouched",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790283863264,
+          "status": "pending",
+          "title": "calls the service exactly once when the capability is allowed, and hands its answer back untouched"
+        },
+        {
+          "ancestorTitles": [
+            "capability gate"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "capability gate opens Marketing drafting to the bounded participant role and the two local walkthrough roles, never to an employee or a leader",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790283863264,
+          "status": "pending",
+          "title": "opens Marketing drafting to the bounded participant role and the two local walkthrough roles, never to an employee or a leader"
+        },
+        {
+          "ancestorTitles": [
+            "capability gate"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "capability gate holds the Marketing review decision to the Marketing reviewer alone: a platform role is not a business approval",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790283863264,
+          "status": "pending",
+          "title": "holds the Marketing review decision to the Marketing reviewer alone: a platform role is not a business approval"
+        },
+        {
+          "ancestorTitles": [
+            "capability gate"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "capability gate declares a role list for every capability, so a new one cannot default to open",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790283863264,
+          "status": "pending",
+          "title": "declares a role list for every capability, so a new one cannot default to open"
+        }
+      ],
+      "failureMessage": null
+    },
+    {
+      "leaks": false,
+      "numFailingTests": 0,
+      "numPassingTests": 0,
+      "numPendingTests": 7,
+      "numTodoTests": 0,
+      "openHandles": [],
+      "perfStats": {
+        "end": 1790283863512,
+        "loadTestEnvironmentEnd": 1790283863274,
+        "loadTestEnvironmentStart": 1790283863267,
+        "runtime": 237,
+        "setupAfterEnvEnd": 1790283863382,
+        "setupAfterEnvStart": 1790283863307,
+        "setupFilesEnd": 1790283863275,
+        "setupFilesStart": 1790283863275,
+        "slow": false,
+        "start": 1790283863275
+      },
+      "skipped": true,
+      "snapshot": {
+        "added": 0,
+        "fileDeleted": false,
+        "matched": 0,
+        "unchecked": 0,
+        "uncheckedKeys": [],
+        "unmatched": 0,
+        "updated": 0
+      },
+      "testFilePath": "C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-audit-fixes\\src\\webparts\\aiCoeFrontDoor\\services\\gatedServices.test.ts",
+      "testResults": [
+        {
+          "ancestorTitles": [
+            "gated service facades"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "gated service facades refuses the measures read to an employee without calling the service, in the service's own denied shape",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790283863511,
+          "status": "pending",
+          "title": "refuses the measures read to an employee without calling the service, in the service's own denied shape"
+        },
+        {
+          "ancestorTitles": [
+            "gated service facades"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "gated service facades refuses every protected read while the membership is unresolved, whatever roles it claims",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790283863511,
+          "status": "pending",
+          "title": "refuses every protected read while the membership is unresolved, whatever roles it claims"
+        },
+        {
+          "ancestorTitles": [
+            "gated service facades"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "gated service facades lets a leader read the measures once and still refuses the operator surfaces",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790283863511,
+          "status": "pending",
+          "title": "lets a leader read the measures once and still refuses the operator surfaces"
+        },
+        {
+          "ancestorTitles": [
+            "gated service facades"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "gated service facades passes every operator read through exactly once, untouched",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790283863511,
+          "status": "pending",
+          "title": "passes every operator read through exactly once, untouched"
+        },
+        {
+          "ancestorTitles": [
+            "gated service facades"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "gated service facades leaves a person's own writes open, so an unconfirmed membership never blocks their own work",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790283863511,
+          "status": "pending",
+          "title": "leaves a person's own writes open, so an unconfirmed membership never blocks their own work"
+        },
+        {
+          "ancestorTitles": [
+            "gated service facades"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "gated service facades keeps an absent measures service absent rather than inventing one",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790283863511,
+          "status": "pending",
+          "title": "keeps an absent measures service absent rather than inventing one"
+        },
+        {
+          "ancestorTitles": [
+            "gated service facades"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "gated service facades never names a group, a role or a list in the refusal",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790283863511,
+          "status": "pending",
+          "title": "never names a group, a role or a list in the refusal"
+        }
+      ],
+      "failureMessage": null
+    },
+    {
+      "leaks": false,
+      "numFailingTests": 0,
+      "numPassingTests": 0,
+      "numPendingTests": 3,
+      "numTodoTests": 0,
+      "openHandles": [],
+      "perfStats": {
+        "end": 1790283863736,
+        "loadTestEnvironmentEnd": 1790283863521,
+        "loadTestEnvironmentStart": 1790283863515,
+        "runtime": 215,
+        "setupAfterEnvEnd": 1790283863616,
+        "setupAfterEnvStart": 1790283863554,
+        "setupFilesEnd": 1790283863522,
+        "setupFilesStart": 1790283863521,
+        "slow": false,
+        "start": 1790283863521
+      },
+      "skipped": true,
+      "snapshot": {
+        "added": 0,
+        "fileDeleted": false,
+        "matched": 0,
+        "unchecked": 0,
+        "uncheckedKeys": [],
+        "unmatched": 0,
+        "updated": 0
+      },
+      "testFilePath": "C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-audit-fixes\\src\\webparts\\aiCoeFrontDoor\\components\\app\\AppMarketingWorkspace.test.tsx",
+      "testResults": [
+        {
+          "ancestorTitles": [
+            "AppMarketingWorkspace review boundaries"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppMarketingWorkspace review boundaries keeps one synthetic warning banner without repeating the service label as plain text",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790283863736,
+          "status": "pending",
+          "title": "keeps one synthetic warning banner without repeating the service label as plain text"
+        },
+        {
+          "ancestorTitles": [
+            "AppMarketingWorkspace review boundaries"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppMarketingWorkspace review boundaries creates a meaningful objective correction as a new revision after changes are requested",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790283863736,
+          "status": "pending",
+          "title": "creates a meaningful objective correction as a new revision after changes are requested"
+        },
+        {
+          "ancestorTitles": [
+            "AppMarketingWorkspace review boundaries"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppMarketingWorkspace review boundaries does not offer participant-to-reviewer switching or a decision without the service capability",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790283863736,
+          "status": "pending",
+          "title": "does not offer participant-to-reviewer switching or a decision without the service capability"
+        }
+      ],
+      "failureMessage": null
+    },
+    {
+      "leaks": false,
+      "numFailingTests": 0,
+      "numPassingTests": 0,
+      "numPendingTests": 2,
+      "numTodoTests": 0,
+      "openHandles": [],
+      "perfStats": {
+        "end": 1790283863937,
+        "loadTestEnvironmentEnd": 1790283863756,
+        "loadTestEnvironmentStart": 1790283863739,
+        "runtime": 180,
+        "setupAfterEnvEnd": 1790283863829,
+        "setupAfterEnvStart": 1790283863791,
+        "setupFilesEnd": 1790283863758,
+        "setupFilesStart": 1790283863757,
+        "slow": false,
+        "start": 1790283863757
+      },
+      "skipped": true,
+      "snapshot": {
+        "added": 0,
+        "fileDeleted": false,
+        "matched": 0,
+        "unchecked": 0,
+        "uncheckedKeys": [],
+        "unmatched": 0,
+        "updated": 0
+      },
+      "testFilePath": "C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-audit-fixes\\src\\webparts\\aiCoeFrontDoor\\components\\app\\AppShell.cases.test.tsx",
+      "testResults": [
+        {
+          "ancestorTitles": [
+            "Cases unsaved navigation wiring"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "Cases unsaved navigation wiring blocks pointer navigation, gives case-specific instructions and stays mounted until a confirmed save",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790283863937,
+          "status": "pending",
+          "title": "blocks pointer navigation, gives case-specific instructions and stays mounted until a confirmed save"
+        },
+        {
+          "ancestorTitles": [
+            "Cases unsaved navigation wiring"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "Cases unsaved navigation wiring guards keyboard and unload until explicit discard, without deleting a saved draft",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790283863937,
+          "status": "pending",
+          "title": "guards keyboard and unload until explicit discard, without deleting a saved draft"
+        }
+      ],
+      "failureMessage": null
+    },
+    {
+      "leaks": false,
+      "numFailingTests": 0,
+      "numPassingTests": 0,
+      "numPendingTests": 12,
+      "numTodoTests": 0,
+      "openHandles": [],
+      "perfStats": {
+        "end": 1790283864081,
+        "loadTestEnvironmentEnd": 1790283863945,
+        "loadTestEnvironmentStart": 1790283863939,
+        "runtime": 136,
+        "setupAfterEnvEnd": 1790283864008,
+        "setupAfterEnvStart": 1790283863973,
+        "setupFilesEnd": 1790283863945,
+        "setupFilesStart": 1790283863945,
+        "slow": false,
+        "start": 1790283863945
+      },
+      "skipped": true,
+      "snapshot": {
+        "added": 0,
+        "fileDeleted": false,
+        "matched": 0,
+        "unchecked": 0,
+        "uncheckedKeys": [],
+        "unmatched": 0,
+        "updated": 0
+      },
+      "testFilePath": "C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-audit-fixes\\src\\webparts\\aiCoeFrontDoor\\components\\app\\AppValue.test.tsx",
+      "testResults": [
+        {
+          "ancestorTitles": [
+            "AppValue evidence gate"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppValue evidence gate withholds a number without current evidence, a valid period and privacy metadata: {}",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790283864081,
+          "status": "pending",
+          "title": "withholds a number without current evidence, a valid period and privacy metadata: {}"
+        },
+        {
+          "ancestorTitles": [
+            "AppValue evidence gate"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppValue evidence gate withholds a number without current evidence, a valid period and privacy metadata: {\"evidenceRef\":\" \"}",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790283864081,
+          "status": "pending",
+          "title": "withholds a number without current evidence, a valid period and privacy metadata: {\"evidenceRef\":\" \"}"
+        },
+        {
+          "ancestorTitles": [
+            "AppValue evidence gate"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppValue evidence gate withholds a number without current evidence, a valid period and privacy metadata: {}",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790283864081,
+          "status": "pending",
+          "title": "withholds a number without current evidence, a valid period and privacy metadata: {}"
+        },
+        {
+          "ancestorTitles": [
+            "AppValue evidence gate"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppValue evidence gate withholds a number without current evidence, a valid period and privacy metadata: {}",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790283864081,
+          "status": "pending",
+          "title": "withholds a number without current evidence, a valid period and privacy metadata: {}"
+        },
+        {
+          "ancestorTitles": [
+            "AppValue evidence gate"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppValue evidence gate withholds a number without current evidence, a valid period and privacy metadata: {\"periodStart\":\"2026-09-23\"}",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790283864081,
+          "status": "pending",
+          "title": "withholds a number without current evidence, a valid period and privacy metadata: {\"periodStart\":\"2026-09-23\"}"
+        },
+        {
+          "ancestorTitles": [
+            "AppValue evidence gate"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppValue evidence gate withholds a number without current evidence, a valid period and privacy metadata: {\"periodEnd\":\"2026-09-24\"}",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790283864081,
+          "status": "pending",
+          "title": "withholds a number without current evidence, a valid period and privacy metadata: {\"periodEnd\":\"2026-09-24\"}"
+        },
+        {
+          "ancestorTitles": [
+            "AppValue evidence gate"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppValue evidence gate withholds a number without current evidence, a valid period and privacy metadata: {\"periodStart\":\"2026-08-01\",\"periodEnd\":\"2026-08-10\"}",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790283864081,
+          "status": "pending",
+          "title": "withholds a number without current evidence, a valid period and privacy metadata: {\"periodStart\":\"2026-08-01\",\"periodEnd\":\"2026-08-10\"}"
+        },
+        {
+          "ancestorTitles": [
+            "AppValue evidence gate"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppValue evidence gate withholds a number without current evidence, a valid period and privacy metadata: {}",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790283864081,
+          "status": "pending",
+          "title": "withholds a number without current evidence, a valid period and privacy metadata: {}"
+        },
+        {
+          "ancestorTitles": [
+            "AppValue evidence gate"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppValue evidence gate withholds a number without current evidence, a valid period and privacy metadata: {\"cohortSize\":null}",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790283864081,
+          "status": "pending",
+          "title": "withholds a number without current evidence, a valid period and privacy metadata: {\"cohortSize\":null}"
+        },
+        {
+          "ancestorTitles": [
+            "AppValue evidence gate"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppValue evidence gate withholds a number without current evidence, a valid period and privacy metadata: {\"value\":null}",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790283864081,
+          "status": "pending",
+          "title": "withholds a number without current evidence, a valid period and privacy metadata: {\"value\":null}"
+        },
+        {
+          "ancestorTitles": [
+            "AppValue evidence gate"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppValue evidence gate shows the recorded measure with evidence AND period, without calling the value verified",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790283864081,
+          "status": "pending",
+          "title": "shows the recorded measure with evidence AND period, without calling the value verified"
+        },
+        {
+          "ancestorTitles": [
+            "AppValue evidence gate"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppValue evidence gate suppresses a sensitive small cohort even if its row claims to be measured",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790283864081,
+          "status": "pending",
+          "title": "suppresses a sensitive small cohort even if its row claims to be measured"
+        }
+      ],
+      "failureMessage": null
+    },
+    {
+      "leaks": false,
+      "numFailingTests": 0,
+      "numPassingTests": 0,
+      "numPendingTests": 1,
+      "numTodoTests": 0,
+      "openHandles": [],
+      "perfStats": {
+        "end": 1790283864234,
+        "loadTestEnvironmentEnd": 1790283864087,
+        "loadTestEnvironmentStart": 1790283864082,
+        "runtime": 146,
+        "setupAfterEnvEnd": 1790283864149,
+        "setupAfterEnvStart": 1790283864114,
+        "setupFilesEnd": 1790283864088,
+        "setupFilesStart": 1790283864088,
+        "slow": false,
+        "start": 1790283864088
+      },
+      "skipped": true,
+      "snapshot": {
+        "added": 0,
+        "fileDeleted": false,
+        "matched": 0,
+        "unchecked": 0,
+        "uncheckedKeys": [],
+        "unmatched": 0,
+        "updated": 0
+      },
+      "testFilePath": "C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-audit-fixes\\src\\webparts\\aiCoeFrontDoor\\components\\app\\AppMarketing.uat.test.tsx",
+      "testResults": [
+        {
+          "ancestorTitles": [],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "adds bottom padding around the labelled demonstration cards without changing their actions",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790283864234,
+          "status": "pending",
+          "title": "adds bottom padding around the labelled demonstration cards without changing their actions"
+        }
+      ],
+      "failureMessage": null
+    }
+  ],
+  "wasInterrupted": false
+}

@@ -1,0 +1,150 @@
+{
+  "kind": "marketing-provisioning-local-verification.v1",
+  "phase": "red-readback-boundaries",
+  "scope": "Offline process-local fake PnP; local installed command metadata only",
+  "nativeCalls": 0,
+  "tenantApplied": false,
+  "qualified": false,
+  "enabled": false,
+  "sourceHashes": "source-hashes.json",
+  "results": [
+    {
+      "name": "independent",
+      "command": [
+        "/mnt/c/Program Files/PowerShell/7/pwsh.exe",
+        "-NoProfile",
+        "-NonInteractive",
+        "-File",
+        "C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-audit-fixes\\tests\\provisioning\\Run-IndependentTests.ps1",
+        "-Case",
+        "all"
+      ],
+      "startedAt": "2026-09-24T13:42:08.940661+00:00",
+      "durationSeconds": 1.757,
+      "exitCode": 1,
+      "passed": false,
+      "summary": {
+        "status": "FAIL",
+        "checks": 16,
+        "failed": 4,
+        "scope": "Independent offline fake PnP fault injection",
+        "qualified": false,
+        "cases": [
+          {
+            "name": "group-drift",
+            "status": "PASS",
+            "observation": "Group/principal drift since preflight; stop and reconcile without changing membership.",
+            "requesterGranted": false,
+            "fakeWrites": 28
+          },
+          {
+            "name": "group-drift-after-grant",
+            "status": "PASS",
+            "observation": "Group/principal drift since preflight; stop and reconcile without changing membership.",
+            "requesterGranted": true,
+            "fakeWrites": 29
+          },
+          {
+            "name": "app-only",
+            "status": "PASS",
+            "observation": "Existing delegated interactive/device PnP session required; app-only, raw-token and unknown modes are refused.",
+            "requesterGranted": false,
+            "fakeWrites": 0
+          },
+          {
+            "name": "unclassified-token",
+            "status": "PASS",
+            "observation": "Existing delegated interactive/device PnP session required; app-only, raw-token and unknown modes are refused.",
+            "requesterGranted": false,
+            "fakeWrites": 0
+          },
+          {
+            "name": "role-id-drift",
+            "status": "FAIL",
+            "observation": "ASSERT: Expected refusal for role-id-drift",
+            "requesterGranted": true,
+            "fakeWrites": 29
+          },
+          {
+            "name": "read-role-drift",
+            "status": "PASS",
+            "observation": "Read role permission drift.",
+            "requesterGranted": false,
+            "fakeWrites": 28
+          },
+          {
+            "name": "wrong-list-url",
+            "status": "FAIL",
+            "observation": "ASSERT: Expected refusal for wrong-list-url",
+            "requesterGranted": true,
+            "fakeWrites": 29
+          },
+          {
+            "name": "own-write-unique",
+            "status": "PASS",
+            "observation": "List configuration readback failed.",
+            "requesterGranted": false,
+            "fakeWrites": 12
+          },
+          {
+            "name": "private-row-after-grant",
+            "status": "FAIL",
+            "observation": "ASSERT: Expected refusal for private-row-after-grant",
+            "requesterGranted": true,
+            "fakeWrites": 29
+          },
+          {
+            "name": "late-canonical-field",
+            "status": "FAIL",
+            "observation": "ASSERT: Requester grant occurred before failed safety check",
+            "requesterGranted": true,
+            "fakeWrites": 29
+          },
+          {
+            "name": "unique-index-drift",
+            "status": "PASS",
+            "observation": "Field schema readback failed.",
+            "requesterGranted": false,
+            "fakeWrites": 12
+          },
+          {
+            "name": "indexed-drift",
+            "status": "PASS",
+            "observation": "Field schema readback failed.",
+            "requesterGranted": false,
+            "fakeWrites": 12
+          },
+          {
+            "name": "required-drift",
+            "status": "PASS",
+            "observation": "Field schema readback failed.",
+            "requesterGranted": false,
+            "fakeWrites": 12
+          },
+          {
+            "name": "field-type-drift",
+            "status": "PASS",
+            "observation": "Field schema readback failed.",
+            "requesterGranted": false,
+            "fakeWrites": 12
+          },
+          {
+            "name": "note-richtext",
+            "status": "PASS",
+            "observation": "Note fields must be plain non-append text.",
+            "requesterGranted": false,
+            "fakeWrites": 12
+          },
+          {
+            "name": "note-appendonly",
+            "status": "PASS",
+            "observation": "Note fields must be plain non-append text.",
+            "requesterGranted": false,
+            "fakeWrites": 12
+          }
+        ]
+      }
+    }
+  ],
+  "allPassed": false
+}

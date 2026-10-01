@@ -1,0 +1,136 @@
+{
+  "numFailedTestSuites": 0,
+  "numFailedTests": 0,
+  "numPassedTestSuites": 1,
+  "numPassedTests": 4,
+  "numPendingTestSuites": 0,
+  "numPendingTests": 0,
+  "numRuntimeErrorTestSuites": 0,
+  "numTodoTests": 0,
+  "numTotalTestSuites": 1,
+  "numTotalTests": 4,
+  "openHandles": [],
+  "snapshot": {
+    "added": 0,
+    "didUpdate": false,
+    "failure": false,
+    "filesAdded": 0,
+    "filesRemoved": 0,
+    "filesRemovedList": [],
+    "filesUnmatched": 0,
+    "filesUpdated": 0,
+    "matched": 0,
+    "total": 0,
+    "unchecked": 0,
+    "uncheckedKeysByFile": [],
+    "unmatched": 0,
+    "updated": 0
+  },
+  "startTime": 1790172877913,
+  "success": true,
+  "testResults": [
+    {
+      "leaks": false,
+      "numFailingTests": 0,
+      "numPassingTests": 4,
+      "numPendingTests": 0,
+      "numTodoTests": 0,
+      "openHandles": [],
+      "perfStats": {
+        "end": 1790172878174,
+        "loadTestEnvironmentEnd": 1790172877971,
+        "loadTestEnvironmentStart": 1790172877930,
+        "runtime": 202,
+        "setupAfterEnvEnd": 1790172878106,
+        "setupAfterEnvStart": 1790172878106,
+        "setupFilesEnd": 1790172877972,
+        "setupFilesStart": 1790172877972,
+        "slow": false,
+        "start": 1790172877972
+      },
+      "skipped": false,
+      "snapshot": {
+        "added": 0,
+        "fileDeleted": false,
+        "matched": 0,
+        "unchecked": 0,
+        "uncheckedKeys": [],
+        "unmatched": 0,
+        "updated": 0
+      },
+      "testFilePath": "C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-audit-fixes\\src\\provisioning\\onePageDefinition.test.ts",
+      "testResults": [
+        {
+          "ancestorTitles": [
+            "one-page additive app definition"
+          ],
+          "duration": 3,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "one-page additive app definition leaves the sixteen-page definition with zero app instances",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 2,
+          "retryReasons": [],
+          "startAt": 1790172878166,
+          "status": "passed",
+          "title": "leaves the sixteen-page definition with zero app instances"
+        },
+        {
+          "ancestorTitles": [
+            "one-page additive app definition"
+          ],
+          "duration": 1,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "one-page additive app definition declares exactly one view:app instance on an explicit page file token",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 5,
+          "retryReasons": [],
+          "startAt": 1790172878170,
+          "status": "passed",
+          "title": "declares exactly one view:app instance on an explicit page file token"
+        },
+        {
+          "ancestorTitles": [
+            "one-page additive app definition"
+          ],
+          "duration": 1,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "one-page additive app definition exposes optional host bindings without activating drafts, CORE or Marketing",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 8,
+          "retryReasons": [],
+          "startAt": 1790172878171,
+          "status": "passed",
+          "title": "exposes optional host bindings without activating drafts, CORE or Marketing"
+        },
+        {
+          "ancestorTitles": [
+            "one-page additive app definition"
+          ],
+          "duration": 1,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "one-page additive app definition offers dry-run and binding checks and refuses Overwrite, QuickLaunch replacement and implicit apply",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 7,
+          "retryReasons": [],
+          "startAt": 1790172878172,
+          "status": "passed",
+          "title": "offers dry-run and binding checks and refuses Overwrite, QuickLaunch replacement and implicit apply"
+        }
+      ],
+      "failureMessage": null
+    }
+  ],
+  "wasInterrupted": false
+}

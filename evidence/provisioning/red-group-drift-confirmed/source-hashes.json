@@ -1,0 +1,18 @@
+{
+  "backend/marketing-native/provisioning/ConvertTo-MarketingRecordPlan.ps1": "95382d528e3e99cec47980cd7c27bfb41c1baa882189df2df58909aa5c97e8b7",
+  "backend/marketing-native/provisioning/New-MarketingBootstrap.ps1": "eee46206ff59d6fc3e08b58eb4980de29a5b82600e5762cac2027027c3bcbf31",
+  "backend/marketing-native/provisioning/New-MarketingLists.ps1": "d44df48290326bdb82e5f8acc0a65cfe1c576152cae412c2ed76098979243786",
+  "backend/marketing-native/provisioning/ProvisioningReceipt.ps1": "6317477378ec1e6c1fcf66080b38ac26fdd168c6582b8999985cf377b922ae80",
+  "backend/marketing-native/provisioning/README.md": "42406305ac545ee68b2e0581f4fb7bfa23ceb22ff2c89f47ca323212cb2f8280",
+  "backend/marketing-native/provisioning/RETENTION-COMMISSIONING.md": "2fc3aedd010265e732b8a7b38d8f8de3baaa080de2679e6861746d25a1030728",
+  "backend/marketing-native/provisioning/controlled-inputs.schema.json": "a1a3c901a22d42d29202d89b4a9c4988309a9557cb487aba4d8812b16686c817",
+  "backend/marketing-native/provisioning/marketing.v1.lists.json": "690903876bf650bacaf33436620cf99ef26386a8c44748e9b31cae4df3ad6b25",
+  "backend/marketing-native/provisioning/operator-binding.template.psd1": "17e1bdf0939127e7d070bc533ba313f86abefcb7b2ab4c7a34bf04bf6d99b04e",
+  "tests/provisioning/Check-NativeSurface.ps1": "a3f92b7839add8c6b2b3be99ae6f6e2229edccfefe99e47b5b2dbbe9a5fe6a4f",
+  "tests/provisioning/Fake-PnP.ps1": "07ba2623d5a213f7256fec7488f47429ac469ce5894e6de20b6031ea96da919a",
+  "tests/provisioning/Run-BootstrapTests.ps1": "4c5d8c0f3288385071773112eb618fbaed1505570a3557e4132e4a0d935e83e0",
+  "tests/provisioning/Run-IndependentTests.ps1": "515c4563d77d4bc303de64ed7e7d0842a715103281463a629b5b57f29a89db66",
+  "tests/provisioning/Run-ProvisioningTests.ps1": "52aa6c32885d9742bb5d3d792cb1f593b5d0288fd4c56de969e632573468287e",
+  "tests/provisioning/verify.py": "06a925493333d8d871025a317b3635f39219f2d39f48b4a974cc1baac72cd36f",
+  "backend/power-automate/marketing-runtime/provisioning.json": "690903876bf650bacaf33436620cf99ef26386a8c44748e9b31cae4df3ad6b25"
+}

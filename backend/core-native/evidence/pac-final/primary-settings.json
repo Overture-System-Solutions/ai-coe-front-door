@@ -1,0 +1,74 @@
+{
+  "EnvironmentVariables": [
+    {
+      "SchemaName": "aicoe_EnvironmentLabel",
+      "Value": "",
+      "DefaultValue": "Pilot",
+      "Name": {
+        "Default": "aicoe_EnvironmentLabel",
+        "ByLcid": {
+          "1033": "aicoe_EnvironmentLabel"
+        }
+      },
+      "TypeId": 100000000,
+      "Description": {
+        "Default": "Appears in log rows and outbox subjects.",
+        "ByLcid": {
+          "1033": "Appears in log rows and outbox subjects."
+        }
+      },
+      "IsRequired": false
+    },
+    {
+      "SchemaName": "aicoe_NotificationEmail",
+      "Value": "",
+      "DefaultValue": "REPLACE-BEFORE-ENABLING.invalid",
+      "Name": {
+        "Default": "aicoe_NotificationEmail",
+        "ByLcid": {
+          "1033": "aicoe_NotificationEmail"
+        }
+      },
+      "TypeId": 100000000,
+      "Description": {
+        "Default": "Alert address. Invalid on purpose until set.",
+        "ByLcid": {
+          "1033": "Alert address. Invalid on purpose until set."
+        }
+      },
+      "IsRequired": false
+    },
+    {
+      "SchemaName": "aicoe_SiteUrl",
+      "Value": "",
+      "DefaultValue": "https://parkplace.sharepoint.com/sites/AICoE-PrivatePilot",
+      "Name": {
+        "Default": "aicoe_SiteUrl",
+        "ByLcid": {
+          "1033": "aicoe_SiteUrl"
+        }
+      },
+      "TypeId": 100000000,
+      "Description": {
+        "Default": "SharePoint site that hosts the AI CoE lists. Set per environment.",
+        "ByLcid": {
+          "1033": "SharePoint site that hosts the AI CoE lists. Set per environment."
+        }
+      },
+      "IsRequired": false
+    }
+  ],
+  "ConnectionReferences": [
+    {
+      "LogicalName": "aicoe_coreintegrity",
+      "ConnectionId": "",
+      "ConnectorId": "/providers/Microsoft.PowerApps/apis/UNBOUND_CORE_INTEGRITY"
+    },
+    {
+      "LogicalName": "aicoe_sharepointonline",
+      "ConnectionId": "",
+      "ConnectorId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+    }
+  ],
+  "CopilotAgents": []
+}

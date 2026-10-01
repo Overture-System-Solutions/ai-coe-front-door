@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { isExternalHref } from '../../content/links';
 import { parseMarkup } from '../../content/markup';
 import type { MarkupNode } from '../../content/markup';
 import { resolveContentHref } from '../../content/pageContent';
@@ -9,17 +10,12 @@ export interface IMarkupProps {
   text: string;
 }
 
-const ORIGIN: RegExp = /^https?:\/\/[^/]+/i;
-
-function originOf(url: string): string | undefined {
-  const match: RegExpExecArray | null = ORIGIN.exec(url.trim());
-  return match === null ? undefined : match[0].toLowerCase();
-}
-
-/** Anchor attributes for a resolved target: URLs on another origin (Teams, other tenants) open in a new tab. */
+/**
+ * Anchor attributes for a target `resolveContentHref` has already guarded: only the new-tab decision
+ * is made here (URLs on another origin, such as Teams or another tenant, open in a new tab).
+ */
 export function anchorProps(siteUrl: string, href: string): React.AnchorHTMLAttributes<HTMLAnchorElement> {
-  const origin: string | undefined = originOf(href);
-  return origin !== undefined && origin !== originOf(siteUrl) ? { href, target: '_blank', rel: 'noopener noreferrer' } : { href };
+  return isExternalHref(siteUrl, href) ? { href, target: '_blank', rel: 'noopener noreferrer' } : { href };
 }
 
 /** Renders page text with its in-text markup; links resolve against the site. */

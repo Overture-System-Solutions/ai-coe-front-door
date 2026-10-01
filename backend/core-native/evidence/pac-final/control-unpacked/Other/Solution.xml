@@ -1,0 +1,67 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ImportExportXml version="9.2.24084.185" SolutionPackageVersion="9.2" languagecode="1033" generatedBy="CrmLive" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <SolutionManifest>
+    <UniqueName>AICoECoreAutomation</UniqueName>
+    <LocalizedNames>
+      <LocalizedName description="AI CoE Core Automation" languagecode="1033" />
+    </LocalizedNames>
+    <Descriptions>
+      <Description description="AI CoE core automation for the idea-to-business-case MVP: command flow (UI&lt;-&gt;flow contract v0.1.1), evidence &amp; readiness, Markdown projector, notification outbox (ships off), health monitor, provisioning. Records bound to CW-AICOE 3.4.0-rc2 schemas. Every flow imports switched off." languagecode="1033" />
+    </Descriptions>
+    <Version>3.0.0.0</Version>
+    <Managed>0</Managed>
+    <Publisher>
+      <UniqueName>aicoe</UniqueName>
+      <LocalizedNames>
+        <LocalizedName description="AI CoE" languagecode="1033" />
+      </LocalizedNames>
+      <Descriptions />
+      <EMailAddress xsi:nil="true"></EMailAddress>
+      <SupportingWebsiteUrl xsi:nil="true"></SupportingWebsiteUrl>
+      <CustomizationPrefix>aicoe</CustomizationPrefix>
+      <CustomizationOptionValuePrefix>10000</CustomizationOptionValuePrefix>
+      <Addresses>
+        <Address>
+          <AddressNumber>1</AddressNumber>
+          <AddressTypeCode>1</AddressTypeCode>
+          <City xsi:nil="true"></City>
+          <County xsi:nil="true"></County>
+          <Country xsi:nil="true"></Country>
+          <Fax xsi:nil="true"></Fax>
+          <FreightTermsCode xsi:nil="true"></FreightTermsCode>
+          <ImportSequenceNumber xsi:nil="true"></ImportSequenceNumber>
+          <Latitude xsi:nil="true"></Latitude>
+          <Line1 xsi:nil="true"></Line1>
+          <Line2 xsi:nil="true"></Line2>
+          <Line3 xsi:nil="true"></Line3>
+          <Longitude xsi:nil="true"></Longitude>
+          <Name xsi:nil="true"></Name>
+          <PostalCode xsi:nil="true"></PostalCode>
+          <PostOfficeBox xsi:nil="true"></PostOfficeBox>
+          <PrimaryContactName xsi:nil="true"></PrimaryContactName>
+          <ShippingMethodCode>1</ShippingMethodCode>
+          <StateOrProvince xsi:nil="true"></StateOrProvince>
+          <Telephone1 xsi:nil="true"></Telephone1>
+          <Telephone2 xsi:nil="true"></Telephone2>
+          <Telephone3 xsi:nil="true"></Telephone3>
+          <TimeZoneRuleVersionNumber xsi:nil="true"></TimeZoneRuleVersionNumber>
+          <UPSZone xsi:nil="true"></UPSZone>
+          <UTCOffset xsi:nil="true"></UTCOffset>
+          <UTCConversionTimeZoneCode xsi:nil="true"></UTCConversionTimeZoneCode>
+        </Address>
+      </Addresses>
+    </Publisher>
+    <RootComponents>
+      <RootComponent type="29" id="{41303d3c-0cab-5668-8b02-b638fb361ab0}" behavior="0" />
+      <RootComponent type="29" id="{5cff5cdb-41b4-581e-ad63-f7495680e02d}" behavior="0" />
+      <RootComponent type="29" id="{99538ee6-adde-5cac-a8dc-78e2d9f2b417}" behavior="0" />
+      <RootComponent type="29" id="{9c7a7513-4787-5fdc-9c2f-ed9e00ce7b10}" behavior="0" />
+      <RootComponent type="29" id="{aba74eca-505e-5f1d-a3df-f157499e7dbf}" behavior="0" />
+      <RootComponent type="29" id="{bbb2f816-2abe-5216-8fc8-23452056573b}" behavior="0" />
+      <RootComponent type="380" schemaName="aicoe_EnvironmentLabel" behavior="0" />
+      <RootComponent type="380" schemaName="aicoe_NotificationEmail" behavior="0" />
+      <RootComponent type="380" schemaName="aicoe_SiteUrl" behavior="0" />
+    </RootComponents>
+    <MissingDependencies />
+  </SolutionManifest>
+</ImportExportXml>

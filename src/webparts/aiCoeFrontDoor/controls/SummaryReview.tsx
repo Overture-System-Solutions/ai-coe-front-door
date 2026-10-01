@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { usePageViewFlag } from '../context/FrontDoorContext';
 import { ChevronRight, RotateCcw } from '../icons';
 import type { ISummaryField } from '../summaries/types';
 import { visibleSteps } from '../workflows/formEngine';
@@ -7,6 +8,7 @@ import type { IWorkflowDefinition } from '../workflows/types';
 import { answerableSteps } from './AnswerList';
 import { IndicatorsBanner } from './IndicatorsBanner';
 import { OriginalAnswers } from './OriginalAnswers';
+import { StatusPill } from './StatusPill';
 import { SummaryDraftEditor } from './SummaryDraftEditor';
 import { WhatHappensNext } from './WhatHappensNext';
 
@@ -37,7 +39,7 @@ export interface ISummaryReviewProps<TKey extends string> {
   onConfirm: () => void;
 }
 
-/** Editable summary page shared by the idea and team-usage workflows. */
+/** Editable summary page shared by the idea and team-usage workflows; a page view says the summary is a draft only, the legacy screen is unchanged. */
 export function SummaryReview<TKey extends string>({
   workflow,
   copy,
@@ -51,11 +53,17 @@ export function SummaryReview<TKey extends string>({
   onEditAnswer,
   onConfirm
 }: ISummaryReviewProps<TKey>): React.ReactElement {
+  const pageView: boolean = usePageViewFlag();
   const answersChanged: boolean = session.summarySourceSnapshot !== undefined && session.summarySourceSnapshot !== JSON.stringify(session.answers);
   return (
     <div className="space-y-6">
       <div>
         <h2 className="text-xl font-semibold">{copy.heading}</h2>
+        {pageView && (
+          <p className="ai-review-state">
+            <StatusPill state="draftOnly" />
+          </p>
+        )}
         <p className="mt-1.5 text-[15px]" style={{ color: 'var(--color-ink-muted)' }}>
           {copy.intro}
         </p>
@@ -78,7 +86,7 @@ export function SummaryReview<TKey extends string>({
           </p>
         )}
       </div>
-      <OriginalAnswers steps={answerableSteps(visibleSteps(workflow, session.answers))} answers={session.answers} onEdit={onEditAnswer} />
+      <OriginalAnswers steps={answerableSteps(visibleSteps(workflow, session.answers), session.answers)} answers={session.answers} onEdit={onEditAnswer} />
       <WhatHappensNext text={whatHappensNext} />
       <div className="flex flex-wrap gap-3 pt-2">
         <button

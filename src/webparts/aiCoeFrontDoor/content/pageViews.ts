@@ -8,13 +8,28 @@
  *
  * Wording note: this file is scanned for Tailwind utility names; keep prose free of utility words.
  */
-import type { WorkflowId } from '../workflows/types';
-import { WORKFLOW_ORDER } from './workflows/catalog';
+import type { PieceWorkflowId, WorkflowId } from '../workflows/types';
+// The six ids that render a step-by-step piece: the five shipped workflows and the outcome record.
+import { PAGE_WORKFLOWS as PIECE_WORKFLOW_IDS } from './workflows/catalog';
 
-/** `page` renders one page of the content document (see pageContent.ts) chosen by `pageKey`. */
-export type FrontDoorView = 'legacy' | 'home' | WorkflowId | 'telemetry' | 'admin' | 'page';
+/**
+ * `page` renders one page of the content document (see pageContent.ts) chosen by `pageKey`.
+ *
+ * `app` is the consolidated view: the whole experience in one instance with its sections reached by tabs inside
+ * the part, so an ordinary journey needs no second page. It is what a newly added instance gets, and it is a
+ * separate view rather than a change to `legacy` on purpose - `legacy` is pinned screen for screen against the
+ * shipped bundle by the journey parity suite, so it keeps rendering exactly as it always has, and every property
+ * bag written before this release still parses to it.
+ */
+export type FrontDoorView = 'legacy' | 'app' | 'home' | PieceWorkflowId | 'telemetry' | 'admin' | 'page';
 
-export const FRONT_DOOR_VIEWS: readonly FrontDoorView[] = ['legacy', 'home', 'idea', 'toolCheck', 'teamUsage', 'helpTraining', 'feedback', 'telemetry', 'admin', 'page'];
+export const FRONT_DOOR_VIEWS: readonly FrontDoorView[] = ['app', 'legacy', 'home', 'idea', 'toolCheck', 'teamUsage', 'helpTraining', 'feedback', 'telemetry', 'admin', 'page', 'outcome'];
+
+/**
+ * Still `legacy`, and deliberately. This is what an unrecognised or absent property parses to, so it governs old
+ * instances rather than new ones; what a new instance gets is decided by the first toolbox entry, which presets
+ * `app`. Changing this would silently restyle every instance already on a site.
+ */
 export const DEFAULT_FRONT_DOOR_VIEW: FrontDoorView = 'legacy';
 
 function matchIgnoringCase<T extends string>(candidates: readonly T[], value: unknown): T | undefined {
@@ -27,9 +42,9 @@ export function parseFrontDoorView(value: unknown): FrontDoorView {
   return matchIgnoringCase(FRONT_DOOR_VIEWS, value) ?? DEFAULT_FRONT_DOOR_VIEW;
 }
 
-/** True for the five views that render one workflow. */
-export function isWorkflowView(view: FrontDoorView): view is WorkflowId {
-  return WORKFLOW_ORDER.indexOf(view as WorkflowId) >= 0;
+/** True for the six views that walk someone through steps, so none of them takes the home-shell path. */
+export function isWorkflowView(view: FrontDoorView): view is PieceWorkflowId {
+  return PIECE_WORKFLOW_IDS.indexOf(view as PieceWorkflowId) >= 0;
 }
 
 /** How much room the piece has: a wide section, or a narrow column (half or one third of the page). */
@@ -47,7 +62,15 @@ export type PageTarget = WorkflowId | 'telemetry' | 'admin' | 'policy';
 
 export const PAGE_TARGETS: readonly PageTarget[] = ['idea', 'toolCheck', 'teamUsage', 'helpTraining', 'feedback', 'telemetry', 'admin', 'policy'];
 
-export type PageLinks = { [target in PageTarget]?: string };
+/**
+ * Everything a piece can link to: the eight tile targets plus the outcome record, which is a page a home
+ * piece may offer but not one of the tile targets, so `PageTarget` and its property map stay as shipped.
+ */
+export type PageLinkTarget = PageTarget | 'outcome';
+
+export const PAGE_LINK_TARGETS: readonly PageLinkTarget[] = ['idea', 'toolCheck', 'teamUsage', 'helpTraining', 'feedback', 'telemetry', 'admin', 'policy', 'outcome'];
+
+export type PageLinks = { [target in PageLinkTarget]?: string };
 
 /** The raw web part properties behind the page views; all optional because older instances lack them. */
 export interface IPageViewProperties {
@@ -62,6 +85,8 @@ export interface IPageViewProperties {
   pageTelemetry?: string;
   pageAdmin?: string;
   pagePolicy?: string;
+  /** Where the outcome record lives; blank leaves it off the home tiles (decision 16). */
+  pageOutcome?: string;
   /** Which page of the content document a `page` view renders. */
   pageKey?: string;
   /** Site path or URL of the content document; blank means the default in pageContent.ts. */
@@ -127,6 +152,11 @@ export function createPageViewSettings(props: IPageViewProperties, siteUrl: stri
     if (url !== undefined) {
       pages[target] = url;
     }
+  }
+  // The outcome record has its own property: it is a link the home piece may carry, not a tile target.
+  const outcomeUrl: string | undefined = resolvePageUrl(siteUrl, props.pageOutcome);
+  if (outcomeUrl !== undefined) {
+    pages.outcome = outcomeUrl;
   }
   const settings: IPageViewSettings = {
     view: parseFrontDoorView(props.view),

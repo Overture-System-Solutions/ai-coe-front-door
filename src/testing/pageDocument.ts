@@ -1,11 +1,17 @@
 /**
  * A small page content document for tests: every block type, Contoso wording, site paths that
- * resolve against the test site. Test support only: never bundled into the web part.
+ * resolve against the test site, a route table with one open on-site route and one closed route
+ * (no link yet), the work command on that closed route and one tile on it. Test support only:
+ * never bundled into the web part.
  */
 import type { IPageDocument } from '../webparts/aiCoeFrontDoor/content/pageContent';
 
 export const SAMPLE_PAGE_DOCUMENT: IPageDocument = {
   version: 1,
+  routes: {
+    guidedIntake: { key: 'guidedIntake', label: 'Start a guided request', href: 'SitePages/Explore-an-AI-idea.aspx', state: 'availableNow' },
+    work: { key: 'work', label: 'Get work done', note: 'Not yet proved at Contoso; the guided request opens instead.' }
+  },
   pages: {
     startHere: {
       title: 'Start here',
@@ -16,10 +22,19 @@ export const SAMPLE_PAGE_DOCUMENT: IPageDocument = {
           text: 'Ask the AI CoE in [Teams](https://teams.microsoft.com/l/channel/contoso) or [start a request](SitePages/Requests.aspx).',
           cta: { label: 'Start a request', href: 'SitePages/Requests.aspx' }
         },
+        {
+          type: 'workCommand',
+          prompt: 'Say what you need done at Contoso',
+          placeholder: 'One sentence, for example: prepare me for a customer meeting.',
+          submitLabel: 'Start',
+          route: 'work',
+          emptyText: 'Say what you need done first.'
+        },
         { type: 'heading', level: 2, text: 'What do you want to do?' },
         {
           type: 'tiles',
           items: [
+            { title: 'Get work done', kicker: 'Do', route: 'work', description: 'Say what you need and the right path opens.', icon: 'Lightbulb', tone: 'teal' },
             { title: 'Ask the AI CoE', href: 'https://teams.microsoft.com/l/channel/contoso', description: 'Questions, ideas, worries.', icon: 'MessageSquare', tone: 'teal' },
             { title: 'Use AI for my work', href: 'SitePages/Use-AI.aspx', description: 'What is allowed and how to do it.', icon: 'BriefcaseBusiness', tone: 'teal' },
             { title: 'Start a request', href: 'SitePages/Requests.aspx', description: 'Ideas, tools, training, feedback.', icon: 'Inbox', tone: 'blue' },

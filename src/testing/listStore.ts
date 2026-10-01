@@ -1,7 +1,10 @@
 /**
  * In-memory stand-in for the SharePoint REST list endpoints the web part uses. Supports the OData
- * options the services send (`$select`, `$orderby`, `$top`), optional paging through
- * `@odata.nextLink`, injected failures, and records every request for assertions.
+ * options the services send (`$select`, `$orderby`, `$top`, a one-field `$filter ... eq '...'`),
+ * `items(<Id>)` reads, optional paging through `@odata.nextLink`, injected failures (`fail`,
+ * `deny`, lifted again by `recover`), a hook that runs after a POST is committed (`afterPost`),
+ * item-level read trimming (`trimTo`), the site groups of the signed-in person (`setGroups`,
+ * `denyGroups`, read through `_api/web/currentuser/groups`), and records every request for assertions.
  * Test support only: never bundled into the web part.
  */
 import type { IListClient, IListRequestOptions, IListResponse } from '../webparts/aiCoeFrontDoor/services/types';
@@ -17,6 +20,8 @@ export interface IRecordedRequest {
   list: string | undefined;
   /** Server-relative path when the request read a file instead of a list. */
   file?: string;
+  /** True when the request read the site groups of the signed-in person instead of a list. */
+  groups?: true;
   query: { [name: string]: string };
   headers: { [name: string]: string };
   body: unknown;
@@ -27,8 +32,18 @@ interface IListFailure {
   body: string;
 }
 
-const ITEMS_URL: RegExp = /getbytitle\('((?:[^']|'')*)'\)\/items(?:\?(.*))?$/;
+/** Runs after a POST to the list has been committed, with the created item. */
+export type AfterPostHook = (item: IStoredItem) => void;
+
+/** The columns that name the person a row belongs to, in the lists the web part writes. */
+const PERSON_FIELDS: readonly string[] = ['RequestorEmail', 'SubmitterEmail'];
+
+const ITEMS_URL: RegExp = /getbytitle\('((?:[^']|'')*)'\)\/items(?:\((\d+)\))?(?:\?(.*))?$/;
+const GROUPS_URL: RegExp = /\/_api\/web\/currentuser\/groups(?:\?(.*))?$/i;
 const FILE_URL: RegExp = /GetFileByServerRelativeUrl\('((?:[^']|'')*)'\)\/\$value$/i;
+/** The list itself, not its items: answers `DefaultDisplayFormUrl` as SharePoint does, server-relative (1.0.0.18). */
+const LIST_URL: RegExp = /^(.*?)\/_api\/web\/lists\/getbytitle\('((?:[^']|'')*)'\)(?:\?(.*))?$/;
+const EQ_FILTER: RegExp = /^\s*([A-Za-z_][A-Za-z0-9_]*)\s+eq\s+'((?:[^']|'')*)'\s*$/;
 
 function parseQuery(raw: string | undefined): { [name: string]: string } {
   const query: { [name: string]: string } = {};
@@ -66,12 +81,43 @@ function respond(status: number, data: unknown): IListResponse {
   };
 }
 
+function project(item: IStoredItem, select: string[] | undefined): object {
+  if (select === undefined) {
+    return item;
+  }
+  const projected: { [field: string]: unknown } = {};
+  for (const field of select) {
+    if (Object.prototype.hasOwnProperty.call(item, field)) {
+      projected[field] = item[field];
+    }
+  }
+  return projected;
+}
+
+/** Applies a `$filter=<Field> eq '<value>'` clause; any other filter shape matches nothing, as a typo would on the server. */
+function matchesFilter(item: IStoredItem, filter: string | undefined): boolean {
+  if (filter === undefined) {
+    return true;
+  }
+  const match: RegExpExecArray | null = EQ_FILTER.exec(filter);
+  if (match === null) {
+    return false;
+  }
+  const value: string = match[2].replace(/''/g, "'");
+  const field: unknown = item[match[1]];
+  return field !== undefined && field !== null && String(field) === value;
+}
+
 export class InMemoryListStore {
   public readonly requests: IRecordedRequest[] = [];
   private readonly _lists: { [title: string]: IStoredItem[] } = {};
   private readonly _failures: { [title: string]: IListFailure } = {};
+  private readonly _afterPost: { [title: string]: AfterPostHook } = {};
   private readonly _files: { [serverRelativePath: string]: string } = {};
   private readonly _pageSize: number | undefined;
+  private _reader: string | undefined;
+  private _groups: IStoredItem[] = [];
+  private _groupsFailure: IListFailure | undefined;
   private _nextId: number = 1;
 
   public constructor(titles: readonly string[], pageSize?: number) {
@@ -88,6 +134,7 @@ export class InMemoryListStore {
     }
   }
 
+  /** Every row the list holds, untrimmed: what the server stores, not what a reader sees. */
   public items(title: string): IStoredItem[] {
     return this._lists[title].slice();
   }
@@ -97,9 +144,46 @@ export class InMemoryListStore {
     this._files[serverRelativePath] = body;
   }
 
+  /**
+   * The site groups `_api/web/currentuser/groups` reports for the signed-in person, in the order
+   * given; each gets an id, as the server assigns one. Seeding again replaces the whole membership.
+   */
+  public setGroups(titles: readonly string[]): void {
+    this._groups = titles.map((title: string): IStoredItem => ({ Id: this._nextId++, Title: title }));
+  }
+
+  /** Refuses every read of the site groups, as a web whose membership the person may not read does. */
+  public denyGroups(status: number = 403): void {
+    this._groupsFailure = { status, body: 'Access denied' };
+  }
+
   /** Makes every request to the list fail with the given status and body. */
   public fail(title: string, status: number = 500, body: string = 'boom'): void {
     this._failures[title] = { status, body };
+  }
+
+  /** Refuses every GET and POST to the list, as a list the reader holds no permission on does (403 by default). */
+  public deny(title: string, status: number = 403): void {
+    this.fail(title, status, 'Access denied');
+  }
+
+  /** Lets a failed or denied list answer again; its rows and hooks stay (for a retry after an outage). */
+  public recover(title: string): void {
+    delete this._failures[title];
+  }
+
+  /** Registers a hook that runs after each POST to the list is committed (for example to fail the readback that follows). */
+  public afterPost(title: string, hook: AfterPostHook): void {
+    this._afterPost[title] = hook;
+  }
+
+  /**
+   * Simulates item-level read security for one reader: GETs return only the rows whose person
+   * column (`RequestorEmail`, `SubmitterEmail`) matches the email, case-insensitively; rows with
+   * no person column stay visible. Writes and the stored rows are unaffected.
+   */
+  public trimTo(email: string): void {
+    this._reader = email.toLowerCase();
   }
 
   public async request(method: 'GET' | 'POST', url: string, options: IListRequestOptions): Promise<IListResponse> {
@@ -109,9 +193,33 @@ export class InMemoryListStore {
       this.requests.push({ method, url, list: undefined, file, query: {}, headers: options.headers, body: undefined });
       return Object.prototype.hasOwnProperty.call(this._files, file) ? respond(200, this._files[file]) : respond(404, 'File not found');
     }
+    const groupsMatch: RegExpExecArray | null = GROUPS_URL.exec(url);
+    if (groupsMatch) {
+      const groupsQuery: { [name: string]: string } = parseQuery(groupsMatch[1]);
+      this.requests.push({ method, url, list: undefined, groups: true, query: groupsQuery, headers: options.headers, body: undefined });
+      if (this._groupsFailure) {
+        return respond(this._groupsFailure.status, this._groupsFailure.body);
+      }
+      const select: string[] | undefined = groupsQuery.$select ? groupsQuery.$select.split(',') : undefined;
+      return respond(200, { value: this._groups.map((group: IStoredItem): object => project(group, select)) });
+    }
+    const listMatch: RegExpExecArray | null = LIST_URL.exec(url);
+    if (listMatch) {
+      const title: string = listMatch[2].replace(/''/g, "'");
+      this.requests.push({ method, url, list: title, query: parseQuery(listMatch[3]), headers: options.headers, body: undefined });
+      if (!Object.prototype.hasOwnProperty.call(this._lists, title)) {
+        return respond(404, 'List not found');
+      }
+      const listFailure: IListFailure | undefined = this._failures[title];
+      if (listFailure) {
+        return respond(listFailure.status, listFailure.body);
+      }
+      return respond(200, { DefaultDisplayFormUrl: `${new URL(listMatch[1]).pathname.replace(/\/+$/, '')}/Lists/${title}/DispForm.aspx` });
+    }
     const match: RegExpExecArray | null = ITEMS_URL.exec(url);
     const list: string | undefined = match ? match[1].replace(/''/g, "'") : undefined;
-    const query: { [name: string]: string } = parseQuery(match ? match[2] : undefined);
+    const itemId: number | undefined = match && match[2] !== undefined ? Number(match[2]) : undefined;
+    const query: { [name: string]: string } = parseQuery(match ? match[3] : undefined);
     const body: unknown = options.body === undefined ? undefined : JSON.parse(options.body);
     this.requests.push({ method, url, list, query, headers: options.headers, body });
 
@@ -125,13 +233,45 @@ export class InMemoryListStore {
     if (method === 'POST') {
       const created: IStoredItem = { ...(body as object), Id: this._nextId++ } as IStoredItem;
       this._lists[list].push(created);
+      const hook: AfterPostHook | undefined = this._afterPost[list];
+      if (hook !== undefined) {
+        hook(created);
+      }
       return respond(201, created);
+    }
+    if (itemId !== undefined) {
+      return this._item(list, itemId, query);
     }
     return respond(200, this._page(list, url, query));
   }
 
+  /** The rows of a list as the current reader sees them. */
+  private _visible(list: string): IStoredItem[] {
+    const reader: string | undefined = this._reader;
+    if (reader === undefined) {
+      return this._lists[list].slice();
+    }
+    return this._lists[list].filter((item: IStoredItem): boolean => {
+      for (const field of PERSON_FIELDS) {
+        const value: unknown = item[field];
+        if (typeof value === 'string') {
+          return value.toLowerCase() === reader;
+        }
+      }
+      return true;
+    });
+  }
+
+  private _item(list: string, itemId: number, query: { [name: string]: string }): IListResponse {
+    const found: IStoredItem | undefined = this._visible(list).filter((item: IStoredItem): boolean => item.Id === itemId)[0];
+    if (found === undefined) {
+      return respond(404, 'Item does not exist');
+    }
+    return respond(200, project(found, query.$select ? query.$select.split(',') : undefined));
+  }
+
   private _page(list: string, url: string, query: { [name: string]: string }): { value: object[]; '@odata.nextLink'?: string } {
-    let items: IStoredItem[] = this._lists[list].slice();
+    let items: IStoredItem[] = this._visible(list).filter((item: IStoredItem): boolean => matchesFilter(item, query.$filter));
     const orderBy: string | undefined = query.$orderby;
     if (orderBy) {
       const [field, direction] = orderBy.split(/\s+/);
@@ -144,18 +284,7 @@ export class InMemoryListStore {
     const end: number = this._pageSize === undefined ? items.length : Math.min(items.length, skip + this._pageSize);
     const page: IStoredItem[] = items.slice(skip, end);
     const select: string[] | undefined = query.$select ? query.$select.split(',') : undefined;
-    const value: object[] = page.map((item: IStoredItem): object => {
-      if (select === undefined) {
-        return item;
-      }
-      const projected: { [field: string]: unknown } = {};
-      for (const field of select) {
-        if (Object.prototype.hasOwnProperty.call(item, field)) {
-          projected[field] = item[field];
-        }
-      }
-      return projected;
-    });
+    const value: object[] = page.map((item: IStoredItem): object => project(item, select));
     const result: { value: object[]; '@odata.nextLink'?: string } = { value };
     if (end < items.length) {
       const base: string = url.replace(/&\$skiptoken=\d+/, '');

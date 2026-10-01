@@ -1,0 +1,14 @@
+{
+  "enabled": false,
+  "siteUrl": "",
+  "canonicalListId": "",
+  "requestListId": "",
+  "resultListId": "",
+  "writerPrincipalId": null,
+  "readRoleDefinitionId": 1073741826,
+  "qualificationReceiptRef": "",
+  "provider": {
+    "model": "",
+    "qualificationReceiptRef": ""
+  }
+}

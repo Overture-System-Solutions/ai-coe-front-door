@@ -1,8 +1,9 @@
-import { act, fireEvent, screen, within } from '@testing-library/react';
+import { act, fireEvent, screen, waitFor, within } from '@testing-library/react';
 import * as React from 'react';
 import { spyOnDownloads } from '../../../../testing/dom';
 import type { IDownloadSpy } from '../../../../testing/dom';
-import { InMemoryDraftStore } from '../../../../testing/fakeServices';
+import { createFakeGovernanceService, EARLIER_ATTEMPT, EARLIER_ATTEMPT_SAVED, holdEarlierAttempt, InMemoryDraftStore } from '../../../../testing/fakeServices';
+import type { IFakeGovernanceService } from '../../../../testing/fakeServices';
 import { enterAnswer, journeyAnswers, playJourney, TOOL_CHECK_GAP_JOURNEY, TOOL_CHECK_JOURNEY } from '../../../../testing/journeys';
 import type { IJourney } from '../../../../testing/journeys';
 import { firstStepOf, ISO_TIMESTAMP, renderWorkflowPage } from '../../../../testing/workflowHarness';
@@ -12,6 +13,7 @@ import type { IBranding } from '../../branding/branding';
 import { createWorkflowCatalog } from '../../content/workflows/catalog';
 import { evaluateToolPolicy } from '../../services/toolPolicyEvaluator';
 import type { IPolicyDecision } from '../../services/toolPolicyEvaluator';
+import type { ISubmissionResult } from '../../services/types';
 import type { IAnswers, IWorkflowDefinition } from '../../workflows/types';
 import type { IWorkflowProps } from './shared';
 import { ToolCheckWorkflow } from './ToolCheckWorkflow';
@@ -22,6 +24,26 @@ const fitsAnswers: IAnswers = journeyAnswers(TOOL_CHECK_JOURNEY);
 const fits: IPolicyDecision = evaluateToolPolicy(fitsAnswers, branding);
 const gapAnswers: IAnswers = journeyAnswers(TOOL_CHECK_GAP_JOURNEY);
 const gap: IPolicyDecision = evaluateToolPolicy(gapAnswers, branding);
+
+const RETRY_ID: string = 'OVT-AICOE-20260929-RETRYME4';
+const OUTAGE: ISubmissionResult = {
+  connected: false,
+  state: 'failed',
+  intakeId: RETRY_ID,
+  message: 'SharePoint could not create the AI CoE record. AI CoE Pilot Intakes returned 503: boom',
+  failureClass: 'TRANSIENT',
+  userMessage: 'Not available right now; try again.'
+};
+const PENDING: ISubmissionResult = {
+  connected: false,
+  state: 'pending',
+  intakeId: RETRY_ID,
+  message: `SharePoint accepted the AI CoE record ${RETRY_ID} but did not confirm it back.`,
+  failureClass: 'INCONCLUSIVE',
+  userMessage: 'Saved, not yet confirmed.'
+};
+/** The guidance a kept draft resumes onto: the answers and the routing result, before any review request. */
+const GUIDANCE_DRAFT: object = { answers: fitsAnswers, currentStepId: 'usagePattern', phase: 'result', decision: fits };
 
 function renderToolCheck(options: IWorkflowPageOptions = {}): IWorkflowHarness {
   return renderWorkflowPage((props: IWorkflowProps): React.ReactElement => <ToolCheckWorkflow {...props} />, options);
@@ -40,6 +62,13 @@ function fillContact(name: string, team: string, email: string): void {
   fireEvent.change(screen.getByLabelText('Your name'), { target: { value: name } });
   fireEvent.change(screen.getByLabelText('Your team'), { target: { value: team } });
   fireEvent.change(screen.getByLabelText('Work email'), { target: { value: email } });
+}
+
+/** From the guidance result: opens the contact form, fills it in and files the review request. */
+function requestReview(): void {
+  fireEvent.click(screen.getByRole('button', { name: 'Want a second opinion? Create a CoE review request' }));
+  fillContact('Pat Example', 'Finance', 'pat@contoso.com');
+  fireEvent.click(screen.getByRole('button', { name: 'Create review request' }));
 }
 
 describe('ToolCheckWorkflow', () => {
@@ -156,6 +185,71 @@ describe('ToolCheckWorkflow', () => {
     });
   });
 
+  it('still clears the draft after a failed review request in the legacy view', async () => {
+    const draftStore: InMemoryDraftStore = new InMemoryDraftStore();
+    await draftStore.save('toolCheck', { answers: {} });
+    const { governance, onDraftsChanged } = await reachResult(TOOL_CHECK_JOURNEY, fits, { draftStore });
+    governance.result = OUTAGE;
+    requestReview();
+    await screen.findByText('The AI CoE record was not created.');
+    expect(draftStore.keys()).toEqual([]);
+    expect(onDraftsChanged).toHaveBeenCalledWith('toolCheck', false);
+  });
+
+  describe('in a page view', () => {
+    it.each([
+      ['failed', OUTAGE, 'Try again'],
+      ['pending', PENDING, 'Confirm again']
+    ])('keeps the guidance as a draft after a %s review request and clears it once a retry under the same reference is saved', async (_state: string, outcome: ISubmissionResult, retryLabel: string) => {
+      const draftStore: InMemoryDraftStore = new InMemoryDraftStore();
+      const { governance, onDraftsChanged } = await reachResult(TOOL_CHECK_JOURNEY, fits, { draftStore, pageView: true });
+      const saved: ISubmissionResult = governance.result;
+      governance.result = outcome;
+      requestReview();
+      await screen.findByRole('heading', { name: 'Your review request is ready' });
+      await waitFor((): void => expect(draftStore.keys()).toEqual(['toolCheck']));
+      expect(JSON.parse(draftStore.drafts.toolCheck)).toMatchObject(GUIDANCE_DRAFT);
+      expect(onDraftsChanged).not.toHaveBeenCalledWith('toolCheck', false);
+
+      governance.result = saved;
+      fireEvent.click(screen.getByRole('button', { name: retryLabel }));
+      await screen.findByText('Saved and confirmed');
+      expect(governance.submissions).toHaveLength(2);
+      expect(governance.submissions[1].workflowType).toBe('toolCheck-review-request');
+      expect(governance.submissions[1].intakeId).toBe(RETRY_ID);
+      expect(governance.submissions[1].payload).toEqual(governance.submissions[0].payload);
+      expect(draftStore.keys()).toEqual([]);
+      expect(onDraftsChanged).toHaveBeenCalledWith('toolCheck', false);
+    });
+
+    it('confirms an earlier attempt that held the review request back without clearing the guidance, then sends it on request', async () => {
+      const draftStore: InMemoryDraftStore = new InMemoryDraftStore();
+      const governance: IFakeGovernanceService = createFakeGovernanceService();
+      const saved: ISubmissionResult = governance.result;
+      holdEarlierAttempt(governance);
+      const { onDraftsChanged } = await reachResult(TOOL_CHECK_JOURNEY, fits, { draftStore, governance, pageView: true });
+      requestReview();
+      await screen.findByText('Saved, not yet confirmed');
+      await waitFor((): void => expect(draftStore.keys()).toEqual(['toolCheck']));
+
+      governance.result = EARLIER_ATTEMPT_SAVED;
+      fireEvent.click(screen.getByRole('button', { name: 'Confirm again' }));
+      await screen.findByText('Earlier request confirmed');
+      expect(governance.submissions[1]).toEqual({ workflowType: EARLIER_ATTEMPT.workflowType, payload: EARLIER_ATTEMPT.payload, intakeId: EARLIER_ATTEMPT.intakeId });
+      expect(JSON.parse(draftStore.drafts.toolCheck)).toMatchObject(GUIDANCE_DRAFT);
+      expect(onDraftsChanged).not.toHaveBeenCalledWith('toolCheck', false);
+
+      governance.result = saved;
+      fireEvent.click(screen.getByRole('button', { name: 'Send these answers' }));
+      await screen.findByText('Saved and confirmed');
+      expect(governance.submissions).toHaveLength(3);
+      expect(governance.submissions[2].workflowType).toBe('toolCheck-review-request');
+      expect(governance.submissions[2].intakeId).toBeUndefined();
+      expect(draftStore.keys()).toEqual([]);
+      expect(onDraftsChanged).toHaveBeenCalledWith('toolCheck', false);
+    });
+  });
+
   it('saves form drafts and resumes onto a saved result', async () => {
     const draftStore: InMemoryDraftStore = new InMemoryDraftStore();
     const first: IWorkflowHarness = renderToolCheck({ draftStore });
@@ -163,7 +257,7 @@ describe('ToolCheckWorkflow', () => {
     expect(screen.getByRole('progressbar')).toHaveAttribute('aria-label', 'Progress: Just getting started');
     enterAnswer(toolCheck.steps[0], 'Drafting notes.');
     fireEvent.click(screen.getByRole('button', { name: 'Save draft' }));
-    await screen.findByText('Draft saved on this device.');
+    await screen.findByText('Draft saved.');
     expect(JSON.parse(draftStore.drafts.toolCheck)).toEqual({ answers: { helpWith: 'Drafting notes.' }, currentStepId: 'helpWith', phase: 'form', decision: null });
     first.unmount();
 

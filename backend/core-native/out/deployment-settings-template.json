@@ -1,0 +1,28 @@
+{
+  "EnvironmentVariables": [
+    {
+      "SchemaName": "aicoe_SiteUrl",
+      "Value": null
+    },
+    {
+      "SchemaName": "aicoe_NotificationEmail",
+      "Value": null
+    },
+    {
+      "SchemaName": "aicoe_EnvironmentLabel",
+      "Value": null
+    }
+  ],
+  "ConnectionReferences": [
+    {
+      "LogicalName": "aicoe_sharepointonline",
+      "ConnectionId": null,
+      "ConnectorId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+    },
+    {
+      "LogicalName": "aicoe_coreintegrity",
+      "ConnectionId": null,
+      "ConnectorId": "/providers/Microsoft.PowerApps/apis/UNBOUND_CORE_INTEGRITY"
+    }
+  ]
+}

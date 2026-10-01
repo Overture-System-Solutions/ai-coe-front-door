@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<environmentvariabledefinition schemaname="aicoe_NotificationEmail">
+  <defaultvalue>REPLACE-BEFORE-ENABLING.invalid</defaultvalue>
+  <description default="Alert address. Invalid on purpose until set.">
+    <label description="Alert address. Invalid on purpose until set." languagecode="1033" />
+  </description>
+  <displayname default="aicoe_NotificationEmail">
+    <label description="aicoe_NotificationEmail" languagecode="1033" />
+  </displayname>
+  <introducedversion>3.0.0.0</introducedversion>
+  <iscustomizable>1</iscustomizable>
+  <isrequired>0</isrequired>
+  <secretstore>0</secretstore>
+  <statecode>0</statecode>
+  <statuscode>1</statuscode>
+  <type>100000000</type>
+</environmentvariabledefinition>

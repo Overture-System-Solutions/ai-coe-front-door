@@ -6,21 +6,74 @@ front-door web part instance per page, the top navigation and the home page.
 .DESCRIPTION
 Operator tool for a site owner; the build and the tests never run it. It reads pages.json next to this script,
 resolves the tokens from a parameter file (copy parameters.sample.json, fill it in, keep it out of git) and the named
-parameters, uploads the resolved content document (the blocks of the six navigation pages) to Site Assets, then
-creates each page with a single front-door instance. Pages that already exist are skipped unless -Overwrite is given,
-in which case they are sent to the site recycle bin and rebuilt from pages.json; edits made in the browser are
-recoverable from the recycle bin but are not carried over. The content document is rewritten on every run (Site
+parameters, uploads the resolved content document (the blocks of the content pages, the plane of a page written
+for operators, and the shared footer every page view draws below its content, the five form pages included) to Site
+Assets, then creates each page with a single front-door instance. A page that already exists keeps its content and its
+browser edits: only the properties of its front-door instance are rewritten from pages.json and the page is
+republished, so a site upgraded from an earlier version takes this version's properties without -Overwrite. With
+-Overwrite every existing page is sent to the site recycle bin and rebuilt from pages.json; edits made in the browser
+are recoverable from the recycle bin but are not carried over. The content document is rewritten on every run (Site
 Assets keeps its version history), and the navigation is rebuilt every time. A page whose build fails part-way is
 recycled again so the next run recreates it.
 
 Tokens in pages.json: {Name} is a parameter value; {Page:key} is the server-relative URL of a defined page;
 {Url:Name} is a URL parameter. Text parameters must have a value. URL parameters may be blank: a blank one turns an
-in-text link "[label]({Url:Name})" into its label, and a tile or call to action pointing at it is left out with a
-warning. The web part opens links to other origins in a new tab.
+in-text link "[label]({Url:Name})" into its label, and a tile or call to action pointing at it is marked 'needsAccess'
+with a warning, so the web part shows it as closed rather than dropping it. Optional parameters may be blank too: a
+blank one takes the 'default' its declaration carries, or stays empty. Group parameters (since 1.0.0.14) carry the
+title of a site group, which the script looks up once: a blank title, or one the site does not carry, is reported and
+nothing else happens, so a site whose groups are not created yet still provisions. Tokens inside the 'routes' table are resolved
+the same way. A block that names a parameter in 'skipWhenBlank' (the private-pilot notice on Start here names
+PilotTeamName) is dropped, with a warning, when that parameter is blank; the key itself never reaches the document.
+A page may name a parameter the same way (since 1.0.0.15 the role-start page names PilotTeamName): a run without a
+value for it builds no page, uploads no blocks for it, adds no navigation node, and drops every tile, card and in-text
+link that targets it, each with a warning, so nothing on the site points at a page that was not built.
+The web part opens links to other origins in a new tab.
 
 The package must already be installed on the site (upload as an update to the app catalog, then "Get it" on the site);
 the script stops before creating anything when the front-door component is not available, and verifies after each
 placement that SharePoint bound the component to the instance.
+
+List security (since 1.0.0.13): before the upload, every list named in the 'listSecurity' section of pages.json (the
+two intake lists) is put under item-level security, so a site member reads and edits their own rows and the Status
+page shows each person exactly their own requests. SharePoint bypasses item-level security for a principal whose
+permission level holds Override List Behaviors (the Microsoft 365 permission reference lists it as Override Check-Out):
+the default Design and Full Control levels hold it, the default Edit level of the site Members group does not, so the
+script breaks the list's inheritance (keeping the existing grants), gives the site's Owners group Full Control, leaves
+the Members group at its level and sets ReadSecurity 2 / WriteSecurity 2. Since 1.0.0.14 each entry may also name
+'fullControlGroups': the 'group' parameters whose site groups are given Full Control on that list too, so a person in
+the operators group who is not a site owner reads every row and not only the rows they sent. A group this site does
+not carry is reported and granted nothing, as a page permission that names it is. A list the site does not carry is
+skipped with a warning. The companion flows' connection must hold Override List Behaviors on both lists (Full Control,
+Design or a custom level); an Edit-level connection is trimmed to its own items.
+
+Lists (since 1.0.0.14): before the upload, every list named in the 'lists' section of pages.json (the program
+measures list the Enterprise value page reads) is ensured: a list the site does not carry is created as a generic
+list with the declared description, and a list it already carries keeps its rows and its design and is given only the
+columns it lacks, each added to the default view, with a unique column indexed and made unique in one call. The
+section never removes or renames a column, so a tenant's rows stay readable across releases; a column that must mean
+something else gets a new name in a later version instead. Rerunning changes nothing. Since 1.0.0.15 a declared list
+may carry its own 'security' ('ownItems'), its own 'fullControlGroups' and a 'hideFromDefaultView' list: the list is
+then put under the same item-level security as the intake lists, and the built-in columns named there (Created By and
+Modified By, which SharePoint writes on every item whatever the list declares) are taken off its default view. The
+columns themselves and every row stay where they are.
+
+Page permissions (since 1.0.0.14): each page in pages.json declares 'inherit' (the site's own permissions), 'owners'
+(the site's Owners group alone, as the admin dashboard and the Operations page do) or 'groups:<Name>[,<Name>]', where
+each name is a parameter of kind 'group'. For the last two the script resets the page's item permissions, gives the
+Owners group Full Control and each named site group Read, so SharePoint itself refuses the page to everyone else. A
+group parameter that is blank, or that names a group the site does not carry, grants nobody: that page stays
+owners-only and the role the group would bind stays unbound.
+
+Instance properties (since 1.0.0.14): every front-door instance carries the properties pages.json declares for it, and
+two the script composes. 'roleGroups' pairs each role with the site group of a 'group' parameter, and only the pairs
+whose group this site carries are kept, so a group that is blank or not there leaves its role unbound.
+'paletteOverrides' carries the Palette parameter, so a tenant's colours are a parameter and never code. Both are
+written when a page is created and when an existing page's instance is updated in place.
+
+The run ends with a summary: the pages created, updated, skipped and locked, the lists ensured and secured, the name
+of the content release (the ContentRelease parameter, or the date and time of the run), and the bindings - every url,
+optional and group parameter as BOUND or AWAITING, by name and kind, never by value.
 
 Every parameter must be given by name; a stray token on the command line (for example a bracket copied from an
 example) is rejected instead of becoming a value.
@@ -36,17 +89,31 @@ script. Named parameters below override values from the file.
 Organization name used in the page text and set on every front-door instance.
 
 .PARAMETER DraftServiceUrl
-HTTP trigger URL of the Claude draft flow for the idea page; blank keeps plain summaries.
+HTTP trigger URL of the AI draft flow for the idea page; blank keeps plain summaries.
 
 .PARAMETER TelemetryProvider
-Usage feed for the Status page: claude (default), openai or both.
+Usage feed for the Operations page: claude (default), openai or both.
 
 .PARAMETER Overwrite
-Send pages that already exist to the recycle bin and rebuild them.
+Send every page pages.json declares that already exists to the recycle bin and rebuild it, the five form pages and the
+admin dashboard included. Without it an existing page keeps its content and only its instance properties are updated.
 
+.PARAMETER HardenMembers
+Optional hardening of the intake lists: move the site Members group from Edit to Contribute on each secured list.
+Contribute withholds Manage Lists (the right to change the list's design and views); it is not what makes read
+security work, which rests on the Edit level withholding Override List Behaviors. Without the switch the Members
+group is left at its level.
+
+.PARAMETER ListsOnly
+Run only the list steps, for a site whose front door is placed some other way (the one-page installer): put the
+listSecurity lists under item-level security and ensure the declared lists (their columns, their own security and
+their default views), then stop. No content document is uploaded and no page, navigation node or home page is created
+or changed, so the text parameters may stay blank; group parameters are still read for the Full Control grants, and a
+one-page parameter file (sharepoint/pages/one-page) can be passed as it is. The site need not be a communication site
+and the front-door component need not be installed, though the package's intake list is only secured once it is.
 .PARAMETER AllowNonCommunicationSite
 Proceed on a site that is not a communication site. There the QuickLaunch is the left navigation, and every existing
-node in it is replaced by the six front-door entries.
+node in it is replaced by the five front-door entries.
 
 .PARAMETER ClientId
 Entra application (client) id registered for PnP PowerShell interactive login (Register-PnPEntraIDAppForInteractiveLogin).
@@ -67,6 +134,8 @@ param(
   [string]$DraftServiceUrl,
   [ValidateSet('', 'claude', 'openai', 'both')][string]$TelemetryProvider = '',
   [switch]$Overwrite,
+  [switch]$HardenMembers,
+  [switch]$ListsOnly,
   [switch]$AllowNonCommunicationSite,
   [string]$ClientId
 )
@@ -100,13 +169,25 @@ if (-not $values.ContainsKey('TelemetryProvider') -or [string]::IsNullOrWhiteSpa
 
 $kinds = @{}
 $missing = @()
+# What this run was actually given, recorded before a declared default is substituted, so the bindings summary at the
+# end can say what the site still owes rather than what a default is standing in for.
+$supplied = @{}
 foreach ($name in @($definition['parameters'].Keys)) {
-  $kinds[$name] = [string]$definition['parameters'][$name]['kind']
-  if ($kinds[$name] -notin @('text', 'url')) { throw "Parameter '$name' in pages.json has an unknown kind '$($kinds[$name])'; expected 'text' or 'url'." }
+  $declaration = $definition['parameters'][$name]
+  $kinds[$name] = [string]$declaration['kind']
+  if ($kinds[$name] -notin @('text', 'url', 'optional', 'group')) { throw "Parameter '$name' in pages.json has an unknown kind '$($kinds[$name])'; expected 'text', 'url', 'optional' or 'group'." }
+  if ($declaration.Contains('default') -and $kinds[$name] -ne 'optional') { throw "Parameter '$name' in pages.json declares a default, which only an 'optional' parameter may carry." }
   if (-not $values.ContainsKey($name)) { $values[$name] = '' }
-  if ($kinds[$name] -eq 'text' -and [string]::IsNullOrWhiteSpace($values[$name])) { $missing += $name }
+  $supplied[$name] = -not [string]::IsNullOrWhiteSpace($values[$name])
+  if ([string]::IsNullOrWhiteSpace($values[$name])) {
+    # Only a text parameter must be filled. A blank url parameter fails closed further down; a blank optional one
+    # takes the default its declaration carries, or stays blank.
+    if ($kinds[$name] -eq 'text') { $missing += $name }
+    elseif ($kinds[$name] -eq 'optional' -and $declaration.Contains('default')) { $values[$name] = [string]$declaration['default'] }
+  }
 }
-if ($missing.Count -gt 0) {
+# A lists-only run builds no page and writes no text, so only a page build needs every text parameter.
+if ($missing.Count -gt 0 -and -not $ListsOnly) {
   throw "These text parameters have no value (set them in $ParameterFile or by name): $($missing -join ', ')"
 }
 foreach ($name in @($values.Keys)) {
@@ -122,7 +203,7 @@ if ($ClientId) {
   Connect-PnPOnline -Url $SiteUrl -Interactive
 }
 $web = Get-PnPWeb -Includes ServerRelativeUrl, WebTemplate
-if ($web.WebTemplate -ne 'SITEPAGEPUBLISHING' -and -not $AllowNonCommunicationSite) {
+if ($web.WebTemplate -ne 'SITEPAGEPUBLISHING' -and -not $AllowNonCommunicationSite -and -not $ListsOnly) {
   throw "This is not a communication site ($($web.WebTemplate)). The script rebuilds the QuickLaunch, which is the horizontal top navigation only on communication sites; here it is the left navigation and every existing node would be removed. Pass -AllowNonCommunicationSite to proceed anyway."
 }
 $webRoot = $web.ServerRelativeUrl.TrimEnd('/')
@@ -133,15 +214,18 @@ $webRoot = $web.ServerRelativeUrl.TrimEnd('/')
 function ConvertTo-GuidText([string]$value) {
   return ($value -replace '[{}]', '').Trim().ToLowerInvariant()
 }
-$homePageFile = (Get-PnPHomePage) -replace '^SitePages/', ''
-$wantedId = ConvertTo-GuidText ([string]$definition['componentId'])
-$components = @(Get-PnPPageComponent -Page $homePageFile -ListAvailable)
-$component = $components | Where-Object { (ConvertTo-GuidText ([string]$_.Id)) -eq $wantedId } | Select-Object -First 1
-if ($null -eq $component) {
-  $listed = ($components | ForEach-Object { "$($_.Name) ($($_.Id))" }) -join '; '
-  throw "The front-door component ($($definition['componentId'])) is not available on this site: install the package (app catalog upload, then 'Get it' on the site) and rerun. Components listed for ${homePageFile}: $listed"
+# A lists-only run places no web part, so it does not need the component.
+if (-not $ListsOnly) {
+  $homePageFile = (Get-PnPHomePage) -replace '^SitePages/', ''
+  $wantedId = ConvertTo-GuidText ([string]$definition['componentId'])
+  $components = @(Get-PnPPageComponent -Page $homePageFile -ListAvailable)
+  $component = $components | Where-Object { (ConvertTo-GuidText ([string]$_.Id)) -eq $wantedId } | Select-Object -First 1
+  if ($null -eq $component) {
+    $listed = ($components | ForEach-Object { "$($_.Name) ($($_.Id))" }) -join '; '
+    throw "The front-door component ($($definition['componentId'])) is not available on this site: install the package (app catalog upload, then 'Get it' on the site) and rerun. Components listed for ${homePageFile}: $listed"
+  }
+  Write-Host "Front-door component: $($component.Name) ($($component.Id))"
 }
-Write-Host "Front-door component: $($component.Name) ($($component.Id))"
 
 function Get-Page([string]$key) {
   $page = @($definition['pages'] | Where-Object { $_['key'] -eq $key })
@@ -153,7 +237,27 @@ function Get-PageFile([string]$key) {
   return [string](Get-Page $key)['file']
 }
 
+# Pages this run does not build (1.0.0.15): a page may name a parameter in 'skipWhenBlank' (the role-start page names
+# PilotTeamName), and a run without a value for it builds no page, uploads no blocks for it, puts no node in the
+# navigation, and drops every tile, card and in-text link that targets it. The set is answered once, before the token
+# pass, so nothing downstream can resolve a link to a page that is not there.
+$skippedPages = @{}
+foreach ($page in $definition['pages']) {
+  if (-not ($page.Contains('skipWhenBlank'))) { continue }
+  $name = [string]$page['skipWhenBlank']
+  if (-not $kinds.ContainsKey($name)) { throw "Page '$($page['key'])' names an undeclared parameter '$name' in skipWhenBlank." }
+  if ([string]::IsNullOrWhiteSpace([string]$values[$name])) {
+    Write-Warning "The page $($page['file']) is skipped because the parameter '$name' is blank; every tile, card and link that targets it is dropped."
+    $skippedPages[[string]$page['key']] = $true
+  }
+}
+
+function Test-PageKept($page) {
+  return -not $skippedPages.ContainsKey([string]$page['key'])
+}
+
 function Get-PageUrl([string]$key) {
+  if ($skippedPages.ContainsKey($key)) { throw "pages.json links to page '$key', which this run skipped; the link must be a tile, card or in-text link the run can drop." }
   return "$webRoot/SitePages/$(Get-PageFile $key)"
 }
 
@@ -179,6 +283,12 @@ function Resolve-Text([string]$text) {
     if (-not $values.ContainsKey($name)) { throw "Unknown token {$name} in pages.json." }
     return [string]$values[$name]
   }
+  $skippedLink = [System.Text.RegularExpressions.MatchEvaluator] {
+    param($match)
+    if ($skippedPages.ContainsKey($match.Groups[2].Value)) { return $match.Groups[1].Value }
+    return $match.Value
+  }
+  $text = [regex]::Replace($text, '\[([^\[\]]+)\]\(\{Page:([A-Za-z]+)\}\)', $skippedLink)
   $text = [regex]::Replace($text, '\[([^\[\]]+)\]\(\{Url:([A-Za-z]+)\}\)', $urlLink)
   $text = [regex]::Replace($text, '\{Page:([A-Za-z]+)\}', $pageLink)
   $text = [regex]::Replace($text, '\{Url:([A-Za-z]+)\}', $urlToken)
@@ -186,8 +296,48 @@ function Resolve-Text([string]$text) {
   return $text
 }
 
-# Resolves every string in a block tree. Tiles whose link resolves to nothing (a blank URL parameter) are left out,
-# as is a hero call to action without a target; both are reported so the page owner can add the link later.
+# True when an action item (a tile, a call to action) has no link and names neither a state nor a route.
+function Test-Unlinked($item) {
+  return [string]::IsNullOrWhiteSpace([string]$item['href']) -and -not $item.Contains('state') -and -not $item.Contains('route')
+}
+
+# True when an item (a tile, a card, a status line) still has its destination: it names no page this run skipped
+# (1.0.0.15). A card pointing at a page that was not built would promise a link SharePoint answers with a 404, so the
+# item goes and the page keeps the rest of the block.
+function Test-TargetKept($item, [string]$where, [bool]$report = $true) {
+  if (-not ($item -is [System.Collections.IDictionary]) -or -not $item.Contains('href')) { return $true }
+  $target = [regex]::Match([string]$item['href'], '^\{Page:([A-Za-z]+)\}$')
+  if (-not $target.Success -or -not $skippedPages.ContainsKey($target.Groups[1].Value)) { return $true }
+  if ($report) {
+    Write-Warning "The item '$($item['title'])' on $where is dropped because it targets $($target.Groups[1].Value), a page this run skipped."
+  }
+  return $false
+}
+
+# True when a block stays in the document: it names no parameter in 'skipWhenBlank', or the one it names has a value
+# (the private-pilot notice on Start here sets skipWhenBlank to PilotTeamName, so a site without a pilot team shows none),
+# and it still has an item after the items targeting a skipped page were dropped (1.0.0.15).
+function Test-BlockKept($block, [string]$where) {
+  if (-not ($block -is [System.Collections.IDictionary])) { return $true }
+  if ($block.Contains('skipWhenBlank')) {
+    $name = [string]$block['skipWhenBlank']
+    if (-not $kinds.ContainsKey($name)) { throw "A block on $where names an undeclared parameter '$name' in skipWhenBlank." }
+    if ([string]::IsNullOrWhiteSpace([string]$values[$name])) {
+      Write-Warning "The $($block['type']) block '$($block['title'])' on $where is dropped because the parameter '$name' is blank."
+      return $false
+    }
+  }
+  if ($block.Contains('items') -and @($block['items']).Count -gt 0 -and @($block['items'] | Where-Object { Test-TargetKept $_ $where $false }).Count -eq 0) {
+    Write-Warning "The $($block['type']) block on $where is dropped because every item in it targets a page this run skipped."
+    return $false
+  }
+  return $true
+}
+
+# Resolves every string in a block tree (and in the route table). A tile or hero call to action whose link resolves
+# to nothing (a blank URL parameter) and that names neither a state nor a route stays on the page marked
+# 'needsAccess', so the web part shows it as closed (a labelled non-link with its state) instead of dropping the
+# promise; each is reported so the page owner can add the link later.
 function Resolve-Node($node, [string]$where) {
   if ($node -is [string]) { return Resolve-Text $node }
   if ($node -is [System.Collections.IList]) {
@@ -197,25 +347,377 @@ function Resolve-Node($node, [string]$where) {
   }
   if ($node -is [System.Collections.IDictionary]) {
     $resolved = [ordered]@{}
-    foreach ($key in @($node.Keys)) { $resolved[$key] = Resolve-Node $node[$key] $where }
-    if ($resolved.Contains('type') -and $resolved['type'] -eq 'tiles') {
-      $kept = @()
-      foreach ($item in @($resolved['items'])) {
-        if ([string]::IsNullOrWhiteSpace([string]$item['href'])) {
-          Write-Warning "The tile '$($item['title'])' on $where has no link (its URL parameter is blank) and is left out."
-          continue
-        }
-        $kept += , $item
+    foreach ($key in @($node.Keys)) {
+      # The skip rule is the script's, decided by Test-BlockKept; the web part never sees the key.
+      if ($key -eq 'skipWhenBlank') { continue }
+      if ($key -eq 'items' -and $node[$key] -is [System.Collections.IList]) {
+        # An item pointing at a page this run skipped goes before the token pass, so its {Page:} link never resolves.
+        # The filtered list is held in a variable and passed as it is: an array argument reaches the parameter whole,
+        # and wrapping it (a unary comma) would hand Resolve-Node an array of one array and nest every items list.
+        $keptItems = @($node[$key] | Where-Object { Test-TargetKept $_ $where })
+        $resolved[$key] = Resolve-Node $keptItems $where
+        continue
       }
-      $resolved['items'] = $kept
+      $resolved[$key] = Resolve-Node $node[$key] $where
     }
-    if ($resolved.Contains('type') -and $resolved['type'] -eq 'hero' -and $resolved.Contains('cta') -and [string]::IsNullOrWhiteSpace([string]$resolved['cta']['href'])) {
-      Write-Warning "The call to action '$($resolved['cta']['label'])' on $where has no link (its URL parameter is blank) and is left out."
-      $resolved.Remove('cta')
+    if ($resolved.Contains('type') -and $resolved['type'] -eq 'tiles') {
+      foreach ($item in @($resolved['items'])) {
+        if (Test-Unlinked $item) {
+          Write-Warning "The tile '$($item['title'])' on $where has no link (its URL parameter is blank) and is shown as closed."
+          $item['state'] = 'needsAccess'
+        }
+      }
+    }
+    if ($resolved.Contains('type') -and $resolved['type'] -eq 'hero' -and $resolved.Contains('cta') -and (Test-Unlinked $resolved['cta'])) {
+      Write-Warning "The call to action '$($resolved['cta']['label'])' on $where has no link (its URL parameter is blank) and is shown as closed."
+      $resolved['cta']['state'] = 'needsAccess'
     }
     return $resolved
   }
   return $node
+}
+
+# ---------------------------------------------------------------------------------------------------------------
+# Site groups and permission levels: the 'group' parameters, resolved once (1.0.0.14)
+# ---------------------------------------------------------------------------------------------------------------
+# The role names are resolved by kind (Administrator, Editor, Contributor, Reader) as the admin page's grant does, so
+# a site in another language gets the same levels.
+$fullControlRole = (Get-PnPRoleDefinition | Where-Object { $_.RoleTypeKind -eq 'Administrator' } | Select-Object -First 1).Name
+$editRole = (Get-PnPRoleDefinition | Where-Object { $_.RoleTypeKind -eq 'Editor' } | Select-Object -First 1).Name
+$contributeRole = (Get-PnPRoleDefinition | Where-Object { $_.RoleTypeKind -eq 'Contributor' } | Select-Object -First 1).Name
+$readRole = (Get-PnPRoleDefinition | Where-Object { $_.RoleTypeKind -eq 'Reader' } | Select-Object -First 1).Name
+# A parameter of kind 'group' carries the title of a site group, which belongs to the tenant and never to pages.json.
+# Each is looked up here, once, and kept under its parameter name. A blank title, or one the site does not carry, is
+# reported and skipped: the run goes on, a page that names the group keeps its owners-only grant, and the role the
+# group would bind stays unbound, so the person sees the protected-page wording instead of content that is not theirs.
+$siteGroups = @{}
+foreach ($name in @($kinds.Keys)) {
+  if ($kinds[$name] -ne 'group') { continue }
+  $title = [string]$values[$name]
+  $group = $null
+  if (-not [string]::IsNullOrWhiteSpace($title)) {
+    try { $group = Get-PnPGroup -Identity $title -ErrorAction SilentlyContinue } catch { $group = $null }
+  }
+  if ($null -eq $group) {
+    $named = if ([string]::IsNullOrWhiteSpace($title)) { 'blank' } else { "'$title'" }
+    Write-Warning "The site group of '$name' ($named) is not found; page stays owners-only and the role stays unbound."
+    continue
+  }
+  $siteGroups[$name] = $group
+  Write-Host "Site group for ${name}: $title"
+}
+
+# ---------------------------------------------------------------------------------------------------------------
+# Instance properties: what every front-door instance carries from the parameters (1.0.0.14)
+# ---------------------------------------------------------------------------------------------------------------
+# pages.json gives each instance its properties and this composes the two that are not a plain token. 'roleGroups'
+# binds a role id to a site group: the definition pairs each role with a group parameter, the token pass fills in the
+# titles, and only the pairs whose group this site carries are kept, so a group that is blank or not there leaves its
+# role unbound instead of naming a group nobody holds. 'paletteOverrides' carries the Palette parameter, so a tenant's
+# colours are a parameter and never code; blank clears the override and the shipped colours stand.
+function Format-RoleGroups([string]$value) {
+  $bound = @()
+  foreach ($pair in ($value -split ';')) {
+    $separator = $pair.IndexOf('=')
+    if ($separator -lt 0) { continue }
+    $roleId = $pair.Substring(0, $separator).Trim()
+    $title = $pair.Substring($separator + 1).Trim()
+    if ($roleId -eq '' -or $title -eq '') { continue }
+    if (@($siteGroups.Values | Where-Object { [string]$_.Title -eq $title }).Count -eq 0) { continue }
+    $bound += "${roleId}=${title}"
+  }
+  return ($bound -join ';')
+}
+
+# The property bag of one page: every property pages.json declares, tokens resolved, plus the composed ones. The page
+# the script creates and the page it updates in place get the same bag, so an upgraded site ends up where a new one
+# starts.
+function Get-InstanceProperties($page) {
+  $properties = @{}
+  foreach ($name in @($page['instance'].Keys)) {
+    $properties[$name] = Resolve-Text ([string]$page['instance'][$name])
+  }
+  if ($properties.ContainsKey('roleGroups')) { $properties['roleGroups'] = Format-RoleGroups $properties['roleGroups'] }
+  $properties['paletteOverrides'] = [string]$values['Palette']
+  return $properties
+}
+
+# What this run calls the content it uploads. Blank names the run by its own date and time, so a summary always says
+# which content a page is showing.
+$releaseId = [string]$values['ContentRelease']
+if ([string]::IsNullOrWhiteSpace($releaseId)) { $releaseId = [System.DateTime]::UtcNow.ToString('yyyy-MM-ddTHH:mm:ssZ') }
+
+# ---------------------------------------------------------------------------------------------------------------
+# List security: item-level read and write security on the intake lists, made effective (decision 6)
+# ---------------------------------------------------------------------------------------------------------------
+# SharePoint bypasses item-level security (ReadSecurity 2 / WriteSecurity 2) for a principal whose permission level
+# holds Override List Behaviors (shown as Override Check-Out in the Microsoft 365 permission reference). The default
+# Design and Full Control levels hold it; the default Edit level of the site Members group does not. So: break the
+# list's inheritance keeping its grants (Set-PnPList; Set-PnPListPermission only adds or removes roles), give the Owners
+# group Full Control (they read every row, as the admin dashboard needs), give the same to every site group the
+# entry's 'fullControlGroups' names (1.0.0.14: the operators group, so an operator who is not a site owner reads every
+# row rather than only the rows they sent), leave the Members group at its level, then
+# set the two flags last, so a run that stops part-way never trims a list before the owners can read it. Rerunning
+# changes nothing: inheritance is broken once, and a role already held is not granted twice.
+# The role names come from the section above, resolved by kind so a site in another language gets the same levels.
+$securedLists = @()
+$unsecuredLists = @()
+
+# One list put under item-level security. Written once and called twice: here for the lists the package feature and
+# the companion solution provision, and again in the "Lists" section below for a list this script created that
+# declares its own security (1.0.0.15), so the two can never come to mean different things. The list is added to the
+# run summary where it is secured, so the counts stay true whichever section called this.
+function Set-OwnItemsSecurity {
+  param(
+    [Parameter(Mandatory = $true)][string]$title,
+    [string[]]$fullControlGroups = @()
+  )
+  # Only a list the site already carries: the intake list comes from the package feature, the use-case list from the
+  # companion solution, and a declared list was created a moment ago. None of them is created here.
+  $list = Get-PnPList -Identity $title -Includes HasUniqueRoleAssignments -ErrorAction SilentlyContinue
+  if ($null -eq $list) {
+    Write-Warning "The list '$title' is not on this site; read security not applied. Install what provisions it and rerun."
+    $script:unsecuredLists += $title
+    return
+  }
+  Write-Host "Securing $title (each person reads and edits their own items; Owners: $fullControlRole) ..."
+  $owners = Get-PnPGroup -AssociatedOwnerGroup
+  if (-not $list.HasUniqueRoleAssignments) {
+    Set-PnPList -Identity $title -BreakRoleInheritance -CopyRoleAssignments
+  }
+  Set-PnPListPermission -Identity $title -Group $owners -AddRole $fullControlRole
+  # Item-level security trims every principal whose permission level withholds Override List Behaviors, the site's
+  # owners included until the grant above; the same is true of an operator, so the role a page binds is given the list
+  # right that makes the operator view whole. A group that is blank, or that this site does not carry, was reported
+  # when the parameters were resolved: it is reported again here, against the list it would have read, and the run
+  # goes on with the list still secured.
+  foreach ($parameterName in $fullControlGroups) {
+    if (-not $siteGroups.ContainsKey($parameterName)) {
+      Write-Warning "The site group of '$parameterName' is not on this site; Full Control on '$title' not granted, so that role reads only its own rows."
+      continue
+    }
+    Set-PnPListPermission -Identity $title -Group $siteGroups[$parameterName] -AddRole $fullControlRole
+    Write-Host "  The site group of '$parameterName' holds $fullControlRole on $title and reads every row."
+  }
+  if ($HardenMembers) {
+    # Hardening only: Contribute removes Manage Lists (list design and view changes) from the Members group; it is not what makes read security work.
+    # Read security rests on the Edit level withholding Override List Behaviors, which Contribute withholds as well.
+    $members = Get-PnPGroup -AssociatedMemberGroup
+    $memberRoles = @(Get-PnPListPermissions -Identity $title -PrincipalId $members.Id -ErrorAction SilentlyContinue | ForEach-Object { $_.Name })
+    if ($memberRoles -contains $editRole) {
+      Set-PnPListPermission -Identity $title -Group $members -RemoveRole $editRole -AddRole $contributeRole
+    } else {
+      Write-Host "  Members already hold no $editRole on $title; nothing to harden."
+    }
+  }
+  # SharePoint refuses item-level read security on a list carrying a field that enforces unique values: it cannot
+  # tell someone their value collides without naming a row it will not show them. The feature's own intake key ships
+  # that way (sharepoint/assets/intake-schema.xml, which this package never rewrites), so the flag is cleared here,
+  # on the site, before the list is secured. The column keeps its index and its Required flag, so the id is still the
+  # record's identity and still fast to look up; what goes is the database-level duplicate guard, which nothing
+  # depends on - a retry finds its own row by reading the key back (services/GovernanceService.ts) and the generated
+  # id already carries a random suffix. Every column cleared is named, because it is a real change to a shipped list.
+  foreach ($unique in @(Get-PnPField -List $title | Where-Object { $_.EnforceUniqueValues })) {
+    Set-PnPField -List $title -Identity $unique.InternalName -Values @{ EnforceUniqueValues = $false }
+    Write-Host "  $($unique.InternalName) no longer enforces unique values, which item-level read security forbids; it stays indexed and required."
+  }
+  Set-PnPList -Identity $title -ReadSecurity 2 -WriteSecurity 2
+  $script:securedLists += $title
+}
+
+# 'readOnly' (1.0.0.18): a register everyone reads and only the owners and the declared groups write, such as the
+# approved tools, where nobody may approve their own tool. The inheritance is broken keeping its grants, the owners and
+# each declared group get Full Control on the list (which carries Override List Behaviors), and then the flags go on:
+# ReadSecurity 1 lets every member read every row, WriteSecurity 4 lets no one without the override create or edit one.
+# A unique key is kept: everyone reads every row, so a collision names no row that is hidden from anyone.
+function Set-ReadOnlySecurity {
+  param(
+    [Parameter(Mandatory = $true)][string]$title,
+    [string[]]$fullControlGroups = @()
+  )
+  $list = Get-PnPList -Identity $title -Includes HasUniqueRoleAssignments -ErrorAction SilentlyContinue
+  if ($null -eq $list) {
+    Write-Warning "The list '$title' is not on this site; read-only security not applied. Install what provisions it and rerun."
+    $script:unsecuredLists += $title
+    return
+  }
+  Write-Host "Securing $title (everyone reads every row; only Owners and the named groups write: $fullControlRole) ..."
+  $owners = Get-PnPGroup -AssociatedOwnerGroup
+  if (-not $list.HasUniqueRoleAssignments) {
+    Set-PnPList -Identity $title -BreakRoleInheritance -CopyRoleAssignments
+  }
+  Set-PnPListPermission -Identity $title -Group $owners -AddRole $fullControlRole
+  foreach ($parameterName in $fullControlGroups) {
+    if (-not $siteGroups.ContainsKey($parameterName)) {
+      Write-Warning "The site group of '$parameterName' is not on this site; Full Control on '$title' not granted, so that role can read the list but not change it."
+      continue
+    }
+    Set-PnPListPermission -Identity $title -Group $siteGroups[$parameterName] -AddRole $fullControlRole
+    Write-Host "  The site group of '$parameterName' holds $fullControlRole on $title and can change its rows."
+  }
+  Set-PnPList -Identity $title -ReadSecurity 1 -WriteSecurity 4
+  $script:securedLists += $title
+}
+
+# The groups that read every row of a list are named as parameters and never as group titles, so nothing
+# tenant-bound is committed. A name that is not a declared 'group' parameter is an authoring mistake in pages.json
+# and stops the run before anything is changed, exactly as it does for a page's permissions. A mode this script does
+# not know stops it too, rather than leaving a list open in the belief that it was secured.
+function Test-OwnItemsDeclaration {
+  param(
+    [Parameter(Mandatory = $true)][string]$title,
+    [string]$mode,
+    [string[]]$fullControlGroups = @()
+  )
+  if ($mode -ne 'ownItems' -and $mode -ne 'readOnly') {
+    throw "List security for '$title' in pages.json names an unknown mode '$mode'; expected 'ownItems' or 'readOnly'."
+  }
+  foreach ($parameterName in $fullControlGroups) {
+    if (-not $kinds.ContainsKey($parameterName) -or $kinds[$parameterName] -ne 'group') {
+      throw "List security for '$title' names '$parameterName' in 'fullControlGroups', which is not a parameter of kind 'group' in pages.json."
+    }
+  }
+}
+
+$listSecurity = @(if ($definition.Contains('listSecurity')) { $definition['listSecurity'] })
+foreach ($entry in $listSecurity) {
+  $title = [string]$entry['title']
+  $fullControlGroups = @(if ($entry.Contains('fullControlGroups')) { $entry['fullControlGroups'] })
+  Test-OwnItemsDeclaration $title ([string]$entry['security']) $fullControlGroups
+  if ([string]$entry['security'] -eq 'readOnly') {
+    Set-ReadOnlySecurity $title $fullControlGroups
+  } else {
+    Set-OwnItemsSecurity $title $fullControlGroups
+  }
+}
+if ($securedLists.Count -gt 0) {
+  Write-Warning "The companion flows' connection must hold Override List Behaviors (Full Control, Design or a custom permission level) on the intake lists; an Edit-level connection is trimmed to its own items."
+}
+
+# ---------------------------------------------------------------------------------------------------------------
+# Lists: the lists pages.json declares, created once and only ever added to (1.0.0.14)
+# ---------------------------------------------------------------------------------------------------------------
+# A list this site does not carry is created as a plain generic list; a list it already carries is kept as it is and
+# given only the columns it lacks. This section never removes or renames a field: a column an earlier version created
+# holds a tenant's own rows, so a declaration that no longer names it leaves it where it is, and a column that must
+# mean something else gets a new name instead. Rerunning changes nothing.
+# # Migration: 1.0.0.14 creates the program measures list with its nine columns. Later versions append a column to
+# # that list, or declare another list; no version drops a column, renames one, or changes its type.
+# The section runs before the content document is uploaded, so a page the document carries never names a list the
+# site is still missing. The titles and column names come from pages.json; this script names none of them.
+$ensuredLists = @()
+$listTypes = @('Text', 'Note', 'Number', 'DateTime', 'Choice', 'Boolean')
+$listDefinitions = @(if ($definition.Contains('lists')) { $definition['lists'] })
+# The whole declaration is checked before anything is created, so a typo in the second list cannot leave the first
+# one half-built.
+foreach ($entry in $listDefinitions) {
+  $title = [string]$entry['title']
+  # A list may declare the security it is to end the run under (1.0.0.15: 'ownItems' and the groups that read every
+  # row). It is checked here, in the pass that creates nothing, so a mistyped mode or an unknown group parameter is
+  # found before a list exists to be left open.
+  if ($entry.Contains('security')) {
+    $declaredGroups = @(if ($entry.Contains('fullControlGroups')) { $entry['fullControlGroups'] })
+    Test-OwnItemsDeclaration $title ([string]$entry['security']) $declaredGroups
+  }
+  foreach ($field in @($entry['fields'])) {
+    $internalName = [string]$field['name']
+    if ($internalName -notmatch '^[A-Za-z][A-Za-z0-9]{0,31}$') {
+      throw "List '$title' in pages.json declares a column '$internalName'; a column name is a letter followed by letters or digits, 32 characters at most."
+    }
+    if ([string]$field['type'] -notin $listTypes) {
+      throw "Column '$internalName' of list '$title' in pages.json is of type '$($field['type'])'; expected 'Text', 'Note', 'Number', 'DateTime', 'Choice' or 'Boolean'."
+    }
+    $hasChoices = $field.Contains('choices') -and @($field['choices']).Count -gt 0
+    if (([string]$field['type'] -eq 'Choice') -ne $hasChoices) {
+      throw "Column '$internalName' of list '$title' in pages.json must declare 'choices' when it is a Choice column and must not declare them otherwise."
+    }
+  }
+}
+foreach ($entry in $listDefinitions) {
+  $title = [string]$entry['title']
+  $fields = @($entry['fields'])
+  $list = Get-PnPList -Identity $title -ErrorAction SilentlyContinue
+  if ($null -eq $list) {
+    Write-Host "Creating list $title ..."
+    # The description is written once, at creation, so a page owner's own wording is never overwritten. It is a
+    # second call because New-PnPList in the pinned PnP.PowerShell takes no description; Set-PnPList does.
+    New-PnPList -Title $title -Template GenericList -OnQuickLaunch:$false | Out-Null
+    Set-PnPList -Identity $title -Description ([string]$entry['description'])
+  } else {
+    Write-Host "List $title is already on this site; adding the columns it lacks ..."
+  }
+  foreach ($field in $fields) {
+    $internalName = [string]$field['name']
+    $existing = Get-PnPField -List $title -Identity $internalName -ErrorAction SilentlyContinue
+    if ($null -ne $existing) {
+      Write-Host "  $internalName is already there and is left as it is."
+      continue
+    }
+    $required = $field.Contains('required') -and [bool]$field['required']
+    if ([string]$field['type'] -eq 'Choice') {
+      Add-PnPField -List $title -DisplayName $internalName -InternalName $internalName -Type Choice -Choices ([string[]]@($field['choices'])) -Required:$required -AddToDefaultView | Out-Null
+    } else {
+      Add-PnPField -List $title -DisplayName $internalName -InternalName $internalName -Type ([string]$field['type']) -Required:$required -AddToDefaultView | Out-Null
+    }
+    # A unique column must be indexed as well, so both flags are set in one call, as the feature's intake key is.
+    if ($field.Contains('unique') -and [bool]$field['unique']) {
+      Set-PnPField -List $title -Identity $internalName -Values @{ Indexed = $true; EnforceUniqueValues = $true }
+    } elseif ($field.Contains('indexed') -and [bool]$field['indexed']) {
+      Set-PnPField -List $title -Identity $internalName -Values @{ Indexed = $true }
+    }
+    Write-Host "  Added $internalName ($($field['type']))."
+  }
+  # SharePoint writes Created By and Modified By on every item, whatever a list declares, so a list meant to hold
+  # content-free rows still names whoever saved each one. A list that declares 'hideFromDefaultView' has those
+  # built-in columns taken off its default view: the columns and the rows are untouched (nothing is removed and
+  # nothing is renamed), the list simply does not put them in front of whoever opens it. A column already off the
+  # view is left alone, so rerunning changes nothing.
+  $hiddenColumns = @(if ($entry.Contains('hideFromDefaultView')) { $entry['hideFromDefaultView'] })
+  $viewOwner = if ($hiddenColumns.Count -gt 0) { Get-PnPList -Identity $title -Includes DefaultView } else { $null }
+  if ($null -ne $viewOwner -and $null -eq $viewOwner.DefaultView) {
+    Write-Warning "The list '$title' has no default view; its built-in person columns were left where they are."
+  } elseif ($null -ne $viewOwner) {
+    $view = $viewOwner.DefaultView
+    $viewContext = Get-PnPContext
+    $viewContext.Load($view.ViewFields)
+    Invoke-PnPQuery
+    $viewChanged = $false
+    foreach ($column in $hiddenColumns) {
+      if ($view.ViewFields -contains $column) {
+        $view.ViewFields.Remove($column)
+        $viewChanged = $true
+        Write-Host "  $column is no longer on the default view of $title."
+      }
+    }
+    if ($viewChanged) {
+      $view.Update()
+      Invoke-PnPQuery
+    }
+  }
+  # A list that declares its own security is put under it here, where it exists: the same rules, the same wording and
+  # the same summary as the lists the package feature provisions (decision 16). The flags go on last, as they do there.
+  # A 'readOnly' register (1.0.0.18) is read by everyone and written only by the owners and the declared groups.
+  if ($entry.Contains('security')) {
+    $entryGroups = @(if ($entry.Contains('fullControlGroups')) { $entry['fullControlGroups'] })
+    if ([string]$entry['security'] -eq 'readOnly') {
+      Set-ReadOnlySecurity $title $entryGroups
+    } else {
+      Set-OwnItemsSecurity $title $entryGroups
+    }
+  }
+  $ensuredLists += $title
+}
+
+# A lists-only run ends here, before anything that writes the content document, a page or the navigation.
+if ($ListsOnly) {
+  Write-Host ''
+  Write-Host 'Lists only: no content document, page, navigation node or home page was created or changed.'
+  Write-Host "Lists ensured: $(if ($ensuredLists.Count -gt 0) { $ensuredLists -join ', ' } else { 'none' })"
+  Write-Host "Lists under item-level security: $(if ($securedLists.Count -gt 0) { $securedLists -join ', ' } else { 'none' })"
+  if ($unsecuredLists.Count -gt 0) {
+    Write-Warning "Not secured, not on this site yet: $($unsecuredLists -join ', '). Install what provisions them and rerun."
+  }
+  return
 }
 
 # ---------------------------------------------------------------------------------------------------------------
@@ -224,16 +726,56 @@ function Resolve-Node($node, [string]$where) {
 $documentPages = [ordered]@{}
 foreach ($page in $definition['pages']) {
   if (-not $page.Contains('blocks')) { continue }
+  if (-not (Test-PageKept $page)) { continue }
   $instance = $page['instance']
   if ($instance['view'] -ne 'page' -or $instance['pageKey'] -ne $page['key'] -or $instance['contentUrl'] -ne $contentPath) {
     throw "Page '$($page['key'])' carries blocks, so its instance must be a 'page' view with pageKey '$($page['key'])' reading $contentPath."
   }
-  $documentPages[[string]$page['key']] = [ordered]@{
+  # Blocks keyed on a blank parameter (skipWhenBlank) are dropped before the token pass, so their tokens never resolve.
+  $kept = @($page['blocks'] | Where-Object { Test-BlockKept $_ ([string]$page['file']) })
+  $documentPage = [ordered]@{
     title = Resolve-Text ([string]$page['title'])
-    blocks = Resolve-Node $page['blocks'] ([string]$page['file'])
+    blocks = Resolve-Node $kept ([string]$page['file'])
   }
+  # A page written for operators names its plane (Operations, Enterprise value); the web part shows codes beside
+  # the plain wording there and keeps those pages out of the user plane. A page may also name the roles it is
+  # written for: the site's own permissions are what actually keep it shut (the group parameters below grant the
+  # same groups), and this only tells someone who does reach it whose page it is, instead of drawing blocks that
+  # would mislead them.
+  if ($page.Contains('plane')) { $documentPage['plane'] = [string]$page['plane'] }
+  if ($page.Contains('requiredRole')) { $documentPage['requiredRole'] = @($page['requiredRole']) }
+  $documentPages[[string]$page['key']] = $documentPage
 }
 $document = [ordered]@{ version = 1; pages = $documentPages }
+# The route table and the shared sections (the footer below every page view, the form pages included) go through
+# the same token pass as the blocks; vocabulary and settings are copied as written (their {organization} and {role}
+# tokens belong to the web part, and Resolve-Text would refuse them).
+if ($definition.Contains('routes')) { $document['routes'] = Resolve-Node $definition['routes'] 'routes' }
+if ($definition.Contains('shared')) { $document['shared'] = Resolve-Node $definition['shared'] 'shared' }
+foreach ($section in @('vocabulary', 'settings')) {
+  if ($definition.Contains($section)) { $document[$section] = $definition[$section] }
+}
+
+# ---------------------------------------------------------------------------------------------------------------
+# Release and bindings: what this run published, and which of the tenant's own inputs the site holds (1.0.0.14)
+# ---------------------------------------------------------------------------------------------------------------
+# The operator plane renders both, so a site owner reads which content a page is showing and what the site still
+# owes without opening the parameter file. A binding is answered from the same three things the end-of-run summary
+# prints: the kind the definition declares, whether this run was given a value, and whether the site carries the
+# group a title names. Only the name, the kind and the state travel to the document; a value never does, with the
+# one exception of a qualification receipt reference, which names a record rather than holding a secret.
+$document['release'] = [ordered]@{ id = $releaseId; publishedAt = [System.DateTime]::UtcNow.ToString('yyyy-MM-dd'); source = $contentPath }
+$bindingRows = @()
+foreach ($name in @($kinds.Keys | Sort-Object)) {
+  $kind = $kinds[$name]
+  if ($kind -notin @('url', 'optional', 'group')) { continue }
+  $isBound = if ($kind -eq 'group') { $siteGroups.ContainsKey($name) } else { [bool]$supplied[$name] }
+  $row = [ordered]@{ name = $name; kind = $kind; state = $(if ($isBound) { 'bound' } else { 'awaiting' }) }
+  if ($isBound -and $name -like '*ReceiptRef') { $row['receiptRef'] = [string]$values[$name] }
+  $bindingRows += $row
+}
+$document['bindings'] = @($bindingRows)
+
 $documentJson = $document | ConvertTo-Json -Depth 20
 
 Write-Host "Uploading $contentPath ($($documentPages.Count) pages) ..."
@@ -254,18 +796,71 @@ if ($readBack['version'] -ne 1 -or @($readBack['pages'].Keys).Count -ne $documen
 }
 
 # ---------------------------------------------------------------------------------------------------------------
+# Page permissions: 'inherit', 'owners' or 'groups:<Name>[,<Name>]'
+# ---------------------------------------------------------------------------------------------------------------
+# A protected page names group parameters, never a group title, so nothing tenant-bound is committed. The item's
+# inheritance is reset first, because breaking it on an item that is already unique would keep stray grants from an
+# earlier run; then the site's Owners group gets Full Control and each site group the parameters resolved gets Read.
+# A group parameter that was blank, or that named a group the site does not carry, was reported above and grants
+# nobody here, so the page stays owners-only rather than open to everyone.
+function Set-PagePermission([string]$file, [string]$permissions) {
+  if ([string]::IsNullOrWhiteSpace($permissions) -or $permissions -eq 'inherit') { return }
+  $readers = @()
+  if ($permissions -ne 'owners') {
+    if ($permissions -notmatch '^groups:[A-Za-z][A-Za-z0-9]*(,[A-Za-z][A-Za-z0-9]*)*$') {
+      throw "Page '$file' in pages.json declares permissions '$permissions'; expected 'inherit', 'owners' or 'groups:<Name>[,<Name>]'."
+    }
+    foreach ($parameterName in (($permissions -replace '^groups:', '') -split ',')) {
+      if (-not $kinds.ContainsKey($parameterName) -or $kinds[$parameterName] -ne 'group') {
+        throw "Page '$file' names '$parameterName' in its permissions, which is not a parameter of kind 'group' in pages.json."
+      }
+      if ($siteGroups.ContainsKey($parameterName)) { $readers += $siteGroups[$parameterName] }
+    }
+  }
+  $item = Find-PageItem $file
+  $owners = Get-PnPGroup -AssociatedOwnerGroup
+  Set-PnPListItemPermission -List 'Site Pages' -Identity $item.Id -InheritPermissions
+  Set-PnPListItemPermission -List 'Site Pages' -Identity $item.Id -Group $owners -AddRole $fullControlRole -ClearExisting
+  foreach ($group in $readers) {
+    Set-PnPListItemPermission -List 'Site Pages' -Identity $item.Id -Group $group -AddRole $readRole
+  }
+}
+
+# ---------------------------------------------------------------------------------------------------------------
 # Pages: one section, one front-door instance each
 # ---------------------------------------------------------------------------------------------------------------
 $created = @()
+$updated = @()
 $skipped = @()
 $locked = @()
+$notBuilt = @()
 foreach ($page in $definition['pages']) {
+  if (-not (Test-PageKept $page)) {
+    $notBuilt += [string]$page['file']
+    continue
+  }
   $file = [string]$page['file']
   $pageName = $file -replace '\.aspx$', ''
+  $properties = Get-InstanceProperties $page
   $existing = Find-PageItem $file
   if ($null -ne $existing -and -not $Overwrite) {
-    Write-Host "Skipping $file (exists; use -Overwrite to recycle and rebuild it)."
-    $skipped += $file
+    # The page itself, and every edit made to it in the browser, is left as it is: only the properties of its
+    # front-door instance are rewritten from pages.json and the page is republished, so a site upgraded from an
+    # earlier version takes this version's properties without -Overwrite, which would recycle every page.
+    Write-Host "Updating the front-door instance on $file in place (the page keeps its content; -Overwrite rebuilds it) ..."
+    try {
+      $control = @(Get-PnPPageComponent -Page $pageName | Where-Object { $_.PSObject.Properties['WebPartId'] -and (ConvertTo-GuidText ([string]$_.WebPartId)) -eq $wantedId })
+      if ($control.Count -ne 1) {
+        throw "the page carries $($control.Count) front-door instance(s); one was expected"
+      }
+      Set-PnPPageWebPart -Page $pageName -Identity $control[0].InstanceId -PropertiesJson ($properties | ConvertTo-Json -Depth 5 -Compress)
+      Set-PnPPage -Identity $pageName -Publish | Out-Null
+      Set-PagePermission $file ([string]$page['permissions'])
+      $updated += $file
+    } catch {
+      Write-Warning "Skipping $file - its instance properties could not be updated ($($_.Exception.Message.Trim())). Rerun with -Overwrite to recycle the page and rebuild it from pages.json, or set the values in the instance's property pane."
+      $skipped += $file
+    }
     continue
   }
   if ($null -ne $existing) {
@@ -283,10 +878,6 @@ foreach ($page in $definition['pages']) {
     Add-PnPPage -Name $pageName -Title (Resolve-Text ([string]$page['title'])) -LayoutType Article -HeaderLayoutType NoImage -CommentsEnabled:([bool]$page['commentsEnabled']) | Out-Null
     Add-PnPPageSection -Page $pageName -SectionTemplate OneColumn -Order 1 | Out-Null
     # A hashtable merges over the component's manifest defaults, so "view" overrides the legacy default.
-    $properties = @{}
-    foreach ($name in @($page['instance'].Keys)) {
-      $properties[$name] = Resolve-Text ([string]$page['instance'][$name])
-    }
     Add-PnPPageWebPart -Page $pageName -Component $component -Section 1 -Column 1 -Order 1 -WebPartProperties $properties | Out-Null
     # Read the control back: a web part without its component id would be saved silently and never render.
     $placed = @(Get-PnPPageComponent -Page $pageName | Where-Object { $_.PSObject.Properties['WebPartId'] -and (ConvertTo-GuidText ([string]$_.WebPartId)) -eq $wantedId })
@@ -295,14 +886,7 @@ foreach ($page in $definition['pages']) {
     }
     Set-PnPPage -Identity $pageName -Publish | Out-Null
 
-    if ([string]$page['permissions'] -eq 'owners') {
-      $item = Find-PageItem $file
-      $owners = Get-PnPGroup -AssociatedOwnerGroup
-      $adminRole = (Get-PnPRoleDefinition | Where-Object { $_.RoleTypeKind -eq 'Administrator' } | Select-Object -First 1).Name
-      # Reset first: breaking inheritance on an item that is already unique keeps stray grants from an earlier run.
-      Set-PnPListItemPermission -List 'Site Pages' -Identity $item.Id -InheritPermissions
-      Set-PnPListItemPermission -List 'Site Pages' -Identity $item.Id -Group $owners -AddRole $adminRole -ClearExisting
-    }
+    Set-PagePermission $file ([string]$page['permissions'])
   } catch {
     Write-Warning "Building $file failed; the partial page is recycled so the next run recreates it."
     Remove-PnPPage -Identity $pageName -Force -Recycle -ErrorAction SilentlyContinue | Out-Null
@@ -316,9 +900,12 @@ foreach ($page in $definition['pages']) {
 # ---------------------------------------------------------------------------------------------------------------
 Get-PnPNavigationNode -Location QuickLaunch | ForEach-Object { Remove-PnPNavigationNode -Identity $_.Id -Force }
 foreach ($entry in $definition['navigation']) {
+  # A navigation entry for a page this run skipped is dropped, as every tile and card that targets one is.
+  if ($skippedPages.ContainsKey([string]$entry['page'])) { continue }
   $node = Add-PnPNavigationNode -Location QuickLaunch -Title ([string]$entry['title']) -Url (Get-PageUrl ([string]$entry['page']))
   if ($entry.Contains('children')) {
     foreach ($child in $entry['children']) {
+      if ($skippedPages.ContainsKey([string]$child['page'])) { continue }
       Add-PnPNavigationNode -Location QuickLaunch -Parent $node.Id -Title ([string]$child['title']) -Url (Get-PageUrl ([string]$child['page'])) | Out-Null
     }
   }
@@ -328,9 +915,35 @@ Set-PnPHomePage -RootFolderRelativeUrl "SitePages/$(Get-PageFile 'startHere')"
 Write-Host ''
 Write-Host "Content document: $contentPath ($($documentPages.Count) pages; earlier versions stay in its version history)"
 Write-Host "Created: $($created.Count) page(s)$(if ($created.Count -gt 0) { ' - ' + ($created -join ', ') })"
+Write-Host "Updated: $($updated.Count) page(s) whose instance properties were rewritten in place$(if ($updated.Count -gt 0) { ' - ' + ($updated -join ', ') })"
 Write-Host "Skipped: $($skipped.Count) page(s)$(if ($skipped.Count -gt 0) { ' - ' + ($skipped -join ', ') })"
 Write-Host "Locked: $($locked.Count) page(s)$(if ($locked.Count -gt 0) { ' - ' + ($locked -join ', ') })"
-Write-Host 'Navigation and home page set. Open each page once in the browser; a warning above names any tile or link left out because its URL parameter was blank.'
+Write-Host "Not built: $($notBuilt.Count) page(s) skipped because the parameter they are keyed on is blank$(if ($notBuilt.Count -gt 0) { ' - ' + ($notBuilt -join ', ') })"
+Write-Host "Lists: $($ensuredLists.Count) declared list(s) created or extended$(if ($ensuredLists.Count -gt 0) { ' - ' + ($ensuredLists -join ', ') }); a column an earlier version created is never removed or renamed"
+Write-Host "List security: $($securedLists.Count) list(s) under item-level security$(if ($securedLists.Count -gt 0) { ' - ' + ($securedLists -join ', ') })$(if ($unsecuredLists.Count -gt 0) { '; not on this site: ' + ($unsecuredLists -join ', ') })"
+# Bindings: what the pages carry from the tenant's own parameters rather than from committed content. A parameter this
+# run was not given reads AWAITING, even where a declared default stands in for it, so the summary says what the site
+# still owes and not what a default is covering; a group title this site does not carry reads AWAITING too, because
+# the role behind it stays unbound. Only the name, the kind and the state are printed: a value belongs to the tenant
+# and never goes to the console or to a log. The document carries the same answer in its 'bindings' section (see
+# "Release and bindings" above), read from the same three inputs, so the console and the Operations page agree.
+Write-Host "Content release: $releaseId$(if (-not $supplied['ContentRelease']) { ' (named by this run; set ContentRelease to name it yourself)' })"
+Write-Host 'Bindings (every url, optional and group parameter; a value is never printed):'
+foreach ($name in @($kinds.Keys | Sort-Object)) {
+  $kind = $kinds[$name]
+  if ($kind -notin @('url', 'optional', 'group')) { continue }
+  $bound = if ($kind -eq 'group') { $siteGroups.ContainsKey($name) } else { [bool]$supplied[$name] }
+  $note = ''
+  if (-not $bound -and $kind -eq 'group') { $note = ' - no site group of that title, so the role stays unbound and a page that names it stays owners-only' }
+  elseif (-not $bound -and $definition['parameters'][$name].Contains('default')) { $note = ' - the declared default stands in' }
+  Write-Host "  ${name} (${kind}): $(if ($bound) { 'BOUND' } else { 'AWAITING' })$note"
+}
+# A blank GovernanceReference leaves the legacy view quoting the package's own default policy reference and every page
+# view reading "reference not yet set"; fill the parameter and rerun, and the instance properties are updated in place.
+$governanceBinding = if ([string]::IsNullOrWhiteSpace([string]$values['GovernanceReference'])) { 'AWAITING (blank: review requests quote the default wording until GovernanceReference is set)' } else { 'set' }
+$reviewSystemBinding = if ([string]::IsNullOrWhiteSpace([string]$values['ReviewSystemName'])) { 'default wording (blank: tool guidance names the review system generically until ReviewSystemName is set)' } else { 'set' }
+Write-Host "Wording: GovernanceReference $governanceBinding; ReviewSystemName $reviewSystemBinding"
+Write-Host 'Navigation and home page set. Open each page once in the browser; a warning above names any tile or call to action shown as closed because its URL parameter was blank.'
 if ($locked.Count -gt 0) {
   throw "$($locked.Count) page(s) were left as they were because they are locked for editing: $($locked -join ', '). Close the browser tabs that have them open, wait a few minutes, and rerun with -Overwrite."
 }

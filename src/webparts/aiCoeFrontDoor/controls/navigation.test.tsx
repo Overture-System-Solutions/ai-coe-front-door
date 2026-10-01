@@ -87,6 +87,18 @@ describe('HeroNetworkSvg', () => {
     expect(svg.querySelectorAll('circle')).toHaveLength(15);
     expect(svg.querySelectorAll('path')).toHaveLength(8);
   });
+
+  it('hides the illustration from assistive technology when it is decorative, keeping the drawing itself', () => {
+    const { container } = render(<HeroNetworkSvg decorative={true} />);
+    const svg: SVGElement = container.querySelector('svg.ai-hero-network') as SVGElement;
+    expect(svg).toHaveAttribute('aria-hidden', 'true');
+    expect(svg).not.toHaveAttribute('role');
+    expect(svg).not.toHaveAttribute('aria-label');
+    expect(svg).toHaveAttribute('viewBox', '0 0 760 300');
+    expect(screen.queryByRole('img')).not.toBeInTheDocument();
+    expect(svg.querySelectorAll('circle')).toHaveLength(15);
+    expect(svg.querySelectorAll('path')).toHaveLength(8);
+  });
 });
 
 describe('LoadingState and WorkflowHeader', () => {

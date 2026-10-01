@@ -1,0 +1,448 @@
+{
+  "numFailedTestSuites": 1,
+  "numFailedTests": 1,
+  "numPassedTestSuites": 1,
+  "numPassedTests": 19,
+  "numPendingTestSuites": 0,
+  "numPendingTests": 0,
+  "numRuntimeErrorTestSuites": 0,
+  "numTodoTests": 0,
+  "numTotalTestSuites": 2,
+  "numTotalTests": 20,
+  "openHandles": [],
+  "snapshot": {
+    "added": 0,
+    "didUpdate": false,
+    "failure": false,
+    "filesAdded": 0,
+    "filesRemoved": 0,
+    "filesRemovedList": [],
+    "filesUnmatched": 0,
+    "filesUpdated": 0,
+    "matched": 0,
+    "total": 0,
+    "unchecked": 0,
+    "uncheckedKeysByFile": [],
+    "unmatched": 0,
+    "updated": 0
+  },
+  "startTime": 1790272161852,
+  "success": false,
+  "testResults": [
+    {
+      "leaks": false,
+      "numFailingTests": 1,
+      "numPassingTests": 14,
+      "numPendingTests": 0,
+      "numTodoTests": 0,
+      "openHandles": [],
+      "perfStats": {
+        "end": 1790272164729,
+        "loadTestEnvironmentEnd": 1790272162587,
+        "loadTestEnvironmentStart": 1790272162000,
+        "runtime": 2140,
+        "setupAfterEnvEnd": 1790272162911,
+        "setupAfterEnvStart": 1790272162741,
+        "setupFilesEnd": 1790272162601,
+        "setupFilesStart": 1790272162589,
+        "slow": false,
+        "start": 1790272162589
+      },
+      "skipped": false,
+      "snapshot": {
+        "added": 0,
+        "fileDeleted": false,
+        "matched": 0,
+        "unchecked": 0,
+        "uncheckedKeys": [],
+        "unmatched": 0,
+        "updated": 0
+      },
+      "testFilePath": "C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-audit-fixes\\src\\webparts\\aiCoeFrontDoor\\components\\app\\AppCoreWorkspace.test.tsx",
+      "testResults": [
+        {
+          "ancestorTitles": [
+            "AppCoreWorkspace case journey"
+          ],
+          "duration": 173,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppCoreWorkspace case journey saves only edited clarification fields instead of clearing unseen S1 values",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 8,
+          "retryReasons": [],
+          "startAt": 1790272163826,
+          "status": "passed",
+          "title": "saves only edited clarification fields instead of clearing unseen S1 values"
+        },
+        {
+          "ancestorTitles": [
+            "AppCoreWorkspace case journey"
+          ],
+          "duration": 21,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppCoreWorkspace case journey renders unvalidated native work without a fabricated date or synthetic write notice",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 4,
+          "retryReasons": [],
+          "startAt": 1790272164000,
+          "status": "passed",
+          "title": "renders unvalidated native work without a fabricated date or synthetic write notice"
+        },
+        {
+          "ancestorTitles": [
+            "AppCoreWorkspace case journey"
+          ],
+          "duration": 64,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppCoreWorkspace case journey does not call human validation for an unauthorized or unresolved reviewer context {\"roles\":[\"employee\"],\"rolesState\":\"resolved\"}",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 7,
+          "retryReasons": [],
+          "startAt": 1790272164021,
+          "status": "passed",
+          "title": "does not call human validation for an unauthorized or unresolved reviewer context {\"roles\":[\"employee\"],\"rolesState\":\"resolved\"}"
+        },
+        {
+          "ancestorTitles": [
+            "AppCoreWorkspace case journey"
+          ],
+          "duration": 57,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppCoreWorkspace case journey does not call human validation for an unauthorized or unresolved reviewer context {\"roles\":[\"operator\"],\"rolesState\":\"resolved\",\"isAdmin\":true}",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 7,
+          "retryReasons": [],
+          "startAt": 1790272164085,
+          "status": "passed",
+          "title": "does not call human validation for an unauthorized or unresolved reviewer context {\"roles\":[\"operator\"],\"rolesState\":\"resolved\",\"isAdmin\":true}"
+        },
+        {
+          "ancestorTitles": [
+            "AppCoreWorkspace case journey"
+          ],
+          "duration": 49,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppCoreWorkspace case journey does not call human validation for an unauthorized or unresolved reviewer context {\"roles\":[\"marketingReviewer\"],\"rolesState\":\"resolved\"}",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 7,
+          "retryReasons": [],
+          "startAt": 1790272164143,
+          "status": "passed",
+          "title": "does not call human validation for an unauthorized or unresolved reviewer context {\"roles\":[\"marketingReviewer\"],\"rolesState\":\"resolved\"}"
+        },
+        {
+          "ancestorTitles": [
+            "AppCoreWorkspace case journey"
+          ],
+          "duration": 47,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppCoreWorkspace case journey does not call human validation for an unauthorized or unresolved reviewer context {\"roles\":[\"designAuthority\"],\"rolesState\":\"pending\"}",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 7,
+          "retryReasons": [],
+          "startAt": 1790272164192,
+          "status": "passed",
+          "title": "does not call human validation for an unauthorized or unresolved reviewer context {\"roles\":[\"designAuthority\"],\"rolesState\":\"pending\"}"
+        },
+        {
+          "ancestorTitles": [
+            "AppCoreWorkspace case journey"
+          ],
+          "duration": 49,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppCoreWorkspace case journey does not call human validation for an unauthorized or unresolved reviewer context {\"roles\":[\"designAuthority\"],\"rolesState\":\"unresolved\"}",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 7,
+          "retryReasons": [],
+          "startAt": 1790272164240,
+          "status": "passed",
+          "title": "does not call human validation for an unauthorized or unresolved reviewer context {\"roles\":[\"designAuthority\"],\"rolesState\":\"unresolved\"}"
+        },
+        {
+          "ancestorTitles": [
+            "AppCoreWorkspace case journey"
+          ],
+          "duration": 43,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppCoreWorkspace case journey explains unavailable synthetic human validation instead of inventing authority",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 5,
+          "retryReasons": [],
+          "startAt": 1790272164290,
+          "status": "passed",
+          "title": "explains unavailable synthetic human validation instead of inventing authority"
+        },
+        {
+          "ancestorTitles": [
+            "AppCoreWorkspace case journey"
+          ],
+          "duration": 25,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppCoreWorkspace case journey keeps recovery failure fail-closed and makes no follow-up call after unmount",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 6,
+          "retryReasons": [],
+          "startAt": 1790272164333,
+          "status": "passed",
+          "title": "keeps recovery failure fail-closed and makes no follow-up call after unmount"
+        },
+        {
+          "ancestorTitles": [
+            "AppCoreWorkspace case journey"
+          ],
+          "duration": 67,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppCoreWorkspace case journey offers explicit human validation only to resolved design authority and refreshes the original packet after saving",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 9,
+          "retryReasons": [],
+          "startAt": 1790272164358,
+          "status": "passed",
+          "title": "offers explicit human validation only to resolved design authority and refreshes the original packet after saving"
+        },
+        {
+          "ancestorTitles": [
+            "AppCoreWorkspace case journey"
+          ],
+          "duration": 34,
+          "failing": false,
+          "failureDetails": [
+            {
+              "name": "TestingLibraryElementError"
+            }
+          ],
+          "failureMessages": [
+            "TestingLibraryElementError: Found multiple elements with the text: CW-LOCAL_0001\n\nHere are the matching elements:\n\nIgnored nodes: comments, script, style\n\u001b[36m<small>\u001b[39m\n  \u001b[0mCW-LOCAL_0001\u001b[0m\n\u001b[36m</small>\u001b[39m\n\nIgnored nodes: comments, script, style\n\u001b[36m<span>\u001b[39m\n  \u001b[0mCW-LOCAL_0001\u001b[0m\n\u001b[36m</span>\u001b[39m\n\n(If this is intentional, then use the `*AllBy*` variant of the query (like `queryAllByText`, `getAllByText`, or `findAllByText`)).\n\nIgnored nodes: comments, script, style\n\u001b[36m<body>\u001b[39m\n  \u001b[36m<div>\u001b[39m\n    \u001b[36m<div\u001b[39m\n      \u001b[33mclass\u001b[39m=\u001b[32m\"ai-case-workspace\"\u001b[39m\n    \u001b[36m>\u001b[39m\n      \u001b[36m<p\u001b[39m\n        \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-aside ai-app-aside--info\"\u001b[39m\n        \u001b[33mrole\u001b[39m=\u001b[32m\"note\"\u001b[39m\n      \u001b[36m>\u001b[39m\n        \u001b[0mPractice mode: use invented information. Cases and responses stay in this local simulation; nothing is sent to SharePoint or an AI provider.\u001b[0m\n      \u001b[36m</p>\u001b[39m\n      \u001b[36m<div\u001b[39m\n        \u001b[33mclass\u001b[39m=\u001b[32m\"ai-case-toolbar\"\u001b[39m\n      \u001b[36m>\u001b[39m\n        \u001b[36m<div>\u001b[39m\n          \u001b[36m<h3\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-detail-title\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[0mYour cases\u001b[0m\n          \u001b[36m</h3>\u001b[39m\n          \u001b[36m<p\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-note\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[0mStart a case to track a piece of work, or open one you already saved.\u001b[0m\n          \u001b[36m</p>\u001b[39m\n        \u001b[36m</div>\u001b[39m\n        \u001b[36m<div\u001b[39m\n          \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-actions\"\u001b[39m\n        \u001b[36m>\u001b[39m\n          \u001b[36m<button\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-ghost\"\u001b[39m\n            \u001b[33mtype\u001b[39m=\u001b[32m\"button\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[0mShow saved cases\u001b[0m\n          \u001b[36m</button>\u001b[39m\n          \u001b[36m<button\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-ghost\"\u001b[39m\n            \u001b[33mtype\u001b[39m=\u001b[32m\"button\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[0mNew case\u001b[0m\n          \u001b[36m</button>\u001b[39m\n        \u001b[36m</div>\u001b[39m\n      \u001b[36m</div>\u001b[39m\n      \u001b[36m<section\u001b[39m\n        \u001b[33maria-label\u001b[39m=\u001b[32m\"My saved cases\"\u001b[39m\n        \u001b[33mclass\u001b[39m=\u001b[32m\"ai-case-library\"\u001b[39m\n      \u001b[36m>\u001b[39m\n        \u001b[36m<h4\u001b[39m\n          \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-subheading\"\u001b[39m\n        \u001b[36m>\u001b[39m\n          \u001b[0mMy saved cases\u001b[0m\n        \u001b[36m</h4>\u001b[39m\n        \u001b[36m<ul\u001b[39m\n          \u001b[33mclass\u001b[39m=\u001b[32m\"ai-case-list\"\u001b[39m\n        \u001b[36m>\u001b[39m\n          \u001b[36m<li>\u001b[39m\n            \u001b[36m<button\u001b[39m\n              \u001b[33maria-pressed\u001b[39m=\u001b[32m\"true\"\u001b[39m\n              \u001b[33mclass\u001b[39m=\u001b[32m\"ai-case-choice\"\u001b[39m\n              \u001b[33mtype\u001b[39m=\u001b[32m\"button\"\u001b[39m\n            \u001b[36m>\u001b[39m\n              \u001b[36m<strong>\u001b[39m\n                \u001b[0mA saved case\u001b[0m\n              \u001b[36m</strong>\u001b[39m\n              \u001b[36m<span>\u001b[39m\n                \u001b[0mNeed one answer\u001b[0m\n              \u001b[36m</span>\u001b[39m\n              \u001b[36m<small>\u001b[39m\n                \u001b[0mCW-LOCAL_0001\u001b[0m\n              \u001b[36m</small>\u001b[39m\n            \u001b[36m</button>\u001b[39m\n          \u001b[36m</li>\u001b[39m\n        \u001b[36m</ul>\u001b[39m\n      \u001b[36m</section>\u001b[39m\n      \u001b[36m<section\u001b[39m\n        \u001b[33maria-label\u001b[39m=\u001b[32m\"Selected case status\"\u001b[39m\n        \u001b[33mclass\u001b[39m=\u001b[32m\"ai-case-overview\"\u001b[39m\n      \u001b[36m>\u001b[39m\n        \u001b[36m<div>\u001b[39m\n          \u001b[36m<span\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-note\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[0mSelected case\u001b[0m\n          \u001b[36m</span>\u001b[39m\n          \u001b[36m<h3\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-detail-title\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[0mA saved case\u001b[0m\n          \u001b[36m</h3>\u001b[39m\n          \u001b[36m<p\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-note\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[0mCase reference: \u001b[0m\n            \u001b[36m<span>\u001b[39m\n              \u001b[0mCW-LOCAL_0001\u001b[0m\n            \u001b[36m</span>\u001b[39m\n          \u001b[36m</p>\u001b[39m\n        \u001b[36m</div>\u001b[39m\n        \u001b[36m<div>\u001b[39m\n          \u001b[36m<span\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"ai-case-status\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[0mNeed one answer\u001b[0m\n          \u001b[36m</span>\u001b[39m\n          \u001b[36m<p>\u001b[39m\n            \u001b[0mAdd the missing problem, desired outcome or sponsor in Case details below.\u001b[0m\n          \u001b[36m</p>\u001b[39m\n        \u001b[36m</div>\u001b[39m\n      \u001b[36m</section>\u001b[39m\n      \u001b[36m<section\u001b[39m\n        \u001b[33maria-labelledby\u001b[39m=\u001b[32m\"ai-core-details-heading\"\u001b[39m\n        \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-panel ai-case-details\"\u001b[39m\n      \u001b[36m>\u001b[39m\n        \u001b[36m<h3\u001b[39m\n          \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-detail-title\"\u001b[39m\n          \u001b[33mid\u001b[39m=\u001b[32m\"ai-core-details-heading\"\u001b[39m\n        \u001b[36m>\u001b[39m\n          \u001b[0mCase details\u001b[0m\n        \u001b[36m</h3>\u001b[39m\n        \u001b[36m<p\u001b[39m\n          \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-note\"\u001b[39m\n        \u001b[36m>\u001b[39m\n          \u001b[0mUpdate only what needs to change. Previously saved descriptions are not included in the status view; leaving a field untouched keeps its saved value.\u001b[0m\n        \u001b[36m</p>\u001b[39m\n        \u001b[36m<div\u001b[39m\n          \u001b[33mclass\u001b[39m=\u001b[32m\"ai-case-fields\"\u001b[39m\n        \u001b[36m>\u001b[39m\n          \u001b[36m<div\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"ai-case-field ai-case-field--wide\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[36m<label\u001b[39m\n              \u001b[33mfor\u001b[39m=\u001b[32m\"ai-core-title\"\u001b[39m\n            \u001b[36m>\u001b[39m\n              \u001b[0mCase title\u001b[0m\n            \u001b[36m</label>\u001b[39m\n            \u001b[36m<input\u001b[39m\n              \u001b[33mid\u001b[39m=\u001b[32m\"ai-core-title\"\u001b[39m\n              \u001b[33mplaceholder\u001b[39m=\u001b[32m\"For example, reduce time spent preparing weekly reports\"\u001b[39m\n              \u001b[33mrequired\u001b[39m=\u001b[32m\"\"\u001b[39m\n              \u001b[33mvalue\u001b[39m=\u001b[32m\"A saved case\"\u001b[39m\n            \u001b[36m/>\u001b[39m\n            \u001b[36m<p\u001b[39m\n              \u001b[33mclass\u001b[39m=\u001b[32m\"ai-case-help\"\u001b[39m\n            \u001b[36m>\u001b[39m\n              \u001b[0mRequired. Use a short name you will recognize in your case list.\u001b[0m\n            \u001b[36m</p>\u001b[39m\n          \u001b[36m</div>\u001b[39m\n          \u001b[36m<div\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"ai-case-field\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[36m<label\u001b[39m\n              \u001b[33mfor\u001b[39m=\u001b[32m\"ai-core-problem\"\u001b[39m\n            \u001b[36m>\u001b[39m\n              \u001b[0mProblem statement\u001b[0m\n            \u001b[36m</label>\u001b[39m\n            \u001b[36m<textarea\u001b[39m\n              \u001b[33mid\u001b[39m=\u001b[32m\"ai-core-problem\"\u001b[39m\n              \u001b[33mplaceholder\u001b[39m=\u001b[32m\"Enter a revised problem, or leave unchanged\"\u001b[39m\n              \u001b[33mrows\u001b[39m=\u001b[32m\"4\"\u001b[39m\n            \u001b[36m/>\u001b[39m\n            \u001b[36m<p\u001b[39m\n              \u001b[33mclass\u001b[39m=\u001b[32m\"ai-case-help\"\u001b[39m\n            \u001b[36m>\u001b[39m\n              \u001b[0mDescribe the current task or problem, not a proposed product.\u001b[0m\n            \u001b[36m</p>\u001b[39m\n          \u001b[36m</div>\u001b[39m\n          \u001b[36m<div\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"ai-case-field\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[36m<label\u001b[39m\n              \u001b[33mfor\u001b[39m=\u001b[32m\"ai-core-outcome\"\u001b[39m\n            \u001b[36m>\u001b[39m\n              \u001b[0mDesired outcome\u001b[0m\n            \u001b[36m</label>\u001b[39m\n            \u001b[36m<textarea\u001b[39m\n              \u001b[33mid\u001b[39m=\u001b[32m\"ai-core-outcome\"\u001b[39m\n              \u001b[33mplaceholder\u001b[39m=\u001b[32m\"Enter a revised outcome, or leave unchanged\"\u001b[39m\n              \u001b[33mrows\u001b[39m=\u001b[32m\"4\"\u001b[39m\n            \u001b[36m/>\u001b[39m\n            \u001b[36m<p\u001b[39m\n              \u001b[33mclass\u001b[39m=\u001b[32m\"ai-case-help\"\u001b[39m\n            \u001b[36m>\u001b[39m\n              \u001b[0mExplain the result you need. Leave unsupported numbers out.\u001b[0m\n            \u001b[36m</p>\u001b[39m\n          \u001b[36m</div>\u001b[39m\n          \u001b[36m<div\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"ai-case-field ai-case-field--wide\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[36m<label\u001b[39m\n              \u001b[33mfor\u001b[39m=\u001b[32m\"ai-core-sponsor\"\u001b[39m\n            \u001b[36m>\u001b[39m\n              \u001b[0mBusiness sponsor\u001b[0m\n            \u001b[36m</label>\u001b[39m\n            \u001b[36m<input\u001b[39m\n              \u001b[33mid\u001b[39m=\u001b[32m\"ai-core-sponsor\"\u001b[39m\n              \u001b[33mplaceholder\u001b[39m=\u001b[32m\"For example, operations lead — if confirmed\"\u001b[39m\n              \u001b[33mvalue\u001b[39m=\u001b[32m\"\"\u001b[39m\n            \u001b[36m/>\u001b[39m\n            \u001b[36m<p\u001b[39m\n              \u001b[33mclass\u001b[39m=\u001b[32m\"ai-case-help\"\u001b[39m\n            \u001b[36m>\u001b[39m\n              \u001b[0mThe role or confirmed person accountable for this work. Needed for review; do not guess a name.\u001b[0m\n            \u001b[36m</p>\u001b[39m\n          \u001b[36m</div>\u001b[39m\n        \u001b[36m</div>\u001b[39m\n        \u001b[36m<p\u001b[39m\n          \u001b[33mclass\u001b[39m=\u001b[32m\"ai-case-help\"\u001b[39m\n        \u001b[36m>\u001b[39m\n          \u001b[0mTo remove saved text, edit that field and clear it before saving. Only fields you edit are updated.\u001b[0m\n        \u001b[36m</p>\u001b[39m\n        \u001b[36m<button\u001b[39m\n          \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-ghost\"\u001b[39m\n          \u001b[33mtype\u001b[39m=\u001b[32m\"button\"\u001b[39m\n        \u001b[36m>\u001b[39m\n          \u001b[0mRecover pending result\u001b[0m\n        \u001b[36m</button>\u001b[39m\n        \u001b[36m<div\u001b[39m\n          \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-actions\"\u001b[39m\n        \u001b[36m>\u001b[39m\n          \u001b[36m<button\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-primary\"\u001b[39m\n            \u001b[33mtype\u001b[39m=\u001b[32m\"button\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[0mSave case changes\u001b[0m\n          \u001b[36m</button>\u001b[39m\n          \u001b[36m<button\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-ghost\"\u001b[39m\n            \u001b[33mtype\u001b[39m=\u001b[32m\"button\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[0mRefresh status\u001b[0m\n          \u001b[36m</button>\u001b[39m\n          \u001b[36m<button\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-ghost\"\u001b[39m\n            \u001b[33mtype\u001b[39m=\u001b[32m\"button\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[0mCheck review readiness\u001b[0m\n          \u001b[36m</button>\u001b[39m\n        \u001b[36m</div>\u001b[39m\n        \u001b[36m<p\u001b[39m\n          \u001b[33mclass\u001b[39m=\u001b[32m\"ai-case-help\"\u001b[39m\n        \u001b[36m>\u001b[39m\n          \u001b[0mChecking readiness does not approve the case or submit it to a board.\u001b[0m\n        \u001b[36m</p>\u001b[39m\n      \u001b[36m</section>\u001b[39m\n      \u001b[36m<p\u001b[39m\n        \u001b[33maria-live\u001b[39m=\u001b[32m\"polite\"\u001b[39m\n        \u001b[33mclass\u001b[39m=\u001b[32m\"ai-case-feedback\"\u001b[39m\n        \u001b[33mdata-core-phase\u001b[39m=\u001b[32m\"completed\"\u001b[39m\n        \u001b[33mrole\u001b[39m=\u001b[32m\"status\"\u001b[39m\n      \u001b[36m>\u001b[39m\n        \u001b[0mSaved cases refreshed.\u001b[0m\n      \u001b[36m</p>\u001b[39m\n      \u001b[36m<section\u001b[39m\n        \u001b[33maria-label\u001b[39m=\u001b[32m\"Requested information\"\u001b[39m\n        \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-panel ai-case-evidence\"\u001b[39m\n      \u001b[36m>\u001b[39m\n        \u001b[36m<h3\u001b[39m\n          \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-detail-title\"\u001b[39m\n        \u001b[36m>\u001b[39m\n          \u001b[0mRequested information\u001b[0m\n        \u001b[36m</h3>\u001b[39m\n        \u001b[36m<p\u001b[39m\n          \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-note\"\u001b[39m\n        \u001b[36m>\u001b[39m\n          \u001b[0mChoose a topic, read what is needed and save your response. An authorized reviewer checks the evidence separately.\u001b[0m\n        \u001b[36m</p>\u001b[39m\n        \u001b[36m<div\u001b[39m\n          \u001b[33mclass\u001b[39m=\u001b[32m\"ai-case-field\"\u001b[39m\n        \u001b[36m>\u001b[39m\n          \u001b[36m<label\u001b[39m\n            \u001b[33mfor\u001b[39m=\u001b[32m\"ai-core-packet\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[0mInformation to provide\u001b[0m\n          \u001b[36m</label>\u001b[39m\n          \u001b[36m<select\u001b[39m\n            \u001b[33mid\u001b[39m=\u001b[32m\"ai-core-packet\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[36m<option\u001b[39m\n              \u001b[33mvalue\u001b[39m=\u001b[32m\"\"\u001b[39m\n            \u001b[36m>\u001b[39m\n              \u001b[0mChoose a topic\u001b[0m\n            \u001b[36m</option>\u001b[39m\n            \u001b[36m<option\u001b[39m\n              \u001b[33mvalue\u001b[39m=\u001b[32m\"EVP-CW-LOCAL_0001-S2_OPERATING\"\u001b[39m\n            \u001b[36m>\u001b[39m\n              \u001b[0mOperating details — Needs a response\u001b[0m\n            \u001b[36m</option>\u001b[39m\n            \u001b[36m<option\u001b[39m\n              \u001b[33mvalue\u001b[39m=\u001b[32m\"EVP-CW-LOCAL_0001-S3_FINANCIAL\"\u001b[39m\n            \u001b[36m>\u001b[39m\n              \u001b[0mCosts and benefits — Needs a response\u001b[0m\n            \u001b[36m</option>\u001b[39m\n            \u001b[36m<option\u001b[39m\n              \u001b[33mvalue\u001b[39m=\u001b[32m\"EVP-CW-LOCAL_0001-S4_TECHNICAL\"\u001b[39m\n            \u001b[36m>\u001b[39m\n              \u001b[0mTechnical details — Needs a response\u001b[0m\n            \u001b[36m</option>\u001b[39m\n            \u001b[36m<option\u001b[39m\n              \u001b[33mvalue\u001b[39m=\u001b[32m\"EVP-CW-LOCAL_0001-S5_RISK\"\u001b[39m\n            \u001b[36m>\u001b[39m\n              \u001b[0mRisks and safeguards — Needs a response\u001b[0m\n            \u001b[36m</option>\u001b[39m\n          \u001b[36m</select>\u001b[39m\n        \u001b[36m</div>\u001b[39m\n        \u001b[36m<div\u001b[39m\n          \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-actions\"\u001b[39m\n        \u001b[36m>\u001b[39m\n          \u001b[36m<button\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-primary\"\u001b[39m\n            \u001b[33mdisabled\u001b[39m=\u001b[32m\"\"\u001b[39m\n            \u001b[33mtype\u001b[39m=\u001b[32m\"button\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[0mSave response\u001b[0m\n          \u001b[36m</button>\u001b[39m\n        \u001b[36m</div>\u001b[39m\n        \u001b[36m<p\u001b[39m\n          \u001b[33mclass\u001b[39m=\u001b[32m\"ai-case-help\"\u001b[39m\n        \u001b[36m>\u001b[39m\n          \u001b[0mSaving your response is not approval. Only an authorized reviewer can validate it.\u001b[0m\n        \u001b[36m</p>\u001b[39m\n      \u001b[36m</section>\u001b[39m\n      \u001b[36m<details\u001b[39m\n        \u001b[33mclass\u001b[39m=\u001b[32m\"ai-case-technical\"\u001b[39m\n      \u001b[36m>\u001b[39m\n        \u001b[36m<summary>\u001b[39m\n          \u001b[0mTechnical details\u001b[0m\n        \u001b[36m</summary>\u001b[39m\n        \u001b[36m<p>\u001b[39m\n          \u001b[0mSynthetic Binding A: real command keys, validators and polling over an in-memory command list. Not a tenant write.\u001b[0m\n        \u001b[36m</p>\u001b[39m\n        \u001b[36m<dl\u001b[39m\n          \u001b[33mclass\u001b[39m=\u001b[32m\"ai-case-metadata\"\u001b[39m\n        \u001b[36m>\u001b[39m\n          \u001b[36m<div>\u001b[39m\n            \u001b[36m<dt>\u001b[39m\n              \u001b[0mCase version\u001b[0m\n            \u001b[36m</dt>\u001b[39m\n            \u001b[36m<dd>\u001b[39m\n              \u001b[0m1\u001b[0m\n            \u001b[36m</dd>\u001b[39m\n          \u001b[36m</div>\u001b[39m\n          \u001b[36m<div>\u001b[39m\n            \u001b[36m<dt>\u001b[39m\n              \u001b[0mRecorded state\u001b[0m\n            \u001b[36m</dt>\u001b[39m\n            \u001b[36m<dd>\u001b[39m\n              \u001b[0mCLARIFYING\u001b[0m\n            \u001b[36m</dd>\u001b[39m\n          \u001b[36m</div>\u001b[39m\n          \u001b[36m<div>\u001b[39m\n            \u001b[36m<dt>\u001b[39m\n              \u001b[0mRecorded next action\u001b[0m\n            \u001b[36m</dt>\u001b[39m\n            \u001b[36m<dd>\u001b[39m\n              \u001b[0mRETURN_TO_REQUESTER_CLARIFY: problem_statement, sponsor, desired_outcome\u001b[0m\n            \u001b[36m</dd>\u001b[39m\n          \u001b[36m</div>\u001b[39m\n        \u001b[36m</dl>\u001b[39m\n        \u001b[36m<p\u001b[39m\n          \u001b[33mclass\u001b[39m=\u001b[32m\"ai-case-help\"\u001b[39m\n        \u001b[36m>\u001b[39m\n          \u001b[0mPacket interface: core-packet-list.v0.1-proposal\u001b[0m\n        \u001b[36m</p>\u001b[39m\n      \u001b[36m</details>\u001b[39m\n    \u001b[36m</div>\u001b[39m\n  \u001b[36m</div>\u001b[39m\n\u001b[36m</body>\u001b[39m\n    at Object.getElementError (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\@testing-library\\react\\node_modules\\@testing-library\\dom\\dist\\config.js:37:19)\n    at getElementError (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\@testing-library\\react\\node_modules\\@testing-library\\dom\\dist\\query-helpers.js:20:35)\n    at getMultipleElementsFoundError (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\@testing-library\\react\\node_modules\\@testing-library\\dom\\dist\\query-helpers.js:23:10)\n    at C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\@testing-library\\react\\node_modules\\@testing-library\\dom\\dist\\query-helpers.js:55:13\n    at C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\@testing-library\\react\\node_modules\\@testing-library\\dom\\dist\\query-helpers.js:95:19\n    at Object.<anonymous> (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-audit-fixes\\src\\webparts\\aiCoeFrontDoor\\components\\app\\AppCoreWorkspace.test.tsx:155:17)"
+          ],
+          "fullName": "AppCoreWorkspace case journey recovers the original pending command before fresh reads and never resubmits an unknown mutation",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 7,
+          "retryReasons": [],
+          "startAt": 1790272164425,
+          "status": "failed",
+          "title": "recovers the original pending command before fresh reads and never resubmits an unknown mutation"
+        },
+        {
+          "ancestorTitles": [
+            "AppCoreWorkspace case journey"
+          ],
+          "duration": 62,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppCoreWorkspace case journey lets the person select a packet, read its questions and submit their own classified answer",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 9,
+          "retryReasons": [],
+          "startAt": 1790272164471,
+          "status": "passed",
+          "title": "lets the person select a packet, read its questions and submit their own classified answer"
+        },
+        {
+          "ancestorTitles": [
+            "AppCoreWorkspace case journey"
+          ],
+          "duration": 88,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppCoreWorkspace case journey restores only a scoped opaque selection by reading the service after remount",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 10,
+          "retryReasons": [],
+          "startAt": 1790272164533,
+          "status": "passed",
+          "title": "restores only a scoped opaque selection by reading the service after remount"
+        },
+        {
+          "ancestorTitles": [
+            "AppCoreWorkspace case journey"
+          ],
+          "duration": 65,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppCoreWorkspace case journey saves entered clarification against the selected WorkID rather than creating a second case",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 6,
+          "retryReasons": [],
+          "startAt": 1790272164621,
+          "status": "passed",
+          "title": "saves entered clarification against the selected WorkID rather than creating a second case"
+        },
+        {
+          "ancestorTitles": [
+            "AppCoreWorkspace case journey"
+          ],
+          "duration": 26,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppCoreWorkspace case journey renders public ListMyWork Items as selectable cases and reads status on selection",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 5,
+          "retryReasons": [],
+          "startAt": 1790272164687,
+          "status": "passed",
+          "title": "renders public ListMyWork Items as selectable cases and reads status on selection"
+        }
+      ],
+      "failureMessage": "  ● AppCoreWorkspace case journey › recovers the original pending command before fresh reads and never resubmits an unknown mutation\n\n    TestingLibraryElementError: Found multiple elements with the text: CW-LOCAL_0001\n\n    Here are the matching elements:\n\n    Ignored nodes: comments, script, style\n    \u001b[36m<small>\u001b[39m\n      \u001b[0mCW-LOCAL_0001\u001b[0m\n    \u001b[36m</small>\u001b[39m\n\n    Ignored nodes: comments, script, style\n    \u001b[36m<span>\u001b[39m\n      \u001b[0mCW-LOCAL_0001\u001b[0m\n    \u001b[36m</span>\u001b[39m\n\n    (If this is intentional, then use the `*AllBy*` variant of the query (like `queryAllByText`, `getAllByText`, or `findAllByText`)).\n\n    Ignored nodes: comments, script, style\n    \u001b[36m<body>\u001b[39m\n      \u001b[36m<div>\u001b[39m\n        \u001b[36m<div\u001b[39m\n          \u001b[33mclass\u001b[39m=\u001b[32m\"ai-case-workspace\"\u001b[39m\n        \u001b[36m>\u001b[39m\n          \u001b[36m<p\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-aside ai-app-aside--info\"\u001b[39m\n            \u001b[33mrole\u001b[39m=\u001b[32m\"note\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[0mPractice mode: use invented information. Cases and responses stay in this local simulation; nothing is sent to SharePoint or an AI provider.\u001b[0m\n          \u001b[36m</p>\u001b[39m\n          \u001b[36m<div\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"ai-case-toolbar\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[36m<div>\u001b[39m\n              \u001b[36m<h3\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-detail-title\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[0mYour cases\u001b[0m\n              \u001b[36m</h3>\u001b[39m\n              \u001b[36m<p\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-note\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[0mStart a case to track a piece of work, or open one you already saved.\u001b[0m\n              \u001b[36m</p>\u001b[39m\n            \u001b[36m</div>\u001b[39m\n            \u001b[36m<div\u001b[39m\n              \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-actions\"\u001b[39m\n            \u001b[36m>\u001b[39m\n              \u001b[36m<button\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-ghost\"\u001b[39m\n                \u001b[33mtype\u001b[39m=\u001b[32m\"button\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[0mShow saved cases\u001b[0m\n              \u001b[36m</button>\u001b[39m\n              \u001b[36m<button\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-ghost\"\u001b[39m\n                \u001b[33mtype\u001b[39m=\u001b[32m\"button\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[0mNew case\u001b[0m\n              \u001b[36m</button>\u001b[39m\n            \u001b[36m</div>\u001b[39m\n          \u001b[36m</div>\u001b[39m\n          \u001b[36m<section\u001b[39m\n            \u001b[33maria-label\u001b[39m=\u001b[32m\"My saved cases\"\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"ai-case-library\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[36m<h4\u001b[39m\n              \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-subheading\"\u001b[39m\n            \u001b[36m>\u001b[39m\n              \u001b[0mMy saved cases\u001b[0m\n            \u001b[36m</h4>\u001b[39m\n            \u001b[36m<ul\u001b[39m\n              \u001b[33mclass\u001b[39m=\u001b[32m\"ai-case-list\"\u001b[39m\n            \u001b[36m>\u001b[39m\n              \u001b[36m<li>\u001b[39m\n                \u001b[36m<button\u001b[39m\n                  \u001b[33maria-pressed\u001b[39m=\u001b[32m\"true\"\u001b[39m\n                  \u001b[33mclass\u001b[39m=\u001b[32m\"ai-case-choice\"\u001b[39m\n                  \u001b[33mtype\u001b[39m=\u001b[32m\"button\"\u001b[39m\n                \u001b[36m>\u001b[39m\n                  \u001b[36m<strong>\u001b[39m\n                    \u001b[0mA saved case\u001b[0m\n                  \u001b[36m</strong>\u001b[39m\n                  \u001b[36m<span>\u001b[39m\n                    \u001b[0mNeed one answer\u001b[0m\n                  \u001b[36m</span>\u001b[39m\n                  \u001b[36m<small>\u001b[39m\n                    \u001b[0mCW-LOCAL_0001\u001b[0m\n                  \u001b[36m</small>\u001b[39m\n                \u001b[36m</button>\u001b[39m\n              \u001b[36m</li>\u001b[39m\n            \u001b[36m</ul>\u001b[39m\n          \u001b[36m</section>\u001b[39m\n          \u001b[36m<section\u001b[39m\n            \u001b[33maria-label\u001b[39m=\u001b[32m\"Selected case status\"\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"ai-case-overview\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[36m<div>\u001b[39m\n              \u001b[36m<span\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-note\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[0mSelected case\u001b[0m\n              \u001b[36m</span>\u001b[39m\n              \u001b[36m<h3\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-detail-title\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[0mA saved case\u001b[0m\n              \u001b[36m</h3>\u001b[39m\n              \u001b[36m<p\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-note\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[0mCase reference: \u001b[0m\n                \u001b[36m<span>\u001b[39m\n                  \u001b[0mCW-LOCAL_0001\u001b[0m\n                \u001b[36m</span>\u001b[39m\n              \u001b[36m</p>\u001b[39m\n            \u001b[36m</div>\u001b[39m\n            \u001b[36m<div>\u001b[39m\n              \u001b[36m<span\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"ai-case-status\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[0mNeed one answer\u001b[0m\n              \u001b[36m</span>\u001b[39m\n              \u001b[36m<p>\u001b[39m\n                \u001b[0mAdd the missing problem, desired outcome or sponsor in Case details below.\u001b[0m\n              \u001b[36m</p>\u001b[39m\n            \u001b[36m</div>\u001b[39m\n          \u001b[36m</section>\u001b[39m\n          \u001b[36m<section\u001b[39m\n            \u001b[33maria-labelledby\u001b[39m=\u001b[32m\"ai-core-details-heading\"\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-panel ai-case-details\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[36m<h3\u001b[39m\n              \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-detail-title\"\u001b[39m\n              \u001b[33mid\u001b[39m=\u001b[32m\"ai-core-details-heading\"\u001b[39m\n            \u001b[36m>\u001b[39m\n              \u001b[0mCase details\u001b[0m\n            \u001b[36m</h3>\u001b[39m\n            \u001b[36m<p\u001b[39m\n              \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-note\"\u001b[39m\n            \u001b[36m>\u001b[39m\n              \u001b[0mUpdate only what needs to change. Previously saved descriptions are not included in the status view; leaving a field untouched keeps its saved value.\u001b[0m\n            \u001b[36m</p>\u001b[39m\n            \u001b[36m<div\u001b[39m\n              \u001b[33mclass\u001b[39m=\u001b[32m\"ai-case-fields\"\u001b[39m\n            \u001b[36m>\u001b[39m\n              \u001b[36m<div\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"ai-case-field ai-case-field--wide\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[36m<label\u001b[39m\n                  \u001b[33mfor\u001b[39m=\u001b[32m\"ai-core-title\"\u001b[39m\n                \u001b[36m>\u001b[39m\n                  \u001b[0mCase title\u001b[0m\n                \u001b[36m</label>\u001b[39m\n                \u001b[36m<input\u001b[39m\n                  \u001b[33mid\u001b[39m=\u001b[32m\"ai-core-title\"\u001b[39m\n                  \u001b[33mplaceholder\u001b[39m=\u001b[32m\"For example, reduce time spent preparing weekly reports\"\u001b[39m\n                  \u001b[33mrequired\u001b[39m=\u001b[32m\"\"\u001b[39m\n                  \u001b[33mvalue\u001b[39m=\u001b[32m\"A saved case\"\u001b[39m\n                \u001b[36m/>\u001b[39m\n                \u001b[36m<p\u001b[39m\n                  \u001b[33mclass\u001b[39m=\u001b[32m\"ai-case-help\"\u001b[39m\n                \u001b[36m>\u001b[39m\n                  \u001b[0mRequired. Use a short name you will recognize in your case list.\u001b[0m\n                \u001b[36m</p>\u001b[39m\n              \u001b[36m</div>\u001b[39m\n              \u001b[36m<div\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"ai-case-field\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[36m<label\u001b[39m\n                  \u001b[33mfor\u001b[39m=\u001b[32m\"ai-core-problem\"\u001b[39m\n                \u001b[36m>\u001b[39m\n                  \u001b[0mProblem statement\u001b[0m\n                \u001b[36m</label>\u001b[39m\n                \u001b[36m<textarea\u001b[39m\n                  \u001b[33mid\u001b[39m=\u001b[32m\"ai-core-problem\"\u001b[39m\n                  \u001b[33mplaceholder\u001b[39m=\u001b[32m\"Enter a revised problem, or leave unchanged\"\u001b[39m\n                  \u001b[33mrows\u001b[39m=\u001b[32m\"4\"\u001b[39m\n                \u001b[36m/>\u001b[39m\n                \u001b[36m<p\u001b[39m\n                  \u001b[33mclass\u001b[39m=\u001b[32m\"ai-case-help\"\u001b[39m\n                \u001b[36m>\u001b[39m\n                  \u001b[0mDescribe the current task or problem, not a proposed product.\u001b[0m\n                \u001b[36m</p>\u001b[39m\n              \u001b[36m</div>\u001b[39m\n              \u001b[36m<div\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"ai-case-field\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[36m<label\u001b[39m\n                  \u001b[33mfor\u001b[39m=\u001b[32m\"ai-core-outcome\"\u001b[39m\n                \u001b[36m>\u001b[39m\n                  \u001b[0mDesired outcome\u001b[0m\n                \u001b[36m</label>\u001b[39m\n                \u001b[36m<textarea\u001b[39m\n                  \u001b[33mid\u001b[39m=\u001b[32m\"ai-core-outcome\"\u001b[39m\n                  \u001b[33mplaceholder\u001b[39m=\u001b[32m\"Enter a revised outcome, or leave unchanged\"\u001b[39m\n                  \u001b[33mrows\u001b[39m=\u001b[32m\"4\"\u001b[39m\n                \u001b[36m/>\u001b[39m\n                \u001b[36m<p\u001b[39m\n                  \u001b[33mclass\u001b[39m=\u001b[32m\"ai-case-help\"\u001b[39m\n                \u001b[36m>\u001b[39m\n                  \u001b[0mExplain the result you need. Leave unsupported numbers out.\u001b[0m\n                \u001b[36m</p>\u001b[39m\n              \u001b[36m</div>\u001b[39m\n              \u001b[36m<div\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"ai-case-field ai-case-field--wide\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[36m<label\u001b[39m\n                  \u001b[33mfor\u001b[39m=\u001b[32m\"ai-core-sponsor\"\u001b[39m\n                \u001b[36m>\u001b[39m\n                  \u001b[0mBusiness sponsor\u001b[0m\n                \u001b[36m</label>\u001b[39m\n                \u001b[36m<input\u001b[39m\n                  \u001b[33mid\u001b[39m=\u001b[32m\"ai-core-sponsor\"\u001b[39m\n                  \u001b[33mplaceholder\u001b[39m=\u001b[32m\"For example, operations lead — if confirmed\"\u001b[39m\n                  \u001b[33mvalue\u001b[39m=\u001b[32m\"\"\u001b[39m\n                \u001b[36m/>\u001b[39m\n                \u001b[36m<p\u001b[39m\n                  \u001b[33mclass\u001b[39m=\u001b[32m\"ai-case-help\"\u001b[39m\n                \u001b[36m>\u001b[39m\n                  \u001b[0mThe role or confirmed person accountable for this work. Needed for review; do not guess a name.\u001b[0m\n                \u001b[36m</p>\u001b[39m\n              \u001b[36m</div>\u001b[39m\n            \u001b[36m</div>\u001b[39m\n            \u001b[36m<p\u001b[39m\n              \u001b[33mclass\u001b[39m=\u001b[32m\"ai-case-help\"\u001b[39m\n            \u001b[36m>\u001b[39m\n              \u001b[0mTo remove saved text, edit that field and clear it before saving. Only fields you edit are updated.\u001b[0m\n            \u001b[36m</p>\u001b[39m\n            \u001b[36m<button\u001b[39m\n              \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-ghost\"\u001b[39m\n              \u001b[33mtype\u001b[39m=\u001b[32m\"button\"\u001b[39m\n            \u001b[36m>\u001b[39m\n              \u001b[0mRecover pending result\u001b[0m\n            \u001b[36m</button>\u001b[39m\n            \u001b[36m<div\u001b[39m\n              \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-actions\"\u001b[39m\n            \u001b[36m>\u001b[39m\n              \u001b[36m<button\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-primary\"\u001b[39m\n                \u001b[33mtype\u001b[39m=\u001b[32m\"button\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[0mSave case changes\u001b[0m\n              \u001b[36m</button>\u001b[39m\n              \u001b[36m<button\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-ghost\"\u001b[39m\n                \u001b[33mtype\u001b[39m=\u001b[32m\"button\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[0mRefresh status\u001b[0m\n              \u001b[36m</button>\u001b[39m\n              \u001b[36m<button\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-ghost\"\u001b[39m\n                \u001b[33mtype\u001b[39m=\u001b[32m\"button\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[0mCheck review readiness\u001b[0m\n              \u001b[36m</button>\u001b[39m\n            \u001b[36m</div>\u001b[39m\n            \u001b[36m<p\u001b[39m\n              \u001b[33mclass\u001b[39m=\u001b[32m\"ai-case-help\"\u001b[39m\n            \u001b[36m>\u001b[39m\n              \u001b[0mChecking readiness does not approve the case or submit it to a board.\u001b[0m\n            \u001b[36m</p>\u001b[39m\n          \u001b[36m</section>\u001b[39m\n          \u001b[36m<p\u001b[39m\n            \u001b[33maria-live\u001b[39m=\u001b[32m\"polite\"\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"ai-case-feedback\"\u001b[39m\n            \u001b[33mdata-core-phase\u001b[39m=\u001b[32m\"completed\"\u001b[39m\n            \u001b[33mrole\u001b[39m=\u001b[32m\"status\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[0mSaved cases refreshed.\u001b[0m\n          \u001b[36m</p>\u001b[39m\n          \u001b[36m<section\u001b[39m\n            \u001b[33maria-label\u001b[39m=\u001b[32m\"Requested information\"\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-panel ai-case-evidence\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[36m<h3\u001b[39m\n              \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-detail-title\"\u001b[39m\n            \u001b[36m>\u001b[39m\n              \u001b[0mRequested information\u001b[0m\n            \u001b[36m</h3>\u001b[39m\n            \u001b[36m<p\u001b[39m\n              \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-note\"\u001b[39m\n            \u001b[36m>\u001b[39m\n              \u001b[0mChoose a topic, read what is needed and save your response. An authorized reviewer checks the evidence separately.\u001b[0m\n            \u001b[36m</p>\u001b[39m\n            \u001b[36m<div\u001b[39m\n              \u001b[33mclass\u001b[39m=\u001b[32m\"ai-case-field\"\u001b[39m\n            \u001b[36m>\u001b[39m\n              \u001b[36m<label\u001b[39m\n                \u001b[33mfor\u001b[39m=\u001b[32m\"ai-core-packet\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[0mInformation to provide\u001b[0m\n              \u001b[36m</label>\u001b[39m\n              \u001b[36m<select\u001b[39m\n                \u001b[33mid\u001b[39m=\u001b[32m\"ai-core-packet\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[36m<option\u001b[39m\n                  \u001b[33mvalue\u001b[39m=\u001b[32m\"\"\u001b[39m\n                \u001b[36m>\u001b[39m\n                  \u001b[0mChoose a topic\u001b[0m\n                \u001b[36m</option>\u001b[39m\n                \u001b[36m<option\u001b[39m\n                  \u001b[33mvalue\u001b[39m=\u001b[32m\"EVP-CW-LOCAL_0001-S2_OPERATING\"\u001b[39m\n                \u001b[36m>\u001b[39m\n                  \u001b[0mOperating details — Needs a response\u001b[0m\n                \u001b[36m</option>\u001b[39m\n                \u001b[36m<option\u001b[39m\n                  \u001b[33mvalue\u001b[39m=\u001b[32m\"EVP-CW-LOCAL_0001-S3_FINANCIAL\"\u001b[39m\n                \u001b[36m>\u001b[39m\n                  \u001b[0mCosts and benefits — Needs a response\u001b[0m\n                \u001b[36m</option>\u001b[39m\n                \u001b[36m<option\u001b[39m\n                  \u001b[33mvalue\u001b[39m=\u001b[32m\"EVP-CW-LOCAL_0001-S4_TECHNICAL\"\u001b[39m\n                \u001b[36m>\u001b[39m\n                  \u001b[0mTechnical details — Needs a response\u001b[0m\n                \u001b[36m</option>\u001b[39m\n                \u001b[36m<option\u001b[39m\n                  \u001b[33mvalue\u001b[39m=\u001b[32m\"EVP-CW-LOCAL_0001-S5_RISK\"\u001b[39m\n                \u001b[36m>\u001b[39m\n                  \u001b[0mRisks and safeguards — Needs a response\u001b[0m\n                \u001b[36m</option>\u001b[39m\n              \u001b[36m</select>\u001b[39m\n            \u001b[36m</div>\u001b[39m\n            \u001b[36m<div\u001b[39m\n              \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-actions\"\u001b[39m\n            \u001b[36m>\u001b[39m\n              \u001b[36m<button\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-primary\"\u001b[39m\n                \u001b[33mdisabled\u001b[39m=\u001b[32m\"\"\u001b[39m\n                \u001b[33mtype\u001b[39m=\u001b[32m\"button\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[0mSave response\u001b[0m\n              \u001b[36m</button>\u001b[39m\n            \u001b[36m</div>\u001b[39m\n            \u001b[36m<p\u001b[39m\n              \u001b[33mclass\u001b[39m=\u001b[32m\"ai-case-help\"\u001b[39m\n            \u001b[36m>\u001b[39m\n              \u001b[0mSaving your response is not approval. Only an authorized reviewer can validate it.\u001b[0m\n            \u001b[36m</p>\u001b[39m\n          \u001b[36m</section>\u001b[39m\n          \u001b[36m<details\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"ai-case-technical\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[36m<summary>\u001b[39m\n              \u001b[0mTechnical details\u001b[0m\n            \u001b[36m</summary>\u001b[39m\n            \u001b[36m<p>\u001b[39m\n              \u001b[0mSynthetic Binding A: real command keys, validators and polling over an in-memory command list. Not a tenant write.\u001b[0m\n            \u001b[36m</p>\u001b[39m\n            \u001b[36m<dl\u001b[39m\n              \u001b[33mclass\u001b[39m=\u001b[32m\"ai-case-metadata\"\u001b[39m\n            \u001b[36m>\u001b[39m\n              \u001b[36m<div>\u001b[39m\n                \u001b[36m<dt>\u001b[39m\n                  \u001b[0mCase version\u001b[0m\n                \u001b[36m</dt>\u001b[39m\n                \u001b[36m<dd>\u001b[39m\n                  \u001b[0m1\u001b[0m\n                \u001b[36m</dd>\u001b[39m\n              \u001b[36m</div>\u001b[39m\n              \u001b[36m<div>\u001b[39m\n                \u001b[36m<dt>\u001b[39m\n                  \u001b[0mRecorded state\u001b[0m\n                \u001b[36m</dt>\u001b[39m\n                \u001b[36m<dd>\u001b[39m\n                  \u001b[0mCLARIFYING\u001b[0m\n                \u001b[36m</dd>\u001b[39m\n              \u001b[36m</div>\u001b[39m\n              \u001b[36m<div>\u001b[39m\n                \u001b[36m<dt>\u001b[39m\n                  \u001b[0mRecorded next action\u001b[0m\n                \u001b[36m</dt>\u001b[39m\n                \u001b[36m<dd>\u001b[39m\n                  \u001b[0mRETURN_TO_REQUESTER_CLARIFY: problem_statement, sponsor, desired_outcome\u001b[0m\n                \u001b[36m</dd>\u001b[39m\n              \u001b[36m</div>\u001b[39m\n            \u001b[36m</dl>\u001b[39m\n            \u001b[36m<p\u001b[39m\n              \u001b[33mclass\u001b[39m=\u001b[32m\"ai-case-help\"\u001b[39m\n            \u001b[36m>\u001b[39m\n              \u001b[0mPacket interface: core-packet-list.v0.1-proposal\u001b[0m\n            \u001b[36m</p>\u001b[39m\n          \u001b[36m</details>\u001b[39m\n        \u001b[36m</div>\u001b[39m\n      \u001b[36m</div>\u001b[39m\n    \u001b[36m</body>\u001b[39m\n\n    \u001b[0m \u001b[90m 153 |\u001b[39m     \u001b[36mawait\u001b[39m act(\u001b[36masync\u001b[39m ()\u001b[33m:\u001b[39m \u001b[33mPromise\u001b[39m\u001b[33m<\u001b[39m\u001b[36mvoid\u001b[39m\u001b[33m>\u001b[39m \u001b[33m=>\u001b[39m { fireEvent\u001b[33m.\u001b[39mclick(view\u001b[33m.\u001b[39mgetByRole(\u001b[32m'button'\u001b[39m\u001b[33m,\u001b[39m { name\u001b[33m:\u001b[39m \u001b[32m'Recover pending result'\u001b[39m }))\u001b[33m;\u001b[39m })\u001b[33m;\u001b[39m\n     \u001b[90m 154 |\u001b[39m     \u001b[36mawait\u001b[39m waitFor(()\u001b[33m:\u001b[39m \u001b[36mvoid\u001b[39m \u001b[33m=>\u001b[39m { expect(view\u001b[33m.\u001b[39mgetByRole(\u001b[32m'button'\u001b[39m\u001b[33m,\u001b[39m { name\u001b[33m:\u001b[39m \u001b[32m'Save case changes'\u001b[39m }))\u001b[33m.\u001b[39mnot\u001b[33m.\u001b[39mtoBeDisabled()\u001b[33m;\u001b[39m })\u001b[33m;\u001b[39m\n    \u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 155 |\u001b[39m     expect(view\u001b[33m.\u001b[39mgetByText(workId))\u001b[33m.\u001b[39mtoBeInTheDocument()\u001b[33m;\u001b[39m\n     \u001b[90m     |\u001b[39m                 \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n     \u001b[90m 156 |\u001b[39m     expect(create)\u001b[33m.\u001b[39mnot\u001b[33m.\u001b[39mtoHaveBeenCalled()\u001b[33m;\u001b[39m\n     \u001b[90m 157 |\u001b[39m     expect(list)\u001b[33m.\u001b[39mtoHaveBeenCalledTimes(\u001b[35m1\u001b[39m)\u001b[33m;\u001b[39m\n     \u001b[90m 158 |\u001b[39m     expect(service\u001b[33m.\u001b[39mrecoverPending)\u001b[33m.\u001b[39mtoHaveBeenCalledTimes(\u001b[35m2\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m\n\n      at Object.getElementError (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/config.js:37:19)\n      at getElementError (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/query-helpers.js:20:35)\n      at getMultipleElementsFoundError (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/query-helpers.js:23:10)\n      at ../overture-ai-coe-front-door-rc2-single-webpart/node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/query-helpers.js:55:13\n      at ../overture-ai-coe-front-door-rc2-single-webpart/node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/query-helpers.js:95:19\n      at Object.<anonymous> (src/webparts/aiCoeFrontDoor/components/app/AppCoreWorkspace.test.tsx:155:17)\n"
+    },
+    {
+      "leaks": false,
+      "numFailingTests": 0,
+      "numPassingTests": 5,
+      "numPendingTests": 0,
+      "numTodoTests": 0,
+      "openHandles": [],
+      "perfStats": {
+        "end": 1790272165129,
+        "loadTestEnvironmentEnd": 1790272164740,
+        "loadTestEnvironmentStart": 1790272164733,
+        "runtime": 389,
+        "setupAfterEnvEnd": 1790272164814,
+        "setupAfterEnvStart": 1790272164770,
+        "setupFilesEnd": 1790272164740,
+        "setupFilesStart": 1790272164740,
+        "slow": false,
+        "start": 1790272164740
+      },
+      "skipped": false,
+      "snapshot": {
+        "added": 0,
+        "fileDeleted": false,
+        "matched": 0,
+        "unchecked": 0,
+        "uncheckedKeys": [],
+        "unmatched": 0,
+        "updated": 0
+      },
+      "testFilePath": "C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-audit-fixes\\src\\webparts\\aiCoeFrontDoor\\components\\app\\AppCoreWorkspace.uat.test.tsx",
+      "testResults": [
+        {
+          "ancestorTitles": [
+            "Cases UAT clarity"
+          ],
+          "duration": 25,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "Cases UAT clarity starts with an empty, labelled case form rather than pre-entered fictional business text",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 10,
+          "retryReasons": [],
+          "startAt": 1790272164907,
+          "status": "passed",
+          "title": "starts with an empty, labelled case form rather than pre-entered fictional business text"
+        },
+        {
+          "ancestorTitles": [
+            "Cases UAT clarity"
+          ],
+          "duration": 50,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "Cases UAT clarity creates only the entered case and reports readable confirmed feedback",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 7,
+          "retryReasons": [],
+          "startAt": 1790272164932,
+          "status": "passed",
+          "title": "creates only the entered case and reports readable confirmed feedback"
+        },
+        {
+          "ancestorTitles": [
+            "Cases UAT clarity"
+          ],
+          "duration": 76,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "Cases UAT clarity can start a separate blank case without changing an existing one",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 7,
+          "retryReasons": [],
+          "startAt": 1790272164982,
+          "status": "passed",
+          "title": "can start a separate blank case without changing an existing one"
+        },
+        {
+          "ancestorTitles": [
+            "Cases UAT clarity"
+          ],
+          "duration": 17,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "Cases UAT clarity reports unsaved case edits to the shell and protects them from a fresh selection",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 5,
+          "retryReasons": [],
+          "startAt": 1790272165058,
+          "status": "passed",
+          "title": "reports unsaved case edits to the shell and protects them from a fresh selection"
+        },
+        {
+          "ancestorTitles": [
+            "Cases UAT clarity"
+          ],
+          "duration": 53,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "Cases UAT clarity names information requests plainly and keeps certainty choices explained",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 7,
+          "retryReasons": [],
+          "startAt": 1790272165075,
+          "status": "passed",
+          "title": "names information requests plainly and keeps certainty choices explained"
+        }
+      ],
+      "failureMessage": null
+    }
+  ],
+  "wasInterrupted": false
+}

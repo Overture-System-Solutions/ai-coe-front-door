@@ -1,6 +1,6 @@
 import type { IBranding } from '../branding/branding';
 import { asStringArray, includes } from '../utils/collections';
-import { formatAnswer, visibleSteps } from '../workflows/formEngine';
+import { answerSteps, formatAnswer } from '../workflows/formEngine';
 import type { IAnswers, IStep, IWorkflowDefinition, WorkflowId } from '../workflows/types';
 import { createRecordId } from './recordId';
 
@@ -13,7 +13,11 @@ export interface IPolicyOutcome {
 
 export type PolicyOutcomes = { [key in PolicyOutcomeKey]: IPolicyOutcome };
 
-/** The four routing outcomes of the guidance prototype, with organization-specific wording. */
+/**
+ * The four routing outcomes of the guidance prototype, with organization-specific wording. The review system is
+ * named by the branding (`reviewSystemName`, a web part property): blank keeps the shipped name in the legacy view,
+ * so the parity suites hold, and neutral wording in page views.
+ */
 export function policyOutcomes(branding: IBranding): PolicyOutcomes {
   return {
     fits: {
@@ -21,21 +25,21 @@ export function policyOutcomes(branding: IBranding): PolicyOutcomes {
       defaultNextSteps: [
         `Confirm the tool and task still match ${branding.organizationPossessive} current approved-use guidance.`,
         'Keep a person reviewing the output before it is used or shared.',
-        'If company information, workflow integration, or the task changes, submit a TESS review with manager endorsement before proceeding.'
+        `If company information, workflow integration, or the task changes, submit ${branding.reviewRequestPhrase} with manager endorsement before proceeding.`
       ]
     },
     safeguards: {
       label: 'Additional safeguards and confirmation are needed',
       defaultNextSteps: [
         'Pause this use until the tool status, data boundary, and human checkpoint are confirmed.',
-        'If company information or a business workflow is involved, submit a TESS review with manager endorsement.'
+        `If company information or a business workflow is involved, submit ${branding.reviewRequestPhrase} with manager endorsement.`
       ]
     },
     reviewNeeded: {
       label: 'Please request a CoE review before proceeding',
       defaultNextSteps: [
         'Pause this AI use until the required review is complete.',
-        'Submit the request through TESS with manager endorsement.',
+        `Submit the request through ${branding.reviewSystemName} with manager endorsement.`,
         "You don't need to add any sensitive details — the answers you already gave are enough to start."
       ]
     },
@@ -43,7 +47,7 @@ export function policyOutcomes(branding: IBranding): PolicyOutcomes {
       label: 'Current guidance does not answer this yet',
       defaultNextSteps: [
         'This is a gap in current guidance, not a decision about your idea.',
-        'Use TESS or contact the AI CoE to confirm the current approved-use guidance before proceeding.',
+        `Use ${branding.reviewSystemName} or contact the AI CoE to confirm the current approved-use guidance before proceeding.`,
         'If you can, find out the exact name of the tool — that helps a lot.'
       ]
     }
@@ -212,8 +216,11 @@ export function evaluateToolPolicy(answers: IAnswers, branding: IBranding): IPol
 }
 
 export interface IPolicyEvaluation extends IPolicyDecision {
-  /** The shipped evaluator is a local prototype, not a policy service; the UI labels it as such. */
-  mode: 'prototype';
+  /**
+   * The shipped evaluator is a local prototype, not a policy service, and the UI labels it as such; `register`
+   * (1.0.0.18) is the tabbed view's tool check, which reads the approved-tools register.
+   */
+  mode: 'prototype' | 'register';
 }
 
 export interface IToolPolicyEvaluator {
@@ -309,7 +316,7 @@ export function buildReviewRequestExportText(
   }
   lines.push('');
   lines.push('Original answers:');
-  for (const step of visibleSteps(definition, answers)) {
+  for (const step of answerSteps(definition, answers)) {
     if (step.type !== 'notice') {
       const value: string = formatAnswer(step, answers[step.id]);
       if (value) {
@@ -326,6 +333,12 @@ export function indexSteps(definition: IWorkflowDefinition): { [stepId: string]:
   const index: { [stepId: string]: IStep } = {};
   for (const step of definition.steps) {
     index[step.id] = step;
+    // A group's fields are questions of their own for every summary that looks one up by its answer key.
+    if (step.type === 'group') {
+      for (const field of step.fields) {
+        index[field.id] = field;
+      }
+    }
   }
   return index;
 }

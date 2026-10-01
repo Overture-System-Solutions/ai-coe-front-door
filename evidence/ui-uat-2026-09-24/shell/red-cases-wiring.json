@@ -1,0 +1,1205 @@
+{
+  "numFailedTestSuites": 1,
+  "numFailedTests": 2,
+  "numPassedTestSuites": 0,
+  "numPassedTests": 0,
+  "numPendingTestSuites": 3,
+  "numPendingTests": 58,
+  "numRuntimeErrorTestSuites": 0,
+  "numTodoTests": 0,
+  "numTotalTestSuites": 4,
+  "numTotalTests": 60,
+  "openHandles": [],
+  "snapshot": {
+    "added": 0,
+    "didUpdate": false,
+    "failure": false,
+    "filesAdded": 0,
+    "filesRemoved": 0,
+    "filesRemovedList": [],
+    "filesUnmatched": 0,
+    "filesUpdated": 0,
+    "matched": 0,
+    "total": 0,
+    "unchecked": 0,
+    "uncheckedKeysByFile": [],
+    "unmatched": 0,
+    "updated": 0
+  },
+  "startTime": 1790271568287,
+  "success": false,
+  "testResults": [
+    {
+      "leaks": false,
+      "numFailingTests": 0,
+      "numPassingTests": 0,
+      "numPendingTests": 38,
+      "numTodoTests": 0,
+      "openHandles": [],
+      "perfStats": {
+        "end": 1790271571449,
+        "loadTestEnvironmentEnd": 1790271569062,
+        "loadTestEnvironmentStart": 1790271568439,
+        "runtime": 2385,
+        "setupAfterEnvEnd": 1790271569403,
+        "setupAfterEnvStart": 1790271569219,
+        "setupFilesEnd": 1790271569078,
+        "setupFilesStart": 1790271569064,
+        "slow": false,
+        "start": 1790271569064
+      },
+      "skipped": true,
+      "snapshot": {
+        "added": 0,
+        "fileDeleted": false,
+        "matched": 0,
+        "unchecked": 0,
+        "uncheckedKeys": [],
+        "unmatched": 0,
+        "updated": 0
+      },
+      "testFilePath": "C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-audit-fixes\\src\\webparts\\aiCoeFrontDoor\\components\\app\\AppShell.test.tsx",
+      "testResults": [
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell preserves transient synthetic objective and notes across section changes without a browser-text write",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271571446,
+          "status": "pending",
+          "title": "preserves transient synthetic objective and notes across section changes without a browser-text write"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell blocks leaving unsaved business Marketing input until the server draft seam confirms it",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271571446,
+          "status": "pending",
+          "title": "blocks leaving unsaved business Marketing input until the server draft seam confirms it"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell opens on the first screen with the entry panel and the three ways in",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271571446,
+          "status": "pending",
+          "title": "opens on the first screen with the entry panel and the three ways in"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell keeps a section a person may not use out of the tab list entirely",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271571446,
+          "status": "pending",
+          "title": "keeps a section a person may not use out of the tab list entirely"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell opens the measured view to a leader but still not the operator surface",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271571446,
+          "status": "pending",
+          "title": "opens the measured view to a leader but still not the operator surface"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell shows nothing narrowed while the membership is unresolved, rather than guessing",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271571446,
+          "status": "pending",
+          "title": "shows nothing narrowed while the membership is unresolved, rather than guessing"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell moves along the tabs with the arrow keys, and wraps at both ends",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271571446,
+          "status": "pending",
+          "title": "moves along the tabs with the arrow keys, and wraps at both ends"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell keeps sequential keyboard navigation on the actual focused tab, but pointer entry focuses the heading",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271571447,
+          "status": "pending",
+          "title": "keeps sequential keyboard navigation on the actual focused tab, but pointer entry focuses the heading"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell ignores a key the tab list does not own, so typing is not swallowed",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271571447,
+          "status": "pending",
+          "title": "ignores a key the tab list does not own, so typing is not swallowed"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell keeps one tab in the tab order and points each panel at its tab",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271571447,
+          "status": "pending",
+          "title": "keeps one tab in the tab order and points each panel at its tab"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell gives the section a heading that can take focus, so a change is announced",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271571447,
+          "status": "pending",
+          "title": "gives the section a heading that can take focus, so a change is announced"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell names the person and what the view can say about their access",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271571447,
+          "status": "pending",
+          "title": "names the person and what the view can say about their access"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell says so when the membership could not be confirmed, rather than staying quiet about it",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271571447,
+          "status": "pending",
+          "title": "says so when the membership could not be confirmed, rather than staying quiet about it"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell supplies the configured document route to the actual submission receipt",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271571447,
+          "status": "pending",
+          "title": "supplies the configured document route to the actual submission receipt"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell carries the footer promise on every section",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271571447,
+          "status": "pending",
+          "title": "carries the footer promise on every section"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell does not mount Enterprise value or call getMeasures when an employee clicks the Home card",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271571447,
+          "status": "pending",
+          "title": "does not mount Enterprise value or call getMeasures when an employee clicks the Home card"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell does not fetch measures or usage while membership is unresolved, including from the Home card",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271571447,
+          "status": "pending",
+          "title": "does not fetch measures or usage while membership is unresolved, including from the Home card"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell shows Usage on Enterprise value for an operator without a System map route",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271571447,
+          "status": "pending",
+          "title": "shows Usage on Enterprise value for an operator without a System map route"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell lets a leader open Enterprise value without mounting usage or calling getMetrics",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271571447,
+          "status": "pending",
+          "title": "lets a leader open Enterprise value without mounting usage or calling getMetrics"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell keeps the Home sentence as the idea draft and opens the guided request with the same wording",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271571447,
+          "status": "pending",
+          "title": "keeps the Home sentence as the idea draft and opens the guided request with the same wording"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell keeps guided edits mounted when navigation needs an unsaved draft and saving is refused",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271571447,
+          "status": "pending",
+          "title": "keeps guided edits mounted when navigation needs an unsaved draft and saving is refused"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell keeps guided edits mounted when navigation needs an unsaved draft and saving is rejected",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271571447,
+          "status": "pending",
+          "title": "keeps guided edits mounted when navigation needs an unsaved draft and saving is rejected"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell keeps the sentence in the box and opens nothing when the draft cannot be saved",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271571447,
+          "status": "pending",
+          "title": "keeps the sentence in the box and opens nothing when the draft cannot be saved"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell opens Marketing for a reviewer without granting drafting controls",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271571447,
+          "status": "pending",
+          "title": "opens Marketing for a reviewer without granting drafting controls"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell shows Marketing to a bounded participant and keeps the synthetic workspace across a Home round-trip",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271571447,
+          "status": "pending",
+          "title": "shows Marketing to a bounded participant and keeps the synthetic workspace across a Home round-trip"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell keeps the administrator queue unread for an operator without site-owner permission and no System map route",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271571447,
+          "status": "pending",
+          "title": "keeps the administrator queue unread for an operator without site-owner permission and no System map route"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell says the support route is unbound when the content document does not name one",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271571447,
+          "status": "pending",
+          "title": "says the support route is unbound when the content document does not name one"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell does not expose an unsafe support link: javascript:void(0)",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271571447,
+          "status": "pending",
+          "title": "does not expose an unsafe support link: javascript:void(0)"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell does not expose an unsafe support link: data:text/html,unsafe",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271571447,
+          "status": "pending",
+          "title": "does not expose an unsafe support link: data:text/html,unsafe"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell does not expose an unsafe support link: //untrusted.invalid/path",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271571447,
+          "status": "pending",
+          "title": "does not expose an unsafe support link: //untrusted.invalid/path"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell resolves site-relative support links against the site rather than the hosting page",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271571447,
+          "status": "pending",
+          "title": "resolves site-relative support links against the site rather than the hosting page"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell renders a configured support route from the page content document",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271571447,
+          "status": "pending",
+          "title": "renders a configured support route from the page content document"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell places the administrator control last, apart from the section tabs, for a site owner",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271571448,
+          "status": "pending",
+          "title": "places the administrator control last, apart from the section tabs, for a site owner"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell opens the administrator queue from that control and still opens a section tab",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271571448,
+          "status": "pending",
+          "title": "opens the administrator queue from that control and still opens a section tab"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell keeps System map absent and administrator reads lazy even for a site owner",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271571448,
+          "status": "pending",
+          "title": "keeps System map absent and administrator reads lazy even for a site owner"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell moves to the administrator control with End when the person may open it",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271571448,
+          "status": "pending",
+          "title": "moves to the administrator control with End when the person may open it"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell spaces Register team AI use from the other Improvement cards and keeps the larger panels below",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271571448,
+          "status": "pending",
+          "title": "spaces Register team AI use from the other Improvement cards and keeps the larger panels below"
+        },
+        {
+          "ancestorTitles": [
+            "AppShell"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "AppShell does not mount the administrator queue or read it for an employee",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271571448,
+          "status": "pending",
+          "title": "does not mount the administrator queue or read it for an employee"
+        }
+      ],
+      "failureMessage": null
+    },
+    {
+      "leaks": false,
+      "numFailingTests": 0,
+      "numPassingTests": 0,
+      "numPendingTests": 6,
+      "numTodoTests": 0,
+      "openHandles": [],
+      "perfStats": {
+        "end": 1790271571707,
+        "loadTestEnvironmentEnd": 1790271571460,
+        "loadTestEnvironmentStart": 1790271571453,
+        "runtime": 246,
+        "setupAfterEnvEnd": 1790271571544,
+        "setupAfterEnvStart": 1790271571498,
+        "setupFilesEnd": 1790271571461,
+        "setupFilesStart": 1790271571461,
+        "slow": false,
+        "start": 1790271571461
+      },
+      "skipped": true,
+      "snapshot": {
+        "added": 0,
+        "fileDeleted": false,
+        "matched": 0,
+        "unchecked": 0,
+        "uncheckedKeys": [],
+        "unmatched": 0,
+        "updated": 0
+      },
+      "testFilePath": "C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-audit-fixes\\src\\webparts\\aiCoeFrontDoor\\components\\app\\AppSections.test.tsx",
+      "testResults": [
+        {
+          "ancestorTitles": [
+            "same-app measurement and teaching entry"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "same-app measurement and teaching entry pads the Engineering starter region vertically in the wide layout without changing the cards",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271571706,
+          "status": "pending",
+          "title": "pads the Engineering starter region vertically in the wide layout without changing the cards"
+        },
+        {
+          "ancestorTitles": [
+            "same-app measurement and teaching entry"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "same-app measurement and teaching entry pads the Engineering starter region vertically in the narrow layout without changing the cards",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271571706,
+          "status": "pending",
+          "title": "pads the Engineering starter region vertically in the narrow layout without changing the cards"
+        },
+        {
+          "ancestorTitles": [
+            "same-app measurement and teaching entry"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "same-app measurement and teaching entry opens and closes the guidance with keyboard controls in the narrow layout",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271571706,
+          "status": "pending",
+          "title": "opens and closes the guidance with keyboard controls in the narrow layout"
+        },
+        {
+          "ancestorTitles": [
+            "same-app measurement and teaching entry"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "same-app measurement and teaching entry opens source, role, stop and recovery quick-start guidance from Engineering without a private source link",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271571706,
+          "status": "pending",
+          "title": "opens source, role, stop and recovery quick-start guidance from Engineering without a private source link"
+        },
+        {
+          "ancestorTitles": [
+            "same-app measurement and teaching entry"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "same-app measurement and teaching entry connects Improvement guidance to the existing outcome form, not another tracker",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271571706,
+          "status": "pending",
+          "title": "connects Improvement guidance to the existing outcome form, not another tracker"
+        },
+        {
+          "ancestorTitles": [
+            "same-app measurement and teaching entry"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "same-app measurement and teaching entry keeps Improvement proposal/retest guidance without the misplaced operator commissioning control",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271571707,
+          "status": "pending",
+          "title": "keeps Improvement proposal/retest guidance without the misplaced operator commissioning control"
+        }
+      ],
+      "failureMessage": null
+    },
+    {
+      "leaks": false,
+      "numFailingTests": 2,
+      "numPassingTests": 0,
+      "numPendingTests": 0,
+      "numTodoTests": 0,
+      "openHandles": [],
+      "perfStats": {
+        "end": 1790271572258,
+        "loadTestEnvironmentEnd": 1790271571719,
+        "loadTestEnvironmentStart": 1790271571710,
+        "runtime": 538,
+        "setupAfterEnvEnd": 1790271571826,
+        "setupAfterEnvStart": 1790271571759,
+        "setupFilesEnd": 1790271571720,
+        "setupFilesStart": 1790271571720,
+        "slow": false,
+        "start": 1790271571720
+      },
+      "skipped": false,
+      "snapshot": {
+        "added": 0,
+        "fileDeleted": false,
+        "matched": 0,
+        "unchecked": 0,
+        "uncheckedKeys": [],
+        "unmatched": 0,
+        "updated": 0
+      },
+      "testFilePath": "C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-audit-fixes\\src\\webparts\\aiCoeFrontDoor\\components\\app\\AppShell.cases.test.tsx",
+      "testResults": [
+        {
+          "ancestorTitles": [
+            "Cases unsaved navigation wiring"
+          ],
+          "duration": 209,
+          "failing": false,
+          "failureDetails": [
+            {
+              "name": "TestingLibraryElementError"
+            }
+          ],
+          "failureMessages": [
+            "TestingLibraryElementError: Unable to find an accessible element with the role \"tab\" and name \"Cases\"\n\nHere are the accessible roles:\n\n  banner:\n\n  Name \"\":\n  \u001b[36m<header\u001b[39m\n    \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-top\"\u001b[39m\n  \u001b[36m/>\u001b[39m\n\n  --------------------------------------------------\n  navigation:\n\n  Name \"AI Center of Excellence sections\":\n  \u001b[36m<nav\u001b[39m\n    \u001b[33maria-label\u001b[39m=\u001b[32m\"AI Center of Excellence sections\"\u001b[39m\n    \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-tabs\"\u001b[39m\n  \u001b[36m/>\u001b[39m\n\n  --------------------------------------------------\n  tablist:\n\n  Name \"AI Center of Excellence sections\":\n  \u001b[36m<div\u001b[39m\n    \u001b[33maria-label\u001b[39m=\u001b[32m\"AI Center of Excellence sections\"\u001b[39m\n    \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-tabrow\"\u001b[39m\n    \u001b[33mrole\u001b[39m=\u001b[32m\"tablist\"\u001b[39m\n  \u001b[36m/>\u001b[39m\n\n  --------------------------------------------------\n  tab:\n\n  Name \"Home\":\n  \u001b[36m<button\u001b[39m\n    \u001b[33maria-controls\u001b[39m=\u001b[32m\"ai-app-panel-home\"\u001b[39m\n    \u001b[33maria-selected\u001b[39m=\u001b[32m\"true\"\u001b[39m\n    \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-tab\"\u001b[39m\n    \u001b[33mid\u001b[39m=\u001b[32m\"ai-app-tab-home\"\u001b[39m\n    \u001b[33mrole\u001b[39m=\u001b[32m\"tab\"\u001b[39m\n    \u001b[33mtabindex\u001b[39m=\u001b[32m\"0\"\u001b[39m\n    \u001b[33mtype\u001b[39m=\u001b[32m\"button\"\u001b[39m\n  \u001b[36m/>\u001b[39m\n\n  Name \"Cases\":\n  \u001b[36m<button\u001b[39m\n    \u001b[33maria-controls\u001b[39m=\u001b[32m\"ai-app-panel-cases\"\u001b[39m\n    \u001b[33maria-selected\u001b[39m=\u001b[32m\"false\"\u001b[39m\n    \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-tab\"\u001b[39m\n    \u001b[33mid\u001b[39m=\u001b[32m\"ai-app-tab-cases\"\u001b[39m\n    \u001b[33mrole\u001b[39m=\u001b[32m\"tab\"\u001b[39m\n    \u001b[33mtabindex\u001b[39m=\u001b[32m\"-1\"\u001b[39m\n    \u001b[33mtype\u001b[39m=\u001b[32m\"button\"\u001b[39m\n  \u001b[36m/>\u001b[39m\n\n  Name \"Engineering\":\n  \u001b[36m<button\u001b[39m\n    \u001b[33maria-controls\u001b[39m=\u001b[32m\"ai-app-panel-engineering\"\u001b[39m\n    \u001b[33maria-selected\u001b[39m=\u001b[32m\"false\"\u001b[39m\n    \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-tab\"\u001b[39m\n    \u001b[33mid\u001b[39m=\u001b[32m\"ai-app-tab-engineering\"\u001b[39m\n    \u001b[33mrole\u001b[39m=\u001b[32m\"tab\"\u001b[39m\n    \u001b[33mtabindex\u001b[39m=\u001b[32m\"-1\"\u001b[39m\n    \u001b[33mtype\u001b[39m=\u001b[32m\"button\"\u001b[39m\n  \u001b[36m/>\u001b[39m\n\n  Name \"Improvement\":\n  \u001b[36m<button\u001b[39m\n    \u001b[33maria-controls\u001b[39m=\u001b[32m\"ai-app-panel-improvement\"\u001b[39m\n    \u001b[33maria-selected\u001b[39m=\u001b[32m\"false\"\u001b[39m\n    \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-tab\"\u001b[39m\n    \u001b[33mid\u001b[39m=\u001b[32m\"ai-app-tab-improvement\"\u001b[39m\n    \u001b[33mrole\u001b[39m=\u001b[32m\"tab\"\u001b[39m\n    \u001b[33mtabindex\u001b[39m=\u001b[32m\"-1\"\u001b[39m\n    \u001b[33mtype\u001b[39m=\u001b[32m\"button\"\u001b[39m\n  \u001b[36m/>\u001b[39m\n\n  --------------------------------------------------\n  tabpanel:\n\n  Name \"Home\":\n  \u001b[36m<section\u001b[39m\n    \u001b[33maria-labelledby\u001b[39m=\u001b[32m\"ai-app-tab-home\"\u001b[39m\n    \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-panel\"\u001b[39m\n    \u001b[33mid\u001b[39m=\u001b[32m\"ai-app-panel-home\"\u001b[39m\n    \u001b[33mrole\u001b[39m=\u001b[32m\"tabpanel\"\u001b[39m\n  \u001b[36m/>\u001b[39m\n\n  --------------------------------------------------\n  heading:\n\n  Name \"Home\":\n  \u001b[36m<h2\u001b[39m\n    \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-heading ai-app-heading--quiet\"\u001b[39m\n    \u001b[33mtabindex\u001b[39m=\u001b[32m\"-1\"\u001b[39m\n  \u001b[36m/>\u001b[39m\n\n  Name \"What this view can say\":\n  \u001b[36m<h3\u001b[39m\n    \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-status-title\"\u001b[39m\n  \u001b[36m/>\u001b[39m\n\n  Name \"What matters now\":\n  \u001b[36m<h3\u001b[39m\n    \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-head-title\"\u001b[39m\n  \u001b[36m/>\u001b[39m\n\n  Name \"Your next request\":\n  \u001b[36m<h4\u001b[39m\n    \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-case-title\"\u001b[39m\n  \u001b[36m/>\u001b[39m\n\n  Name \"Your own status\":\n  \u001b[36m<h4\u001b[39m\n    \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-case-title\"\u001b[39m\n  \u001b[36m/>\u001b[39m\n\n  Name \"How a task turned out\":\n  \u001b[36m<h4\u001b[39m\n    \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-case-title\"\u001b[39m\n  \u001b[36m/>\u001b[39m\n\n  --------------------------------------------------\n  textbox:\n\n  Name \"What are you trying to get done?\":\n  \u001b[36m<input\u001b[39m\n    \u001b[33mautocomplete\u001b[39m=\u001b[32m\"off\"\u001b[39m\n    \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-command-input\"\u001b[39m\n    \u001b[33mid\u001b[39m=\u001b[32m\"ai-app-command-input\"\u001b[39m\n    \u001b[33mplaceholder\u001b[39m=\u001b[32m\"What are you trying to get done?\"\u001b[39m\n    \u001b[33mvalue\u001b[39m=\u001b[32m\"\"\u001b[39m\n  \u001b[36m/>\u001b[39m\n\n  --------------------------------------------------\n  button:\n\n  Name \"Ask the Overture AI CoE\":\n  \u001b[36m<button\u001b[39m\n    \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-primary\"\u001b[39m\n    \u001b[33mtype\u001b[39m=\u001b[32m\"submit\"\u001b[39m\n  \u001b[36m/>\u001b[39m\n\n  Name \"01 Get my work done Ask for a draft, check whether a tool is allowed, or get help with something you are stuck on.\":\n  \u001b[36m<button\u001b[39m\n    \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-choice-button\"\u001b[39m\n    \u001b[33mtype\u001b[39m=\u001b[32m\"button\"\u001b[39m\n  \u001b[36m/>\u001b[39m\n\n  Name \"02 Run or improve the business Register how your team is using AI, record how a task turned out, or raise something that is not working.\":\n  \u001b[36m<button\u001b[39m\n    \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-choice-button\"\u001b[39m\n    \u001b[33mtype\u001b[39m=\u001b[32m\"button\"\u001b[39m\n  \u001b[36m/>\u001b[39m\n\n  Name \"03 Review enterprise AI value See what has actually been measured, with the evidence behind each number.\":\n  \u001b[36m<button\u001b[39m\n    \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-choice-button\"\u001b[39m\n    \u001b[33mtype\u001b[39m=\u001b[32m\"button\"\u001b[39m\n  \u001b[36m/>\u001b[39m\n\n  --------------------------------------------------\n  list:\n\n  Name \"\":\n  \u001b[36m<ul\u001b[39m\n    \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-status-rows\"\u001b[39m\n  \u001b[36m/>\u001b[39m\n\n  Name \"\":\n  \u001b[36m<ul\u001b[39m\n    \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-choices\"\u001b[39m\n  \u001b[36m/>\u001b[39m\n\n  Name \"\":\n  \u001b[36m<ul\u001b[39m\n    \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-threes\"\u001b[39m\n  \u001b[36m/>\u001b[39m\n\n  --------------------------------------------------\n  listitem:\n\n  Name \"\":\n  \u001b[36m<li\u001b[39m\n    \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-status-row\"\u001b[39m\n  \u001b[36m/>\u001b[39m\n\n  Name \"\":\n  \u001b[36m<li\u001b[39m\n    \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-status-row\"\u001b[39m\n  \u001b[36m/>\u001b[39m\n\n  Name \"\":\n  \u001b[36m<li\u001b[39m\n    \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-status-row\"\u001b[39m\n  \u001b[36m/>\u001b[39m\n\n  Name \"\":\n  \u001b[36m<li\u001b[39m\n    \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-choice\"\u001b[39m\n  \u001b[36m/>\u001b[39m\n\n  Name \"\":\n  \u001b[36m<li\u001b[39m\n    \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-choice\"\u001b[39m\n  \u001b[36m/>\u001b[39m\n\n  Name \"\":\n  \u001b[36m<li\u001b[39m\n    \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-choice\"\u001b[39m\n  \u001b[36m/>\u001b[39m\n\n  Name \"\":\n  \u001b[36m<li\u001b[39m\n    \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-surface ai-app-case\"\u001b[39m\n  \u001b[36m/>\u001b[39m\n\n  Name \"\":\n  \u001b[36m<li\u001b[39m\n    \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-surface ai-app-case\"\u001b[39m\n  \u001b[36m/>\u001b[39m\n\n  Name \"\":\n  \u001b[36m<li\u001b[39m\n    \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-surface ai-app-case\"\u001b[39m\n  \u001b[36m/>\u001b[39m\n\n  --------------------------------------------------\n  contentinfo:\n\n  Name \"\":\n  \u001b[36m<footer\u001b[39m\n    \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-foot\"\u001b[39m\n  \u001b[36m/>\u001b[39m\n\n  --------------------------------------------------\n\nIgnored nodes: comments, script, style\n\u001b[36m<body>\u001b[39m\n  \u001b[36m<div>\u001b[39m\n    \u001b[36m<div\u001b[39m\n      \u001b[33mclass\u001b[39m=\u001b[32m\"overture-app ai-view ai-view--app\"\u001b[39m\n    \u001b[36m>\u001b[39m\n      \u001b[36m<header\u001b[39m\n        \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-top\"\u001b[39m\n      \u001b[36m>\u001b[39m\n        \u001b[36m<div\u001b[39m\n          \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-brand\"\u001b[39m\n        \u001b[36m>\u001b[39m\n          \u001b[36m<span\u001b[39m\n            \u001b[33maria-hidden\u001b[39m=\u001b[32m\"true\"\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-mark\"\u001b[39m\n          \u001b[36m/>\u001b[39m\n          \u001b[36m<span\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-brand-text\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[36m<strong\u001b[39m\n              \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-brand-name\"\u001b[39m\n            \u001b[36m>\u001b[39m\n              \u001b[0mOverture\u001b[0m\n            \u001b[36m</strong>\u001b[39m\n            \u001b[36m<small\u001b[39m\n              \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-brand-note\"\u001b[39m\n            \u001b[36m>\u001b[39m\n              \u001b[0mAI Center of Excellence\u001b[0m\n            \u001b[36m</small>\u001b[39m\n          \u001b[36m</span>\u001b[39m\n        \u001b[36m</div>\u001b[39m\n        \u001b[36m<div\u001b[39m\n          \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-chips\"\u001b[39m\n        \u001b[36m>\u001b[39m\n          \u001b[36m<span\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-chip-line\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[36m<span\u001b[39m\n              \u001b[33maria-hidden\u001b[39m=\u001b[32m\"true\"\u001b[39m\n              \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-dot\"\u001b[39m\n            \u001b[36m/>\u001b[39m\n            \u001b[0mEmployee\u001b[0m\n          \u001b[36m</span>\u001b[39m\n          \u001b[36m<span\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-chip-line\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[36m<span\u001b[39m\n              \u001b[33maria-hidden\u001b[39m=\u001b[32m\"true\"\u001b[39m\n              \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-dot ai-app-dot--wait\"\u001b[39m\n            \u001b[36m/>\u001b[39m\n            \u001b[0mAccess not confirmed\u001b[0m\n          \u001b[36m</span>\u001b[39m\n          \u001b[36m<span\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-chip-line ai-app-chip-line--who\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[0mSigned in as Pat Example\u001b[0m\n          \u001b[36m</span>\u001b[39m\n        \u001b[36m</div>\u001b[39m\n      \u001b[36m</header>\u001b[39m\n      \u001b[36m<nav\u001b[39m\n        \u001b[33maria-label\u001b[39m=\u001b[32m\"AI Center of Excellence sections\"\u001b[39m\n        \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-tabs\"\u001b[39m\n      \u001b[36m>\u001b[39m\n        \u001b[36m<div\u001b[39m\n          \u001b[33maria-label\u001b[39m=\u001b[32m\"AI Center of Excellence sections\"\u001b[39m\n          \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-tabrow\"\u001b[39m\n          \u001b[33mrole\u001b[39m=\u001b[32m\"tablist\"\u001b[39m\n        \u001b[36m>\u001b[39m\n          \u001b[36m<button\u001b[39m\n            \u001b[33maria-controls\u001b[39m=\u001b[32m\"ai-app-panel-home\"\u001b[39m\n            \u001b[33maria-selected\u001b[39m=\u001b[32m\"true\"\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-tab\"\u001b[39m\n            \u001b[33mid\u001b[39m=\u001b[32m\"ai-app-tab-home\"\u001b[39m\n            \u001b[33mrole\u001b[39m=\u001b[32m\"tab\"\u001b[39m\n            \u001b[33mtabindex\u001b[39m=\u001b[32m\"0\"\u001b[39m\n            \u001b[33mtype\u001b[39m=\u001b[32m\"button\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[0mHome\u001b[0m\n          \u001b[36m</button>\u001b[39m\n          \u001b[36m<button\u001b[39m\n            \u001b[33maria-controls\u001b[39m=\u001b[32m\"ai-app-panel-cases\"\u001b[39m\n            \u001b[33maria-selected\u001b[39m=\u001b[32m\"false\"\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-tab\"\u001b[39m\n            \u001b[33mid\u001b[39m=\u001b[32m\"ai-app-tab-cases\"\u001b[39m\n            \u001b[33mrole\u001b[39m=\u001b[32m\"tab\"\u001b[39m\n            \u001b[33mtabindex\u001b[39m=\u001b[32m\"-1\"\u001b[39m\n            \u001b[33mtype\u001b[39m=\u001b[32m\"button\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[0mCases\u001b[0m\n          \u001b[36m</button>\u001b[39m\n          \u001b[36m<button\u001b[39m\n            \u001b[33maria-controls\u001b[39m=\u001b[32m\"ai-app-panel-engineering\"\u001b[39m\n            \u001b[33maria-selected\u001b[39m=\u001b[32m\"false\"\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-tab\"\u001b[39m\n            \u001b[33mid\u001b[39m=\u001b[32m\"ai-app-tab-engineering\"\u001b[39m\n            \u001b[33mrole\u001b[39m=\u001b[32m\"tab\"\u001b[39m\n            \u001b[33mtabindex\u001b[39m=\u001b[32m\"-1\"\u001b[39m\n            \u001b[33mtype\u001b[39m=\u001b[32m\"button\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[0mEngineering\u001b[0m\n          \u001b[36m</button>\u001b[39m\n          \u001b[36m<button\u001b[39m\n            \u001b[33maria-controls\u001b[39m=\u001b[32m\"ai-app-panel-improvement\"\u001b[39m\n            \u001b[33maria-selected\u001b[39m=\u001b[32m\"false\"\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-tab\"\u001b[39m\n            \u001b[33mid\u001b[39m=\u001b[32m\"ai-app-tab-improvement\"\u001b[39m\n            \u001b[33mrole\u001b[39m=\u001b[32m\"tab\"\u001b[39m\n            \u001b[33mtabindex\u001b[39m=\u001b[32m\"-1\"\u001b[39m\n            \u001b[33mtype\u001b[39m=\u001b[32m\"button\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[0mImprovement\u001b[0m\n          \u001b[36m</button>\u001b[39m\n        \u001b[36m</div>\u001b[39m\n      \u001b[36m</nav>\u001b[39m\n      \u001b[36m<section\u001b[39m\n        \u001b[33maria-labelledby\u001b[39m=\u001b[32m\"ai-app-tab-home\"\u001b[39m\n        \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-panel\"\u001b[39m\n        \u001b[33mid\u001b[39m=\u001b[32m\"ai-app-panel-home\"\u001b[39m\n        \u001b[33mrole\u001b[39m=\u001b[32m\"tabpanel\"\u001b[39m\n      \u001b[36m>\u001b[39m\n        \u001b[36m<h2\u001b[39m\n          \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-heading ai-app-heading--quiet\"\u001b[39m\n          \u001b[33mtabindex\u001b[39m=\u001b[32m\"-1\"\u001b[39m\n        \u001b[36m>\u001b[39m\n          \u001b[0mHome\u001b[0m\n        \u001b[36m</h2>\u001b[39m\n        \u001b[36m<div>\u001b[39m\n          \u001b[36m<div\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-first\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[36m<div\u001b[39m\n              \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-hero\"\u001b[39m\n            \u001b[36m>\u001b[39m\n              \u001b[36m<p\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-hero-eyebrow\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[0mOverture AI Center of Excellence\u001b[0m\n              \u001b[36m</p>\u001b[39m\n              \u001b[36m<p\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-hero-title\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[0mMake the next move.\u001b[0m\n              \u001b[36m</p>\u001b[39m\n              \u001b[36m<p\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-hero-text\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[0mStart with the work. A person reads every request, and every answer says what it rests on.\u001b[0m\n              \u001b[36m</p>\u001b[39m\n              \u001b[36m<form\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-command\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[36m<label\u001b[39m\n                  \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-command-label\"\u001b[39m\n                  \u001b[33mfor\u001b[39m=\u001b[32m\"ai-app-command-input\"\u001b[39m\n                \u001b[36m>\u001b[39m\n                  \u001b[0mWhat are you trying to get done?\u001b[0m\n                \u001b[36m</label>\u001b[39m\n                \u001b[36m<span\u001b[39m\n                  \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-command-row\"\u001b[39m\n                \u001b[36m>\u001b[39m\n                  \u001b[36m<input\u001b[39m\n                    \u001b[33mautocomplete\u001b[39m=\u001b[32m\"off\"\u001b[39m\n                    \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-command-input\"\u001b[39m\n                    \u001b[33mid\u001b[39m=\u001b[32m\"ai-app-command-input\"\u001b[39m\n                    \u001b[33mplaceholder\u001b[39m=\u001b[32m\"What are you trying to get done?\"\u001b[39m\n                    \u001b[33mvalue\u001b[39m=\u001b[32m\"\"\u001b[39m\n                  \u001b[36m/>\u001b[39m\n                  \u001b[36m<button\u001b[39m\n                    \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-primary\"\u001b[39m\n                    \u001b[33mtype\u001b[39m=\u001b[32m\"submit\"\u001b[39m\n                  \u001b[36m>\u001b[39m\n                    \u001b[0mAsk the Overture AI CoE\u001b[0m\n                  \u001b[36m</button>\u001b[39m\n                \u001b[36m</span>\u001b[39m\n              \u001b[36m</form>\u001b[39m\n              \u001b[36m<p\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-hero-micro\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[0mYour sentence is saved as a draft in the configured store and opens the guided request here. It is not submitted for review from this box.\u001b[0m\n              \u001b[36m</p>\u001b[39m\n            \u001b[36m</div>\u001b[39m\n            \u001b[36m<div\u001b[39m\n              \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-first-side\"\u001b[39m\n            \u001b[36m>\u001b[39m\n              \u001b[36m<section\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-surface ai-app-status\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[36m<h3\u001b[39m\n                  \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-status-title\"\u001b[39m\n                \u001b[36m>\u001b[39m\n                  \u001b[0mWhat this view can say\u001b[0m\n                \u001b[36m</h3>\u001b[39m\n                \u001b[36m<ul\u001b[39m\n                  \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-status-rows\"\u001b[39m\n                \u001b[36m>\u001b[39m\n                  \u001b[36m<li\u001b[39m\n                    \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-status-row\"\u001b[39m\n                  \u001b[36m>\u001b[39m\n                    \u001b[36m<span\u001b[39m\n                      \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-status-text\"\u001b[39m\n                    \u001b[36m>\u001b[39m\n                      \u001b[36m<strong\u001b[39m\n                        \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-status-label\"\u001b[39m\n                      \u001b[36m>\u001b[39m\n                        \u001b[0mYour access\u001b[0m\n                      \u001b[36m</strong>\u001b[39m\n                      \u001b[36m<small\u001b[39m\n                        \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-status-note\"\u001b[39m\n                      \u001b[36m>\u001b[39m\n                        \u001b[0mCould not be confirmed, so less is shown\u001b[0m\n                      \u001b[36m</small>\u001b[39m\n                    \u001b[36m</span>\u001b[39m\n                    \u001b[36m<span\u001b[39m\n                      \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-pill ai-app-pill--wait\"\u001b[39m\n                    \u001b[36m>\u001b[39m\n                      \u001b[0mNot confirmed\u001b[0m\n                    \u001b[36m</span>\u001b[39m\n                  \u001b[36m</li>\u001b[39m\n                  \u001b[36m<li\u001b[39m\n                    \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-status-row\"\u001b[39m\n                  \u001b[36m>\u001b[39m\n                    \u001b[36m<span\u001b[39m\n                      \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-status-text\"\u001b[39m\n                    \u001b[36m>\u001b[39m\n                      \u001b[36m<strong\u001b[39m\n                        \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-status-label\"\u001b[39m\n                      \u001b[36m>\u001b[39m\n                        \u001b[0mWhat this page can do\u001b[0m\n                      \u001b[36m</strong>\u001b[39m\n                      \u001b[36m<small\u001b[39m\n                        \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-status-note\"\u001b[39m\n                      \u001b[36m>\u001b[39m\n                        \u001b[0mIt drafts, records and shows. It sends nothing and publishes nothing.\u001b[0m\n                      \u001b[36m</small>\u001b[39m\n                    \u001b[36m</span>\u001b[39m\n                    \u001b[36m<span\u001b[39m\n                      \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-pill ai-app-pill--good\"\u001b[39m\n                    \u001b[36m>\u001b[39m\n                      \u001b[0mBounded\u001b[0m\n                    \u001b[36m</span>\u001b[39m\n                  \u001b[36m</li>\u001b[39m\n                  \u001b[36m<li\u001b[39m\n                    \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-status-row\"\u001b[39m\n                  \u001b[36m>\u001b[39m\n                    \u001b[36m<span\u001b[39m\n                      \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-status-text\"\u001b[39m\n                    \u001b[36m>\u001b[39m\n                      \u001b[36m<strong\u001b[39m\n                        \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-status-label\"\u001b[39m\n                      \u001b[36m>\u001b[39m\n                        \u001b[0mMarketing workflows\u001b[0m\n                      \u001b[36m</strong>\u001b[39m\n                      \u001b[36m<small\u001b[39m\n                        \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-status-note\"\u001b[39m\n                      \u001b[36m>\u001b[39m\n                        \u001b[0mA labelled demonstration, and a synthetic workspace with real validation, review and persistence over invented sources\u001b[0m\n                      \u001b[36m</small>\u001b[39m\n                    \u001b[36m</span>\u001b[39m\n                    \u001b[36m<span\u001b[39m\n                      \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-pill ai-app-pill--design\"\u001b[39m\n                    \u001b[36m>\u001b[39m\n                      \u001b[0mSynthetic only\u001b[0m\n                    \u001b[36m</span>\u001b[39m\n                  \u001b[36m</li>\u001b[39m\n                \u001b[36m</ul>\u001b[39m\n              \u001b[36m</section>\u001b[39m\n            \u001b[36m</div>\u001b[39m\n          \u001b[36m</div>\u001b[39m\n          \u001b[36m<ul\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-choices\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[36m<li\u001b[39m\n              \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-choice\"\u001b[39m\n            \u001b[36m>\u001b[39m\n              \u001b[36m<button\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-choice-button\"\u001b[39m\n                \u001b[33mtype\u001b[39m=\u001b[32m\"button\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[36m<span\u001b[39m\n                  \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-choice-step\"\u001b[39m\n                \u001b[36m>\u001b[39m\n                  \u001b[0m01\u001b[0m\n                \u001b[36m</span>\u001b[39m\n                \u001b[36m<span\u001b[39m\n                  \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-choice-title\"\u001b[39m\n                \u001b[36m>\u001b[39m\n                  \u001b[0mGet my work done\u001b[0m\n                \u001b[36m</span>\u001b[39m\n                \u001b[36m<span\u001b[39m\n                  \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-choice-text\"\u001b[39m\n                \u001b[36m>\u001b[39m\n                  \u001b[0mAsk for a draft, check whether a tool is allowed, or get help with something you are stuck on.\u001b[0m\n                \u001b[36m</span>\u001b[39m\n              \u001b[36m</button>\u001b[39m\n            \u001b[36m</li>\u001b[39m\n            \u001b[36m<li\u001b[39m\n              \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-choice\"\u001b[39m\n            \u001b[36m>\u001b[39m\n              \u001b[36m<button\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-choice-button\"\u001b[39m\n                \u001b[33mtype\u001b[39m=\u001b[32m\"button\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[36m<span\u001b[39m\n                  \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-choice-step\"\u001b[39m\n                \u001b[36m>\u001b[39m\n                  \u001b[0m02\u001b[0m\n                \u001b[36m</span>\u001b[39m\n                \u001b[36m<span\u001b[39m\n                  \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-choice-title\"\u001b[39m\n                \u001b[36m>\u001b[39m\n                  \u001b[0mRun or improve the business\u001b[0m\n                \u001b[36m</span>\u001b[39m\n                \u001b[36m<span\u001b[39m\n                  \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-choice-text\"\u001b[39m\n                \u001b[36m>\u001b[39m\n                  \u001b[0mRegister how your team is using AI, record how a task turned out, or raise something that is not working.\u001b[0m\n                \u001b[36m</span>\u001b[39m\n              \u001b[36m</button>\u001b[39m\n            \u001b[36m</li>\u001b[39m\n            \u001b[36m<li\u001b[39m\n              \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-choice\"\u001b[39m\n            \u001b[36m>\u001b[39m\n              \u001b[36m<button\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-choice-button\"\u001b[39m\n                \u001b[33mtype\u001b[39m=\u001b[32m\"button\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[36m<span\u001b[39m\n                  \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-choice-step\"\u001b[39m\n                \u001b[36m>\u001b[39m\n                  \u001b[0m03\u001b[0m\n                \u001b[36m</span>\u001b[39m\n                \u001b[36m<span\u001b[39m\n                  \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-choice-title\"\u001b[39m\n                \u001b[36m>\u001b[39m\n                  \u001b[0mReview enterprise AI value\u001b[0m\n                \u001b[36m</span>\u001b[39m\n                \u001b[36m<span\u001b[39m\n                  \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-choice-text\"\u001b[39m\n                \u001b[36m>\u001b[39m\n                  \u001b[0mSee what has actually been measured, with the evidence behind each number.\u001b[0m\n                \u001b[36m</span>\u001b[39m\n              \u001b[36m</button>\u001b[39m\n            \u001b[36m</li>\u001b[39m\n          \u001b[36m</ul>\u001b[39m\n          \u001b[36m<div\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-head\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[36m<div\u001b[39m\n              \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-head-text\"\u001b[39m\n            \u001b[36m>\u001b[39m\n              \u001b[36m<h3\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-head-title\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[0mWhat matters now\u001b[0m\n              \u001b[36m</h3>\u001b[39m\n              \u001b[36m<p\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-head-note\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[0mDrawn from the role your site groups resolved, not from anything this page can change.\u001b[0m\n              \u001b[36m</p>\u001b[39m\n            \u001b[36m</div>\u001b[39m\n          \u001b[36m</div>\u001b[39m\n          \u001b[36m<ul\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-threes\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[36m<li\u001b[39m\n              \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-surface ai-app-case\"\u001b[39m\n            \u001b[36m>\u001b[39m\n              \u001b[36m<span\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-case-top\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[36m<span\u001b[39m\n                  \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-case-ref\"\u001b[39m\n                \u001b[36m>\u001b[39m\n                  \u001b[0m01\u001b[0m\n                \u001b[36m</span>\u001b[39m\n                \u001b[36m<span\u001b[39m\n                  \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-pill ai-app-pill--info\"\u001b[39m\n                \u001b[36m>\u001b[39m\n                  \u001b[0mOpen to you\u001b[0m\n                \u001b[36m</span>\u001b[39m\n              \u001b[36m</span>\u001b[39m\n              \u001b[36m<h4\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-case-title\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[0mYour next request\u001b[0m\n              \u001b[36m</h4>\u001b[39m\n              \u001b[36m<p\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-case-summary\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[0mStart from the work rather than a catalogue of tools. A person reads every request.\u001b[0m\n              \u001b[36m</p>\u001b[39m\n            \u001b[36m</li>\u001b[39m\n            \u001b[36m<li\u001b[39m\n              \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-surface ai-app-case\"\u001b[39m\n            \u001b[36m>\u001b[39m\n              \u001b[36m<span\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-case-top\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[36m<span\u001b[39m\n                  \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-case-ref\"\u001b[39m\n                \u001b[36m>\u001b[39m\n                  \u001b[0m02\u001b[0m\n                \u001b[36m</span>\u001b[39m\n                \u001b[36m<span\u001b[39m\n                  \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-pill ai-app-pill--info\"\u001b[39m\n                \u001b[36m>\u001b[39m\n                  \u001b[0mOpen to you\u001b[0m\n                \u001b[36m</span>\u001b[39m\n              \u001b[36m</span>\u001b[39m\n              \u001b[36m<h4\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-case-title\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[0mYour own status\u001b[0m\n              \u001b[36m</h4>\u001b[39m\n              \u001b[36m<p\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-case-summary\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[0mSee what you have sent and where each one stands, without asking anyone.\u001b[0m\n              \u001b[36m</p>\u001b[39m\n            \u001b[36m</li>\u001b[39m\n            \u001b[36m<li\u001b[39m\n              \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-surface ai-app-case\"\u001b[39m\n            \u001b[36m>\u001b[39m\n              \u001b[36m<span\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-case-top\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[36m<span\u001b[39m\n                  \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-case-ref\"\u001b[39m\n                \u001b[36m>\u001b[39m\n                  \u001b[0m03\u001b[0m\n                \u001b[36m</span>\u001b[39m\n                \u001b[36m<span\u001b[39m\n                  \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-pill ai-app-pill--info\"\u001b[39m\n                \u001b[36m>\u001b[39m\n                  \u001b[0mOpen to you\u001b[0m\n                \u001b[36m</span>\u001b[39m\n              \u001b[36m</span>\u001b[39m\n              \u001b[36m<h4\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-case-title\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[0mHow a task turned out\u001b[0m\n              \u001b[36m</h4>\u001b[39m\n              \u001b[36m<p\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-case-summary\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[0mRecord an outcome in five choices. Nothing you typed or produced is kept.\u001b[0m\n              \u001b[36m</p>\u001b[39m\n            \u001b[36m</li>\u001b[39m\n          \u001b[36m</ul>\u001b[39m\n        \u001b[36m</div>\u001b[39m\n      \u001b[36m</section>\u001b[39m\n      \u001b[36m<footer\u001b[39m\n        \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-foot\"\u001b[39m\n      \u001b[36m>\u001b[39m\n        \u001b[36m<span>\u001b[39m\n          \u001b[0mOverture AI Center of Excellence\u001b[0m\n        \u001b[36m</span>\u001b[39m\n        \u001b[36m<span>\u001b[39m\n          \u001b[0mNothing on this page is sent or published without a person deciding it.\u001b[0m\n        \u001b[36m</span>\u001b[39m\n        \u001b[36m<span\u001b[39m\n          \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-foot-support\"\u001b[39m\n        \u001b[36m>\u001b[39m\n          \u001b[0mSupport route: not bound on this site yet.\u001b[0m\n        \u001b[36m</span>\u001b[39m\n      \u001b[36m</footer>\u001b[39m\n    \u001b[36m</div>\u001b[39m\n  \u001b[36m</div>\u001b[39m\n\u001b[36m</body>\u001b[39m\n    at Object.getElementError (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\@testing-library\\react\\node_modules\\@testing-library\\dom\\dist\\config.js:37:19)\n    at C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\@testing-library\\react\\node_modules\\@testing-library\\dom\\dist\\query-helpers.js:76:38\n    at C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\@testing-library\\react\\node_modules\\@testing-library\\dom\\dist\\query-helpers.js:52:17\n    at C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-rc2-single-webpart\\node_modules\\@testing-library\\react\\node_modules\\@testing-library\\dom\\dist\\query-helpers.js:95:19\n    at Object.<anonymous> (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-audit-fixes\\src\\webparts\\aiCoeFrontDoor\\components\\app\\AppShell.cases.test.tsx:34:17)"
+          ],
+          "fullName": "Cases unsaved navigation wiring blocks pointer navigation, gives case-specific instructions and stays mounted until a confirmed save",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 1,
+          "retryReasons": [],
+          "startAt": 1790271571972,
+          "status": "failed",
+          "title": "blocks pointer navigation, gives case-specific instructions and stays mounted until a confirmed save"
+        },
+        {
+          "ancestorTitles": [
+            "Cases unsaved navigation wiring"
+          ],
+          "duration": 51,
+          "failing": false,
+          "failureDetails": [
+            {
+              "matcherResult": {
+                "pass": false,
+                "message": "expect(element).toHaveFocus()\n\nExpected element with focus:\n  <button aria-controls=\"ai-app-panel-cases\" aria-selected=\"false\" class=\"ai-app-tab\" id=\"ai-app-tab-cases\" role=\"tab\" tabindex=\"-1\" type=\"button\">Cases</button>\nReceived element with focus:\n  <button aria-controls=\"ai-app-panel-engineering\" aria-selected=\"true\" class=\"ai-app-tab\" id=\"ai-app-tab-engineering\" role=\"tab\" tabindex=\"0\" type=\"button\">Engineering</button>"
+              }
+            }
+          ],
+          "failureMessages": [
+            "Error: expect(element).toHaveFocus()\n\nExpected element with focus:\n  <button aria-controls=\"ai-app-panel-cases\" aria-selected=\"false\" class=\"ai-app-tab\" id=\"ai-app-tab-cases\" role=\"tab\" tabindex=\"-1\" type=\"button\">Cases</button>\nReceived element with focus:\n  <button aria-controls=\"ai-app-panel-engineering\" aria-selected=\"true\" class=\"ai-app-tab\" id=\"ai-app-tab-engineering\" role=\"tab\" tabindex=\"0\" type=\"button\">Engineering</button>\n    at Object.<anonymous> (C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-audit-fixes\\src\\webparts\\aiCoeFrontDoor\\components\\app\\AppShell.cases.test.tsx:51:21)"
+          ],
+          "fullName": "Cases unsaved navigation wiring guards keyboard and unload until explicit discard, without deleting a saved draft",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 1,
+          "retryReasons": [],
+          "startAt": 1790271572188,
+          "status": "failed",
+          "title": "guards keyboard and unload until explicit discard, without deleting a saved draft"
+        }
+      ],
+      "failureMessage": "  ● Cases unsaved navigation wiring › blocks pointer navigation, gives case-specific instructions and stays mounted until a confirmed save\n\n    TestingLibraryElementError: Unable to find an accessible element with the role \"tab\" and name \"Cases\"\n\n    Here are the accessible roles:\n\n      banner:\n\n      Name \"\":\n      \u001b[36m<header\u001b[39m\n        \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-top\"\u001b[39m\n      \u001b[36m/>\u001b[39m\n\n      --------------------------------------------------\n      navigation:\n\n      Name \"AI Center of Excellence sections\":\n      \u001b[36m<nav\u001b[39m\n        \u001b[33maria-label\u001b[39m=\u001b[32m\"AI Center of Excellence sections\"\u001b[39m\n        \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-tabs\"\u001b[39m\n      \u001b[36m/>\u001b[39m\n\n      --------------------------------------------------\n      tablist:\n\n      Name \"AI Center of Excellence sections\":\n      \u001b[36m<div\u001b[39m\n        \u001b[33maria-label\u001b[39m=\u001b[32m\"AI Center of Excellence sections\"\u001b[39m\n        \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-tabrow\"\u001b[39m\n        \u001b[33mrole\u001b[39m=\u001b[32m\"tablist\"\u001b[39m\n      \u001b[36m/>\u001b[39m\n\n      --------------------------------------------------\n      tab:\n\n      Name \"Home\":\n      \u001b[36m<button\u001b[39m\n        \u001b[33maria-controls\u001b[39m=\u001b[32m\"ai-app-panel-home\"\u001b[39m\n        \u001b[33maria-selected\u001b[39m=\u001b[32m\"true\"\u001b[39m\n        \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-tab\"\u001b[39m\n        \u001b[33mid\u001b[39m=\u001b[32m\"ai-app-tab-home\"\u001b[39m\n        \u001b[33mrole\u001b[39m=\u001b[32m\"tab\"\u001b[39m\n        \u001b[33mtabindex\u001b[39m=\u001b[32m\"0\"\u001b[39m\n        \u001b[33mtype\u001b[39m=\u001b[32m\"button\"\u001b[39m\n      \u001b[36m/>\u001b[39m\n\n      Name \"Cases\":\n      \u001b[36m<button\u001b[39m\n        \u001b[33maria-controls\u001b[39m=\u001b[32m\"ai-app-panel-cases\"\u001b[39m\n        \u001b[33maria-selected\u001b[39m=\u001b[32m\"false\"\u001b[39m\n        \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-tab\"\u001b[39m\n        \u001b[33mid\u001b[39m=\u001b[32m\"ai-app-tab-cases\"\u001b[39m\n        \u001b[33mrole\u001b[39m=\u001b[32m\"tab\"\u001b[39m\n        \u001b[33mtabindex\u001b[39m=\u001b[32m\"-1\"\u001b[39m\n        \u001b[33mtype\u001b[39m=\u001b[32m\"button\"\u001b[39m\n      \u001b[36m/>\u001b[39m\n\n      Name \"Engineering\":\n      \u001b[36m<button\u001b[39m\n        \u001b[33maria-controls\u001b[39m=\u001b[32m\"ai-app-panel-engineering\"\u001b[39m\n        \u001b[33maria-selected\u001b[39m=\u001b[32m\"false\"\u001b[39m\n        \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-tab\"\u001b[39m\n        \u001b[33mid\u001b[39m=\u001b[32m\"ai-app-tab-engineering\"\u001b[39m\n        \u001b[33mrole\u001b[39m=\u001b[32m\"tab\"\u001b[39m\n        \u001b[33mtabindex\u001b[39m=\u001b[32m\"-1\"\u001b[39m\n        \u001b[33mtype\u001b[39m=\u001b[32m\"button\"\u001b[39m\n      \u001b[36m/>\u001b[39m\n\n      Name \"Improvement\":\n      \u001b[36m<button\u001b[39m\n        \u001b[33maria-controls\u001b[39m=\u001b[32m\"ai-app-panel-improvement\"\u001b[39m\n        \u001b[33maria-selected\u001b[39m=\u001b[32m\"false\"\u001b[39m\n        \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-tab\"\u001b[39m\n        \u001b[33mid\u001b[39m=\u001b[32m\"ai-app-tab-improvement\"\u001b[39m\n        \u001b[33mrole\u001b[39m=\u001b[32m\"tab\"\u001b[39m\n        \u001b[33mtabindex\u001b[39m=\u001b[32m\"-1\"\u001b[39m\n        \u001b[33mtype\u001b[39m=\u001b[32m\"button\"\u001b[39m\n      \u001b[36m/>\u001b[39m\n\n      --------------------------------------------------\n      tabpanel:\n\n      Name \"Home\":\n      \u001b[36m<section\u001b[39m\n        \u001b[33maria-labelledby\u001b[39m=\u001b[32m\"ai-app-tab-home\"\u001b[39m\n        \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-panel\"\u001b[39m\n        \u001b[33mid\u001b[39m=\u001b[32m\"ai-app-panel-home\"\u001b[39m\n        \u001b[33mrole\u001b[39m=\u001b[32m\"tabpanel\"\u001b[39m\n      \u001b[36m/>\u001b[39m\n\n      --------------------------------------------------\n      heading:\n\n      Name \"Home\":\n      \u001b[36m<h2\u001b[39m\n        \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-heading ai-app-heading--quiet\"\u001b[39m\n        \u001b[33mtabindex\u001b[39m=\u001b[32m\"-1\"\u001b[39m\n      \u001b[36m/>\u001b[39m\n\n      Name \"What this view can say\":\n      \u001b[36m<h3\u001b[39m\n        \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-status-title\"\u001b[39m\n      \u001b[36m/>\u001b[39m\n\n      Name \"What matters now\":\n      \u001b[36m<h3\u001b[39m\n        \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-head-title\"\u001b[39m\n      \u001b[36m/>\u001b[39m\n\n      Name \"Your next request\":\n      \u001b[36m<h4\u001b[39m\n        \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-case-title\"\u001b[39m\n      \u001b[36m/>\u001b[39m\n\n      Name \"Your own status\":\n      \u001b[36m<h4\u001b[39m\n        \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-case-title\"\u001b[39m\n      \u001b[36m/>\u001b[39m\n\n      Name \"How a task turned out\":\n      \u001b[36m<h4\u001b[39m\n        \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-case-title\"\u001b[39m\n      \u001b[36m/>\u001b[39m\n\n      --------------------------------------------------\n      textbox:\n\n      Name \"What are you trying to get done?\":\n      \u001b[36m<input\u001b[39m\n        \u001b[33mautocomplete\u001b[39m=\u001b[32m\"off\"\u001b[39m\n        \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-command-input\"\u001b[39m\n        \u001b[33mid\u001b[39m=\u001b[32m\"ai-app-command-input\"\u001b[39m\n        \u001b[33mplaceholder\u001b[39m=\u001b[32m\"What are you trying to get done?\"\u001b[39m\n        \u001b[33mvalue\u001b[39m=\u001b[32m\"\"\u001b[39m\n      \u001b[36m/>\u001b[39m\n\n      --------------------------------------------------\n      button:\n\n      Name \"Ask the Overture AI CoE\":\n      \u001b[36m<button\u001b[39m\n        \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-primary\"\u001b[39m\n        \u001b[33mtype\u001b[39m=\u001b[32m\"submit\"\u001b[39m\n      \u001b[36m/>\u001b[39m\n\n      Name \"01 Get my work done Ask for a draft, check whether a tool is allowed, or get help with something you are stuck on.\":\n      \u001b[36m<button\u001b[39m\n        \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-choice-button\"\u001b[39m\n        \u001b[33mtype\u001b[39m=\u001b[32m\"button\"\u001b[39m\n      \u001b[36m/>\u001b[39m\n\n      Name \"02 Run or improve the business Register how your team is using AI, record how a task turned out, or raise something that is not working.\":\n      \u001b[36m<button\u001b[39m\n        \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-choice-button\"\u001b[39m\n        \u001b[33mtype\u001b[39m=\u001b[32m\"button\"\u001b[39m\n      \u001b[36m/>\u001b[39m\n\n      Name \"03 Review enterprise AI value See what has actually been measured, with the evidence behind each number.\":\n      \u001b[36m<button\u001b[39m\n        \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-choice-button\"\u001b[39m\n        \u001b[33mtype\u001b[39m=\u001b[32m\"button\"\u001b[39m\n      \u001b[36m/>\u001b[39m\n\n      --------------------------------------------------\n      list:\n\n      Name \"\":\n      \u001b[36m<ul\u001b[39m\n        \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-status-rows\"\u001b[39m\n      \u001b[36m/>\u001b[39m\n\n      Name \"\":\n      \u001b[36m<ul\u001b[39m\n        \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-choices\"\u001b[39m\n      \u001b[36m/>\u001b[39m\n\n      Name \"\":\n      \u001b[36m<ul\u001b[39m\n        \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-threes\"\u001b[39m\n      \u001b[36m/>\u001b[39m\n\n      --------------------------------------------------\n      listitem:\n\n      Name \"\":\n      \u001b[36m<li\u001b[39m\n        \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-status-row\"\u001b[39m\n      \u001b[36m/>\u001b[39m\n\n      Name \"\":\n      \u001b[36m<li\u001b[39m\n        \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-status-row\"\u001b[39m\n      \u001b[36m/>\u001b[39m\n\n      Name \"\":\n      \u001b[36m<li\u001b[39m\n        \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-status-row\"\u001b[39m\n      \u001b[36m/>\u001b[39m\n\n      Name \"\":\n      \u001b[36m<li\u001b[39m\n        \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-choice\"\u001b[39m\n      \u001b[36m/>\u001b[39m\n\n      Name \"\":\n      \u001b[36m<li\u001b[39m\n        \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-choice\"\u001b[39m\n      \u001b[36m/>\u001b[39m\n\n      Name \"\":\n      \u001b[36m<li\u001b[39m\n        \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-choice\"\u001b[39m\n      \u001b[36m/>\u001b[39m\n\n      Name \"\":\n      \u001b[36m<li\u001b[39m\n        \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-surface ai-app-case\"\u001b[39m\n      \u001b[36m/>\u001b[39m\n\n      Name \"\":\n      \u001b[36m<li\u001b[39m\n        \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-surface ai-app-case\"\u001b[39m\n      \u001b[36m/>\u001b[39m\n\n      Name \"\":\n      \u001b[36m<li\u001b[39m\n        \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-surface ai-app-case\"\u001b[39m\n      \u001b[36m/>\u001b[39m\n\n      --------------------------------------------------\n      contentinfo:\n\n      Name \"\":\n      \u001b[36m<footer\u001b[39m\n        \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-foot\"\u001b[39m\n      \u001b[36m/>\u001b[39m\n\n      --------------------------------------------------\n\n    Ignored nodes: comments, script, style\n    \u001b[36m<body>\u001b[39m\n      \u001b[36m<div>\u001b[39m\n        \u001b[36m<div\u001b[39m\n          \u001b[33mclass\u001b[39m=\u001b[32m\"overture-app ai-view ai-view--app\"\u001b[39m\n        \u001b[36m>\u001b[39m\n          \u001b[36m<header\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-top\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[36m<div\u001b[39m\n              \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-brand\"\u001b[39m\n            \u001b[36m>\u001b[39m\n              \u001b[36m<span\u001b[39m\n                \u001b[33maria-hidden\u001b[39m=\u001b[32m\"true\"\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-mark\"\u001b[39m\n              \u001b[36m/>\u001b[39m\n              \u001b[36m<span\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-brand-text\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[36m<strong\u001b[39m\n                  \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-brand-name\"\u001b[39m\n                \u001b[36m>\u001b[39m\n                  \u001b[0mOverture\u001b[0m\n                \u001b[36m</strong>\u001b[39m\n                \u001b[36m<small\u001b[39m\n                  \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-brand-note\"\u001b[39m\n                \u001b[36m>\u001b[39m\n                  \u001b[0mAI Center of Excellence\u001b[0m\n                \u001b[36m</small>\u001b[39m\n              \u001b[36m</span>\u001b[39m\n            \u001b[36m</div>\u001b[39m\n            \u001b[36m<div\u001b[39m\n              \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-chips\"\u001b[39m\n            \u001b[36m>\u001b[39m\n              \u001b[36m<span\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-chip-line\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[36m<span\u001b[39m\n                  \u001b[33maria-hidden\u001b[39m=\u001b[32m\"true\"\u001b[39m\n                  \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-dot\"\u001b[39m\n                \u001b[36m/>\u001b[39m\n                \u001b[0mEmployee\u001b[0m\n              \u001b[36m</span>\u001b[39m\n              \u001b[36m<span\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-chip-line\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[36m<span\u001b[39m\n                  \u001b[33maria-hidden\u001b[39m=\u001b[32m\"true\"\u001b[39m\n                  \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-dot ai-app-dot--wait\"\u001b[39m\n                \u001b[36m/>\u001b[39m\n                \u001b[0mAccess not confirmed\u001b[0m\n              \u001b[36m</span>\u001b[39m\n              \u001b[36m<span\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-chip-line ai-app-chip-line--who\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[0mSigned in as Pat Example\u001b[0m\n              \u001b[36m</span>\u001b[39m\n            \u001b[36m</div>\u001b[39m\n          \u001b[36m</header>\u001b[39m\n          \u001b[36m<nav\u001b[39m\n            \u001b[33maria-label\u001b[39m=\u001b[32m\"AI Center of Excellence sections\"\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-tabs\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[36m<div\u001b[39m\n              \u001b[33maria-label\u001b[39m=\u001b[32m\"AI Center of Excellence sections\"\u001b[39m\n              \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-tabrow\"\u001b[39m\n              \u001b[33mrole\u001b[39m=\u001b[32m\"tablist\"\u001b[39m\n            \u001b[36m>\u001b[39m\n              \u001b[36m<button\u001b[39m\n                \u001b[33maria-controls\u001b[39m=\u001b[32m\"ai-app-panel-home\"\u001b[39m\n                \u001b[33maria-selected\u001b[39m=\u001b[32m\"true\"\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-tab\"\u001b[39m\n                \u001b[33mid\u001b[39m=\u001b[32m\"ai-app-tab-home\"\u001b[39m\n                \u001b[33mrole\u001b[39m=\u001b[32m\"tab\"\u001b[39m\n                \u001b[33mtabindex\u001b[39m=\u001b[32m\"0\"\u001b[39m\n                \u001b[33mtype\u001b[39m=\u001b[32m\"button\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[0mHome\u001b[0m\n              \u001b[36m</button>\u001b[39m\n              \u001b[36m<button\u001b[39m\n                \u001b[33maria-controls\u001b[39m=\u001b[32m\"ai-app-panel-cases\"\u001b[39m\n                \u001b[33maria-selected\u001b[39m=\u001b[32m\"false\"\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-tab\"\u001b[39m\n                \u001b[33mid\u001b[39m=\u001b[32m\"ai-app-tab-cases\"\u001b[39m\n                \u001b[33mrole\u001b[39m=\u001b[32m\"tab\"\u001b[39m\n                \u001b[33mtabindex\u001b[39m=\u001b[32m\"-1\"\u001b[39m\n                \u001b[33mtype\u001b[39m=\u001b[32m\"button\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[0mCases\u001b[0m\n              \u001b[36m</button>\u001b[39m\n              \u001b[36m<button\u001b[39m\n                \u001b[33maria-controls\u001b[39m=\u001b[32m\"ai-app-panel-engineering\"\u001b[39m\n                \u001b[33maria-selected\u001b[39m=\u001b[32m\"false\"\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-tab\"\u001b[39m\n                \u001b[33mid\u001b[39m=\u001b[32m\"ai-app-tab-engineering\"\u001b[39m\n                \u001b[33mrole\u001b[39m=\u001b[32m\"tab\"\u001b[39m\n                \u001b[33mtabindex\u001b[39m=\u001b[32m\"-1\"\u001b[39m\n                \u001b[33mtype\u001b[39m=\u001b[32m\"button\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[0mEngineering\u001b[0m\n              \u001b[36m</button>\u001b[39m\n              \u001b[36m<button\u001b[39m\n                \u001b[33maria-controls\u001b[39m=\u001b[32m\"ai-app-panel-improvement\"\u001b[39m\n                \u001b[33maria-selected\u001b[39m=\u001b[32m\"false\"\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-tab\"\u001b[39m\n                \u001b[33mid\u001b[39m=\u001b[32m\"ai-app-tab-improvement\"\u001b[39m\n                \u001b[33mrole\u001b[39m=\u001b[32m\"tab\"\u001b[39m\n                \u001b[33mtabindex\u001b[39m=\u001b[32m\"-1\"\u001b[39m\n                \u001b[33mtype\u001b[39m=\u001b[32m\"button\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[0mImprovement\u001b[0m\n              \u001b[36m</button>\u001b[39m\n            \u001b[36m</div>\u001b[39m\n          \u001b[36m</nav>\u001b[39m\n          \u001b[36m<section\u001b[39m\n            \u001b[33maria-labelledby\u001b[39m=\u001b[32m\"ai-app-tab-home\"\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-panel\"\u001b[39m\n            \u001b[33mid\u001b[39m=\u001b[32m\"ai-app-panel-home\"\u001b[39m\n            \u001b[33mrole\u001b[39m=\u001b[32m\"tabpanel\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[36m<h2\u001b[39m\n              \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-heading ai-app-heading--quiet\"\u001b[39m\n              \u001b[33mtabindex\u001b[39m=\u001b[32m\"-1\"\u001b[39m\n            \u001b[36m>\u001b[39m\n              \u001b[0mHome\u001b[0m\n            \u001b[36m</h2>\u001b[39m\n            \u001b[36m<div>\u001b[39m\n              \u001b[36m<div\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-first\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[36m<div\u001b[39m\n                  \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-hero\"\u001b[39m\n                \u001b[36m>\u001b[39m\n                  \u001b[36m<p\u001b[39m\n                    \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-hero-eyebrow\"\u001b[39m\n                  \u001b[36m>\u001b[39m\n                    \u001b[0mOverture AI Center of Excellence\u001b[0m\n                  \u001b[36m</p>\u001b[39m\n                  \u001b[36m<p\u001b[39m\n                    \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-hero-title\"\u001b[39m\n                  \u001b[36m>\u001b[39m\n                    \u001b[0mMake the next move.\u001b[0m\n                  \u001b[36m</p>\u001b[39m\n                  \u001b[36m<p\u001b[39m\n                    \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-hero-text\"\u001b[39m\n                  \u001b[36m>\u001b[39m\n                    \u001b[0mStart with the work. A person reads every request, and every answer says what it rests on.\u001b[0m\n                  \u001b[36m</p>\u001b[39m\n                  \u001b[36m<form\u001b[39m\n                    \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-command\"\u001b[39m\n                  \u001b[36m>\u001b[39m\n                    \u001b[36m<label\u001b[39m\n                      \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-command-label\"\u001b[39m\n                      \u001b[33mfor\u001b[39m=\u001b[32m\"ai-app-command-input\"\u001b[39m\n                    \u001b[36m>\u001b[39m\n                      \u001b[0mWhat are you trying to get done?\u001b[0m\n                    \u001b[36m</label>\u001b[39m\n                    \u001b[36m<span\u001b[39m\n                      \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-command-row\"\u001b[39m\n                    \u001b[36m>\u001b[39m\n                      \u001b[36m<input\u001b[39m\n                        \u001b[33mautocomplete\u001b[39m=\u001b[32m\"off\"\u001b[39m\n                        \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-command-input\"\u001b[39m\n                        \u001b[33mid\u001b[39m=\u001b[32m\"ai-app-command-input\"\u001b[39m\n                        \u001b[33mplaceholder\u001b[39m=\u001b[32m\"What are you trying to get done?\"\u001b[39m\n                        \u001b[33mvalue\u001b[39m=\u001b[32m\"\"\u001b[39m\n                      \u001b[36m/>\u001b[39m\n                      \u001b[36m<button\u001b[39m\n                        \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-primary\"\u001b[39m\n                        \u001b[33mtype\u001b[39m=\u001b[32m\"submit\"\u001b[39m\n                      \u001b[36m>\u001b[39m\n                        \u001b[0mAsk the Overture AI CoE\u001b[0m\n                      \u001b[36m</button>\u001b[39m\n                    \u001b[36m</span>\u001b[39m\n                  \u001b[36m</form>\u001b[39m\n                  \u001b[36m<p\u001b[39m\n                    \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-hero-micro\"\u001b[39m\n                  \u001b[36m>\u001b[39m\n                    \u001b[0mYour sentence is saved as a draft in the configured store and opens the guided request here. It is not submitted for review from this box.\u001b[0m\n                  \u001b[36m</p>\u001b[39m\n                \u001b[36m</div>\u001b[39m\n                \u001b[36m<div\u001b[39m\n                  \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-first-side\"\u001b[39m\n                \u001b[36m>\u001b[39m\n                  \u001b[36m<section\u001b[39m\n                    \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-surface ai-app-status\"\u001b[39m\n                  \u001b[36m>\u001b[39m\n                    \u001b[36m<h3\u001b[39m\n                      \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-status-title\"\u001b[39m\n                    \u001b[36m>\u001b[39m\n                      \u001b[0mWhat this view can say\u001b[0m\n                    \u001b[36m</h3>\u001b[39m\n                    \u001b[36m<ul\u001b[39m\n                      \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-status-rows\"\u001b[39m\n                    \u001b[36m>\u001b[39m\n                      \u001b[36m<li\u001b[39m\n                        \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-status-row\"\u001b[39m\n                      \u001b[36m>\u001b[39m\n                        \u001b[36m<span\u001b[39m\n                          \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-status-text\"\u001b[39m\n                        \u001b[36m>\u001b[39m\n                          \u001b[36m<strong\u001b[39m\n                            \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-status-label\"\u001b[39m\n                          \u001b[36m>\u001b[39m\n                            \u001b[0mYour access\u001b[0m\n                          \u001b[36m</strong>\u001b[39m\n                          \u001b[36m<small\u001b[39m\n                            \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-status-note\"\u001b[39m\n                          \u001b[36m>\u001b[39m\n                            \u001b[0mCould not be confirmed, so less is shown\u001b[0m\n                          \u001b[36m</small>\u001b[39m\n                        \u001b[36m</span>\u001b[39m\n                        \u001b[36m<span\u001b[39m\n                          \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-pill ai-app-pill--wait\"\u001b[39m\n                        \u001b[36m>\u001b[39m\n                          \u001b[0mNot confirmed\u001b[0m\n                        \u001b[36m</span>\u001b[39m\n                      \u001b[36m</li>\u001b[39m\n                      \u001b[36m<li\u001b[39m\n                        \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-status-row\"\u001b[39m\n                      \u001b[36m>\u001b[39m\n                        \u001b[36m<span\u001b[39m\n                          \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-status-text\"\u001b[39m\n                        \u001b[36m>\u001b[39m\n                          \u001b[36m<strong\u001b[39m\n                            \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-status-label\"\u001b[39m\n                          \u001b[36m>\u001b[39m\n                            \u001b[0mWhat this page can do\u001b[0m\n                          \u001b[36m</strong>\u001b[39m\n                          \u001b[36m<small\u001b[39m\n                            \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-status-note\"\u001b[39m\n                          \u001b[36m>\u001b[39m\n                            \u001b[0mIt drafts, records and shows. It sends nothing and publishes nothing.\u001b[0m\n                          \u001b[36m</small>\u001b[39m\n                        \u001b[36m</span>\u001b[39m\n                        \u001b[36m<span\u001b[39m\n                          \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-pill ai-app-pill--good\"\u001b[39m\n                        \u001b[36m>\u001b[39m\n                          \u001b[0mBounded\u001b[0m\n                        \u001b[36m</span>\u001b[39m\n                      \u001b[36m</li>\u001b[39m\n                      \u001b[36m<li\u001b[39m\n                        \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-status-row\"\u001b[39m\n                      \u001b[36m>\u001b[39m\n                        \u001b[36m<span\u001b[39m\n                          \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-status-text\"\u001b[39m\n                        \u001b[36m>\u001b[39m\n                          \u001b[36m<strong\u001b[39m\n                            \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-status-label\"\u001b[39m\n                          \u001b[36m>\u001b[39m\n                            \u001b[0mMarketing workflows\u001b[0m\n                          \u001b[36m</strong>\u001b[39m\n                          \u001b[36m<small\u001b[39m\n                            \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-status-note\"\u001b[39m\n                          \u001b[36m>\u001b[39m\n                            \u001b[0mA labelled demonstration, and a synthetic workspace with real validation, review and persistence over invented sources\u001b[0m\n                          \u001b[36m</small>\u001b[39m\n                        \u001b[36m</span>\u001b[39m\n                        \u001b[36m<span\u001b[39m\n                          \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-pill ai-app-pill--design\"\u001b[39m\n                        \u001b[36m>\u001b[39m\n                          \u001b[0mSynthetic only\u001b[0m\n                        \u001b[36m</span>\u001b[39m\n                      \u001b[36m</li>\u001b[39m\n                    \u001b[36m</ul>\u001b[39m\n                  \u001b[36m</section>\u001b[39m\n                \u001b[36m</div>\u001b[39m\n              \u001b[36m</div>\u001b[39m\n              \u001b[36m<ul\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-choices\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[36m<li\u001b[39m\n                  \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-choice\"\u001b[39m\n                \u001b[36m>\u001b[39m\n                  \u001b[36m<button\u001b[39m\n                    \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-choice-button\"\u001b[39m\n                    \u001b[33mtype\u001b[39m=\u001b[32m\"button\"\u001b[39m\n                  \u001b[36m>\u001b[39m\n                    \u001b[36m<span\u001b[39m\n                      \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-choice-step\"\u001b[39m\n                    \u001b[36m>\u001b[39m\n                      \u001b[0m01\u001b[0m\n                    \u001b[36m</span>\u001b[39m\n                    \u001b[36m<span\u001b[39m\n                      \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-choice-title\"\u001b[39m\n                    \u001b[36m>\u001b[39m\n                      \u001b[0mGet my work done\u001b[0m\n                    \u001b[36m</span>\u001b[39m\n                    \u001b[36m<span\u001b[39m\n                      \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-choice-text\"\u001b[39m\n                    \u001b[36m>\u001b[39m\n                      \u001b[0mAsk for a draft, check whether a tool is allowed, or get help with something you are stuck on.\u001b[0m\n                    \u001b[36m</span>\u001b[39m\n                  \u001b[36m</button>\u001b[39m\n                \u001b[36m</li>\u001b[39m\n                \u001b[36m<li\u001b[39m\n                  \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-choice\"\u001b[39m\n                \u001b[36m>\u001b[39m\n                  \u001b[36m<button\u001b[39m\n                    \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-choice-button\"\u001b[39m\n                    \u001b[33mtype\u001b[39m=\u001b[32m\"button\"\u001b[39m\n                  \u001b[36m>\u001b[39m\n                    \u001b[36m<span\u001b[39m\n                      \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-choice-step\"\u001b[39m\n                    \u001b[36m>\u001b[39m\n                      \u001b[0m02\u001b[0m\n                    \u001b[36m</span>\u001b[39m\n                    \u001b[36m<span\u001b[39m\n                      \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-choice-title\"\u001b[39m\n                    \u001b[36m>\u001b[39m\n                      \u001b[0mRun or improve the business\u001b[0m\n                    \u001b[36m</span>\u001b[39m\n                    \u001b[36m<span\u001b[39m\n                      \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-choice-text\"\u001b[39m\n                    \u001b[36m>\u001b[39m\n                      \u001b[0mRegister how your team is using AI, record how a task turned out, or raise something that is not working.\u001b[0m\n                    \u001b[36m</span>\u001b[39m\n                  \u001b[36m</button>\u001b[39m\n                \u001b[36m</li>\u001b[39m\n                \u001b[36m<li\u001b[39m\n                  \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-choice\"\u001b[39m\n                \u001b[36m>\u001b[39m\n                  \u001b[36m<button\u001b[39m\n                    \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-choice-button\"\u001b[39m\n                    \u001b[33mtype\u001b[39m=\u001b[32m\"button\"\u001b[39m\n                  \u001b[36m>\u001b[39m\n                    \u001b[36m<span\u001b[39m\n                      \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-choice-step\"\u001b[39m\n                    \u001b[36m>\u001b[39m\n                      \u001b[0m03\u001b[0m\n                    \u001b[36m</span>\u001b[39m\n                    \u001b[36m<span\u001b[39m\n                      \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-choice-title\"\u001b[39m\n                    \u001b[36m>\u001b[39m\n                      \u001b[0mReview enterprise AI value\u001b[0m\n                    \u001b[36m</span>\u001b[39m\n                    \u001b[36m<span\u001b[39m\n                      \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-choice-text\"\u001b[39m\n                    \u001b[36m>\u001b[39m\n                      \u001b[0mSee what has actually been measured, with the evidence behind each number.\u001b[0m\n                    \u001b[36m</span>\u001b[39m\n                  \u001b[36m</button>\u001b[39m\n                \u001b[36m</li>\u001b[39m\n              \u001b[36m</ul>\u001b[39m\n              \u001b[36m<div\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-head\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[36m<div\u001b[39m\n                  \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-head-text\"\u001b[39m\n                \u001b[36m>\u001b[39m\n                  \u001b[36m<h3\u001b[39m\n                    \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-head-title\"\u001b[39m\n                  \u001b[36m>\u001b[39m\n                    \u001b[0mWhat matters now\u001b[0m\n                  \u001b[36m</h3>\u001b[39m\n                  \u001b[36m<p\u001b[39m\n                    \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-head-note\"\u001b[39m\n                  \u001b[36m>\u001b[39m\n                    \u001b[0mDrawn from the role your site groups resolved, not from anything this page can change.\u001b[0m\n                  \u001b[36m</p>\u001b[39m\n                \u001b[36m</div>\u001b[39m\n              \u001b[36m</div>\u001b[39m\n              \u001b[36m<ul\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-threes\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[36m<li\u001b[39m\n                  \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-surface ai-app-case\"\u001b[39m\n                \u001b[36m>\u001b[39m\n                  \u001b[36m<span\u001b[39m\n                    \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-case-top\"\u001b[39m\n                  \u001b[36m>\u001b[39m\n                    \u001b[36m<span\u001b[39m\n                      \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-case-ref\"\u001b[39m\n                    \u001b[36m>\u001b[39m\n                      \u001b[0m01\u001b[0m\n                    \u001b[36m</span>\u001b[39m\n                    \u001b[36m<span\u001b[39m\n                      \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-pill ai-app-pill--info\"\u001b[39m\n                    \u001b[36m>\u001b[39m\n                      \u001b[0mOpen to you\u001b[0m\n                    \u001b[36m</span>\u001b[39m\n                  \u001b[36m</span>\u001b[39m\n                  \u001b[36m<h4\u001b[39m\n                    \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-case-title\"\u001b[39m\n                  \u001b[36m>\u001b[39m\n                    \u001b[0mYour next request\u001b[0m\n                  \u001b[36m</h4>\u001b[39m\n                  \u001b[36m<p\u001b[39m\n                    \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-case-summary\"\u001b[39m\n                  \u001b[36m>\u001b[39m\n                    \u001b[0mStart from the work rather than a catalogue of tools. A person reads every request.\u001b[0m\n                  \u001b[36m</p>\u001b[39m\n                \u001b[36m</li>\u001b[39m\n                \u001b[36m<li\u001b[39m\n                  \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-surface ai-app-case\"\u001b[39m\n                \u001b[36m>\u001b[39m\n                  \u001b[36m<span\u001b[39m\n                    \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-case-top\"\u001b[39m\n                  \u001b[36m>\u001b[39m\n                    \u001b[36m<span\u001b[39m\n                      \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-case-ref\"\u001b[39m\n                    \u001b[36m>\u001b[39m\n                      \u001b[0m02\u001b[0m\n                    \u001b[36m</span>\u001b[39m\n                    \u001b[36m<span\u001b[39m\n                      \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-pill ai-app-pill--info\"\u001b[39m\n                    \u001b[36m>\u001b[39m\n                      \u001b[0mOpen to you\u001b[0m\n                    \u001b[36m</span>\u001b[39m\n                  \u001b[36m</span>\u001b[39m\n                  \u001b[36m<h4\u001b[39m\n                    \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-case-title\"\u001b[39m\n                  \u001b[36m>\u001b[39m\n                    \u001b[0mYour own status\u001b[0m\n                  \u001b[36m</h4>\u001b[39m\n                  \u001b[36m<p\u001b[39m\n                    \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-case-summary\"\u001b[39m\n                  \u001b[36m>\u001b[39m\n                    \u001b[0mSee what you have sent and where each one stands, without asking anyone.\u001b[0m\n                  \u001b[36m</p>\u001b[39m\n                \u001b[36m</li>\u001b[39m\n                \u001b[36m<li\u001b[39m\n                  \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-surface ai-app-case\"\u001b[39m\n                \u001b[36m>\u001b[39m\n                  \u001b[36m<span\u001b[39m\n                    \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-case-top\"\u001b[39m\n                  \u001b[36m>\u001b[39m\n                    \u001b[36m<span\u001b[39m\n                      \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-case-ref\"\u001b[39m\n                    \u001b[36m>\u001b[39m\n                      \u001b[0m03\u001b[0m\n                    \u001b[36m</span>\u001b[39m\n                    \u001b[36m<span\u001b[39m\n                      \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-pill ai-app-pill--info\"\u001b[39m\n                    \u001b[36m>\u001b[39m\n                      \u001b[0mOpen to you\u001b[0m\n                    \u001b[36m</span>\u001b[39m\n                  \u001b[36m</span>\u001b[39m\n                  \u001b[36m<h4\u001b[39m\n                    \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-case-title\"\u001b[39m\n                  \u001b[36m>\u001b[39m\n                    \u001b[0mHow a task turned out\u001b[0m\n                  \u001b[36m</h4>\u001b[39m\n                  \u001b[36m<p\u001b[39m\n                    \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-case-summary\"\u001b[39m\n                  \u001b[36m>\u001b[39m\n                    \u001b[0mRecord an outcome in five choices. Nothing you typed or produced is kept.\u001b[0m\n                  \u001b[36m</p>\u001b[39m\n                \u001b[36m</li>\u001b[39m\n              \u001b[36m</ul>\u001b[39m\n            \u001b[36m</div>\u001b[39m\n          \u001b[36m</section>\u001b[39m\n          \u001b[36m<footer\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-foot\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[36m<span>\u001b[39m\n              \u001b[0mOverture AI Center of Excellence\u001b[0m\n            \u001b[36m</span>\u001b[39m\n            \u001b[36m<span>\u001b[39m\n              \u001b[0mNothing on this page is sent or published without a person deciding it.\u001b[0m\n            \u001b[36m</span>\u001b[39m\n            \u001b[36m<span\u001b[39m\n              \u001b[33mclass\u001b[39m=\u001b[32m\"ai-app-foot-support\"\u001b[39m\n            \u001b[36m>\u001b[39m\n              \u001b[0mSupport route: not bound on this site yet.\u001b[0m\n            \u001b[36m</span>\u001b[39m\n          \u001b[36m</footer>\u001b[39m\n        \u001b[36m</div>\u001b[39m\n      \u001b[36m</div>\u001b[39m\n    \u001b[36m</body>\u001b[39m\n\n    \u001b[0m \u001b[90m 32 |\u001b[39m     \u001b[36mconst\u001b[39m view \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m cases()\u001b[33m;\u001b[39m\n     \u001b[90m 33 |\u001b[39m     fireEvent\u001b[33m.\u001b[39mclick(view\u001b[33m.\u001b[39mgetByRole(\u001b[32m'tab'\u001b[39m\u001b[33m,\u001b[39m { name\u001b[33m:\u001b[39m \u001b[32m'Home'\u001b[39m }))\u001b[33m;\u001b[39m\n    \u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 34 |\u001b[39m     expect(view\u001b[33m.\u001b[39mgetByRole(\u001b[32m'tab'\u001b[39m\u001b[33m,\u001b[39m { name\u001b[33m:\u001b[39m \u001b[32m'Cases'\u001b[39m\u001b[33m,\u001b[39m selected\u001b[33m:\u001b[39m \u001b[36mtrue\u001b[39m }))\u001b[33m.\u001b[39mtoBeInTheDocument()\u001b[33m;\u001b[39m\n     \u001b[90m    |\u001b[39m                 \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n     \u001b[90m 35 |\u001b[39m     expect(view\u001b[33m.\u001b[39mgetByRole(\u001b[32m'alert'\u001b[39m))\u001b[33m.\u001b[39mtoHaveTextContent(\u001b[32m'Save case changes'\u001b[39m)\u001b[33m;\u001b[39m\n     \u001b[90m 36 |\u001b[39m     expect(view\u001b[33m.\u001b[39mgetByRole(\u001b[32m'alert'\u001b[39m))\u001b[33m.\u001b[39mtoHaveTextContent(\u001b[32m'response'\u001b[39m)\u001b[33m;\u001b[39m\n     \u001b[90m 37 |\u001b[39m     expect(view\u001b[33m.\u001b[39mgetByRole(\u001b[32m'alert'\u001b[39m))\u001b[33m.\u001b[39mnot\u001b[33m.\u001b[39mtoHaveTextContent(\u001b[32m'Save draft'\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m\n\n      at Object.getElementError (../overture-ai-coe-front-door-rc2-single-webpart/node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/config.js:37:19)\n      at ../overture-ai-coe-front-door-rc2-single-webpart/node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/query-helpers.js:76:38\n      at ../overture-ai-coe-front-door-rc2-single-webpart/node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/query-helpers.js:52:17\n      at ../overture-ai-coe-front-door-rc2-single-webpart/node_modules/@testing-library/react/node_modules/@testing-library/dom/dist/query-helpers.js:95:19\n      at Object.<anonymous> (src/webparts/aiCoeFrontDoor/components/app/AppShell.cases.test.tsx:34:17)\n\n  ● Cases unsaved navigation wiring › guards keyboard and unload until explicit discard, without deleting a saved draft\n\n    expect(element).toHaveFocus()\n\n    Expected element with focus:\n      <button aria-controls=\"ai-app-panel-cases\" aria-selected=\"false\" class=\"ai-app-tab\" id=\"ai-app-tab-cases\" role=\"tab\" tabindex=\"-1\" type=\"button\">Cases</button>\n    Received element with focus:\n      <button aria-controls=\"ai-app-panel-engineering\" aria-selected=\"true\" class=\"ai-app-tab\" id=\"ai-app-tab-engineering\" role=\"tab\" tabindex=\"0\" type=\"button\">Engineering</button>\n\n    \u001b[0m \u001b[90m 49 |\u001b[39m     caseTab\u001b[33m.\u001b[39mfocus()\u001b[33m;\u001b[39m\n     \u001b[90m 50 |\u001b[39m     fireEvent\u001b[33m.\u001b[39mkeyDown(caseTab\u001b[33m,\u001b[39m { key\u001b[33m:\u001b[39m \u001b[32m'ArrowRight'\u001b[39m })\u001b[33m;\u001b[39m\n    \u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 51 |\u001b[39m     expect(caseTab)\u001b[33m.\u001b[39mtoHaveFocus()\u001b[33m;\u001b[39m\n     \u001b[90m    |\u001b[39m                     \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n     \u001b[90m 52 |\u001b[39m     expect(caseTab)\u001b[33m.\u001b[39mtoHaveAttribute(\u001b[32m'aria-selected'\u001b[39m\u001b[33m,\u001b[39m \u001b[32m'true'\u001b[39m)\u001b[33m;\u001b[39m\n     \u001b[90m 53 |\u001b[39m     \u001b[36mconst\u001b[39m before \u001b[33m=\u001b[39m \u001b[36mnew\u001b[39m \u001b[33mEvent\u001b[39m(\u001b[32m'beforeunload'\u001b[39m\u001b[33m,\u001b[39m { cancelable\u001b[33m:\u001b[39m \u001b[36mtrue\u001b[39m })\u001b[33m;\u001b[39m\n     \u001b[90m 54 |\u001b[39m     window\u001b[33m.\u001b[39mdispatchEvent(before)\u001b[33m;\u001b[39m\u001b[0m\n\n      at Object.<anonymous> (src/webparts/aiCoeFrontDoor/components/app/AppShell.cases.test.tsx:51:21)\n"
+    },
+    {
+      "leaks": false,
+      "numFailingTests": 0,
+      "numPassingTests": 0,
+      "numPendingTests": 14,
+      "numTodoTests": 0,
+      "openHandles": [],
+      "perfStats": {
+        "end": 1790271572374,
+        "loadTestEnvironmentEnd": 1790271572267,
+        "loadTestEnvironmentStart": 1790271572262,
+        "runtime": 107,
+        "setupAfterEnvEnd": 1790271572364,
+        "setupAfterEnvStart": 1790271572299,
+        "setupFilesEnd": 1790271572268,
+        "setupFilesStart": 1790271572267,
+        "slow": false,
+        "start": 1790271572267
+      },
+      "skipped": true,
+      "snapshot": {
+        "added": 0,
+        "fileDeleted": false,
+        "matched": 0,
+        "unchecked": 0,
+        "uncheckedKeys": [],
+        "unmatched": 0,
+        "updated": 0
+      },
+      "testFilePath": "C:\\Users\\scfre\\JuliannaAI\\OSS-AI-CoE\\development\\overture-ai-coe-front-door-audit-fixes\\src\\webparts\\aiCoeFrontDoor\\content\\appSections.test.ts",
+      "testResults": [
+        {
+          "ancestorTitles": [
+            "consolidated section routes"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "consolidated section routes removes System map from every section route while retaining guarded Admin and value",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271572373,
+          "status": "pending",
+          "title": "removes System map from every section route while retaining guarded Admin and value"
+        },
+        {
+          "ancestorTitles": [
+            "consolidated section routes"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "consolidated section routes returns Home for stale or unknown route map",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271572373,
+          "status": "pending",
+          "title": "returns Home for stale or unknown route map"
+        },
+        {
+          "ancestorTitles": [
+            "consolidated section routes"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "consolidated section routes returns Home for stale or unknown route  MAP ",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271572373,
+          "status": "pending",
+          "title": "returns Home for stale or unknown route  MAP "
+        },
+        {
+          "ancestorTitles": [
+            "consolidated section routes"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "consolidated section routes returns Home for stale or unknown route System map",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271572373,
+          "status": "pending",
+          "title": "returns Home for stale or unknown route System map"
+        },
+        {
+          "ancestorTitles": [
+            "consolidated section routes"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "consolidated section routes returns Home for stale or unknown route undefined",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271572373,
+          "status": "pending",
+          "title": "returns Home for stale or unknown route undefined"
+        },
+        {
+          "ancestorTitles": [
+            "consolidated section routes"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "consolidated section routes returns Home for stale or unknown route null",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271572373,
+          "status": "pending",
+          "title": "returns Home for stale or unknown route null"
+        },
+        {
+          "ancestorTitles": [
+            "consolidated section routes"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "consolidated section routes returns Home for stale or unknown route 3",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271572374,
+          "status": "pending",
+          "title": "returns Home for stale or unknown route 3"
+        },
+        {
+          "ancestorTitles": [
+            "consolidated section routes"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "consolidated section routes keeps supported route home addressable",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271572374,
+          "status": "pending",
+          "title": "keeps supported route home addressable"
+        },
+        {
+          "ancestorTitles": [
+            "consolidated section routes"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "consolidated section routes keeps supported route cases addressable",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271572374,
+          "status": "pending",
+          "title": "keeps supported route cases addressable"
+        },
+        {
+          "ancestorTitles": [
+            "consolidated section routes"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "consolidated section routes keeps supported route engineering addressable",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271572374,
+          "status": "pending",
+          "title": "keeps supported route engineering addressable"
+        },
+        {
+          "ancestorTitles": [
+            "consolidated section routes"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "consolidated section routes keeps supported route marketing addressable",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271572374,
+          "status": "pending",
+          "title": "keeps supported route marketing addressable"
+        },
+        {
+          "ancestorTitles": [
+            "consolidated section routes"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "consolidated section routes keeps supported route improvement addressable",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271572374,
+          "status": "pending",
+          "title": "keeps supported route improvement addressable"
+        },
+        {
+          "ancestorTitles": [
+            "consolidated section routes"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "consolidated section routes keeps supported route value addressable",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271572374,
+          "status": "pending",
+          "title": "keeps supported route value addressable"
+        },
+        {
+          "ancestorTitles": [
+            "consolidated section routes"
+          ],
+          "duration": null,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "consolidated section routes keeps supported route admin addressable",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1790271572374,
+          "status": "pending",
+          "title": "keeps supported route admin addressable"
+        }
+      ],
+      "failureMessage": null
+    }
+  ],
+  "wasInterrupted": false
+}

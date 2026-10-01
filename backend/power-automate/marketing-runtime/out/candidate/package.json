@@ -1,0 +1,11 @@
+{
+  "name": "@oss/marketing-runtime-offline-candidate",
+  "version": "0.1.1",
+  "private": true,
+  "type": "commonjs",
+  "main": "server/invoke.cjs",
+  "engines": {
+    "node": ">=22"
+  },
+  "description": "Offline review candidate; NOT a Power Automate solution or commissioned tenant runtime"
+}

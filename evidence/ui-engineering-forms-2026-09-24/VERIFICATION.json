@@ -1,0 +1,50 @@
+{
+  "verifiedAt": "2026-09-24T21:38:36.141454+00:00",
+  "status": "PASS",
+  "scope": "ENGINEERING_FORM_WIDTH_ONLY_OFFLINE",
+  "forms": [
+    "Explore an AI idea",
+    "Check a tool or task",
+    "Get help or training"
+  ],
+  "sourceChanges": [
+    "src/webparts/aiCoeFrontDoor/components/app/AppSections.test.tsx",
+    "src/webparts/aiCoeFrontDoor/components/app/AppShell.tsx"
+  ],
+  "sourceHashes": {
+    "src/webparts/aiCoeFrontDoor/components/app/AppSections.test.tsx": "43406949c68da481251956cc477576ef0340346afbfc6294bf4d754290a62194",
+    "src/webparts/aiCoeFrontDoor/components/app/AppShell.tsx": "5f970638b8466441763a151b2fff7572a1f78e1c208e66166f0cde217a859c83"
+  },
+  "productionTests": {
+    "passed": 1194,
+    "suites": 125,
+    "failed": 0,
+    "log": "heft-production.log"
+  },
+  "focusedTests": {
+    "passed": 133,
+    "suites": 12,
+    "failed": 0,
+    "skipped": 0
+  },
+  "browser": {
+    "receipt": "browser-results.json",
+    "checks": 9,
+    "javascriptErrors": [],
+    "externalRequests": [],
+    "previousUIRegression": "final-browser.json"
+  },
+  "lintWarnings": 112,
+  "servedBundle": "dist/ai-coe-front-door-web-part_220801d4f50f84bba68f.js",
+  "servedBundleSha256": "8f4a2ebdbac9888284c5ab356bbc837f4e72f092634337dbeec5c7c1310257d8",
+  "previewUrl": "http://127.0.0.1:4173/?view=app&organization=CloudWave&role=marketingParticipant",
+  "previewProcess": "proc_1d5b9c4e1a4e",
+  "previousPackageUnchanged": true,
+  "previousPackageSha256": "5a01fd5a6c40a3e2b71999de9cba44a2a7fe630148c9debc7d83885d2fc7a86b",
+  "beforeSnapshot": "before-engineering-forms.zip",
+  "beforeSnapshotSha256": "b98a9374571ef0532c37e9d1f8028b2302359fca834cd08fd78ede6417352f6b",
+  "newPackage": false,
+  "tenantChanges": false,
+  "liveModelCalls": false,
+  "committed": false
+}

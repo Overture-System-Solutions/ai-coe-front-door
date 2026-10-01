@@ -1,0 +1,64 @@
+TAP version 13
+# Subtest: offline candidate builds dependency-complete runtime and exports a disabled-safe host invocation
+ok 1 - offline candidate builds dependency-complete runtime and exports a disabled-safe host invocation
+  ---
+  duration_ms: 700.3307
+  type: 'test'
+  ...
+# Subtest: IR-01 completed source replay and new recovery refuse current sourceRecord revocation
+ok 2 - IR-01 completed source replay and new recovery refuse current sourceRecord revocation
+  ---
+  duration_ms: 375.7394
+  type: 'test'
+  ...
+# Subtest: IR-01 completed source replay and new recovery refuse current registerRevoked revocation
+ok 3 - IR-01 completed source replay and new recovery refuse current registerRevoked revocation
+  ---
+  duration_ms: 7.7943
+  type: 'test'
+  ...
+# Subtest: IR-01 completed source replay and new recovery refuse current registerApproval revocation
+ok 4 - IR-01 completed source replay and new recovery refuse current registerApproval revocation
+  ---
+  duration_ms: 7.912
+  type: 'test'
+  ...
+# Subtest: IR-01 completed source replay and new recovery refuse current permission revocation
+ok 5 - IR-01 completed source replay and new recovery refuse current permission revocation
+  ---
+  duration_ms: 6.5748
+  type: 'test'
+  ...
+# Subtest: IR-01 completed source replay and new recovery refuse current audience revocation
+ok 6 - IR-01 completed source replay and new recovery refuse current audience revocation
+  ---
+  duration_ms: 10.6667
+  type: 'test'
+  ...
+# Subtest: IR-01 completed source replay and new recovery refuse current version revocation
+ok 7 - IR-01 completed source replay and new recovery refuse current version revocation
+  ---
+  duration_ms: 4.7555
+  type: 'test'
+  ...
+# Subtest: IR-02 source revoked during byte retrieval is never offered to the provider
+ok 8 - IR-02 source revoked during byte retrieval is never offered to the provider
+  ---
+  duration_ms: 4.1135
+  type: 'test'
+  ...
+# Subtest: IR-02 provider-intent boundary refreshes source access before invoking the connector
+ok 9 - IR-02 provider-intent boundary refreshes source access before invoking the connector
+  ---
+  duration_ms: 7.0328
+  type: 'test'
+  ...
+1..9
+# tests 9
+# suites 0
+# pass 9
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1359.2355

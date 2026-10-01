@@ -115,7 +115,7 @@ describe('IdeaWorkflow', () => {
     const first: IWorkflowHarness = await reachSummary({ draftStore });
     fireEvent.change(screen.getByLabelText('Suggested use-case title'), { target: { value: 'Edited title' } });
     fireEvent.click(screen.getByRole('button', { name: 'Save draft' }));
-    await screen.findByText('Draft saved on this device.');
+    await screen.findByText('Draft saved.');
     expect(JSON.parse(draftStore.drafts.idea)).toEqual({
       answers,
       currentStepId: 'anythingElse',
@@ -243,7 +243,7 @@ describe('IdeaWorkflow with a Claude draft service', () => {
     const first: IWorkflowHarness = await reachAiSummary(ideaDrafts, { draftStore });
     await screen.findByRole('heading', { name: 'Here is a draft summary' });
     fireEvent.click(screen.getByRole('button', { name: 'Save draft' }));
-    await screen.findByText('Draft saved on this device.');
+    await screen.findByText('Draft saved.');
     expect(JSON.parse(draftStore.drafts.idea)).toMatchObject({ phase: 'summary', summaryDraft: aiDraft, draftProvenance: provenance });
     first.unmount();
 

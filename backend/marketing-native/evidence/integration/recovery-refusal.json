@@ -1,0 +1,32 @@
+{
+  "boundary": "ACTUAL_GENERATED_WDL_AND_COMPILED_HELPER_WITH_EXPLICIT_FAKE_EXTERNALS",
+  "helperSha256": "ef9d0b11e7a973ea64777bc7837db4afb6fd0a41aaf0d9e65fcd06186c3f5517",
+  "flowSha256": "d65946575cd3c94c5f08c99d34f592c0a37410042b0219e495d3602835eb7767",
+  "count": 1,
+  "passed": 0,
+  "results": [
+    {
+      "name": "same original completed intent",
+      "operation": "RecoverMarketingIntentV1",
+      "pass": false,
+      "error": "{\"Finalize_Native_Plan_Assert\": \"invalid literal for int() with base 10: 'MARKETING_HELPER_REFUSED'\", \"For_each_command\": \"{\\\"Finalize_Native_Plan_Assert\\\": \\\"invalid literal for int() with base 10: 'MARKETING_HELPER_REFUSED'\\\"}\"}",
+      "helperRefusals": [
+        {
+          "mode": "Plan",
+          "code": "PLAN_STATE_CHANGED"
+        }
+      ],
+      "failedActions": {
+        "Finalize_Native_Plan_Assert": "invalid literal for int() with base 10: 'MARKETING_HELPER_REFUSED'",
+        "For_each_command": "{\"Finalize_Native_Plan_Assert\": \"invalid literal for int() with base 10: 'MARKETING_HELPER_REFUSED'\"}"
+      },
+      "actionsExecuted": 349,
+      "durableEffects": [
+        "update:canonical:98a01058df5a91eba3f3b32c952b9974ce9fefca7d1c1ff770fab73c09f7eb76",
+        "insert:canonical:78164ccd291b504698f90f20526f2a4719efbdb3540acf9f67a9f0f60153d03f",
+        "insert:canonical:c2a426c21ca0cc8cea27fa3126b9cea91f18455615517b4295355d53d0cfc8b5"
+      ]
+    }
+  ],
+  "nativeAcceptance": false
+}

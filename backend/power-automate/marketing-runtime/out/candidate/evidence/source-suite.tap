@@ -1,0 +1,358 @@
+TAP version 13
+# Subtest: business factory uses immutable ingress, no client authority and fresh read ids across restart
+ok 1 - business factory uses immutable ingress, no client authority and fresh read ids across restart
+  ---
+  duration_ms: 57.519
+  type: 'test'
+  ...
+# Subtest: M01 refuses acceptance after a cited source is revoked
+ok 2 - M01 refuses acceptance after a cited source is revoked
+  ---
+  duration_ms: 77.652
+  type: 'test'
+  ...
+# Subtest: M02 parent supersession invalidates an accepted child
+ok 3 - M02 parent supersession invalidates an accepted child
+  ---
+  duration_ms: 63.9327
+  type: 'test'
+  ...
+# Subtest: M03 receipt outage stays inconclusive and recovers the same review
+ok 4 - M03 receipt outage stays inconclusive and recovers the same review
+  ---
+  duration_ms: 15.541
+  type: 'test'
+  ...
+# Subtest: M03 completion outage stays inconclusive and recovers the same review
+ok 5 - M03 completion outage stays inconclusive and recovers the same review
+  ---
+  duration_ms: 14.2538
+  type: 'test'
+  ...
+# Subtest: M04 rejects a review kind which cannot accept this artifact
+ok 6 - M04 rejects a review kind which cannot accept this artifact
+  ---
+  duration_ms: 20.6598
+  type: 'test'
+  ...
+# Subtest: M04 meeting acceptance requires every artifact review kind
+ok 7 - M04 meeting acceptance requires every artifact review kind
+  ---
+  duration_ms: 64.2293
+  type: 'test'
+  ...
+# Subtest: draft intent outage cannot report saved
+ok 8 - draft intent outage cannot report saved
+  ---
+  duration_ms: 1.9662
+  type: 'test'
+  ...
+# Subtest: draft receipt outage cannot report saved
+ok 9 - draft receipt outage cannot report saved
+  ---
+  duration_ms: 5.1271
+  type: 'test'
+  ...
+# Subtest: draft completion outage cannot report saved
+ok 10 - draft completion outage cannot report saved
+  ---
+  duration_ms: 5.4653
+  type: 'test'
+  ...
+# Subtest: qualified provider provenance retains the server qualification receipt
+ok 11 - qualified provider provenance retains the server qualification receipt
+  ---
+  duration_ms: 3.9954
+  type: 'test'
+  ...
+# Subtest: meeting notes are retrieved at their reference, never replaced by caller text
+ok 12 - meeting notes are retrieved at their reference, never replaced by caller text
+  ---
+  duration_ms: 14.0788
+  type: 'test'
+  ...
+# Subtest: tenant substitution cannot request a review or redraft an artifact
+ok 13 - tenant substitution cannot request a review or redraft an artifact
+  ---
+  duration_ms: 3.3822
+  type: 'test'
+  ...
+# Subtest: tampered payload is quarantined rather than trusting its declared hash
+ok 14 - tampered payload is quarantined rather than trusting its declared hash
+  ---
+  duration_ms: 3.9468
+  type: 'test'
+  ...
+# Subtest: authority revoked between decision write and verification cannot accept
+ok 15 - authority revoked between decision write and verification cannot accept
+  ---
+  duration_ms: 9.1185
+  type: 'test'
+  ...
+# Subtest: dispatcher drafts with real server source/provider adapters at a fake external boundary
+ok 16 - dispatcher drafts with real server source/provider adapters at a fake external boundary
+  ---
+  duration_ms: 152.0889
+  type: 'test'
+  ...
+# Subtest: all three dispatcher journeys retain parent/review/source lineage; revocation removes acceptance
+ok 17 - all three dispatcher journeys retain parent/review/source lineage; revocation removes acceptance
+  ---
+  duration_ms: 578.3785
+  type: 'test'
+  ...
+# Subtest: completed command replay and recovery recheck current Author work membership
+ok 18 - completed command replay and recovery recheck current Author work membership
+  ---
+  duration_ms: 16.8569
+  type: 'test'
+  ...
+# Subtest: source endpoint refuses revoked register references and malformed approval expiry
+ok 19 - source endpoint refuses revoked register references and malformed approval expiry
+  ---
+  duration_ms: 14.9794
+  type: 'test'
+  ...
+# Subtest: lost provider outcome stays uncertain and never invokes a second model attempt
+ok 20 - lost provider outcome stays uncertain and never invokes a second model attempt
+  ---
+  duration_ms: 10.0817
+  type: 'test'
+  ...
+# Subtest: durable draft receipt outage recovers the same draft without provider replay
+ok 21 - durable draft receipt outage recovers the same draft without provider replay
+  ---
+  duration_ms: 16.9604
+  type: 'test'
+  ...
+# Subtest: dispatcher blocks altered ingress, cross-author recovery, wrong review kind and permission-denied sources
+ok 22 - dispatcher blocks altered ingress, cross-author recovery, wrong review kind and permission-denied sources
+  ---
+  duration_ms: 24.6172
+  type: 'test'
+  ...
+# Subtest: result publication requires readback of private Author-only ACLs
+ok 23 - result publication requires readback of private Author-only ACLs
+  ---
+  duration_ms: 3.0072
+  type: 'test'
+  ...
+# Subtest: business facade work selector and manual save execute through the real dispatcher and guarded readback
+ok 24 - business facade work selector and manual save execute through the real dispatcher and guarded readback
+  ---
+  duration_ms: 75.1372
+  type: 'test'
+  ...
+# Subtest: manual mutation and recovery reuse original opaque IDs across reload and never repeat a write
+ok 25 - manual mutation and recovery reuse original opaque IDs across reload and never repeat a write
+  ---
+  duration_ms: 50.441
+  type: 'test'
+  ...
+# Subtest: manual facade retains its reference for hash-valid but wrong-provenance responses
+ok 26 - manual facade retains its reference for hash-valid but wrong-provenance responses
+  ---
+  duration_ms: 34.8339
+  type: 'test'
+  ...
+# Subtest: manual malformed input cannot create an artifact
+ok 27 - manual malformed input cannot create an artifact
+  ---
+  duration_ms: 28.3073
+  type: 'test'
+  ...
+# Subtest: manual wrongKind input cannot create an artifact
+ok 28 - manual wrongKind input cannot create an artifact
+  ---
+  duration_ms: 16.0669
+  type: 'test'
+  ...
+# Subtest: manual wrongWork input cannot create an artifact
+ok 29 - manual wrongWork input cannot create an artifact
+  ---
+  duration_ms: 4.0805
+  type: 'test'
+  ...
+# Subtest: manual metadata input cannot create an artifact
+ok 30 - manual metadata input cannot create an artifact
+  ---
+  duration_ms: 2.9806
+  type: 'test'
+  ...
+# Subtest: manual state input cannot create an artifact
+ok 31 - manual state input cannot create an artifact
+  ---
+  duration_ms: 2.9855
+  type: 'test'
+  ...
+# Subtest: manual identity input cannot create an artifact
+ok 32 - manual identity input cannot create an artifact
+  ---
+  duration_ms: 3.3695
+  type: 'test'
+  ...
+# Subtest: manual permissions input cannot create an artifact
+ok 33 - manual permissions input cannot create an artifact
+  ---
+  duration_ms: 3.1135
+  type: 'test'
+  ...
+# Subtest: manual provenance input cannot create an artifact
+ok 34 - manual provenance input cannot create an artifact
+  ---
+  duration_ms: 2.3818
+  type: 'test'
+  ...
+# Subtest: manual receipt input cannot create an artifact
+ok 35 - manual receipt input cannot create an artifact
+  ---
+  duration_ms: 3.1635
+  type: 'test'
+  ...
+# Subtest: manual pin input cannot create an artifact
+ok 36 - manual pin input cannot create an artifact
+  ---
+  duration_ms: 17.5847
+  type: 'test'
+  ...
+# Subtest: manual revisions require own artifact, same work/kind and explicit current version
+ok 37 - manual revisions require own artifact, same work/kind and explicit current version
+  ---
+  duration_ms: 69.3751
+  type: 'test'
+  ...
+# Subtest: manual recovery refuses newly revoked sources rather than completing a pending revision
+ok 38 - manual recovery refuses newly revoked sources rather than completing a pending revision
+  ---
+  duration_ms: 21.494
+  type: 'test'
+  ...
+# Subtest: manual commit rechecks member enablement after the durable intent boundary
+ok 39 - manual commit rechecks member enablement after the durable intent boundary
+  ---
+  duration_ms: 4.9922
+  type: 'test'
+  ...
+# Subtest: manual brief uses the real source gate and immutable repository without any provider call
+ok 40 - manual brief uses the real source gate and immutable repository without any provider call
+  ---
+  duration_ms: 111.6955
+  type: 'test'
+  ...
+# Subtest: manual revisions reject stale tokens even when distinct immutable SharePoint rows share an ETag
+ok 41 - manual revisions reject stale tokens even when distinct immutable SharePoint rows share an ETag
+  ---
+  duration_ms: 78.1128
+  type: 'test'
+  ...
+# Subtest: manual content-plan and follow-through use verified accepted parents and every normal review kind
+ok 42 - manual content-plan and follow-through use verified accepted parents and every normal review kind
+  ---
+  duration_ms: 476.7111
+  type: 'test'
+  ...
+# Subtest: authorized work selector reads only the current verified Author member workIds
+ok 43 - authorized work selector reads only the current verified Author member workIds
+  ---
+  duration_ms: 8.6928
+  type: 'test'
+  ...
+# Subtest: offline candidate builds dependency-complete runtime and exports a disabled-safe host invocation
+ok 44 - offline candidate builds dependency-complete runtime and exports a disabled-safe host invocation
+  ---
+  duration_ms: 933.4217
+  type: 'test'
+  ...
+# Subtest: qualified provider uses frozen Claude wire shape and refuses truncation/tool/refusal
+ok 45 - qualified provider uses frozen Claude wire shape and refuses truncation/tool/refusal
+  ---
+  duration_ms: 5.1488
+  type: 'test'
+  ...
+# Subtest: server source retrieval pins permission, ETag and content hash instead of client text
+ok 46 - server source retrieval pins permission, ETag and content hash instead of client text
+  ---
+  duration_ms: 22.6183
+  type: 'test'
+  ...
+# Subtest: executable dispatcher derives identity from request Author and rejects payload authority
+ok 47 - executable dispatcher derives identity from request Author and rejects payload authority
+  ---
+  duration_ms: 64.7309
+  type: 'test'
+  ...
+# Subtest: canonical enumeration is bounded even when continuation URLs never repeat
+ok 48 - canonical enumeration is bounded even when continuation URLs never repeat
+  ---
+  duration_ms: 3.5822
+  type: 'test'
+  ...
+# Subtest: server SharePoint HTTP supplies a finite network deadline and disallows redirects
+ok 49 - server SharePoint HTTP supplies a finite network deadline and disallows redirects
+  ---
+  duration_ms: 1.3486
+  type: 'test'
+  ...
+# Subtest: server canonical adapter persists across instances and rejects stale ETags
+ok 50 - server canonical adapter persists across instances and rejects stale ETags
+  ---
+  duration_ms: 2.4099
+  type: 'test'
+  ...
+# Subtest: IR-01 completed source replay and new recovery refuse current sourceRecord revocation
+ok 51 - IR-01 completed source replay and new recovery refuse current sourceRecord revocation
+  ---
+  duration_ms: 47.7381
+  type: 'test'
+  ...
+# Subtest: IR-01 completed source replay and new recovery refuse current registerRevoked revocation
+ok 52 - IR-01 completed source replay and new recovery refuse current registerRevoked revocation
+  ---
+  duration_ms: 26.2502
+  type: 'test'
+  ...
+# Subtest: IR-01 completed source replay and new recovery refuse current registerApproval revocation
+ok 53 - IR-01 completed source replay and new recovery refuse current registerApproval revocation
+  ---
+  duration_ms: 24.3303
+  type: 'test'
+  ...
+# Subtest: IR-01 completed source replay and new recovery refuse current permission revocation
+ok 54 - IR-01 completed source replay and new recovery refuse current permission revocation
+  ---
+  duration_ms: 23.5878
+  type: 'test'
+  ...
+# Subtest: IR-01 completed source replay and new recovery refuse current audience revocation
+ok 55 - IR-01 completed source replay and new recovery refuse current audience revocation
+  ---
+  duration_ms: 21.9639
+  type: 'test'
+  ...
+# Subtest: IR-01 completed source replay and new recovery refuse current version revocation
+ok 56 - IR-01 completed source replay and new recovery refuse current version revocation
+  ---
+  duration_ms: 24.3948
+  type: 'test'
+  ...
+# Subtest: IR-02 source revoked during byte retrieval is never offered to the provider
+ok 57 - IR-02 source revoked during byte retrieval is never offered to the provider
+  ---
+  duration_ms: 9.0631
+  type: 'test'
+  ...
+# Subtest: IR-02 provider-intent boundary refreshes source access before invoking the connector
+ok 58 - IR-02 provider-intent boundary refreshes source access before invoking the connector
+  ---
+  duration_ms: 14.77
+  type: 'test'
+  ...
+1..58
+# tests 58
+# suites 0
+# pass 58
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2321.9198

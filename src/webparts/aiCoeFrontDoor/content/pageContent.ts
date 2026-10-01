@@ -6,11 +6,60 @@
  *
  * Wording note: this file is scanned for Tailwind utility names; keep prose free of utility words.
  */
-import { PAGE_TARGETS, resolvePageUrl } from './pageViews';
-import type { PageLinks, PageTarget } from './pageViews';
+import { includes } from '../utils/collections';
+import { PAGE_LINK_TARGETS } from './pageViews';
+import type { PageLinks, PageLinkTarget } from './pageViews';
+import { asObject, ownKeys, readFlag, readIsoDate, readItems, readStringList, readText, setOptional } from './rawJson';
+import type { Raw } from './rawJson';
+import { parseRoutes } from './routes';
+import type { RouteTable } from './routes';
+import { readCanonicalStatus, readState, TRUTH_STATE_KEYS } from './truthStates';
+import type { StateCode, TruthStateKey } from './truthStates';
+
+export { isExternalHref, resolveContentHref } from './links';
 
 export const PAGE_DOCUMENT_VERSION: number = 1;
 export const DEFAULT_CONTENT_URL: string = 'SiteAssets/ai-coe-pages.json';
+
+/** Who a page is written for: people using the front door, or the operators who run it. */
+export type PagePlane = 'user' | 'operator';
+export const PAGE_PLANES: readonly PagePlane[] = ['user', 'operator'];
+export const DEFAULT_PAGE_PLANE: PagePlane = 'user';
+
+/** Wording a document may override for one truth state; a blank keeps the default. */
+export interface ITruthStateWording {
+  label?: string;
+  definition?: string;
+}
+
+/** The chrome labels a document may override. */
+export type ChromeLabel = 'badge' | 'example' | 'needsRefresh' | 'awaitingSource' | 'protectedPage';
+export const CHROME_LABELS: readonly ChromeLabel[] = ['badge', 'example', 'needsRefresh', 'awaitingSource', 'protectedPage'];
+
+/**
+ * The document's wording overrides, all optional and all string maps: truth-state labels and
+ * definitions, plain request-status names by code, chrome labels, role names and telemetry feed names.
+ * `{organization}` and `{role}` in the text are filled by the renderer, never by the script.
+ */
+export interface IVocabulary {
+  truthStates: { [key in TruthStateKey]?: ITruthStateWording };
+  requestStatuses: { [code: string]: string };
+  chrome: { [key in ChromeLabel]?: string };
+  roles: { [roleId: string]: string };
+  telemetry: { [feedId: string]: string };
+}
+
+export const DEFAULT_VOCABULARY: IVocabulary = { truthStates: {}, requestStatuses: {}, chrome: {}, roles: {}, telemetry: {} };
+
+/** Numbers the document sets for every page: how old a fact may be, and the smallest group a measure may describe. */
+export interface IDocumentSettings {
+  freshnessDays: number;
+  minimumCohort: number;
+}
+
+export const DEFAULT_SETTINGS: IDocumentSettings = { freshnessDays: 30, minimumCohort: 5 };
+const MAX_FRESHNESS_DAYS: number = 3650;
+const MAX_MINIMUM_COHORT: number = 1000;
 
 /** The colour families the service and metric cards already ship. */
 export type CardTone = 'teal' | 'blue' | 'violet' | 'gold' | 'cyan';
@@ -21,48 +70,85 @@ export const DEFAULT_CARD_TONE: CardTone = 'teal';
 export type LaneTone = 'green' | 'amber' | 'red';
 export const LANE_TONES: readonly LaneTone[] = ['green', 'amber', 'red'];
 
-export interface ILinkTarget {
-  label: string;
-  href: string;
+/**
+ * What an item may say about where it leads: a link, a truth state or activation code, and a route
+ * key from the document's route list (which wins over the other two). An item with a state or a
+ * route may have no link: it is then shown as a labelled non-link with its pill.
+ */
+export interface IActionFields {
+  href?: string;
+  state?: StateCode;
+  route?: string;
 }
 
-export interface IHeroBlock {
+/** What a fact may say about its age and origin, and whether it is an example rather than a fact. */
+export interface IFactFields {
+  /** YYYY-MM-DD: when the fact was last read back. */
+  asOf?: string;
+  /** Where the fact was read from. */
+  source?: string;
+  /** Present when the item is an illustration, not something read from this environment; it carries the example pill. */
+  illustrative?: true;
+}
+
+/**
+ * What any block may say about who it is written for: role ids, any one of which shows it. A block
+ * without an audience is for everyone. The roles come from site group membership, so a block is a
+ * courtesy to the reader, never a protection: anything that must not be read is kept off the page by
+ * the site's own permissions.
+ */
+export interface IBlockAudience {
+  audience?: string[];
+}
+
+export interface IHeroCta extends IActionFields {
+  label: string;
+  /** Short line under the call to action. */
+  note?: string;
+}
+
+export interface IHeroBlock extends IBlockAudience {
   type: 'hero';
   title: string;
   /** The line under the title; in-text markup allowed. */
   text?: string;
   /** Replaces the branding badge when given. */
   badge?: string;
-  cta?: ILinkTarget;
+  cta?: IHeroCta;
 }
 
-export interface IHeadingBlock {
+export interface IHeadingBlock extends IBlockAudience {
   type: 'heading';
   level: 2 | 3;
   text: string;
 }
 
-export interface IParagraphBlock {
+export interface IParagraphBlock extends IBlockAudience {
   type: 'paragraph';
   /** In-text markup allowed. */
   text: string;
 }
 
-export interface ITileItem {
+export interface ITileItem extends IActionFields {
   title: string;
-  href: string;
+  /** Small line above the title, such as "Do", "Ask", "Improve". */
+  kicker?: string;
   description?: string;
+  /** Short line under the description, such as where the link opens. */
+  note?: string;
   /** Name of an icon the front door ships; unknown names fall back to the light bulb. */
   icon?: string;
   tone: CardTone;
 }
 
-export interface ITilesBlock {
+export interface ITilesBlock extends IBlockAudience {
   type: 'tiles';
+  /** Present only when the tiles are the page's main choice: three to a row. */
+  prominent?: true;
   items: ITileItem[];
 }
 
-export interface ICardItem {
+export interface ICardItem extends IActionFields, IFactFields {
   title: string;
   /** Small line above the title, such as a duration. */
   kicker?: string;
@@ -73,7 +159,7 @@ export interface ICardItem {
   tone: CardTone;
 }
 
-export interface ICardsBlock {
+export interface ICardsBlock extends IBlockAudience {
   type: 'cards';
   columns: 2 | 3;
   items: ICardItem[];
@@ -87,61 +173,341 @@ export interface ILaneItem {
   badge?: string;
 }
 
-export interface ILanesBlock {
+export interface ILanesBlock extends IBlockAudience {
   type: 'lanes';
   items: ILaneItem[];
 }
 
-export interface IStatusItem {
+export interface IStatusItem extends IActionFields, IFactFields {
   label: string;
   /** In-text markup allowed. */
   text: string;
 }
 
-export interface IStatusRowBlock {
+export interface IStatusRowBlock extends IBlockAudience {
   type: 'statusRow';
   items: IStatusItem[];
 }
 
-/** The two front-door pieces a content page can embed between its blocks. */
-export type PieceKind = 'home' | 'telemetry';
-export const PIECE_KINDS: readonly PieceKind[] = ['home', 'telemetry'];
+/** The three front-door pieces a content page can embed between its blocks: the home tiles, the telemetry strip, the person's own requests. */
+export type PieceKind = 'home' | 'telemetry' | 'myWork';
+export const PIECE_KINDS: readonly PieceKind[] = ['home', 'telemetry', 'myWork'];
 
-export interface IPieceBlock {
+export interface IPieceBlock extends IBlockAudience {
   type: 'piece';
   piece: PieceKind;
   /** Where the home tiles lead, as written in the document (site paths or full URLs). */
   pages: PageLinks;
+  /** Telemetry only: the small line above the strip's heading, replacing the shipped one; the tile labels then come from `vocabulary.telemetry`. */
+  kicker?: string;
 }
 
-export type PageBlock = IHeroBlock | IHeadingBlock | IParagraphBlock | ITilesBlock | ICardsBlock | ILanesBlock | IStatusRowBlock | IPieceBlock;
+/** What a status strip item is: the count of the person's own requests, or a labelled line like a status row's. */
+export type StatusStripItemKind = 'myRequests' | 'text';
+export const STATUS_STRIP_ITEM_KINDS: readonly StatusStripItemKind[] = ['myRequests', 'text'];
+
+export interface IStatusStripItem extends IActionFields, IFactFields {
+  kind: StatusStripItemKind;
+  label: string;
+  /** The line's text (required for a `text` item; a lead before the counts on a `myRequests` item); in-text markup allowed. */
+  text?: string;
+}
+
+/**
+ * Short labelled lines side by side on the first screen, one of which may count the person's own
+ * requests by plain status (read from the request list, never a number when the list cannot be read).
+ */
+export interface IStatusStripBlock extends IBlockAudience {
+  type: 'statusStrip';
+  items: IStatusStripItem[];
+  /** Shown for the request count when the person has sent nothing. */
+  emptyText: string;
+  /** Shown for the request count when the list cannot be read. */
+  unavailableText: string;
+}
+
+export const DEFAULT_STATUS_STRIP_EMPTY_TEXT: string = 'No requests from you yet.';
+export const DEFAULT_STATUS_STRIP_UNAVAILABLE_TEXT: string = 'Status unavailable: the request list could not be read.';
+
+/**
+ * The first screen's one command: a sentence about the work to be done, saved as the idea draft and
+ * carried to the route the block names (`work` by default) through the route list, so an unproved
+ * destination fails closed to the guided intake with the sentence already filled in.
+ */
+export interface IWorkCommandBlock extends IBlockAudience {
+  type: 'workCommand';
+  /** The question above the input, such as "What do you need done?". */
+  prompt: string;
+  placeholder?: string;
+  submitLabel: string;
+  /** Key of the route the sentence is carried to. */
+  route: string;
+  /** Short line under the input; in-text markup allowed. */
+  note?: string;
+  /** Shown when the sentence is empty on submit. */
+  emptyText: string;
+}
+
+export const DEFAULT_WORK_COMMAND_SUBMIT_LABEL: string = 'Start';
+export const DEFAULT_WORK_COMMAND_ROUTE: string = 'work';
+export const DEFAULT_WORK_COMMAND_EMPTY_TEXT: string = 'Say what you need done first.';
+
+/** How a notice is meant: something to know, or something to take care over (a data boundary, a pilot's limits). */
+export type NoticeTone = 'info' | 'caution';
+export const NOTICE_TONES: readonly NoticeTone[] = ['info', 'caution'];
+export const DEFAULT_NOTICE_TONE: NoticeTone = 'info';
+
+/** A short aside set apart from the page's prose: a boundary, a limit, a fact about what the site records. */
+export interface INoticeBlock extends IBlockAudience {
+  type: 'notice';
+  tone: NoticeTone;
+  title?: string;
+  /** In-text markup allowed. */
+  text: string;
+}
+
+/** One rule: what to do, in a few words, and optionally why or how. */
+export interface IRuleItem {
+  title: string;
+  /** In-text markup allowed. */
+  text?: string;
+}
+
+/** A short numbered (or bulleted) set of rules people are asked to keep, such as the three rules of the pilot. */
+export interface IRulesBlock extends IBlockAudience {
+  type: 'rules';
+  title?: string;
+  items: IRuleItem[];
+  /** Numbered unless the document says `false`. */
+  ordered: boolean;
+}
+
+/**
+ * What a support routing row is for, so a page can pick the owner of a kind of failure without
+ * reading the row's wording: `identity` takes access failures, `support` takes anything else.
+ */
+export type SupportRouteKind = 'identity' | 'privacy' | 'approval' | 'claims' | 'recovery' | 'support';
+
+export const SUPPORT_ROUTE_KINDS: readonly SupportRouteKind[] = ['identity', 'privacy', 'approval', 'claims', 'recovery', 'support'];
+
+/** One row of the support routing grid: what went wrong, who it goes to, and what to do at once. */
+export interface ISupportRouteItem {
+  issue: string;
+  /** The named owner; absent means the page says "not yet named". */
+  owner?: string;
+  action?: string;
+  /** Which kind of issue the row takes; absent means the row is shown but never chosen for a failure notice. */
+  kind?: SupportRouteKind;
+}
+
+/**
+ * The pilot's support route, shared by every page view: where to ask, when to stop and ask, what a
+ * report should carry, and which owner each kind of issue goes to.
+ */
+export interface ISupportRouteBlock extends IBlockAudience {
+  type: 'supportRoute';
+  /** The route, such as the pilot channel; a link when `href` is set, a plain label otherwise. */
+  label: string;
+  href?: string;
+  /** The situations in which to stop and ask. */
+  stopWhen: string[];
+  /** What to put in a report (the task type, the time, the status shown, what was expected). */
+  reportFields: string[];
+  routes: ISupportRouteItem[];
+}
+
+/** The traffic-light health a case last recorded; the same three tones as the request lanes. */
+export type CaseHealth = LaneTone;
+
+/**
+ * One case as the page shows it: the record id, the canonical status code (never a pilot word), and
+ * what its latest authoritative source said (the stage and health then, the day that source was
+ * read, the next action). Nothing here is read from a list yet; an example item says so with the
+ * example pill, and a dated one carries its freshness like a card.
+ */
+export interface ICaseCardItem {
+  id: string;
+  title: string;
+  description?: string;
+  /** A canonical status code; `AWAITING_SOURCE` draws the awaiting-source pill, every other code its plain wording. */
+  state: string;
+  /** The stage the latest source recorded, such as "Validate". */
+  historicalStage?: string;
+  historicalHealth?: CaseHealth;
+  /** YYYY-MM-DD: the day the latest source was read. */
+  sourceDate?: string;
+  nextAction?: string;
+  /** Closing line under the case; a stale case without one says not to infer progress. */
+  caption?: string;
+  /** Present when the case is an illustration, not a record of this environment; it carries the example pill. */
+  illustrative?: true;
+}
+
+/** One card per case; a `source` naming a cases list is accepted and ignored until that list exists. */
+export interface ICaseCardsBlock extends IBlockAudience {
+  type: 'caseCards';
+  items: ICaseCardItem[];
+}
+
+/**
+ * One measure the Enterprise value page asks the measures list for. The document names the measure
+ * and, when the list's own title is not the wording a page wants, the label to show; the number, the
+ * period, the evidence and the size of the group all come from the row, never from the document, so
+ * a measure nobody has recorded reads as a placeholder rather than as a figure someone wrote down.
+ */
+export interface IKpiItem {
+  /** The `MeasureId` of the row to read. */
+  id: string;
+  /** The wording above the number; the row's title, or the id, when the document gives none. */
+  label?: string;
+  /** Present when the tile illustrates how a measure reads, not a measure of this environment. */
+  illustrative?: true;
+}
+
+/** The measure tiles of a page; each reads one row of the measures list, or shows why it cannot. */
+export interface IKpiBlock extends IBlockAudience {
+  type: 'kpi';
+  items: IKpiItem[];
+  /** Shown once under the tiles when the measures list could not be read at all. */
+  unavailableText: string;
+}
+
+export const DEFAULT_KPI_UNAVAILABLE_TEXT: string = 'Measures unavailable: the measures list could not be read.';
+
+/**
+ * One workflow as a page shows it: the work it takes in, the work it gives back, the person who
+ * decides, and what counts as a pass. Nothing here is read from a registry yet, so a card that
+ * describes a workflow rather than naming one this environment runs says so with the example pill.
+ */
+export interface IWorkflowCardItem {
+  title: string;
+  /** Where the card leads, when it leads anywhere; a card names no route: a workflow is not a destination. */
+  href?: string;
+  /** A truth state or activation code; anything but `availableNow` draws the closed pill. */
+  state?: StateCode;
+  /** What the workflow is given. */
+  input: string;
+  /** What it gives back. */
+  output: string;
+  /** The person who decides, and what they decide. */
+  humanDecision: string;
+  /** What has to be true before the result may be used. */
+  pass: string;
+  /** A worked example of the work the card describes; in-text markup allowed. */
+  example?: string;
+  /** Present when the card illustrates a workflow, not one proved in this environment; it carries the example pill. */
+  illustrative?: true;
+  /** A workflow-family tag: read and never drawn, so content can be tagged before a catalogue list exists. */
+  family?: string;
+}
+
+/** One card per workflow; a card may lead somewhere, and says nothing about availability it cannot prove. */
+export interface IWorkflowCardsBlock extends IBlockAudience {
+  type: 'workflowCards';
+  items: IWorkflowCardItem[];
+}
+
+/**
+ * The bindings of the run, as the provisioning run wrote them on the document. The block carries no
+ * binding of its own: everything it shows comes from `release` and `bindings` below, so a page cannot
+ * claim a tenant input the run never had.
+ */
+export interface IBindingsBlock extends IBlockAudience {
+  type: 'bindings';
+  /** The wording above the rows; none when the page gives the section its own heading. */
+  title?: string;
+}
+
+export type PageBlock =
+  | IHeroBlock
+  | IHeadingBlock
+  | IParagraphBlock
+  | ITilesBlock
+  | ICardsBlock
+  | ILanesBlock
+  | IStatusRowBlock
+  | IStatusStripBlock
+  | IPieceBlock
+  | IWorkCommandBlock
+  | INoticeBlock
+  | IRulesBlock
+  | ISupportRouteBlock
+  | ICaseCardsBlock
+  | IKpiBlock
+  | IWorkflowCardsBlock
+  | IBindingsBlock;
 
 export interface IContentPage {
   title: string;
   blocks: PageBlock[];
+  /** Present only when the page is written for operators; absent means the user plane. */
+  plane?: PagePlane;
+  /**
+   * Role ids, any one of which opens the page; absent means everyone. The site's permissions are what
+   * actually keep a page shut (the script grants the same groups); this tells a person who does reach
+   * the page whose page it is, instead of drawing blocks that would only mislead them.
+   */
+  requiredRole?: string[];
+}
+
+/** The sections every page view shares: the footer rendered below the content, the wizards included. */
+export interface ISharedSections {
+  footer: PageBlock[];
+}
+
+export const EMPTY_SHARED: ISharedSections = { footer: [] };
+
+/** Block types that belong to one page only and are dropped from the shared sections. */
+export const SHARED_EXCLUDED_BLOCK_TYPES: readonly PageBlock['type'][] = ['hero', 'piece', 'workCommand'];
+
+/**
+ * What the provisioning run called the content it uploaded: the name the run was given (or the time
+ * of the run, when it was given none), the day it was published and the document it wrote. Written by
+ * the run, never by hand, so an operator can tell which content a page is showing.
+ */
+export interface IContentRelease {
+  id: string;
+  /** YYYY-MM-DD: the day the run uploaded the document. */
+  publishedAt?: string;
+  /** Where the run put it, such as the site-relative path of the content document. */
+  source?: string;
+}
+
+/** The kinds of parameter a run reports on: the three that may be blank and fail closed. */
+export type BindingKind = 'url' | 'optional' | 'group';
+export const BINDING_KINDS: readonly BindingKind[] = ['url', 'optional', 'group'];
+
+/** Whether the site holds the input behind a binding, or still owes it. */
+export type BindingState = 'bound' | 'awaiting';
+export const BINDING_STATES: readonly BindingState[] = ['bound', 'awaiting'];
+
+/**
+ * One tenant input the run reported: its name, its kind and whether the site holds it. A value never
+ * travels with it, except the reference of a qualification receipt, which names a record rather than
+ * holding a secret.
+ */
+export interface IBinding {
+  name: string;
+  kind: BindingKind;
+  state: BindingState;
+  receiptRef?: string;
 }
 
 export interface IPageDocument {
   version: number;
   pages: { [key: string]: IContentPage };
-}
-
-type Raw = { [key: string]: unknown };
-
-function asObject(value: unknown): Raw | undefined {
-  return value !== null && typeof value === 'object' && !Array.isArray(value) ? (value as Raw) : undefined;
-}
-
-/** A trimmed, non-empty string; undefined for anything else. */
-function readText(value: unknown): string | undefined {
-  const text: string = typeof value === 'string' ? value.trim() : '';
-  return text === '' ? undefined : text;
-}
-
-function setOptional<T extends object>(target: T, key: keyof T, value: string | undefined): void {
-  if (value !== undefined) {
-    (target as { [name: string]: unknown })[key as string] = value;
-  }
+  /** Present when the run named the content it uploaded. */
+  release?: IContentRelease;
+  /** Present when the run reported its bindings; an empty list is a run that had none to report. */
+  bindings?: IBinding[];
+  /** Present when the document carries a vocabulary object; a malformed one is dropped. */
+  vocabulary?: IVocabulary;
+  /** Present when the document carries a settings object; a malformed one is dropped. */
+  settings?: IDocumentSettings;
+  /** Present when the document carries a routes object; a malformed one is dropped. */
+  routes?: RouteTable;
+  /** Present when the document carries a shared object; a malformed one is dropped. */
+  shared?: ISharedSections;
 }
 
 function readTone<T extends string>(candidates: readonly T[], value: unknown): T | undefined {
@@ -162,25 +528,37 @@ export function readParagraphs(value: unknown): string[] {
   return paragraphs;
 }
 
-function readItems<T>(value: unknown, readItem: (raw: Raw) => T | undefined): T[] {
-  const items: T[] = [];
-  if (Array.isArray(value)) {
-    for (const entry of value) {
-      const raw: Raw | undefined = asObject(entry);
-      const item: T | undefined = raw === undefined ? undefined : readItem(raw);
-      if (item !== undefined) {
-        items.push(item);
-      }
-    }
+/** Reads href, state and route onto an item; true when at least one of them is there (an item with none leads nowhere). */
+function readActionFields(item: IActionFields, raw: Raw): boolean {
+  setOptional(item, 'href', readText(raw.href));
+  const state: StateCode | undefined = readState(raw.state);
+  if (state !== undefined) {
+    item.state = state;
   }
-  return items;
+  setOptional(item, 'route', readText(raw.route));
+  return item.href !== undefined || item.state !== undefined || item.route !== undefined;
 }
 
-function readLinkTarget(value: unknown): ILinkTarget | undefined {
+function readFactFields(item: IFactFields, raw: Raw): void {
+  setOptional(item, 'asOf', readIsoDate(raw.asOf));
+  setOptional(item, 'source', readText(raw.source));
+  if (readFlag(raw.illustrative) === true) {
+    item.illustrative = true;
+  }
+}
+
+function readHeroCta(value: unknown): IHeroCta | undefined {
   const raw: Raw | undefined = asObject(value);
   const label: string | undefined = raw === undefined ? undefined : readText(raw.label);
-  const href: string | undefined = raw === undefined ? undefined : readText(raw.href);
-  return label !== undefined && href !== undefined ? { label, href } : undefined;
+  if (raw === undefined || label === undefined) {
+    return undefined;
+  }
+  const cta: IHeroCta = { label };
+  if (!readActionFields(cta, raw)) {
+    return undefined;
+  }
+  setOptional(cta, 'note', readText(raw.note));
+  return cta;
 }
 
 function parseHero(raw: Raw): IHeroBlock | undefined {
@@ -191,7 +569,7 @@ function parseHero(raw: Raw): IHeroBlock | undefined {
   const block: IHeroBlock = { type: 'hero', title };
   setOptional(block, 'text', readText(raw.text));
   setOptional(block, 'badge', readText(raw.badge));
-  const cta: ILinkTarget | undefined = readLinkTarget(raw.cta);
+  const cta: IHeroCta | undefined = readHeroCta(raw.cta);
   if (cta !== undefined) {
     block.cta = cta;
   }
@@ -210,19 +588,30 @@ function parseParagraph(raw: Raw): IParagraphBlock | undefined {
 
 function readTile(raw: Raw): ITileItem | undefined {
   const title: string | undefined = readText(raw.title);
-  const href: string | undefined = readText(raw.href);
-  if (title === undefined || href === undefined) {
+  if (title === undefined) {
     return undefined;
   }
-  const item: ITileItem = { title, href, tone: readTone(CARD_TONES, raw.tone) ?? DEFAULT_CARD_TONE };
+  const item: ITileItem = { title, tone: readTone(CARD_TONES, raw.tone) ?? DEFAULT_CARD_TONE };
+  if (!readActionFields(item, raw)) {
+    return undefined;
+  }
+  setOptional(item, 'kicker', readText(raw.kicker));
   setOptional(item, 'description', readText(raw.description));
+  setOptional(item, 'note', readText(raw.note));
   setOptional(item, 'icon', readText(raw.icon));
   return item;
 }
 
 function parseTiles(raw: Raw): ITilesBlock | undefined {
   const items: ITileItem[] = readItems(raw.items, readTile);
-  return items.length === 0 ? undefined : { type: 'tiles', items };
+  if (items.length === 0) {
+    return undefined;
+  }
+  const block: ITilesBlock = { type: 'tiles', items };
+  if (readFlag(raw.prominent) === true) {
+    block.prominent = true;
+  }
+  return block;
 }
 
 function readCard(raw: Raw): ICardItem | undefined {
@@ -233,6 +622,8 @@ function readCard(raw: Raw): ICardItem | undefined {
   const item: ICardItem = { title, body: readParagraphs(raw.body), tone: readTone(CARD_TONES, raw.tone) ?? DEFAULT_CARD_TONE };
   setOptional(item, 'kicker', readText(raw.kicker));
   setOptional(item, 'meta', readText(raw.meta));
+  readActionFields(item, raw);
+  readFactFields(item, raw);
   return item;
 }
 
@@ -261,7 +652,13 @@ function parseLanes(raw: Raw): ILanesBlock | undefined {
 function readStatusItem(raw: Raw): IStatusItem | undefined {
   const label: string | undefined = readText(raw.label);
   const text: string | undefined = readText(raw.text);
-  return label !== undefined && text !== undefined ? { label, text } : undefined;
+  if (label === undefined || text === undefined) {
+    return undefined;
+  }
+  const item: IStatusItem = { label, text };
+  readActionFields(item, raw);
+  readFactFields(item, raw);
+  return item;
 }
 
 function parseStatusRow(raw: Raw): IStatusRowBlock | undefined {
@@ -273,10 +670,10 @@ function readPageLinks(value: unknown): PageLinks {
   const raw: Raw | undefined = asObject(value);
   const pages: PageLinks = {};
   if (raw !== undefined) {
-    for (const target of PAGE_TARGETS) {
+    for (const target of PAGE_LINK_TARGETS) {
       const link: string | undefined = readText(raw[target]);
       if (link !== undefined) {
-        pages[target as PageTarget] = link;
+        pages[target as PageLinkTarget] = link;
       }
     }
   }
@@ -288,15 +685,272 @@ function parsePiece(raw: Raw): IPieceBlock | undefined {
   if (piece === undefined) {
     return undefined;
   }
-  return { type: 'piece', piece, pages: piece === 'home' ? readPageLinks(raw.pages) : {} };
+  const block: IPieceBlock = { type: 'piece', piece, pages: piece === 'home' ? readPageLinks(raw.pages) : {} };
+  if (piece === 'telemetry') {
+    setOptional(block, 'kicker', readText(raw.kicker));
+  }
+  return block;
 }
 
-/** Reads one block; undefined for anything that is not a well-formed block of a known type. */
+function readStatusStripItem(raw: Raw): IStatusStripItem | undefined {
+  const label: string | undefined = readText(raw.label);
+  const kind: StatusStripItemKind | undefined = raw.kind === undefined ? 'text' : readTone(STATUS_STRIP_ITEM_KINDS, raw.kind);
+  const text: string | undefined = readText(raw.text);
+  if (label === undefined || kind === undefined || (kind === 'text' && text === undefined)) {
+    return undefined;
+  }
+  const item: IStatusStripItem = { kind, label };
+  setOptional(item, 'text', text);
+  readActionFields(item, raw);
+  readFactFields(item, raw);
+  return item;
+}
+
+/** The status strip: needs at least one well-formed item; the two texts for the request count fall back to their defaults. */
+export function parseStatusStrip(raw: Raw): IStatusStripBlock | undefined {
+  const items: IStatusStripItem[] = readItems(raw.items, readStatusStripItem);
+  if (items.length === 0) {
+    return undefined;
+  }
+  return {
+    type: 'statusStrip',
+    items,
+    emptyText: readText(raw.emptyText) ?? DEFAULT_STATUS_STRIP_EMPTY_TEXT,
+    unavailableText: readText(raw.unavailableText) ?? DEFAULT_STATUS_STRIP_UNAVAILABLE_TEXT
+  };
+}
+
+/** The work command: needs a prompt; the submit label, the route and the empty-sentence text fall back to their defaults. */
+export function parseWorkCommand(raw: Raw): IWorkCommandBlock | undefined {
+  const prompt: string | undefined = readText(raw.prompt);
+  if (prompt === undefined) {
+    return undefined;
+  }
+  const block: IWorkCommandBlock = {
+    type: 'workCommand',
+    prompt,
+    submitLabel: readText(raw.submitLabel) ?? DEFAULT_WORK_COMMAND_SUBMIT_LABEL,
+    route: readText(raw.route) ?? DEFAULT_WORK_COMMAND_ROUTE,
+    emptyText: readText(raw.emptyText) ?? DEFAULT_WORK_COMMAND_EMPTY_TEXT
+  };
+  setOptional(block, 'placeholder', readText(raw.placeholder));
+  setOptional(block, 'note', readText(raw.note));
+  return block;
+}
+
+/** A notice: needs text; the tone falls back to info and the title is optional. */
+export function parseNotice(raw: Raw): INoticeBlock | undefined {
+  const text: string | undefined = readText(raw.text);
+  if (text === undefined) {
+    return undefined;
+  }
+  const block: INoticeBlock = { type: 'notice', tone: readTone(NOTICE_TONES, raw.tone) ?? DEFAULT_NOTICE_TONE, text };
+  setOptional(block, 'title', readText(raw.title));
+  return block;
+}
+
+function readRule(raw: Raw): IRuleItem | undefined {
+  const title: string | undefined = readText(raw.title);
+  if (title === undefined) {
+    return undefined;
+  }
+  const item: IRuleItem = { title };
+  setOptional(item, 'text', readText(raw.text));
+  return item;
+}
+
+/** Rules: needs at least one titled item; numbered unless `ordered` is a literal false; the title is optional. */
+export function parseRules(raw: Raw): IRulesBlock | undefined {
+  const items: IRuleItem[] = readItems(raw.items, readRule);
+  if (items.length === 0) {
+    return undefined;
+  }
+  const block: IRulesBlock = { type: 'rules', items, ordered: raw.ordered !== false };
+  setOptional(block, 'title', readText(raw.title));
+  return block;
+}
+
+function readSupportRouteItem(raw: Raw): ISupportRouteItem | undefined {
+  const issue: string | undefined = readText(raw.issue);
+  if (issue === undefined) {
+    return undefined;
+  }
+  const item: ISupportRouteItem = { issue };
+  setOptional(item, 'owner', readText(raw.owner));
+  setOptional(item, 'action', readText(raw.action));
+  const kind: string | undefined = readText(raw.kind);
+  if (kind !== undefined && includes(SUPPORT_ROUTE_KINDS, kind as SupportRouteKind)) {
+    item.kind = kind as SupportRouteKind;
+  }
+  return item;
+}
+
+/** The support route among the shared footer blocks, if the document has one. */
+export function findSupportRoute(blocks: readonly PageBlock[]): ISupportRouteBlock | undefined {
+  for (const block of blocks) {
+    if (block.type === 'supportRoute') {
+      return block;
+    }
+  }
+  return undefined;
+}
+
+/** The support route: needs a label; the link, the two lists and the routing rows are optional and rows without an issue are dropped. */
+export function parseSupportRoute(raw: Raw): ISupportRouteBlock | undefined {
+  const label: string | undefined = readText(raw.label);
+  if (label === undefined) {
+    return undefined;
+  }
+  const block: ISupportRouteBlock = {
+    type: 'supportRoute',
+    label,
+    stopWhen: readStringList(raw.stopWhen),
+    reportFields: readStringList(raw.reportFields),
+    routes: readItems(raw.routes, readSupportRouteItem)
+  };
+  setOptional(block, 'href', readText(raw.href));
+  return block;
+}
+
+function readCaseCard(raw: Raw): ICaseCardItem | undefined {
+  const id: string | undefined = readText(raw.id);
+  const title: string | undefined = readText(raw.title);
+  const state: string | undefined = readCanonicalStatus(raw.state);
+  if (id === undefined || title === undefined || state === undefined) {
+    return undefined;
+  }
+  const item: ICaseCardItem = { id, title, state };
+  setOptional(item, 'description', readText(raw.description));
+  setOptional(item, 'historicalStage', readText(raw.historicalStage));
+  const health: CaseHealth | undefined = readTone(LANE_TONES, raw.historicalHealth);
+  if (health !== undefined) {
+    item.historicalHealth = health;
+  }
+  setOptional(item, 'sourceDate', readIsoDate(raw.sourceDate));
+  setOptional(item, 'nextAction', readText(raw.nextAction));
+  setOptional(item, 'caption', readText(raw.caption));
+  if (readFlag(raw.illustrative) === true) {
+    item.illustrative = true;
+  }
+  // `source` (where a cases list would be read from) is accepted here and left out: no list is read yet.
+  return item;
+}
+
+/** The case cards: needs at least one item with an id, a title and a canonical status code. */
+export function parseCaseCards(raw: Raw): ICaseCardsBlock | undefined {
+  const items: ICaseCardItem[] = readItems(raw.items, readCaseCard);
+  return items.length === 0 ? undefined : { type: 'caseCards', items };
+}
+
+function readKpiItem(raw: Raw): IKpiItem | undefined {
+  const id: string | undefined = readText(raw.id);
+  if (id === undefined) {
+    return undefined;
+  }
+  const item: IKpiItem = { id };
+  setOptional(item, 'label', readText(raw.label));
+  if (readFlag(raw.illustrative) === true) {
+    item.illustrative = true;
+  }
+  // A number, a period or an evidence reference written here would be a claim the document cannot make: only the row can.
+  return item;
+}
+
+/** The measure tiles: needs at least one item naming a measure; the unavailable line falls back to its default. */
+export function parseKpi(raw: Raw): IKpiBlock | undefined {
+  const items: IKpiItem[] = readItems(raw.items, readKpiItem);
+  if (items.length === 0) {
+    return undefined;
+  }
+  return { type: 'kpi', items, unavailableText: readText(raw.unavailableText) ?? DEFAULT_KPI_UNAVAILABLE_TEXT };
+}
+
+function readWorkflowCard(raw: Raw): IWorkflowCardItem | undefined {
+  const title: string | undefined = readText(raw.title);
+  const input: string | undefined = readText(raw.input);
+  const output: string | undefined = readText(raw.output);
+  const humanDecision: string | undefined = readText(raw.humanDecision);
+  const pass: string | undefined = readText(raw.pass);
+  if (title === undefined || input === undefined || output === undefined || humanDecision === undefined || pass === undefined) {
+    return undefined;
+  }
+  const item: IWorkflowCardItem = { title, input, output, humanDecision, pass };
+  setOptional(item, 'example', readText(raw.example));
+  setOptional(item, 'href', readText(raw.href));
+  const state: StateCode | undefined = readState(raw.state);
+  if (state !== undefined) {
+    item.state = state;
+  }
+  if (readFlag(raw.illustrative) === true) {
+    item.illustrative = true;
+  }
+  // `family` is carried and never drawn: the catalogue list that would give a family meaning does not exist yet.
+  setOptional(item, 'family', readText(raw.family));
+  return item;
+}
+
+/** The workflow cards: needs at least one item naming the work, what it takes, what it gives, who decides and what a pass is. */
+export function parseWorkflowCards(raw: Raw): IWorkflowCardsBlock | undefined {
+  const items: IWorkflowCardItem[] = readItems(raw.items, readWorkflowCard);
+  return items.length === 0 ? undefined : { type: 'workflowCards', items };
+}
+
+/** The bindings block: nothing of its own but the wording above the rows, which the run fills in. */
+export function parseBindings(raw: Raw): IBindingsBlock {
+  const block: IBindingsBlock = { type: 'bindings' };
+  setOptional(block, 'title', readText(raw.title));
+  return block;
+}
+
+/** The release the run named; undefined without an id, and no date is invented for a publication that gives none. */
+export function parseRelease(value: unknown): IContentRelease | undefined {
+  const raw: Raw | undefined = asObject(value);
+  const id: string | undefined = raw === undefined ? undefined : readText(raw.id);
+  if (raw === undefined || id === undefined) {
+    return undefined;
+  }
+  const release: IContentRelease = { id };
+  setOptional(release, 'publishedAt', readIsoDate(raw.publishedAt));
+  setOptional(release, 'source', readText(raw.source));
+  return release;
+}
+
+function readBinding(raw: Raw): IBinding | undefined {
+  const name: string | undefined = readText(raw.name);
+  const kind: BindingKind | undefined = readTone(BINDING_KINDS, raw.kind);
+  const state: BindingState | undefined = readTone(BINDING_STATES, raw.state);
+  if (name === undefined || kind === undefined || state === undefined) {
+    return undefined;
+  }
+  const binding: IBinding = { name, kind, state };
+  setOptional(binding, 'receiptRef', readText(raw.receiptRef));
+  return binding;
+}
+
+/** The bindings the run reported; a row missing a name, a known kind or a known state is left out. */
+export function parseBindingList(value: unknown): IBinding[] {
+  return readItems(value, readBinding);
+}
+
+/**
+ * Reads one block; undefined for anything that is not a well-formed block of a known type. Any block
+ * may name the roles it is written for; a malformed or empty audience is left out, so the block stays
+ * a block for everyone rather than one nobody can see.
+ */
 export function parseBlock(value: unknown): PageBlock | undefined {
   const raw: Raw | undefined = asObject(value);
   if (raw === undefined) {
     return undefined;
   }
+  const block: PageBlock | undefined = parseTypedBlock(raw);
+  const audience: string[] = readStringList(raw.audience);
+  if (block !== undefined && audience.length > 0) {
+    block.audience = audience;
+  }
+  return block;
+}
+
+function parseTypedBlock(raw: Raw): PageBlock | undefined {
   switch (raw.type) {
     case 'hero':
       return parseHero(raw);
@@ -312,11 +966,134 @@ export function parseBlock(value: unknown): PageBlock | undefined {
       return parseLanes(raw);
     case 'statusRow':
       return parseStatusRow(raw);
+    case 'statusStrip':
+      return parseStatusStrip(raw);
     case 'piece':
       return parsePiece(raw);
+    case 'workCommand':
+      return parseWorkCommand(raw);
+    case 'notice':
+      return parseNotice(raw);
+    case 'rules':
+      return parseRules(raw);
+    case 'supportRoute':
+      return parseSupportRoute(raw);
+    case 'caseCards':
+      return parseCaseCards(raw);
+    case 'kpi':
+      return parseKpi(raw);
+    case 'workflowCards':
+      return parseWorkflowCards(raw);
+    case 'bindings':
+      return parseBindings(raw);
     default:
       return undefined;
   }
+}
+
+/**
+ * The shared sections: the footer's blocks read like a page's, less the hero, the piece and the work
+ * command, which belong to one page each; anything malformed is left out and a missing footer is empty.
+ */
+export function parseShared(value: unknown): ISharedSections {
+  const raw: Raw | undefined = asObject(value);
+  const footer: PageBlock[] = [];
+  if (raw !== undefined && Array.isArray(raw.footer)) {
+    for (const entry of raw.footer) {
+      const block: PageBlock | undefined = parseBlock(entry);
+      if (block !== undefined && SHARED_EXCLUDED_BLOCK_TYPES.indexOf(block.type) < 0) {
+        footer.push(block);
+      }
+    }
+  }
+  return { footer };
+}
+
+/** The plane a page names; anything but `operator` is the user plane. */
+export function readPlane(value: unknown): PagePlane {
+  return readTone(PAGE_PLANES, value) ?? DEFAULT_PAGE_PLANE;
+}
+
+/** Role ids written as one id or a list of them; anything else is no requirement at all. */
+export function readRoleList(value: unknown): string[] {
+  const single: string | undefined = typeof value === 'string' ? readText(value) : undefined;
+  return single === undefined ? readStringList(value) : [single];
+}
+
+/** The plane of a parsed page (user unless the page says operator). */
+export function pagePlane(page: IContentPage): PagePlane {
+  return page.plane ?? DEFAULT_PAGE_PLANE;
+}
+
+/** Trimmed, non-empty strings of an object, keyed as written; anything else is left out. */
+function readStringMap(value: unknown): { [key: string]: string } {
+  const raw: Raw | undefined = asObject(value);
+  const map: { [key: string]: string } = {};
+  if (raw !== undefined) {
+    for (const key of ownKeys(raw)) {
+      const text: string | undefined = readText(raw[key]);
+      if (text !== undefined) {
+        map[key] = text;
+      }
+    }
+  }
+  return map;
+}
+
+/** Only the known keys of a string map. */
+function pickKeys<K extends string>(map: { [key: string]: string }, keys: readonly K[]): { [key in K]?: string } {
+  const picked: { [key in K]?: string } = {};
+  for (const key of keys) {
+    if (Object.prototype.hasOwnProperty.call(map, key)) {
+      picked[key] = map[key];
+    }
+  }
+  return picked;
+}
+
+function readTruthStateWording(value: unknown): { [key in TruthStateKey]?: ITruthStateWording } {
+  const raw: Raw | undefined = asObject(value);
+  const wording: { [key in TruthStateKey]?: ITruthStateWording } = {};
+  if (raw !== undefined) {
+    for (const key of TRUTH_STATE_KEYS) {
+      const entry: Raw | undefined = asObject(raw[key]);
+      if (entry !== undefined) {
+        const item: ITruthStateWording = {};
+        setOptional(item, 'label', readText(entry.label));
+        setOptional(item, 'definition', readText(entry.definition));
+        wording[key] = item;
+      }
+    }
+  }
+  return wording;
+}
+
+/** The vocabulary section: string maps only, unknown keys ignored, anything malformed left out. */
+export function parseVocabulary(value: unknown): IVocabulary {
+  const raw: Raw | undefined = asObject(value);
+  if (raw === undefined) {
+    return { truthStates: {}, requestStatuses: {}, chrome: {}, roles: {}, telemetry: {} };
+  }
+  return {
+    truthStates: readTruthStateWording(raw.truthStates),
+    requestStatuses: readStringMap(raw.requestStatuses),
+    chrome: pickKeys(readStringMap(raw.chrome), CHROME_LABELS),
+    roles: readStringMap(raw.roles),
+    telemetry: readStringMap(raw.telemetry)
+  };
+}
+
+function readBoundedInteger(value: unknown, max: number, fallback: number): number {
+  return typeof value === 'number' && isFinite(value) && Math.floor(value) === value && value >= 1 && value <= max ? value : fallback;
+}
+
+/** The settings section: whole numbers within their bounds, the defaults for anything else. */
+export function parseSettings(value: unknown): IDocumentSettings {
+  const raw: Raw | undefined = asObject(value);
+  return {
+    freshnessDays: readBoundedInteger(raw === undefined ? undefined : raw.freshnessDays, MAX_FRESHNESS_DAYS, DEFAULT_SETTINGS.freshnessDays),
+    minimumCohort: readBoundedInteger(raw === undefined ? undefined : raw.minimumCohort, MAX_MINIMUM_COHORT, DEFAULT_SETTINGS.minimumCohort)
+  };
 }
 
 function parsePage(value: unknown): IContentPage | undefined {
@@ -332,10 +1109,24 @@ function parsePage(value: unknown): IContentPage | undefined {
       blocks.push(block);
     }
   }
-  return { title, blocks };
+  const page: IContentPage = { title, blocks };
+  if (readPlane(raw.plane) === 'operator') {
+    page.plane = 'operator';
+  }
+  const requiredRole: string[] = readRoleList(raw.requiredRole);
+  if (requiredRole.length > 0) {
+    page.requiredRole = requiredRole;
+  }
+  return page;
 }
 
-/** Parses the document text; undefined unless it is a version 1 object with a pages object. */
+/**
+ * Parses the document text; undefined unless it is a version 1 object with a pages object. The
+ * optional `vocabulary`, `settings`, `routes` and `shared` sections are carried when they are objects
+ * and dropped (never the document) when they are not, and the `release` and `bindings` a provisioning
+ * run writes the same way: a release without an id and a bindings section that is not a list are left
+ * out, and the document still renders.
+ */
 export function parsePageDocument(text: string): IPageDocument | undefined {
   let parsed: unknown;
   try {
@@ -349,13 +1140,33 @@ export function parsePageDocument(text: string): IPageDocument | undefined {
     return undefined;
   }
   const pages: { [key: string]: IContentPage } = {};
-  for (const key of Object.keys(rawPages)) {
+  for (const key of ownKeys(rawPages)) {
     const page: IContentPage | undefined = parsePage(rawPages[key]);
     if (page !== undefined) {
       pages[key] = page;
     }
   }
-  return { version: PAGE_DOCUMENT_VERSION, pages };
+  const document: IPageDocument = { version: PAGE_DOCUMENT_VERSION, pages };
+  if (asObject(raw.settings) !== undefined) {
+    document.settings = parseSettings(raw.settings);
+  }
+  if (asObject(raw.vocabulary) !== undefined) {
+    document.vocabulary = parseVocabulary(raw.vocabulary);
+  }
+  if (asObject(raw.routes) !== undefined) {
+    document.routes = parseRoutes(raw.routes);
+  }
+  if (asObject(raw.shared) !== undefined) {
+    document.shared = parseShared(raw.shared);
+  }
+  const release: IContentRelease | undefined = parseRelease(raw.release);
+  if (release !== undefined) {
+    document.release = release;
+  }
+  if (Array.isArray(raw.bindings)) {
+    document.bindings = parseBindingList(raw.bindings);
+  }
+  return document;
 }
 
 /** The configured document path, or the default when blank. */
@@ -363,13 +1174,7 @@ export function parseContentUrl(value: unknown): string {
   return readText(value) ?? DEFAULT_CONTENT_URL;
 }
 
-const PASS_THROUGH: RegExp = /^(#|\?|mailto:|tel:)/i;
-
-/** A link target from the document: site paths resolve against the site; anchors, queries, mail and full URLs pass through. */
-export function resolveContentHref(siteUrl: string, href: string): string {
-  const text: string = href.trim();
-  if (PASS_THROUGH.test(text)) {
-    return text;
-  }
-  return resolvePageUrl(siteUrl, text) ?? '#';
+/** The configured document path as written, trimmed; undefined when blank, so an instance without one reads no document. */
+export function parseOptionalContentUrl(value: unknown): string | undefined {
+  return readText(value);
 }

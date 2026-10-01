@@ -1,0 +1,8 @@
+{
+  "clientWords": ["overture", "tegria", "cloudwave", "gocloudwave", "osscontact"],
+  "bundlePhrases": ["Overture", "CloudWave", "Tegria", "Start with Claude", "OSS Demo", "Claude draft flow"],
+  "hosts": ["[a-z0-9-]+\\.sharepoint\\.com"],
+  "people": ["Frerichs", "Sides", "Martens", "Donahue", "Conrad", "Achtelik", "Mengert", "Littlejohn", "Shimon"],
+  "caseIds": ["CW-0\\d", "EHR Insights"],
+  "secretPatterns": ["sig=", "client_secret", "-----BEGIN", "eyJ[A-Za-z0-9_-]{20,}"]
+}

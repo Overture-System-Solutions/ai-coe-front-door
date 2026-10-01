@@ -13,14 +13,51 @@
   "supportedHosts": ["SharePointWebPart", "SharePointFullPage"],
   "supportsThemeVariants": true,
 
+  // The first entry is what an author gets when they add the web part, so the consolidated view is the normal
+  // experience. The single-page "legacy" entry below it is kept unchanged: it is pinned screen for screen against
+  // package 1.0.0.7 by the journey parity suite, and every instance already on a site keeps rendering it, because
+  // an absent or unrecognised `view` still parses to legacy.
   "preconfiguredEntries": [{
     "groupId": "5c03119e-3074-46fd-976b-c60198311f70",
     "group": { "default": "AI Center of Excellence" },
     "title": { "default": "AI CoE Front Door" },
+    "description": { "default": "The whole AI CoE front door in one part: intake, your requests, improvement and the measured view, reached by tabs inside it" },
+    "officeFabricIconFontName": "EntryView",
+    "properties": {
+      "organizationName": "",
+      "governanceReference": "",
+      "reviewSystemName": "",
+      "roleGroups": "",
+      "paletteOverrides": "",
+      "draftServiceUrl": "",
+      "telemetryProvider": "claude",
+      "view": "app",
+      "layout": "wide",
+      "returnUrl": "",
+      "pageIdea": "",
+      "pageToolCheck": "",
+      "pageTeamUsage": "",
+      "pageHelpTraining": "",
+      "pageFeedback": "",
+      "pageTelemetry": "",
+      "pageAdmin": "",
+      "pagePolicy": "",
+      "pageOutcome": "",
+      "pageKey": "",
+      "contentUrl": "SiteAssets/ai-coe-pages.json"
+    }
+  }, {
+    "groupId": "5c03119e-3074-46fd-976b-c60198311f70",
+    "group": { "default": "AI Center of Excellence" },
+    "title": { "default": "AI CoE Front Door (single page, as shipped)" },
     "description": { "default": "Governed AI CoE intake, routing, telemetry, and administrator dashboard" },
     "officeFabricIconFontName": "EntryView",
     "properties": {
       "organizationName": "",
+      "governanceReference": "",
+      "reviewSystemName": "",
+      "roleGroups": "",
+      "paletteOverrides": "",
       "draftServiceUrl": "",
       "telemetryProvider": "claude",
       "view": "legacy",
@@ -34,6 +71,7 @@
       "pageTelemetry": "",
       "pageAdmin": "",
       "pagePolicy": "",
+      "pageOutcome": "",
       "pageKey": "",
       "contentUrl": "SiteAssets/ai-coe-pages.json"
     }
@@ -45,6 +83,10 @@
     "officeFabricIconFontName": "EntryView",
     "properties": {
       "organizationName": "",
+      "governanceReference": "",
+      "reviewSystemName": "",
+      "roleGroups": "",
+      "paletteOverrides": "",
       "draftServiceUrl": "",
       "telemetryProvider": "claude",
       "view": "home",
@@ -58,6 +100,7 @@
       "pageTelemetry": "",
       "pageAdmin": "",
       "pagePolicy": "",
+      "pageOutcome": "",
       "pageKey": "",
       "contentUrl": "SiteAssets/ai-coe-pages.json"
     }
@@ -69,6 +112,10 @@
     "officeFabricIconFontName": "EntryView",
     "properties": {
       "organizationName": "",
+      "governanceReference": "",
+      "reviewSystemName": "",
+      "roleGroups": "",
+      "paletteOverrides": "",
       "draftServiceUrl": "",
       "telemetryProvider": "claude",
       "view": "idea",
@@ -82,6 +129,7 @@
       "pageTelemetry": "",
       "pageAdmin": "",
       "pagePolicy": "",
+      "pageOutcome": "",
       "pageKey": "",
       "contentUrl": "SiteAssets/ai-coe-pages.json"
     }
@@ -93,6 +141,10 @@
     "officeFabricIconFontName": "EntryView",
     "properties": {
       "organizationName": "",
+      "governanceReference": "",
+      "reviewSystemName": "",
+      "roleGroups": "",
+      "paletteOverrides": "",
       "draftServiceUrl": "",
       "telemetryProvider": "claude",
       "view": "toolCheck",
@@ -106,6 +158,7 @@
       "pageTelemetry": "",
       "pageAdmin": "",
       "pagePolicy": "",
+      "pageOutcome": "",
       "pageKey": "",
       "contentUrl": "SiteAssets/ai-coe-pages.json"
     }
@@ -117,6 +170,10 @@
     "officeFabricIconFontName": "EntryView",
     "properties": {
       "organizationName": "",
+      "governanceReference": "",
+      "reviewSystemName": "",
+      "roleGroups": "",
+      "paletteOverrides": "",
       "draftServiceUrl": "",
       "telemetryProvider": "claude",
       "view": "teamUsage",
@@ -130,6 +187,7 @@
       "pageTelemetry": "",
       "pageAdmin": "",
       "pagePolicy": "",
+      "pageOutcome": "",
       "pageKey": "",
       "contentUrl": "SiteAssets/ai-coe-pages.json"
     }
@@ -141,6 +199,10 @@
     "officeFabricIconFontName": "EntryView",
     "properties": {
       "organizationName": "",
+      "governanceReference": "",
+      "reviewSystemName": "",
+      "roleGroups": "",
+      "paletteOverrides": "",
       "draftServiceUrl": "",
       "telemetryProvider": "claude",
       "view": "helpTraining",
@@ -154,6 +216,7 @@
       "pageTelemetry": "",
       "pageAdmin": "",
       "pagePolicy": "",
+      "pageOutcome": "",
       "pageKey": "",
       "contentUrl": "SiteAssets/ai-coe-pages.json"
     }
@@ -165,6 +228,10 @@
     "officeFabricIconFontName": "EntryView",
     "properties": {
       "organizationName": "",
+      "governanceReference": "",
+      "reviewSystemName": "",
+      "roleGroups": "",
+      "paletteOverrides": "",
       "draftServiceUrl": "",
       "telemetryProvider": "claude",
       "view": "feedback",
@@ -178,6 +245,7 @@
       "pageTelemetry": "",
       "pageAdmin": "",
       "pagePolicy": "",
+      "pageOutcome": "",
       "pageKey": "",
       "contentUrl": "SiteAssets/ai-coe-pages.json"
     }
@@ -189,6 +257,10 @@
     "officeFabricIconFontName": "EntryView",
     "properties": {
       "organizationName": "",
+      "governanceReference": "",
+      "reviewSystemName": "",
+      "roleGroups": "",
+      "paletteOverrides": "",
       "draftServiceUrl": "",
       "telemetryProvider": "claude",
       "view": "telemetry",
@@ -202,6 +274,7 @@
       "pageTelemetry": "",
       "pageAdmin": "",
       "pagePolicy": "",
+      "pageOutcome": "",
       "pageKey": "",
       "contentUrl": "SiteAssets/ai-coe-pages.json"
     }
@@ -213,6 +286,10 @@
     "officeFabricIconFontName": "EntryView",
     "properties": {
       "organizationName": "",
+      "governanceReference": "",
+      "reviewSystemName": "",
+      "roleGroups": "",
+      "paletteOverrides": "",
       "draftServiceUrl": "",
       "telemetryProvider": "claude",
       "view": "admin",
@@ -226,6 +303,7 @@
       "pageTelemetry": "",
       "pageAdmin": "",
       "pagePolicy": "",
+      "pageOutcome": "",
       "pageKey": "",
       "contentUrl": "SiteAssets/ai-coe-pages.json"
     }
@@ -237,6 +315,10 @@
     "officeFabricIconFontName": "EntryView",
     "properties": {
       "organizationName": "",
+      "governanceReference": "",
+      "reviewSystemName": "",
+      "roleGroups": "",
+      "paletteOverrides": "",
       "draftServiceUrl": "",
       "telemetryProvider": "claude",
       "view": "page",
@@ -250,6 +332,36 @@
       "pageTelemetry": "",
       "pageAdmin": "",
       "pagePolicy": "",
+      "pageOutcome": "",
+      "pageKey": "",
+      "contentUrl": "SiteAssets/ai-coe-pages.json"
+    }
+  }, {
+    "groupId": "5c03119e-3074-46fd-976b-c60198311f70",
+    "group": { "default": "AI Center of Excellence" },
+    "title": { "default": "AI CoE: Record a task outcome" },
+    "description": { "default": "A short record of how one AI task went: task type, outcome, review state; no prompt or answer is kept" },
+    "officeFabricIconFontName": "EntryView",
+    "properties": {
+      "organizationName": "",
+      "governanceReference": "",
+      "reviewSystemName": "",
+      "roleGroups": "",
+      "paletteOverrides": "",
+      "draftServiceUrl": "",
+      "telemetryProvider": "claude",
+      "view": "outcome",
+      "layout": "wide",
+      "returnUrl": "",
+      "pageIdea": "",
+      "pageToolCheck": "",
+      "pageTeamUsage": "",
+      "pageHelpTraining": "",
+      "pageFeedback": "",
+      "pageTelemetry": "",
+      "pageAdmin": "",
+      "pagePolicy": "",
+      "pageOutcome": "",
       "pageKey": "",
       "contentUrl": "SiteAssets/ai-coe-pages.json"
     }

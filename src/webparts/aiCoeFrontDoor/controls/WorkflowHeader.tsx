@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { ChevronLeft } from '../icons';
-import type { IWorkflowDefinition } from '../workflows/types';
+import type { IPieceWorkflowDefinition } from '../workflows/types';
 
 export interface IWorkflowHeaderProps {
-  workflow: IWorkflowDefinition;
+  workflow: IPieceWorkflowDefinition;
   onExit: () => void;
 }
 

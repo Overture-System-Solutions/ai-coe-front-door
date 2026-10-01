@@ -6,6 +6,11 @@
  * stylesheets are never edited. Keep this file ASCII: a non-ASCII character makes Sass emit @charset.
  *
  * Must keep the .global.scss suffix: the framework hashes the selectors of any other stylesheet name.
+ *
+ * Palette tokens (1.0.0.14): a few declarations read a tenant colour as `var(--fd-x, <literal>)`, where the literal
+ * is the colour the front door draws with no tenant value. The web part sets the `--fd-*` properties on its own
+ * element from the `paletteOverrides` property; no rule here declares one, because a declaration inside the web part
+ * would win over the value set on the element above it and every override would be dead (`styles/palette.test.ts`).
  */
 
 /* A piece is a card on the page: no page tint and no shell insets (16px keeps card shadows off the next web part). */
@@ -26,8 +31,8 @@
 
 #overture-ai-coe-pilot .ai-view--home .ai-home-adminbar .ai-admin-back,
 #overture-ai-coe-pilot .ai-view--page .ai-home-adminbar .ai-admin-back {
-  background: #087f83;
-  border-color: #087f83;
+  background: var(--fd-accent, #087f83);
+  border-color: var(--fd-accent, #087f83);
   color: #fff;
   text-decoration: none;
 }
@@ -46,6 +51,15 @@
 #overture-ai-coe-pilot .ai-view--home a.ai-service-card,
 #overture-ai-coe-pilot .ai-view--page a.ai-service-card {
   text-decoration: none;
+}
+
+/* Every card link in a page view is at least a 44px target. The whole compound sits in :where(), so this rule's
+   specificity is the root id alone, (1,0,0): it loses to the shipped .ai-service-card (1,1,0; 116px, which the home
+   piece keeps inside a page view) and to the page tiles rule (1,3,0; 92px). A floor under any card no other rule
+   sizes, never a change to the ones they do. (:where() zeroes only its own argument, so wrapping the view class
+   alone would leave a.ai-service-card counted and the rule at (1,1,1), above the shipped floor.) */
+#overture-ai-coe-pilot :where(.ai-view--page a.ai-service-card) {
+  min-height: 44px;
 }
 
 #overture-ai-coe-pilot .ai-view--home .ai-resource-strip,
@@ -113,8 +127,42 @@
   text-decoration: underline;
 }
 
+/* The call to action is a 44px target; the page tiles below already stand 92px. */
 #overture-ai-coe-pilot .ai-view--page a.ai-hero-cta {
+  min-height: 44px;
   text-decoration: none;
+}
+
+/* A closed call to action keeps the button's look without its invitation; the pill says why, the fallback where to go. */
+#overture-ai-coe-pilot .ai-view--page .ai-hero-cta--closed {
+  cursor: default;
+  opacity: 0.85;
+}
+
+#overture-ai-coe-pilot .ai-view--page .ai-hero-cta--closed:hover {
+  background: #fff;
+  color: #076874;
+  transform: none;
+}
+
+#overture-ai-coe-pilot .ai-view--page .ai-hero-state {
+  display: block;
+  margin-top: 12px;
+}
+
+#overture-ai-coe-pilot .ai-view--page a.ai-hero-fallback {
+  color: #fff;
+  display: inline-block;
+  font-weight: 600;
+  margin: 12px 0 0;
+  min-height: 24px;
+  text-decoration: underline;
+}
+
+#overture-ai-coe-pilot .ai-view--page .ai-hero-note {
+  font-size: 14px;
+  margin: 10px 0 0;
+  opacity: 0.9;
 }
 
 /* Tiles: the service cards in a fluid row instead of the landing page's six-column grid. */
@@ -127,6 +175,56 @@
 #overture-ai-coe-pilot .ai-view--page .ai-page-tiles .ai-service-card {
   grid-column: auto;
   min-height: 92px;
+}
+
+/* Prominent tiles: the page's main choice, three to a row. */
+#overture-ai-coe-pilot .ai-view--page .ai-page-tiles--prominent {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+#overture-ai-coe-pilot .ai-view--page .ai-service-kicker {
+  color: #5b6878;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  margin: 0 0 4px;
+  text-transform: uppercase;
+}
+
+#overture-ai-coe-pilot .ai-view--page .ai-service-state {
+  display: block;
+  margin-top: 8px;
+}
+
+#overture-ai-coe-pilot .ai-view--page .ai-service-note {
+  color: #5b6878;
+  display: block;
+  font-size: 13px;
+  font-style: italic;
+  line-height: 1.45;
+  margin-top: 6px;
+}
+
+/* A closed tile is a labelled non-link: the card without its lift, with the pill and the fallback link inside. */
+#overture-ai-coe-pilot .ai-view--page .ai-service-card--closed {
+  cursor: default;
+  opacity: 0.85;
+}
+
+#overture-ai-coe-pilot .ai-view--page .ai-service-card--closed:hover {
+  border-color: #d4dee6;
+  box-shadow: 0 5px 12px rgba(28, 49, 70, 0.1);
+  transform: none;
+}
+
+#overture-ai-coe-pilot .ai-view--page a.ai-service-fallback {
+  color: #076874;
+  display: inline-block;
+  font-size: 14px;
+  font-weight: 600;
+  margin-top: 8px;
+  min-height: 24px;
+  text-decoration: underline;
 }
 
 /* Cards: the metric-card surfaces and tones, two or three to a row. */
@@ -214,6 +312,31 @@
   margin: 10px 0 0;
 }
 
+/* A card that names a state or a route ends with its pill, the route note and, when closed, the fallback link. */
+#overture-ai-coe-pilot .ai-view--page .ai-page-card-state {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 10px 0 0;
+}
+
+#overture-ai-coe-pilot .ai-view--page .ai-page-card-note {
+  color: #5b6878;
+  font-size: 13px;
+  font-style: italic;
+  line-height: 1.45;
+}
+
+#overture-ai-coe-pilot .ai-view--page a.ai-page-card-fallback {
+  color: #076874;
+  display: inline-block;
+  font-size: 14px;
+  font-weight: 600;
+  min-height: 24px;
+  text-decoration: underline;
+}
+
 /* Lanes: the three traffic-light tones, using the shipped status pill colours. */
 #overture-ai-coe-pilot .ai-view--page .ai-page-lanes {
   display: grid;
@@ -262,6 +385,57 @@
   color: #9b1c1c;
 }
 
+/*
+ * Status pill: a truth state or a chrome state as text plus an icon shape, in every page view
+ * (content pages, the wizard views and the pieces alike), so the meaning never rests on colour alone.
+ * The three traffic-light tones reuse the lane pairs above; the blue draft tone is a new pair.
+ */
+#overture-ai-coe-pilot .ai-view .ai-pill {
+  align-items: center;
+  border-radius: 999px;
+  display: inline-flex;
+  font-size: 11px;
+  font-weight: 800;
+  gap: 6px;
+  letter-spacing: 0.02em;
+  line-height: 1.2;
+  min-height: 24px;
+  padding: 2px 10px;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+#overture-ai-coe-pilot .ai-view .ai-pill svg {
+  height: 12px;
+  width: 12px;
+}
+
+#overture-ai-coe-pilot .ai-view .ai-pill code {
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: 600;
+}
+
+#overture-ai-coe-pilot .ai-view .ai-pill--green {
+  background: var(--fd-state-green, #ddf6f0);
+  color: #076b67;
+}
+
+#overture-ai-coe-pilot .ai-view .ai-pill--blue {
+  background: var(--fd-state-blue, #e7f0fb);
+  color: #0b4a9b;
+}
+
+#overture-ai-coe-pilot .ai-view .ai-pill--amber {
+  background: var(--fd-state-amber, #fff4cf);
+  color: #725600;
+}
+
+#overture-ai-coe-pilot .ai-view .ai-pill--red {
+  background: var(--fd-state-red, #fde8e8);
+  color: #9b1c1c;
+}
+
 /* Status row: short labelled lines side by side. */
 #overture-ai-coe-pilot .ai-view--page .ai-page-status {
   display: grid;
@@ -278,6 +452,899 @@
 
 #overture-ai-coe-pilot .ai-view--page .ai-page-status-item strong {
   color: #10243e;
+}
+
+/* Status strip: short labelled lines in a fluid row on the first screen; the request counts are a link. */
+#overture-ai-coe-pilot .ai-view--page .ai-page-strip {
+  display: grid;
+  gap: 12px 24px;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+#overture-ai-coe-pilot .ai-view--page .ai-page-strip-item {
+  color: #2b3d52;
+  font-size: 15px;
+  line-height: 1.5;
+  margin: 0;
+}
+
+#overture-ai-coe-pilot .ai-view--page .ai-page-strip-item strong {
+  color: #10243e;
+}
+
+#overture-ai-coe-pilot .ai-view--page .ai-page-strip a {
+  color: #076874;
+  font-weight: 600;
+  text-decoration: underline;
+}
+
+/* Freshness: the as-of line under a card or a status item, with the needs-refresh, awaiting-source or example pill. */
+#overture-ai-coe-pilot .ai-view--page .ai-page-freshness {
+  color: #5b6878;
+  font-size: 13px;
+  line-height: 1.45;
+  margin: 8px 0 0;
+}
+
+/* Case cards: one card per case on the card surface, its historical health on the left edge and the health chip (the chip's text carries the word). */
+#overture-ai-coe-pilot .ai-view--page .ai-page-cases {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+#overture-ai-coe-pilot .ai-view--page .ai-case-card {
+  background: #fff;
+  border: 1px solid #dbe5ec;
+  border-left: 5px solid #07878a;
+  border-radius: 13px;
+  color: #2b3d52;
+  font-size: 15px;
+  line-height: 1.5;
+  min-width: 0;
+  padding: 17px 18px 15px;
+}
+
+#overture-ai-coe-pilot .ai-view--page .ai-case-card--green {
+  border-left-color: #076b67;
+}
+
+#overture-ai-coe-pilot .ai-view--page .ai-case-card--amber {
+  border-left-color: #725600;
+}
+
+#overture-ai-coe-pilot .ai-view--page .ai-case-card--red {
+  border-left-color: #9b1c1c;
+}
+
+#overture-ai-coe-pilot .ai-view--page .ai-case-head {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+  margin: 0 0 8px;
+}
+
+#overture-ai-coe-pilot .ai-view--page .ai-case-id {
+  background: #e5ebf0;
+  border-radius: 6px;
+  color: #10243e;
+  font-family: Consolas, Menlo, monospace;
+  font-size: 14px;
+  padding: 1px 6px;
+}
+
+#overture-ai-coe-pilot .ai-view--page .ai-case-card h3 {
+  color: #10243e;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.3;
+  margin: 0 0 8px;
+}
+
+#overture-ai-coe-pilot .ai-view--page .ai-case-description {
+  margin: 0 0 10px;
+}
+
+#overture-ai-coe-pilot .ai-view--page .ai-case-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 10px;
+  margin: 0 0 10px;
+}
+
+#overture-ai-coe-pilot .ai-view--page .ai-case-tag {
+  background: #e5ebf0;
+  border-radius: 999px;
+  color: #10243e;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.4;
+  padding: 2px 10px;
+}
+
+#overture-ai-coe-pilot .ai-view--page .ai-case-tag--green {
+  background: var(--fd-state-green, #ddf6f0);
+  color: #076b67;
+}
+
+#overture-ai-coe-pilot .ai-view--page .ai-case-tag--amber {
+  background: var(--fd-state-amber, #fff4cf);
+  color: #725600;
+}
+
+#overture-ai-coe-pilot .ai-view--page .ai-case-tag--red {
+  background: var(--fd-state-red, #fde8e8);
+  color: #9b1c1c;
+}
+
+#overture-ai-coe-pilot .ai-view--page .ai-case-footer {
+  border-top: 1px solid #dbe5ec;
+  margin: 10px 0 0;
+  padding-top: 10px;
+}
+
+#overture-ai-coe-pilot .ai-view--page .ai-case-next {
+  color: #10243e;
+  font-weight: 600;
+  margin: 0;
+}
+
+#overture-ai-coe-pilot .ai-view--page .ai-case-caption {
+  color: #5b6878;
+  font-size: 13px;
+  font-style: italic;
+  line-height: 1.45;
+  margin: 6px 0 0;
+}
+
+/* Measure tiles: the shipped metric card in a three-column row, with the evidence a placeholder waits for and the operator codes below it. */
+#overture-ai-coe-pilot .ai-view--page .ai-page-kpi {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+#overture-ai-coe-pilot .ai-view--page .ai-metric-evidence {
+  color: var(--fd-muted, #5b6878);
+  font-size: 13px;
+  font-style: italic;
+  line-height: 1.45;
+  margin: 8px 0 0;
+}
+
+#overture-ai-coe-pilot .ai-view--page .ai-metric-codes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 10px;
+  margin: 10px 0 0;
+}
+
+#overture-ai-coe-pilot .ai-view--page .ai-metric-codes code {
+  background: #e5ebf0;
+  border-radius: 6px;
+  color: #10243e;
+  font-family: Consolas, Menlo, monospace;
+  font-size: 14px;
+  padding: 1px 6px;
+}
+
+#overture-ai-coe-pilot .ai-view--page .ai-page-kpi-note {
+  color: var(--fd-muted, #5b6878);
+  font-size: 13px;
+  line-height: 1.45;
+  margin: 8px 0 0;
+}
+
+/* Workflow cards: one card per workflow on the card surface, its four answers as a two-column description list. */
+#overture-ai-coe-pilot .ai-view--page .ai-page-workflows {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+#overture-ai-coe-pilot .ai-view--page .ai-page-workflow {
+  background: #fff;
+  border: 1px solid #dbe5ec;
+  border-left: 5px solid #07878a;
+  border-radius: 13px;
+  color: #2b3d52;
+  font-size: 15px;
+  line-height: 1.5;
+  min-width: 0;
+  padding: 17px 18px 15px;
+}
+
+#overture-ai-coe-pilot .ai-view--page .ai-page-workflow--closed {
+  opacity: 0.85;
+}
+
+#overture-ai-coe-pilot .ai-view--page .ai-page-workflow-head {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+  margin: 0 0 8px;
+}
+
+#overture-ai-coe-pilot .ai-view--page .ai-page-workflow h3 {
+  color: #10243e;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.3;
+  margin: 0 0 8px;
+}
+
+#overture-ai-coe-pilot .ai-view--page .ai-page-workflow-fields {
+  display: grid;
+  gap: 4px 12px;
+  grid-template-columns: minmax(0, 1fr);
+  margin: 0;
+}
+
+#overture-ai-coe-pilot .ai-view--page .ai-page-workflow-fields dt {
+  color: #5b6878;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+#overture-ai-coe-pilot .ai-view--page .ai-page-workflow-fields dd {
+  margin: 0 0 6px;
+}
+
+#overture-ai-coe-pilot .ai-view--page .ai-page-workflow-example {
+  color: #5b6878;
+  font-size: 13px;
+  font-style: italic;
+  line-height: 1.45;
+  margin: 6px 0 0;
+}
+
+#overture-ai-coe-pilot .ai-view--page a.ai-page-workflow-link {
+  color: #076874;
+  display: inline-block;
+  font-size: 14px;
+  font-weight: 600;
+  margin-top: 8px;
+  min-height: 24px;
+  text-decoration: underline;
+}
+
+/* Bindings: what the provisioning run published and which tenant inputs the site holds; operator pages only. */
+#overture-ai-coe-pilot .ai-view--page .ai-page-bindings {
+  background: #fff;
+  border-radius: 13px;
+  border: 1px solid #dbe5ec;
+  padding: 17px 18px 15px;
+}
+
+#overture-ai-coe-pilot .ai-view--page .ai-page-bindings-title {
+  color: var(--fd-ink, #10243e);
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.3;
+  margin: 0 0 8px;
+}
+
+#overture-ai-coe-pilot .ai-view--page .ai-page-bindings-release {
+  color: var(--fd-ink, #10243e);
+  font-size: 15px;
+  line-height: 1.45;
+  margin: 0;
+}
+
+#overture-ai-coe-pilot .ai-view--page .ai-page-bindings-source {
+  color: var(--fd-muted, #5b6878);
+  display: block;
+  font-size: 13px;
+  line-height: 1.45;
+  margin: 2px 0 0;
+}
+
+#overture-ai-coe-pilot .ai-view--page .ai-page-bindings-list {
+  display: grid;
+  gap: 8px;
+  margin: 12px 0 0;
+}
+
+#overture-ai-coe-pilot .ai-view--page .ai-page-binding {
+  align-items: center;
+  border-top: 1px solid #e5ebf0;
+  display: grid;
+  gap: 4px 12px;
+  grid-template-columns: minmax(0, 1fr) auto;
+  padding-top: 8px;
+}
+
+#overture-ai-coe-pilot .ai-view--page .ai-page-binding-name {
+  color: var(--fd-ink, #10243e);
+  font-weight: 600;
+  min-width: 0;
+  overflow-wrap: break-word;
+}
+
+#overture-ai-coe-pilot .ai-view--page .ai-page-binding-state {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+}
+
+#overture-ai-coe-pilot .ai-view--page .ai-page-binding-kind {
+  background: #e5ebf0;
+  border-radius: 6px;
+  color: var(--fd-ink, #10243e);
+  font-family: Consolas, Menlo, monospace;
+  font-size: 13px;
+  padding: 1px 6px;
+}
+
+#overture-ai-coe-pilot .ai-view--page .ai-page-binding-receipt {
+  color: var(--fd-muted, #5b6878);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+#overture-ai-coe-pilot .ai-view--page .ai-page-bindings-empty {
+  color: var(--fd-muted, #5b6878);
+  font-size: 13px;
+  line-height: 1.45;
+  margin: 12px 0 0;
+}
+
+/* My work: the person's own requests as rows on the card surface, each with the workflow, the status pill, the reference and the dates. */
+#overture-ai-coe-pilot .ai-view--page .ai-page-mywork-title {
+  color: #10243e;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.3;
+  margin: 0 0 10px;
+}
+
+#overture-ai-coe-pilot .ai-view--page .ai-page-mywork-list {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+}
+
+#overture-ai-coe-pilot .ai-view--page .ai-mywork-row {
+  background: #fff;
+  border: 1px solid #dbe5ec;
+  border-left: 5px solid #07878a;
+  border-radius: 13px;
+  color: #2b3d52;
+  font-size: 15px;
+  line-height: 1.5;
+  padding: 12px 16px;
+}
+
+#overture-ai-coe-pilot .ai-view--page .ai-mywork-head {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+  margin: 0 0 4px;
+}
+
+#overture-ai-coe-pilot .ai-view--page .ai-mywork-label {
+  color: #10243e;
+  font-weight: 700;
+}
+
+#overture-ai-coe-pilot .ai-view--page .ai-mywork-reference {
+  margin: 0 0 4px;
+}
+
+#overture-ai-coe-pilot .ai-view--page .ai-mywork-key {
+  color: #5b6878;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+#overture-ai-coe-pilot .ai-view--page .ai-mywork-row code {
+  background: #e5ebf0;
+  border-radius: 6px;
+  color: #10243e;
+  font-family: Consolas, Menlo, monospace;
+  font-size: 14px;
+  padding: 1px 6px;
+}
+
+#overture-ai-coe-pilot .ai-view--page .ai-mywork-dates {
+  color: #5b6878;
+  font-size: 13px;
+  margin: 0;
+}
+
+#overture-ai-coe-pilot .ai-view--page .ai-mywork-note {
+  color: #2b3d52;
+  font-size: 15px;
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* Work command: one sentence and one button on a row, the question above, the note and any message below; both controls are 44px targets. */
+#overture-ai-coe-pilot .ai-view--page .ai-page-command {
+  align-items: center;
+  display: grid;
+  gap: 10px 12px;
+  grid-template-columns: minmax(0, 1fr) auto;
+}
+
+#overture-ai-coe-pilot .ai-view--page .ai-page-command-label {
+  color: var(--fd-ink, #10243e);
+  font-size: 19px;
+  font-weight: 700;
+  grid-column: 1 / -1;
+  line-height: 1.3;
+}
+
+#overture-ai-coe-pilot .ai-view--page .ai-page-command-input {
+  border-radius: 12px;
+  font-size: 17px;
+  line-height: 1.4;
+  min-height: 44px;
+  min-width: 0;
+  padding: 10px 14px;
+  width: 100%;
+}
+
+#overture-ai-coe-pilot .ai-view--page .ai-page-command-submit {
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 700;
+  min-height: 44px;
+  padding: 10px 22px;
+  white-space: nowrap;
+}
+
+#overture-ai-coe-pilot .ai-view--page .ai-page-command-note,
+#overture-ai-coe-pilot .ai-view--page .ai-page-command-alert,
+#overture-ai-coe-pilot .ai-view--page .ai-page-command-status {
+  font-size: 14px;
+  grid-column: 1 / -1;
+  line-height: 1.5;
+  margin: 0;
+}
+
+#overture-ai-coe-pilot .ai-view--page .ai-page-command-note {
+  color: var(--fd-muted, #5b6878);
+}
+
+#overture-ai-coe-pilot .ai-view--page .ai-page-command-note a {
+  color: #076874;
+  font-weight: 600;
+  text-decoration: underline;
+}
+
+#overture-ai-coe-pilot .ai-view--page .ai-page-command-alert {
+  color: #9b1c1c;
+  font-weight: 600;
+}
+
+#overture-ai-coe-pilot .ai-view--page .ai-page-command-status {
+  color: #076b67;
+  font-weight: 600;
+}
+
+/*
+ * Notice: a short aside on the card surface with a toned left edge; the tone is carried by the edge and
+ * the title, never by colour alone. Info takes the shipped link blue, caution the amber lane ink.
+ */
+#overture-ai-coe-pilot .ai-view--page .ai-page-notice {
+  background: var(--fd-paper, #fff);
+  border: 1px solid #dbe5ec;
+  border-radius: 13px;
+  color: #2b3d52;
+  font-size: 15px;
+  line-height: 1.5;
+  max-width: 860px;
+  padding: 14px 18px;
+}
+
+#overture-ai-coe-pilot .ai-view--page .ai-page-notice--info {
+  border-left: 5px solid var(--fd-focus, #0b66d4);
+}
+
+#overture-ai-coe-pilot .ai-view--page .ai-page-notice--caution {
+  border-left: 5px solid #725600;
+}
+
+#overture-ai-coe-pilot .ai-view--page .ai-page-notice-title {
+  color: var(--fd-ink, #10243e);
+  display: block;
+  font-size: 16px;
+  margin: 0 0 4px;
+}
+
+#overture-ai-coe-pilot .ai-view--page .ai-page-notice-text {
+  margin: 0;
+}
+
+#overture-ai-coe-pilot .ai-view--page .ai-page-notice a,
+#overture-ai-coe-pilot .ai-view--page .ai-page-rules a {
+  color: #076874;
+  font-weight: 600;
+  text-decoration: underline;
+}
+
+/* Rules: a numbered or bulleted set of titled items with the paragraph's measure; each title on its own line. */
+#overture-ai-coe-pilot .ai-view--page .ai-page-rules-title {
+  color: #10243e;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.3;
+  margin: 0 0 10px;
+}
+
+#overture-ai-coe-pilot .ai-view--page .ai-page-rules {
+  color: #2b3d52;
+  font-size: 16px;
+  line-height: 1.5;
+  margin: 0;
+  max-width: 860px;
+  padding: 0 0 0 26px;
+}
+
+#overture-ai-coe-pilot .ai-view--page .ai-page-rules > li {
+  padding-left: 6px;
+}
+
+#overture-ai-coe-pilot .ai-view--page .ai-page-rules > li + li {
+  margin-top: 10px;
+}
+
+#overture-ai-coe-pilot .ai-view--page .ai-page-rule-title {
+  color: #10243e;
+  display: block;
+}
+
+/* Shared footer: the document's shared blocks below the content of every page view (the wizards included), set off by a rule. */
+#overture-ai-coe-pilot .ai-view .ai-page-block--shared {
+  border-top: 1px solid #dbe5ec;
+  margin-top: 32px;
+  padding-top: 24px;
+}
+
+#overture-ai-coe-pilot .ai-view .ai-page-block--shared .ai-page-block + .ai-page-block {
+  margin-top: 24px;
+}
+
+/* Support route: where to ask, when to stop, what to include, and the routing grid as small cards on the card surface. */
+#overture-ai-coe-pilot .ai-view .ai-page-support {
+  color: #2b3d52;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+#overture-ai-coe-pilot .ai-view .ai-page-support-title {
+  color: #10243e;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.3;
+  margin: 0 0 8px;
+}
+
+#overture-ai-coe-pilot .ai-view .ai-page-support-route {
+  font-size: 16px;
+  margin: 0 0 16px;
+}
+
+#overture-ai-coe-pilot .ai-view .ai-page-support a {
+  color: #076874;
+  font-weight: 600;
+  text-decoration: underline;
+}
+
+#overture-ai-coe-pilot .ai-view .ai-page-support-columns {
+  display: grid;
+  gap: 16px 24px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin: 0 0 16px;
+}
+
+#overture-ai-coe-pilot .ai-view .ai-page-support-heading {
+  color: #10243e;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.3;
+  margin: 0 0 6px;
+}
+
+#overture-ai-coe-pilot .ai-view .ai-page-support-list {
+  margin: 0;
+  padding: 0 0 0 20px;
+}
+
+#overture-ai-coe-pilot .ai-view .ai-page-support-grid {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+}
+
+#overture-ai-coe-pilot .ai-view .ai-page-support-row {
+  background: #fff;
+  border: 1px solid #dbe5ec;
+  border-radius: 13px;
+  display: grid;
+  gap: 4px 16px;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr) minmax(0, 1.4fr);
+  padding: 12px 16px;
+}
+
+#overture-ai-coe-pilot .ai-view .ai-page-support-row dt {
+  color: #10243e;
+  font-weight: 700;
+}
+
+#overture-ai-coe-pilot .ai-view .ai-page-support-row dd {
+  margin: 0;
+}
+
+#overture-ai-coe-pilot .ai-view .ai-page-support-key {
+  color: #5b6878;
+  display: block;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+/* Page view chrome: the header line names the CoE and the identity line the signed-in person, in the shipped muted ink. */
+#overture-ai-coe-pilot .ai-view .ai-page-header {
+  margin: 0;
+}
+
+#overture-ai-coe-pilot .ai-view .ai-page-identity {
+  color: #5b6878;
+  font-size: 13px;
+  line-height: 1.4;
+  margin: 0 0 16px;
+}
+
+/* The line that says a section was left out because the role could not be read: the same quiet ink, below the blocks. */
+#overture-ai-coe-pilot .ai-view .ai-page-role-note {
+  color: #5b6878;
+  font-size: 13px;
+  line-height: 1.4;
+  margin: 16px 0 0;
+}
+
+/*
+ * Keyboard focus: every focusable control in a page view shows the shipped service-card ring (3px, #0b66d4,
+ * offset 3px), applied by element so no block can ship a control without one (WCAG 2.2 2.4.7 and 2.4.11).
+ * On the dark hero the ring keeps the shipped hero colour, which the blue ring would not contrast against.
+ */
+#overture-ai-coe-pilot .ai-view a:focus-visible,
+#overture-ai-coe-pilot .ai-view button:focus-visible,
+#overture-ai-coe-pilot .ai-view input:focus-visible,
+#overture-ai-coe-pilot .ai-view select:focus-visible,
+#overture-ai-coe-pilot .ai-view textarea:focus-visible {
+  outline: 3px solid #0b66d4;
+  outline-offset: 3px;
+}
+
+#overture-ai-coe-pilot .ai-view .ai-hero a:focus-visible {
+  outline-color: #8be9ff;
+}
+
+/* Summary review in a page view: the draft-only pill under the heading; the legacy screen carries none. */
+#overture-ai-coe-pilot .ai-view .ai-review-state {
+  margin: 8px 0 0;
+}
+
+/*
+ * Receipt (a page view, after a submission): the outcome as a card on the card surface with a toned left edge,
+ * green when the record was read back, amber while the write is accepted but not confirmed.
+ */
+#overture-ai-coe-pilot .ai-view .ai-receipt {
+  background: #fff;
+  border: 1px solid #dbe5ec;
+  border-left: 5px solid #076b67;
+  border-radius: 13px;
+  color: #2b3d52;
+  font-size: 15px;
+  line-height: 1.5;
+  padding: 14px 18px;
+}
+
+#overture-ai-coe-pilot .ai-view .ai-receipt--pending {
+  border-left-color: #725600;
+}
+
+#overture-ai-coe-pilot .ai-view .ai-receipt-head {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+  margin: 0 0 8px;
+}
+
+#overture-ai-coe-pilot .ai-view .ai-receipt-icon,
+#overture-ai-coe-pilot .ai-view .ai-failure-icon {
+  flex-shrink: 0;
+  height: 22px;
+  width: 22px;
+}
+
+#overture-ai-coe-pilot .ai-view .ai-receipt--saved .ai-receipt-icon {
+  color: #076b67;
+}
+
+#overture-ai-coe-pilot .ai-view .ai-receipt--pending .ai-receipt-icon {
+  color: #725600;
+}
+
+#overture-ai-coe-pilot .ai-view .ai-receipt-title,
+#overture-ai-coe-pilot .ai-view .ai-failure-title {
+  color: #10243e;
+  font-size: 17px;
+  font-weight: 700;
+}
+
+#overture-ai-coe-pilot .ai-view .ai-receipt-line {
+  margin: 0 0 4px;
+}
+
+#overture-ai-coe-pilot .ai-view .ai-receipt-key,
+#overture-ai-coe-pilot .ai-view .ai-route-card-key {
+  color: #5b6878;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+#overture-ai-coe-pilot .ai-view .ai-receipt code,
+#overture-ai-coe-pilot .ai-view .ai-route-card code,
+#overture-ai-coe-pilot .ai-view .ai-failure-code {
+  background: #e5ebf0;
+  border-radius: 6px;
+  color: #10243e;
+  font-family: Consolas, Menlo, monospace;
+  font-size: 14px;
+  padding: 1px 6px;
+}
+
+#overture-ai-coe-pilot .ai-view .ai-receipt-link {
+  color: #076874;
+  font-weight: 600;
+  text-decoration: underline;
+}
+
+#overture-ai-coe-pilot .ai-view .ai-receipt-caveat {
+  color: #5b6878;
+  margin: 8px 0 0;
+}
+
+#overture-ai-coe-pilot .ai-view .ai-receipt-retry,
+#overture-ai-coe-pilot .ai-view .ai-receipt-send,
+#overture-ai-coe-pilot .ai-view .ai-failure-retry {
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 600;
+  margin: 12px 0 0;
+  padding: 10px 16px;
+}
+
+/* Failure notice: the class in words, the sentence, and the three facts as a description list, red left edge. */
+#overture-ai-coe-pilot .ai-view .ai-failure {
+  background: #fff;
+  border: 1px solid #dbe5ec;
+  border-left: 5px solid #9b1c1c;
+  border-radius: 13px;
+  color: #2b3d52;
+  font-size: 15px;
+  line-height: 1.5;
+  padding: 14px 18px;
+}
+
+#overture-ai-coe-pilot .ai-view .ai-failure-head {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+  margin: 0 0 8px;
+}
+
+#overture-ai-coe-pilot .ai-view .ai-failure-icon {
+  color: #9b1c1c;
+}
+
+#overture-ai-coe-pilot .ai-view .ai-failure-message {
+  margin: 0 0 10px;
+}
+
+#overture-ai-coe-pilot .ai-view .ai-failure-facts {
+  display: grid;
+  gap: 8px;
+  margin: 0 0 10px;
+}
+
+#overture-ai-coe-pilot .ai-view .ai-failure-fact {
+  display: grid;
+  gap: 2px 16px;
+  grid-template-columns: minmax(0, 0.6fr) minmax(0, 2fr);
+}
+
+#overture-ai-coe-pilot .ai-view .ai-failure-fact dt {
+  color: #10243e;
+  font-weight: 700;
+}
+
+#overture-ai-coe-pilot .ai-view .ai-failure-fact dd {
+  margin: 0;
+}
+
+#overture-ai-coe-pilot .ai-view .ai-failure-draft {
+  color: #5b6878;
+  margin: 0;
+}
+
+/* Hand-off card after a saved record: where to continue, with the reference for copying and the route's state. */
+#overture-ai-coe-pilot .ai-view .ai-route-card {
+  background: #fff;
+  border: 1px solid #dbe5ec;
+  border-radius: 13px;
+  color: #2b3d52;
+  font-size: 15px;
+  line-height: 1.5;
+  padding: 14px 18px;
+}
+
+#overture-ai-coe-pilot .ai-view .ai-route-card--closed {
+  background: var(--fd-bg, #f7fafc);
+}
+
+#overture-ai-coe-pilot .ai-view .ai-route-card-title {
+  color: #10243e;
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 1.3;
+  margin: 0 0 6px;
+}
+
+#overture-ai-coe-pilot .ai-view .ai-route-card-reference,
+#overture-ai-coe-pilot .ai-view .ai-route-card-state,
+#overture-ai-coe-pilot .ai-view .ai-route-card-note {
+  margin: 0 0 6px;
+}
+
+#overture-ai-coe-pilot .ai-view .ai-route-card-note {
+  color: #5b6878;
+}
+
+#overture-ai-coe-pilot .ai-view a.ai-route-card-link {
+  align-items: center;
+  color: #076874;
+  display: inline-flex;
+  font-weight: 600;
+  gap: 6px;
+  margin: 4px 0 0;
+  text-decoration: underline;
+}
+
+#overture-ai-coe-pilot .ai-view a.ai-route-card-link svg {
+  height: 16px;
+  width: 16px;
+}
+
+#overture-ai-coe-pilot .ai-view a.ai-route-card-fallback {
+  color: #076874;
+  display: inline-block;
+  font-weight: 600;
+  margin: 4px 0 0;
+  text-decoration: underline;
+}
+
+#overture-ai-coe-pilot .ai-view--narrow .ai-failure-fact {
+  grid-template-columns: 1fr;
 }
 
 /* Narrow layout (a half or one-third column): the shipped phone breakpoints, keyed on the piece instead of the viewport. */
@@ -344,10 +1411,17 @@
 
 /* Narrow content pages: every block grid becomes one column and the hero drops its illustration. */
 #overture-ai-coe-pilot .ai-view--narrow .ai-page-tiles,
+#overture-ai-coe-pilot .ai-view--narrow .ai-page-tiles--prominent,
 #overture-ai-coe-pilot .ai-view--narrow .ai-page-cards,
 #overture-ai-coe-pilot .ai-view--narrow .ai-page-cards--3,
+#overture-ai-coe-pilot .ai-view--narrow .ai-page-cases,
+#overture-ai-coe-pilot .ai-view--narrow .ai-page-kpi,
+#overture-ai-coe-pilot .ai-view--narrow .ai-page-workflows,
+#overture-ai-coe-pilot .ai-view--narrow .ai-page-binding,
 #overture-ai-coe-pilot .ai-view--narrow .ai-page-lanes,
-#overture-ai-coe-pilot .ai-view--narrow .ai-page-status {
+#overture-ai-coe-pilot .ai-view--narrow .ai-page-status,
+#overture-ai-coe-pilot .ai-view--narrow .ai-page-strip,
+#overture-ai-coe-pilot .ai-view--narrow .ai-page-command {
   grid-template-columns: 1fr;
 }
 
@@ -363,4 +1437,10 @@
 
 #overture-ai-coe-pilot .ai-view--narrow .ai-hero-network {
   display: none;
+}
+
+/* Narrow support route: the two lists and each routing row stack. */
+#overture-ai-coe-pilot .ai-view--narrow .ai-page-support-columns,
+#overture-ai-coe-pilot .ai-view--narrow .ai-page-support-row {
+  grid-template-columns: 1fr;
 }

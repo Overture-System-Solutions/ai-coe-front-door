@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<environmentvariabledefinition schemaname="aicoe_EnvironmentLabel">
+  <defaultvalue>Pilot</defaultvalue>
+  <description default="Appears in log rows and outbox subjects.">
+    <label description="Appears in log rows and outbox subjects." languagecode="1033" />
+  </description>
+  <displayname default="aicoe_EnvironmentLabel">
+    <label description="aicoe_EnvironmentLabel" languagecode="1033" />
+  </displayname>
+  <introducedversion>3.0.0.1</introducedversion>
+  <iscustomizable>1</iscustomizable>
+  <isrequired>0</isrequired>
+  <secretstore>0</secretstore>
+  <statecode>0</statecode>
+  <statuscode>1</statuscode>
+  <type>100000000</type>
+</environmentvariabledefinition>

@@ -4,7 +4,7 @@ import { createDeferred, createFakeGovernanceService } from '../../../testing/fa
 import type { IDeferred, IFakeGovernanceService } from '../../../testing/fakeServices';
 import { renderWithFrontDoor, TEST_SITE_URL } from '../../../testing/renderWithFrontDoor';
 import type { IAdminDashboardData, IListItem } from '../services/types';
-import { buildRecords, formatAnswerValue, formatDateTime, GovernanceAdminDashboard, humanizeKey } from './GovernanceAdminDashboard';
+import { buildRecords, expedited, formatAnswerValue, formatDateTime, GovernanceAdminDashboard, humanizeKey } from './GovernanceAdminDashboard';
 import type { IDashboardRecord } from './GovernanceAdminDashboard';
 
 const intakes: IListItem[] = [
@@ -117,6 +117,54 @@ describe('GovernanceAdminDashboard helpers', () => {
     expect(records[0]).toMatchObject({ status: 'Submitted', risk: 'Unrated', governance: false, requestor: 'kim@contoso.com', submittedAt: '2026-09-03T10:00:00Z' });
     expect(records[3]).toMatchObject({ workflow: '', governance: true, requestor: 'lee@contoso.com', risk: 'High' });
     expect(records[4]).toMatchObject({ requestor: 'owner@contoso.com', requestorEmail: 'owner@contoso.com', status: 'Closed' });
+  });
+});
+
+describe('executive cases in the queue', () => {
+  const executiveIntake: IListItem = {
+    Id: 14,
+    Title: 'Explore an AI idea — OVT-AICOE-20260801-EXECEXEC',
+    IntakeId: 'OVT-AICOE-20260801-EXECEXEC',
+    WorkflowType: 'idea',
+    RequestorName: 'Lee Leader',
+    SubmittedAt: '2026-08-01T10:00:00Z',
+    Priority: 'High',
+    PilotOnly: false,
+    PayloadJson: JSON.stringify({ originalAnswers: { workToImprove: 'Board pack' }, reviewPriority: { level: 'executive', reason: 'x' } })
+  };
+  const executiveUseCase: IListItem = {
+    Id: 24,
+    Title: 'Board pack',
+    CoEID: 'OVT-AICOE-20260801-EXECEXEC',
+    Status: 'Ready for Review',
+    RiskTier: 'Low',
+    NextReviewDate: '2026-08-05T10:00:00Z',
+    Created: '2026-08-01T10:05:00Z'
+  };
+
+  it('lists an open executive case first, flags it and counts it as needing attention', () => {
+    const records: IDashboardRecord[] = buildRecords(intakes.concat([executiveIntake]), useCases.concat([executiveUseCase]));
+    expect(records[0]).toMatchObject({ key: 'intake-14', executive: true, reviewBy: '2026-08-05T10:00:00Z', risk: 'Low' });
+    expect(expedited(records[0])).toBe(true);
+    expect(records.filter((record: IDashboardRecord): boolean => record.executive).length).toBe(1);
+  });
+
+  it('drops a decided executive case back into date order', () => {
+    const records: IDashboardRecord[] = buildRecords(intakes.concat([executiveIntake]), useCases.concat([{ ...executiveUseCase, Status: 'Approved' }]));
+    expect(records[0].key).toBe('intake-13');
+    expect(expedited(records.filter((record: IDashboardRecord): boolean => record.key === 'intake-14')[0])).toBe(false);
+  });
+
+  it('shows the Executive pill and the review date on the record', async () => {
+    const governance: IFakeGovernanceService = createFakeGovernanceService();
+    governance.getAdminDashboardData = async (): Promise<IAdminDashboardData> => ({ ...dashboard, intakes: dashboard.intakes.concat([executiveIntake]), useCases: dashboard.useCases.concat([executiveUseCase]) });
+    renderWithFrontDoor(<GovernanceAdminDashboard onExit={jest.fn()} />, { governance });
+    await act(async () => undefined);
+    const row: HTMLElement = screen.getByRole('button', { name: /OVT-AICOE-20260801-EXECEXEC/ });
+    expect(within(row).getByText('Executive')).toHaveClass('ai-admin-pill', 'is-high');
+    fireEvent.click(row);
+    expect(screen.getByText('Executive case, review by')).toBeInTheDocument();
+    expect(screen.getByText(formatDateTime('2026-08-05T10:00:00Z'))).toBeInTheDocument();
   });
 });
 

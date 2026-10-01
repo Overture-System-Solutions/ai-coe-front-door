@@ -1,0 +1,52 @@
+/*
+ * Page view media queries: viewport reflow and reduced motion for the pieces that sit inside native
+ * page sections. The page view stylesheet (pageViews.global.scss) carries no at-rules, so the queries
+ * live here and this file holds nothing else. The legacy single-page view never carries `.ai-view`,
+ * so nothing here touches it, and this file stays outside the 1.0.0.7 parity comparison. Every
+ * selector is scoped under the web part root and a `.ai-view` class, and this file loads after the
+ * page view stylesheet, so a query wins over the same-specificity rule it adjusts without editing it.
+ * Keep this file ASCII: a non-ASCII character makes Sass emit @charset.
+ *
+ * Must keep the .global.scss suffix: the framework hashes the selectors of any other stylesheet name.
+ */
+
+/* Phone-width viewports: every block grid, the work command and the support route in one column; the hero copy fills the card. */
+@media (max-width: 800px) {
+  #overture-ai-coe-pilot .ai-view .ai-page-tiles,
+  #overture-ai-coe-pilot .ai-view .ai-page-tiles--prominent,
+  #overture-ai-coe-pilot .ai-view .ai-page-cards,
+  #overture-ai-coe-pilot .ai-view .ai-page-cards--3,
+  #overture-ai-coe-pilot .ai-view .ai-page-cases,
+  #overture-ai-coe-pilot .ai-view .ai-page-workflows,
+  #overture-ai-coe-pilot .ai-view .ai-page-lanes,
+  #overture-ai-coe-pilot .ai-view .ai-page-status,
+  #overture-ai-coe-pilot .ai-view .ai-page-command,
+  #overture-ai-coe-pilot .ai-view .ai-page-support-columns,
+  #overture-ai-coe-pilot .ai-view .ai-page-support-row {
+    grid-template-columns: 1fr;
+  }
+
+  #overture-ai-coe-pilot .ai-view .ai-hero-copy {
+    max-width: none;
+    padding: 26px 22px;
+  }
+}
+
+/* Small phones: the hero drops its illustration so the promise and the command keep the width. */
+@media (max-width: 480px) {
+  #overture-ai-coe-pilot .ai-view .ai-hero-network {
+    display: none;
+  }
+}
+
+/* Reduced motion: no transitions inside the blocks and no hover lift on the two shipped lifted controls. */
+@media (prefers-reduced-motion: reduce) {
+  #overture-ai-coe-pilot .ai-view .ai-page-block * {
+    transition: none !important;
+  }
+
+  #overture-ai-coe-pilot .ai-view .ai-hero-cta:hover,
+  #overture-ai-coe-pilot .ai-view .ai-service-card:hover {
+    transform: none !important;
+  }
+}

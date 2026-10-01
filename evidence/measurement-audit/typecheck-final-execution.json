@@ -1,0 +1,8 @@
+{
+  "command": "node.exe node_modules/typescript/bin/tsc -p evidence/frontend-audit/tsconfig.owned.json --noEmit --pretty false",
+  "result": {
+    "output": "",
+    "exit_code": 0,
+    "error": null
+  }
+}
