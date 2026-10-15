@@ -1,6 +1,9 @@
 """Offline checks for a built target.
 
-    python checks.py --target cloudwave-privatepilot [--write-verification]
+    python checks.py --target overture-ai-coe [--write-verification]
+
+A client tenant's package is checked by ../AI_CoE_Pilot_Builder/build_pilot.py, which runs this suite with
+a Target made from that tenant's local target file.
 
 The central check re-derives each flow from the live 1.0.0.8 export at the JSON level, applying only
 the intended changes (site, recipients, responder, connection references, declared wording), and
@@ -23,6 +26,32 @@ import front_door_lists as fdl
 
 EXPECTED_FLOWS = {'SharePointProvisioning', 'WeeklyPortfolioControl', 'ReviewandDecision', 'IntakeProcessing', 'TriageandRouting'}
 TARGET = None
+SITE_URL = re.compile(r'https://[A-Za-z0-9.-]+\.sharepoint\.com(?:/(?:sites|teams)/[A-Za-z0-9._-]+)?', re.I)
+ADDRESS = re.compile(r"[A-Za-z0-9._%+'-]+@[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)+")
+
+
+def foreign_values(text, target):
+    """SharePoint hosts, sites and addresses in the text that are not the target's own, in order of appearance.
+
+    Allowlist, not blocklist: a package may name only its own site and its own recipients, so no other tenant
+    has to be named here to be caught.
+    """
+    host = target.site.split('/')[2].lower()
+    own = {a.lower() for a in target.recipients.split(';')}
+    found = []
+    for match in SITE_URL.finditer(text):
+        value = match.group(0)
+        if value.split('/')[2].lower() != host:
+            value = value.split('/')[2].lower()
+        elif value.lower() == target.site.lower() or value.count('/') == 2:
+            continue
+        if value not in found:
+            found.append(value)
+    for match in ADDRESS.finditer(text):
+        value = match.group(0)
+        if value.lower() not in own and value not in found:
+            found.append(value)
+    return found
 
 
 def members(path):
@@ -198,13 +227,8 @@ class Checks(unittest.TestCase):
                     self.assertNotIn('"%s"' % old, text)
                 for _, old, _, _ in self.t.relabels:
                     self.assertNotIn(old, text)
-                if self.t.key == 'cloudwave-privatepilot':
-                    self.assertNotIn('osscontact', text.lower())
-                    self.assertNotIn('DEMO', text.upper())
-                    self.assertNotIn('SYNTHETIC', text.upper())
-                if self.t.key in ('ai-coe-lab', 'overture-ai-coe'):
-                    self.assertNotIn('gocloudwave', text.lower())
-                    self.assertNotIn('parkplace', text.lower())
+                self.assertEqual(foreign_values(text, self.t), [])
+                if self.t.strict_wording:
                     self.assertNotIn('DEMO', text.upper())
                     self.assertNotIn('SYNTHETIC', text.upper())
 
@@ -256,9 +280,13 @@ class Checks(unittest.TestCase):
                 self.assertNotIn(marker, text, name)
 
     def test_deterministic_build(self):
+        # Two builds in this interpreter are byte-identical; the delivered package has the same members, metadata
+        # and content (its compressed bytes match too when it is checked with the interpreter that built it).
         with tempfile.TemporaryDirectory() as folder:
             again, _ = b.build(self.t, Path(folder) / 'again.zip')
-            self.assertEqual(again.read_bytes(), self.t.out.read_bytes())
+            third, _ = b.build(self.t, Path(folder) / 'third.zip')
+            self.assertEqual(again.read_bytes(), third.read_bytes())
+            self.assertTrue(b.same_package(again, self.t.out))
 
 
 def write_verification(target, result):

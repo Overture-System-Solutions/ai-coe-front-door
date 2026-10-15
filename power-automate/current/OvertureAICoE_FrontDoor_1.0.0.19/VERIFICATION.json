@@ -10,7 +10,7 @@
   "verificationRecord": "development/overture-ai-coe-front-door-audit-fixes/evidence/port-verification.json",
   "preview": "Offline preview (simulated host, made-up data): Requests shows Start a request above My requests, starters four across at 1280px, two at 1000px and one at 600px; My requests two columns at 1280px and 1000px, one at 600px; Cases shows the worked business cases with their Started from links and the request-to-business-case explanation; Home ends with the approved tools and Requests no longer shows them; no console errors.",
   "supersedes": "OvertureAICoE_FrontDoor_1.0.0.18 (never uploaded; moved to power-automate/archived/OSS_AI_CoE_OvertureAICoE_FrontDoor_1.0.0.18)",
-  "target": "OvertureAICoE (OSS tenant) first; CloudWave later",
+  "target": "OvertureAICoE (OSS tenant) first; client tenants later",
   "uploaded": false,
   "tenantAcceptance": "not claimed"
 }

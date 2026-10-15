@@ -1,4 +1,4 @@
-AI CoE front door 1.0.0.19 for OvertureAICoE (OSS tenant) - do this one before CloudWave
+AI CoE front door 1.0.0.19 for OvertureAICoE (OSS tenant) - do this one before any client tenant
 
 Site:     https://osscontact.sharepoint.com/sites/OvertureAICoE
 Package:  overture-ai-coe-front-door.sppkg, version 1.0.0.19
@@ -80,7 +80,7 @@ STEPS
      e. Submit one short request; the receipt offers "Continue in the AI CoE Concierge".
      f. As a member, open the AI CoE Approved Tools list: rows can be read, New is refused or missing.
      g. Cases: no box about cases being saved through a configured service.
-  7. Tell Julianna what you saw (or a screenshot of anything wrong). Then CloudWave gets the same package.
+  7. Tell Julianna what you saw (or a screenshot of anything wrong). Then a client tenant can get the same package.
 
 ROLLBACK
   Upload the 1.0.0.17 package again (Replace). The two concierge settings stay in the page but do nothing in

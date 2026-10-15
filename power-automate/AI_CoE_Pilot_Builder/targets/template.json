@@ -1,0 +1,13 @@
+{
+  "key": "template",
+  "profile": "aicoe",
+  "reference_build": true,
+  "organization": "Contoso",
+  "site": "https://contoso.sharepoint.com/sites/AICoE",
+  "recipients": "ai-coe-reviewers@contoso.com",
+  "case_analysis_allowed_users": "ai-coe-reviewers@contoso.com",
+  "connector_api_name": null,
+  "governance_description": "AI CoE intake, triage and review workflows for the AI CoE site. Notifications and approvals go to the named reviewers. Provisioning also creates the front door's Program Measures, Outcome Records, Approved Tools and User Drafts lists. No AI-provider integration.",
+  "copilot_submission_description": "Flows the AI CoE Concierge agent calls to save feedback and AI ideas for the AI CoE site, after the person confirms a summary in chat. They write the same rows as the front door. SharePoint only; no AI-provider integration.",
+  "output_folder": "../../current/AICoE_Template_1.0.0.0"
+}

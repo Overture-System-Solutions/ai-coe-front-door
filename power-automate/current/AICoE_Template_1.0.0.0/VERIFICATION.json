@@ -1,0 +1,342 @@
+{
+  "what": "AI CoE template packages 01-06 (tenant-neutral reference build; 01 is import-ready)",
+  "written_at": "2026-10-15T20:56:38Z",
+  "status": "locally checked; the reference packages 02-06 are not for import; tenant builds, import, designer Save, agent tool configuration and live acceptance are separate and pending",
+  "target": {
+    "file": "template.json",
+    "profile": "aicoe",
+    "reference_build": true,
+    "site": "https://contoso.sharepoint.com/sites/AICoE",
+    "recipients": "ai-coe-reviewers@contoso.com",
+    "connector_api_name": "shared_aicoe-5fai-20coe-20claude-20draft-5f0000000000000000"
+  },
+  "publisher": {
+    "unique_name": "AICoETemplate",
+    "display_name": "AI CoE Template",
+    "prefix": "aicoe",
+    "option_value_prefix": 61413
+  },
+  "packages": {
+    "connector": {
+      "file": "01_AICoEClaudeConnector_1_0_0_0.zip",
+      "sha256": "4733bdd984471c9fa3b376c5e6c6ce03a469e0ce951d09f6eb5bf0aba6f413de",
+      "bytes": 4856,
+      "renames": 10,
+      "rename_undone_exactly": true,
+      "leftovers": {},
+      "foreign_values": [],
+      "pac_roundtrip": {
+        "ok": true,
+        "steps": [
+          {
+            "command": "pac solution unpack",
+            "exit_code": 0,
+            "warnings_or_errors": []
+          },
+          {
+            "command": "pac solution pack",
+            "exit_code": 0,
+            "warnings_or_errors": []
+          },
+          {
+            "command": "pac solution unpack",
+            "exit_code": 0,
+            "warnings_or_errors": []
+          },
+          {
+            "command": "pac solution create-settings",
+            "exit_code": 0,
+            "warnings_or_errors": []
+          }
+        ],
+        "workflows": 0,
+        "workflow_json_equal_after_roundtrip": true,
+        "connection_references": []
+      }
+    },
+    "workflows": {
+      "file": "02_AICoEWorkflows_1_0_0_0_REFERENCE_NOT_FOR_IMPORT.zip",
+      "sha256": "f8b6f75e202bc98c402fd81b4dbdfd9c7b896b0fcd408ec1b1adb46770e2ac47",
+      "bytes": 18361,
+      "renames": 17,
+      "rename_undone_exactly": true,
+      "leftovers": {},
+      "foreign_values": [],
+      "pac_roundtrip": {
+        "ok": true,
+        "steps": [
+          {
+            "command": "pac solution unpack",
+            "exit_code": 0,
+            "warnings_or_errors": []
+          },
+          {
+            "command": "pac solution pack",
+            "exit_code": 0,
+            "warnings_or_errors": []
+          },
+          {
+            "command": "pac solution unpack",
+            "exit_code": 0,
+            "warnings_or_errors": []
+          },
+          {
+            "command": "pac solution create-settings",
+            "exit_code": 0,
+            "warnings_or_errors": []
+          }
+        ],
+        "workflows": 5,
+        "workflow_json_equal_after_roundtrip": true,
+        "connection_references": [
+          "aicoe_approvals",
+          "aicoe_office365",
+          "aicoe_sharepoint"
+        ]
+      }
+    },
+    "idea_draft": {
+      "file": "03_AICoEClaudeIdeaDraft_1_0_0_0_REFERENCE_NOT_FOR_IMPORT.zip",
+      "sha256": "54e2e88b7455aeb1d88226d01e8ebda8834bdf923abadd780c498957da327981",
+      "bytes": 6924,
+      "renames": 14,
+      "rename_undone_exactly": true,
+      "leftovers": {},
+      "foreign_values": [],
+      "pac_roundtrip": {
+        "ok": true,
+        "steps": [
+          {
+            "command": "pac solution unpack",
+            "exit_code": 0,
+            "warnings_or_errors": []
+          },
+          {
+            "command": "pac solution pack",
+            "exit_code": 0,
+            "warnings_or_errors": []
+          },
+          {
+            "command": "pac solution unpack",
+            "exit_code": 0,
+            "warnings_or_errors": []
+          },
+          {
+            "command": "pac solution create-settings",
+            "exit_code": 0,
+            "warnings_or_errors": []
+          }
+        ],
+        "workflows": 1,
+        "workflow_json_equal_after_roundtrip": true,
+        "connection_references": [
+          "aicoe_claudeideadraft"
+        ]
+      }
+    },
+    "case_analysis": {
+      "file": "04_case_analysis/AICoEClaudeCaseAnalysis_1_0_0_0_REFERENCE_NOT_FOR_IMPORT.zip",
+      "sha256": "220d90fd0237cce53f4e1744502f5c5eae2360a14e340542820517005a5899df",
+      "bytes": 7366,
+      "renames": 15,
+      "rename_undone_exactly": true,
+      "leftovers": {},
+      "foreign_values": [],
+      "pac_roundtrip": {
+        "ok": true,
+        "steps": [
+          {
+            "command": "pac solution unpack",
+            "exit_code": 0,
+            "warnings_or_errors": []
+          },
+          {
+            "command": "pac solution pack",
+            "exit_code": 0,
+            "warnings_or_errors": []
+          },
+          {
+            "command": "pac solution unpack",
+            "exit_code": 0,
+            "warnings_or_errors": []
+          },
+          {
+            "command": "pac solution create-settings",
+            "exit_code": 0,
+            "warnings_or_errors": []
+          }
+        ],
+        "workflows": 1,
+        "workflow_json_equal_after_roundtrip": true,
+        "connection_references": [
+          "aicoe_caseanalysissharepoint",
+          "aicoe_claudecaseanalysisconnection"
+        ]
+      }
+    },
+    "copilot_submission": {
+      "file": "06_copilot_submission/AICoECopilotSubmission_1_0_0_0_REFERENCE_NOT_FOR_IMPORT.zip",
+      "sha256": "040369a3d0328ce5a28ee2a7f4239a64d6d9c9370a15de1b21a7cac3bd7d15b9",
+      "bytes": 16075,
+      "renames": 10,
+      "rename_undone_exactly": true,
+      "leftovers": {},
+      "foreign_values": [],
+      "pac_roundtrip": {
+        "ok": true,
+        "steps": [
+          {
+            "command": "pac solution unpack",
+            "exit_code": 0,
+            "warnings_or_errors": []
+          },
+          {
+            "command": "pac solution pack",
+            "exit_code": 0,
+            "warnings_or_errors": []
+          },
+          {
+            "command": "pac solution unpack",
+            "exit_code": 0,
+            "warnings_or_errors": []
+          },
+          {
+            "command": "pac solution create-settings",
+            "exit_code": 0,
+            "warnings_or_errors": []
+          }
+        ],
+        "workflows": 2,
+        "workflow_json_equal_after_roundtrip": true,
+        "connection_references": [
+          "aicoe_copilotsharepoint"
+        ]
+      }
+    }
+  },
+  "other_files": {
+    "04_case_analysis/analysis.schema.json": "32e05873c59764022cf73a786eb8c34bc4053fe48a853d859bd4374d82f72180",
+    "04_case_analysis/claude-request-body.json": "6580ab3357baed491004dbc6dcb6745ea26119897e9be3d4d934ea8d5a1405ab",
+    "04_case_analysis/request.schema.json": "7d12b578063abfadad596dc4fc05dd619f316aa79f95c7b8aeb1609663322d1a",
+    "04_case_analysis/response.schema.json": "0762ddefbbb46d7381f7cd740be1469c24fef4b6e2f11c649200a45236e1b16d",
+    "04_case_analysis/synthetic-request.json": "751ed96e241668e4589e0337e4a5cc689430a0e214f2db1a2625b43cfb116380",
+    "06_copilot_submission/CONCIERGE_INSTRUCTIONS.txt": "1c234c1068530c37331e458ae0b155f0f0dca98687da4d79e0886b6912f82467",
+    "START_HERE.txt": "b26062b1aac03f5e21794b3e013be659a32b67c20311376b035456a1dd17e352"
+  },
+  "builder_checks": {
+    "connector": true,
+    "governance": {
+      "run": 8,
+      "failed": 0,
+      "skipped": 0,
+      "failures": []
+    },
+    "idea_draft": true,
+    "case_analysis": "not run: a reference build uses the packager fixture mode"
+  },
+  "fresh_rebuild_matches_committed_files": true,
+  "fresh_rebuild_identical_bytes": {
+    "01_AICoEClaudeConnector_1_0_0_0.zip": false,
+    "02_AICoEWorkflows_1_0_0_0_REFERENCE_NOT_FOR_IMPORT.zip": false,
+    "03_AICoEClaudeIdeaDraft_1_0_0_0_REFERENCE_NOT_FOR_IMPORT.zip": false,
+    "04_case_analysis/AICoEClaudeCaseAnalysis_1_0_0_0_REFERENCE_NOT_FOR_IMPORT.zip": false,
+    "04_case_analysis/analysis.schema.json": true,
+    "04_case_analysis/claude-request-body.json": true,
+    "04_case_analysis/request.schema.json": true,
+    "04_case_analysis/response.schema.json": true,
+    "04_case_analysis/synthetic-request.json": true,
+    "06_copilot_submission/AICoECopilotSubmission_1_0_0_0_REFERENCE_NOT_FOR_IMPORT.zip": false,
+    "06_copilot_submission/CONCIERGE_INSTRUCTIONS.txt": true
+  },
+  "tests": {
+    "pilot_builder": {
+      "exit_code": 0,
+      "tests": 46,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "summary": "46 passed in 2.54s"
+    },
+    "copilot_submission": {
+      "exit_code": 0,
+      "tests": 77,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "summary": "77 passed in 3.02s"
+    },
+    "governance_builder": {
+      "exit_code": 0,
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "summary": "6 passed in 0.11s"
+    }
+  },
+  "interpreter": {
+    "python": "3.11.15",
+    "system": "Linux",
+    "zlib": "1.3.2"
+  },
+  "parity_reference": {
+    "front_door": "overture-ai-coe-front-door-audit-fixes",
+    "branch": "fix/coe-audit-server-drafts",
+    "commit": "745aace52a193c4e46b8265087c814e433113ae5",
+    "files": {
+      "src/webparts/aiCoeFrontDoor/services/GovernanceService.ts": "f02967a73905fdf99dca99fafd9ce2395685ccad4591fb4163041218f6fb1fc8",
+      "src/webparts/aiCoeFrontDoor/services/flags.ts": "1add08c84c41b8dcc6ecb5d0ae20bc11c7585342ffae34c20e64ced0bba3dfb0",
+      "src/webparts/aiCoeFrontDoor/services/executivePriority.ts": "a463be94c0b0c1b2de26adf1865450502d4dd855b6e59a460d08655f4539902c",
+      "src/webparts/aiCoeFrontDoor/services/intakeId.ts": "ac60d0bd728673f9bab9a3c2e15850221c85f82d2cc0dcb631d1a5dd376e0016",
+      "src/webparts/aiCoeFrontDoor/summaries/ideaSummary.ts": "4545e7cfe846540ffcee36d0ad738331bec8bcce0e4ea202b95b3ffab6f3edba",
+      "src/webparts/aiCoeFrontDoor/summaries/feedbackSummary.ts": "30218b5f99c561beed5d2c920935e6edcd2837015c54ecb96ac2db0c25f22e8b",
+      "src/webparts/aiCoeFrontDoor/content/workflows/idea.ts": "fb2551b81eb0592b54e98141172193758abd98a843f233364777c2771aed3051",
+      "src/webparts/aiCoeFrontDoor/content/workflows/feedback.ts": "17c96e1c4db9443361ba43e27a0ca4396c75c4d256c543aa491cbc15f7dce606",
+      "sharepoint/assets/intake-schema.xml": "5e36a7d01c78040f0af27f13f31a84616765bb26437db25a8a6cb65a7e7ba48e"
+    }
+  },
+  "source": {
+    "AI_CoE_Pilot_Builder/README.txt": "d8559a3b112e9f28e984581417f68ac32ee53e58f4c19ad37774d3ae28e4b3be",
+    "AI_CoE_Pilot_Builder/build_pilot.py": "9258f33282710d2ee640d7a998f7c1dd53e54a4bbec9e34e47e76b607d7974f6",
+    "AI_CoE_Pilot_Builder/claude_flows.py": "91fd8cffa26d930f3154bbb0f67c97cf0b7dbe4df46e195539c2adf2b2b7f5fd",
+    "AI_CoE_Pilot_Builder/copilot_submission/CONCIERGE_INSTRUCTIONS.template.txt": "31a3365179da911fb5b3383c2a0835afe2b359a712ce3584b010e2b45d752914",
+    "AI_CoE_Pilot_Builder/copilot_submission/build_copilot_submission.py": "29fadd6f16d6cac9fa584562068e5d241f9e241db5c58337301d60aa5277ae34",
+    "AI_CoE_Pilot_Builder/copilot_submission/fake_sharepoint.py": "ab86375d25d53886583015875d0a32d2166a2db2540b1a11be70a722ad058a2b",
+    "AI_CoE_Pilot_Builder/copilot_submission/parity/reference.cjs": "2666a53f2c6cee62c9bb5ae15ba60cd1d5a288683f5bbf68a006d4ea599ceb58",
+    "AI_CoE_Pilot_Builder/copilot_submission/tests/conftest.py": "799b4715e9e84434039b765a6100d1155d6fb55d97ec41e5e49caf169a0c8ea4",
+    "AI_CoE_Pilot_Builder/copilot_submission/tests/helpers.py": "82c2edf51547d6b168484c942535abb3405c22aeb27efd26a7ce1f060450546c",
+    "AI_CoE_Pilot_Builder/copilot_submission/tests/test_delivery_docs.py": "bb0af7d723da5620e7e86468e85ab52f79f15ebe3d55cbb5b05ec96c1c11287f",
+    "AI_CoE_Pilot_Builder/copilot_submission/tests/test_fake_sharepoint.py": "f5688011f8b74d44a22a46eefe4a596d4a8039ffbefa6cfd523970bfda2c84c8",
+    "AI_CoE_Pilot_Builder/copilot_submission/tests/test_feedback_flow.py": "5c236ac78c25230cbf10fb03702f2f4313c82f83dd11330b0c1b353cc04f8237",
+    "AI_CoE_Pilot_Builder/copilot_submission/tests/test_idea_flow.py": "5adaed7d9e595e280b9258fa923077d37b9c320e1162b7ea60384fb412e3d7d9",
+    "AI_CoE_Pilot_Builder/copilot_submission/tests/test_package.py": "25934136f7931b459062cd1060d560bd19ea2c3e982f54f76d4bcf4bc744247e",
+    "AI_CoE_Pilot_Builder/copilot_submission/tests/test_parity.py": "9ad356693ce497b5b277e2f9782447fa35c88d4ae3ad0faca8ac851664bc121b",
+    "AI_CoE_Pilot_Builder/copilot_submission/tests/test_wdl.py": "4d771874781da0ebf440128d28daa9b50f975dd80373bab9b970030ddb78e988",
+    "AI_CoE_Pilot_Builder/copilot_submission/wdl.py": "46d081b238691e926daf46db81f99326db8180e9e2ce6938c581080eeb8e1658",
+    "AI_CoE_Pilot_Builder/profiles.py": "cceb5101837af6066f95faea44d059826abf2faec26c3a507248178035f36207",
+    "AI_CoE_Pilot_Builder/retarget.py": "1605c381a0c4f8e4a098e2851fab793c9c5e5433c9955b32e4580baa6b602b93",
+    "AI_CoE_Pilot_Builder/target_file.py": "f5b8eef07ca404583fb9905f02be8560d0721a452d8e9668f127487956e61a52",
+    "AI_CoE_Pilot_Builder/targets/template.json": "12ec7457af26daa5fb4216e6c514241e80f4cdb813823c548a3e3cf4f6b6168b",
+    "AI_CoE_Pilot_Builder/tests/conftest.py": "27c3f3e1e7595c8d0f2907dd41bb8aec6ae019b4411a947e24ced87ab1c0f919",
+    "AI_CoE_Pilot_Builder/tests/test_build_pilot.py": "538f417c1e9b80ff4769901c09e16fc7fe9fda8489fc0f2c5d537646db995cbc",
+    "AI_CoE_Pilot_Builder/tests/test_claude_flows.py": "fa68ce10fec1dcf4f2630df48a252b90c37338e2c1f50764d4fd903fc159a852",
+    "AI_CoE_Pilot_Builder/tests/test_profiles.py": "96fe823499b4b70518c2134f4b1aa074289e06f78a5a0688618133800da661d7",
+    "AI_CoE_Pilot_Builder/tests/test_retarget.py": "5a7ad3c0ee19a354efa09f9fd47ea558e59a8a2e4b0e149067aa958c272d3ffa",
+    "AI_CoE_Pilot_Builder/tests/test_targets.py": "dd67612e73c926e1e903f414e66e43a9e5365a56ab05e3f4101322d6eb3f2a5c",
+    "AI_CoE_Pilot_Builder/verify.py": "5dc023a986083f6eb26d18711b2149810d2b897045c3edf7d10b9312aed3b53c",
+    "AI_CoE_Governance_Flow_Builder/README.txt": "7ec33df2dc5ede87a14f3d23f082d6b05b9ef3080d4cc3b1cb82a667f7871284",
+    "AI_CoE_Governance_Flow_Builder/build_solution.py": "b8323132ba90d148eae89d9d0177ee18d06ba4209629390137f935fed989f6b3",
+    "AI_CoE_Governance_Flow_Builder/checks.py": "aec2c9a6a17238545ddf7f651b9c735e2f02580c31651022151cf2c51d348f5e",
+    "AI_CoE_Governance_Flow_Builder/front_door_lists.json": "d457483bf2c6a0a0aaa66c0db4f0e86e7d049ca795d8f19a7e9f3c1d79d465c1",
+    "AI_CoE_Governance_Flow_Builder/front_door_lists.py": "3e27f44d34db9aa41de72eb9d3e19e08d93b0369f1eef4474381214c4a881e9c",
+    "AI_CoE_Governance_Flow_Builder/test_builder.py": "cb09551a6791be276ee0132ec1a39799fc70dfb04fca1b07a53c2e7546db7946"
+  },
+  "limits": [
+    "Flows ran in a local WDL emulation against an in-memory SharePoint fake; neither is Microsoft.",
+    "The 04 reference build is the archived packager in fixture mode; its 18 checks run only on a tenant (import) build, as tests/test_build_pilot.py does for a sample tenant.",
+    "The connector's runtime name pattern for a tenant is inferred from OSS's connector; the target file takes the real one.",
+    "Compressed ZIP bytes depend on the zlib build; equality here is of members, metadata and content.",
+    "Copilot Studio tool configuration, Premium classification and every live acceptance step are unverified."
+  ],
+  "result": "PASS"
+}

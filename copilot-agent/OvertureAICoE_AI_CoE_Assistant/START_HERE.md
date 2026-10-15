@@ -50,6 +50,6 @@ The front door draws its content inside the web part, and Copilot Studio cannot 
 
 Anyone with a Microsoft 365 Copilot license can use the agent at no extra cost. Anyone without one uses billed Copilot Studio messages (a capacity pack, pay-as-you-go, or a trial while testing). Record which applies to Brian and Sam before wider use.
 
-## Moving to CloudWave later
+## Moving to another tenant later
 
-Rebuild the same agent there (or export it in a solution), with the same files. It gets its own title ID, so its two links go into the CloudWave page's settings.
+Rebuild the same agent there (or export it in a solution), with the same files. It gets its own title ID, so its two links go into that tenant's front-door page settings.

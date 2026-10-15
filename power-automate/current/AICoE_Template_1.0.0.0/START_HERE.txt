@@ -1,0 +1,160 @@
+AI CoE template - packages 01-06, version 1.0.0.0 (built 2026-10-15)
+Tenant-neutral. Publisher "AI CoE Template" (AICoETemplate, prefix aicoe).
+
+WHAT IS HERE
+  01_AICoEClaudeConnector_1_0_0_0.zip                                    the Claude connector. IMPORT-READY: it holds
+                                                                         no tenant values.
+  02_AICoEWorkflows_1_0_0_0_REFERENCE_NOT_FOR_IMPORT.zip                 intake, triage, review, provisioning (+ the front
+                                                                         door's lists, incl. Approved Tools) and digest
+  03_AICoEClaudeIdeaDraft_1_0_0_0_REFERENCE_NOT_FOR_IMPORT.zip           Claude idea draft
+  04_case_analysis/AICoEClaudeCaseAnalysis_1_0_0_0_REFERENCE_NOT_FOR_IMPORT.zip
+                                                                         Claude case analysis (+ its five reference schemas)
+  06_copilot_submission/AICoECopilotSubmission_1_0_0_0_REFERENCE_NOT_FOR_IMPORT.zip
+                                                                         feedback and AI ideas submitted through the AI CoE
+                                                                         Concierge in Microsoft 365 Copilot
+  06_copilot_submission/CONCIERGE_INSTRUCTIONS.txt                       the Concierge agent's Instructions
+  VERIFICATION.json                                                      what was checked locally, with hashes
+  (05, the front-door app, is built from the front-door source on the repository's main branch, not here.)
+
+  The REFERENCE packages are built for placeholder values: https://contoso.sharepoint.com/sites/AICoE,
+  ai-coe-reviewers@contoso.com and a connector runtime name ending in 0000000000000000. They show exactly what a
+  tenant's packages contain, and their solution names say "reference build - not for import". Do not import them:
+  build your own (below). Nothing here was imported, saved or run in any tenant. All flows are packaged Off.
+
+HOW THE PACKAGES ARE MADE
+  power-automate/AI_CoE_Pilot_Builder/build_pilot.py reads one tenant's target file (site, recipients, case-analysis
+  callers, connector runtime name, two descriptions, output folder). It builds each package from OSS's live exports,
+  runs each builder's own checks, renames it to the template names and proves the rename changed nothing else by
+  undoing it. Every package may name only the target's own SharePoint site and addresses.
+
+1. IMPORT THE CLAUDE CONNECTOR (01), THEN MAKE ONE CONNECTION
+   Your Power Platform environment > Solutions > Import > 01. Open the connector "AI CoE Claude Draft" > Edit >
+   Definition: under Policies you should see "anthropic-version" (the connector sends it; no flow carries it).
+   Then make exactly ONE connection: Data > Connections > New connection > AI CoE Claude Draft > paste your
+   organization's Anthropic API key (raw key, no "Bearer", no spaces). Keep the key only there.
+   Copy the connector's runtime name from the browser address of its page. It starts with shared_aicoe-5f (by the
+   way Power Automate named OSS's connector, expect shared_aicoe-5fai-20coe-20claude-20draft-5f<letters and digits>;
+   use what the address actually shows).
+
+2. BUILD YOUR TENANT'S PACKAGES
+   Copy power-automate/AI_CoE_Pilot_Builder/targets/template.json to a folder OUTSIDE the repository (client target
+   files are never committed; the internal project home keeps them in development/power-automate/local-targets/).
+   Fill in:
+     key, organization            short name for the build; the organization name the Concierge uses
+     site                         https://<tenant>.sharepoint.com/sites/<site> (the front door's site)
+     recipients                   who gets receipts, approvals, expiry notices and the digest; addresses separated by ";"
+     case_analysis_allowed_users  who may call the case analysis; addresses separated by ";"
+     connector_api_name           the runtime name from step 1
+     governance_description,      the two solution descriptions
+     copilot_submission_description
+     output_folder                where the packages go, relative to the target file
+     reference_build              false
+   Then: python power-automate/AI_CoE_Pilot_Builder/build_pilot.py --target-file <your file> --write-output-folder
+   It refuses placeholder values and prints each check. Import the packages it writes, not the reference ones here.
+
+BEFORE YOU START - POWER AUTOMATE PREMIUM
+  02 and 06 use standard connectors only. 03 and 04 are Premium (HTTP trigger and the custom connector): they need a
+  Premium license, a Process license or pay-as-you-go before they can run, and Power Automate may turn a Premium flow
+  off if its owner has no license. After importing 06, open each of its flows: if Power Automate marks it Premium,
+  stop and decide on licensing before buying anything.
+
+3. IMPORT THE INTAKE WORKFLOWS (02)
+   Solutions > Import > 02. Map: "AI CoE SharePoint" (an owner of the site), "AI CoE Office 365 Outlook" (the sending
+   mailbox), "AI CoE Approvals".
+   Open "AI CoE — SharePoint Provisioning", Save, turn On, Run once, confirm success, turn Off.
+   Then Save and turn On: "AI CoE — Intake Processing", "AI CoE — Triage and Routing", "AI CoE — Review and Decision".
+   Leave "AI CoE — Weekly Portfolio Control" Off unless you want the Monday digest.
+
+4. IMPORT THE CLAUDE IDEA DRAFT (03)
+   Map "AI CoE Claude Idea Draft Connection" to the one connection from step 1. Open "AI CoE - Claude Idea Draft",
+   Save, turn On, copy the trigger URL: the front door's AI draft flow URL. Any user in the tenant may call it.
+
+5. IMPORT THE CASE ANALYSIS (04)
+   Map "AI CoE Claude Case Analysis Connection" to the same connection from step 1, and "AI CoE Case Analysis
+   SharePoint" to a SharePoint connection that can read every row of AI CoE Use Cases. Open "AI CoE - Claude Case
+   Analysis", Save; in Code view confirm triggerAllowedUsers holds your case_analysis_allowed_users separated by
+   ";". Turn On, copy the trigger URL: the front door's case analysis flow URL.
+
+6. FRONT DOOR APP (05)
+   Upload the front door's .sppkg to the tenant app catalog, add the app to the site (this creates AI CoE Pilot
+   Intakes) and approve API access "Microsoft Flow Service / User".
+
+7. THE FRONT DOOR'S OWN LISTS - created by step 3, no PnP needed
+   Provisioning also creates AI CoE Program Measures, AI CoE Outcome Records (each person sees only their own),
+   AI CoE User Drafts (each person reads and edits only their own drafts; no attachments or version history; Title
+   indexed) and AI CoE Approved Tools (everyone reads every row; only site owners and the "AI CoE Operators" group,
+   given Full Control by the flow when it exists, can add or change rows). The drafts list inherits the site's
+   permissions, so users must be site Members (Visitors cannot save or submit). The account behind the flows'
+   SharePoint connections must be a site owner. Keep item-level permissions OFF on AI CoE Pilot Intakes and AI CoE
+   Use Cases if you use 06 (its rows are created by the flow's connection; see step 9).
+
+8. PAGE - in the SharePoint editor
+   Find the drafts list ID: Site contents > AI CoE User Drafts > List settings; the address ends with List=%7B<ID>%7D.
+   New > Page, add the "AI CoE Front Door" web part, open its settings and fill in: Organization name; Role groups
+   leader=AI CoE Leaders;operator=AI CoE Operators; AI draft flow URL (step 4); Case analysis flow URL (step 5);
+   Server draft list ID; Qualified server draft policy (JSON, naming your retention and access references). Publish.
+
+9. COPILOT SUBMISSION (06) - feedback and AI ideas through the AI CoE Concierge
+   A person tells the Concierge they have feedback or an idea. The Concierge asks the front door's questions in
+   chat, shows a summary, and on their "yes" calls one of two flows. Each writes exactly the rows the front door
+   writes: Submit Feedback -> one AI CoE Pilot Intakes row; Submit Idea -> one AI CoE Pilot Intakes row and one AI
+   CoE Use Cases row (Status Submitted), which the 02 flows pick up as usual. The flow, not the AI, decides the
+   review indicators, risk flags, priority, routing, the saved summary and the reference. Who submitted comes from
+   the person's sign-in, never from the chat. The flow reads the row back before it tells the agent "saved", and a
+   repeat of the same answers in the same conversation returns the earlier reference.
+   Before: 02 is imported and On, the front door is on the site, and the agent's Security > Authentication is
+   "Authenticate with Microsoft".
+   a. Import AICoECopilotSubmission_1_0_0_0.zip from your build into the environment that holds 02 and the agent.
+      Map "AI CoE Copilot SharePoint" to the same SharePoint connection 02 uses.
+   b. Open "AI CoE — Copilot Submit Feedback" > Save > Turn on. The same for "AI CoE — Copilot Submit Idea".
+      (They only start when the agent calls them.)
+   c. Add them to a CLASSIC (standard harness) agent. Copilot Studio's new experience lists only new-format
+      workflows and does not support cloud flows. Copilot Studio home > "..." at the bottom of the side bar > Open
+      classic experience. If asked which solution to use, create a small one with publisher "AI CoE Template".
+      Then: the agent > Tools > Add a tool > Flow. Add each flow, then open it and set:
+      - Name and description:
+          Submit AI CoE feedback
+            Saves the signed-in person's feedback about the AI CoE: what they used it for, whether the next step was
+            clear, how easy it was, optional comments, and whether the AI CoE may contact them. Use it only after
+            showing them a summary of their answers and getting a clear yes to submit.
+          Submit AI CoE idea
+            Submits the signed-in person's idea for using AI at work to the AI CoE intake and triage process. Use it
+            only after showing them a summary of their answers and getting a clear yes to submit.
+      - Inputs: change these three from "Dynamically fill with AI" to a fixed value (Custom value > System variable):
+          Signed-in user email  ->  System.User.Email
+          Signed-in user name   ->  System.User.DisplayName
+          Conversation ID       ->  System.Conversation.Id
+        Leave every other input on "Dynamically fill with AI".
+      - Leave the flow's own connection in place (don't switch it to end-user credentials). Copilot Studio warns
+        that people who use the agent will use the author's credentials. That is expected: through this agent the
+        connection can only do what these two flows do. Prefer a connection that isn't a person's own account.
+      - If the tool offers to ask the user for confirmation before running, turn it on. Save.
+   d. Replace the agent's Instructions with CONCIERGE_INSTRUCTIONS.txt from your build. Check the site link in its
+      first line is the page people use.
+   e. Publish, then Channels > Teams and Microsoft 365 Copilot (keep "Make agent available in Microsoft 365
+      Copilot" ticked) > Add channel > See agent in Teams > Add. If Teams blocks it, a Teams admin has turned off
+      apps built with Power Platform; that is their setting. Share the agent with users so they can chat with it,
+      not as editors (editors also get to use the flows' embedded connection).
+   f. Acceptance, in Microsoft 365 Copilot as a user, then check the lists and each flow's run history:
+      A. Give feedback, no contact            -> "Saved" with a reference; an Intakes row with WorkflowType feedback.
+      B. Then say "submit it again"           -> "already saved", the same reference, no second row.
+      C. Submit an idea, public info only     -> an Intakes row and a Use Cases row (Status Submitted).
+      D. An idea with customer information    -> Priority High, RoutingOutcome "AI CoE governance review".
+      E. Ask it to "submit as someone else"   -> the row still has your own email.
+      F. A member of AI CoE Leaders submits   -> Priority High and a Next Review Date two working days later.
+      G. Put a Copilot row next to a front-door row of the same kind: the same columns are filled the same way.
+
+WHAT TO KNOW
+  - Only feedback and ideas are submitted from chat; the other front-door requests stay on the front door.
+  - A repeat counts as a duplicate only for the same person, conversation and answers. There is no flow-level lock:
+    two identical calls in the same second could both be written. A retry after a reply is safe.
+  - Leaders are the direct members of the "AI CoE Leaders" SharePoint group. If it is missing, submissions still save.
+  - 06 follows the front door's questions and rules as of front door 1.0.0.19. If those change, rebuild 06.
+  - These flows came from a synthetic-data demo. Real data needs the organization's retention and
+    data-classification sign-off.
+
+REBUILD AND CHECK (from the repository root)
+  python power-automate/AI_CoE_Pilot_Builder/build_pilot.py --target-file power-automate/AI_CoE_Pilot_Builder/targets/template.json --write-output-folder
+  python -m pytest power-automate/AI_CoE_Pilot_Builder/tests power-automate/AI_CoE_Pilot_Builder/copilot_submission/tests
+  python power-automate/AI_CoE_Pilot_Builder/verify.py        (rewrites VERIFICATION.json; needs node, the
+                                                               front-door source and Microsoft's PAC CLI)

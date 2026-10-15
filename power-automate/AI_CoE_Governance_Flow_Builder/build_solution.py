@@ -3,10 +3,13 @@
     python build_solution.py --target ossaicoedemo
     python build_solution.py --target ai-coe-lab
     python build_solution.py --target overture-ai-coe
-    python build_solution.py --target cloudwave-privatepilot
 
 Input: the live OSS export OSSCloudWaveDashboardDemo 1.0.0.8 (baseline/, SHA-256 checked; registered in
 the project home as S780). Each target's ZIP is written to its delivery folder.
+
+The targets declared here are OSS's own sites. A client tenant's workflows are built by
+../AI_CoE_Pilot_Builder/build_pilot.py from that tenant's own target file, which calls build() below with a
+Target made from it; client target files stay outside this repository.
 
 The five flows keep their exported logic byte for byte except for these edits, made as exact text
 replacements whose counts are asserted:
@@ -15,12 +18,17 @@ replacements whose counts are asserted:
   - the Decisions record stores whoever answered the approval, not a fixed address;
   - a new solution identity, workflow IDs and connection references, so a target never replaces
     another solution's flows;
-  - optional wording changes a target declares (the CloudWave pilot drops the demo labels);
+  - optional wording changes a target declares (a pilot or production site drops the demo labels);
   - optionally, the front door's own lists in SharePoint Provisioning (front_door_lists.py), for a site
     that cannot run the front door's PnP installer;
   - every flow is packaged Off.
 The publisher (OSSCloudWaveDemoPublisher, prefix cwdd) is kept: it is the one the Claude connector
-package uses too. Nothing is imported or activated and no credential is involved.
+package uses too. (The pilot builder's tenant-neutral "aicoe" profile renames it afterwards.) Nothing is
+imported or activated and no credential is involved.
+
+ZIP bytes depend on the zlib build: Windows Python 3.14.2 (zlib-ng 1.3.1) reproduces the delivered packages
+exactly; other interpreters write the same members with different compressed bytes. same_package() compares
+what an import reads (member names, order, timestamps, attributes, CRCs and content), not compressed bytes.
 """
 import argparse
 import hashlib
@@ -66,6 +74,7 @@ class Target:
     relabels: tuple = field(default_factory=tuple)   # (old, new, count) per workflow kind
     front_door_lists: bool = False   # SharePoint Provisioning also creates Program Measures and Outcome Records
     operators_group: str = 'AI CoE Operators'   # the site group given Full Control on the read-only approved tools
+    strict_wording: bool = False   # no demo or synthetic-data wording may remain in the flows
 
 
 TARGETS = {
@@ -86,7 +95,7 @@ TARGETS = {
         },
         out=ARTIFACTS / 'archived' / 'OSS_AI_CoE_Demo_OSSAICoEDemo_1.0.0.0' / 'OSSAICoEDemo_1_0_0_0.zip',
     ),
-    # The OSS rehearsal of the CloudWave private pilot: the pilot's configuration on the OSS AI-CoE-Lab site.
+    # The OSS rehearsal of a client private pilot: the pilot's configuration on the OSS AI-CoE-Lab site.
     'ai-coe-lab': Target(
         key='ai-coe-lab',
         site='https://osscontact.sharepoint.com/sites/AI-CoE-Lab',
@@ -94,7 +103,7 @@ TARGETS = {
         solution='AICoELab',
         display='AI CoE Lab',
         description=('AI CoE Lab intake, triage and review workflows for the AI-CoE-Lab site, the OSS rehearsal of '
-                     'the CloudWave private pilot. Notifications and approvals go to Brian Frerichs and Samuel '
+                     'a client private pilot. Notifications and approvals go to Brian Frerichs and Samuel '
                      "Conrad. Provisioning also creates the front door's Program Measures, Outcome Records and User "
                      'Drafts lists. No AI-provider integration.'),
         flow_prefix='AI CoE Lab',
@@ -106,6 +115,7 @@ TARGETS = {
         },
         out=ARTIFACTS / 'OSS_AI_CoE_Lab_1.0.0.0' / '02_AICoELab_Workflows_1_0_0_0.zip',
         front_door_lists=True,
+        strict_wording=True,
         relabels=(('IntakeProcessing', '[OSS DEMO] Submission received.', '[AI CoE Lab] Submission received.', 1),
                   ('IntakeProcessing', 'The synthetic case will move through triage and human review.',
                    'Your case will move through triage and human review.', 1)),
@@ -131,31 +141,8 @@ TARGETS = {
         out=ARTIFACTS / 'current' / 'OvertureAICoE_1_0_0_2.zip',
         version='1.0.0.2',
         front_door_lists=True,
+        strict_wording=True,
         relabels=(('IntakeProcessing', '[OSS DEMO] Submission received.', '[Overture AI CoE] Submission received.', 1),
-                  ('IntakeProcessing', 'The synthetic case will move through triage and human review.',
-                   'Your case will move through triage and human review.', 1)),
-    ),
-    'cloudwave-privatepilot': Target(
-        key='cloudwave-privatepilot',
-        site='https://parkplace.sharepoint.com/sites/AICoE-PrivatePilot',
-        recipients='sconrad@gocloudwave.com;bfrerichs@gocloudwave.com;jmartens@gocloudwave.com',
-        solution='AICoEPrivatePilot',
-        display='AI CoE Private Pilot',
-        description=('AI CoE private pilot intake, triage and review workflows for the AICoE-PrivatePilot site. '
-                     'Notifications and approvals go to the named owners. Provisioning also creates the front '
-                     "door's Program Measures, Outcome Records, Approved Tools and User Drafts lists. No AI-provider "
-                     'integration.'),
-        flow_prefix='AI CoE Pilot',
-        file_prefix='AICoEPilot',
-        references={
-            'cwdd_sharedsharepointonline': ('cwdd_aicoepilotsharepoint', 'AI CoE Pilot SharePoint'),
-            'cwdd_sharedoffice365': ('cwdd_aicoepilotoffice365', 'AI CoE Pilot Office 365 Outlook'),
-            'cwdd_sharedapprovals': ('cwdd_aicoepilotapprovals', 'AI CoE Pilot Approvals'),
-        },
-        out=ARTIFACTS / 'current' / 'CloudWave_AICoE_PrivatePilot_1.0.0.0' / '02_AICoEPrivatePilot_Workflows_1_0_0_2.zip',
-        version='1.0.0.2',
-        front_door_lists=True,
-        relabels=(('IntakeProcessing', '[OSS DEMO] Submission received.', '[AI CoE Pilot] Submission received.', 1),
                   ('IntakeProcessing', 'The synthetic case will move through triage and human review.',
                    'Your case will move through triage and human review.', 1)),
     ),
@@ -182,6 +169,18 @@ def recipient_edits(target):
 
 def sha256(path):
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
+
+
+def same_package(first, second):
+    """True when two ZIPs hold the same members in the same order with the same metadata and content.
+
+    Compressed bytes are ignored: they differ between zlib builds while what an import reads does not.
+    """
+    def described(source):
+        with zipfile.ZipFile(source) as archive:
+            return [((i.filename, i.date_time, i.external_attr, i.compress_type, i.CRC, i.file_size), archive.read(i))
+                    for i in archive.infolist()]
+    return described(first) == described(second)
 
 
 def replace(text, old, new, count, label):

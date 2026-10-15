@@ -1,2 +1,4 @@
 __pycache__/
 *.pyc
+# Client target files stay outside the repository; never commit them.
+local-targets/

@@ -1,0 +1,7 @@
+{
+  "schemaVersion": "1.0",
+  "workflowId": "caseAnalysis",
+  "requestId": "synthetic-case-analysis-001",
+  "demoDataOnly": true,
+  "question": "Which open cases should I look at first this week, and why?"
+}
