@@ -1,8 +1,11 @@
-"""Stage selected verified binaries, offline installer and receipts; no deployment."""
+"""Stage selected verified binaries, offline installer and receipts; no deployment.
+
+Usage: stage_delivery.py <name of the 1.0.0.17 local-corrections delivery folder under the project home's deliverables/>
+"""
 from pathlib import Path
-import datetime, hashlib, json, shutil, zipfile
+import datetime, hashlib, json, shutil, sys, zipfile
 ROOT=Path(__file__).resolve().parents[2];PROJECT=ROOT.parents[1]
-DEST=PROJECT/'deliverables/CloudWave_Local_Corrections_1.0.0.17_2026-09-23'
+DEST=PROJECT/'deliverables'/sys.argv[1]
 sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()
 files={
 'sharepoint/solution/overture-ai-coe-front-door.sppkg':'frontend/overture-ai-coe-front-door-1.0.0.17.sppkg',

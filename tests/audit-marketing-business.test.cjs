@@ -7,7 +7,7 @@ const binding={enabled:true,siteUrl:session.tenantScope,requestListId:'11111111-
 function fixture(){const values=new Map(),posts=[];const references={getItem:k=>values.get(k)||null,setItem:(k,v)=>values.set(k,v),removeItem:k=>values.delete(k)};const http={request:async(method,url,body)=>{if(method==='POST'){posts.push(body);return {status:201,body:{Id:posts.length}};}return {status:200,body:{value:[]}};}};return {values,posts,references,http};}
 test('Marketing persists only an opaque pre-dispatch reference and never repeats an unknown mutation after reload',async()=>{
  const f=fixture(),options={binding,session,http:f.http,references:f.references,pollAttempts:1};
- const input={workId:'CW-SYNTHETIC_TEST',objective:'PRIVATE-SYNTHETIC-OBJECTIVE',audienceContext:['PRIVATE-SYNTHETIC-AUDIENCE'],sourceIds:['SRC-SYNTHETIC']};
+ const input={workId:'AICOE-SYNTHETIC_TEST',objective:'PRIVATE-SYNTHETIC-OBJECTIVE',audienceContext:['PRIVATE-SYNTHETIC-AUDIENCE'],sourceIds:['SRC-SYNTHETIC']};
  const first=await createBusinessMarketingServices(options).draft.draftCampaignBrief(session,input);assert.equal(first.kind,'failed');
  assert.equal(f.values.size,1);assert.ok(!JSON.stringify([...f.values]).includes('PRIVATE-SYNTHETIC'));
  const restarted=createBusinessMarketingServices(options);await restarted.draft.draftCampaignBrief(session,input);assert.equal(f.posts.length,1);
@@ -15,7 +15,7 @@ test('Marketing persists only an opaque pre-dispatch reference and never repeats
 });
 test('Marketing refuses a mutation if its opaque reference cannot be stored',async()=>{
  const f=fixture();f.references.setItem=()=>{throw new Error('Synthetic storage refusal');};
- await createBusinessMarketingServices({binding,session,http:f.http,references:f.references,pollAttempts:1}).draft.draftCampaignBrief(session,{workId:'CW-SYNTHETIC_TEST',objective:'Synthetic objective',audienceContext:[],sourceIds:[]});
+ await createBusinessMarketingServices({binding,session,http:f.http,references:f.references,pollAttempts:1}).draft.draftCampaignBrief(session,{workId:'AICOE-SYNTHETIC_TEST',objective:'Synthetic objective',audienceContext:[],sourceIds:[]});
  assert.equal(f.posts.length,0);
 });
 test('Marketing recovery after reload validates and acknowledges the original review-request result',async()=>{
@@ -36,7 +36,7 @@ test('Marketing recovery after reload validates and acknowledges the original re
 test('an unknown Marketing recovery request also retains one original recovery ID',async()=>{
  const f=fixture(),options={binding,session,http:f.http,references:f.references,pollAttempts:1};
  const service=createBusinessMarketingServices(options);
- await service.draft.draftCampaignBrief(session,{workId:'CW-SYNTHETIC_TEST',objective:'Synthetic objective',audienceContext:[],sourceIds:[]});
+ await service.draft.draftCampaignBrief(session,{workId:'AICOE-SYNTHETIC_TEST',objective:'Synthetic objective',audienceContext:[],sourceIds:[]});
  const key=JSON.parse([...f.values.values()][0]).id;
  await service.draft.reconcileAttempt(session,key);
  await createBusinessMarketingServices(options).draft.reconcileAttempt(session,key);

@@ -10,6 +10,7 @@
  *
  * Wording note: this file is scanned for Tailwind utility names; keep prose free of utility words.
  */
+import { mintWorkId } from '../../content/workIdentity';
 import { NO_RECEIPT, parseRequest, parseResponse, toEmployeeWork } from './coreContract';
 import type {
   CoreOperation,
@@ -273,7 +274,7 @@ export class LocalCoreEngine {
   private _mintWorkId(): string {
     const n: string = String(this._serial).padStart(4, '0');
     this._serial += 1;
-    return `CW-LOCAL_${n}`;
+    return mintWorkId(`LOCAL_${n}`);
   }
 }
 

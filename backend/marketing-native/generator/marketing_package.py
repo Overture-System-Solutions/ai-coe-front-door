@@ -12,7 +12,7 @@ from xml.sax.saxutils import escape
 import zipfile
 from marketing_flow import ROOT
 
-DONOR_SHA256 = 'bb39ae86413b684eba5f05b90b1c9876b20e5b5a28d74285e74e82bb8ac0a430'
+DONOR_SHA256 = '24e8fdf4c3d7efbca0013c0e434bf26f16b671982e1515d70dba6d49cd9e29f3'
 
 
 def packing_primitives():
@@ -26,7 +26,8 @@ def packing_primitives():
     keep += [n for n in tree.body if isinstance(n, ast.Assign) and any(isinstance(t, ast.Name) and t.id in {'CRM_VERSION', 'CONTENT_TYPES'} for t in n.targets)]
     model = SimpleNamespace(SOLUTION_UNIQUE='AICoEMarketingAutomation', SOLUTION_VERSION='1.0.0.0',
                             SOLUTION_DISPLAY='AI CoE Marketing Automation', PUBLISHER_UNIQUE='AICoEMarketingPublisher',
-                            PUBLISHER_DISPLAY='AI CoE Marketing', PUBLISHER_PREFIX='aicoe', ENV_VARS=[])
+                            PUBLISHER_DISPLAY='AI CoE Marketing', PUBLISHER_PREFIX='aicoe', ENV_VARS=[],
+                            RELEASE='1.0.0.0', schema_family=lambda: 'AICOE')  # donor description; replaced below
     ns = {'re': re, 'escape': escape, 'M': model}
     exec(compile(ast.Module(body=keep, type_ignores=[]), str(path), 'exec'), ns)
     return ns

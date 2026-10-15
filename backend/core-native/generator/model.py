@@ -1,7 +1,7 @@
 """
 AICoECoreAutomation 3.0.0.0 — data model (SharePoint lists) and configuration seed.
 
-List names: v3.2 physical map (CW-AICOE-PRODUCTION-IMPLEMENTATION-ROUTE-AND-PHYSICAL-MAP-v1, the active pointer),
+List names: v3.2 physical map (the AI CoE production implementation route and physical map v1, the active pointer),
 plus 'AI CoE Case Command' (UI<->flow contract binding A) and 'AI Automation Log' (2.1 lineage).
 Column internal names: RC2 3.4.0-rc2 schema field names verbatim, except the SharePoint 'Title' column which
 carries each list's primary key (WorkID / EvidencePacketID / ...); RC2 work-record 'Title' maps to 'WorkTitle'.
@@ -9,6 +9,7 @@ Scores are Text columns because RC2 allows a number OR a state word (never zero-
 is always stored verbatim in 'RecordJson' so schema validation can run over exactly what the flow wrote.
 """
 from __future__ import annotations
+import build_target
 
 SOLUTION_UNIQUE = "AICoECoreAutomation"
 SOLUTION_VERSION = "3.0.0.1"
@@ -19,7 +20,13 @@ PUBLISHER_DISPLAY = "AI CoE"
 RELEASE = "3.4.0-rc2"
 POLICY_VERSION = "uat-transcribed-v3.4-s10"  # transcribed from v3.4 design s9-11; YAML unreadable over connector
 GATES_VERSION = "readiness-gates-v1"           # gate-count model, NOT the v3.4 weighted readiness model
-DEFAULT_SITE = "https://parkplace.sharepoint.com/sites/AICoE-PrivatePilot"
+# Build target (generator/build_target.py): the SharePoint site and WorkID prefix. Neutral placeholder by default;
+# build.py --target-file applies a local target through configure() before any flow or package is generated.
+TARGET = dict(build_target.DEFAULT)
+DEFAULT_SITE = TARGET["site"]
+WORK_ID_PREFIX = TARGET["work_id_prefix"]
+POLICY_SOURCE_HASH = build_target.policy_sha256(TARGET)
+ARB_OWNER_NOTE = build_target.arb_owner_note(TARGET)  # Authority_ARB note; a target's optional arb_owner_note replaces it
 
 ENV_VARS = [  # definitions with defaults, NO value records (2.1 decision)
     ("aicoe_SiteUrl", DEFAULT_SITE, "SharePoint site that hosts the AI CoE lists. Set per environment."),
@@ -125,7 +132,7 @@ def seed_config(site_url_placeholder="@SITE@"):
         ("ELT_TRIGGERS", '["multi_department_impact","material_investment"]', "Policy", True, "v3.4 s11; ELT precedence over ARB"),
         ("DelegatedFastPathEnabled", "false", "Policy", True, "false until a delegated AI CoE authority is bound; no trigger + false => PREPARATION lane"),
         ("Authority_AI_COE_FAST_PATH", '""', "Authority", True, "Named delegated approver principal. Blank => DECISION_AUTHORITY_KNOWN gate cannot pass."),
-        ("Authority_ARB", '""', "Authority", True, "ARB owner principal (Kelli/Clay path). Blank => gate cannot pass. ARB integration is NOT in MVP."),
+        ("Authority_ARB", '""', "Authority", True, ARB_OWNER_NOTE),
         ("Authority_ELT", '""', "Authority", True, "ELT decision body. Blank => gate cannot pass."),
         ("ThresholdsRatified", "false", "Policy", True, "Set true only by ELT decision 2."),
         ("FreshnessDays", "30", "Policy", True, "EVIDENCE_FRESHNESS gate: validated packets older than this fail."),
@@ -171,7 +178,23 @@ _upstream_seed_config=seed_config
 def seed_config(site_url_placeholder='@SITE@'):
     rows=_upstream_seed_config(site_url_placeholder)
     rows=[(k,'false' if k=='AutoValidateReturnedPackets' else v,c,p,n) for k,v,c,p,n in rows]
-    additions={'NativeQualified':False,'SecurityQualified':False,'RuntimeMode':'DISABLED','TenantLabel':'UNBOUND','UatSiteUrl':'','UatPrincipals':[], 'ServicePrincipalID':0,'PolicyAccepted':False,'PolicySourceHash':'51210529f823b1571e737c40f21a97921e498c60f8e132374171634138ccf736','PolicyAcceptanceReceipt':'','PolicyBindingVersion':'','FlowEnabled':{'01':False,'02':False,'03':False,'04':False,'05':False}}
+    additions={'NativeQualified':False,'SecurityQualified':False,'RuntimeMode':'DISABLED','TenantLabel':'UNBOUND','UatSiteUrl':'','UatPrincipals':[], 'ServicePrincipalID':0,'PolicyAccepted':False,'PolicySourceHash':POLICY_SOURCE_HASH,'PolicyAcceptanceReceipt':'','PolicyBindingVersion':'','FlowEnabled':{'01':False,'02':False,'03':False,'04':False,'05':False}}
     import json
     return rows+[(k,json.dumps(v),'Qualification',True,'Separately accepted native binding required; never enabled by this package.') for k,v in additions.items()]
 LIST_ID_KEYS = {k: f"ListId_{k}" for k in LISTS}  # Definitions rows written by flow 00 after readback
+
+
+def configure(target: dict) -> dict:
+    """Bind this build to a validated target (site + WorkID prefix [+ ARB owner note]); every generated artifact reads these globals."""
+    global TARGET, DEFAULT_SITE, WORK_ID_PREFIX, POLICY_SOURCE_HASH, ARB_OWNER_NOTE
+    TARGET = build_target.validate(target)
+    DEFAULT_SITE, WORK_ID_PREFIX = TARGET["site"], TARGET["work_id_prefix"]
+    POLICY_SOURCE_HASH = build_target.policy_sha256(TARGET)
+    ARB_OWNER_NOTE = build_target.arb_owner_note(TARGET)
+    ENV_VARS[0] = (ENV_VARS[0][0], DEFAULT_SITE, ENV_VARS[0][2])
+    return TARGET
+
+
+def schema_family() -> str:
+    """Name of the RC2 record-schema family: '<prefix>-AICOE', or plain 'AICOE' for the neutral AICOE prefix."""
+    return "AICOE" if WORK_ID_PREFIX == "AICOE" else f"{WORK_ID_PREFIX}-AICOE"

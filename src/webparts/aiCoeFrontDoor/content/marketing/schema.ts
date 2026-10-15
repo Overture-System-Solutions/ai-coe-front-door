@@ -14,7 +14,7 @@
  *
  * Wording note: this file is scanned for Tailwind utility names; keep prose free of utility words.
  */
-import { CANONICAL_ID, CANONICAL_WORK_ID, isSentinel } from '../workIdentity';
+import { CANONICAL_ID, isCanonicalWorkId, isSentinel, workIdPrefix } from '../workIdentity';
 import type { Sentinel } from '../workIdentity';
 import { SHA256_HEX } from '../actionEnvelope';
 import type { ISourceRef } from './sourceRegister';
@@ -215,8 +215,8 @@ export function canonicalId(value: unknown, path: string, issues: IIssue[]): str
 }
 
 export function workId(value: unknown, path: string, issues: IIssue[]): string | undefined {
-  if (typeof value !== 'string' || !CANONICAL_WORK_ID.test(value)) {
-    issues.push({ path, message: 'must be a canonical Work ID (CW-…).' });
+  if (!isCanonicalWorkId(value)) {
+    issues.push({ path, message: `must be a canonical Work ID (${workIdPrefix() ?? '<prefix>'}-…).` });
     return undefined;
   }
   return value;

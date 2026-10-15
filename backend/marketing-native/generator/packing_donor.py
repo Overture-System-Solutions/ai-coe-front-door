@@ -25,7 +25,7 @@ def solution_xml(flows, literal: bool) -> str:
         roots += "\n" + "\n".join(f'      <RootComponent type="380" schemaName="{s}" behavior="0" />' for s, _, _ in M.ENV_VARS)
     # connection references are declared in customizations.xml only: their component type code (>=10000) is per-environment
     desc = ("AI CoE core automation for the idea-to-business-case MVP: command flow (UI<->flow contract v0.2.0), evidence & readiness, Markdown projector, "
-            "notification outbox (ships off), health monitor, provisioning. Records bound to CW-AICOE 3.4.0-rc2 schemas. Every flow imports switched off."
+            f"notification outbox (ships off), health monitor, provisioning. Records bound to {M.schema_family()} {M.RELEASE} schemas. Every flow imports switched off."
             + (" LITERAL FALLBACK: no environment variables; site/alert/label are literals." if literal else ""))
     return f'''<?xml version="1.0" encoding="utf-8"?>
 <ImportExportXml version="{CRM_VERSION}" SolutionPackageVersion="9.2" languagecode="1033" generatedBy="CrmLive" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">

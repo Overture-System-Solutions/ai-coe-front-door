@@ -5,7 +5,7 @@
   "create": {
     "generatedVersion": 1,
     "fixtureVersion": 2,
-    "fixtureFile": "mock/CreateOrResumeWork/CW-UAT-FAST-001-create-incomplete-s1.json",
+    "fixtureFile": "mock/CreateOrResumeWork/UAT-FAST-001-create-incomplete-s1.json",
     "localEngine": 1,
     "status": "amber",
     "reason": "Local engine and generated create template write Version 1. Fixture pairs return Version 2. Amendment records the fixture mismatch; client does not invent Version 2."
@@ -15,7 +15,7 @@
     "generatedArbState": "READY_FOR_ARB",
     "fixtureState": "DECISION_READY",
     "fixtureLane": "PREPARATION",
-    "fixtureFile": "mock/RequestDecisionReadiness/CW-UAT-ARB-001-ready.json",
+    "fixtureFile": "mock/RequestDecisionReadiness/UAT-ARB-001-ready.json",
     "localEngineState": "READY_FOR_ARB",
     "status": "amber",
     "reason": "Local engine follows the ARB-lane generated branch (READY_FOR_ARB). Fixtures pair DECISION_READY with Lane PREPARATION, which is the other branch of the same generated expression. Both mismatches stay visible."

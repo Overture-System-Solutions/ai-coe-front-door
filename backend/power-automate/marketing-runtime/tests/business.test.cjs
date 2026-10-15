@@ -21,8 +21,8 @@ test('business factory uses immutable ingress, no client authority and fresh rea
   const http = fakeHttp();
   const first = mod.createBusinessMarketingServices({ binding, session, http });
   assert.equal(first.mode, 'live');
-  await first.review.listArtifacts('CW-OFFLINE_TEST');
-  await mod.createBusinessMarketingServices({ binding, session, http }).review.listArtifacts('CW-OFFLINE_TEST');
+  await first.review.listArtifacts('AICOE-OFFLINE_TEST');
+  await mod.createBusinessMarketingServices({ binding, session, http }).review.listArtifacts('AICOE-OFFLINE_TEST');
   const posts = http.calls.filter(c => c.method === 'POST');
   assert.equal(posts.length, 2); assert.notEqual(posts[0].body.Title, posts[1].body.Title);
   assert.ok(posts.every(c => !/actorId|tenantScope|authority|resolution|roles/.test(c.body.PayloadJson)));

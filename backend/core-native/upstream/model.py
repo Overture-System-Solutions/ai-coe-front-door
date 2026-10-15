@@ -1,7 +1,7 @@
 """
 AICoECoreAutomation 3.0.0.0 — data model (SharePoint lists) and configuration seed.
 
-List names: v3.2 physical map (CW-AICOE-PRODUCTION-IMPLEMENTATION-ROUTE-AND-PHYSICAL-MAP-v1, the active pointer),
+List names: v3.2 physical map (the AI CoE production implementation route and physical map v1, the active pointer),
 plus 'AI CoE Case Command' (UI<->flow contract binding A) and 'AI Automation Log' (2.1 lineage).
 Column internal names: RC2 3.4.0-rc2 schema field names verbatim, except the SharePoint 'Title' column which
 carries each list's primary key (WorkID / EvidencePacketID / ...); RC2 work-record 'Title' maps to 'WorkTitle'.
@@ -19,7 +19,7 @@ PUBLISHER_DISPLAY = "AI CoE"
 RELEASE = "3.4.0-rc2"
 POLICY_VERSION = "uat-transcribed-v3.4-s10"  # transcribed from v3.4 design s9-11; YAML unreadable over connector
 GATES_VERSION = "readiness-gates-v1"           # gate-count model, NOT the v3.4 weighted readiness model
-DEFAULT_SITE = "https://parkplace.sharepoint.com/sites/AICoE-PrivatePilot"
+DEFAULT_SITE = "https://contoso.sharepoint.com/sites/AICoE"
 
 ENV_VARS = [  # definitions with defaults, NO value records (2.1 decision)
     ("aicoe_SiteUrl", DEFAULT_SITE, "SharePoint site that hosts the AI CoE lists. Set per environment."),
@@ -125,7 +125,7 @@ def seed_config(site_url_placeholder="@SITE@"):
         ("ELT_TRIGGERS", '["multi_department_impact","material_investment"]', "Policy", True, "v3.4 s11; ELT precedence over ARB"),
         ("DelegatedFastPathEnabled", "false", "Policy", True, "false until a delegated AI CoE authority is bound; no trigger + false => PREPARATION lane"),
         ("Authority_AI_COE_FAST_PATH", '""', "Authority", True, "Named delegated approver principal. Blank => DECISION_AUTHORITY_KNOWN gate cannot pass."),
-        ("Authority_ARB", '""', "Authority", True, "ARB owner principal (Kelli/Clay path). Blank => gate cannot pass. ARB integration is NOT in MVP."),
+        ("Authority_ARB", '""', "Authority", True, "ARB owner principal (designated ARB owner path). Blank => gate cannot pass. ARB integration is NOT in MVP."),
         ("Authority_ELT", '""', "Authority", True, "ELT decision body. Blank => gate cannot pass."),
         ("ThresholdsRatified", "false", "Policy", True, "Set true only by ELT decision 2."),
         ("FreshnessDays", "30", "Policy", True, "EVIDENCE_FRESHNESS gate: validated packets older than this fail."),

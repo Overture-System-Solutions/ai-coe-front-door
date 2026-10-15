@@ -63,19 +63,19 @@ describe('v0.1.1 fixture pair validation (operation-discriminated)', () => {
   });
 
   it('keeps create Version 2 and Lane PREPARATION visible as fixture-vs-generated mismatches', () => {
-    const created: IPair = loadPair('CreateOrResumeWork', 'CW-UAT-FAST-001-create-incomplete-s1');
+    const created: IPair = loadPair('CreateOrResumeWork', 'UAT-FAST-001-create-incomplete-s1');
     expect(created.response.Work?.Version).toBe(2);
     expect(created.response.Work?.Lane).toBe('PREPARATION');
     expect(created.response.Created).toBe(true);
   });
 
   it('keeps the replay fixture\'s Created:false visible against v0.1.1 §7a (preserve Created:true)', () => {
-    const replay: IPair = loadPair('CreateOrResumeWork', 'CW-UAT-FAST-001-replay-same-idempotency-key');
+    const replay: IPair = loadPair('CreateOrResumeWork', 'UAT-FAST-001-replay-same-idempotency-key');
     expect(replay.response.Created).toBe(false);
   });
 
   it('keeps ready-fixture DECISION_READY/PREPARATION visible against generated READY_FOR_* routing', () => {
-    const ready: IPair = loadPair('RequestDecisionReadiness', 'CW-UAT-ARB-001-ready');
+    const ready: IPair = loadPair('RequestDecisionReadiness', 'UAT-ARB-001-ready');
     expect(ready.response.Work?.State).toBe('DECISION_READY');
     expect(ready.response.Work?.Lane).toBe('PREPARATION');
   });

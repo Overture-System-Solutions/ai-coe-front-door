@@ -46,7 +46,7 @@
     "Value": "\"\"",
     "Category": "Authority",
     "Provisional": true,
-    "Note": "ARB owner principal (Kelli/Clay path). Blank => gate cannot pass. ARB integration is NOT in MVP."
+    "Note": "ARB owner principal (designated ARB owner path). Blank => gate cannot pass. ARB integration is NOT in MVP."
   },
   {
     "Key": "Authority_ELT",
@@ -253,7 +253,7 @@
   },
   {
     "Key": "PolicySourceHash",
-    "Value": "\"51210529f823b1571e737c40f21a97921e498c60f8e132374171634138ccf736\"",
+    "Value": "\"cd0d19ba3a2b051402d33927e851547289e34a2fa4fbb384ce737896f8794b2f\"",
     "Category": "Qualification",
     "Provisional": true,
     "Note": "Separately accepted native binding required; never enabled by this package."

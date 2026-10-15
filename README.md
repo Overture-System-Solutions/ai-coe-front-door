@@ -66,15 +66,33 @@ Use Node.js 22.14 or newer (below 23) and npm.
   inventory fields; what the lock file cannot say reads `AWAITING_TENANT_INVENTORY` until the tenant inventory
   fills it). Both files are committed with each release.
 
-## Deploy 1.0.0.19
+## Deploy 1.0.0.20
 
 This is an **offline review candidate**, not authorization to import or activate business processing. After separate
 approval, upload `sharepoint/solution/overture-ai-coe-front-door.sppkg` as an update of the existing app.
 The solution id (`f125ebdf-4a9d-4e6e-8479-3a18874e7752`), feature id (`69ab84b7-608c-47ee-9623-af8ebaf2cb10`,
 version 1.0.0.2) and web part id (`cf2e5904-0703-4fe4-ae5a-ec012d6fa689`) are unchanged, so the provisioned lists
-are left untouched. 1.0.0.19 changes no list schema and declares no new list.
+are left untouched. 1.0.0.20 changes no list schema and declares no new list.
 
-What 1.0.0.19 changes, in the tabbed view (`view:app`):
+What 1.0.0.20 changes:
+- **Work ID prefix setting.** A new web part property, `workIdPrefix` (Branding, "Work ID prefix"), names the prefix
+  of this site's Work IDs: the `work_id_prefix` its CORE target was built with. Blank means `AICOE`, the CORE
+  generator's default. A value must pass the generator's own rule (an upper-case letter, then 1 to 15 upper-case
+  letters or digits); the pane refuses anything else. Every Work ID check and every minted Work ID reads it: the CORE
+  contract validators, the native case service's recovery references, the case lists of Cases and Marketing, the
+  synthetic case service (`AICOE-LOCAL_0001` by default), the synthetic Marketing workspace and the offline preview's
+  practice cases. A Work ID under another prefix is refused, and a malformed setting refuses every Work ID and mints
+  none, so a mistyped prefix cannot move a page into another namespace. One page holds one prefix. The one-page
+  installer writes it from the optional `WorkIdPrefix` parameter (blank keeps the instance's value).
+- **A site whose CORE target uses another prefix sets it before it updates.** Up to 1.0.0.19 the front door accepted
+  one built-in prefix only. A site with CORE records under a prefix other than `AICOE` sets `workIdPrefix` to that
+  prefix, or its Work IDs are refused.
+- **Neutral examples.** Example and test Work IDs read `AICOE-…`, and the CORE conformance test reads the regenerated
+  contract pairs (`UAT-…`). The tenant word list stores client names, roster surnames and case ids only as SHA-256
+  hashes (`node scripts/hash-tenant-word.mjs <list>` makes an entry), and every scan, the package verifier's
+  included, still finds them.
+
+What 1.0.0.19 already added remains. It changed the tabbed view (`view:app`) as follows:
 - **Requests layout.** Start a request has its own section above My requests: the four forms sit in one row (two by
   two on a medium screen, one column on a small screen or in the narrow layout). My requests fills two columns side
   by side (one on a small screen), so a long list grows half as tall.
@@ -253,6 +271,13 @@ page view reads neutral wording; a filled value is quoted in either view:
 The script writes both on every instance from the `GovernanceReference` and `ReviewSystemName` parameters and
 reports a blank `GovernanceReference` as AWAITING in its end-of-run summary; both default literals are rows of
 `docs/content-claims.md` (class `binding`) and of "Portability exceptions" below.
+
+One more Branding property (since 1.0.0.20) names the prefix of the site's Work IDs, which the CORE generator writes
+from its target's `work_id_prefix`:
+
+| Property | Pane label | Blank | Set |
+|---|---|---|---|
+| `workIdPrefix` | Work ID prefix | `AICOE`, the generator's default | every Work ID is read and minted under it; it must be an upper-case letter, then 1 to 15 upper-case letters or digits, and a malformed value refuses every Work ID |
 
 A third Branding property (since 1.0.0.14), `roleGroups`, binds site groups to the four roles the front door knows
 (`employee`, `leader`, `operator`, `designAuthority`): pairs of a role id and a site group title, one pair per
@@ -731,8 +756,15 @@ and `settings` sections are copied as written. `src/provisioning/pagesDefinition
 tokens, that the web part's parser accepts every block once the tokens are resolved, and that no word of the tenant
 list is in the file: `src/provisioning/tenantWords.json` is the one list of client names, tenant hosts, the reference
 roster, case ids and secret shapes that the provisioning tests scan `pages.json`, `parameters.sample.json` and the
-script against. That list is deliberately not tenant-neutral (it is what the scans look for), lives outside
-`src/webparts`, is imported by nothing in the web part and is never packaged.
+script against. The list names no client: the client names, the reference roster's surnames and the case ids are
+stored only as SHA-256 hashes (each with its length and a 12-bit probe of a rolling hash, which keeps the scan of a
+whole bundle fast), while OSS's own names, generic phrases, the host shape and the secret shapes stay written out as
+expressions. A hashed entry is still found anywhere in a text, as a substring, in its list's case rule
+(`src/provisioning/tenantWords.ts`, with the verifier's copy in `scripts/tenant-words.mjs`; a test holds the two to the
+same findings). A hash keeps a name out of plain text, not out of reach: anyone who guesses a name can hash it and
+confirm it against the list. `node scripts/hash-tenant-word.mjs <list>` makes an entry from a word read from standard
+input, so a new word never has to be written into the repository. The list lives outside `src/webparts`, is imported
+by nothing in the web part and is never packaged.
 
 **Page permissions.** Every page declares one of three modes. `inherit` leaves the page with the site's own
 permissions. `owners` gives the site's Owners group Full Control and nobody else: the admin dashboard and the
@@ -906,6 +938,8 @@ the identity line, the site's owners group on the admin page). Bindings, the pro
 | `caseAnalysisUrl` | web part property (AI drafting) on the one-page `view:app` instance, written by the one-page script from `CaseAnalysisUrl` | property | the leaders' case analysis panel says it is not connected |
 | `CaseAnalysisUrl` | the one-page `parameters.json` (from its sample) | url | `caseAnalysisUrl` left as it is on the instance (blank on a new one) |
 | `telemetryProvider` | web part property (Telemetry) on Operations, written by the script from `TelemetryProvider` | property | `claude` |
+| `workIdPrefix` | web part property (Branding) on the one-page `view:app` instance, written by the one-page script from `WorkIdPrefix` (1.0.0.20) | property | `AICOE`, the CORE generator's default `work_id_prefix` |
+| `WorkIdPrefix` | the one-page `parameters.json` (from its sample) | optional | `workIdPrefix` left as it is on the instance (blank on a new one, read as `AICOE`) |
 | AI CoE Pilot Intakes | the package feature (`sharepoint/assets/intake-schema.xml`), untouched on upgrade | list | absent: a submission fails and the visitor sees the shipped failure screen |
 | AI CoE Use Cases | the companion Power Automate solution | list | absent: the dashboard section reads as unavailable |
 | AI CoE Decisions | the companion Power Automate solution | list | absent: the dashboard section reads as unavailable |
@@ -946,7 +980,7 @@ What the built bundle still carries from its first tenant, each with an owner an
 | `overture-ai-coe-pilot`, the DOM scope id, the `.overture-*` classes and `overture-confirm-title`, the confirm dialog heading id | `content/constants.ts`; `styles/theme.global.scss` (the shipped stylesheet, reproduced rule for rule); `controls/ConfirmDialog.tsx` | front-door maintainers | kept: the stylesheet parity suite pins every rule and the legacy screens are parity-locked; changes only with a deliberate stylesheet release; with the package name, the solution name, the draft key prefix and the download file names these are the documented identifiers the verifier masks before its client-word scan of the archive |
 | The telemetry feed labels (`Claude API spend this month`, `OpenAI API spend this month` and the rest) | `content/telemetryTiles.ts`, `services/UsageMetricsService.ts` | AI CoE operations | product names of the usage feeds, not of a tenant; the legacy strip keeps them verbatim (parity); the page-view strip on the owners-only Operations page (1.0.0.13) takes its labels from `vocabulary.telemetry`, so the page names the feed and never a provider |
 | The vendor name in the shipped list schemas (site column group) and in the package publisher block | `sharepoint/assets/*.xml` (byte-identical to 1.0.0.7); the developer block of `config/package-solution.json` | package maintainers | metadata, never rendered; changing the schemas would break the in-place upgrade; with the documented identifiers above, the two are the recorded exemptions of the verifier's package scan |
-| `src/provisioning/tenantWords.json`, the tenant word list | outside `src/webparts`, imported by nothing in the web part, never packaged (the verifier asserts the archive holds neither the file nor its entries) | front-door maintainers | deliberately not tenant-neutral: it is what every scan looks for; on rebind it is replaced with the words of the new first tenant |
+| `src/provisioning/tenantWords.json`, the tenant word list | outside `src/webparts`, imported by nothing in the web part, never packaged (the verifier asserts the archive holds neither the file nor its entries) | front-door maintainers | names no client: the client names, the reference roster and the case ids are stored only as SHA-256 hashes, and the scans still find them anywhere in a text; a hash keeps a name out of plain text, but anyone who guesses a name can confirm it against the list; on rebind the new first tenant's words are hashed in with `scripts/hash-tenant-word.mjs` |
 
 ## Implementation route
 
@@ -985,6 +1019,8 @@ accessibility and support requirements (FD-41, FD-42, GOV-13, GOV-37).
                                       the claims ledger and the release verifier
     src/portability/                  the thrown-away test: the rebind inventory and the portability exceptions
     scripts/verify-package.mjs        the release verifier (package checks, tenant word scan, dependency inventory)
+    scripts/tenant-words.mjs          the verifier's copy of the tenant word scan (hashed words included)
+    scripts/hash-tenant-word.mjs      makes a hashed entry of the tenant word list from a word read from standard input
     sharepoint/assets/                list schemas provisioned by the package feature
     sharepoint/pages/                 page definition, parameter sample and PnP PowerShell script (operator tools)
     parity/                           stylesheet fixtures extracted from 1.0.0.7

@@ -5,7 +5,7 @@ import { createSyntheticMarketingServices, createDisabledLiveMarketingServices }
 import { MemoryStorageBackend } from '../../services/marketing/artifactStore';
 import { FIXTURE_REGISTER } from '../../content/marketing/sourceRegister';
 import type { IRoleResolution } from '../../services/roleResolver';
-import { AppMarketingWorkspace, SYNTHETIC_WORK_ID } from './AppMarketingWorkspace';
+import { AppMarketingWorkspace, syntheticWorkId } from './AppMarketingWorkspace';
 
 const participant: IRoleResolution = { roles: ['employee', 'marketingParticipant'], resolution: 'resolved' };
 const reviewer: IRoleResolution = { roles: ['employee', 'marketingReviewer'], resolution: 'resolved' };
@@ -13,7 +13,7 @@ const session = { actorId: TEST_USER.email, tenantScope: TEST_SITE_URL, resoluti
 
 async function fixture() {
   const marketing = createSyntheticMarketingServices(new MemoryStorageBackend());
-  const draft = await marketing.draft.draftCampaignBrief(session, { workId: SYNTHETIC_WORK_ID, objective: 'Original objective (synthetic)', audienceContext: ['Fixture audience'], sourceIds: FIXTURE_REGISTER.entries.map(entry => entry.id) });
+  const draft = await marketing.draft.draftCampaignBrief(session, { workId: syntheticWorkId(), objective: 'Original objective (synthetic)', audienceContext: ['Fixture audience'], sourceIds: FIXTURE_REGISTER.entries.map(entry => entry.id) });
   if (draft.kind !== 'saved') { throw new Error(draft.reasons.join(' ')); }
   return { marketing, draft };
 }

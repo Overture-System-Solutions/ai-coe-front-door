@@ -9,11 +9,13 @@ Structural validator for the generated cloud flows (the 2.1 verification standar
   V6 every list column written (item keys) or filtered/selected exists in the data model for that list
   V7 every outputs('Cfg')?['Key'] is a seeded Definitions key (or ListId_* / EmployeeStatusMap)
   V8 every flow with mutating loops has a failure handler (an action with runAfter on Failed)
-  V9 no reference to the OSS lab tenant (osscontact) survives; no hard-coded parkplace URL in the primary package
+  V9 no reference to the OSS lab tenant (osscontact) survives; no SharePoint host or site other than the build target's
+     own site appears in either package (allowlist: model.DEFAULT_SITE, set from the build target)
   V10 no expression contains an obviously unbalanced parenthesis
 """
 from __future__ import annotations
 import json, re, sys
+from urllib.parse import urlsplit
 
 import model as M
 
@@ -25,6 +27,8 @@ FILTER_FIELD_RE = re.compile(r"(?<![A-Za-z_'])([A-Za-z][A-Za-z0-9_]*)\s+(eq|ne|g
 TITLE_TO_KEY = {v[0]: k for k, v in M.LISTS.items()}
 SYSTEM_COLS = {"Title", "ID", "Id", "Created", "Modified", "Author", "Editor", "Claims", "Email"}
 SEED_KEYS = {k for k, *_ in M.seed_config()} | {f"ListId_{k}" for k in M.LISTS} | {"EmployeeStatusMap"}
+SP_HOST_RE = re.compile(r"(?<![A-Za-z0-9-])([A-Za-z0-9-]+\.sharepoint\.com)", re.I)
+SP_SITE_RE = re.compile(r"https?://[A-Za-z0-9-]+\.sharepoint\.com/(?:sites|teams)/[A-Za-z0-9_.-]+", re.I)
 
 
 def walk(actions: dict, ancestors: tuple = (), block_path: str = ""):
@@ -53,6 +57,14 @@ def columns_for(table_expr: str) -> set[str] | None:
     key = m.group(1) if m else TITLE_TO_KEY.get(table_expr)
     if key is None: return None
     return {c[0] for c in M.LISTS[key][3]} | SYSTEM_COLS
+
+
+def foreign_sharepoint(text: str, site: str) -> list[str]:
+    """Every SharePoint host or site named in text that is not the target site (allowlist, names no tenant)."""
+    own_host = (urlsplit(site).hostname or "").lower()
+    hosts = {h.lower() for h in SP_HOST_RE.findall(text)} - {own_host}
+    sites = {s for s in SP_SITE_RE.findall(text) if s != site}
+    return sorted(hosts | sites)
 
 
 def validate(defn: dict, flow_name: str, literal: bool) -> list[str]:
@@ -92,12 +104,13 @@ def validate(defn: dict, flow_name: str, literal: bool) -> list[str]:
     has_handler = any(any("Failed" in v for v in a.get("runAfter", {}).values()) for _, a, *_ in all_actions)
     if mutating and not has_handler: errs.append("V8 mutating flow without a failure handler")
     if "osscontact" in text.lower(): errs.append("V9 lab tenant reference survives")
-    if not literal and "parkplace.sharepoint.com" in text.replace(M.DEFAULT_SITE, ""): errs.append("V9 hard-coded site URL outside the env-var default")
+    errs.extend(f"V9 SharePoint reference other than the build target's own site: {x}" for x in foreign_sharepoint(text, M.DEFAULT_SITE))
     return errs
 
 
 def main():
-    import flows
+    import flows, build_target
+    if '--target-file' in sys.argv: M.configure(build_target.load(sys.argv[sys.argv.index('--target-file') + 1]))
     total = 0
     for literal in (False, True):
         lit = {"site": M.DEFAULT_SITE, "mail": "REPLACE-BEFORE-ENABLING.invalid", "label": "Pilot"} if literal else None

@@ -1,10 +1,16 @@
 Contract copy for this branch only.
 
-Original frozen bytes (do not modify):
-  evidence/bld-core-front-door-review-2026-09-22/extracted/CW-AICOE-UI-FLOW-CONTRACT-v0.1.1-2026-09-21/
+Original frozen bytes (do not modify): the extracted UI-flow contract v0.1.1 folder (2026-09-21)
+under evidence/bld-core-front-door-review-2026-09-22/extracted/ in the project home.
 
 This folder is a working copy so the front-door tests can pin the 23 fixture pairs without reading
 outside the worktree. It is not a new contract version and not a fork of the delivery.
+
+Tenant-neutral regeneration (2026-10-15): this copy is no longer byte-identical to the frozen original.
+build_contract.py regenerated the schema, the 23 pairs and mock/index.json with the neutral Work ID prefix
+AICOE-, case names UAT-*, the placeholder tenant label Contoso-PrivatePilot and a neutral title/$id
+(contract-v0.1.1/README.md section 7b). The pairs were rebuilt from the recorded pairs at commit d7cd658
+because the fixture file is not available; all other recorded values are unchanged.
 
 Generated flow originals remain under:
   evidence/bld-core-front-door-review-2026-09-22/extracted/AICoECoreAutomation_3_0_0_0_PACKAGE-2026-09-21/AICoECoreAutomation_3_0_0_0/flow-definitions/

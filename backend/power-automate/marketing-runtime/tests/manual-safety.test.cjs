@@ -6,8 +6,8 @@ const m = require('./manual-fixture.cjs');
 for (const [label, mutate] of Object.entries({
   malformed: r => ({ ...r, payload: { objective: 'Incomplete' } }),
   wrongKind: r => ({ ...r, kind: 'contentPlan' }),
-  wrongWork: r => ({ ...r, workId: 'CW-NOT_ALLOWED' }),
-  metadata: r => ({ ...r, payload: { ...r.payload, workId: 'CW-FORGED' } }),
+  wrongWork: r => ({ ...r, workId: 'AICOE-NOT_ALLOWED' }),
+  metadata: r => ({ ...r, payload: { ...r.payload, workId: 'AICOE-FORGED' } }),
   state: r => ({ ...r, payload: { ...r.payload, state: 'accepted' } }),
   identity: r => ({ ...r, payload: { ...r.payload, createdBy: 'forged' } }),
   permissions: r => ({ ...r, payload: { ...r.payload, permissions: ['owner'] } }),
@@ -27,8 +27,8 @@ test('manual revisions require own artifact, same work/kind and explicit current
   assert.equal((await f.run('SaveManualMarketingDraftV1', revise, 8)).kind, 'failed', 'Reviewer cannot revise another author content.');
   assert.equal((await f.run('SaveManualMarketingDraftV1', { ...revise, kind: 'contentPlan' })).kind, 'failed');
   const member = JSON.parse((await f.store.read('member:7')).value);
-  await f.save('member:7', { ...member, workIds: [m.workId, 'CW-SECOND_WORK'] });
-  assert.equal((await f.run('SaveManualMarketingDraftV1', { ...revise, workId: 'CW-SECOND_WORK' })).kind, 'failed');
+  await f.save('member:7', { ...member, workIds: [m.workId, 'AICOE-SECOND_WORK'] });
+  assert.equal((await f.run('SaveManualMarketingDraftV1', { ...revise, workId: 'AICOE-SECOND_WORK' })).kind, 'failed');
   assert.equal((await f.store.keys('envelope:')).length, 1);
 });
 test('manual recovery refuses newly revoked sources rather than completing a pending revision', async () => {

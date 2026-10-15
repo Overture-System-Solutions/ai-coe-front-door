@@ -281,7 +281,8 @@ describe('page provisioning script', () => {
 
   it('ships tenant-neutral: no word of the tenant list in the committed provisioning files', () => {
     // Only the committed files: an operator's filled-in parameters.json may name the tenant. The word list itself is
-    // the single permitted home for client names and the reference roster (src/provisioning/tenantWords.json).
+    // the single home of the client names and the reference roster (src/provisioning/tenantWords.json), where they are
+    // stored only as hashes.
     for (const file of ['New-FrontDoorPages.ps1', 'pages.json', 'parameters.sample.json']) {
       const text: string = fs.readFileSync(path.join(PAGES_DIR, file), 'utf8');
       for (const list of PROVISIONING_SCAN) {
@@ -812,7 +813,8 @@ describe('page provisioning script', () => {
 
 describe('README', () => {
   it('documents the current package and the page layout', () => {
-    expect(readme).toContain('## Deploy 1.0.0.19');
+    expect(readme).toContain('## Deploy 1.0.0.20');
+    expect(readme).not.toContain('## Deploy 1.0.0.19');
     expect(readme).not.toContain('## Deploy 1.0.0.18');
     expect(readme).not.toContain('## Deploy 1.0.0.17');
     expect(readme).not.toContain('## Deploy 1.0.0.16');
@@ -878,7 +880,9 @@ describe('README', () => {
     expect(readme).toMatch(/blank or unknown[^.]*warning/);
     expect(readme).toMatch(/owners-only[^.]*the role[^.]*unbound|the role[^.]*unbound[^.]*owners-only/);
     expect(readme).toContain('src/provisioning/tenantWords.json');
-    expect(readme).toContain('deliberately not tenant-neutral');
+    // The list names no client: its client names, roster and case ids are stored only as hashes, and the README says so.
+    expect(readme).toContain('stored only as SHA-256 hashes');
+    expect(readme).not.toContain('deliberately not tenant-neutral');
     // The module the script is written for, and where the operator reads what that version accepts.
     expect(readme).toContain('src/provisioning/pnpCmdletParameters.json');
   });
@@ -945,8 +949,14 @@ describe('README', () => {
     expect(readme).toContain('?page=value');
   });
 
-  it('documents the 1.0.0.19 candidate, what 1.0.0.18 and 1.0.0.17 already added, commissioning gates and additive one-page path', () => {
-    const deploy: string = readme.slice(readme.indexOf('## Deploy 1.0.0.19'), readme.indexOf('### Enable AI drafting'));
+  it('documents the 1.0.0.20 candidate, what 1.0.0.19, 1.0.0.18 and 1.0.0.17 already added, commissioning gates and additive one-page path', () => {
+    const deploy: string = readme.slice(readme.indexOf('## Deploy 1.0.0.20'), readme.indexOf('### Enable AI drafting'));
+    // 1.0.0.20: the Work ID prefix setting, blank meaning AICOE, and what a site built with another prefix must set.
+    expect(deploy).toContain('`workIdPrefix`');
+    expect(deploy).toContain('`WorkIdPrefix`');
+    expect(deploy).toContain('`AICOE`');
+    expect(deploy).toContain('work_id_prefix');
+    expect(deploy).toMatch(/What 1\.0\.0\.19 already added remains/);
     // 1.0.0.19: Cases leaves the business-case workspace out on an unbound site, a business case names the request it
     // started from, and the undecided rule for which cases need one is shown as two options.
     expect(deploy).toContain('coreBindingJson');

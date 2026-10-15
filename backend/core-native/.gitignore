@@ -1,0 +1,11 @@
+# Local .NET/NuGet caches (point DOTNET_CLI_HOME, NUGET_PACKAGES, NUGET_HTTP_CACHE_PATH outside the repository;
+# these patterns also keep the old in-tree evidence/ locations out) and the connector harness build output.
+dotnet-home/
+nuget-packages/
+nuget-http-cache/
+connector/local/bin/
+connector/local/obj/
+# Python caches
+__pycache__/
+.pytest_cache/
+*.pyc

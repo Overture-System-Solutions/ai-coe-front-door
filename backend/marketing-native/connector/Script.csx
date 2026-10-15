@@ -28,7 +28,7 @@ public partial class Script : ScriptBase
     static string Text(JToken t, int max=8000) { var s=S(t); Require(!String.IsNullOrWhiteSpace(s) && s.Length<=max,"TEXT_INVALID"); return s; }
     static bool Match(string text,string pattern) { return text!=null && Regex.IsMatch(text,pattern,RegexOptions.CultureInvariant,TimeSpan.FromSeconds(1)); }
     static bool Id(JToken t) { return Match(S(t),"^[A-Z][A-Z0-9_-]{2,127}$"); }
-    static bool Work(JToken t) { return Match(S(t),"^CW-[A-Z0-9][A-Z0-9_-]{2,79}$"); }
+    static bool Work(JToken t) { return Match(S(t),"^AICOE-[A-Z0-9][A-Z0-9_-]{2,79}$"); }
     static bool UUID(JToken t) { return Match(S(t),"^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"); }
     static bool Digest(JToken t) { return Match(S(t),"^[0-9a-f]{64}$") && S(t)!=new string('0',64); }
     static DateTimeOffset Date(JToken t) { DateTimeOffset d; Require(Match(S(t),"^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,7})?Z$") && DateTimeOffset.TryParse(S(t),Invariant,0,out d),"DATE_INVALID"); return DateTimeOffset.Parse(S(t),Invariant); }

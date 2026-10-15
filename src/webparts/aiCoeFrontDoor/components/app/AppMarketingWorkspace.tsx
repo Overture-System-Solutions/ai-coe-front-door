@@ -14,6 +14,7 @@ import { parseMeetingFollowThrough } from '../../content/marketing/meetingFollow
 import type { IActionProposal, IBriefChangeProposal, ICommunicationDraft, IDecisionProposal, IMeetingFollowThroughV1, IUnresolvedQuestion } from '../../content/marketing/meetingFollowThrough';
 import { FIXTURE_MEETING_NOTES, FIXTURE_REGISTER } from '../../content/marketing/sourceRegister';
 import type { ISourceEntry } from '../../content/marketing/sourceRegister';
+import { mintWorkId } from '../../content/workIdentity';
 import { useFrontDoor } from '../../context/FrontDoorContext';
 import type { IArtifactWithState, IAuthorityBinding } from '../../services/marketing/artifactRepository';
 import type { DraftResult, IMarketingSession } from '../../services/marketing/marketingDraftService';
@@ -42,8 +43,13 @@ import { AppNotice } from './kit';
  * Wording note: this file is scanned for Tailwind utility names; keep prose free of utility words.
  */
 
-/** The one canonical Work ID the synthetic workspace drafts under; a real work binds a real ID through CORE. */
-export const SYNTHETIC_WORK_ID: string = 'CW-SYNTHETIC_MARKETING_WORKSPACE';
+/** The body of the one Work ID the synthetic workspace drafts under, after the page's Work ID prefix. */
+export const SYNTHETIC_WORK_ID_BODY: string = 'SYNTHETIC_MARKETING_WORKSPACE';
+
+/** The one canonical Work ID the synthetic workspace drafts under (`AICOE-SYNTHETIC_MARKETING_WORKSPACE` by default); a real work binds a real ID through CORE. */
+export function syntheticWorkId(): string {
+  return mintWorkId(SYNTHETIC_WORK_ID_BODY);
+}
 
 export const WORKSPACE_NOTICE: string =
   'Synthetic workspace: real validation, review and persistence over invented sources and a deterministic provider. Nothing here is business content or a live AI response; nothing is sent, published, assigned or scheduled.';
@@ -101,7 +107,7 @@ export function AppMarketingWorkspace({ marketing, resolution, workingInputs, on
   const mounted: React.MutableRefObject<boolean> = React.useRef<boolean>(true);
 
   const refresh = React.useCallback(async (): Promise<void> => {
-    const list: IArtifactWithState[] = await marketing.review.listArtifacts(SYNTHETIC_WORK_ID);
+    const list: IArtifactWithState[] = await marketing.review.listArtifacts(syntheticWorkId());
     if (mounted.current) {
       setArtifacts(list);
     }
@@ -176,14 +182,14 @@ export function AppMarketingWorkspace({ marketing, resolution, workingInputs, on
   const sourceIds: string[] = FIXTURE_REGISTER.entries.map((entry: ISourceEntry): string => entry.id);
 
   const draftBrief = (artifactId?: string, correctedObjective: string = objective): Promise<void> =>
-    runDraft('Drafting the campaign brief', (): Promise<DraftResult> => marketing.draft.draftCampaignBrief(session, { workId: SYNTHETIC_WORK_ID, objective: correctedObjective, audienceContext: ['Team leads who have not asked the AI CoE for anything yet (synthetic)'], sourceIds, artifactId }));
+    runDraft('Drafting the campaign brief', (): Promise<DraftResult> => marketing.draft.draftCampaignBrief(session, { workId: syntheticWorkId(), objective: correctedObjective, audienceContext: ['Team leads who have not asked the AI CoE for anything yet (synthetic)'], sourceIds, artifactId }));
 
   const draftPlan = (artifactId?: string): Promise<void> =>
     runDraft('Drafting the content plan', (): Promise<DraftResult> => {
       if (acceptedBrief === undefined) {
         return Promise.resolve({ kind: 'failed', failure: 'prerequisiteNotAccepted', reasons: ['A content plan starts from an accepted campaign brief, read back from the store. None is accepted yet.'] });
       }
-      return marketing.draft.draftContentPlan(session, { workId: SYNTHETIC_WORK_ID, briefArtifactId: acceptedBrief.envelope.artifactId, sourceIds, artifactId });
+      return marketing.draft.draftContentPlan(session, { workId: syntheticWorkId(), briefArtifactId: acceptedBrief.envelope.artifactId, sourceIds, artifactId });
     });
 
   const draftFollowThrough = (artifactId?: string): Promise<void> =>
@@ -192,7 +198,7 @@ export function AppMarketingWorkspace({ marketing, resolution, workingInputs, on
         return Promise.resolve({ kind: 'failed', failure: 'prerequisiteNotAccepted', reasons: ['A follow-through binds the current campaign packet; draft a campaign brief first.'] });
       }
       return marketing.draft.draftMeetingFollowThrough(session, {
-        workId: SYNTHETIC_WORK_ID,
+        workId: syntheticWorkId(),
         briefArtifactId: anyBrief.envelope.artifactId,
         notes: [{ sourceId: 'FIXTURE-MEETING-004', versionOrETag: 'fixture-v1', locator: 'fixture://meeting/notes-week-1#notes', text: notes }],
         sourceIds,

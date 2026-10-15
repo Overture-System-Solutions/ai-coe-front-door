@@ -3,7 +3,7 @@
 from __future__ import annotations
 import argparse,hashlib,io,json,zipfile
 from pathlib import Path
-import model as M,flows,package,validate,binding,native_runtime as N
+import model as M,flows,package,validate,binding,build_target,native_runtime as N
 ROOT=Path(__file__).resolve().parents[1]
 
 def sha(data):return hashlib.sha256(data).hexdigest()
@@ -13,12 +13,16 @@ def main():
     parser.add_argument('--review-unbound',action='store_true')
     parser.add_argument('--binding',type=Path)
     parser.add_argument('--out',type=Path,default=ROOT/'out')
+    parser.add_argument('--target-file',type=Path,help='local JSON with "site", "work_id_prefix" and optional "arb_owner_note"; default: neutral placeholder target')
     args=parser.parse_args()
-    try:bound=binding.load(args.binding,args.review_unbound)
+    try:target=M.configure(build_target.load(args.target_file))
+    except (ValueError,OSError) as exc:parser.error(str(exc))
+    script=build_target.render_script(target)  # exact packaged connector bytes for this target
+    try:bound=binding.load(args.binding,args.review_unbound,script)
     except ValueError as exc:parser.error(str(exc))
     N.HELPER_API=bound['runtimeApiName'];N.HELPER_LOGICAL=bound['logicalName'];N.HELPER_ID=bound['connectorId']
     out=args.out;out.mkdir(parents=True,exist_ok=True)
-    evidence={'solution':M.SOLUTION_UNIQUE,'version':M.SOLUTION_VERSION,'transportVersion':'v0.2.0','binding':bound,'packages':{},'flows':[],'validation':{},'sourceHashes':{}}
+    evidence={'solution':M.SOLUTION_UNIQUE,'version':M.SOLUTION_VERSION,'transportVersion':'v0.2.0','target':target,'policy':{'id':build_target.policy_id(target),'sourceSha256':M.POLICY_SOURCE_HASH},'binding':bound,'packages':{},'flows':[],'validation':{},'sourceHashes':{}}
     def save_package(name,payload):
         (out/name).write_bytes(payload)
         with zipfile.ZipFile(io.BytesIO(payload)) as z:
@@ -38,7 +42,8 @@ def main():
             data=(json.dumps(f.definition(),indent=2)+'\n').encode();(folder/(package.safe_name(f.name)+'.json')).write_bytes(data)
             if not literal:evidence['flows'].append({'name':f.name,'workflowId':f.guid,'actions':len(list(validate.walk(f.actions))),'definitionSha256':sha(data),'stateCode':0,'nativeExecuted':False})
         evidence['validation']['literal' if literal else 'primary']=errs
-    helper_files={name:(ROOT/'connector'/name).read_bytes() for name in ['Script.cs','apiDefinition.swagger.json','apiProperties.json','deployment.json','README.md']}
+    helper_files={name:(ROOT/'connector'/name).read_bytes() for name in ['apiDefinition.swagger.json','apiProperties.json','deployment.json','README.md']}
+    helper_files['Script.cs']=script
     helper_files['Script.csx']=helper_files['Script.cs']
     buf=io.BytesIO()
     with zipfile.ZipFile(buf,'w',zipfile.ZIP_DEFLATED) as z:
@@ -54,6 +59,6 @@ def main():
     evidence['not_claimed']=['registered or qualified helper connector','flow designer Save','tenant import or execution','real ACLs/two-account isolation','model calls','Send','production or business acceptance']
     (out/'build-evidence.json').write_text(json.dumps(evidence,indent=2)+'\n')
     (out/'deployment-settings-template.json').write_text(json.dumps({'EnvironmentVariables':[{'SchemaName':n,'Value':None} for n,_,_ in M.ENV_VARS],'ConnectionReferences':[{'LogicalName':'aicoe_sharepointonline','ConnectionId':None,'ConnectorId':'/providers/Microsoft.PowerApps/apis/shared_sharepointonline'},{'LogicalName':N.HELPER_REF,'ConnectionId':None,'ConnectorId':'/providers/Microsoft.PowerApps/apis/'+N.HELPER_API}]},indent=2)+'\n')
-    print(json.dumps({'binding':bound,'packages':{k:{x:v[x] for x in ['sha256','bytes']} for k,v in evidence['packages'].items()}},indent=2))
+    print(json.dumps({'target':target,'binding':bound,'packages':{k:{x:v[x] for x in ['sha256','bytes']} for k,v in evidence['packages'].items()}},indent=2))
 
 if __name__=='__main__':main()

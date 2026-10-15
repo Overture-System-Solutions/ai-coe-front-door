@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Local mock for the CloudWave AI CoE UI <-> flow contract v0.1. Zero dependencies (stdlib only).
+Local mock for the AI CoE UI <-> flow contract v0.1. Zero dependencies (stdlib only).
 
   python3 mock_server.py [--port 8787] [--mock-dir ./mock]
 

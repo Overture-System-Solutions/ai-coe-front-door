@@ -1,0 +1,49 @@
+{
+  "verifiedAt": "2026-10-15T22:50:56.654700+00:00",
+  "scope": "LOCAL_STEPS_1_TO_4_ONLY",
+  "nativeAcceptance": false,
+  "tenantActions": 0,
+  "liveModelCalls": 0,
+  "enabled": false,
+  "registered": false,
+  "bound": false,
+  "counts": {
+    "flowTests": 30,
+    "helperTests": 31,
+    "integrationTests": 16,
+    "provisioningGroupedChecks": 85
+  },
+  "operationCount": 16,
+  "referenceScenarios": 22,
+  "crashBoundaries": 44,
+  "protectedFiles": 528,
+  "preserved": true,
+  "scriptSha256": "fc9b733cb245ecc75bef48c107bcd3881cc360547bf790b19f6add0c5a531f46",
+  "exactPackageCompiledDllSha256": "302457ff21c4b09c00a39d1e2f3c167f208a2b60e6c28fb265e7c727637de5eb",
+  "packageTarget": {
+    "site": "https://contoso.sharepoint.com/sites/AICoE",
+    "workIdPrefix": "AICOE"
+  },
+  "flowActions": 434,
+  "packages": {
+    "AICoEMarketingAutomation_1_0_0_0_UNBOUND_REVIEW_ONLY.zip": {
+      "sha256": "629dde403c49cadfece35af92197ac559a1d2989f5139bd26a7f35729a4bfd74",
+      "bytes": 23315
+    },
+    "AICoEMarketingIntegrity_1_0_0_0_REGISTRATION_CANDIDATE.zip": {
+      "sha256": "169c2d9c4b07ead50dbb7b8422c2c85aabafd693333ec4ba5e05e4593584ab4d",
+      "bytes": 57211
+    },
+    "AICoEMarketingAutomation_1_0_0_0.zip": {
+      "sha256": "cfadb968f5544234aa34ce8d7c6e8d551737d8bfc0104db985a9ffc57119f872",
+      "bytes": 21639
+    }
+  },
+  "evidence": "backend/marketing-native/evidence/integration/tenant-neutral-2026-10-15",
+  "qualificationGates": "NATIVE_GATES.md",
+  "limits": [
+    "Exact production script compiled as C#7.3 using a local .NET10 ScriptBase shim, not the hosted compiler.",
+    "Actual packaged WDL executed by a bounded offline interpreter; external SharePoint and Claude are explicit fixtures.",
+    "Helper registration and metadata binding, native import/Save, permissions, provider and lifecycle acceptance remain unperformed."
+  ]
+}

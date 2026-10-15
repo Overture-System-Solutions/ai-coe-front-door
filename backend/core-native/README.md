@@ -1,6 +1,25 @@
 # CORE 3.0.0.1 — offline-verified correction candidate
 
-Owned lane: `backend/core-native/**` only. Upstream seven generator modules are preserved byte-for-byte in `upstream/`; `evidence/source-pins.json` records original paths, sizes and SHA-256. This corrects the same AICoECoreAutomation solution/workflow identities, not a new tenant writer. No import, ACL execution, model call, Send, commit or push is authorized.
+Owned lane: `backend/core-native/**` only. `upstream/` keeps the seven original generator modules and the routing-policy source as **tenant-neutral copies**: client tenant values were replaced, and `evidence/source-pins.json` keeps the originals' historical SHA-256/sizes, the neutral copies' hashes and the exact placeholder-only line edits (see [Build target](#build-target)). This corrects the same AICoECoreAutomation solution/workflow identities, not a new tenant writer. No import, ACL execution, model call, Send, commit or push is authorized.
+
+## Build target
+
+The repository names no client tenant. A build is bound to a **target**: the SharePoint site and the WorkID prefix, read from a local JSON file kept outside the repository:
+
+```json
+{"site": "https://contoso.sharepoint.com/sites/AICoE", "work_id_prefix": "AICOE"}
+```
+
+`generator/build.py --target-file <file>` (and `generator/validate.py --target-file <file>`) apply it; without a file the neutral placeholder above is used, and the committed `out/` is that default build. The file must hold `site` (`https://<host>.sharepoint.com/sites/<name>`) and `work_id_prefix` (2–16 upper-case letters/digits), and may hold `arb_owner_note` (one printable line, at most 500 characters, no `@`). Any other key or a malformed value fails the build.
+
+- **Site:** default of the `aicoe_SiteUrl` environment variable (primary package) and the literal baked into every flow of the `_literal-fallback` package.
+- **Prefix:** the connector's WorkID (`<prefix>-<32 hex>`) and the WorkID pattern it accepts, the routing-policy id `<prefix>-POLICY-1`, the RC2 schema family in the solution description (`<prefix>-AICOE`, plain `AICOE` for the default), the lineage flow routines and reference/test IDs.
+- **ARB owner note (optional):** `arb_owner_note` is the Note text of the `Authority_ARB` configuration row (who owns the ARB authority path), seeded by flow 00 and written to `out/definitions-seed.json`. Absent, the neutral note `ARB owner principal (designated ARB owner path). Blank => gate cannot pass. ARB integration is NOT in MVP.` is used. It changes nothing else in either package.
+- **Policy binding:** the `PolicySourceHash` bound into the connector and the configuration seed is the SHA-256 of `upstream/routing-policy.yaml` rendered for the target.
+- The committed `connector/Script.cs`, `upstream/routing-policy.yaml` and `contract/routing-policy.json` are the renderings for the default target. `generator/build_target.py` re-renders three anchored sites in Script.cs (WorkID pattern, WorkID creation, policy hash) and the policy id for another target; each anchor must occur exactly once or the build fails. The packaged Script.cs is that rendering, and the binding `scriptSha256` is its hash. The local harness compiles the committed (default) Script.cs.
+- Workflow GUIDs never depend on the target: `generator/wdl.py` pins the six preserved identities verbatim.
+- Validator V9 is an allowlist: no SharePoint host or site other than the target's own may appear in either package.
+- `evidence/upstream_provenance.py --target-file <file> [--original-dir <originals>]` restores the original upstream bytes from the neutral copies and checks them against the historical pins. The one redacted span (R1, staff names in the Authority_ARB note) is read from the target's `arb_owner_note` when it fits the recorded template, or from `--redaction R1=TEXT` / `--original-dir`; it is never guessed and never stored in this repository.
 
 ## Frontend transport agreement: `v0.2.0`
 
@@ -22,10 +41,10 @@ Every flow packages OFF. SendEnabled remains false; this draft/review release ha
 
 ## Current local result
 
-**30 tests passed; zero failures/errors/skips.** The exact production helper compiles with .NET 10.0.401 / C# 7.3 (zero warnings/errors). All six generated workflow graphs, including fresh provisioning, execute in the local WDL/SharePoint harness; a second smoke run executes the exact final primary ZIP definitions. This is not Microsoft's hosted WDL engine or SharePoint.
+**58 tests passed; zero failures/errors/skips** (the original 30 plus 28 tenant-neutrality tests in `tests/test_target.py`). The exact production helper compiles with .NET 10.0.401 / C# 7.3 (zero warnings/errors). All six generated workflow graphs, including fresh provisioning, execute in the local WDL/SharePoint harness; a second smoke run executes the exact final primary ZIP definitions. This is not Microsoft's hosted WDL engine or SharePoint.
 
 - Primary and literal definitions: **12 structural passes**. Crash regression covers every one of the create path's **20 durable fixture boundaries**; interleaved stale-writer and post-publication/pre-completion missing-receipt recovery also pass.
-- All **seven original generator pins** and **six workflow identities** preserved. Same `AICoECoreAutomation` solution, corrected version `3.0.0.1`; transport remains `v0.2.0`.
+- **Six workflow identities** preserved. The seven generator pins and the policy pin keep their historical SHA-256; the neutral copies match their recorded hashes, and the originals (outside the repository) still match the historical pins. Same `AICoECoreAutomation` solution, corrected version `3.0.0.1`; transport remains `v0.2.0`.
 - Both flow ZIPs passed **local PAC 2.12.1 unpack → pack → unpack → create-settings**, with workflow JSON, XML identities/states, connection references and environment definitions preserved. The primary package has three environment-variable root warnings, also reproduced on the untouched supplied 3.0.0.0 candidate. The literal fallback has none. These warnings remain a native import gate, not silently waived.
 - Every packaged flow is OFF (`StateCode=0`, `StatusCode=1`); no reachable Send action or Outlook connection. Qualification flags and SendEnabled default false. Importing an update can preserve prior native flow state—OFF package metadata is not a tenant shutdown.
 
@@ -33,5 +52,5 @@ Every flow packages OFF. SendEnabled remains false; this draft/review release ha
 
 Current delivery is `out/AICoECoreAutomation_3_0_0_1_UNBOUND_REVIEW_ONLY.zip`, its `_literal-fallback.zip`, and the separate `out/AICoECoreIntegrity_3_0_0_1_REGISTRATION_CANDIDATE.zip`. The helper archive is **not** a Dataverse solution import ZIP. `UNBOUND_CORE_INTEGRITY` is deliberately not a registered API identity; none of these artifacts is a deployable/native-accepted release. `out/pac-roundtrip/` contains evidence copies, not extra approved releases.
 
-Earlier `generator/out/`, checkpoint logs and older hashes are retained history, not current deliverables. No tenant/provider call, import, designer Save, ACL application, Send, frontend edit, commit or push occurred in this finalization.
+The earlier `generator/out/` copy was removed in the tenant-neutral pass (git history keeps it); checkpoint logs and older hashes are history, not current deliverables. No tenant/provider call, import, designer Save, ACL application, Send, frontend edit, commit or push occurred in this finalization.
 

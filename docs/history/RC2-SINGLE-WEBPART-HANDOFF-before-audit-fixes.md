@@ -23,7 +23,7 @@ RC2 and Marketing reference packages are unchanged and must stay so; these decis
 2. **The Marketing owner and the copy approver are unbound.** The reviewed package names neither. It assigns
    strategy and voice validation to the Marketing owner and copy and channel approval to Marketing/communications;
    those may be one person, and this branch does not assume it. No production identity is defaulted to Samuel,
-   Brian, Jordan or Clay — routing a decision does not make someone the approver. Local tests use fictional,
+   Brian or client staff — routing a decision does not make someone the approver. Local tests use fictional,
    labelled reviewers. Real approval and routing stay blocked until the appropriate owner confirms identity and
    authority.
 
@@ -43,10 +43,10 @@ RC2 and Marketing reference packages are unchanged and must stay so; these decis
    *best in class*. Invented ROI or adoption figures and unsupported availability, security or capability claims are
    prohibited. **Passing a word check is not proof that a claim is true.** `docs/content-claims.md`'s additional
    restrictions stay scoped to the user interface and are not applied to schema keys, citations or technical
-   documentation. Any further CloudWave brand or legal vocabulary policy is an explicit **pending input**.
+   documentation. Any further client brand or legal vocabulary policy is an explicit **pending input**.
 
 6. **Site is unbound.** The first slice is local and fixture-backed. `CloudWaveDashboardDemo` is an existing OSS
-   demo site, not CloudWave production; this branch neither creates a site nor assumes permission to deploy to that
+   demo site, not the client's production site; this branch neither creates a site nor assumes permission to deploy to that
    one. The live destination stays configurable and unbound until the existing controller or an authorized owner
    confirms site, environment and test scope, preferring an approved existing sandbox over provisioning another.
 
@@ -91,7 +91,7 @@ unaffected. What a *new* instance gets is decided by the first toolbox entry, wh
 
 **The prototype's colours are configuration, not code.** `styles/palette.test.ts` holds a list of the eight
 reference-palette colours and fails the build if one appears in a stylesheet: they are an example tenant override.
-The shell therefore reads `--fd-*` tokens with the front door's own shipped fallbacks, and a CloudWave tenant
+The shell therefore reads `--fd-*` tokens with the front door's own shipped fallbacks, and a client tenant
 reaches the prototype's navy/blue/cyan through the `Palette` provisioning parameter. This is a deliberate
 difference from the demo and it is what keeps the view portable to another tenant.
 
@@ -149,7 +149,7 @@ deciding two-account tenant test for them is still recorded as not performed.
 | Live CORE / tenant / Send / paid models | **Externally blocked** | `LIVE_BINDINGS_REQUIRED.md`; `SendEnabled=false` |
 | Binding B / browser-visible SAS | **Not in scope** | baseline decision |
 | OpenAI `demoDataOnly` off | **Not in scope** | stays on |
-| Defaulting approvers to Samuel/Brian/Jordan/Clay | **Not in scope** | fictional labelled reviewers only |
+| Defaulting approvers to Samuel/Brian/client staff | **Not in scope** | fictional labelled reviewers only |
 | Whole-site QuickLaunch replacement / implicit `-Overwrite` | **Not in scope** | one-page script refuses both |
 
 ## What was not built as of 2026-09-21 (history)
@@ -182,7 +182,7 @@ Local schemas, adapters and review protocol now exist; they do not satisfy these
 
 1. An approved permitted-source register the three operations take as input. Owner: Brian / claims owner.
 2. Named Marketing strategy/voice owner, copy/channel approver, and meeting/sender roles. Owner: business owner of those roles — not defaulted here.
-3. The corrected native CORE ingress (unique Title + read-own, F01–F12) plus accepted contract version. Owner: Jordan, via the controller.
+3. The corrected native CORE ingress (unique Title + read-own, F01–F12) plus accepted contract version. Owner: the engineering lane, via the controller.
 4. Tenant/site/environment, access groups, support/stop, retention. See `LIVE_BINDINGS_REQUIRED.md`.
 5. The two-account tenant test for item-level list security, still not performed.
 

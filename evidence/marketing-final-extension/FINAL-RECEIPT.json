@@ -1,10 +1,10 @@
 {
-  "capturedAt": "2026-09-23T14:51:48.994100+00:00",
+  "capturedAt": "2026-10-15T22:44:45.092584+00:00",
   "boundary": "real local source/runtime; explicitly fake SharePoint/provider only",
   "testsExitCode": 0,
   "typecheckExitCode": 0,
-  "tests": 58,
-  "pass": 58,
+  "tests": 59,
+  "pass": 59,
   "fail": 0,
   "skipped": 0,
   "cancelled": 0,
@@ -19,15 +19,25 @@
     "rootFiles": 21,
     "diagnostics": []
   },
-  "historicalArchive": {
-    "name": "marketing-runtime-offline-0.1.0.zip",
-    "sha256": "fd7a8ade1ff49d0dc5a36bb3318d2e0e5e25d74cf015db91b04fd9fd80b5da48"
+  "historicalArchives": {
+    "removedFromTip": [
+      {
+        "name": "marketing-runtime-offline-0.1.0.zip",
+        "sha256": "fd7a8ade1ff49d0dc5a36bb3318d2e0e5e25d74cf015db91b04fd9fd80b5da48"
+      },
+      {
+        "name": "marketing-runtime-offline-0.1.1.zip",
+        "sha256": "b9fb673be4cdca98193883855716329255d45a30db92ed4bf2c16534374075da"
+      }
+    ],
+    "why": "tenant-neutral repository 2026-10-15",
+    "history": "git commit d7cd658, backend/power-automate/marketing-runtime/out/"
   },
   "package": {
     "kind": "offline-node-extension-candidate",
     "powerAutomateImportable": false,
-    "archive": "marketing-runtime-offline-0.1.1.zip",
-    "sha256": "b9fb673be4cdca98193883855716329255d45a30db92ed4bf2c16534374075da",
+    "archive": "marketing-runtime-offline-0.1.2.zip",
+    "sha256": "a5d58285642ab86545c2bdd0eb5b68f4d1bec092991f41e66b263fc24baad794",
     "zipMembers": 42,
     "verifiedManifestFiles": 41,
     "sourceInputs": 40,
@@ -44,15 +54,15 @@
   "currentSources": [
     {
       "path": "backend/power-automate/marketing-runtime/HANDOFF.md",
-      "sha256": "09645ba3793de8cdf6c051a744d6da7f5b1177abcc8c3c7c63236789d46ea8db"
+      "sha256": "b48269654b87a7c2ff2a3f100a32b44ec0b80987df3fb1c1010e79fb502413c9"
     },
     {
       "path": "backend/power-automate/marketing-runtime/README.md",
-      "sha256": "cd00518cae7f99e10c44bafd9852e6dde1b6230b593c886eaf5a4e2aa044b0e1"
+      "sha256": "198c01e78a05ba55b2938ee98b4ce2176aaed36560519e93c70212f1556a0e35"
     },
     {
       "path": "backend/power-automate/marketing-runtime/build.cjs",
-      "sha256": "6f3e536542633e0b5848a61691558c67a0cbc5a11d8bc6fd1b2e12e4c6478c7c"
+      "sha256": "4ef11c928bead7d48485e343579c48dd8f63500de84adbb414fe843a4142464a"
     },
     {
       "path": "backend/power-automate/marketing-runtime/config.example.json",
@@ -64,11 +74,11 @@
     },
     {
       "path": "backend/power-automate/marketing-runtime/evidence/source-suite.tap",
-      "sha256": "278f2ce081758756d5ce1065fb89f32fae55bcbdbb41d0d4fd047323e482e440"
+      "sha256": "8756653f3bdceb9ef256cb00808bbcbf82a71f96882b923668920a608f42b9de"
     },
     {
       "path": "backend/power-automate/marketing-runtime/evidence/test-results.json",
-      "sha256": "fd5d38814720e1e47520cc2f584123d9d49921a5d9a6a21b63555951b64129fe"
+      "sha256": "7991a2678bc36a7c5ff29a1b908668f50aae91bd8db58c92d8550f3a3c7393b6"
     },
     {
       "path": "backend/power-automate/marketing-runtime/evidence/typecheck.txt",
@@ -76,7 +86,7 @@
     },
     {
       "path": "backend/power-automate/marketing-runtime/operations.json",
-      "sha256": "6c3208ca873bf7145cd06367f2a73f31d6a2b3ba88c9ab56b9663f92d84bf777"
+      "sha256": "eb7a99f0f9517b4d91e8b49baca2cb4d48b238f708f2984ce9daa1c834dd54ba"
     },
     {
       "path": "backend/power-automate/marketing-runtime/package.py",
@@ -96,7 +106,7 @@
     },
     {
       "path": "backend/power-automate/marketing-runtime/server/runtime.cjs",
-      "sha256": "4d6ca5a7164f33eaa09f4b09e95f9fabf8ea5ec0a4002f5f967d394813cf97c9"
+      "sha256": "4cd710ebdc9644504e1b8f58d10e38e6cc63e9671d9eb72f1c5e477c2d5e5a8a"
     },
     {
       "path": "backend/power-automate/marketing-runtime/server/sharepoint.cjs",
@@ -108,11 +118,11 @@
     },
     {
       "path": "backend/power-automate/marketing-runtime/tests/business.test.cjs",
-      "sha256": "befe5620751c0c89301eff233ccfd9f554862fef0c5bc7ee12ae4a47bac5b9e9"
+      "sha256": "2eba684852ed7ba7bd2b4723f39267d0c834225045247f9b1cf81db2484424ba"
     },
     {
       "path": "backend/power-automate/marketing-runtime/tests/helpers.cjs",
-      "sha256": "44355c47c6e80a736fc2060d8150ef1f2f0bd8481990e60708c6b110e3f197a4"
+      "sha256": "34311be252269af60d250fb3611bc0ff29742eb90756abaa4d9878caa5237b68"
     },
     {
       "path": "backend/power-automate/marketing-runtime/tests/integrity.test.cjs",
@@ -120,7 +130,7 @@
     },
     {
       "path": "backend/power-automate/marketing-runtime/tests/journey.test.cjs",
-      "sha256": "3ad48e59c16b34aae45028bd38da0eb26f7a7443a0a474237f3b3aa8ad6f64ae"
+      "sha256": "0373e1aa404d705549e0d57954b4b510db7cafe537ddc0f16b9d83854ca8ca0f"
     },
     {
       "path": "backend/power-automate/marketing-runtime/tests/manual-business.test.cjs",
@@ -128,31 +138,31 @@
     },
     {
       "path": "backend/power-automate/marketing-runtime/tests/manual-fixture.cjs",
-      "sha256": "078acf2dc100e328d8e5bd29ae418d991c63f2045cc83b94aadfc7e588586a0c"
+      "sha256": "055bb1ad21234364185ded86035660f893846f3919f47287235cf07bc6131c7c"
     },
     {
       "path": "backend/power-automate/marketing-runtime/tests/manual-safety.test.cjs",
-      "sha256": "2b6576ccece2c45be7d95e1dae80cb31ee735c9d019063810b6bb013f3cad91e"
+      "sha256": "22a693c6061054c40ccc170a038419868572c61bb6f9bafaf9e4ba6c23dbbbc2"
     },
     {
       "path": "backend/power-automate/marketing-runtime/tests/manual.test.cjs",
-      "sha256": "6cd99f9f552549301cde4263af55f20fc640916098629c875317f24248b4dcab"
+      "sha256": "5a08ba65eed75ea7d9e6f07f314bb378e7ba2c52b84ac01b46f9f26738660804"
     },
     {
       "path": "backend/power-automate/marketing-runtime/tests/package.test.cjs",
-      "sha256": "61213ff2a42d7812c09a83540baebfad3417b718521294647289931739e5f6df"
+      "sha256": "e4ddfee0f3eeadb09aea00f127a7e420b44617d1d8d87427b2a4dee163bd458a"
     },
     {
       "path": "backend/power-automate/marketing-runtime/tests/provider-source.test.cjs",
-      "sha256": "ae5c5ac4477e6842af3adbd6a178b9258fc94a439adeadf252ecdbfeb6159d77"
+      "sha256": "cd7e65f2ae0d0c15eb7629d14656e482293876b9cbad6cbe1ddff8b4098655e3"
     },
     {
       "path": "backend/power-automate/marketing-runtime/tests/runtime-fixture.cjs",
-      "sha256": "5439a1713b9e4d590b5c77288cdd7c095c3badf0d7bccda2c2be8cb848ae694a"
+      "sha256": "e56b9736ede9464cadaa0a8fd22875b2d8a7ec4b959c7a0629a26a05c8bc7bb0"
     },
     {
       "path": "backend/power-automate/marketing-runtime/tests/runtime.test.cjs",
-      "sha256": "ad47aabc7d37bdb6a73c98559eceb07d035161dc03f06ab7bba6eb8ef098e461"
+      "sha256": "93ce11bb09c54503148e97140c428d2530b2020ace77e798eebb761bb21045e7"
     },
     {
       "path": "backend/power-automate/marketing-runtime/tests/server.test.cjs",
@@ -164,7 +174,7 @@
     },
     {
       "path": "backend/power-automate/marketing-runtime/tests/source-disclosure.test.cjs",
-      "sha256": "e55f1e3ce5a4025126e8247bd57f8ccdbd14ca87915e4ed9e1aa10115ca1e2a4"
+      "sha256": "dcedf8613979e1badbc24aad51ca6acbe38d38f6d7e61ce074578d586a6bb01b"
     },
     {
       "path": "evidence/marketing-final-extension/typecheck.cjs",
@@ -172,11 +182,11 @@
     },
     {
       "path": "evidence/marketing-final-extension/verify.py",
-      "sha256": "b999634e3bf0da60ee18c13dda460bb74cfb90b7c189341d55b786e056964c41"
+      "sha256": "bf21324839ea7b543fbdea4fe1325b56e225605409ee86e5e0124eada4fe6233"
     },
     {
       "path": "src/webparts/aiCoeFrontDoor/content/actionEnvelope.ts",
-      "sha256": "2ae7a254854cafc67d12061ec2d86d43ebcfdb371a6660ec5f6279736defd0bc"
+      "sha256": "d59de0812a772286cf2f2eb49c139fed91cfa1a9bfe087dacbabc7f3404ff4f8"
     },
     {
       "path": "src/webparts/aiCoeFrontDoor/content/marketing/artifactEnvelope.ts",
@@ -208,7 +218,7 @@
     },
     {
       "path": "src/webparts/aiCoeFrontDoor/content/marketing/schema.ts",
-      "sha256": "928bef36eb1ccc98343cb2eb105266dc7c19a8065cbdcde66cdaf8f54a289039"
+      "sha256": "87e4d86af2d43661d51f2c6cf469f86ea40d7c5b5d857b763813b42d929fa995"
     },
     {
       "path": "src/webparts/aiCoeFrontDoor/content/marketing/schemas/artifact-envelope.v1.json",
@@ -236,11 +246,11 @@
     },
     {
       "path": "src/webparts/aiCoeFrontDoor/content/workIdentity.ts",
-      "sha256": "d3e78ca542040e39cd07e2e04d68873a94e84fdb0e096d8cebae3e843f46e6a6"
+      "sha256": "ccea63d79854bff6dde44bb85bb3410155dfb76594f6e784e6e2cedf683480f0"
     },
     {
       "path": "src/webparts/aiCoeFrontDoor/services/authorization.ts",
-      "sha256": "f8b35386319de8d9dbd0c1c5491b62a450e6f50626c8c3a7e6baa6478700080d"
+      "sha256": "1049d4694b5ceed5bb5b87b1f4f33259dcfa44e86f7478bcb8fceec6fd48c872"
     },
     {
       "path": "src/webparts/aiCoeFrontDoor/services/marketing/artifactRepository.ts",
@@ -285,5 +295,5 @@
   ],
   "nativeBinding": "UNBOUND: approved existing Node-capable canonical-writer host/trigger/connector bridge and native commissioning still required",
   "sourceInputParity": true,
-  "previousArchiveUnchanged": true
+  "previousArchivesInHistoryOnly": true
 }

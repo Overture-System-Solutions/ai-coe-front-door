@@ -2,25 +2,25 @@ TAP version 13
 # Subtest: Marketing persists only an opaque pre-dispatch reference and never repeats an unknown mutation after reload
 ok 1 - Marketing persists only an opaque pre-dispatch reference and never repeats an unknown mutation after reload
   ---
-  duration_ms: 7.8695
+  duration_ms: 7.1909
   type: 'test'
   ...
 # Subtest: Marketing refuses a mutation if its opaque reference cannot be stored
 ok 2 - Marketing refuses a mutation if its opaque reference cannot be stored
   ---
-  duration_ms: 2.9907
+  duration_ms: 3.1685
   type: 'test'
   ...
 # Subtest: Marketing recovery after reload validates and acknowledges the original review-request result
 ok 3 - Marketing recovery after reload validates and acknowledges the original review-request result
   ---
-  duration_ms: 2.0834
+  duration_ms: 2.9098
   type: 'test'
   ...
 # Subtest: an unknown Marketing recovery request also retains one original recovery ID
 ok 4 - an unknown Marketing recovery request also retains one original recovery ID
   ---
-  duration_ms: 1.1169
+  duration_ms: 1.5807
   type: 'test'
   ...
 1..4
@@ -31,4 +31,4 @@ ok 4 - an unknown Marketing recovery request also retains one original recovery 
 # cancelled 0
 # skipped 0
 # todo 0
-# duration_ms 533.8605
+# duration_ms 515.6356

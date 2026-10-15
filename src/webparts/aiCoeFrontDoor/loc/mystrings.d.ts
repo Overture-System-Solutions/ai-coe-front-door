@@ -10,6 +10,8 @@ declare interface IAiCoeFrontDoorWebPartStrings {
   RoleGroupsFieldLabel: string;
   RoleGroupsFieldDescription: string;
   PaletteOverridesFieldLabel: string;
+  WorkIdPrefixFieldLabel: string;
+  WorkIdPrefixFieldDescription: string;
   PaletteOverridesFieldDescription: string;
   DraftingGroupName: string;
   DraftServiceUrlFieldLabel: string;

@@ -15,16 +15,16 @@
   ],
   "allCurrentPackageHashesInHandoff": true,
   "documentHashes": {
-    "README.md": "88db42d7c2356eacbe868bcc7429605e2c06bc7a39d78ae1b0be8d8e54cba5e9",
-    "HANDOFF.md": "5153bba216b56e4d4e9762e1a93ca8d385b5b1885ab56cc23677897db847c1ee",
-    "evidence/RESUMPTION.md": "818167a42e40678624deb9ceaa54d58a514f17d2ea62cc53ab9bc84f4e89352e",
-    "evidence/IMPLEMENTATION_NOTES.md": "5add2d0459040b5f8a59c45dc9c750b26cd10361f252b1f440c803d67462d43d"
+    "README.md": "c10185c1f7014dc392b8a908134cc13fa3efeea35f2d83093752b2f27ca11dcf",
+    "HANDOFF.md": "5a79980e414ceba0fab5dc6f43ddf0e23c4dd85fea8f6f314a21f23b30c49f3c",
+    "evidence/RESUMPTION.md": "e235b72b00966a5c5e6a02d1415682ef0fa1f264fb878640ffc8139d99b6253f",
+    "evidence/IMPLEMENTATION_NOTES.md": "99ce604bbe6b6d85700b0047670ce96875e53ac0be44d2264becd0b10a4382cb"
   },
   "tests": {
-    "tests": 30,
+    "tests": 58,
     "failures": 0,
     "errors": 0,
     "skipped": 0
   },
-  "scriptSha256": "cc87f233b3aedcc3a022d40ae40a77387d7bd4684253c3dbebdd3d2fb6aa8c1a"
+  "scriptSha256": "1ee99d989f1e50f69cd84c24a486736d12879dcfe95c9b3174a0db8290c819ac"
 }

@@ -3,7 +3,7 @@ const {test}=require('node:test');
 const assert=require('node:assert/strict');
 const load=require('./audit-source-loader.cjs');
 const {parseResponse}=load('services/core/coreContract.ts');
-const work={WorkID:'CW-TEST01',Title:'Synthetic case',Stage:'INTAKE',State:'CLARIFYING',EmployeeStatus:'Need one answer',Lane:null,NextAction:'Complete S1',NextOwner:null,NextDate:null,Version:1,LastValidatedAt:null,OpenEvidenceGaps:['S1_SPONSOR'],DuplicateStatus:'NOT_CHECKED'};
+const work={WorkID:'AICOE-TEST01',Title:'Synthetic case',Stage:'INTAKE',State:'CLARIFYING',EmployeeStatus:'Need one answer',Lane:null,NextAction:'Complete S1',NextOwner:null,NextDate:null,Version:1,LastValidatedAt:null,OpenEvidenceGaps:['S1_SPONSOR'],DuplicateStatus:'NOT_CHECKED'};
 test('v0.2.0 preserves an unvalidated null time without weakening v0.1.1',()=>{
  const response={Result:'PASS',ReceiptID:'RCPT-TEST01',Work:work};
  assert.equal(parseResponse('GetWorkStatus',response).valid,false);

@@ -13,7 +13,7 @@ import * as path from 'path';
 import { TENANT_WORDS_PATH } from './tenantWords';
 
 const ROOT: string = process.cwd();
-const RELEASE: string = '1.0.0.19';
+const RELEASE: string = '1.0.0.20';
 const script: string = fs.readFileSync(path.join(ROOT, 'scripts/verify-package.mjs'), 'utf8');
 
 /** The sixteen `required_inventory_fields` of 13_SECURITY_AND_THREAT_MODEL/secrets-supply-chain.yaml, in its order. */
@@ -108,6 +108,16 @@ describe('verify-package', () => {
     }
     expect(script).toMatch(/componentText/);
     expect(script).toMatch(/strings chunk/i);
+  });
+
+  it('scans with the shared copy of the tenant word scan, hashed words included, and refuses a malformed list', () => {
+    // One scan, two copies: scripts/tenant-words.mjs is held to src/provisioning/tenantWords.ts by its test, so the
+    // verifier keeps no expression-only scan of its own that would miss the words stored only as hashes.
+    expect(script).toContain("import { findTenantWords, tenantWordProblems } from './tenant-words.mjs';");
+    expect(script).not.toMatch(/function (findTenantWords|tenantWordPattern)\b/);
+    expect(script).toMatch(/tenantWordProblems\(tenantWords\)/);
+    expect(script).toContain('is malformed');
+    expect(fs.existsSync(path.join(ROOT, 'scripts/tenant-words.mjs'))).toBe(true);
   });
 
   it('asserts the package carries neither the tenant word list nor any of its entries', () => {

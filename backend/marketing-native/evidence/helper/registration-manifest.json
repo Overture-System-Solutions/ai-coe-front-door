@@ -1,17 +1,17 @@
 {
   "kind": "UNBOUND_PRIVATE_CONNECTOR_REGISTRATION_CANDIDATE_NOT_SOLUTION_IMPORT",
   "boundary": "LOCAL_CSHARP73_NET10_SCRIPTBASE_SHIM_ONLY_NOT_HOSTED_QUALIFICATION",
-  "scriptSha256": "9dead8bb1670f64a517dee06d685ea1c789fed6ac0bef4a6cf9e644661f397f6",
-  "scriptBytes": 99901,
-  "localDllSha256": "7d6a76c4bb619d7fdab23ae35de724311a6ab4069d736302c257644b3eabfab2",
+  "scriptSha256": "fc9b733cb245ecc75bef48c107bcd3881cc360547bf790b19f6add0c5a531f46",
+  "scriptBytes": 101617,
+  "localDllSha256": "fdc652be411a954b2ae6874561ed551e71ca5792e636c2690cf00dc1cf89862d",
   "members": {
     "Script.cs": {
-      "sha256": "9dead8bb1670f64a517dee06d685ea1c789fed6ac0bef4a6cf9e644661f397f6",
-      "bytes": 99901
+      "sha256": "fc9b733cb245ecc75bef48c107bcd3881cc360547bf790b19f6add0c5a531f46",
+      "bytes": 101617
     },
     "Script.csx": {
-      "sha256": "9dead8bb1670f64a517dee06d685ea1c789fed6ac0bef4a6cf9e644661f397f6",
-      "bytes": 99901
+      "sha256": "fc9b733cb245ecc75bef48c107bcd3881cc360547bf790b19f6add0c5a531f46",
+      "bytes": 101617
     },
     "apiDefinition.swagger.json": {
       "sha256": "2f9ad3804bf871198175084af3356b9ebd4a28be8dd07cbd325de74c78e08ab2",
@@ -26,15 +26,15 @@
       "bytes": 729
     },
     "README.md": {
-      "sha256": "a0f3d93a533d25966903a817a16df5e17be22fc5d46ebbfdfd85d06391682a0e",
-      "bytes": 6641
+      "sha256": "71e35e3a00c38451db3e571566c374eb6185705a19bc52b5c49cf0f7b2269dda",
+      "bytes": 7186
     }
   },
   "nativeAcceptance": false,
   "tenantWrites": false,
   "providerCalls": false,
-  "zipSha256": "9ad1e16d880428340e00d1de4d0c107ed0ea674ef3afef71cc22ea294b29d047",
-  "zipBytes": 57132,
+  "zipSha256": "16c8550b718b763aa28f3e179af83906d3671b5f372d52b9a1c9868972108739",
+  "zipBytes": 57951,
   "zipPath": "connector/AICoEMarketingIntegrity_1_0_0_0_REGISTRATION_CANDIDATE.zip",
   "zipReadbackVerified": true
 }

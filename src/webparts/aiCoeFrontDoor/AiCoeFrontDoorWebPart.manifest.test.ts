@@ -34,6 +34,7 @@ function readManifest(file: string): IManifest {
 
 const LEGACY_PROPERTIES: { [name: string]: unknown } = {
   organizationName: '',
+  workIdPrefix: '',
   // Blank reproduces the shipped wording in the legacy view and neutral wording in page views (decision 21).
   governanceReference: '',
   reviewSystemName: '',

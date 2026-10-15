@@ -10,7 +10,7 @@
 
 Source ID: S181 in the internal OSS AI CoE catalog.
 
-Original artifact: `resources/TempTegriaAndCloudwaveResources/overture-ai-coe-front-door.sppkg` in the parent project; originally supplied from the same-named Downloads resource folder.
+Original artifact: `overture-ai-coe-front-door.sppkg` in the parent project's incoming client-resources folder under `resources/`; originally supplied from the same-named Downloads resource folder.
 
 Package SHA-256: `97e5e1e3ff5e6c68188ae9d395ac5763dd8e8342a2b514416e51581d714f6500`.
 

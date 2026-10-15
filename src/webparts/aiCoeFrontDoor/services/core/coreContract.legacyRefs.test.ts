@@ -4,7 +4,7 @@ import type { IContractIssue, IWorkProjection } from './coreContract';
 // A business case keeps the request and AI CoE case it started from (1.0.0.19). The native service stores these as
 // LegacyRefs on create; the projection carries them only when the service returns them.
 const base: IWorkProjection = {
-  WorkID: 'CW-PRACTICE-0001',
+  WorkID: 'AICOE-PRACTICE-0001',
   Title: 'A case that started as a request',
   Stage: 'EVIDENCE',
   State: 'EVIDENCE_BUILDING',

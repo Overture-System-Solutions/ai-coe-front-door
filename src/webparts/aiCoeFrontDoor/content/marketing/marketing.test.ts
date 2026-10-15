@@ -32,7 +32,7 @@ function fixtureBrief(): ICampaignBriefV1 {
   return {
     schemaVersion: CAMPAIGN_BRIEF_SCHEMA_VERSION,
     briefId: 'FIXTURE-BRIEF-001',
-    workId: 'CW-OVT_AICOE_20260921_AB12CD34',
+    workId: 'AICOE-OVT_AICOE_20260921_AB12CD34',
     registerId: FIXTURE_REGISTER.registerId,
     registerVersion: FIXTURE_REGISTER.version,
     objective: 'Fixture objective for local testing.',
@@ -206,7 +206,7 @@ describe('CampaignBrief.v1', () => {
     const extra: ICampaignBriefV1 = fixtureBrief();
     extra.proposedOwners = [{ role: 'Communications owner', note: 'Planning only.' }];
     (extra.proposedOwners[0] as unknown as { email: string; assignedTo: string; taskId: string }).email = 'owner@example.invalid';
-    (extra.proposedOwners[0] as unknown as { assignedTo: string }).assignedTo = 'Jordan';
+    (extra.proposedOwners[0] as unknown as { assignedTo: string }).assignedTo = 'Morgan';
     (extra.proposedOwners[0] as unknown as { taskId: string }).taskId = 'TASK-1';
     const owners: ReturnType<typeof validateCampaignBrief> = validateCampaignBrief(extra);
     expect(owners.valid).toBe(false);

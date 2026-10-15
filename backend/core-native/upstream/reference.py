@@ -69,7 +69,7 @@ def authorized(c, identity, cfg):
 def create_or_resume(st: Store, req, identity, key):
     s1 = req["S1"]; cfg = st.cfg
     if not req.get("WorkID"):
-        g = gaps(s1); wid = st.uid("CW")
+        g = gaps(s1); wid = st.uid("AICOE")
         dup = [c["WorkID"] for c in st.cases.values() if c["Title"] == s1["Title"]]
         rec = {"WorkID": wid, "WorkType": "IDEA", "Stage": "INTAKE", "State": "READY_FOR_TRIAGE" if not g else "CLARIFYING", "Title": s1["Title"], "ProblemStatement": s1.get("ProblemStatement"),
                "DesiredOutcome": s1.get("DesiredOutcome"), "Requester": s1.get("Requester") or identity, "Department": s1.get("Department"), "Sponsor": s1.get("Sponsor"), "AccountableOwner": s1.get("AccountableOwner"),
@@ -209,7 +209,7 @@ def run():
     G("T1", r["Result"] == "PASS" and r["Work"]["State"] == "CLARIFYING" and r["Work"]["EmployeeStatus"] == "Need one answer" and r["ClarificationRequired"] == ["S1_PROBLEM_STATEMENT", "S1_SPONSOR"], f"create -> {r['Work']['State']} gaps {r['ClarificationRequired']}")
     # T2 other user denied
     r2 = get_status(st, {"WorkID": wid}, B); G("T2", r2["Result"] == "DENIED" and r2["ErrorClass"] == "NOT_AUTHORIZED", "other user's status is DENIED")
-    r3 = get_status(st, {"WorkID": "CW-NONE-999"}, A); G("T3", r3["Result"] == "FAIL" and r3["ErrorClass"] == "NOT_FOUND", "unknown id NOT_FOUND")
+    r3 = get_status(st, {"WorkID": "AICOE-NONE-999"}, A); G("T3", r3["Result"] == "FAIL" and r3["ErrorClass"] == "NOT_FOUND", "unknown id NOT_FOUND")
     # T4 resume completes S1 (+ sponsor, owner, decision requested, one ARB trigger)
     r4 = create_or_resume(st, {"WorkID": wid, "S1": {"ProblemStatement": "Weekly report takes 6h", "Sponsor": "sponsor@example.invalid", "AccountableOwner": "owner@example.invalid", "DecisionRequested": "Approve bounded pilot", "Risks": ["TRIGGER_NEW_VENDOR"]}}, A, "k2")
     G("T4", r4["Result"] == "PASS" and r4["Work"]["State"] == "READY_FOR_TRIAGE" and r4["Created"] is False and r4["Work"]["Version"] == 2, f"resume -> {r4['Work']['State']} v{r4['Work']['Version']}")

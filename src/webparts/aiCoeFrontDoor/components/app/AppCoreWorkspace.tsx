@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { payloadHash } from '../../content/actionEnvelope';
-import { CANONICAL_WORK_ID } from '../../content/workIdentity';
+import { isCanonicalWorkId } from '../../content/workIdentity';
 import { browserLocalStorage } from '../../services/draftStorage';
 import { useFrontDoor } from '../../context/FrontDoorContext';
 import { usePageDocument } from '../pages/PageDocumentContext';
@@ -213,7 +213,7 @@ function CoreCaseWorkspace({ coreWork, onDirtyChange }: ICoreWorkspaceProps): Re
       const key = await selectionKey;
       let reference: string | null | undefined;
       try { reference = key === undefined ? undefined : browserLocalStorage()?.getItem(key); } catch { return; }
-      if (cancelled || !coreWork.enabled || typeof reference !== 'string' || !CANONICAL_WORK_ID.test(reference)) { return; }
+      if (cancelled || !coreWork.enabled || typeof reference !== 'string' || !isCanonicalWorkId(reference)) { return; }
       busyRef.current = true; setBusy(true);
       setProblem(''); setOutcome(''); setSponsor('');
       try {

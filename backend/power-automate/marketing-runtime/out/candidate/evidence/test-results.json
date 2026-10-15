@@ -1,10 +1,10 @@
 {
-  "capturedAt": "2026-09-23T14:51:48.994100+00:00",
+  "capturedAt": "2026-10-15T22:44:45.092584+00:00",
   "boundary": "real local source/runtime; explicitly fake SharePoint/provider only",
   "testsExitCode": 0,
   "typecheckExitCode": 0,
-  "tests": 58,
-  "pass": 58,
+  "tests": 59,
+  "pass": 59,
   "fail": 0,
   "skipped": 0,
   "cancelled": 0,
@@ -19,8 +19,18 @@
     "rootFiles": 21,
     "diagnostics": []
   },
-  "historicalArchive": {
-    "name": "marketing-runtime-offline-0.1.0.zip",
-    "sha256": "fd7a8ade1ff49d0dc5a36bb3318d2e0e5e25d74cf015db91b04fd9fd80b5da48"
+  "historicalArchives": {
+    "removedFromTip": [
+      {
+        "name": "marketing-runtime-offline-0.1.0.zip",
+        "sha256": "fd7a8ade1ff49d0dc5a36bb3318d2e0e5e25d74cf015db91b04fd9fd80b5da48"
+      },
+      {
+        "name": "marketing-runtime-offline-0.1.1.zip",
+        "sha256": "b9fb673be4cdca98193883855716329255d45a30db92ed4bf2c16534374075da"
+      }
+    ],
+    "why": "tenant-neutral repository 2026-10-15",
+    "history": "git commit d7cd658, backend/power-automate/marketing-runtime/out/"
   }
 }

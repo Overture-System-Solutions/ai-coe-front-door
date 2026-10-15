@@ -49,6 +49,10 @@ class MarketingRuntime {
     this.invokeClaude = invokeClaude; this.now = now;
     this.schemaFor = schemaFor ?? (kind => require(path.join(__dirname, '../schemas', { campaignBrief: 'campaign-brief.v1.json', contentPlan: 'content-plan.v1.json', meetingFollowThrough: 'meeting-follow-through.v1.json' }[kind])));
     this.hash = this.shared('content/actionEnvelope').payloadHash;
+    // The tenant's Work ID prefix (blank or absent = AICOE), as the front door's "Work ID prefix" setting and the CORE
+    // target's work_id_prefix name it. The shared validators hold it module-wide, so one process serves one prefix.
+    this.workIdPrefix = this.shared('content/workIdentity').configureWorkIdPrefix(config?.workIdPrefix);
+    if (this.workIdPrefix === undefined) throw new Error('Work ID prefix malformed: use 2 to 16 upper-case letters or digits, starting with a letter, or leave it blank for AICOE.');
   }
   async read(key) { const held = await this.store.read(key); return held ? { value: JSON.parse(held.value), version: held.version } : undefined; }
   async put(key, value, prior) {
@@ -91,6 +95,7 @@ class MarketingRuntime {
   }
   async execute(itemId) {
     if (this.config.enabled !== true || !Number.isSafeInteger(itemId) || itemId < 1) throw new Error('Marketing runtime disabled or request reference invalid.');
+    if (this.shared('content/workIdentity').configureWorkIdPrefix(this.config.workIdPrefix) !== this.workIdPrefix) throw new Error('Work ID prefix changed after the runtime was configured.');
     await this.qualify(this.config.qualificationReceiptRef, await this.hash(this.config));
     const response = await this.sp.request('GET', `${listUrl(this.config, 'requestListId')}(${itemId})?$select=Id,Title,Operation,ProtocolVersion,PayloadJson,Created,Modified,AuthorId,EditorId,Author/Id,Author/Email,Author/LoginName&$expand=Author`);
     const row = response.body?.d ?? response.body;

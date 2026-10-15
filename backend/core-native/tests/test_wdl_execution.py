@@ -1,7 +1,7 @@
 """Actual generated WDL + exact compiled C#; external SharePoint is simulated."""
 import copy, json
 import pytest
-import flows
+import flows, model
 from wdl_harness import Helper, Engine, SharePointFixture, Crash
 
 @pytest.fixture(scope='module')
@@ -63,7 +63,7 @@ def test_generated_clarification_packets_conflict_and_rejection(helper):
     enqueue(sp,'CreateOrResumeWork',wid,ExpectedVersion=2,S1={'ProblemStatement':None});run(sp,helper)
     assert json.loads(sp.tables['Cases'][0]['RecordJson'])['State']=='CLARIFYING'
     assert all(r['Status']=='EXPIRED' for r in sp.tables['Evidence'])
-    enqueue(sp,'GetWorkStatus','CW-NOT-FOUND');run(sp,helper)
+    enqueue(sp,'GetWorkStatus',model.WORK_ID_PREFIX+'-NOT-FOUND');run(sp,helper)
     assert json.loads(sp.tables['Results'][-1]['ResponseJson'])['Result']=='DENIED'
     bad=enqueue(sp,'CreateOrResumeWork',S1={'Title':'X','SourceChannel':'TEST'})
     bad['RequestJson']='{"Context":null}'
@@ -184,7 +184,7 @@ def test_other_author_cannot_read_existing_or_missing_work(helper):
     sp=SharePointFixture();run(sp,helper);wid=sp.tables['Cases'][0]['Title']
     next(r for r in sp.tables['Definitions'] if r['Title']=='UatPrincipals')['Value']=json.dumps(['alice@example.invalid','bob@example.invalid'])
     responses=[]
-    for target in (wid,'CW-ABSENT'):
+    for target in (wid,model.WORK_ID_PREFIX+'-ABSENT'):
         enqueue(sp,'GetWorkStatus',target)
         sp.tables['Requests'][-1].update(AuthorId=8,Author={'Id':8,'EMail':'bob@example.invalid'})
         run(sp,helper);r=sp.tables['Results'][-1]

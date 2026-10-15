@@ -9,7 +9,7 @@ Structural validator for the generated cloud flows (the 2.1 verification standar
   V6 every list column written (item keys) or filtered/selected exists in the data model for that list
   V7 every outputs('Cfg')?['Key'] is a seeded Definitions key (or ListId_* / EmployeeStatusMap)
   V8 every flow with mutating loops has a failure handler (an action with runAfter on Failed)
-  V9 no reference to the OSS lab tenant (osscontact) survives; no hard-coded parkplace URL in the primary package
+  V9 no reference to the OSS lab tenant (osscontact) survives; no hard-coded contoso URL in the primary package
   V10 no expression contains an obviously unbalanced parenthesis
 """
 from __future__ import annotations
@@ -92,7 +92,7 @@ def validate(defn: dict, flow_name: str, literal: bool) -> list[str]:
     has_handler = any(any("Failed" in v for v in a.get("runAfter", {}).values()) for _, a, *_ in all_actions)
     if mutating and not has_handler: errs.append("V8 mutating flow without a failure handler")
     if "osscontact" in text.lower(): errs.append("V9 lab tenant reference survives")
-    if not literal and "parkplace.sharepoint.com" in text.replace(M.DEFAULT_SITE, ""): errs.append("V9 hard-coded site URL outside the env-var default")
+    if not literal and "contoso.sharepoint.com" in text.replace(M.DEFAULT_SITE, ""): errs.append("V9 hard-coded site URL outside the env-var default")
     return errs
 
 

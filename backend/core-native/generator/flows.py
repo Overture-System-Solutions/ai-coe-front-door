@@ -297,7 +297,7 @@ def op_create_or_resume(f: Flow) -> dict:
     # ---- create ----
     cr, cl = {}, [None]
     f.add("Gaps", f.compose(gaps_expr("outputs('S1')")), into=cr, last=cl)
-    f.add("NewWorkID", f.compose(f"@{new_id('CW')}"), into=cr, last=cl)
+    f.add("NewWorkID", f.compose(f"@{new_id(M.WORK_ID_PREFIX)}"), into=cr, last=cl)
     f.add("Dedup", f.get_items(L("Cases"), "@concat('WorkTitle eq ''', replace(string(outputs('S1')?['Title']), '''', ''''''), '''')", top=5), into=cr, last=cl)
     f.add("Related", f.select("@body('Dedup')?['value']", "@item()?['Title']"), into=cr, last=cl)
     f.add("Record", f.compose(new_record("outputs('S1')", "@outputs('NewWorkID')", "outputs('Gaps')", "@if(empty(body('Dedup')?['value']), 'UNIQUE', 'POSSIBLE_DUPLICATE')", "@body('Related')")), into=cr, last=cl)
@@ -511,7 +511,7 @@ def flow_01(literal=None) -> Flow:
 # ------------------------------------------------------------------------------------------------
 def svc_event(f: Flow, blk, last, sfx: str, work_id: str, etype: str, payload: dict, key_suffix: str):
     ev = {"EventID": f"@{new_id('EVT')}", "WorkID": work_id, "EventType": etype, "OccurredAt": "@utcNow()", "ActorType": "SERVICE", "ActorID": f.name, "Provider": None,
-          "SourceRef": f"svc:{f.name}", "SourceVersion": "1", "CorrelationID": f"@concat('CORR-', replace({work_id[1:]}, 'CW-', ''))", "CausationID": None,
+          "SourceRef": f"svc:{f.name}", "SourceVersion": "1", "CorrelationID": f"@concat('CORR-', replace({work_id[1:]}, {q(M.WORK_ID_PREFIX + '-')}, ''))", "CausationID": None,
           "IdempotencyKey": f"@concat({work_id[1:]}, ':{etype}:', {key_suffix})", "PayloadVersion": "1", "Payload": payload, "AuthorityClass": "WRITE_BUSINESS_RECORD",
           "ReceiptID": f"@{new_id('RCPT')}", "SchemaVersion": "2.0.0"}
     f.add(f"Evt_{sfx}", f.compose(ev), into=blk, last=last)
@@ -535,7 +535,7 @@ def flow_02(literal=None) -> Flow:
     pb, pl = {}, [None]
     mk = {}
     f.add("Tmpl", f.compose("@outputs('Cfg')?['PacketDefaults']?[items('For_each_type')]"), into=mk, last=[None], run_after={})
-    f.add("PacketRec", f.compose({"EvidencePacketID": "@concat('EVP-', replace(items('For_each_case')?['Title'], 'CW-', ''), '-', items('For_each_type'))", "WorkID": wid, "EvidenceType": "@items('For_each_type')",
+    f.add("PacketRec", f.compose({"EvidencePacketID": "@concat('EVP-', replace(items('For_each_case')?['Title'], " + q(M.WORK_ID_PREFIX + '-') + ", ''), '-', items('For_each_type'))", "WorkID": wid, "EvidenceType": "@items('For_each_type')",
                                  "ReasonRequired": "Decision readiness hard gate S2_S5_COMPLETE_OR_NA", "Questions": ["@outputs('Tmpl')?['q']"], "AssignedRole": "@outputs('Tmpl')?['role']", "AssignedPerson": None,
                                  "SourceRefs": ["@concat('case:', items('For_each_case')?['Title'])"], "DueAt": "@addDays(utcNow(), int(outputs('Cfg')?['PacketDueDays']))", "Status": "AWAITING_RESPONSE",
                                  "Applicability": "REQUIRED", "Response": None, "ValidatorAssertion": None, "Confidence": None, "KnownAssumedUnknown": "UNKNOWN", "FreshnessState": "UNPROVED", "Version": 1}),
@@ -598,7 +598,7 @@ def flow_02(literal=None) -> Flow:
     f.add("If_Reminder_Due", f.condition({"and": [{"less": ["@ticks(coalesce(items('For_each_overdue')?['LastReminderAt'], '1970-01-01T00:00:00Z'))", "@ticks(addDays(utcNow(), mul(-1, int(outputs('Cfg')?['ReminderAfterDays']))))"]}]}, rem), into=ob, last=ol_)
     esc = {}
     f.add("Evt_Escalate", f.compose({"EventID": f"@{new_id('EVT')}", "WorkID": "@items('For_each_overdue')?['WorkID']", "EventType": "ESCALATION_REQUIRED", "OccurredAt": "@utcNow()", "ActorType": "SERVICE", "ActorID": f.name, "Provider": None,
-                                    "SourceRef": "@concat('evidence-packet:', items('For_each_overdue')?['Title'])", "SourceVersion": "@string(coalesce(items('For_each_overdue')?['Version'], 1))", "CorrelationID": "@concat('CORR-', replace(items('For_each_overdue')?['WorkID'], 'CW-', ''))",
+                                    "SourceRef": "@concat('evidence-packet:', items('For_each_overdue')?['Title'])", "SourceVersion": "@string(coalesce(items('For_each_overdue')?['Version'], 1))", "CorrelationID": "@concat('CORR-', replace(items('For_each_overdue')?['WorkID'], " + q(M.WORK_ID_PREFIX + '-') + ", ''))",
                                     "CausationID": None, "IdempotencyKey": "@concat(items('For_each_overdue')?['WorkID'], ':ESCALATION_REQUIRED:', items('For_each_overdue')?['Title'])", "PayloadVersion": "1",
                                     "Payload": {"EvidencePacketID": "@items('For_each_overdue')?['Title']", "DueAt": "@items('For_each_overdue')?['DueAt']"}, "AuthorityClass": "NOTIFY", "ReceiptID": f"@{new_id('RCPT')}", "SchemaVersion": "2.0.0"}), into=esc, last=[None], run_after={})
     f.add("Event_Escalate", f.create_item(L("Events"), {"Title": "@outputs('Evt_Escalate')?['EventID']", "WorkID": "@items('For_each_overdue')?['WorkID']", "EventType": "ESCALATION_REQUIRED", "OccurredAt": "@utcNow()", "ActorType": choice("SERVICE"), "ActorID": f.name,

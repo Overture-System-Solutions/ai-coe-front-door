@@ -6,7 +6,7 @@ import { parseCampaignBrief } from '../../content/marketing/campaignBrief';
 import { parseContentPlan } from '../../content/marketing/contentPlan';
 import { parseMeetingFollowThrough } from '../../content/marketing/meetingFollowThrough';
 import { MANUAL_SERVER_FIELDS } from '../../content/marketing/manualDraft';
-import { CANONICAL_WORK_ID } from '../../content/workIdentity';
+import { isCanonicalWorkId } from '../../content/workIdentity';
 import { isUsableForBusinessContent } from '../../content/marketing/sourceRegister';
 import type { ISourceRegister } from '../../content/marketing/sourceRegister';
 import type { IMarketingReviewDecisionV1, ReviewOutcome } from '../../content/marketing/artifactEnvelope';
@@ -83,7 +83,7 @@ function BusinessWorkspace({ marketing, resolution, onDirtyChange, onNavigationB
     pendingRef.current = true; setPending(true);
     Promise.all([marketing.listWork(), marketing.recoverPending ? marketing.recoverPending(false) : Promise.resolve({ kind: 'pending', message: 'Durable Marketing recovery is not bound; mutations are blocked.' })]).then(([ids, recovery]) => {
       if (!active) return;
-      if (ids.some(id => !CANONICAL_WORK_ID.test(id))) throw new Error('Server returned an invalid canonical Work ID.');
+      if (ids.some(id => !isCanonicalWorkId(id))) throw new Error('Server returned an invalid canonical Work ID.');
       setWorkIds(ids); pendingRef.current = recovery.kind === 'pending'; setPending(pendingRef.current); setStatus(recovery.message);
     }).catch(() => { if (active) setStatus('Authorized case listing could not be read.'); });
     return () => { active = false; };

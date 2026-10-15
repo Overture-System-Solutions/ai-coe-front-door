@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <environmentvariabledefinition schemaname="aicoe_SiteUrl">
-  <defaultvalue>https://parkplace.sharepoint.com/sites/AICoE-PrivatePilot</defaultvalue>
+  <defaultvalue>https://contoso.sharepoint.com/sites/AICoE</defaultvalue>
   <description default="SharePoint site that hosts the AI CoE lists. Set per environment.">
     <label description="SharePoint site that hosts the AI CoE lists. Set per environment." languagecode="1033" />
   </description>

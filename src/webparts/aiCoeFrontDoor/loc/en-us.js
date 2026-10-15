@@ -12,6 +12,8 @@ define([], function() {
     "RoleGroupsFieldDescription": "Site groups that map to roles, as role=Group title pairs separated by semicolons: leader=…; operator=…; designAuthority=…; marketingParticipant=…; marketingReviewer=…. Site owners always count as operators; no group grants a Marketing role until it is named here.",
     "PaletteOverridesFieldLabel": "Palette overrides",
     "PaletteOverridesFieldDescription": "Colours of this organization as key=#hex pairs separated by semicolons, for example accent=#008B83;ink=#102B3D. Keys: accent, ink, muted, bg, paper, focus, stateGreen, stateBlue, stateAmber, stateRed, line, soft, heroFrom, heroTo, heroGlow, accentDark, accentSoft. Leave blank to keep the shipped colours.",
+    "WorkIdPrefixFieldLabel": "Work ID prefix",
+    "WorkIdPrefixFieldDescription": "The prefix of this site's Work IDs: the work_id_prefix its CORE target was built with, 2 to 16 upper-case letters or digits starting with a letter. Leave blank for AICOE.",
     "DraftingGroupName": "AI drafting",
     "DraftServiceUrlFieldLabel": "AI draft flow URL",
     "DraftServiceUrlFieldDescription": "HTTP trigger URL of the drafting flow. Keep its approved authenticated caller restriction and approve only the required Microsoft Flow Service API permission. Leave blank to keep plain summaries.",

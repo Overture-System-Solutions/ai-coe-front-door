@@ -12,7 +12,7 @@ Helper continuation finished, then parent review independently reproduced and fi
 
 Final Script.cs SHA-256: `05f6a8507360c476749db2a0a78c41f6e96ce35401fa8973822ea4eb989db936`. The earlier helper-lane and first exact-package receipts remain history, not the current final bytes. Delivery: `../../../../development/power-automate/OSS_AI_CoE_Marketing_Native_1.0.0.0`; its sibling `_LOCAL_REVIEW_BUNDLE.zip` contains 48 readback-verified members, SHA-256 `6ed43f6a453e43c900f59c8f74fd381b94a29cabad19bed2e54c0b0a9f780671`. Exact absolute paths/hashes are in `evidence/integration/DELIVERY.json`.
 
-Updated the curated September 24 report, NOW, CloudWave, decisions, index/catalog and home. Nine home unit tests, static link/source checks and file-browser navigation/search/mobile checks pass; historical unavailable-original/source-review warnings remain documented by the home checker, with preserved snapshots intact. No external requests occurred in the browser check.
+Updated the curated September 24 report, NOW, the client page, decisions, index/catalog and home. Nine home unit tests, static link/source checks and file-browser navigation/search/mobile checks pass; historical unavailable-original/source-review warnings remain documented by the home checker, with preserved snapshots intact. No external requests occurred in the browser check.
 
 **Next is a separately authorized native phase**, not more unfinished local steps 1–4: register/Save the helper and read actual API/Dataverse identity, prepare the bound OFF package and reverify, then native import/designer Save, approved source/reviewer/provider policy, two-account privacy/recovery and historical-result retention/revocation acceptance. The registration ZIP is not a solution import and the UNBOUND flow review ZIP is not yet a working import. Monday.com and legacy/CORE association acceptance remain separate. No child remains active for this local task.
 
@@ -63,3 +63,7 @@ A steering attempt found the helper child no longer live before its final result
 ## Next integration checks
 
 Use the actual generated flow and compiled final Script.cs, not a second reference implementation. Reconcile child contracts against the parent contract before integrating. Exercise create/manual brief/review/plan/follow-through, then AI draft and original-intent recovery. Cover foreign Author, tampered request, missing qualification, source/member/authority revocation, stale revisions, failed write/readback/ACL, unknown provider outcomes and process death at durable boundaries. Verify exact packaged bytes, OFF/unbound defaults, local PAC semantics, source preservation and implementation-vs-native limits. Final report must name incomplete operations if any.
+
+## Tenant-neutral update (2026-10-15)
+
+The Work ID prefix now comes from a build target (see `START_HERE.md`, *Build target*). The committed helper is the neutral default rendering: Script.cs SHA-256 `fc9b733cb245ecc75bef48c107bcd3881cc360547bf790b19f6add0c5a531f46`; `out/` helper ZIP `169c2d9c4b07ead50dbb7b8422c2c85aabafd693333ec4ba5e05e4593584ab4d`; `connector/` registration ZIP regenerated from current sources. The OFF flow solution is unchanged (`629dde40...`). The hashes above are history; a build for the original target reproduces them (equivalence record kept outside the repository).

@@ -1799,7 +1799,8 @@ describe('front door page definition', () => {
   });
 
   it('contains no word of the tenant list: client names, tenant hosts, the reference roster, case ids or secret shapes', () => {
-    // The list itself (src/provisioning/tenantWords.json) is the one place those words may live.
+    // The list itself (src/provisioning/tenantWords.json) is the one place those words live, the client names, roster
+    // and case ids only as hashes.
     for (const file of ['pages.json', 'parameters.sample.json']) {
       const text: string = fs.readFileSync(path.join(PAGES_DIR, file), 'utf8');
       for (const list of PROVISIONING_SCAN) {

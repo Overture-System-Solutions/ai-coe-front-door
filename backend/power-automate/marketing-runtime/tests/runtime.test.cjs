@@ -15,8 +15,8 @@ test('executable dispatcher derives identity from request Author and rejects pay
   cfg.writerPrincipalId = 42;
   const { payloadHash } = load('content/actionEnvelope');
   await store.write('qualification:QUAL-RUNTIME', JSON.stringify({ result: 'PASS', bindingHash: await payloadHash(cfg), expiresAt: '2099-01-01T00:00:00Z' }));
-  await store.write('member:7', JSON.stringify({ actorId: 'verified@example.invalid', enabled: true, roles: ['employee', 'marketingParticipant'], workIds: ['CW-OFFLINE_TEST'], audience: 'Internal' }));
-  const request = { Id: 1, Title: crypto.randomUUID(), Operation: 'ListArtifactsV1', ProtocolVersion: 'marketing.v1', PayloadJson: JSON.stringify({ workId: 'CW-OFFLINE_TEST' }), AuthorId: 7, EditorId: 7, Author: { Id: 7, Email: 'verified@example.invalid', LoginName: 'i:0#.f|membership|verified@example.invalid' }, Created: '2026-09-23T12:00:00Z', Modified: '2026-09-23T12:00:00Z' };
+  await store.write('member:7', JSON.stringify({ actorId: 'verified@example.invalid', enabled: true, roles: ['employee', 'marketingParticipant'], workIds: ['AICOE-OFFLINE_TEST'], audience: 'Internal' }));
+  const request = { Id: 1, Title: crypto.randomUUID(), Operation: 'ListArtifactsV1', ProtocolVersion: 'marketing.v1', PayloadJson: JSON.stringify({ workId: 'AICOE-OFFLINE_TEST' }), AuthorId: 7, EditorId: 7, Author: { Id: 7, Email: 'verified@example.invalid', LoginName: 'i:0#.f|membership|verified@example.invalid' }, Created: '2026-09-23T12:00:00Z', Modified: '2026-09-23T12:00:00Z' };
   const published = [], sp = { request: async (method, url, body) => {
     if (url.includes(cfg.requestListId)) return { status: 200, body: request };
     if (method === 'GET' && url.includes('RoleAssignments')) return { status: 200, body: { HasUniqueRoleAssignments: true, RoleAssignments: [{ PrincipalId: 7, RoleDefinitionBindings: [{ Id: 1073741826 }] }] } };
@@ -28,7 +28,25 @@ test('executable dispatcher derives identity from request Author and rejects pay
   const result = await runtime.execute(1);
   assert.deepEqual(result.value, []); assert.equal(result.actorId, request.Author.Email);
   assert.equal(published.length, 1);
-  request.Title = crypto.randomUUID(); request.PayloadJson = JSON.stringify({ workId: 'CW-OFFLINE_TEST', actorId: 'administrator', resolution: { roles: ['marketingReviewer'] } });
+  request.Title = crypto.randomUUID(); request.PayloadJson = JSON.stringify({ workId: 'AICOE-OFFLINE_TEST', actorId: 'administrator', resolution: { roles: ['marketingReviewer'] } });
   await assert.rejects(runtime.execute(1), /unknown|authority|schema/i);
   assert.equal(published.length, 1);
+});
+
+test('Work ID prefix comes from the server configuration: blank or absent means AICOE, a malformed one refuses to start', async () => {
+  const { MarketingRuntime } = require(path.join(__dirname, '../server/runtime.cjs'));
+  const identity = load('content/workIdentity');
+  const make = workIdPrefix => new MarketingRuntime({ config: { enabled: true, siteUrl: 'https://example.sharepoint.com/sites/marketing', workIdPrefix }, store: {}, sp: {}, shared: load });
+  try {
+    assert.equal(make(undefined).workIdPrefix, 'AICOE');
+    assert.equal(make('').workIdPrefix, 'AICOE');
+    assert.equal(make('CONTOSO').workIdPrefix, 'CONTOSO');
+    assert.equal(identity.isCanonicalWorkId('CONTOSO-OFFLINE_TEST'), true);
+    assert.equal(identity.isCanonicalWorkId('AICOE-OFFLINE_TEST'), false);
+    for (const bad of ['contoso', 'C', '1ABC', 'AICOE-', 7]) assert.throws(() => make(bad), /Work ID prefix malformed/);
+    assert.equal(identity.isCanonicalWorkId('AICOE-OFFLINE_TEST'), false, 'a refused prefix leaves no Work ID valid');
+  } finally {
+    identity.configureWorkIdPrefix(undefined);
+  }
+  assert.equal(identity.isCanonicalWorkId('AICOE-OFFLINE_TEST'), true);
 });

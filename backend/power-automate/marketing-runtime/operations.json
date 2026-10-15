@@ -1,6 +1,6 @@
 {
   "protocol": "marketing.v1",
-  "release": "0.1.1",
+  "release": "0.1.2",
   "enabledByDefault": false,
   "operations": {
     "ListMarketingWorkV1": { "fields": [], "mutation": false, "result": "string[]; sorted unique canonical current Author member.workIds only; max 500" },

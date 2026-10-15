@@ -37,7 +37,7 @@ describe('one-page additive app definition', () => {
   it('exposes optional host bindings without activating drafts, CORE or Marketing', () => {
     const app: { pages: { instance: Record<string, string> }[] } = JSON.parse(fs.readFileSync(APP, 'utf8'));
     const sample: Record<string, string> = JSON.parse(fs.readFileSync(path.join(ROOT, 'sharepoint/pages/one-page/parameters.sample.json'), 'utf8'));
-    for (const [property, token] of Object.entries({ draftListId: 'DraftListId', draftPolicyJson: 'DraftPolicyJson', coreBindingJson: 'CoreBindingJson', marketingBindingJson: 'MarketingBindingJson' })) {
+    for (const [property, token] of Object.entries({ draftListId: 'DraftListId', draftPolicyJson: 'DraftPolicyJson', coreBindingJson: 'CoreBindingJson', marketingBindingJson: 'MarketingBindingJson', workIdPrefix: 'WorkIdPrefix' })) {
       expect(app.pages[0].instance[property]).toBe(`{${token}}`);
       expect(sample[token]).toBe('');
     }

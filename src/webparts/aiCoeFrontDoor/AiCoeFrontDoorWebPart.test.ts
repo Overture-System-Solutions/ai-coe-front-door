@@ -10,7 +10,7 @@ import { IDEA_JOURNEY, journeyAnswers, playJourney, TOOL_CHECK_GAP_JOURNEY } fro
 import { InMemoryListStore } from '../../testing/listStore';
 import type { IRecordedRequest } from '../../testing/listStore';
 import { SAMPLE_PAGE_DOCUMENT } from '../../testing/pageDocument';
-import { BUNDLE_SCAN, findTenantWords, readTenantWords } from '../../provisioning/tenantWords';
+import { BUNDLE_SCAN, findTenantWordsOutOfProcess, readTenantWords } from '../../provisioning/tenantWords';
 import type { ITenantWords } from '../../provisioning/tenantWords';
 import { createBranding } from './branding/branding';
 import { CONTENT_UNAVAILABLE_TEXT, NO_PAGE_KEY_TEXT } from './components/pages/ContentPage';
@@ -112,10 +112,11 @@ describe('AiCoeFrontDoorWebPart bundle', () => {
     // (a base64 data URL, which is not a secret) under every stylesheet, so those data URLs are cut before the scan.
     const code: string = fs.readFileSync(bundlePath, 'utf8').replace(/sourceMappingURL=data:[^\s*]*/g, 'sourceMappingURL=<cut>');
     const chunk: string = fs.readFileSync(newestStringsChunk(), 'utf8');
-    for (const list of BUNDLE_SCAN) {
-      expect({ file: 'bundle', list, found: findTenantWords(code, tenantWords, [list]) }).toEqual({ file: 'bundle', list, found: [] });
-      expect({ file: 'strings', list, found: findTenantWords(chunk, tenantWords, [list]) }).toEqual({ file: 'strings', list, found: [] });
-    }
+    // Scanned out of process: inside the worker, coverage tracking slows the hashed entries' per-window loop by seconds.
+    expect(findTenantWordsOutOfProcess([{ name: 'bundle', text: code }, { name: 'strings', text: chunk }], tenantWords, BUNDLE_SCAN)).toEqual([
+      { name: 'bundle', found: [] },
+      { name: 'strings', found: [] }
+    ]);
     expect(code.indexOf('Overture')).toBe(-1);
     for (const marker of ['OVT-AICOE-', 'overture-ai-coe-front-door:draft:', 'overture-ai-coe-pilot', 'AI CoE Pilot Intakes']) {
       expect(code.indexOf(marker)).toBeGreaterThan(-1);
@@ -320,8 +321,27 @@ describe('AiCoeFrontDoorWebPart bundle', () => {
             'Colours of this organization as key=#hex pairs separated by semicolons, for example accent=#008B83;ink=#102B3D. Keys: accent, ink, muted, bg, paper, focus, stateGreen, stateBlue, stateAmber, stateRed, line, soft, heroFrom, heroTo, heroGlow, accentDark, accentSoft. Leave blank to keep the shipped colours.',
           placeholder: 'accent=#008B83;ink=#102B3D'
         }
+      },
+      // The tenant's Work ID prefix (1.0.0.20): blank is AICOE, the CORE generator's default; the page names its own.
+      {
+        targetProperty: 'workIdPrefix',
+        properties: {
+          label: 'Work ID prefix',
+          description:
+            "The prefix of this site's Work IDs: the work_id_prefix its CORE target was built with, 2 to 16 upper-case letters or digits starting with a letter. Leave blank for AICOE.",
+          placeholder: 'AICOE',
+          onGetErrorMessage: expect.any(Function)
+        }
       }
     ]);
+    // The pane refuses a prefix the CORE generator would refuse, and accepts blank, the default and a tenant's own.
+    const prefixProblem = configuration.pages[0].groups[0].groupFields[5].properties.onGetErrorMessage as (value: string) => string;
+    for (const accepted of ['', '  ', 'AICOE', 'NW', 'N1', 'ABCDEFGHIJKLMNOP']) {
+      expect({ accepted, problem: prefixProblem(accepted) }).toEqual({ accepted, problem: '' });
+    }
+    for (const refused of ['nw', 'N', '1N', 'N-W', 'NW-', 'N W', 'ABCDEFGHIJKLMNOPQ']) {
+      expect({ refused, problem: prefixProblem(refused) }).toEqual({ refused, problem: expect.stringContaining('upper-case letters or digits') });
+    }
     // The drafting flow is named for what it does, never for a provider or a first tenant's flow name.
     expect(configuration.pages[0].groups[1].groupFields).toEqual([
       {

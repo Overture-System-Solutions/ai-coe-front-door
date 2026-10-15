@@ -72,7 +72,7 @@ public class Script : ScriptBase
         if (test) { Need((string)cfg["RuntimeMode"]=="UAT" && (string)cfg["SiteUrl"]==(string)cfg["UatSiteUrl"] && ((JArray)cfg["UatPrincipals"]).Values<string>().Contains(actor)); }
         else Need((string)cfg["RuntimeMode"]=="BUSINESS");
         string work=(string)req["WorkID"];
-        if (!String.IsNullOrEmpty(work)) Need(Regex.IsMatch(work,"^CW-[A-Za-z0-9_-]+$") && work.Length<=160);
+        if (!String.IsNullOrEmpty(work)) Need(Regex.IsMatch(work,"^AICOE-[A-Za-z0-9_-]+$") && work.Length<=160);
         Need((string)row["WorkID"]==(work??""));
         if(op=="CreateOrResumeWork") {
             Keys(req,new[]{"Context","S1"},new[]{"WorkID","ExpectedVersion","LegacyRefs"}); var s1=(JObject)req["S1"]; Keys(s1,new string[0],S1Fields); Need(s1.Count>0);
@@ -145,7 +145,7 @@ public class Script : ScriptBase
         string wid=(string)req["WorkID"]; var row=String.IsNullOrEmpty(wid)?null:Find(p,"Cases",wid); var c=row==null?null:Record(row); var writes=new JArray(); JObject response;
         if(!String.IsNullOrEmpty(wid) && (c==null || !Access(c,actor) || (bool)c["TestRecord"]!=(bool)v["TestRecord"])) response=Error("NOT_AUTHORIZED");
         else if(op=="CreateOrResumeWork" && c==null) {
-            wid="CW-"+Hash(new JArray(key,actor)).Substring(0,32).ToUpperInvariant(); c=new JObject {
+            wid="AICOE-"+Hash(new JArray(key,actor)).Substring(0,32).ToUpperInvariant(); c=new JObject {
                 ["WorkID"]=wid,["WorkType"]="IDEA",["Stage"]="INTAKE",["State"]="CLARIFYING",["Title"]="",["ProblemStatement"]=null,["DesiredOutcome"]=null,["Requester"]=actor,["Department"]=null,["Sponsor"]=null,["AccountableOwner"]=null,["ResponsibleLead"]=null,["CreatedAt"]=now,["SourceChannel"]="",["SourceRefs"]=new JArray(),["RelatedWorkIDs"]=new JArray(),["DuplicateStatus"]="NOT_CHECKED",["Lane"]="PREPARATION",["ARBTier"]=null,["AgentRiskTier"]=null,["PScoreLegacy"]=null,["PScoreCandidate"]="AWAITING_SOURCE",["PScoreVersion"]=null,["PScoreConfidence"]="AWAITING_SOURCE",["Lift"]="AWAITING_SOURCE",["LiftVersion"]=null,["DecisionReadiness"]="AWAITING_VALIDATION",["ReadinessVersion"]=null,["DecisionReadinessState"]="NOT_READY",["DecisionRequested"]=null,["DecisionAuthority"]=null,["RequiredValidators"]=new JArray(PacketTypes),["ValidationState"]="NOT_STARTED",["OpenEvidenceGaps"]=new JArray(),["Dependencies"]=new JArray(),["Risks"]=new JArray(),["TaskSystem"]=null,["CollaborationSurface"]=null,["CurrentRelease"]="3.4.0-rc2",["LastValidatedAt"]=null,["NextAction"]="Complete S1",["NextOwner"]=actor,["NextDate"]=null,["ValueBaselineID"]=null,["ActualValueID"]=null,["RetentionClass"]=(string)cfg["RetentionClass_Default"]??"UNBOUND",["DataClassification"]="INTERNAL",["Version"]=1,["ContentVersion"]=1,["TestRecord"]=v["TestRecord"],["LegacyRefs"]=req["LegacyRefs"]??new JObject(),["EmployeeStatus"]="Need one answer" };
             foreach(var a in ((JObject)req["S1"]).Properties()) if(a.Name!="Requester") c[a.Name]=a.Value.DeepClone();
             var gaps=Gaps(c); c["OpenEvidenceGaps"]=gaps; if(gaps.Count==0) { c["State"]="READY_FOR_TRIAGE"; c["EmployeeStatus"]="Working"; c["NextAction"]="Build S2-S5 evidence"; }
@@ -195,7 +195,7 @@ public class Script : ScriptBase
                 if(!coverage || packets.Any(r=>(string)r["Status"]!="NOT_APPLICABLE" && (String.IsNullOrWhiteSpace((string)r["Response"]) || !new[]{"KNOWN","ASSUMED","MIXED"}.Contains((string)r["KnownAssumedUnknown"])))) block.Add("ASSUMPTIONS_VISIBLE");
                 if(!packets.Any(r=>(string)r["EvidenceType"]=="S4_TECHNICAL" && (string)r["Status"]=="VALIDATED" && (string)r["ValidationKind"]=="HUMAN")) block.Add("IMPLEMENTATION_PATH_UNDERSTOOD");
                 if((bool)c["TestRecord"]) block.Add("BUSINESS_NOT_UAT");
-                bool policy=(bool?)cfg["PolicyAccepted"]==true && (string)cfg["PolicySourceHash"]=="51210529f823b1571e737c40f21a97921e498c60f8e132374171634138ccf736" && !String.IsNullOrWhiteSpace((string)cfg["PolicyAcceptanceReceipt"]) && !String.IsNullOrWhiteSpace((string)cfg["PolicyBindingVersion"]);
+                bool policy=(bool?)cfg["PolicyAccepted"]==true && (string)cfg["PolicySourceHash"]=="cd0d19ba3a2b051402d33927e851547289e34a2fa4fbb384ce737896f8794b2f" && !String.IsNullOrWhiteSpace((string)cfg["PolicyAcceptanceReceipt"]) && !String.IsNullOrWhiteSpace((string)cfg["PolicyBindingVersion"]);
                 if(!policy) block.Add("POLICY_AND_AUTHORITY_BINDING");
                 string lane="PREPARATION", authority=null, rule="ROUTE-999";
                 var factsRows=Rows(p,"Authority").Select(Record).Where(a=>(string)a["Role"]=="ROUTING_FACTS" && (string)a["WorkID"]==wid && Grant(p,c,(string)a["Principal"],"ROUTING_FACTS")).ToArray();

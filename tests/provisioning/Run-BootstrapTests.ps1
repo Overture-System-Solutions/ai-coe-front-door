@@ -13,10 +13,11 @@ Assert (Test-Path $script) 'Missing offline bootstrap generator'
 $result=& $script
 Assert ($result.Mode -eq 'DryRun' -and -not $result.Enabled -and -not $result.Qualified -and $result.NativeOperations -eq 0) 'Bootstrap default must be offline/unqualified'
 $run=Join-Path $root ('evidence/provisioning/bootstrap-tests/'+[guid]::NewGuid().ToString('N'))
-$result=& $script -WriteTemplates -OutputDirectory $run
+$selectedSite='https://contoso.sharepoint.com/sites/AICoEPilot'
+$result=& $script -WriteTemplates -OutputDirectory $run -SiteUrl $selectedSite
 $config=Get-Content (Join-Path $run 'config.template.json') -Raw|ConvertFrom-Json
 Assert (-not $config.enabled -and -not $config.controllerQualified -and -not $config.securityQualified -and $null -eq $config.writerPrincipalId -and $config.qualificationReceiptRef -eq '' -and $config.provider.qualificationReceiptRef -eq '') 'Bootstrap invented qualification/identity'
-Assert ($config.siteUrl -ceq 'https://osscontact.sharepoint.com/sites/CloudWaveDashboardDemo') 'Selected site not preserved'
+Assert ($config.siteUrl -ceq $selectedSite) 'Selected site not preserved'
 $inputText=Get-Content (Join-Path $run 'controlled-inputs.template.json') -Raw
 Assert (Test-Json -Json $inputText -SchemaFile (Join-Path (Split-Path $script -Parent) 'controlled-inputs.schema.json')) 'Empty controlled input is not schema-valid'
 $gate=Get-Content (Join-Path $run 'commissioning.template.json') -Raw|ConvertFrom-Json
@@ -26,7 +27,7 @@ $planner=Join-Path (Split-Path $script -Parent) 'ConvertTo-MarketingRecordPlan.p
 Assert (Test-Path $planner) 'Missing controlled record planner'
 $site='https://synthetic.sharepoint.com/sites/marketing'
 $inputObject=[ordered]@{kind='marketing.bootstrap-input.v1';siteUrl=$site;records=@(
- @{Key='member:200';Value=@{enabled=$false;actorId='requester@example.invalid';roles=@('marketingParticipant');workIds=@('CW-TEST');audience='Synthetic internal'}},
+ @{Key='member:200';Value=@{enabled=$false;actorId='requester@example.invalid';roles=@('marketingParticipant');workIds=@('AICOE-TEST');audience='Synthetic internal'}},
  @{Key='authority:binding-owner';Value=@{bindingRef='binding-owner';actorId='owner@example.invalid';label='SYNTHETIC TEST ONLY';scope=@('sourceRegister');expiresAt='2000-01-01T00:00:00Z';synthetic=$false;tenantScope=$site;revoked=$true}},
  @{Key='source:source-test';Value=@{entry=@{id='source-test';location=($site+'/Shared%20Documents/test.txt');versionOrETag='"1"';owner='Synthetic owner';asOf='2000-01-01';classification='Synthetic';audience='Synthetic internal';mayNotProve='Anything real'};actors=@('requester@example.invalid');purposes=@('campaignBrief');audiences=@('Synthetic internal');contentHash=('a'*64);revoked=$true}},
  @{Key='qualification:QUAL-native-test';Value=@{result='INCONCLUSIVE';bindingHash=('b'*64);expiresAt='2000-01-01T00:00:00Z'}},

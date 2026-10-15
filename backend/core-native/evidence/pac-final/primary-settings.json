@@ -41,7 +41,7 @@
     {
       "SchemaName": "aicoe_SiteUrl",
       "Value": "",
-      "DefaultValue": "https://parkplace.sharepoint.com/sites/AICoE-PrivatePilot",
+      "DefaultValue": "https://contoso.sharepoint.com/sites/AICoE",
       "Name": {
         "Default": "aicoe_SiteUrl",
         "ByLcid": {

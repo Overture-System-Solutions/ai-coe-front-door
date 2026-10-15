@@ -19,6 +19,7 @@ ROOT=Path(__file__).resolve().parents[2]
 APP=ROOT.parents[1]
 sys.path.insert(0,str(ROOT/'generator'))
 from build import NAME,HELPER_NAME
+import build_target
 from marketing_flow import command_flow
 from marketing_package import semantics
 from marketing_validate import validate,walk
@@ -72,10 +73,15 @@ def main():
     env=dict(os.environ,DOTNET_ROOT=str(dotnet.parent),DOTNET_CLI_TELEMETRY_OPTOUT='1',PYTHONDONTWRITEBYTECODE='1')
     run([str(dotnet),'build',str(local/'MarketingHarness.csproj'),'-c','Release','--configfile',str(extracted/'NuGet.Config'),'-v','minimal'],evidence/'exact-script-build.log',env)
     dll=local/'bin/Release/net10.0/MarketingHarness.dll';assert dll.is_file()
+    # The committed Node reference vectors are captured for the default build target, the one out/ is built for; every
+    # suite runs them against the helper compiled from the exact packaged script.
+    package_target=build_target.validate({'site':manifest['target']['site'],'work_id_prefix':manifest['target']['workIdPrefix']})
+    assert package_target==build_target.DEFAULT,'out/ must be the default-target build the reference vectors are captured for'
     summary={}
+    env.update(MARKETING_HELPER_DLL=str(dll))
     summary['flowTests']=suite(ROOT/'tests/flow',evidence/'flow.log',env)
     summary['helperTests']=suite(ROOT/'tests/helper',evidence/'helper.log',env)
-    env.update(MARKETING_HELPER_DLL=str(dll),MARKETING_FLOW_ZIP=str(pac))
+    env.update(MARKETING_FLOW_ZIP=str(pac))
     summary['integrationTests']=suite(ROOT/'tests/integration',evidence/'integration.log',env)
     run([sys.executable,'-B',str(ROOT/'tests/integration/run_native.py'),'--dll',str(dll),'--flow-zip',str(pac),'--output',str(evidence/'all-operations.json')],evidence/'all-operations.log',env)
     vectors=json.loads((evidence/'all-operations.json').read_text());required=set(json.loads((ROOT/'evidence/baseline.json').read_text())['operations']['operations'])
@@ -90,7 +96,7 @@ def main():
     summary['provisioningGroupedChecks']=sum(r['summary']['checks'] for r in provisioning['results'] if r['name']!='surface')
     assert all(sha(APP/p)==h for p,h in baseline.items())
     assert sha(script)==sha(ROOT/'connector/Script.cs'),'Helper changed during final verification'
-    receipt={'verifiedAt':datetime.datetime.now(datetime.timezone.utc).isoformat(),'scope':'LOCAL_STEPS_1_TO_4_ONLY','nativeAcceptance':False,'tenantActions':0,'liveModelCalls':0,'enabled':False,'registered':False,'bound':False,'counts':summary,'operationCount':len(actual),'referenceScenarios':vectors['count'],'crashBoundaries':crashes['count'],'protectedFiles':len(baseline),'preserved':True,'scriptSha256':sha(script),'exactPackageCompiledDllSha256':sha(dll),'flowActions':manifest['actionCount'],'packages':{p.name:{'sha256':sha(p),'bytes':p.stat().st_size} for p in (flow,helper,pac)},'evidence':str(evidence.relative_to(APP)),'qualificationGates':'NATIVE_GATES.md','limits':['Exact production script compiled as C#7.3 using a local .NET10 ScriptBase shim, not the hosted compiler.','Actual packaged WDL executed by a bounded offline interpreter; external SharePoint and Claude are explicit fixtures.','Helper registration and metadata binding, native import/Save, permissions, provider and lifecycle acceptance remain unperformed.']}
+    receipt={'verifiedAt':datetime.datetime.now(datetime.timezone.utc).isoformat(),'scope':'LOCAL_STEPS_1_TO_4_ONLY','nativeAcceptance':False,'tenantActions':0,'liveModelCalls':0,'enabled':False,'registered':False,'bound':False,'counts':summary,'operationCount':len(actual),'referenceScenarios':vectors['count'],'crashBoundaries':crashes['count'],'protectedFiles':len(baseline),'preserved':True,'scriptSha256':sha(script),'exactPackageCompiledDllSha256':sha(dll),'packageTarget':manifest['target'],'flowActions':manifest['actionCount'],'packages':{p.name:{'sha256':sha(p),'bytes':p.stat().st_size} for p in (flow,helper,pac)},'evidence':str(evidence.relative_to(APP)),'qualificationGates':'NATIVE_GATES.md','limits':['Exact production script compiled as C#7.3 using a local .NET10 ScriptBase shim, not the hosted compiler.','Actual packaged WDL executed by a bounded offline interpreter; external SharePoint and Claude are explicit fixtures.','Helper registration and metadata binding, native import/Save, permissions, provider and lifecycle acceptance remain unperformed.']}
     (evidence/'VERIFICATION.json').write_text(json.dumps(receipt,indent=2)+'\n');print(json.dumps(receipt,indent=2))
 
 if __name__=='__main__':main()

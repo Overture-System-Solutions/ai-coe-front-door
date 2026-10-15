@@ -67,11 +67,11 @@ describe('AppShell', () => {
   });
 
   it('blocks leaving unsaved business Marketing input until the server draft seam confirms it', async () => {
-    const marketing = { ...createSyntheticMarketingServices(new MemoryStorageBackend()), mode: 'live' as const, listWork: async () => ['CW-DRAFT_GUARD'], recoverPending: async () => ({ kind: 'none' as const, message: 'No pending intent' }) };
+    const marketing = { ...createSyntheticMarketingServices(new MemoryStorageBackend()), mode: 'live' as const, listWork: async () => ['AICOE-DRAFT_GUARD'], recoverPending: async () => ({ kind: 'none' as const, message: 'No pending intent' }) };
     const view = await renderShell({ roleResolver: resolver(['employee', 'marketingParticipant'], 'resolved'), marketing });
     fireEvent.click(view.getByRole('tab', { name: 'Marketing', exact: true }));
-    await view.findByRole('option', { name: 'CW-DRAFT_GUARD' });
-    fireEvent.change(view.getByLabelText('Marketing case'), { target: { value: 'CW-DRAFT_GUARD' } });
+    await view.findByRole('option', { name: 'AICOE-DRAFT_GUARD' });
+    fireEvent.change(view.getByLabelText('Marketing case'), { target: { value: 'AICOE-DRAFT_GUARD' } });
     await waitFor(() => expect(view.getByLabelText('Approved objective')).toBeEnabled());
     fireEvent.change(view.getByLabelText('Approved objective'), { target: { value: 'Unsubmitted working objective' } });
     fireEvent.click(view.getByRole('tab', { name: 'Home', exact: true }));
