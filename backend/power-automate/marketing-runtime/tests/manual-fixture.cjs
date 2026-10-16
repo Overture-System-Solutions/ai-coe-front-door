@@ -1,7 +1,7 @@
 'use strict';
 // Explicit offline content fixtures only. No model invocation or real approval is represented here.
 const { load, assert, ref } = require('./helpers.cjs');
-const workId = 'CW-OFFLINE_TEST';
+const workId = 'AICOE-OFFLINE_TEST';
 const source = f => ({ sourceId: f.entry.id, versionOrETag: f.entry.versionOrETag });
 const claim = f => ({ text: 'Participants agreed to review the draft.', sources: [source(f)] });
 const unknown = text => ({ text, sources: [], unknown: 'AWAITING_VALIDATION' });

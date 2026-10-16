@@ -4,10 +4,10 @@
    "CorrelationID": "CORR-UAT-ARB-001",
    "IdempotencyKey": "status:neg:1",
    "ClientVersion": "spfx-candidate-0.1",
-   "TenantLabel": "CloudWave-PrivatePilot",
+   "TenantLabel": "Contoso-PrivatePilot",
    "TestRecord": true
   },
-  "WorkID": "CW-UAT-ARB-001"
+  "WorkID": "AICOE-UAT-ARB-001"
  },
  "response": {
   "Result": "DENIED",

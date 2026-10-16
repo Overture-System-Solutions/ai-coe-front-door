@@ -214,8 +214,8 @@ function canonicalId(value, path, issues) {
     return value;
 }
 function workId(value, path, issues) {
-    if (typeof value !== 'string' || !workIdentity_1.CANONICAL_WORK_ID.test(value)) {
-        issues.push({ path, message: 'must be a canonical Work ID (CW-…).' });
+    if (!(0, workIdentity_1.isCanonicalWorkId)(value)) {
+        issues.push({ path, message: `must be a canonical Work ID (${(0, workIdentity_1.workIdPrefix)() ?? '<prefix>'}-…).` });
         return undefined;
     }
     return value;

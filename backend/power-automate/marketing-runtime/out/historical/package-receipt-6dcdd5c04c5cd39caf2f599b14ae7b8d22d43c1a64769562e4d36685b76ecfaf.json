@@ -1,0 +1,11 @@
+{
+  "kind": "offline-node-extension-candidate",
+  "powerAutomateImportable": false,
+  "archive": "marketing-runtime-offline-0.1.1.zip",
+  "sha256": "b9fb673be4cdca98193883855716329255d45a30db92ed4bf2c16534374075da",
+  "zipMembers": 42,
+  "verifiedManifestFiles": 41,
+  "sourceInputs": 40,
+  "compiledZipSmokeExitCode": 0,
+  "testBoundary": "fake SharePoint/provider only; no tenant/model calls"
+}

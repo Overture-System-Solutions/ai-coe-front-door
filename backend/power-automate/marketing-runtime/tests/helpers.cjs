@@ -11,7 +11,7 @@ const { createSyntheticMarketingServices } = load('services/marketing/marketingS
 const { MemoryStorageBackend } = load('services/marketing/artifactStore');
 const { FIXTURE_REGISTER, FIXTURE_MEETING_NOTES } = load('content/marketing/sourceRegister');
 const actor = { actorId: 'regression-author (synthetic)', tenantScope: 'https://example.invalid/audit', resolution: { roles: ['employee', 'marketingParticipant'], resolution: 'resolved' } };
-const workId = 'CW-SYNTHETIC_AUDIT';
+const workId = 'AICOE-SYNTHETIC_AUDIT';
 const sourceIds = FIXTURE_REGISTER.entries.map(e => e.id);
 const options = { now: () => new Date('2026-09-23T12:00:00Z') };
 let intent = 0;

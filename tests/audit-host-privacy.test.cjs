@@ -55,9 +55,9 @@ test('host wires the qualified business Marketing facade and verifies native cal
  part.context={pageContext:{web:{absoluteUrl:siteUrl,permissions:{hasPermission:()=>false}},user:{email:'audit@example.invalid',displayName:'Synthetic tester'}},spHttpClient:{get:async url=>({ok:true,status:200,json:async()=>url.includes('/currentuser?')?{Id:13,Email:currentEmail}:{value:result?[result]:[]}}),post:async(url,config,options)=>{const body=JSON.parse(options.body);posts.push(body);const value=[];result={RequestId:body.Title,ResultJson:JSON.stringify({protocol:'marketing.v1',requestId:body.Title,operation:body.Operation,tenantScope:siteUrl,actorId:'audit@example.invalid',value,valueHash:await payloadHash(value)})};return {ok:true,status:201,json:async()=>({Id:1})};}},aadHttpClientFactory:{getClient:async()=>{throw new Error('No live provider.');}}};
  await part.onInit();const service=part._servicesFor(part._core,createBranding('')).marketing;
  assert.deepEqual(service.liveReasons,[]);assert.equal(typeof service.recoverPending,'function');
- assert.deepEqual(await service.review.listArtifacts('CW-SYNTHETIC_TEST'),[]);assert.equal(posts.length,1);
+ assert.deepEqual(await service.review.listArtifacts('AICOE-SYNTHETIC_TEST'),[]);assert.equal(posts.length,1);
  assert.ok(!/actorId|tenantScope|roles|resolution/.test(posts[0].PayloadJson));
- currentEmail='other@example.invalid';await assert.rejects(()=>service.review.listArtifacts('CW-SYNTHETIC_TEST'));assert.equal(posts.length,1);
+ currentEmail='other@example.invalid';await assert.rejects(()=>service.review.listArtifacts('AICOE-SYNTHETIC_TEST'));assert.equal(posts.length,1);
  part.properties.marketingBindingJson=JSON.stringify({...binding,siteUrl:'https://foreign.sharepoint.com/sites/other'});
  assert.ok(part._servicesFor(part._core,createBranding('')).marketing.liveReasons.length>0);
 });

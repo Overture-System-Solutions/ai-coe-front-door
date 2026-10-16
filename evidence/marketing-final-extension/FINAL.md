@@ -1,4 +1,17 @@
-# Final Marketing extension receipt — offline candidate 0.1.1
+# Final Marketing extension receipt — offline candidate 0.1.2
+
+## 0.1.2: tenant-neutral rebuild, 2026-10-15
+
+0.1.2 is 0.1.1 rebuilt from the tenant-neutral front door. The surface is unchanged except one optional server setting: `workIdPrefix`, the tenant's Work ID prefix (blank or absent = `AICOE`, rule `^[A-Z][A-Z0-9]{1,15}$`, malformed refuses to start). Test fixtures use `AICOE-` Work IDs. `FINAL-RECEIPT.json` now records 0.1.2, from `python3 -B evidence/marketing-final-extension/verify.py` with Windows Node v22.16.0:
+
+- **59 runtime/source tests passed** (the 58 of 0.1.1 plus one for `workIdPrefix`), zero failures/skips/cancellations; **4 parent recovery tests passed**.
+- Strict no-emit TypeScript: 21 roots, zero diagnostics.
+- **9 tests against bytes extracted from the final ZIP passed.**
+- Final ZIP `backend/power-automate/marketing-runtime/out/marketing-runtime-offline-0.1.2.zip`, SHA-256 `a5d58285642ab86545c2bdd0eb5b68f4d1bec092991f41e66b263fc24baad794`; 42 ZIP members, 41 verified manifest files, 40 source inputs match current files.
+- The 0.1.0 and 0.1.1 archives left the tip: their compiled code carried the former client-specific Work ID format. Git history keeps them at commit `d7cd658` (see `backend/power-automate/marketing-runtime/out/NOTE.md`).
+
+The sections below are the 0.1.1 record of 2026-09-23. Its behavior statements still hold for 0.1.2; its counts and hashes are historical.
+
 
 ## Verified outcome
 
@@ -20,7 +33,7 @@
 - Final ZIP `backend/power-automate/marketing-runtime/out/marketing-runtime-offline-0.1.1.zip`
   - SHA-256 `b9fb673be4cdca98193883855716329255d45a30db92ed4bf2c16534374075da`
   - 42 ZIP members; 41 verified manifest files; 40 source inputs match current files.
-- Historical `0.1.0` is unchanged and copied under `out/historical/` before receipt replacement.
+- Historical `0.1.0` was unchanged and copied under `out/historical/` before receipt replacement (both 0.1.0 copies and 0.1.1 left the tip on 2026-10-15; see above).
   - SHA-256 `fd7a8ade1ff49d0dc5a36bb3318d2e0e5e25d74cf015db91b04fd9fd80b5da48`
   - Reviewer findings against that old hash remain valid historical observations, not tests of 0.1.1.
 

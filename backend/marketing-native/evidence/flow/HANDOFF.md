@@ -21,7 +21,7 @@ All paths below are relative to `backend/marketing-native/`.
 | `out/AICoEMarketingAutomation_1_0_0_0_UNBOUND_REVIEW_ONLY.zip` | `fb8fce459711abcb07059f9fdea2e15825824e3e3ed05be9a1f613a8c1ca0381` |
 | `out/pac-roundtrip/AICoEMarketingAutomation_1_0_0_0.zip` | `dab5648a6773d14c0a733c69d3917ec18db6d0d2ac4ea1cd4e5eb908fb0da224` |
 | `out/flow-definitions/AICoEMarketing01Command.json` | `d0ea864115ab867e20129279239d1acb5c70a6e85d1bbcc829353a9fbec7d588` |
-| `evidence/flow/preserved-before-finish/source-and-package.zip` | `09068b396a0251f62891f1677d69d75b9c266de3174046e2e70ed1f3c793f48c` |
+| `evidence/flow/preserved-before-finish/source-and-package.zip` (removed from the tip 2026-10-15; see that folder's `NOTE.md`) | `09068b396a0251f62891f1677d69d75b9c266de3174046e2e70ed1f3c793f48c` |
 
 Previous candidate preserved inside archive: `8b7e72df3c72a2fa06016bd92595075ad75f0107766141f38c3b6dc34e16d39a`; previous PAC ZIP: `b202d93bd74679ccb63e3f468e5f89dbd6f101e912b58d4d3c72e4a05aa4c6eb`.
 

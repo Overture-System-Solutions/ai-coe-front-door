@@ -5,7 +5,7 @@ const { fixture } = require('./runtime-fixture.cjs');
 const { MarketingRuntime } = require('../server/runtime.cjs');
 const schemaFor = kind => require(path.join(root, 'src/webparts/aiCoeFrontDoor/content/marketing/schemas', { campaignBrief: 'campaign-brief.v1.json', contentPlan: 'content-plan.v1.json', meetingFollowThrough: 'meeting-follow-through.v1.json' }[kind]));
 class Runtime extends MarketingRuntime { constructor(options) { super({ ...options, schemaFor }); } }
-const draft = async f => f.run('DraftCampaignBriefV1', { workId: 'CW-OFFLINE_TEST', objective: 'Review the invented offline example', audienceContext: ['Marketing team'], sourceIds: [f.entry.id] });
+const draft = async f => f.run('DraftCampaignBriefV1', { workId: 'AICOE-OFFLINE_TEST', objective: 'Review the invented offline example', audienceContext: ['Marketing team'], sourceIds: [f.entry.id] });
 
 test('dispatcher drafts with real server source/provider adapters at a fake external boundary', async () => {
   const f = await fixture(Runtime); const result = await draft(f);
@@ -27,9 +27,9 @@ test('all three dispatcher journeys retain parent/review/source lineage; revocat
     assert.equal(r.kind, 'recorded', JSON.stringify(r)); return r;
   };
   assert.equal((await accept(b, 'strategyVoice')).state, 'accepted');
-  const plan = await f.run('DraftContentPlanV1', { workId: 'CW-OFFLINE_TEST', briefArtifactId: b.envelope.artifactId, sourceIds: [f.entry.id] });
+  const plan = await f.run('DraftContentPlanV1', { workId: 'AICOE-OFFLINE_TEST', briefArtifactId: b.envelope.artifactId, sourceIds: [f.entry.id] });
   assert.equal(plan.kind, 'saved', JSON.stringify(plan)); assert.equal((await accept(plan, 'copyChannel')).state, 'accepted');
-  const meeting = await f.run('DraftMeetingFollowThroughV1', { workId: 'CW-OFFLINE_TEST', briefArtifactId: b.envelope.artifactId, sourceIds: [f.entry.id], notes: [{ sourceId: f.entry.id, versionOrETag: f.entry.versionOrETag }] });
+  const meeting = await f.run('DraftMeetingFollowThroughV1', { workId: 'AICOE-OFFLINE_TEST', briefArtifactId: b.envelope.artifactId, sourceIds: [f.entry.id], notes: [{ sourceId: f.entry.id, versionOrETag: f.entry.versionOrETag }] });
   assert.equal(meeting.kind, 'saved', JSON.stringify(meeting));
   for (const kind of load('content/marketing/artifactEnvelope').requiredReviewKinds(meeting.envelope)) await accept(meeting, kind);
   assert.equal((await f.run('GetArtifactV1', { artifactId: meeting.envelope.artifactId })).state, 'accepted');
@@ -78,7 +78,7 @@ test('durable draft receipt outage recovers the same draft without provider repl
 
 test('dispatcher blocks altered ingress, cross-author recovery, wrong review kind and permission-denied sources', async () => {
   const f = await fixture(Runtime), b = await draft(f);
-  const row = f.enqueue('ListArtifactsV1', { workId: 'CW-OFFLINE_TEST' }); row.EditorId = 8;
+  const row = f.enqueue('ListArtifactsV1', { workId: 'AICOE-OFFLINE_TEST' }); row.EditorId = 8;
   await assert.rejects(f.runtime().execute(row.Id), /immutable/i);
   await assert.rejects(f.run('RecoverMarketingIntentV1', { intentKey: f.requests[0].Title, kind: 'draft' }, 9), /denied/i);
   assert.equal((await f.run('RequestReviewV1', { target: ref(b.envelope), reviewKind: 'communicationsSend' })).failure, 'unauthorizedReviewer');
@@ -88,6 +88,6 @@ test('dispatcher blocks altered ingress, cross-author recovery, wrong review kin
 test('result publication requires readback of private Author-only ACLs', async () => {
   const f = await fixture(Runtime);
   f.setSpHook(async (method, url) => method === 'GET' && url.includes('RoleAssignments') ? { status: 200, body: { HasUniqueRoleAssignments: false, RoleAssignments: [] } } : undefined);
-  await assert.rejects(f.run('ListArtifactsV1', { workId: 'CW-OFFLINE_TEST' }), /projection.*grant|ACL/i);
+  await assert.rejects(f.run('ListArtifactsV1', { workId: 'AICOE-OFFLINE_TEST' }), /projection.*grant|ACL/i);
 });
 module.exports = { Runtime, draft };

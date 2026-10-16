@@ -14,7 +14,7 @@ async function fixture(Runtime = MarketingRuntime, shared = load) {
   const save = async (key, value) => { const before = await store.read(key); return store.write(key, JSON.stringify(value), before ? { expectedVersion: before.version } : { ifAbsent: true }); };
   for (const [ref, binding] of [['QUAL-RUNTIME', config], ['QUAL-PROVIDER', config.provider]]) await save(`qualification:${ref}`, { result: 'PASS', bindingHash: await payloadHash(binding), expiresAt: '2099-01-01T00:00:00Z' });
   const actors = { 7: 'author@example.invalid', 8: 'reviewer@example.invalid', 9: 'other@example.invalid' };
-  for (const [id, actorId] of Object.entries(actors)) await save(`member:${id}`, { actorId, enabled: true, roles: ['employee', id === '8' ? 'marketingReviewer' : 'marketingParticipant'], workIds: ['CW-OFFLINE_TEST'], audience: 'Marketing team' });
+  for (const [id, actorId] of Object.entries(actors)) await save(`member:${id}`, { actorId, enabled: true, roles: ['employee', id === '8' ? 'marketingReviewer' : 'marketingParticipant'], workIds: ['AICOE-OFFLINE_TEST'], audience: 'Marketing team' });
   const entry = { id: 'SRC-BRAND-NOTES', versionOrETag: '"v1"', location: config.siteUrl + '/Approved/notes.txt', owner: 'Offline test owner', asOf: '2026-09-23', classification: 'Internal', audience: 'Marketing team', mayNotProve: 'Any real claim. This is invented offline test content.' };
   const text = 'Offline test only. Participants agreed to review the draft. Ownership has not been agreed.';
   const register = { registerId: 'REG-MARKETING', version: '1.0', approval: 'approved', asOf: '2026-09-23', entries: [entry] };

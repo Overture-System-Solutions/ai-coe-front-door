@@ -1,0 +1,214 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "AI CoE Marketing Integrity",
+    "version": "1.0.0.0",
+    "description": "Private pure custom-code helper. Power Automate owns all I/O. No external forwarding or model execution; local registration candidate, not hosted qualification."
+  },
+  "host": "unused.invalid",
+  "basePath": "/",
+  "schemes": [
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "security": [],
+  "paths": {
+    "/evaluate": {
+      "post": {
+        "operationId": "Evaluate",
+        "summary": "Evaluate private Marketing integrity and durable plans",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "Mode",
+                "Payload"
+              ],
+              "properties": {
+                "Mode": {
+                  "type": "string",
+                  "enum": [
+                    "Preflight",
+                    "Plan",
+                    "InspectWrite",
+                    "VerifyWrite",
+                    "Page",
+                    "Projection",
+                    "VerifyProjection"
+                  ]
+                },
+                "Payload": {
+                  "type": "string",
+                  "description": "One JSON string serialized by the service-owned flow; never a second projected object."
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Valid=true is a calculation, not an external effect. Refusals are Valid=false and content-free Error. Flow must assert Valid equals boolean true.",
+            "schema": {
+              "type": "object",
+              "required": [
+                "Valid"
+              ],
+              "properties": {
+                "Valid": {
+                  "type": "boolean"
+                },
+                "Error": {
+                  "type": "string"
+                },
+                "Fingerprint": {
+                  "type": "string"
+                },
+                "NeedProvider": {
+                  "type": "boolean"
+                },
+                "ProviderWire": {
+                  "type": "object",
+                  "additionalProperties": true
+                },
+                "ProviderWireHash": {
+                  "type": "string"
+                },
+                "FinalizeRequired": {
+                  "type": "boolean"
+                },
+                "Fields": {
+                  "type": "object",
+                  "additionalProperties": true
+                },
+                "AlreadyApplied": {
+                  "type": "boolean"
+                },
+                "ItemId": {
+                  "type": "integer",
+                  "x-nullable": true
+                },
+                "ExpectedETag": {
+                  "type": "string",
+                  "x-nullable": true
+                },
+                "Rows": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": true
+                  }
+                },
+                "Next": {
+                  "type": "string"
+                },
+                "Projection": {
+                  "type": "object",
+                  "required": [
+                    "protocol",
+                    "requestId",
+                    "operation",
+                    "tenantScope",
+                    "actorId",
+                    "value",
+                    "valueHash"
+                  ],
+                  "additionalProperties": false,
+                  "properties": {
+                    "protocol": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "operation": {
+                      "type": "string"
+                    },
+                    "tenantScope": {
+                      "type": "string"
+                    },
+                    "actorId": {
+                      "type": "string"
+                    },
+                    "valueHash": {
+                      "type": "string"
+                    },
+                    "value": {}
+                  }
+                },
+                "SourceRequests": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "sourceId",
+                      "versionOrETag",
+                      "PermissionUri",
+                      "MetadataUri",
+                      "ContentUri"
+                    ],
+                    "properties": {
+                      "sourceId": {
+                        "type": "string"
+                      },
+                      "versionOrETag": {
+                        "type": "string"
+                      },
+                      "PermissionUri": {
+                        "type": "string"
+                      },
+                      "MetadataUri": {
+                        "type": "string"
+                      },
+                      "ContentUri": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "Writes": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "Key",
+                      "Value",
+                      "ExpectedVersion"
+                    ],
+                    "additionalProperties": false,
+                    "properties": {
+                      "Key": {
+                        "type": "string"
+                      },
+                      "Value": {
+                        "type": "object",
+                        "additionalProperties": true
+                      },
+                      "ExpectedVersion": {
+                        "type": "string",
+                        "x-nullable": true
+                      }
+                    }
+                  }
+                },
+                "Result": {
+                  "description": "Exact marketing.v1 operation value (object, array or null). Provisional storeVersion is private until finalization; never publish it."
+                }
+              },
+              "additionalProperties": false
+            }
+          }
+        }
+      }
+    }
+  }
+}

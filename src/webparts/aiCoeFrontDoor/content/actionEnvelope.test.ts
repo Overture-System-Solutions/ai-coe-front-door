@@ -19,7 +19,7 @@ import { webcrypto } from 'crypto';
 import { TextEncoder as NodeTextEncoder } from 'util';
 
 const SCOPE: string = 'https://example.sharepoint.com/sites/aicoe';
-const WORK_ID: string = 'CW-OVT_AICOE_20260920_AB12CD34';
+const WORK_ID: string = 'AICOE-OVT_AICOE_20260920_AB12CD34';
 
 /**
  * The test environment offers no `crypto.subtle`, which is exactly the case the module fails closed on. A real
@@ -102,7 +102,7 @@ describe('idempotency key', () => {
     const base = { scope: SCOPE, workId: WORK_ID, actionClass: 'MESSAGE_SEND' as ActionClass, payloadHash: hash };
     const key: string = idempotencyKey(base);
     expect(idempotencyKey({ ...base, scope: 'https://other.sharepoint.com/sites/aicoe' })).not.toBe(key);
-    expect(idempotencyKey({ ...base, workId: 'CW-OVT_AICOE_20260920_ZZ99ZZ99' })).not.toBe(key);
+    expect(idempotencyKey({ ...base, workId: 'AICOE-OVT_AICOE_20260920_ZZ99ZZ99' })).not.toBe(key);
     expect(idempotencyKey({ ...base, actionClass: 'CONTENT_PUBLISH' })).not.toBe(key);
   });
 

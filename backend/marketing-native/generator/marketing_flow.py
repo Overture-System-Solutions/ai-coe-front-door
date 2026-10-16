@@ -8,7 +8,7 @@ from pathlib import Path
 import uuid
 
 ROOT = Path(__file__).resolve().parents[1]
-DONOR_SHA256 = 'e4a1bd55c5402dee025170551113010ae481580dd9372036b047bd9ba9e9df92'
+DONOR_SHA256 = 'b4b9b543b776372fb23bd85a305f7f1ad0654f837b9669511cd320b76c649640'
 assert hashlib.sha256((ROOT / 'generator/wdl.py').read_bytes()).hexdigest() == DONOR_SHA256
 _spec = importlib.util.spec_from_file_location('marketing_pinned_wdl', ROOT / 'generator/wdl.py')
 assert _spec is not None and _spec.loader is not None
@@ -19,7 +19,10 @@ Flow, recurrence, q = _wdl.Flow, _wdl.recurrence, _wdl.q
 HELPER_API = 'UNBOUND_MARKETING_INTEGRITY'
 HELPER_LOGICAL = HELPER_REF = 'aicoe_marketingintegrity'
 SP_REF = 'aicoe_marketing_sharepoint'
+FLOW_NAME = 'AI CoE Marketing 01 Command'
 FLOW_ID = str(uuid.uuid5(uuid.NAMESPACE_URL, 'aicoe/marketing/1.0.0.0/command'))
+# The donor pins every workflow identity by name; register this flow's own preserved identity in the private copy.
+_wdl.WORKFLOW_IDS[FLOW_NAME] = FLOW_ID
 HELPER_ID = str(uuid.uuid5(uuid.NAMESPACE_URL, 'aicoe/marketing/1.0.0.0/integrity'))
 CONFIG = json.loads((ROOT.parent / 'power-automate/marketing-runtime/config.example.json').read_text())
 CONFIG.update(controllerQualified=False, securityQualified=False)
@@ -33,7 +36,7 @@ def secure(action):
 
 class MarketingFlow(Flow):
     def __init__(self):
-        super().__init__('AI CoE Marketing 01 Command',
+        super().__init__(FLOW_NAME,
                          'OFF unbound review candidate; sole serialized Marketing writer; no sends.',
                          recurrence('Minute', 5), literal={'site': "@outputs('Cfg')?['siteUrl']"})
         self.guid = FLOW_ID

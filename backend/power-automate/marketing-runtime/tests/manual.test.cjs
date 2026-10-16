@@ -3,7 +3,7 @@ const { test } = require('node:test');
 const { assert, load, ref } = require('./helpers.cjs');
 const { fixture } = require('./runtime-fixture.cjs');
 
-const workId = 'CW-OFFLINE_TEST';
+const workId = 'AICOE-OFFLINE_TEST';
 const manualBrief = f => ({ workId, kind: 'campaignBrief', sourceIds: [f.entry.id], payload: {
   objective: 'Hand-authored offline example', audience: ['Marketing team'], painPoints: ['Unconfirmed ownership'],
   message: [{ text: 'Participants agreed to review the draft.', sources: [{ sourceId: f.entry.id, versionOrETag: f.entry.versionOrETag }] }],
@@ -63,12 +63,12 @@ test('manual content-plan and follow-through use verified accepted parents and e
 test('authorized work selector reads only the current verified Author member workIds', async () => {
   const f = await fixture();
   const before = JSON.parse((await f.store.read('member:7')).value);
-  await f.save('member:7', { ...before, workIds: ['CW-OFFLINE_TEST', 'CW-OFFLINE_TEST', 'CW-SECOND_TEST'] });
-  await f.save('member:9', { ...before, actorId: f.actors[9], workIds: ['CW-PRIVATE_OTHER'] });
-  assert.deepEqual(await f.run('ListMarketingWorkV1', {}), ['CW-OFFLINE_TEST', 'CW-SECOND_TEST']);
-  assert.deepEqual(await f.run('ListMarketingWorkV1', {}, 9), ['CW-PRIVATE_OTHER']);
+  await f.save('member:7', { ...before, workIds: ['AICOE-OFFLINE_TEST', 'AICOE-OFFLINE_TEST', 'AICOE-SECOND_TEST'] });
+  await f.save('member:9', { ...before, actorId: f.actors[9], workIds: ['AICOE-PRIVATE_OTHER'] });
+  assert.deepEqual(await f.run('ListMarketingWorkV1', {}), ['AICOE-OFFLINE_TEST', 'AICOE-SECOND_TEST']);
+  assert.deepEqual(await f.run('ListMarketingWorkV1', {}, 9), ['AICOE-PRIVATE_OTHER']);
   await assert.rejects(f.run('ListMarketingWorkV1', { actorId: f.actors[9] }), /schema|authority/i);
-  await f.save('member:7', { ...before, workIds: ['CW-OFFLINE_TEST', 'not canonical'] });
+  await f.save('member:7', { ...before, workIds: ['AICOE-OFFLINE_TEST', 'not canonical'] });
   await assert.rejects(f.run('ListMarketingWorkV1', {}), /work|canonical/i);
   await f.save('member:7', { ...before, enabled: false });
   await assert.rejects(f.run('ListMarketingWorkV1', {}), /membership/i);

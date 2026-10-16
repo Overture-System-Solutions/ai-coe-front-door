@@ -2,8 +2,13 @@
 import copy, hashlib, json, os, pathlib, subprocess, unittest
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 DOTNET = os.environ.get('DOTNET', '/home/far_cdx/.cache/oss-demo-dotnet/dotnet')
-DLL = ROOT / 'connector/local/bin/Release/net10.0/MarketingHarness.dll'
+DEFAULT_DLL = ROOT / 'connector/local/bin/Release/net10.0/MarketingHarness.dll'
 VECTORS = json.loads((ROOT/'evidence/integration/node-reference-vectors.json').read_text())['cases']
+# The vectors are captured for the default build target, the committed Script.cs. verify_release.py points
+# MARKETING_HELPER_DLL at the helper compiled from the exact packaged script.
+DLL = pathlib.Path(os.environ.get('MARKETING_HELPER_DLL', DEFAULT_DLL))
+WORK_ID = next(c for c in VECTORS if c['name']=='authorized work list')['expectedValue'][0]
+PREFIX = WORK_ID.split('-', 1)[0]
 def canonical(v): return json.dumps(v, sort_keys=True, ensure_ascii=False, separators=(',', ':'))
 def sha(v): return hashlib.sha256(v.encode()).hexdigest()
 def evaluate(mode, payload):
@@ -49,7 +54,7 @@ class ManualAndModesTests(unittest.TestCase):
         p=case('authorized work list')['input'];cfg=p['Config']
         r=evaluate('Page',{'Config':cfg,'Page':{'value':[{'Id':1}], '@odata.nextLink':cfg['siteUrl']+"/_api/web/lists(guid='"+cfg['canonicalListId']+"')/items?$skiptoken=Paged%3DTRUE"}});self.assertTrue(r['Valid'],r);self.assertTrue(r['Next'].startswith('_api/'))
         self.assertFalse(evaluate('Page',{'Config':cfg,'Page':{'value':[], '@odata.nextLink':'https://other.invalid/items'}})['Valid'])
-        r=evaluate('Projection',{'Config':cfg,'Row':p['Row'],'Result':['CW-OFFLINE_TEST']});self.assertTrue(r['Valid'],r)
+        r=evaluate('Projection',{'Config':cfg,'Row':p['Row'],'Result':[WORK_ID]});self.assertTrue(r['Valid'],r)
         q={'Config':cfg,'Row':p['Row'],'Projection':r['Projection'],'Rows':[dict(r['Fields'],Id=99)],'Permissions':{'HasUniqueRoleAssignments':True,'RoleAssignments':[{'PrincipalId':7,'RoleDefinitionBindings':[{'Id':1073741826}]},{'PrincipalId':42,'RoleDefinitionBindings':[{'Id':1073741829}]}]}}
         self.assertTrue(evaluate('VerifyProjection',q)['Valid']);q['Permissions']['RoleAssignments'].append({'PrincipalId':8,'RoleDefinitionBindings':[{'Id':1073741826}]});self.assertFalse(evaluate('VerifyProjection',q)['Valid'])
 class ReviewAndParentTests(unittest.TestCase):
@@ -89,7 +94,7 @@ class ProviderRecoveryTests(unittest.TestCase):
         for mutate in [lambda r:r.update(stop_reason='max_tokens'),lambda r:r.update(stop_details={}),lambda r:r['content'].append({'type':'text','text':'{}'}),lambda r:r.update(role='user')]:
             p=copy.deepcopy(AI_VECTORS[0]['input']);mutate(p['ProviderResponse']);self.assertFalse(evaluate('Plan',p)['Valid'])
     def test_provider_output_identity_claim_and_delivery_refusals(self):
-        for mutate in [lambda v:v.update(workId='CW-OTHER'),lambda v:v['message'][0].update(sources=[]),lambda v:v.update(send=True),lambda v:v['message'][0]['sources'][0].update(sourceId='UNKNOWN-SOURCE')]:
+        for mutate in [lambda v:v.update(workId=PREFIX+'-OTHER'),lambda v:v['message'][0].update(sources=[]),lambda v:v.update(send=True),lambda v:v['message'][0]['sources'][0].update(sourceId='UNKNOWN-SOURCE')]:
             p=copy.deepcopy(AI_VECTORS[0]['input']);raw=json.loads(p['ProviderResponse']['content'][0]['text']);mutate(raw);p['ProviderResponse']['content'][0]['text']=json.dumps(raw);self.assertFalse(evaluate('Plan',p)['Valid'])
     def test_recovery_is_not_cached_source_disclosure(self):
         p=case('read permitted source')['input'];key=p['Records'][0]['RecordKey']

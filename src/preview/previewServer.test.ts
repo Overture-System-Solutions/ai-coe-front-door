@@ -219,7 +219,7 @@ describe('offline preview server', () => {
     expect(host.body.match(/^import\b.*$/gm)).toEqual(["import { PRACTICE_CORE_STORE_KEY, practiceJourney, withPracticeCases } from './practiceCases.js';"]);
     const example: IResponse = await get(`${base}/practiceCases.js`);
     expect(example.status).toBe(200);
-    expect(example.body).toContain('CW-PRACTICE-0001');
+    expect(example.body).toContain('AICOE-PRACTICE-0001');
     expect(example.body).not.toMatch(/^import\b/m);
   });
 

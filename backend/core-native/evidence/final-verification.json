@@ -1,11 +1,11 @@
 {
-  "verifiedAt": "2026-09-23T13:38:16.231756+00:00",
+  "verifiedAt": "2026-10-15T22:20:43.844462+00:00",
   "scope": "OFFLINE_CANDIDATE_ONLY",
   "solution": "AICoECoreAutomation",
   "version": "3.0.0.1",
   "transport": "v0.2.0",
   "tests": {
-    "tests": 30,
+    "tests": 58,
     "failures": 0,
     "errors": 0,
     "skipped": 0
@@ -27,6 +27,34 @@
     "tests.test_provisioning.test_fresh_provisioning_and_repeat_preserve_operator_state",
     "tests.test_provisioning.test_denied_discovery_never_creates_a_list",
     "tests.test_provisioning.test_existing_field_type_drift_is_logged_not_silently_converted",
+    "tests.test_target.test_default_build_names_no_site_or_prefix_but_the_neutral_target",
+    "tests.test_target.test_target_file_drives_site_prefix_policy_script_and_binding",
+    "tests.test_target.test_target_file_is_strict[bad0]",
+    "tests.test_target.test_target_file_is_strict[bad1]",
+    "tests.test_target.test_target_file_is_strict[bad2]",
+    "tests.test_target.test_target_file_is_strict[bad3]",
+    "tests.test_target.test_target_file_is_strict[bad4]",
+    "tests.test_target.test_target_file_is_strict[bad5]",
+    "tests.test_target.test_target_file_is_strict[bad6]",
+    "tests.test_target.test_target_file_is_strict[bad7]",
+    "tests.test_target.test_target_file_is_strict[bad8]",
+    "tests.test_target.test_committed_script_and_policies_are_the_default_rendering",
+    "tests.test_target.test_v9_allows_only_the_build_targets_own_site",
+    "tests.test_target.test_workflow_identities_are_pinned_not_derived_from_a_tenant_seed",
+    "tests.test_target.test_upstream_copies_are_recorded_neutral_renderings_with_historical_pins",
+    "tests.test_target.test_arb_owner_note_is_optional_and_neutral_by_default",
+    "tests.test_target.test_arb_owner_note_is_strict[]",
+    "tests.test_target.test_arb_owner_note_is_strict[   ]",
+    "tests.test_target.test_arb_owner_note_is_strict[3]",
+    "tests.test_target.test_arb_owner_note_is_strict[None]",
+    "tests.test_target.test_arb_owner_note_is_strict[note4]",
+    "tests.test_target.test_arb_owner_note_is_strict[two\\nlines]",
+    "tests.test_target.test_arb_owner_note_is_strict[tab\\there]",
+    "tests.test_target.test_arb_owner_note_is_strict[@{concat(1)}]",
+    "tests.test_target.test_arb_owner_note_is_strict[mail @ host]",
+    "tests.test_target.test_arb_owner_note_is_strict[xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx]",
+    "tests.test_target.test_target_arb_owner_note_replaces_only_the_authority_arb_note",
+    "tests.test_target.test_redaction_r1_is_read_from_the_targets_arb_owner_note",
     "tests.test_wdl_execution.test_generated_create_persists_verified_response_and_read_grant",
     "tests.test_wdl_execution.test_crash_after_every_durable_boundary_resumes_without_duplicates",
     "tests.test_wdl_execution.test_generated_clarification_packets_conflict_and_rejection",
@@ -43,55 +71,102 @@
     "tests.test_wdl_execution.test_other_author_cannot_read_existing_or_missing_work"
   ],
   "structuralDefinitionsPassed": 12,
-  "originalSourcePins": [
+  "target": {
+    "site": "https://contoso.sharepoint.com/sites/AICoE",
+    "work_id_prefix": "AICOE"
+  },
+  "policy": {
+    "id": "AICOE-POLICY-1",
+    "sourceSha256": "cd0d19ba3a2b051402d33927e851547289e34a2fa4fbb384ce737896f8794b2f"
+  },
+  "upstreamPins": [
     {
       "path": "build.py",
-      "sha256": "987c5e19fed3a76a5c9ab483e2c435ef98318995f26e09c0e3d3636781a8dad8",
-      "bytes": 4526,
-      "copyMatches": true,
-      "originalMatches": true
+      "historicalSha256": "987c5e19fed3a76a5c9ab483e2c435ef98318995f26e09c0e3d3636781a8dad8",
+      "historicalBytes": 4526,
+      "neutralSha256": "987c5e19fed3a76a5c9ab483e2c435ef98318995f26e09c0e3d3636781a8dad8",
+      "neutralBytes": 4526,
+      "edits": 0,
+      "changes": "unchanged (names no client value)",
+      "neutralCopyMatches": true,
+      "originalMatchesHistoricalPin": true
     },
     {
       "path": "flows.py",
-      "sha256": "b5535aafaed2c88dcd1f36b855c513e35701e08e7ffd950f04b6eaec3cb92b8d",
-      "bytes": 82839,
-      "copyMatches": true,
-      "originalMatches": true
+      "historicalSha256": "b5535aafaed2c88dcd1f36b855c513e35701e08e7ffd950f04b6eaec3cb92b8d",
+      "historicalBytes": 82839,
+      "neutralSha256": "b90cac9bf8506e9dd4ac3b7281d6bf8c6ba0829ed4861221b94c8b713e5665c7",
+      "neutralBytes": 82851,
+      "edits": 4,
+      "changes": "WorkID prefix in new_id() and the three CORR-/EVP- prefix strips -> neutral prefix",
+      "neutralCopyMatches": true,
+      "originalMatchesHistoricalPin": true
     },
     {
       "path": "model.py",
-      "sha256": "b148dd01f221715b5eb62de6fc7f57b8132f9e417b1b0efc45381661b156818c",
-      "bytes": 14175,
-      "copyMatches": true,
-      "originalMatches": true
+      "historicalSha256": "b148dd01f221715b5eb62de6fc7f57b8132f9e417b1b0efc45381661b156818c",
+      "historicalBytes": 14175,
+      "neutralSha256": "e61b699087ce5fd906495ccf861e73738aa78ec3a9cd135f58a3cf30c628aeba",
+      "neutralBytes": 14172,
+      "edits": 3,
+      "changes": "docstring design-document reference without the client prefix; DEFAULT_SITE -> neutral placeholder site; staff names in the Authority_ARB note redacted (R1)",
+      "neutralCopyMatches": true,
+      "originalMatchesHistoricalPin": true
     },
     {
       "path": "package.py",
-      "sha256": "1b24fa3aad34bd06880b36ef600d7186b68b126dcf587bf5c4162719b22fad85",
-      "bytes": 8570,
-      "copyMatches": true,
-      "originalMatches": true
+      "historicalSha256": "1b24fa3aad34bd06880b36ef600d7186b68b126dcf587bf5c4162719b22fad85",
+      "historicalBytes": 8570,
+      "neutralSha256": "fc1945df3f0ae51fd55f5a9f3d2345b69ae52f2e718e7f9b7053dd81433338f1",
+      "neutralBytes": 8567,
+      "edits": 1,
+      "changes": "solution description schema family without the client prefix",
+      "neutralCopyMatches": true,
+      "originalMatchesHistoricalPin": true
     },
     {
       "path": "reference.py",
-      "sha256": "1f1291aa16ad15d06da5b2dc3f0d3f2e4712ddd55f911e837db45f0e9d45bb76",
-      "bytes": 28893,
-      "copyMatches": true,
-      "originalMatches": true
+      "historicalSha256": "1f1291aa16ad15d06da5b2dc3f0d3f2e4712ddd55f911e837db45f0e9d45bb76",
+      "historicalBytes": 28893,
+      "neutralSha256": "cb7c5efe0553c74021d7438a7090a7e1d8467c77625529f05faffbdb2331041d",
+      "neutralBytes": 28899,
+      "edits": 2,
+      "changes": "reference-model WorkID prefix -> neutral prefix",
+      "neutralCopyMatches": true,
+      "originalMatchesHistoricalPin": true
     },
     {
       "path": "validate.py",
-      "sha256": "7c5af369a90ff54d3826118a52c6fb966223018c990b8eaa885e66a3e9549197",
-      "bytes": 6389,
-      "copyMatches": true,
-      "originalMatches": true
+      "historicalSha256": "7c5af369a90ff54d3826118a52c6fb966223018c990b8eaa885e66a3e9549197",
+      "historicalBytes": 6389,
+      "neutralSha256": "647adad721c02ba8b5d0f6cb51e8215aacfbae1e84ccbe015999fd94620fea16",
+      "neutralBytes": 6385,
+      "edits": 2,
+      "changes": "V9 client host -> neutral placeholder host",
+      "neutralCopyMatches": true,
+      "originalMatchesHistoricalPin": true
     },
     {
       "path": "wdl.py",
-      "sha256": "e4a1bd55c5402dee025170551113010ae481580dd9372036b047bd9ba9e9df92",
-      "bytes": 10481,
-      "copyMatches": true,
-      "originalMatches": true
+      "historicalSha256": "e4a1bd55c5402dee025170551113010ae481580dd9372036b047bd9ba9e9df92",
+      "historicalBytes": 10481,
+      "neutralSha256": "e9753370842cf2e39a44d20c8e01d8fe739baba2765c0db598f46fb205b47d0c",
+      "neutralBytes": 11234,
+      "edits": 13,
+      "changes": "workflow GUID seed string (client prefix) replaced by the six identities it produced, pinned verbatim",
+      "neutralCopyMatches": true,
+      "originalMatchesHistoricalPin": true
+    },
+    {
+      "path": "routing-policy.yaml",
+      "historicalSha256": "51210529f823b1571e737c40f21a97921e498c60f8e132374171634138ccf736",
+      "historicalBytes": 1933,
+      "neutralSha256": "cd0d19ba3a2b051402d33927e851547289e34a2fa4fbb384ce737896f8794b2f",
+      "neutralBytes": 1936,
+      "edits": 1,
+      "changes": "policy expression-language id -> <neutral prefix>-POLICY-1",
+      "neutralCopyMatches": true,
+      "originalMatchesHistoricalPin": "ORIGINAL_NOT_PRESENT_LOCALLY"
     }
   ],
   "originalPackageSha256": "511d054db414b8c24b473035a29c1048544d0a213ad3d624c5cc7d980bcdedd5",
@@ -105,24 +180,24 @@
   },
   "packages": {
     "out/AICoECoreAutomation_3_0_0_1_UNBOUND_REVIEW_ONLY.zip": {
-      "sha256": "b2f7e7717de5436a9ba132d9d3c96dd2afa0a3fc2300dbeb679657fec4eabfb4",
-      "bytes": 44303
+      "sha256": "fa5bafac2d87db42397c82709164babd798f9e1b280f121b6c247be1210c1b56",
+      "bytes": 44226
     },
     "out/AICoECoreAutomation_3_0_0_1_UNBOUND_REVIEW_ONLY_literal-fallback.zip": {
-      "sha256": "067df0118be2e2c4e6d78f7742708f4c699bfcec425a70a75a13d3fa237fe3c6",
-      "bytes": 41340
+      "sha256": "aed1eafa0ab686016c2adef9a1daf20238dcc0e9645a2fde90141bea93097758",
+      "bytes": 41271
     },
     "out/AICoECoreIntegrity_3_0_0_1_REGISTRATION_CANDIDATE.zip": {
-      "sha256": "2cc4336a59d220e5b50e8c3a7a58e86fa5bbada7989e5e438a2ccf534a3d4b85",
-      "bytes": 28395
+      "sha256": "d4746534fbfa296fd232c7d09b364677f2041fc5a0b8b4cfdb566ebb59411e18",
+      "bytes": 28401
     },
     "out/pac-roundtrip/primary.zip": {
-      "sha256": "4762072aad9ab8bc72e0548255c784fc5fa952c33c52482f6e9f0c42f2829b37",
-      "bytes": 42525
+      "sha256": "4706620f5b8ba180862a22c71d8c0ba35cfe5013abd29f7f8a8505a96b71ca74",
+      "bytes": 42442
     },
     "out/pac-roundtrip/literal.zip": {
-      "sha256": "9a569c1147d80b741addd34a8b328fc7dfaac3085960b5bf6c2d5815dda38590",
-      "bytes": 39520
+      "sha256": "f7b4e82ee1afc72009ddda51d6f371ab6fee1b347c12b0d1a210e51a924c09f7",
+      "bytes": 39439
     }
   },
   "pac": {
@@ -163,8 +238,9 @@
     "freshProvisionedListCount": 15
   },
   "compiledHelper": {
-    "scriptSha256": "cc87f233b3aedcc3a022d40ae40a77387d7bd4684253c3dbebdd3d2fb6aa8c1a",
-    "dllSha256": "7ecb0e833db16ca7fa81ce98c49c199c7be770ca1fa8579729b38b48629ef96d",
+    "scriptSha256": "1ee99d989f1e50f69cd84c24a486736d12879dcfe95c9b3174a0db8290c819ac",
+    "packagedScriptSha256": "1ee99d989f1e50f69cd84c24a486736d12879dcfe95c9b3174a0db8290c819ac",
+    "dllSha256": "94bfd688b486c7ed2f9e32d297fc300bb79db03dc1cede77c6efba61ef286b7e",
     "compiler": "dotnet 10.0.401; C# 7.3; local ScriptBase shim",
     "compileLog": "evidence/final-compile.log"
   },
@@ -173,22 +249,23 @@
     "connectorId": null,
     "logicalName": "aicoe_coreintegrity",
     "qualificationReceipt": null,
-    "scriptSha256": "cc87f233b3aedcc3a022d40ae40a77387d7bd4684253c3dbebdd3d2fb6aa8c1a",
+    "scriptSha256": "1ee99d989f1e50f69cd84c24a486736d12879dcfe95c9b3174a0db8290c819ac",
     "deployable": false,
     "bindingStatus": "UNBOUND_REVIEW_ONLY"
   },
   "sourceSnapshot": {
-    "generator/binding.py": "1c1116f1226467837cda2b8c18ab55ee757d67a28b3455d820f883987f9f5444",
-    "generator/build.py": "52ae339e6b059e48e21ad0a69e5a48381a706ed11616fe9b5448035d0845b33b",
-    "generator/flows.py": "87e9dbb061dbafb63f43d809625fd1b002656cca6476069ea8a84a47aa87b094",
-    "generator/model.py": "bb4561841e14750cbab456d034c3b87ef8d37ca70829c09bf14d9cd0f1b25d7e",
+    "generator/binding.py": "3d9689b3ae883b99280a059390cfc81348366f4ab33a6131bb40d722c6189743",
+    "generator/build.py": "9a0cc7763f486d865121e418bf402055e807dc172aef655512bbfd9956be16aa",
+    "generator/build_target.py": "f6788e57db78568dca03471e3f358cec5ebc37735664aab5aacc0d5f4a9daa43",
+    "generator/flows.py": "23ce3521c387998be26b32186556296e4aa893b0df4d39de2bfbee2b46f75c26",
+    "generator/model.py": "63a983f7945f1b42413c4a28985ddf9e49619de8cc72f071d7e984ada717e49e",
     "generator/native_runtime.py": "77c525b6fab434c9379b4d609d5f48e21aa96849b9658afeb77f27b2b3697e75",
-    "generator/package.py": "bb39ae86413b684eba5f05b90b1c9876b20e5b5a28d74285e74e82bb8ac0a430",
-    "generator/reference.py": "1f1291aa16ad15d06da5b2dc3f0d3f2e4712ddd55f911e837db45f0e9d45bb76",
-    "generator/validate.py": "7c5af369a90ff54d3826118a52c6fb966223018c990b8eaa885e66a3e9549197",
-    "generator/wdl.py": "e4a1bd55c5402dee025170551113010ae481580dd9372036b047bd9ba9e9df92",
+    "generator/package.py": "24e8fdf4c3d7efbca0013c0e434bf26f16b671982e1515d70dba6d49cd9e29f3",
+    "generator/reference.py": "f3794ba1e2da7a06ab4acdd4493ae31a0f8255fbc91430a4d7ffc454ab4295ea",
+    "generator/validate.py": "54f014236aa932b724fe46fc608280e44bc17dde1ccd99cafe965514059f2f20",
+    "generator/wdl.py": "b4b9b543b776372fb23bd85a305f7f1ad0654f837b9669511cd320b76c649640",
     "connector/README.md": "9bdfddd57f2bf27f80738536d7e8aff2ec50df1c3ae2588d6648241b5b5856df",
-    "connector/Script.cs": "cc87f233b3aedcc3a022d40ae40a77387d7bd4684253c3dbebdd3d2fb6aa8c1a",
+    "connector/Script.cs": "1ee99d989f1e50f69cd84c24a486736d12879dcfe95c9b3174a0db8290c819ac",
     "connector/apiDefinition.swagger.json": "5d1277880d9627ed1b79fe886ec03e506016d1db790ab6d0f38a16c22caeb832",
     "connector/apiProperties.json": "6924f3674e96205dbac22eafbb11f5d8b5fa5e029f81ebb6e7c63070960b822a",
     "connector/deployment.json": "ad449762298e18440f513b730d305e5e34853f912905cda3ddcf363dfb5d7ed9",
@@ -196,14 +273,23 @@
     "connector/local/Harness.cs": "798167853c4412e36616d3a3a3eab5aa042af1715c69c04a7664a1ac41a2fca9",
     "tests/conftest.py": "c386d87cc747843843aba5c5c3f3f1bab398cde8a4e7225355ad3eb8693d1d6e",
     "tests/provisioning_harness.py": "2d366bedb1ca8e3bad0b69abf8006d2657a3b789c9e5dc5eee426a18597ed5ee",
-    "tests/test_connector.py": "90efd5965b4bd5adabb3cc6473346b4c6caa20bf0bbe1e531a2a3dbb5fdc0fde",
+    "tests/test_connector.py": "cd214f2aa15ef4ea993502997a6cd9fc14b79d8c6d9a177aae241f7888d27325",
     "tests/test_flows.py": "c57be3a76e4d382e3c21dade7589c5cdaed5aa67e49d64373a6c9275031b9052",
     "tests/test_packaging.py": "13a35e2135bfa71e8d6941e380adaf567499b597f180ad40492b63592e2f6ede",
     "tests/test_provisioning.py": "ef0bd861258b27883255f1bc22b228801b4e67f8c3d76661492a352b2fe1579b",
-    "tests/test_wdl_execution.py": "0099824d122a584fe3404d28e2ed3f23f579092d5db208958478c810de4a3ad1",
+    "tests/test_target.py": "a30c452fc58da9b9ef15ee66a455d7dce5d0985394079ed0653688ce4ad602c8",
+    "tests/test_wdl_execution.py": "3d782c57e519231df6bcac3af0a3c4e2129fadcff5c4873513e7acbf2d0a5841",
     "tests/wdl_harness.py": "86e0519b40944efdadd0b42640bb7086697101956f6b305f242e480efffcf3c9",
     "provisioning/Set-CoreIsolation.ps1": "28faf85b5302ac1ee510936ca0a28b1ec693b7f77352b16098f8a70864110d05",
-    "contract/routing-policy.json": "d85043582897ae093dd381ea88713aa69f5afb5e26e392cd32fb73b9e0c3fab4"
+    "contract/routing-policy.json": "14fc5976819d152692e8391014f89154e88979137e1da5b3edfcaee679174c35",
+    "upstream/build.py": "987c5e19fed3a76a5c9ab483e2c435ef98318995f26e09c0e3d3636781a8dad8",
+    "upstream/flows.py": "b90cac9bf8506e9dd4ac3b7281d6bf8c6ba0829ed4861221b94c8b713e5665c7",
+    "upstream/model.py": "e61b699087ce5fd906495ccf861e73738aa78ec3a9cd135f58a3cf30c628aeba",
+    "upstream/package.py": "fc1945df3f0ae51fd55f5a9f3d2345b69ae52f2e718e7f9b7053dd81433338f1",
+    "upstream/reference.py": "cb7c5efe0553c74021d7438a7090a7e1d8467c77625529f05faffbdb2331041d",
+    "upstream/routing-policy.yaml": "cd0d19ba3a2b051402d33927e851547289e34a2fa4fbb384ce737896f8794b2f",
+    "upstream/validate.py": "647adad721c02ba8b5d0f6cb51e8215aacfbae1e84ccbe015999fd94620fea16",
+    "upstream/wdl.py": "e9753370842cf2e39a44d20c8e01d8fe739baba2765c0db598f46fb205b47d0c"
   },
   "notClaimed": [
     "registered or qualified helper connector",

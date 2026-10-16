@@ -4,6 +4,7 @@
   "CoreBindingJson": "",
   "MarketingBindingJson": "",
   "OrganizationName": "Contoso",
+  "WorkIdPrefix": "",
   "GovernanceReference": "",
   "ReviewSystemName": "",
   "DraftServiceUrl": "",

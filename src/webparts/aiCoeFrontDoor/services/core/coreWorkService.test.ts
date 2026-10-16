@@ -3,6 +3,7 @@
  * command, identity isolation, live-disabled reasons, and the packet projection as an extension.
  */
 import { MemoryStorageBackend } from '../marketing/artifactStore';
+import { configureWorkIdPrefix } from '../../content/workIdentity';
 import { parseRequest } from './coreContract';
 import type { IS1 } from './coreContract';
 import { LIVE_CORE_REASONS } from './coreConfig';
@@ -51,8 +52,25 @@ describe('synthetic Binding A work service', () => {
     expect(created.work.version).toBe(1);
     expect(created.work.state).toBe('CLARIFYING');
     expect(created.work.openEvidenceGaps).toEqual(['S1_PROBLEM_STATEMENT', 'S1_SPONSOR']);
-    expect(created.work.workId.indexOf('CW-LOCAL_')).toBe(0);
+    expect(created.work.workId.indexOf('AICOE-LOCAL_')).toBe(0);
     expect(service.associationOf(created.work.workId)?.workId).toBe(created.work.workId);
+  });
+
+  it('mints and validates Work IDs under the page\'s configured prefix, and refuses another prefix\'s', async () => {
+    configureWorkIdPrefix('NW');
+    try {
+      const service: ICoreWorkService = createSyntheticCoreWorkService(PAT.actorId);
+      const created = await service.createOrResume(PAT, { s1: incompleteS1() });
+      expect(created.kind).toBe('ok');
+      const workId: string = created.kind === 'ok' && created.work !== undefined ? created.work.workId : '';
+      expect(workId.indexOf('NW-LOCAL_')).toBe(0);
+      expect((await service.getStatus(PAT, workId)).kind).toBe('ok');
+      const foreign = parseRequest('GetWorkStatus', { Context: { CorrelationID: 'CORR-PREFIX-1', IdempotencyKey: 'k', ClientVersion: 'test', TenantLabel: 'Contoso-PrivatePilot', TestRecord: true }, WorkID: 'AICOE-LOCAL_0001' });
+      expect(foreign.valid).toBe(false);
+      expect(JSON.stringify(foreign.errors)).toContain('^NW-[A-Z0-9_-]{2,124}$');
+    } finally {
+      configureWorkIdPrefix('');
+    }
   });
 
   it('replays the stored create response including Created:true (§7a), and does not insert a second command', async () => {
@@ -196,12 +214,12 @@ describe('synthetic Binding A work service', () => {
     const parsed = parseRequest('CreateOrResumeWork', {
       Context: {
         CorrelationID: 'CORR-LOCAL-001',
-        IdempotencyKey: 'cmdk1:aabbccdd:eeff0011:CreateOrResumeWork:m:CW-LOCAL_0001:0123456789abcdef',
+        IdempotencyKey: 'cmdk1:aabbccdd:eeff0011:CreateOrResumeWork:m:AICOE-LOCAL_0001:0123456789abcdef',
         ClientVersion: 'spfx-1.0.0.16',
         TenantLabel: 'SYNTHETIC-LOCAL',
         TestRecord: true
       },
-      WorkID: 'CW-LOCAL_0001'
+      WorkID: 'AICOE-LOCAL_0001'
     });
     expect(parsed.valid).toBe(false);
     expect(parsed.errors.join(' ')).toContain('S1');
@@ -225,9 +243,9 @@ describe('live Binding A remains disabled', () => {
     expect(live.liveReasons).toEqual(LIVE_CORE_REASONS);
     const created = await live.createOrResume(PAT, { s1: completeS1() });
     expect(created).toEqual({ kind: 'disabled', reasons: LIVE_CORE_REASONS });
-    const status = await live.getStatus(PAT, 'CW-LOCAL_0001');
+    const status = await live.getStatus(PAT, 'AICOE-LOCAL_0001');
     expect(status.kind).toBe('disabled');
-    const packets = await live.listPackets(PAT, 'CW-LOCAL_0001');
+    const packets = await live.listPackets(PAT, 'AICOE-LOCAL_0001');
     expect(packets.unboundReasons.length).toBeGreaterThan(0);
     expect(packets.extension).toBe(PACKET_PROJECTION_EXTENSION);
   });

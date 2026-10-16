@@ -26,12 +26,12 @@ for (const boundary of ['sourceRecord', 'registerRevoked', 'registerApproval', '
 test('IR-02 source revoked during byte retrieval is never offered to the provider', async () => {
   const f = await fixture(Runtime); let revoked = false;
   f.setSpHook(async (method,url) => { if (!revoked && url.endsWith('/$value')) { revoked = true; const source = JSON.parse((await f.store.read('source:' + f.entry.id)).value); await f.save('source:' + f.entry.id, { ...source, revoked: true }); } });
-  const result = await f.run('DraftCampaignBriefV1', { workId: 'CW-OFFLINE_TEST', objective: 'Offline security regression', audienceContext: ['Marketing team'], sourceIds: [f.entry.id] });
+  const result = await f.run('DraftCampaignBriefV1', { workId: 'AICOE-OFFLINE_TEST', objective: 'Offline security regression', audienceContext: ['Marketing team'], sourceIds: [f.entry.id] });
   assert.equal(revoked, true); assert.equal(f.providerCalls(), 0); assert.equal(result.kind, 'failed'); assert.equal((await f.store.keys('envelope:')).length, 0);
 });
 test('IR-02 provider-intent boundary refreshes source access before invoking the connector', async () => {
   const f = await fixture(Runtime), write = f.store.write.bind(f.store);
   f.store.write = async (key,value,options) => { const r = await write(key,value,options); if (key.startsWith('provider:')) { const source = JSON.parse((await f.store.read('source:' + f.entry.id)).value); await f.save('source:' + f.entry.id, { ...source, revoked: true }); } return r; };
-  await f.run('DraftCampaignBriefV1', { workId: 'CW-OFFLINE_TEST', objective: 'Offline late security regression', audienceContext: ['Marketing team'], sourceIds: [f.entry.id] });
+  await f.run('DraftCampaignBriefV1', { workId: 'AICOE-OFFLINE_TEST', objective: 'Offline late security regression', audienceContext: ['Marketing team'], sourceIds: [f.entry.id] });
   assert.equal(f.providerCalls(), 0); assert.equal((await f.store.keys('envelope:')).length, 0);
 });

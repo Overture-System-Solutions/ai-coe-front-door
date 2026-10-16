@@ -82,7 +82,7 @@ The local templates retain empty list GUIDs, null writer ID, empty qualification
 
 | Key | Candidate restrictions |
 |---|---|
-| `member:<SharePointAuthorId>` | `enabled:false`, actual actor/roles/workIds/audience supplied; writer ID/actor forbidden; canonical work IDs `CW-...` only |
+| `member:<SharePointAuthorId>` | `enabled:false`, actual actor/roles/workIds/audience supplied; writer ID/actor forbidden; canonical work IDs `<work_id_prefix>-...` only (`AICOE-...` for the neutral default; see the Build target note below) |
 | `authority:<bindingRef>` | exact bindingRef/tenant; `synthetic:false`, `revoked:true`, expired finite UTC; existing review kinds or `sourceRegister` |
 | `source:<id>` | exact source entry/actors/purposes/audiences/hash; `revoked:true`; same-site `.txt`/`.md` only, no binary extraction or ambiguous path |
 | `qualification:QUAL-...` | `result:INCONCLUSIVE`, expired finite UTC, explicit bindingHash; never PASS |
@@ -126,3 +126,7 @@ pwsh.exe -NoProfile -NonInteractive -File tests/provisioning/Check-NativeSurface
 Use a **fresh process for each command**. Fake PnP disables module autoload, uses synthetic `.invalid` actors and in-memory state; only local DPAPI test receipts are real. The native surface check imports installed local PnP command metadata and inspects the context-classification method, but never obtains a connection or invokes a PnP API. Native command metadata compatibility is not hosted/tenant proof. See repository-root `evidence/provisioning/verification.json`, `evidence/provisioning/TDD.md` and `evidence/provisioning/HANDOFF.md` for actual execution evidence, counts and limitations.
 
 For one captured WSL rerun, use `python3 tests/provisioning/verify.py --phase <new-run-name> --independent all`. It invokes the same Windows executable in separate bounded processes, stores actual stdout/stderr and source hashes, and refuses to overwrite a run directory. Do not publish the synthetic test receipts as tenant evidence. This command is local verification only, not a provisioner or deployment command.
+
+## Build target
+
+The Work ID prefix in `controlled-inputs.schema.json` comes from the build target (see `../START_HERE.md`, *Build target*). The committed schema is the rendering for the neutral default (`AICOE`). For another target, use the `provisioning/controlled-inputs.schema.json` that `generator/build.py --target-file <file> --into <folder>` writes for that target; the scripts read the schema beside them.

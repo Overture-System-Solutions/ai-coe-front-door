@@ -29,6 +29,7 @@ import { PALETTE_KEYS, paletteCustomProperty, parsePaletteOverrides } from './co
 import type { PaletteOverrides } from './content/palette';
 import { parseRoleGroups } from './content/roles';
 import { parseTelemetryProvider } from './content/telemetryTiles';
+import { configureWorkIdPrefix, workIdPrefixProblem } from './content/workIdentity';
 import type { IFrontDoorServices, IFrontDoorUser } from './context/FrontDoorContext';
 import { createCaseAnalysisService } from './services/caseAnalysisService';
 import { createIdeaDraftService } from './services/draftService';
@@ -86,6 +87,11 @@ export interface IAiCoeFrontDoorWebPartProps extends IPageViewProperties {
   coreBindingJson?: string;
   /** Accepted Marketing extension ingress/result binding. Empty never selects the business runtime. */
   marketingBindingJson?: string;
+  /**
+   * Prefix of this site's Work IDs (1.0.0.20): the `work_id_prefix` its CORE target was built with, an upper-case
+   * letter then 1 to 15 upper-case letters or digits. Blank means AICOE; a malformed value refuses every Work ID.
+   */
+  workIdPrefix?: string;
   /** Usage feed shown by the telemetry strip: "claude" (default), "openai" (as shipped in 1.0.0.7) or "both". */
   telemetryProvider: string;
 }
@@ -131,6 +137,8 @@ export default class AiCoeFrontDoorWebPart extends BaseClientSideWebPart<IAiCoeF
 
   public render(): void {
     const core: ICoreServices = this._requireCore();
+    // Before any service is built or any Work ID is read: every check and every minted id uses this page's prefix.
+    configureWorkIdPrefix(this.properties.workIdPrefix);
     this._applyPalette();
     const siteUrl: string = this.context.pageContext.web.absoluteUrl;
     // Every piece on its own page is a page view; only the whole-page legacy view keeps the shipped wording for
@@ -266,6 +274,12 @@ export default class AiCoeFrontDoorWebPart extends BaseClientSideWebPart<IAiCoeF
             label: strings.PaletteOverridesFieldLabel,
             description: strings.PaletteOverridesFieldDescription,
             placeholder: 'accent=#008B83;ink=#102B3D'
+          }),
+          PropertyPaneTextField('workIdPrefix', {
+            label: strings.WorkIdPrefixFieldLabel,
+            description: strings.WorkIdPrefixFieldDescription,
+            placeholder: 'AICOE',
+            onGetErrorMessage: workIdPrefixProblem
           })
         ]
       },
@@ -406,7 +420,7 @@ export default class AiCoeFrontDoorWebPart extends BaseClientSideWebPart<IAiCoeF
     const contentUrl: string | undefined =
       parseFrontDoorView(this.properties.view) === 'page' ? parseContentUrl(this.properties.contentUrl) : parseOptionalContentUrl(this.properties.contentUrl);
     // The tool policy evaluator reads the branding, so every branding input joins the key.
-    const key: string = JSON.stringify([branding.organizationName, branding.governanceReference, branding.reviewSystemName, draftServiceUrl, caseAnalysisUrl, this.properties.conciergeChatUrl ?? '', this.properties.conciergeAddUrl ?? '', contentUrl ?? null, roleGroups, this.properties.draftListId ?? '', this.properties.draftPolicyJson ?? '', this.properties.coreBindingJson ?? '', this.properties.marketingBindingJson ?? '', core.serviceContext.siteUrl, core.user.email]);
+    const key: string = JSON.stringify([branding.organizationName, branding.governanceReference, branding.reviewSystemName, draftServiceUrl, caseAnalysisUrl, this.properties.conciergeChatUrl ?? '', this.properties.conciergeAddUrl ?? '', contentUrl ?? null, roleGroups, this.properties.draftListId ?? '', this.properties.draftPolicyJson ?? '', this.properties.coreBindingJson ?? '', this.properties.marketingBindingJson ?? '', this.properties.workIdPrefix ?? '', core.serviceContext.siteUrl, core.user.email]);
     if (this._services === undefined || this._servicesKey !== key) {
       const synthetic: boolean = this._isSyntheticHost(core.serviceContext.siteUrl);
       const draftStore: IDraftStore = synthetic

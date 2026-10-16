@@ -1,10 +1,10 @@
-# CloudWave AI CoE — UI ⇄ flow interface contract v0.1.1 (CANDIDATE)
+# AI CoE — UI ⇄ flow interface contract v0.1.1 (CANDIDATE)
 
-**Why this exists.** Samuel's SharePoint front door needs to call the core automation and read its results. As of 2026-09-21 no flow definition, solution export or environment record exists in the CloudWave tenant; Brian's flows live only in his maker environment. Rather than wait, the interface and the flows agree on **this contract**: Samuel builds against it (with the mock), Brian's flows implement it, and the first real call is a conformance test, not a discovery exercise.
+**Why this exists.** Samuel's SharePoint front door needs to call the core automation and read its results. As of 2026-09-21 no flow definition, solution export or environment record exists in the client tenant; Brian's flows live only in his maker environment. Rather than wait, the interface and the flows agree on **this contract**: Samuel builds against it (with the mock), Brian's flows implement it, and the first real call is a conformance test, not a discovery exercise.
 
-**Authority.** Candidate, Jordan's engineering lane. Payload field definitions are the RC2 `3.4.0-rc2` schemas (hash-pinned, 26/26 readable members verified in the CloudWave copy). Everything else here is proposed and needs one confirmation from Brian (§7). Nothing here is a tenant object, endpoint or permission.
+**Authority.** Candidate, the engineering lane. Payload field definitions are the RC2 `3.4.0-rc2` schemas (hash-pinned, 26/26 readable members verified in the client's copy). Everything else here is proposed and needs one confirmation from Brian (§7). Nothing here is a tenant object, endpoint or permission.
 
-**Files.** `ui-flow-contract.schema.json` (Draft 2020-12 envelopes), `mock/<Operation>/*.json` (23 recorded request/response pairs from the validated UAT fixtures, incl. 4 negative cases), `mock_server.py` (stdlib-only local stand-in), `mock/index.json` (hash binding to fixtures and RC2 schemas).
+**Files.** `ui-flow-contract.schema.json` (Draft 2020-12 envelopes), `mock/<Operation>/*.json` (23 recorded request/response pairs from the validated UAT fixtures, incl. 4 negative cases), `mock_server.py` (stdlib-only local stand-in), `mock/index.json` (hash binding to fixtures and RC2 schemas). `build_contract.py` generates the schema, the pairs and the index (§7b).
 
 ---
 
@@ -25,7 +25,7 @@ Five operations cover the idea → business-case MVP. The UI never chooses a lan
 ## 2. Context envelope (every request)
 
 ```json
-"Context": { "CorrelationID": "CORR-UAT-FAST-001", "IdempotencyKey": "<stable per intent>", "ClientVersion": "spfx-candidate-0.1", "TenantLabel": "CloudWave-PrivatePilot", "TestRecord": true }
+"Context": { "CorrelationID": "CORR-UAT-FAST-001", "IdempotencyKey": "<stable per intent>", "ClientVersion": "spfx-candidate-0.1", "TenantLabel": "Contoso-PrivatePilot", "TestRecord": true }
 ```
 `IdempotencyKey` = `<WorkID or 'new'>:<operation>:<sha256(payload)[:16]>`. A retry with the same key **must** return the identical response (`Created:false` on replay). `TestRecord:true` rows never enter production totals (v3.2 ALM rule).
 
@@ -65,6 +65,18 @@ Either way the **per-tenant parameter set** (needed because the dashboards and f
 ## 7a. v0.1.1 changes (2026-09-21, driven by the flow build)
 
 `S1` gains `DecisionRequested` and `Risks[]`; `RequestDecisionReadiness` gains optional `PayloadHash`/`EvidenceSetHash` (Power Automate cannot compute SHA-256 — client-computed with provenance was the decision); `ListMyWork` success has no `Work` (only `Items[]`). **Binding A replay semantics:** the command list's `Title` = `IdempotencyKey` is unique, so a replayed create is rejected by SharePoint at write time — the UI then reads the existing row's `ResponseJson`, which is the identical response. **Identity:** the flow takes the caller identity from the command row's `Author`, never from the payload. `Requester` in `ListMyWork` must equal that identity or the call is `DENIED`. Implemented by `AICoECoreAutomation 3.0.0.0` flow `AI CoE 01 Case Command`.
+
+## 7b. Tenant-neutral regeneration (2026-10-15)
+
+Work IDs carry the target's prefix; the neutral default is `AICOE-` (`^AICOE-[A-Z0-9_-]{2,124}$` wherever the contract has a Work ID, including `RelatedWorkIDs` items). Case names are the Work ID without its prefix (`UAT-FAST-001-…`), and every request `Context.TenantLabel` is the placeholder `Contoso-PrivatePilot`. The hash-pinned RC2 record schemas keep their own literal Work ID prefix, so this is a deliberate departure from them for that one pattern. This regeneration did not touch the generated 3.0.0.0 flow definitions.
+
+The UAT fixture file named by `mock/index.json` `fixtures_sha256` is not available, so the pairs were rebuilt from the 23 pairs recorded from it (`mock/index.json` `derivation`; source digest `source_pairs_sha256`). Only Work IDs and the values derived from them (Work ID fields, `RelatedWorkIDs`, `SourceRefs`, `IdempotencyKey`, case names), `TenantLabel` and the create-key suffix (`sha256(S1)[:16]`, recomputed from the re-prefixed `S1`) changed; States, Versions, Lanes, receipts and messages are the recorded values. Regenerate with the RC2 copy from the project home:
+
+```
+python -B build_contract.py --rc2 <RC2 3.4.0-rc2 folder> --from-recorded mock --out .
+```
+
+A second run over the regenerated folder is byte-identical. Re-verified 2026-10-15: 23/23 pairs valid against the regenerated schema; the mock server replays the pairs as before (create → `CLARIFYING / Need one answer`, unknown ID → 422 `NOT_FOUND`, stale lease → 409, other user's work → 403; the three replay pairs still return the cached first response, as recorded in `../generated-pins.json` `mockServer`).
 
 ## 8. Conformance
 

@@ -4,7 +4,7 @@ Produces the JSON the Power Platform solution format expects under Workflows/<Na
 All connector calls are OpenApiConnection actions against connection references (solution-aware ALM).
 """
 from __future__ import annotations
-import json, uuid
+import json
 
 SP_API = "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
 O365_API = "/providers/Microsoft.PowerApps/apis/shared_office365"
@@ -14,6 +14,17 @@ O365_REF = "aicoe_office365outlook"
 SITE_PARAM = "aicoe_SiteUrl (aicoe_SiteUrl)"
 MAIL_PARAM = "aicoe_NotificationEmail (aicoe_NotificationEmail)"
 LABEL_PARAM = "aicoe_EnvironmentLabel (aicoe_EnvironmentLabel)"
+
+# Workflow identities of the shipped AICoECoreAutomation 3.0.0.0 flows, pinned verbatim so a correction updates the
+# same flows in every environment. A new flow needs an explicit identity here; none is derived from a tenant seed.
+WORKFLOW_IDS = {
+    "AI CoE 00 Provisioning": "99538ee6-adde-5cac-a8dc-78e2d9f2b417",
+    "AI CoE 01 Case Command": "bbb2f816-2abe-5216-8fc8-23452056573b",
+    "AI CoE 02 Evidence and Readiness": "9c7a7513-4787-5fdc-9c2f-ed9e00ce7b10",
+    "AI CoE 03 Markdown Projector": "5cff5cdb-41b4-581e-ad63-f7495680e02d",
+    "AI CoE 04 Notification Outbox": "41303d3c-0cab-5668-8b02-b638fb361ab0",
+    "AI CoE 05 Health Monitor": "aba74eca-505e-5f1d-a3df-f157499e7dbf",
+}
 
 
 def P(name: str) -> str:  # environment-variable-backed parameter reference
@@ -28,7 +39,8 @@ class Flow:
         self.literal = literal  # {param: literal} -> literal-fallback mode (no env vars)
         self.actions: dict[str, dict] = {}
         self._last: str | None = None
-        self.guid = str(uuid.uuid5(uuid.NAMESPACE_URL, f"cw-aicoe/3.0.0.0/{name}"))
+        if name not in WORKFLOW_IDS: raise ValueError(f"no preserved workflow identity for {name!r}")
+        self.guid = WORKFLOW_IDS[name]
 
     # ---- container helpers -------------------------------------------------------------
     def add(self, name: str, action: dict, run_after: dict | None = None, into: dict | None = None, last: list | None = None):

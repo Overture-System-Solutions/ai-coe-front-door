@@ -112,7 +112,7 @@ exports.SHA256_HEX = /^[0-9a-f]{64}$/;
  * The scope is percent-encoded because it is the one free-form part and in practice it is a site URL, which
  * carries a colon of its own. Without encoding, `https://host/sites/x` would split into two parts and the key
  * could not be read back - and two different scopes could produce one key, which is the one thing a key must
- * never do. The other three parts cannot contain the separator: a Work ID is `CW-` plus an upper-case alphabet,
+ * never do. The other three parts cannot contain the separator: a Work ID is its prefix (`AICOE-` by default) plus an upper-case alphabet,
  * the action class is an enum, the hash is hex.
  */
 function idempotencyKey(input) {

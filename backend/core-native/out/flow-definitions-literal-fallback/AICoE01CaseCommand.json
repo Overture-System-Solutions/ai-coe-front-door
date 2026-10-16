@@ -188,7 +188,7 @@
                   "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
                 },
                 "parameters": {
-                  "dataset": "https://parkplace.sharepoint.com/sites/AICoE-PrivatePilot",
+                  "dataset": "https://contoso.sharepoint.com/sites/AICoE",
                   "parameters/method": "GET",
                   "parameters/uri": "@variables('Next')",
                   "parameters/headers": {
@@ -215,7 +215,7 @@
               "type": "Compose",
               "inputs": {
                 "Page": "@body('Definitions_GetPage')",
-                "SiteUrl": "https://parkplace.sharepoint.com/sites/AICoE-PrivatePilot"
+                "SiteUrl": "https://contoso.sharepoint.com/sites/AICoE"
               },
               "runtimeConfiguration": {
                 "secureData": {
@@ -355,7 +355,7 @@
           "type": "Compose",
           "inputs": {
             "Rows": "@variables('Rows')",
-            "SiteUrl": "https://parkplace.sharepoint.com/sites/AICoE-PrivatePilot"
+            "SiteUrl": "https://contoso.sharepoint.com/sites/AICoE"
           },
           "runtimeConfiguration": {
             "secureData": {
@@ -532,7 +532,7 @@
                       "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
                     },
                     "parameters": {
-                      "dataset": "https://parkplace.sharepoint.com/sites/AICoE-PrivatePilot",
+                      "dataset": "https://contoso.sharepoint.com/sites/AICoE",
                       "parameters/method": "GET",
                       "parameters/uri": "@variables('Next')",
                       "parameters/headers": {
@@ -559,7 +559,7 @@
                   "type": "Compose",
                   "inputs": {
                     "Page": "@body('Snapshot_GetPage')",
-                    "SiteUrl": "https://parkplace.sharepoint.com/sites/AICoE-PrivatePilot"
+                    "SiteUrl": "https://contoso.sharepoint.com/sites/AICoE"
                   },
                   "runtimeConfiguration": {
                     "secureData": {
@@ -839,7 +839,7 @@
                   "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
                 },
                 "parameters": {
-                  "dataset": "https://parkplace.sharepoint.com/sites/AICoE-PrivatePilot",
+                  "dataset": "https://contoso.sharepoint.com/sites/AICoE",
                   "parameters/method": "POST",
                   "parameters/uri": "@concat('_api/web/lists(guid''', outputs('Cfg')?['ListId_Journal'], ''')/items(', string(body('Pick_Command')?['Slot']?['ID']), ')')",
                   "parameters/headers": {
@@ -874,7 +874,7 @@
                   "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
                 },
                 "parameters": {
-                  "dataset": "https://parkplace.sharepoint.com/sites/AICoE-PrivatePilot",
+                  "dataset": "https://contoso.sharepoint.com/sites/AICoE",
                   "parameters/method": "GET",
                   "parameters/uri": "@concat('_api/web/lists(guid''', outputs('Cfg')?['ListId_Journal'], ''')/items(', string(body('Pick_Command')?['Slot']?['ID']), ')')",
                   "parameters/headers": {
@@ -1188,7 +1188,7 @@
                       "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
                     },
                     "parameters": {
-                      "dataset": "https://parkplace.sharepoint.com/sites/AICoE-PrivatePilot",
+                      "dataset": "https://contoso.sharepoint.com/sites/AICoE",
                       "parameters/method": "POST",
                       "parameters/uri": "@concat('_api/web/lists(guid''', outputs('Cfg')?['ListId_Journal'], ''')/items')",
                       "parameters/headers": {
@@ -1240,7 +1240,7 @@
                   "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
                 },
                 "parameters": {
-                  "dataset": "https://parkplace.sharepoint.com/sites/AICoE-PrivatePilot",
+                  "dataset": "https://contoso.sharepoint.com/sites/AICoE",
                   "parameters/method": "GET",
                   "parameters/uri": "@concat('_api/web/lists(guid''', outputs('Cfg')?['ListId_Journal'], ''')/items?$filter=Title eq ''', replace(body('Pick_Command')?['JournalKey'], '''', ''''''), '''&$top=2')",
                   "parameters/headers": {
@@ -1435,7 +1435,7 @@
                       "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
                     },
                     "parameters": {
-                      "dataset": "https://parkplace.sharepoint.com/sites/AICoE-PrivatePilot",
+                      "dataset": "https://contoso.sharepoint.com/sites/AICoE",
                       "parameters/method": "GET",
                       "parameters/uri": "@concat('_api/web/lists(guid''', outputs('Cfg')?['ListId_Journal'], ''')/items(', string(body('Pick_Command')?['Slot']?['ID']), ')')",
                       "parameters/headers": {
@@ -1584,7 +1584,7 @@
                           "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
                         },
                         "parameters": {
-                          "dataset": "https://parkplace.sharepoint.com/sites/AICoE-PrivatePilot",
+                          "dataset": "https://contoso.sharepoint.com/sites/AICoE",
                           "parameters/method": "GET",
                           "parameters/uri": "@variables('Next')",
                           "parameters/headers": {
@@ -1611,7 +1611,7 @@
                       "type": "Compose",
                       "inputs": {
                         "Page": "@body('Before_Write_Authority_GetPage')",
-                        "SiteUrl": "https://parkplace.sharepoint.com/sites/AICoE-PrivatePilot"
+                        "SiteUrl": "https://contoso.sharepoint.com/sites/AICoE"
                       },
                       "runtimeConfiguration": {
                         "secureData": {
@@ -1821,7 +1821,7 @@
                           "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
                         },
                         "parameters": {
-                          "dataset": "https://parkplace.sharepoint.com/sites/AICoE-PrivatePilot",
+                          "dataset": "https://contoso.sharepoint.com/sites/AICoE",
                           "parameters/method": "GET",
                           "parameters/uri": "@variables('Next')",
                           "parameters/headers": {
@@ -1848,7 +1848,7 @@
                       "type": "Compose",
                       "inputs": {
                         "Page": "@body('Before_Write_Definitions_GetPage')",
-                        "SiteUrl": "https://parkplace.sharepoint.com/sites/AICoE-PrivatePilot"
+                        "SiteUrl": "https://contoso.sharepoint.com/sites/AICoE"
                       },
                       "runtimeConfiguration": {
                         "secureData": {
@@ -1988,7 +1988,7 @@
                   "type": "Compose",
                   "inputs": {
                     "Rows": "@variables('Rows')",
-                    "SiteUrl": "https://parkplace.sharepoint.com/sites/AICoE-PrivatePilot"
+                    "SiteUrl": "https://contoso.sharepoint.com/sites/AICoE"
                   },
                   "runtimeConfiguration": {
                     "secureData": {
@@ -2131,7 +2131,7 @@
                       "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
                     },
                     "parameters": {
-                      "dataset": "https://parkplace.sharepoint.com/sites/AICoE-PrivatePilot",
+                      "dataset": "https://contoso.sharepoint.com/sites/AICoE",
                       "parameters/method": "GET",
                       "parameters/uri": "@concat('_api/web/lists(guid''', outputs('Cfg')?[concat('ListId_', items('For_each_write')?['List'])], ''')/items?$filter=Title eq ''', replace(items('For_each_write')?['Key'], '''', ''''''), '''&$top=2')",
                       "parameters/headers": {
@@ -2253,7 +2253,7 @@
                               "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
                             },
                             "parameters": {
-                              "dataset": "https://parkplace.sharepoint.com/sites/AICoE-PrivatePilot",
+                              "dataset": "https://contoso.sharepoint.com/sites/AICoE",
                               "parameters/method": "POST",
                               "parameters/uri": "@concat('_api/web/lists(guid''', outputs('Cfg')?[concat('ListId_', items('For_each_write')?['List'])], ''')/items(', string(items('For_each_write')?['ItemID']), ')')",
                               "parameters/headers": {
@@ -2291,7 +2291,7 @@
                                 "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
                               },
                               "parameters": {
-                                "dataset": "https://parkplace.sharepoint.com/sites/AICoE-PrivatePilot",
+                                "dataset": "https://contoso.sharepoint.com/sites/AICoE",
                                 "parameters/method": "POST",
                                 "parameters/uri": "@concat('_api/web/lists(guid''', outputs('Cfg')?[concat('ListId_', items('For_each_write')?['List'])], ''')/items')",
                                 "parameters/headers": {
@@ -2351,7 +2351,7 @@
                       "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
                     },
                     "parameters": {
-                      "dataset": "https://parkplace.sharepoint.com/sites/AICoE-PrivatePilot",
+                      "dataset": "https://contoso.sharepoint.com/sites/AICoE",
                       "parameters/method": "GET",
                       "parameters/uri": "@concat('_api/web/lists(guid''', outputs('Cfg')?[concat('ListId_', items('For_each_write')?['List'])], ''')/items?$filter=Title eq ''', replace(items('For_each_write')?['Key'], '''', ''''''), '''&$top=2')",
                       "parameters/headers": {
@@ -2497,7 +2497,7 @@
                   "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
                 },
                 "parameters": {
-                  "dataset": "https://parkplace.sharepoint.com/sites/AICoE-PrivatePilot",
+                  "dataset": "https://contoso.sharepoint.com/sites/AICoE",
                   "parameters/method": "GET",
                   "parameters/uri": "@concat('_api/web/lists(guid''', outputs('Cfg')?['ListId_Journal'], ''')/items(', string(body('Pick_Command')?['Slot']?['ID']), ')')",
                   "parameters/headers": {
@@ -2650,7 +2650,7 @@
                       "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
                     },
                     "parameters": {
-                      "dataset": "https://parkplace.sharepoint.com/sites/AICoE-PrivatePilot",
+                      "dataset": "https://contoso.sharepoint.com/sites/AICoE",
                       "parameters/method": "GET",
                       "parameters/uri": "@variables('Next')",
                       "parameters/headers": {
@@ -2677,7 +2677,7 @@
                   "type": "Compose",
                   "inputs": {
                     "Page": "@body('Before_Receipt_Authority_GetPage')",
-                    "SiteUrl": "https://parkplace.sharepoint.com/sites/AICoE-PrivatePilot"
+                    "SiteUrl": "https://contoso.sharepoint.com/sites/AICoE"
                   },
                   "runtimeConfiguration": {
                     "secureData": {
@@ -2887,7 +2887,7 @@
                       "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
                     },
                     "parameters": {
-                      "dataset": "https://parkplace.sharepoint.com/sites/AICoE-PrivatePilot",
+                      "dataset": "https://contoso.sharepoint.com/sites/AICoE",
                       "parameters/method": "GET",
                       "parameters/uri": "@variables('Next')",
                       "parameters/headers": {
@@ -2914,7 +2914,7 @@
                   "type": "Compose",
                   "inputs": {
                     "Page": "@body('Before_Receipt_Definitions_GetPage')",
-                    "SiteUrl": "https://parkplace.sharepoint.com/sites/AICoE-PrivatePilot"
+                    "SiteUrl": "https://contoso.sharepoint.com/sites/AICoE"
                   },
                   "runtimeConfiguration": {
                     "secureData": {
@@ -3054,7 +3054,7 @@
               "type": "Compose",
               "inputs": {
                 "Rows": "@variables('Rows')",
-                "SiteUrl": "https://parkplace.sharepoint.com/sites/AICoE-PrivatePilot"
+                "SiteUrl": "https://contoso.sharepoint.com/sites/AICoE"
               },
               "runtimeConfiguration": {
                 "secureData": {
@@ -3206,7 +3206,7 @@
                       "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
                     },
                     "parameters": {
-                      "dataset": "https://parkplace.sharepoint.com/sites/AICoE-PrivatePilot",
+                      "dataset": "https://contoso.sharepoint.com/sites/AICoE",
                       "parameters/method": "GET",
                       "parameters/uri": "@concat('_api/web/GetFileByServerRelativeUrl(''', replace(outputs('Plan')?['ProjectionProof']?['Path'], '''', ''''''), ''')/$value')",
                       "parameters/headers": {
@@ -3389,7 +3389,7 @@
                   "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
                 },
                 "parameters": {
-                  "dataset": "https://parkplace.sharepoint.com/sites/AICoE-PrivatePilot",
+                  "dataset": "https://contoso.sharepoint.com/sites/AICoE",
                   "parameters/method": "GET",
                   "parameters/uri": "@concat('_api/web/lists(guid''', outputs('Cfg')?[concat('ListId_', body('Finalize_Compared')?['Receipt']?['List'])], ''')/items?$filter=Title eq ''', replace(body('Finalize_Compared')?['Receipt']?['Key'], '''', ''''''), '''&$top=2')",
                   "parameters/headers": {
@@ -3502,7 +3502,7 @@
                       "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
                     },
                     "parameters": {
-                      "dataset": "https://parkplace.sharepoint.com/sites/AICoE-PrivatePilot",
+                      "dataset": "https://contoso.sharepoint.com/sites/AICoE",
                       "parameters/method": "POST",
                       "parameters/uri": "@concat('_api/web/lists(guid''', outputs('Cfg')?[concat('ListId_', body('Finalize_Compared')?['Receipt']?['List'])], ''')/items')",
                       "parameters/headers": {
@@ -3550,7 +3550,7 @@
                   "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
                 },
                 "parameters": {
-                  "dataset": "https://parkplace.sharepoint.com/sites/AICoE-PrivatePilot",
+                  "dataset": "https://contoso.sharepoint.com/sites/AICoE",
                   "parameters/method": "GET",
                   "parameters/uri": "@concat('_api/web/lists(guid''', outputs('Cfg')?[concat('ListId_', body('Finalize_Compared')?['Receipt']?['List'])], ''')/items?$filter=Title eq ''', replace(body('Finalize_Compared')?['Receipt']?['Key'], '''', ''''''), '''&$top=2')",
                   "parameters/headers": {
@@ -3654,7 +3654,7 @@
                   "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
                 },
                 "parameters": {
-                  "dataset": "https://parkplace.sharepoint.com/sites/AICoE-PrivatePilot",
+                  "dataset": "https://contoso.sharepoint.com/sites/AICoE",
                   "parameters/method": "GET",
                   "parameters/uri": "@concat('_api/web/lists(guid''', outputs('Cfg')?[concat('ListId_', body('Finalize_Compared')?['Event']?['List'])], ''')/items?$filter=Title eq ''', replace(body('Finalize_Compared')?['Event']?['Key'], '''', ''''''), '''&$top=2')",
                   "parameters/headers": {
@@ -3767,7 +3767,7 @@
                       "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
                     },
                     "parameters": {
-                      "dataset": "https://parkplace.sharepoint.com/sites/AICoE-PrivatePilot",
+                      "dataset": "https://contoso.sharepoint.com/sites/AICoE",
                       "parameters/method": "POST",
                       "parameters/uri": "@concat('_api/web/lists(guid''', outputs('Cfg')?[concat('ListId_', body('Finalize_Compared')?['Event']?['List'])], ''')/items')",
                       "parameters/headers": {
@@ -3815,7 +3815,7 @@
                   "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
                 },
                 "parameters": {
-                  "dataset": "https://parkplace.sharepoint.com/sites/AICoE-PrivatePilot",
+                  "dataset": "https://contoso.sharepoint.com/sites/AICoE",
                   "parameters/method": "GET",
                   "parameters/uri": "@concat('_api/web/lists(guid''', outputs('Cfg')?[concat('ListId_', body('Finalize_Compared')?['Event']?['List'])], ''')/items?$filter=Title eq ''', replace(body('Finalize_Compared')?['Event']?['Key'], '''', ''''''), '''&$top=2')",
                   "parameters/headers": {
@@ -3992,7 +3992,7 @@
                       "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
                     },
                     "parameters": {
-                      "dataset": "https://parkplace.sharepoint.com/sites/AICoE-PrivatePilot",
+                      "dataset": "https://contoso.sharepoint.com/sites/AICoE",
                       "parameters/method": "GET",
                       "parameters/uri": "@concat('_api/web/lists(guid''', outputs('Cfg')?['ListId_Results'], ''')/items?$filter=Title eq ''', replace(outputs('Plan')?['Key'], '''', ''''''), '''&$top=2')",
                       "parameters/headers": {
@@ -4105,7 +4105,7 @@
                           "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
                         },
                         "parameters": {
-                          "dataset": "https://parkplace.sharepoint.com/sites/AICoE-PrivatePilot",
+                          "dataset": "https://contoso.sharepoint.com/sites/AICoE",
                           "parameters/method": "POST",
                           "parameters/uri": "@concat('_api/web/lists(guid''', outputs('Cfg')?['ListId_Results'], ''')/items')",
                           "parameters/headers": {
@@ -4153,7 +4153,7 @@
                       "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
                     },
                     "parameters": {
-                      "dataset": "https://parkplace.sharepoint.com/sites/AICoE-PrivatePilot",
+                      "dataset": "https://contoso.sharepoint.com/sites/AICoE",
                       "parameters/method": "GET",
                       "parameters/uri": "@concat('_api/web/lists(guid''', outputs('Cfg')?['ListId_Results'], ''')/items?$filter=Title eq ''', replace(outputs('Plan')?['Key'], '''', ''''''), '''&$top=2')",
                       "parameters/headers": {
@@ -4274,7 +4274,7 @@
                       "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
                     },
                     "parameters": {
-                      "dataset": "https://parkplace.sharepoint.com/sites/AICoE-PrivatePilot",
+                      "dataset": "https://contoso.sharepoint.com/sites/AICoE",
                       "parameters/method": "GET",
                       "parameters/uri": "_api/web/roledefinitions?$filter=RoleTypeKind eq 2&$select=Id,RoleTypeKind",
                       "parameters/headers": {
@@ -4327,7 +4327,7 @@
                       "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
                     },
                     "parameters": {
-                      "dataset": "https://parkplace.sharepoint.com/sites/AICoE-PrivatePilot",
+                      "dataset": "https://contoso.sharepoint.com/sites/AICoE",
                       "parameters/method": "GET",
                       "parameters/uri": "@concat('_api/web/lists(guid''', outputs('Cfg')?['ListId_Journal'], ''')/items(', string(body('Pick_Command')?['Slot']?['ID']), ')')",
                       "parameters/headers": {
@@ -4480,7 +4480,7 @@
                           "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
                         },
                         "parameters": {
-                          "dataset": "https://parkplace.sharepoint.com/sites/AICoE-PrivatePilot",
+                          "dataset": "https://contoso.sharepoint.com/sites/AICoE",
                           "parameters/method": "GET",
                           "parameters/uri": "@variables('Next')",
                           "parameters/headers": {
@@ -4507,7 +4507,7 @@
                       "type": "Compose",
                       "inputs": {
                         "Page": "@body('Before_Grant_Authority_GetPage')",
-                        "SiteUrl": "https://parkplace.sharepoint.com/sites/AICoE-PrivatePilot"
+                        "SiteUrl": "https://contoso.sharepoint.com/sites/AICoE"
                       },
                       "runtimeConfiguration": {
                         "secureData": {
@@ -4717,7 +4717,7 @@
                           "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
                         },
                         "parameters": {
-                          "dataset": "https://parkplace.sharepoint.com/sites/AICoE-PrivatePilot",
+                          "dataset": "https://contoso.sharepoint.com/sites/AICoE",
                           "parameters/method": "GET",
                           "parameters/uri": "@variables('Next')",
                           "parameters/headers": {
@@ -4744,7 +4744,7 @@
                       "type": "Compose",
                       "inputs": {
                         "Page": "@body('Before_Grant_Definitions_GetPage')",
-                        "SiteUrl": "https://parkplace.sharepoint.com/sites/AICoE-PrivatePilot"
+                        "SiteUrl": "https://contoso.sharepoint.com/sites/AICoE"
                       },
                       "runtimeConfiguration": {
                         "secureData": {
@@ -4884,7 +4884,7 @@
                   "type": "Compose",
                   "inputs": {
                     "Rows": "@variables('Rows')",
-                    "SiteUrl": "https://parkplace.sharepoint.com/sites/AICoE-PrivatePilot"
+                    "SiteUrl": "https://contoso.sharepoint.com/sites/AICoE"
                   },
                   "runtimeConfiguration": {
                     "secureData": {
@@ -5027,7 +5027,7 @@
                       "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
                     },
                     "parameters": {
-                      "dataset": "https://parkplace.sharepoint.com/sites/AICoE-PrivatePilot",
+                      "dataset": "https://contoso.sharepoint.com/sites/AICoE",
                       "parameters/method": "POST",
                       "parameters/uri": "@concat(concat('_api/web/lists(guid''', outputs('Cfg')?['ListId_Results'], ''')/items(', string(outputs('ResultID')), ')'), '/breakroleinheritance(copyRoleAssignments=false,clearSubscopes=true)')",
                       "parameters/headers": {
@@ -5063,7 +5063,7 @@
                       "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
                     },
                     "parameters": {
-                      "dataset": "https://parkplace.sharepoint.com/sites/AICoE-PrivatePilot",
+                      "dataset": "https://contoso.sharepoint.com/sites/AICoE",
                       "parameters/method": "POST",
                       "parameters/uri": "@concat(concat('_api/web/lists(guid''', outputs('Cfg')?['ListId_Results'], ''')/items(', string(outputs('ResultID')), ')'), '/roleassignments/addroleassignment(principalid=', string(outputs('Plan')?['AuthorID']), ',roledefid=', string(first(body('Read_Role')?['value'])?['Id']), ')')",
                       "parameters/headers": {
@@ -5099,7 +5099,7 @@
                       "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
                     },
                     "parameters": {
-                      "dataset": "https://parkplace.sharepoint.com/sites/AICoE-PrivatePilot",
+                      "dataset": "https://contoso.sharepoint.com/sites/AICoE",
                       "parameters/method": "GET",
                       "parameters/uri": "@concat(concat('_api/web/lists(guid''', outputs('Cfg')?['ListId_Results'], ''')/items(', string(outputs('ResultID')), ')'), '/roleassignments?$expand=Member,RoleDefinitionBindings')",
                       "parameters/headers": {
@@ -5204,7 +5204,7 @@
                       "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
                     },
                     "parameters": {
-                      "dataset": "https://parkplace.sharepoint.com/sites/AICoE-PrivatePilot",
+                      "dataset": "https://contoso.sharepoint.com/sites/AICoE",
                       "parameters/method": "GET",
                       "parameters/uri": "@concat('_api/web/lists(guid''', outputs('Cfg')?['ListId_Results'], ''')/items(', string(outputs('ResultID')), ')')",
                       "parameters/headers": {
@@ -5240,7 +5240,7 @@
                       "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
                     },
                     "parameters": {
-                      "dataset": "https://parkplace.sharepoint.com/sites/AICoE-PrivatePilot",
+                      "dataset": "https://contoso.sharepoint.com/sites/AICoE",
                       "parameters/method": "POST",
                       "parameters/uri": "@concat('_api/web/lists(guid''', outputs('Cfg')?['ListId_Results'], ''')/items(', string(outputs('ResultID')), ')')",
                       "parameters/headers": {
@@ -5279,7 +5279,7 @@
                       "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
                     },
                     "parameters": {
-                      "dataset": "https://parkplace.sharepoint.com/sites/AICoE-PrivatePilot",
+                      "dataset": "https://contoso.sharepoint.com/sites/AICoE",
                       "parameters/method": "GET",
                       "parameters/uri": "@concat('_api/web/lists(guid''', outputs('Cfg')?['ListId_Results'], ''')/items(', string(outputs('ResultID')), ')')",
                       "parameters/headers": {
@@ -5347,7 +5347,7 @@
                   "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
                 },
                 "parameters": {
-                  "dataset": "https://parkplace.sharepoint.com/sites/AICoE-PrivatePilot",
+                  "dataset": "https://contoso.sharepoint.com/sites/AICoE",
                   "parameters/method": "POST",
                   "parameters/uri": "@concat('_api/web/lists(guid''', outputs('Cfg')?['ListId_Journal'], ''')/items(', string(first(body('Read_Persisted_Plan')?['value'])?['ID']), ')')",
                   "parameters/headers": {
@@ -5386,7 +5386,7 @@
                   "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
                 },
                 "parameters": {
-                  "dataset": "https://parkplace.sharepoint.com/sites/AICoE-PrivatePilot",
+                  "dataset": "https://contoso.sharepoint.com/sites/AICoE",
                   "parameters/method": "POST",
                   "parameters/uri": "@concat('_api/web/lists(guid''', outputs('Cfg')?['ListId_Journal'], ''')/items(', string(body('Pick_Command')?['Slot']?['ID']), ')')",
                   "parameters/headers": {
@@ -5432,7 +5432,7 @@
               "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
             },
             "parameters": {
-              "dataset": "https://parkplace.sharepoint.com/sites/AICoE-PrivatePilot",
+              "dataset": "https://contoso.sharepoint.com/sites/AICoE",
               "parameters/method": "POST",
               "parameters/uri": "@concat('_api/web/lists(guid''', outputs('Cfg')?['ListId_Log'], ''')/items')",
               "parameters/headers": {
@@ -5469,7 +5469,7 @@
               "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
             },
             "parameters": {
-              "dataset": "https://parkplace.sharepoint.com/sites/AICoE-PrivatePilot",
+              "dataset": "https://contoso.sharepoint.com/sites/AICoE",
               "parameters/method": "POST",
               "parameters/uri": "@concat('_api/web/lists(guid''', outputs('Cfg')?['ListId_Log'], ''')/items')",
               "parameters/headers": {

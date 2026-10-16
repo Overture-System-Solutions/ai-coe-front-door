@@ -106,7 +106,7 @@ describe('the practice journey from a request to a business case', () => {
     expect(created.kind).toBe('ok');
     const saved: string | null = backend.getItem(PRACTICE_CORE_STORE_KEY);
     const changed: { engine: { works: { [id: string]: { work: { Title: string } } } } } = JSON.parse(saved as string);
-    changed.engine.works['CW-PRACTICE-0002'].work.Title = 'Renamed while practising';
+    changed.engine.works['AICOE-PRACTICE-0002'].work.Title = 'Renamed while practising';
     const again: string = withPracticeCases(withPracticeCases(JSON.stringify(changed), journey.works), journey.works);
     const reloadedBackend: MemoryStorageBackend = new MemoryStorageBackend();
     reloadedBackend.setItem(PRACTICE_CORE_STORE_KEY, again);

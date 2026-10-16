@@ -62,7 +62,7 @@ export interface IThemeLike {
 
 export interface IPropertyPaneFieldLike {
   targetProperty: string;
-  properties: { label?: string; description?: string; placeholder?: string; options?: { key: string; text: string }[]; selectedKey?: string };
+  properties: { label?: string; description?: string; placeholder?: string; options?: { key: string; text: string }[]; selectedKey?: string; onGetErrorMessage?: (value: string) => string };
 }
 
 export interface IPropertyPaneConfigurationLike {

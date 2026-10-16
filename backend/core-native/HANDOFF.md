@@ -4,15 +4,32 @@
 
 **Bounded local finalization completed; native commissioning remains blocked.** The existing candidate was continued, not replaced. The production C# helper was rebuilt, the actual generated workflow graph exercised, the two inherited datetime/recovery corrections reverified, and fresh OFF review packages generated. There is no registered helper identity or qualification receipt in this delivery.
 
-- **30 tests passed; 0 failures, 0 errors, 0 skips.** `evidence/final-tests.xml` enumerates every test; `evidence/final-tests.log` is the real pytest output.
+- **58 tests passed; 0 failures, 0 errors, 0 skips** (the original 30 plus 28 tenant-neutrality tests in `tests/test_target.py`). `evidence/final-tests.xml` enumerates every test; `evidence/final-tests.log` is the real pytest output.
 - Exact `connector/Script.cs` compiled with isolated **.NET 10.0.401 / C# 7.3**, zero warnings/errors (`evidence/final-compile.log`). `connector/local/Harness.cs` supplies only a local ScriptBase boundary, not replacement business logic.
 - **12 structural definition checks passed**, six primary and six literal (`evidence/final-structural.log`). All six exact primary ZIP definitions were additionally executed by `evidence/verify_delivery.py` against explicitly simulated SharePoint and a local WDL interpreter. This is not hosted Power Automate execution.
 - Fresh provisioning creates all **15 modeled lists/library**, survives repeat execution without resetting operator config or an active writer, and does not turn a simulated 403 into absence. Type drift is reported, not silently repaired.
 - Create-path fault injection covers **20 durable fixture boundaries**, with stable same-intent recovery. Concurrent stale-snapshot claim rejection and post-publication/pre-completion missing-receipt recovery also pass.
 - Both current flow ZIPs completed **PAC 2.12.1 unpack → pack → unpack → create-settings locally**. Parsed workflow JSON and XML identities/states/connection references/environment definitions match before/after. Every flow packages OFF; Send is absent and qualification flags default false.
-- **Seven source pins** match both `upstream/` and the original source paths; **six original workflow identities** and the solution unique name are retained. No commits/pushes or frontend edits.
+- **Eight historical source pins** (seven generator modules and the routing-policy source) are kept in `evidence/source-pins.json`. `upstream/` holds tenant-neutral copies whose own hashes and placeholder-only line edits are recorded there; `evidence/upstream_provenance.py` restores the originals from those copies plus a client's local target file and matches all eight historical pins (checked locally; the target file and the originals stay outside the repository). **Six original workflow identities** and the solution unique name are retained. No commits/pushes or frontend edits.
 
-Authoritative current receipt: [evidence/final-verification.json](evidence/final-verification.json). Full original ZIP/member hashes: [out/build-evidence.json](out/build-evidence.json). Earlier checkpoint logs and `generator/out/` are historical; do not claim their hashes verify this delivery.
+Authoritative current receipt: [evidence/final-verification.json](evidence/final-verification.json). Full original ZIP/member hashes: [out/build-evidence.json](out/build-evidence.json). Earlier checkpoint logs and hashes are historical; do not claim they verify this delivery.
+
+## Build target (tenant-neutral source)
+
+The repository names no client tenant. Every build is bound to a **target** read from a local JSON file kept outside the repository: `generator/build.py --target-file <file>` (also accepted by `generator/validate.py` and `evidence/upstream_provenance.py`).
+
+```json
+{"site": "https://contoso.sharepoint.com/sites/AICoE", "work_id_prefix": "AICOE",
+ "arb_owner_note": "ARB owner principal (designated ARB owner path). Blank => gate cannot pass. ARB integration is NOT in MVP."}
+```
+
+| Key | Required | Drives |
+|---|---|---|
+| `site` | yes | `https://<host>.sharepoint.com/sites/<name>`: default of `aicoe_SiteUrl`, the literal in every `_literal-fallback` flow, and the only site validator V9 allows. |
+| `work_id_prefix` | yes | 2–16 upper-case letters/digits: WorkID format and accepted pattern in the packaged Script.cs, routing-policy id `<prefix>-POLICY-1`, the bound `PolicySourceHash`, the RC2 schema family. |
+| `arb_owner_note` | no | Note text of the `Authority_ARB` configuration row (who owns the ARB authority path), seeded by flow 00 and written to `out/definitions-seed.json`. One printable line, at most 500 characters, no `@`. Absent: the neutral text shown above. |
+
+No other key is accepted; a malformed file fails the build. Without `--target-file` the neutral default is used (Contoso placeholder site, `AICOE`, neutral ARB note), and the committed `out/` is that default build: review evidence, not an import candidate for any tenant. A client's packages are rebuilt from its own target file into a folder outside the repository. For the client target delivered before neutralization, that rebuild reproduces all three delivered packages and every loose output byte-for-byte (checked locally with the WSL venv Python below, whose zlib reproduces the original compression; Windows CPython gives identical member content but different compressed bytes). The target file and that comparison stay outside the repository. The same file lets `evidence/upstream_provenance.py` restore the original upstream modules: the one redacted span (R1, staff names in the Authority_ARB note) is read from the target's `arb_owner_note` when it fits the recorded template, or from `--redaction R1=TEXT` / `--original-dir`. It is never guessed and never stored here.
 
 ## Exact F01–F12 disposition
 
@@ -35,23 +52,23 @@ Authoritative current receipt: [evidence/final-verification.json](evidence/final
 
 ## Current packages (SHA-256)
 
-Paths are relative to `backend/core-native/`. These are the exact rebuilt/tested bytes, not the old checkpoint packages. The first three rows are the review delivery; PAC copies are packaging evidence.
+Paths are relative to `backend/core-native/`. These are the exact rebuilt/tested bytes of the neutral default-target build (see [Build target](#build-target-tenant-neutral-source)), not the old checkpoint packages or the client packages delivered before neutralization. The first three rows are the review delivery; PAC copies are packaging evidence.
 
 | Path | Bytes | SHA-256 |
 |---|---:|---|
-| `out/AICoECoreAutomation_3_0_0_1_UNBOUND_REVIEW_ONLY.zip` | 44303 | `b2f7e7717de5436a9ba132d9d3c96dd2afa0a3fc2300dbeb679657fec4eabfb4` |
-| `out/AICoECoreAutomation_3_0_0_1_UNBOUND_REVIEW_ONLY_literal-fallback.zip` | 41340 | `067df0118be2e2c4e6d78f7742708f4c699bfcec425a70a75a13d3fa237fe3c6` |
-| `out/AICoECoreIntegrity_3_0_0_1_REGISTRATION_CANDIDATE.zip` | 28395 | `2cc4336a59d220e5b50e8c3a7a58e86fa5bbada7989e5e438a2ccf534a3d4b85` |
-| `out/pac-roundtrip/primary.zip` | 42525 | `4762072aad9ab8bc72e0548255c784fc5fa952c33c52482f6e9f0c42f2829b37` |
-| `out/pac-roundtrip/literal.zip` | 39520 | `9a569c1147d80b741addd34a8b328fc7dfaac3085960b5bf6c2d5815dda38590` |
+| `out/AICoECoreAutomation_3_0_0_1_UNBOUND_REVIEW_ONLY.zip` | 44226 | `fa5bafac2d87db42397c82709164babd798f9e1b280f121b6c247be1210c1b56` |
+| `out/AICoECoreAutomation_3_0_0_1_UNBOUND_REVIEW_ONLY_literal-fallback.zip` | 41271 | `aed1eafa0ab686016c2adef9a1daf20238dcc0e9645a2fde90141bea93097758` |
+| `out/AICoECoreIntegrity_3_0_0_1_REGISTRATION_CANDIDATE.zip` | 28401 | `d4746534fbfa296fd232c7d09b364677f2041fc5a0b8b4cfdb566ebb59411e18` |
+| `out/pac-roundtrip/primary.zip` | 42442 | `4706620f5b8ba180862a22c71d8c0ba35cfe5013abd29f7f8a8505a96b71ca74` |
+| `out/pac-roundtrip/literal.zip` | 39439 | `f7b4e82ee1afc72009ddda51d6f371ab6fee1b347c12b0d1a210e51a924c09f7` |
 
 The helper ZIP contains Script.cs, byte-identical Script.csx, OpenAPI, API properties, deployment descriptor and operator README. It is **a custom-connector registration bundle, not a Dataverse solution import ZIP**. The flow candidates explicitly use `UNBOUND_CORE_INTEGRITY`; `connectorId` and `qualificationReceipt` remain null and `deployable` remains false.
 
 ### PAC warning disposition
 
-The primary pack emits three `EnvironmentVariableDefinition` root-component warnings (SiteUrl, NotificationEmail, EnvironmentLabel). The unchanged supplied 3.0.0.0 ZIP reproduced the same warnings in a local control roundtrip; its before/after source hash is unchanged. All three component XML definitions and PAC-generated settings survived, as did all workflow JSON/identities. The literal fallback emits none. **This is not a warning-free primary or a native-export control, and it does not establish tenant import compatibility.** Logs and settings are under `evidence/pac-final/`.
+The primary pack emits three `EnvironmentVariableDefinition` root-component warnings (SiteUrl, NotificationEmail, EnvironmentLabel). The unchanged supplied 3.0.0.0 ZIP reproduced the same warnings in a local control roundtrip; its before/after source hash is unchanged (`evidence/pac-final/control-original-{before,after}.sha256`). That control's unpacked copy is not kept in the repository because the supplied 3.0.0.0 package names a client tenant; its pack/unpack logs stay local. All three component XML definitions and PAC-generated settings survived, as did all workflow JSON/identities. The literal fallback emits none. **This is not a warning-free primary or a native-export control, and it does not establish tenant import compatibility.** Logs and settings are under `evidence/pac-final/`.
 
-The default private-pilot URL is inherited configuration, not a commissioned tenant binding. Literal fallback is still unbound/review-only; it does not bypass connector registration, approved site selection, security qualification or designer Save.
+The default site URL is the neutral Contoso placeholder of the build target, not a commissioned tenant binding; a real site comes only from a local target file. Literal fallback is still unbound/review-only; it does not bypass connector registration, approved site selection, security qualification or designer Save.
 
 ## Preserved original identities
 
@@ -76,31 +93,39 @@ Results are pending until Published is boolean true, and the consumer must match
 
 1. Obtain explicit environment/site/operation authorization through the existing single-writer controller. No approval is inferred from this handoff.
 2. Register/qualify the separate pure helper, including custom-code sandbox support, DLP, namespaces, crypto, payload/runtime limits, secure IO and no-forwarding behavior. Read back the **actual** runtime API name, connector GUID, schema name and scoped qualification receipt; never manufacture an ID. See `connector/README.md` and `connector/deployment.json`.
-3. Bind that exact identity/script SHA via `generator/build.py --binding <authorized-binding.json> --out out/bound`, rebuild/reverify new hashes, still OFF. This local binding action does not itself authorize import or make `deployable` true.
+3. Bind that exact identity/script SHA via `generator/build.py --binding <authorized-binding.json> --target-file <local target.json> --out <folder outside the repository>`, rebuild/reverify new hashes, still OFF. This local binding action does not itself authorize import or make `deployable` true.
 4. Separately authorize import; resolve/qualify the environment-root warning, bind service-owned connections, open/save all flows and verify actual OFF state. Updating an existing flow can preserve prior active state despite OFF XML.
 5. Authorize provisioning/ACL application separately. Run real fresh/repeat setup, direct-API two-account create/read/edit/delete isolation, canonical-list denial, result grants and privileged-admin boundaries. Neither qualification flag may be set solely because local tests pass.
 6. Commission native version/concurrency/retry/crash/receipt/paging/expiry/health paths, then approve actual source/policy/authority/human validation and workflow acceptance. A complete-looking local fixture is not business evidence. Send remains outside this release.
 
 ## Local reproduction
 
-Run from this CORE root using existing offline SDK/PAC dependencies; no package downloads are needed here:
+Run from this CORE root using existing offline SDK/PAC dependencies; no package downloads are needed here. .NET and NuGet caches live outside the repository (`.gitignore` also keeps the old in-tree `evidence/dotnet-home`, `nuget-packages`, `nuget-http-cache` out):
 
 ```bash
 export DOTNET_ROOT=/home/far_cdx/.cache/oss-demo-dotnet
 export PATH="$DOTNET_ROOT:$PATH"
-export DOTNET_CLI_HOME="$PWD/evidence/dotnet-home"
-export NUGET_PACKAGES="$PWD/evidence/nuget-packages"
-export NUGET_HTTP_CACHE_PATH="$PWD/evidence/nuget-http-cache"
+CACHE="${TMPDIR:-/tmp}/core-native-dotnet"
+export DOTNET_CLI_HOME="$CACHE/dotnet-home"
+export NUGET_PACKAGES="$CACHE/nuget-packages"
+export NUGET_HTTP_CACHE_PATH="$CACHE/nuget-http-cache"
 export DOTNET_CLI_TELEMETRY_OPTOUT=1
 export DOTNET_CLI_WORKLOAD_UPDATE_NOTIFY_DISABLE=true
+export PYTHONDONTWRITEBYTECODE=1
 PY=/home/far_cdx/.hermes/hermes-agent/venv/bin/python
 PAC=/home/far_cdx/.cache/oss-demo-pac/pac
 
+# A clean checkout has no connector/local/obj: restore offline first. The project has no package references;
+# an empty local source keeps restore off the network.
+mkdir -p "$CACHE/empty-source"
+dotnet restore connector/local/CoreHarness.csproj --source "$CACHE/empty-source"
 dotnet build connector/local/CoreHarness.csproj --no-restore -c Release
-"$PY" -m pytest tests -q --junitxml=evidence/final-tests.xml
-"$PY" generator/build.py --review-unbound
+"$PY" -m pytest tests -q -p no:cacheprovider --junitxml=evidence/final-tests.xml
+"$PY" generator/build.py --review-unbound      # neutral default target -> out/ (bytes must equal the committed out/)
 "$PY" generator/validate.py
 ```
+
+Use this WSL venv Python for builds whose bytes are compared: its zlib reproduces the recorded compression. A client build adds `--target-file <local target.json> --out <folder outside the repository>`; never write a client build into `out/`.
 
 For each flow ZIP, local PAC commands (use fresh output directories for another receipt):
 
@@ -110,12 +135,15 @@ For each flow ZIP, local PAC commands (use fresh output directories for another 
 "$PAC" solution unpack --zipfile <roundtrip.zip> --folder <roundtrip-unpacked> --packagetype Unmanaged
 "$PAC" solution create-settings --solution-zip <roundtrip.zip> --settings-file <settings.json>
 "$PY" evidence/verify_delivery.py
+"$PY" evidence/write_handoff_check.py
 ```
 
-The verifier expects the recorded `evidence/pac-final/{primary,literal}-*` and `out/pac-roundtrip/{primary,literal}.zip` layout and checks it against the current source and build. It fails rather than blessing a stale package. `pac help` reports version; `pac solution check` is **not offline** and was not run.
+`write_handoff_check.py` recomputes `evidence/final-handoff-check.json` (finding IDs, the package hashes listed in this handoff, document hashes, test totals, Script.cs hash) and fails if a current package hash is missing here or the finding table is incomplete. The verifier expects the recorded `evidence/pac-final/{primary,literal}-*` and `out/pac-roundtrip/{primary,literal}.zip` layout and checks it against the current source and build. It fails rather than blessing a stale package. `pac help` reports version; `pac solution check` is **not offline** and was not run.
 
 ## Finalization changes and boundaries
 
 Added fresh-provisioning execution tests and completed the inherited local WDL harness's provisioning functions/actions. Added interleaved-writer, cross-author and post-publication missing-receipt regressions. Corrected flow 00's stale read-own/edit-own package description. Recompiled inherited production fixes, rebuilt output, retained current compile/test/build/PAC/preservation evidence, and finalized these docs. `evidence/IMPLEMENTATION_NOTES.md` is an earlier checkpoint, superseded by this handoff.
+
+Tenant-neutral pass: client tenant values (site, WorkID prefix, staff names in the ARB owner note) moved out of the repository into local target files (see Build target). `out/`, its PAC roundtrip evidence under `evidence/pac-final/`, `final-verification.json` and this inventory were regenerated for the neutral default target. The former `generator/out/` duplicate was removed (git history keeps it), and .NET/NuGet caches are no longer kept under `evidence/`.
 
 Initial WSL `git status` could not resolve the Windows-owned worktree .git pointer. No pointer repair, Git write, commit, push or branch claim was made; source/package preservation is hash-based here. The parent owns any Windows Git reconciliation. All task artifacts/writes stay under `backend/core-native/**`; no ACL script, tenant/service/provider action or upload was executed.

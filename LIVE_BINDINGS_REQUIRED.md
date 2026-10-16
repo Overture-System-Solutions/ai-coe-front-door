@@ -2,13 +2,13 @@
 
 ## Confirmed direction, not an executed deployment
 
-Sam selected **OSS SharePoint CloudWaveDashboardDemo** for testing and designated **samuel.conrad@osscontact.com** as the authorized writer. The preserved OSS exports identify `https://osscontact.sharepoint.com/sites/CloudWaveDashboardDemo`; this is not CloudWave production. Verify the exact site/environment and authenticated permissions before any native write. Marketing must use an **approved Microsoft environment**; no separate Node host or paid infrastructure is assumed.
+Sam selected **OSS SharePoint CloudWaveDashboardDemo** for testing and designated **samuel.conrad@osscontact.com** as the authorized writer. The preserved OSS exports identify `https://osscontact.sharepoint.com/sites/CloudWaveDashboardDemo`; this is not the client's production site. Verify the exact site/environment and authenticated permissions before any native write. Marketing must use an **approved Microsoft environment**; no separate Node host or paid infrastructure is assumed.
 
 The final local correction build is **1.0.0.17** on `fix/coe-audit-server-drafts`. See [the current handoff](docs/RC2-SINGLE-WEBPART-HANDOFF.md) and [byte-bound verification](evidence/release-1.0.0.17/VERIFICATION.json). Earlier five-binding/1.0.0.16 wording is superseded: some remaining work is implementation, not configuration.
 
 ## Remaining implementation
 
-1. **Marketing execution in Microsoft:** the tested `marketing-runtime-offline-0.1.1.zip` is a Node extension, not a Power Automate import. A compatible approved Microsoft execution/trigger/Claude-connector integration or a native port remains to be implemented and qualified. The existing idea-only draft flow must not be silently widened; keep working OSS exports intact.
+1. **Marketing execution in Microsoft:** the tested `marketing-runtime-offline-0.1.2.zip` is a Node extension, not a Power Automate import. A compatible approved Microsoft execution/trigger/Claude-connector integration or a native port remains to be implemented and qualified. The existing idea-only draft flow must not be silently widened; keep working OSS exports intact.
 2. **Legacy-to-CORE journey:** preserve existing IntakeId/CoEID values and verify their explicit association with the CORE-returned WorkID end to end. Optional LegacyRefs and mapping code do not alone prove an integrated native journey. Since 1.0.0.19 the front door shows a business case's LegacyRefs when the service returns them, but the native projection (`connector/Script.cs` `Projection`) does not return them yet, and nothing creates a business case from a request: the rule for which cases need one is undecided (two options are shown in Cases).
 3. **Marketing provisioning:** its descriptor is not an installer. Actual private canonical/membership/source/review/request/result lists and their ACL/retention lifecycle require a scoped implementation/commissioning path under the approved writer.
 4. **Monday.com:** no setup or integration has been implemented. Board, field, operation, synchronization and authority scope must be established first; preserve Monday/ARB governance.

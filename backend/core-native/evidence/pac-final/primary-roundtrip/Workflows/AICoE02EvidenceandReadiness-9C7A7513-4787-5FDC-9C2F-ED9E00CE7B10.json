@@ -34,7 +34,7 @@
           "type": "SecureObject"
         },
         "aicoe_SiteUrl (aicoe_SiteUrl)": {
-          "defaultValue": "https://parkplace.sharepoint.com/sites/AICoE-PrivatePilot",
+          "defaultValue": "https://contoso.sharepoint.com/sites/AICoE",
           "type": "String",
           "metadata": {
             "schemaName": "aicoe_SiteUrl",

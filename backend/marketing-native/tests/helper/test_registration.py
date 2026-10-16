@@ -22,7 +22,7 @@ class RegistrationTests(unittest.TestCase):
         properties=json.loads((ROOT/'connector/apiProperties.json').read_text())['properties'];self.assertEqual(properties['scriptOperations'],['Evaluate']);self.assertEqual(properties['connectionParameters'],{})
 
     def test_compiled_script_hash_matches_final_source(self):
-        from test_helper import DOTNET, DLL
+        from test_helper import DOTNET, DEFAULT_DLL as DLL
         import subprocess
         expected=hashlib.sha256((ROOT/'connector/Script.cs').read_bytes()).hexdigest()
         actual=subprocess.run([DOTNET,str(DLL),'--script-hash'],input='',text=True,capture_output=True,check=True).stdout.strip()

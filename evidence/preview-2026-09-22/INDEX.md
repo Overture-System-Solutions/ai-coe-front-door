@@ -8,7 +8,7 @@ Not live acceptance. `SendEnabled` stayed false. No tenant, flow, or paid model 
 |---|---|
 | `01-home-owner.png` | Owner, `view=app`, Home tab and seven sections. |
 | `02-cases-owner.png` | Cases / synthetic Binding A idle form. |
-| `03-cases-completed.png` | Create work completed locally: `Command: completed. completed: Working`, Work ID `CW-LOCAL_0001`. Packet projection labelled `core-packet-list.v0.1-proposal`. |
+| `03-cases-completed.png` | Removed 2026-10-15: it showed a Work ID in the former client-specific format (see NOTE.md). Create work completed locally: `Command: completed. completed: Working`. Packet projection labelled `core-packet-list.v0.1-proposal`. |
 | `04-engineering.png` | Engineering guided-request starters. |
 | `05-marketing-empty.png` | Synthetic Marketing workspace empty, labelled synthetic, content plan locked. |
 | `06-marketing-accepted.png` | Brief `BRIEF-MUCYGS7N-0001` accepted; receipt `RCPT-MUCYHSED-0003`; fictional Marketing Owner; no send/publish. |

@@ -1,5 +1,5 @@
 import { payloadHash } from '../../content/actionEnvelope';
-import { CANONICAL_ID, CANONICAL_WORK_ID } from '../../content/workIdentity';
+import { CANONICAL_ID, isCanonicalWorkId } from '../../content/workIdentity';
 import type { IDraftReferences } from '../serverDraftStore';
 import type { IServiceContext } from '../types';
 import type { ICommandObservation } from './coreClient';
@@ -140,7 +140,7 @@ export class NativeCoreWorkService implements ICoreWorkService {
     if (!text) { return undefined; }
     const raw = JSON.parse(text) as IPendingReference;
     if (raw === null || !/^cmd2-[0-9a-f-]{36}$/i.test(raw.key) || ![...CORE_OPERATIONS, 'ListEvidencePackets', 'ValidateEvidencePacket'].includes(raw.operation)
-      || !/^[0-9a-f]{64}$/.test(raw.digest) || !CANONICAL_ID.test(raw.correlationId) || (raw.workId !== '' && !CANONICAL_WORK_ID.test(raw.workId))) {
+      || !/^[0-9a-f]{64}$/.test(raw.digest) || !CANONICAL_ID.test(raw.correlationId) || (raw.workId !== '' && !isCanonicalWorkId(raw.workId))) {
       throw new Error('Recovery reference is invalid; reconcile it before writing.');
     }
     if (raw.requestItemId !== undefined && (!Number.isInteger(raw.requestItemId) || raw.requestItemId < 1)) { throw new Error('Invalid request item reference.'); }

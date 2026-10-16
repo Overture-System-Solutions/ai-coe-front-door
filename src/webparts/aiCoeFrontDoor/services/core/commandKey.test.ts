@@ -79,13 +79,13 @@ describe('command-key adapter cmdk1', () => {
   });
 
   it('mints a new generation for a refresh read and keeps the same generation for a retry of that read', async () => {
-    const payload: unknown = { WorkID: 'CW-LOCAL_0001' };
+    const payload: unknown = { WorkID: 'AICOE-LOCAL_0001' };
     const first: ICommandKey | undefined = await deriveCommandKey({
       tenantScope: SCOPE,
       callerId: CALLER,
       operation: 'GetWorkStatus',
       intent: { kind: 'read', generation: 1 },
-      workId: 'CW-LOCAL_0001',
+      workId: 'AICOE-LOCAL_0001',
       businessPayload: payload
     });
     const retry: ICommandKey | undefined = await deriveCommandKey({
@@ -93,7 +93,7 @@ describe('command-key adapter cmdk1', () => {
       callerId: CALLER,
       operation: 'GetWorkStatus',
       intent: { kind: 'read', generation: 1 },
-      workId: 'CW-LOCAL_0001',
+      workId: 'AICOE-LOCAL_0001',
       businessPayload: payload
     });
     const refresh: ICommandKey | undefined = await deriveCommandKey({
@@ -101,7 +101,7 @@ describe('command-key adapter cmdk1', () => {
       callerId: CALLER,
       operation: 'GetWorkStatus',
       intent: { kind: 'read', generation: 2 },
-      workId: 'CW-LOCAL_0001',
+      workId: 'AICOE-LOCAL_0001',
       businessPayload: payload
     });
     expect(first?.key).toBe(retry?.key);
@@ -116,8 +116,8 @@ describe('command-key adapter cmdk1', () => {
         callerId: CALLER,
         operation: 'GetWorkStatus',
         intent: { kind: 'mutation' },
-        workId: 'CW-LOCAL_0001',
-        businessPayload: { WorkID: 'CW-LOCAL_0001' }
+        workId: 'AICOE-LOCAL_0001',
+        businessPayload: { WorkID: 'AICOE-LOCAL_0001' }
       })
     ).rejects.toThrow(/does not fit operation/);
   });

@@ -1,6 +1,6 @@
 {
   "kind": "offline-node-extension-candidate",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "powerAutomateImportable": false,
   "enabledByDefault": false,
   "node": "v22.16.0",
@@ -16,11 +16,11 @@
     },
     {
       "path": "backend/power-automate/marketing-runtime/evidence/source-suite.tap",
-      "sha256": "278f2ce081758756d5ce1065fb89f32fae55bcbdbb41d0d4fd047323e482e440"
+      "sha256": "8756653f3bdceb9ef256cb00808bbcbf82a71f96882b923668920a608f42b9de"
     },
     {
       "path": "backend/power-automate/marketing-runtime/evidence/test-results.json",
-      "sha256": "fd5d38814720e1e47520cc2f584123d9d49921a5d9a6a21b63555951b64129fe"
+      "sha256": "7991a2678bc36a7c5ff29a1b908668f50aae91bd8db58c92d8550f3a3c7393b6"
     },
     {
       "path": "backend/power-automate/marketing-runtime/evidence/typecheck.txt",
@@ -28,11 +28,11 @@
     },
     {
       "path": "backend/power-automate/marketing-runtime/HANDOFF.md",
-      "sha256": "09645ba3793de8cdf6c051a744d6da7f5b1177abcc8c3c7c63236789d46ea8db"
+      "sha256": "b48269654b87a7c2ff2a3f100a32b44ec0b80987df3fb1c1010e79fb502413c9"
     },
     {
       "path": "backend/power-automate/marketing-runtime/operations.json",
-      "sha256": "6c3208ca873bf7145cd06367f2a73f31d6a2b3ba88c9ab56b9663f92d84bf777"
+      "sha256": "eb7a99f0f9517b4d91e8b49baca2cb4d48b238f708f2984ce9daa1c834dd54ba"
     },
     {
       "path": "backend/power-automate/marketing-runtime/provisioning.json",
@@ -40,7 +40,7 @@
     },
     {
       "path": "backend/power-automate/marketing-runtime/README.md",
-      "sha256": "cd00518cae7f99e10c44bafd9852e6dde1b6230b593c886eaf5a4e2aa044b0e1"
+      "sha256": "198c01e78a05ba55b2938ee98b4ce2176aaed36560519e93c70212f1556a0e35"
     },
     {
       "path": "backend/power-automate/marketing-runtime/server/invoke.cjs",
@@ -52,7 +52,7 @@
     },
     {
       "path": "backend/power-automate/marketing-runtime/server/runtime.cjs",
-      "sha256": "4d6ca5a7164f33eaa09f4b09e95f9fabf8ea5ec0a4002f5f967d394813cf97c9"
+      "sha256": "4cd710ebdc9644504e1b8f58d10e38e6cc63e9671d9eb72f1c5e477c2d5e5a8a"
     },
     {
       "path": "backend/power-automate/marketing-runtime/server/sharepoint.cjs",
@@ -64,7 +64,7 @@
     },
     {
       "path": "src/webparts/aiCoeFrontDoor/content/actionEnvelope.ts",
-      "sha256": "2ae7a254854cafc67d12061ec2d86d43ebcfdb371a6660ec5f6279736defd0bc"
+      "sha256": "d59de0812a772286cf2f2eb49c139fed91cfa1a9bfe087dacbabc7f3404ff4f8"
     },
     {
       "path": "src/webparts/aiCoeFrontDoor/content/marketing/artifactEnvelope.ts",
@@ -96,7 +96,7 @@
     },
     {
       "path": "src/webparts/aiCoeFrontDoor/content/marketing/schema.ts",
-      "sha256": "928bef36eb1ccc98343cb2eb105266dc7c19a8065cbdcde66cdaf8f54a289039"
+      "sha256": "87e4d86af2d43661d51f2c6cf469f86ea40d7c5b5d857b763813b42d929fa995"
     },
     {
       "path": "src/webparts/aiCoeFrontDoor/content/marketing/schemas/artifact-envelope.v1.json",
@@ -124,11 +124,11 @@
     },
     {
       "path": "src/webparts/aiCoeFrontDoor/content/workIdentity.ts",
-      "sha256": "d3e78ca542040e39cd07e2e04d68873a94e84fdb0e096d8cebae3e843f46e6a6"
+      "sha256": "ccea63d79854bff6dde44bb85bb3410155dfb76594f6e784e6e2cedf683480f0"
     },
     {
       "path": "src/webparts/aiCoeFrontDoor/services/authorization.ts",
-      "sha256": "f8b35386319de8d9dbd0c1c5491b62a450e6f50626c8c3a7e6baa6478700080d"
+      "sha256": "1049d4694b5ceed5bb5b87b1f4f33259dcfa44e86f7478bcb8fceec6fd48c872"
     },
     {
       "path": "src/webparts/aiCoeFrontDoor/services/marketing/artifactRepository.ts",
@@ -170,15 +170,15 @@
   "files": [
     {
       "path": "HANDOFF.md",
-      "sha256": "09645ba3793de8cdf6c051a744d6da7f5b1177abcc8c3c7c63236789d46ea8db"
+      "sha256": "b48269654b87a7c2ff2a3f100a32b44ec0b80987df3fb1c1010e79fb502413c9"
     },
     {
       "path": "README.md",
-      "sha256": "cd00518cae7f99e10c44bafd9852e6dde1b6230b593c886eaf5a4e2aa044b0e1"
+      "sha256": "198c01e78a05ba55b2938ee98b4ce2176aaed36560519e93c70212f1556a0e35"
     },
     {
       "path": "compiled/content/actionEnvelope.js",
-      "sha256": "6d81827ef462cce42c723f74812f130c0913656337326f98d6585777ca12c6fd"
+      "sha256": "326704ab120490fa026edb45e21736e0f1d6e771340042c2c2a12258acded000"
     },
     {
       "path": "compiled/content/marketing/artifactEnvelope.js",
@@ -210,7 +210,7 @@
     },
     {
       "path": "compiled/content/marketing/schema.js",
-      "sha256": "4bd781d29850dc672f107f16ccf473c942225b18b297b5440c0d501714b3a2fd"
+      "sha256": "151e1e6ce013f76a96c5503b5faf0df505e165a5b46efd3310472f13671297d4"
     },
     {
       "path": "compiled/content/marketing/sourceGate.js",
@@ -222,11 +222,11 @@
     },
     {
       "path": "compiled/content/workIdentity.js",
-      "sha256": "a436e0d7fedb6799835c72252105c5a032190ff6e916680c587af3cf9202aae5"
+      "sha256": "71e051f2a61a266c4e921e4b2fbdd1ac43f343f86ba6c6c6e35a7f2ca881f9ed"
     },
     {
       "path": "compiled/services/authorization.js",
-      "sha256": "3427a855386d4e6ae597b7adb9b6a43e643153312f36df4fe88650ad73e0041d"
+      "sha256": "24cdb356758f97c9d54fb0662ac49bd2c449d67bb5c67e9f620528594caf1ea2"
     },
     {
       "path": "compiled/services/marketing/artifactRepository.js",
@@ -274,11 +274,11 @@
     },
     {
       "path": "evidence/source-suite.tap",
-      "sha256": "278f2ce081758756d5ce1065fb89f32fae55bcbdbb41d0d4fd047323e482e440"
+      "sha256": "8756653f3bdceb9ef256cb00808bbcbf82a71f96882b923668920a608f42b9de"
     },
     {
       "path": "evidence/test-results.json",
-      "sha256": "fd5d38814720e1e47520cc2f584123d9d49921a5d9a6a21b63555951b64129fe"
+      "sha256": "7991a2678bc36a7c5ff29a1b908668f50aae91bd8db58c92d8550f3a3c7393b6"
     },
     {
       "path": "evidence/typecheck.txt",
@@ -286,11 +286,11 @@
     },
     {
       "path": "operations.json",
-      "sha256": "6c3208ca873bf7145cd06367f2a73f31d6a2b3ba88c9ab56b9663f92d84bf777"
+      "sha256": "eb7a99f0f9517b4d91e8b49baca2cb4d48b238f708f2984ce9daa1c834dd54ba"
     },
     {
       "path": "package.json",
-      "sha256": "282b8cd24372941ef1e8adeec4c4eb22d00f37e47e22073f828f74173ea1c268"
+      "sha256": "24d0ed26b5bb477d76d0d91449af96851895d2886124575d7d5359046c6387d9"
     },
     {
       "path": "provisioning.json",
@@ -322,7 +322,7 @@
     },
     {
       "path": "server/runtime.cjs",
-      "sha256": "4d6ca5a7164f33eaa09f4b09e95f9fabf8ea5ec0a4002f5f967d394813cf97c9"
+      "sha256": "4cd710ebdc9644504e1b8f58d10e38e6cc63e9671d9eb72f1c5e477c2d5e5a8a"
     },
     {
       "path": "server/sharepoint.cjs",

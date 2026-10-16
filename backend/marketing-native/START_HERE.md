@@ -9,6 +9,22 @@
 
 Power Automate owns SharePoint and Claude calls. SharePoint owns immutable requests, canonical records and private result projections. Claude drafts through the existing connector. Human review remains required. Nothing in this runtime sends, publishes externally, schedules Marketing, or configures Monday.com.
 
+## Build target
+
+The repository names no client tenant. A build is bound to a **target**, read from a local JSON file kept outside the repository. The format and rules are those of `backend/core-native` (see its README, *Build target*):
+
+```json
+{"site": "https://contoso.sharepoint.com/sites/AICoE", "work_id_prefix": "AICOE"}
+```
+
+- Without a file the neutral placeholder above is used. The committed `connector/Script.cs`/`Script.csx`, the `out/` and `connector/` packages and `provisioning/controlled-inputs.schema.json` are that default build. A target file must hold exactly `site` (`https://<host>.sharepoint.com/sites/<name>`) and `work_id_prefix` (2–16 upper-case letters/digits, starting with a letter); anything else fails the build.
+- **Prefix:** the canonical Work ID pattern (`^<prefix>-...`) that the helper accepts and that operator member records must use. `generator/build_target.py` re-renders one anchored site in Script.cs and one in the controlled-inputs schema. Each anchor must occur exactly once or the build fails.
+- **Site:** an allowlist. Neither package may name a SharePoint host or site other than the target's own. The OFF flow solution carries no site (its `siteUrl` is bound later), so it is byte-identical for every target.
+- Build for a target into a new folder outside this tree: `python3 -B generator/build.py --review-unbound --target-file <file> --into <folder>` writes the flow solution, the helper registration files and the rendered `provisioning/controlled-inputs.schema.json`; `python3 -B connector/package.py --target-file <file> --into <folder>` writes the registration ZIP with its compiled-script manifest. Only the default build writes `out/` and `connector/`.
+- Workflow, helper and connection identities never depend on the target. `generator/wdl.py` and `generator/packing_donor.py` are byte copies of the current `backend/core-native` generator files (the build refuses a stale copy); the Marketing flow registers its own pinned identity with the donor.
+- **Reference vectors:** `evidence/integration/node-reference-vectors.json` and `node-ai-reference-vectors.json` are captured Node reference output for the default target (Work IDs `AICOE-…`), recaptured with `tests/integration/capture_reference.cjs` and `capture_ai_reference.cjs` on 2026-10-15. The tests and `verify_release.py` run them against the default-target helper; `tests/flow/test_target.py` refuses a recapture under another prefix.
+- `tests/integration/repin_baseline.py --reason <text>` re-pins `evidence/baseline.json` after reviewed changes to protected files made outside this lane.
+
 ## Configuration sequence — later, separately authorized native phase
 
 1. Have the current controller authorize the exact commissioning scope and window. The selected later destination is OSS **CloudWaveDashboardDemo**; Sam's writer designation is not an authenticated principal ID or a qualification receipt. Confirm the current writer through the approved controller route. Do not add a second writer or widen roles to make a test pass.

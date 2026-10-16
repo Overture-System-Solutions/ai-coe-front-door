@@ -136,7 +136,8 @@ function packets(workId: string, sections: ISection[]): IWorkPacketProjection[] 
 
 function businessCaseInProgress(): IStoredWork {
   const step: IStep = STEPS[2];
-  const workId: string = 'CW-PRACTICE-0001';
+  // The preview leaves the Work ID prefix setting blank, so its ids carry the default prefix, AICOE.
+  const workId: string = 'AICOE-PRACTICE-0001';
   return {
     requester: PRACTICE_PERSON,
     created: true,
@@ -192,7 +193,7 @@ function businessCaseInProgress(): IStoredWork {
 
 function businessCaseReady(): IStoredWork {
   const step: IStep = STEPS[3];
-  const workId: string = 'CW-PRACTICE-0002';
+  const workId: string = 'AICOE-PRACTICE-0002';
   return {
     requester: PRACTICE_PERSON,
     created: true,

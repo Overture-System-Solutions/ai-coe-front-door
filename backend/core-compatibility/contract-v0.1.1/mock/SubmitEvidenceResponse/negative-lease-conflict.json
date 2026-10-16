@@ -4,10 +4,10 @@
    "CorrelationID": "CORR-UAT-FAST-001",
    "IdempotencyKey": "evidence:neg:1",
    "ClientVersion": "spfx-candidate-0.1",
-   "TenantLabel": "CloudWave-PrivatePilot",
+   "TenantLabel": "Contoso-PrivatePilot",
    "TestRecord": true
   },
-  "WorkID": "CW-UAT-FAST-001",
+  "WorkID": "AICOE-UAT-FAST-001",
   "EvidencePacketID": "EVP-UAT-FAST-001-S3_FINANCIAL",
   "Response": "x",
   "KnownAssumedUnknown": "ASSUMED"

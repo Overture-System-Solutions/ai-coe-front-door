@@ -12,13 +12,13 @@ import { payloadHash } from '../../content/actionEnvelope';
 
 const participant: IRoleResolution = { roles: ['employee', 'marketingParticipant'], resolution: 'resolved' };
 const reviewer: IRoleResolution = { roles: ['employee', 'marketingReviewer'], resolution: 'resolved' };
-const workId = 'CW-BUSINESS_42';
+const workId = 'AICOE-BUSINESS_42';
 const source = { id: 'MEETING-042', location: 'https://contoso.sharepoint.com/notes/42', versionOrETag: 'v7', owner: 'Business owner', asOf: '2026-09-23', classification: 'Internal', audience: 'Marketing', mayNotProve: 'Availability' };
 function bundle() {
   const failure = { kind: 'failed', failure: 'providerUnavailable', reasons: ['Provider offline'] };
   return {
     mode: 'live', label: 'Business server records', liveReasons: [],
-    listWork: jest.fn().mockResolvedValue([workId, 'CW-BUSINESS_43']),
+    listWork: jest.fn().mockResolvedValue([workId, 'AICOE-BUSINESS_43']),
     recoverPending: jest.fn().mockResolvedValue({ kind: 'none', message: 'No pending intent' }),
     saveManualDraft: jest.fn().mockResolvedValue(failure),
     registry: { mode: 'business', readRegister: jest.fn().mockResolvedValue({ available: true, readback: { register: { registerId: 'APPROVED-REGISTRY', version: '7', approval: 'approved', asOf: '2026-09-23', entries: [source] }, revoked: [], snapshotRef: 'server:register-7' } }) },
@@ -156,7 +156,7 @@ it('does not discard unsaved author text through the case or workspace-mode swit
   fireEvent.change(view.getByLabelText('Approved objective'), { target: { value: 'Unsaved case-specific objective' } });
   expect(view.getByLabelText('Marketing case')).toBeDisabled();
   expect(view.getByRole('button', { name: 'Labelled demonstration', exact: true })).toBeDisabled();
-  fireEvent.change(view.getByLabelText('Marketing case'), { target: { value: 'CW-BUSINESS_43' } });
+  fireEvent.change(view.getByLabelText('Marketing case'), { target: { value: 'AICOE-BUSINESS_43' } });
   expect(view.getByLabelText('Marketing case')).toHaveValue(workId);
   fireEvent.click(view.getByRole('button', { name: 'Save working draft', exact: true }));
   await view.findByText('Working draft saved and read back from the server.');
@@ -273,7 +273,7 @@ it('live mode selects only server-authorized Work IDs and never mounts the synth
   await waitFor(() => expect(view.marketing.listWork).toHaveBeenCalledTimes(1));
   fireEvent.change(select, { target: { value: workId } });
   await waitFor(() => expect(view.marketing.review.listArtifacts).toHaveBeenCalledWith(workId));
-  expect(view.queryByText(/CW-SYNTHETIC_MARKETING_WORKSPACE/)).toBeNull();
+  expect(view.queryByText(/AICOE-SYNTHETIC_MARKETING_WORKSPACE/)).toBeNull();
   expect(view.queryByLabelText(/fictional reviewer/i)).toBeNull();
   expect(view.marketing.review.assumeSyntheticReviewer).not.toHaveBeenCalled();
   expect(view.getByRole('button', { name: 'Business workspace' })).toBeInTheDocument();

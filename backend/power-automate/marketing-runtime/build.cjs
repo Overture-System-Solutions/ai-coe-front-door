@@ -3,7 +3,7 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const { createHash } = require('node:crypto');
-const releaseVersion = '0.1.1';
+const releaseVersion = '0.1.2';
 const root = path.resolve(__dirname, '../../..');
 const base = path.join(root, 'src/webparts/aiCoeFrontDoor');
 const ts = require(path.join(root, 'node_modules/typescript'));

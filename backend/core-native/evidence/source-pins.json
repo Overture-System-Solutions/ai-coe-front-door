@@ -1,40 +1,244 @@
 {
   "source": "/mnt/c/Users/scfre/JuliannaAI/OSS-AI-CoE/evidence/bld-core-front-door-review-2026-09-22/extracted/AICoECoreAutomation_3_0_0_0_PACKAGE-2026-09-21/AICoECoreAutomation_3_0_0_0/generator",
+  "note": "Historical pins: sha256/bytes are the ORIGINAL upstream generator modules (3.0.0.0) and routing-policy source, unchanged. The repository copies under upstream/ are neutral: client tenant values were replaced and recorded as line edits whose \"original\" side holds only placeholders. evidence/upstream_provenance.py restores an original from the neutral copy plus a local target file (redacted spans come from --redaction, an original copy, or, for R1, the target file's optional arb_owner_note) and checks it against the historical pin.",
+  "neutralized": "2026-10-15",
+  "placeholders": {
+    "{{target.site}}": "target site URL",
+    "{{target.host}}": "target site host",
+    "{{target.tenant}}": "first label of the target host",
+    "{{target.prefix}}": "target work_id_prefix",
+    "{{target.prefix_lower}}": "target work_id_prefix in lower case",
+    "{{redacted:R<n>}}": "span withheld from this repository (see redactions)"
+  },
+  "redactions": {
+    "R1": "client staff names in the Authority_ARB configuration note of model.py; original text withheld from this repository and supplied by the client's local target file (optional arb_owner_note), --redaction R1=TEXT or --original-dir"
+  },
   "files": [
     {
       "path": "build.py",
       "sha256": "987c5e19fed3a76a5c9ab483e2c435ef98318995f26e09c0e3d3636781a8dad8",
-      "bytes": 4526
+      "bytes": 4526,
+      "neutral": {
+        "sha256": "987c5e19fed3a76a5c9ab483e2c435ef98318995f26e09c0e3d3636781a8dad8",
+        "bytes": 4526
+      },
+      "changes": "unchanged (names no client value)",
+      "edits": []
     },
     {
       "path": "flows.py",
       "sha256": "b5535aafaed2c88dcd1f36b855c513e35701e08e7ffd950f04b6eaec3cb92b8d",
-      "bytes": 82839
+      "bytes": 82839,
+      "neutral": {
+        "sha256": "b90cac9bf8506e9dd4ac3b7281d6bf8c6ba0829ed4861221b94c8b713e5665c7",
+        "bytes": 82851
+      },
+      "changes": "WorkID prefix in new_id() and the three CORR-/EVP- prefix strips -> neutral prefix",
+      "edits": [
+        {
+          "line": 285,
+          "neutral": "    f.add(\"NewWorkID\", f.compose(f\"@{new_id('AICOE')}\"), into=cr, last=cl)",
+          "original": "    f.add(\"NewWorkID\", f.compose(f\"@{new_id('{{target.prefix}}')}\"), into=cr, last=cl)"
+        },
+        {
+          "line": 495,
+          "neutral": "          \"SourceRef\": f\"svc:{f.name}\", \"SourceVersion\": \"1\", \"CorrelationID\": f\"@concat('CORR-', replace({work_id[1:]}, 'AICOE-', ''))\", \"CausationID\": None,",
+          "original": "          \"SourceRef\": f\"svc:{f.name}\", \"SourceVersion\": \"1\", \"CorrelationID\": f\"@concat('CORR-', replace({work_id[1:]}, '{{target.prefix}}-', ''))\", \"CausationID\": None,"
+        },
+        {
+          "line": 519,
+          "neutral": "    f.add(\"PacketRec\", f.compose({\"EvidencePacketID\": \"@concat('EVP-', replace(items('For_each_case')?['Title'], 'AICOE-', ''), '-', items('For_each_type'))\", \"WorkID\": wid, \"EvidenceType\": \"@items('For_each_type')\",",
+          "original": "    f.add(\"PacketRec\", f.compose({\"EvidencePacketID\": \"@concat('EVP-', replace(items('For_each_case')?['Title'], '{{target.prefix}}-', ''), '-', items('For_each_type'))\", \"WorkID\": wid, \"EvidenceType\": \"@items('For_each_type')\","
+        },
+        {
+          "line": 582,
+          "neutral": "                                    \"SourceRef\": \"@concat('evidence-packet:', items('For_each_overdue')?['Title'])\", \"SourceVersion\": \"@string(coalesce(items('For_each_overdue')?['Version'], 1))\", \"CorrelationID\": \"@concat('CORR-', replace(items('For_each_overdue')?['WorkID'], 'AICOE-', ''))\",",
+          "original": "                                    \"SourceRef\": \"@concat('evidence-packet:', items('For_each_overdue')?['Title'])\", \"SourceVersion\": \"@string(coalesce(items('For_each_overdue')?['Version'], 1))\", \"CorrelationID\": \"@concat('CORR-', replace(items('For_each_overdue')?['WorkID'], '{{target.prefix}}-', ''))\","
+        }
+      ]
     },
     {
       "path": "model.py",
       "sha256": "b148dd01f221715b5eb62de6fc7f57b8132f9e417b1b0efc45381661b156818c",
-      "bytes": 14175
+      "bytes": 14175,
+      "neutral": {
+        "sha256": "e61b699087ce5fd906495ccf861e73738aa78ec3a9cd135f58a3cf30c628aeba",
+        "bytes": 14172
+      },
+      "changes": "docstring design-document reference without the client prefix; DEFAULT_SITE -> neutral placeholder site; staff names in the Authority_ARB note redacted (R1)",
+      "edits": [
+        {
+          "line": 4,
+          "neutral": "List names: v3.2 physical map (the AI CoE production implementation route and physical map v1, the active pointer),",
+          "original": "List names: v3.2 physical map ({{target.prefix}}-AICOE-PRODUCTION-IMPLEMENTATION-ROUTE-AND-PHYSICAL-MAP-v1, the active pointer),"
+        },
+        {
+          "line": 22,
+          "neutral": "DEFAULT_SITE = \"https://contoso.sharepoint.com/sites/AICoE\"",
+          "original": "DEFAULT_SITE = \"{{target.site}}\""
+        },
+        {
+          "line": 128,
+          "neutral": "        (\"Authority_ARB\", '\"\"', \"Authority\", True, \"ARB owner principal (designated ARB owner path). Blank => gate cannot pass. ARB integration is NOT in MVP.\"),",
+          "original": "        (\"Authority_ARB\", '\"\"', \"Authority\", True, \"ARB owner principal ({{redacted:R1}} path). Blank => gate cannot pass. ARB integration is NOT in MVP.\"),"
+        }
+      ]
     },
     {
       "path": "package.py",
       "sha256": "1b24fa3aad34bd06880b36ef600d7186b68b126dcf587bf5c4162719b22fad85",
-      "bytes": 8570
+      "bytes": 8570,
+      "neutral": {
+        "sha256": "fc1945df3f0ae51fd55f5a9f3d2345b69ae52f2e718e7f9b7053dd81433338f1",
+        "bytes": 8567
+      },
+      "changes": "solution description schema family without the client prefix",
+      "edits": [
+        {
+          "line": 27,
+          "neutral": "            \"notification outbox (ships off), health monitor, provisioning. Records bound to AICOE 3.4.0-rc2 schemas. Every flow imports switched off.\"",
+          "original": "            \"notification outbox (ships off), health monitor, provisioning. Records bound to {{target.prefix}}-AICOE 3.4.0-rc2 schemas. Every flow imports switched off.\""
+        }
+      ]
     },
     {
       "path": "reference.py",
       "sha256": "1f1291aa16ad15d06da5b2dc3f0d3f2e4712ddd55f911e837db45f0e9d45bb76",
-      "bytes": 28893
+      "bytes": 28893,
+      "neutral": {
+        "sha256": "cb7c5efe0553c74021d7438a7090a7e1d8467c77625529f05faffbdb2331041d",
+        "bytes": 28899
+      },
+      "changes": "reference-model WorkID prefix -> neutral prefix",
+      "edits": [
+        {
+          "line": 72,
+          "neutral": "        g = gaps(s1); wid = st.uid(\"AICOE\")",
+          "original": "        g = gaps(s1); wid = st.uid(\"{{target.prefix}}\")"
+        },
+        {
+          "line": 212,
+          "neutral": "    r3 = get_status(st, {\"WorkID\": \"AICOE-NONE-999\"}, A); G(\"T3\", r3[\"Result\"] == \"FAIL\" and r3[\"ErrorClass\"] == \"NOT_FOUND\", \"unknown id NOT_FOUND\")",
+          "original": "    r3 = get_status(st, {\"WorkID\": \"{{target.prefix}}-NONE-999\"}, A); G(\"T3\", r3[\"Result\"] == \"FAIL\" and r3[\"ErrorClass\"] == \"NOT_FOUND\", \"unknown id NOT_FOUND\")"
+        }
+      ]
     },
     {
       "path": "validate.py",
       "sha256": "7c5af369a90ff54d3826118a52c6fb966223018c990b8eaa885e66a3e9549197",
-      "bytes": 6389
+      "bytes": 6389,
+      "neutral": {
+        "sha256": "647adad721c02ba8b5d0f6cb51e8215aacfbae1e84ccbe015999fd94620fea16",
+        "bytes": 6385
+      },
+      "changes": "V9 client host -> neutral placeholder host",
+      "edits": [
+        {
+          "line": 12,
+          "neutral": "  V9 no reference to the OSS lab tenant (osscontact) survives; no hard-coded contoso URL in the primary package",
+          "original": "  V9 no reference to the OSS lab tenant (osscontact) survives; no hard-coded {{target.tenant}} URL in the primary package"
+        },
+        {
+          "line": 95,
+          "neutral": "    if not literal and \"contoso.sharepoint.com\" in text.replace(M.DEFAULT_SITE, \"\"): errs.append(\"V9 hard-coded site URL outside the env-var default\")",
+          "original": "    if not literal and \"{{target.host}}\" in text.replace(M.DEFAULT_SITE, \"\"): errs.append(\"V9 hard-coded site URL outside the env-var default\")"
+        }
+      ]
     },
     {
       "path": "wdl.py",
       "sha256": "e4a1bd55c5402dee025170551113010ae481580dd9372036b047bd9ba9e9df92",
-      "bytes": 10481
+      "bytes": 10481,
+      "neutral": {
+        "sha256": "e9753370842cf2e39a44d20c8e01d8fe739baba2765c0db598f46fb205b47d0c",
+        "bytes": 11234
+      },
+      "changes": "workflow GUID seed string (client prefix) replaced by the six identities it produced, pinned verbatim",
+      "edits": [
+        {
+          "line": 18,
+          "neutral": "# Workflow identities of the shipped AICoECoreAutomation 3.0.0.0 flows, pinned verbatim so a correction updates the",
+          "original": null
+        },
+        {
+          "line": 19,
+          "neutral": "# same flows in every environment. A new flow needs an explicit identity here; none is derived from a tenant seed.",
+          "original": null
+        },
+        {
+          "line": 20,
+          "neutral": "WORKFLOW_IDS = {",
+          "original": null
+        },
+        {
+          "line": 21,
+          "neutral": "    \"AI CoE 00 Provisioning\": \"99538ee6-adde-5cac-a8dc-78e2d9f2b417\",",
+          "original": null
+        },
+        {
+          "line": 22,
+          "neutral": "    \"AI CoE 01 Case Command\": \"bbb2f816-2abe-5216-8fc8-23452056573b\",",
+          "original": null
+        },
+        {
+          "line": 23,
+          "neutral": "    \"AI CoE 02 Evidence and Readiness\": \"9c7a7513-4787-5fdc-9c2f-ed9e00ce7b10\",",
+          "original": null
+        },
+        {
+          "line": 24,
+          "neutral": "    \"AI CoE 03 Markdown Projector\": \"5cff5cdb-41b4-581e-ad63-f7495680e02d\",",
+          "original": null
+        },
+        {
+          "line": 25,
+          "neutral": "    \"AI CoE 04 Notification Outbox\": \"41303d3c-0cab-5668-8b02-b638fb361ab0\",",
+          "original": null
+        },
+        {
+          "line": 26,
+          "neutral": "    \"AI CoE 05 Health Monitor\": \"aba74eca-505e-5f1d-a3df-f157499e7dbf\",",
+          "original": null
+        },
+        {
+          "line": 27,
+          "neutral": "}",
+          "original": null
+        },
+        {
+          "line": 28,
+          "neutral": "",
+          "original": null
+        },
+        {
+          "line": 42,
+          "neutral": "        if name not in WORKFLOW_IDS: raise ValueError(f\"no preserved workflow identity for {name!r}\")",
+          "original": "        self.guid = str(uuid.uuid5(uuid.NAMESPACE_URL, f\"{{target.prefix_lower}}-aicoe/3.0.0.0/{name}\"))"
+        },
+        {
+          "line": 43,
+          "neutral": "        self.guid = WORKFLOW_IDS[name]",
+          "original": null
+        }
+      ]
     }
-  ]
+  ],
+  "policy": {
+    "path": "routing-policy.yaml",
+    "sha256": "51210529f823b1571e737c40f21a97921e498c60f8e132374171634138ccf736",
+    "bytes": 1933,
+    "neutral": {
+      "sha256": "cd0d19ba3a2b051402d33927e851547289e34a2fa4fbb384ce737896f8794b2f",
+      "bytes": 1936
+    },
+    "changes": "policy expression-language id -> <neutral prefix>-POLICY-1",
+    "edits": [
+      {
+        "line": 4,
+        "neutral": "  id: AICOE-POLICY-1",
+        "original": "  id: {{target.prefix}}-POLICY-1"
+      }
+    ],
+    "boundAs": "PolicySourceHash: the historical sha256 is the original build's bound policy hash; a build binds the SHA-256 of the policy rendered for its target (generator/build_target.py)"
+  }
 }

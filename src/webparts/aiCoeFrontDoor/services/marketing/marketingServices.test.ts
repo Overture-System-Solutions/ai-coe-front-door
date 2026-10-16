@@ -10,7 +10,7 @@ import { SYNTHETIC_AUTHORITIES } from './marketingReviewService';
 import { createDisabledLiveMarketingServices, createSyntheticMarketingServices } from './marketingServices';
 import { MemoryStorageBackend } from './artifactStore';
 
-const WORK_ID: string = 'CW-SYNTHETIC_MARKETING_WORKSPACE';
+const WORK_ID: string = 'AICOE-SYNTHETIC_MARKETING_WORKSPACE';
 
 const DRAFTER: IMarketingSession = {
   actorId: 'pat@contoso.com',

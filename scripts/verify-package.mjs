@@ -10,7 +10,10 @@
 // host, roster surname or secret shape of the tenant word list (src/provisioning/tenantWords.json) in the
 // bundle, the strings chunk or the packaged component manifest, the data contracts still present, the word
 // list itself and its entries (client words included, beyond the documented identifiers) absent from every entry
-// of the archive, and every dependency pinned exactly.
+// of the archive, and every dependency pinned exactly. The word list names no client: client names, the roster and
+// the case ids are stored only as SHA-256 hashes, and scripts/tenant-words.mjs (the same scan as
+// src/provisioning/tenantWords.ts, held to it by a test) finds them as substrings exactly as the written-out
+// expressions they replaced.
 // Writes the dependency inventory (one row per runtime component of package-lock.json, the sixteen fields of
 // 13_SECURITY_AND_THREAT_MODEL/secrets-supply-chain.yaml `required_inventory_fields`) and records its hash.
 // Exits non-zero on any failure.
@@ -18,6 +21,7 @@ import { createHash } from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
 import { inflateRawSync } from 'node:zlib';
+import { findTenantWords, tenantWordProblems } from './tenant-words.mjs';
 
 const root = path.resolve(import.meta.dirname, '..');
 
@@ -31,13 +35,12 @@ const outPath = path.resolve(root, argument('--out', 'evidence/port-verification
 const inventoryPath = path.resolve(root, argument('--inventory', 'evidence/dependency-inventory.json'));
 const testSummary = argument('--tests', undefined);
 
-// The one list of tenant words every portability scan reads; deliberately not tenant-neutral, never packaged.
+// The one list of tenant words every portability scan reads; client names stored only as SHA-256 hashes, never packaged.
 const TENANT_WORDS_PATH = 'src/provisioning/tenantWords.json';
-const CASE_INSENSITIVE_LISTS = ['clientWords', 'hosts'];
 
 const EXPECTED = {
   productId: 'f125ebdf-4a9d-4e6e-8479-3a18874e7752',
-  version: '1.0.0.19',
+  version: '1.0.0.20',
   featureId: '69ab84b7-608c-47ee-9623-af8ebaf2cb10',
   webPartId: 'cf2e5904-0703-4fe4-ae5a-ec012d6fa689',
   provisioningFiles: ['elements.xml', 'intake-schema.xml', 'decision-schema.xml'],
@@ -149,27 +152,8 @@ function readZipEntries(buffer) {
   return entries;
 }
 
-/** One expression over a whole list of the tenant word file (the same shape src/provisioning/tenantWords.ts builds). */
-function tenantWordPattern(words, list) {
-  return new RegExp(words[list].map((entry) => `(?:${entry})`).join('|'), CASE_INSENSITIVE_LISTS.includes(list) ? 'gi' : 'g');
-}
-
-/** Every match of the given lists in a text, as "<list>: <match>", so a failing scan names what it found. */
-function findTenantWords(text, words, lists) {
-  const found = [];
-  for (const list of lists) {
-    const pattern = tenantWordPattern(words, list);
-    let match = pattern.exec(text);
-    while (match !== null) {
-      found.push(`${list}: ${match[0]}`);
-      if (match[0].length === 0) {
-        pattern.lastIndex++;
-      }
-      match = pattern.exec(text);
-    }
-  }
-  return found;
-}
+// findTenantWords (scripts/tenant-words.mjs) reports every match of the given lists in a text as "<list>: <match>",
+// written-out expressions and hashed words alike, so a failing scan names what it found.
 
 function unescapeXml(text) {
   return text.replace(/&quot;/g, '"').replace(/&apos;/g, "'").replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&');
@@ -188,6 +172,10 @@ if (!fs.existsSync(packagePath)) {
 }
 
 const tenantWords = JSON.parse(fs.readFileSync(path.join(root, TENANT_WORDS_PATH), 'utf8'));
+// A malformed entry (a broken expression, a digest that is not SHA-256 hex) would silently scan for nothing.
+for (const problem of tenantWordProblems(tenantWords)) {
+  check(false, `The tenant word list ${TENANT_WORDS_PATH} is malformed: ${problem}`);
+}
 const packageBytes = fs.readFileSync(packagePath);
 const entries = readZipEntries(packageBytes);
 const byName = new Map(entries.map((entry) => [entry.name, entry.bytes]));

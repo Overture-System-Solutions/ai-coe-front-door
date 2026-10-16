@@ -17,7 +17,7 @@ test('offline candidate builds dependency-complete runtime and exports a disable
     }
     const manifest = JSON.parse(fs.readFileSync(path.join(out, 'manifest.json'), 'utf8'));
     assert.equal(manifest.kind, 'offline-node-extension-candidate'); assert.equal(manifest.powerAutomateImportable, false);
-    assert.equal(manifest.version, '0.1.1');
+    assert.equal(manifest.version, '0.1.2');
     const operations = JSON.parse(fs.readFileSync(path.join(out, 'operations.json'), 'utf8'));
     assert.equal(operations.protocol, 'marketing.v1');
     assert.deepEqual(Object.keys(operations.operations).sort(), Object.keys(require('../server/runtime.cjs').fields).sort());
@@ -29,7 +29,7 @@ test('offline candidate builds dependency-complete runtime and exports a disable
     // Default package resolution, not the source transpiler, is required for this smoke execution.
     class Packaged extends MarketingRuntime { constructor(o) { super({ ...o, shared: undefined }); } }
     const p = await fixture(Packaged);
-    const result = await p.run('DraftCampaignBriefV1', { workId: 'CW-OFFLINE_TEST', objective: 'Offline smoke', audienceContext: ['Marketing team'], sourceIds: [p.entry.id] });
+    const result = await p.run('DraftCampaignBriefV1', { workId: 'AICOE-OFFLINE_TEST', objective: 'Offline smoke', audienceContext: ['Marketing team'], sourceIds: [p.entry.id] });
     assert.equal(result.kind, 'saved', JSON.stringify(result));
     const { createMarketingInvocation } = require(path.join(out, 'server/invoke.cjs'));
     assert.throws(() => createMarketingInvocation({ config: { enabled: false } }), /disabled|binding/i);
@@ -45,7 +45,7 @@ test('offline candidate builds dependency-complete runtime and exports a disable
     for (const key of await f.store.keys('')) assert.equal((await store.write(key, (await f.store.read(key)).value, { ifAbsent: true })).ok, true);
     let guarded = 0;
     const invokeBound = createMarketingInvocation({ config: f.config, sp, invokeClaude: f.invokeClaude, runAsCanonicalWriter: async (scope, run) => { assert.equal(scope.extension, 'marketing.v1'); guarded++; return run(); } });
-    const row = f.enqueue('DraftCampaignBriefV1', { workId: 'CW-OFFLINE_TEST', objective: 'Offline public invocation', audienceContext: ['Marketing team'], sourceIds: [f.entry.id] });
+    const row = f.enqueue('DraftCampaignBriefV1', { workId: 'AICOE-OFFLINE_TEST', objective: 'Offline public invocation', audienceContext: ['Marketing team'], sourceIds: [f.entry.id] });
     const confirmation = await invokeBound({ requestItemId: row.Id });
     assert.equal(confirmation.projectionConfirmed, true); assert.equal(guarded, 1); assert.equal(f.providerCalls(), 1);
     assert.equal(Object.hasOwn(confirmation, 'value'), false);

@@ -13,7 +13,7 @@ test('qualified provider uses frozen Claude wire shape and refuses truncation/to
   assert.throws(() => decodeProviderResponse('openai', { status: 'incomplete' }));
   let input;
   const p = createClaudeProvider({ model: 'qualified-model', qualificationReceiptRef: 'QUAL-PROVIDER', schemaFor: () => ({ type: 'object' }), invoke: async body => { input = body; return reply; } });
-  const out = await p.draft({ operation: 'campaignBrief', artifactId: 'BRIEF-TEST', workId: 'CW-OFFLINE_TEST', permittedSources: [], inputs: {}, policy: {}, requestId: 'REQ-TEST' });
+  const out = await p.draft({ operation: 'campaignBrief', artifactId: 'BRIEF-TEST', workId: 'AICOE-OFFLINE_TEST', permittedSources: [], inputs: {}, policy: {}, requestId: 'REQ-TEST' });
   assert.equal(input['body/stream'], false); assert.equal(input['body/thinking/type'], 'disabled'); assert.equal(input['body/max_tokens'], 1600);
   assert.equal(input['body/output_config/format/type'], 'json_schema'); assert.equal(out.qualificationReceiptRef, 'QUAL-PROVIDER');
 });

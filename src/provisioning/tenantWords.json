@@ -1,8 +1,50 @@
 {
-  "clientWords": ["overture", "tegria", "cloudwave", "gocloudwave", "osscontact"],
-  "bundlePhrases": ["Overture", "CloudWave", "Tegria", "Start with Claude", "OSS Demo", "Claude draft flow"],
-  "hosts": ["[a-z0-9-]+\\.sharepoint\\.com"],
-  "people": ["Frerichs", "Sides", "Martens", "Donahue", "Conrad", "Achtelik", "Mengert", "Littlejohn", "Shimon"],
-  "caseIds": ["CW-0\\d", "EHR Insights"],
-  "secretPatterns": ["sig=", "client_secret", "-----BEGIN", "eyJ[A-Za-z0-9_-]{20,}"]
+  "clientWords": [
+    "overture",
+    { "sha256": "77ecdd4bfb461a5bf352f7aef1cf4af28c0c0fe164c7e0d680ed6c623dee84bc", "length": 6, "probe": 3510 },
+    { "sha256": "63fdfb36760749ade457c87177bcc2f9748c50e6909ef43d622bfc60ed42c978", "length": 9, "probe": 2658 },
+    { "sha256": "1e6e1e50a06fce3386ebb066b428eeeaa13958806160e758a4eb4a3bbe857424", "length": 11, "probe": 1529 },
+    "osscontact"
+  ],
+  "bundlePhrases": [
+    "Overture",
+    { "sha256": "aebb0cea9e99c4a6e45b646fe5cfcac2318b7df2fe80588ab107cbbdfd36e4ad", "length": 9, "probe": 701 },
+    { "sha256": "f64ddf0eb5b38c958ea74440e962ef7125b4b6a2d3c8495457a1ac12c32fd78d", "length": 6, "probe": 3352 },
+    "Start with Claude",
+    "OSS Demo",
+    "Claude draft flow"
+  ],
+  "hosts": [
+    "[a-z0-9-]+\\.sharepoint\\.com"
+  ],
+  "people": [
+    { "sha256": "9892402889ae37d5306ac5aec52334a4bfaac764d208dda55c17a3c03693b975", "length": 8, "probe": 1484 },
+    { "sha256": "1c3607d5f4fd9535022d61ed0d6d37cda4910a60a0a304ddeacb1439f087da66", "length": 5, "probe": 2305 },
+    { "sha256": "c49698ee92a7913afbfd64249740356c14acdbac35972b1d2192f958cf826c6f", "length": 7, "probe": 166 },
+    { "sha256": "f1bd1f7eddde5a2ce89955814e0ba6758ec363636e7d3e73603458c888a88382", "length": 7, "probe": 2784 },
+    { "sha256": "b92f91849d855b40496e911e9b3241fbae4a65b92b383b293a00ea32565d6543", "length": 6, "probe": 731 },
+    { "sha256": "4c7ab0658cc8565cfe5a89a2d5b283b05cc7e92be9d9588fe4919a5bf25bb5ad", "length": 8, "probe": 3169 },
+    { "sha256": "49ecda407cee08c3b72bfff08ffbe9a7da3164cdea76915469f5add38d74b598", "length": 7, "probe": 4046 },
+    { "sha256": "fcc44aa9861ecdd4bdfda776c558c464963d213484de070991231600f063719f", "length": 10, "probe": 228 },
+    { "sha256": "e24b5c1552f83989a0fdebbc756eb4183a60f93068942e9c81ae39f4f114b02b", "length": 6, "probe": 2391 }
+  ],
+  "caseIds": [
+    { "sha256": "8a65d7c058cdd7a9ceb65e403baae64087cdad4672ac79e0b93c9f8812806333", "length": 5, "probe": 1514 },
+    { "sha256": "3fffc5cb6a99471cc03e273fa0d89180f5241e04d055c5349ec7eb09987b4e1c", "length": 5, "probe": 3680 },
+    { "sha256": "a76310d4b832c8286fa7f506b0164c24a3c5e61cf215b69fbc445d768ec0f196", "length": 5, "probe": 3482 },
+    { "sha256": "3748faf864bed0ba33f11213fdd063f80187f33e63cd3b718a0f56cb8592c016", "length": 5, "probe": 2214 },
+    { "sha256": "06c56099869e4958d60d7daf59994cbd90f67808a79657992810144fd96f25d4", "length": 5, "probe": 1518 },
+    { "sha256": "3ba4a2491fba30452cd0669c3882ee956d1cae1b2f3635b6d909a1453f7066ef", "length": 5, "probe": 3658 },
+    { "sha256": "b1220ffc9d78e2d76d0dd8be3305306392382a3a5766e82cce0487d7b06debdf", "length": 5, "probe": 2255 },
+    { "sha256": "a1cf017cb1f39193483ae461829796499e71136f7bf907665af9a494eadcb022", "length": 5, "probe": 236 },
+    { "sha256": "3679b1458d13945739c1e6fd2dadc79fb2e840fa9f4e4be3178df0915bc2e75c", "length": 5, "probe": 344 },
+    { "sha256": "eed5514e222816def9b2dcb34904722b9a541ff55cdbe942056fb2daa00681a9", "length": 5, "probe": 654 },
+    { "sha256": "637d99655692b42290359900f4ae7847b9a1fc90b3625eb53047fc872b78e939", "length": 12, "probe": 713 }
+  ],
+  "secretPatterns": [
+    "sig=",
+    "client_secret",
+    "-----BEGIN",
+    "eyJ[A-Za-z0-9_-]{20,}"
+  ]
 }

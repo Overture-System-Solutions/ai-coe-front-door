@@ -1,6 +1,8 @@
 """Executes the exact custom-connector Script.cs locally, not a Python model."""
 import copy, json, subprocess
 from pathlib import Path
+import model
+P=model.WORK_ID_PREFIX  # WorkID prefix of the default (neutral) build target the compiled Script.cs carries
 ROOT=Path(__file__).resolve().parents[1]
 DOTNET='/home/far_cdx/.cache/oss-demo-dotnet/dotnet'
 DLL=ROOT/'connector/local/bin/Release/net10.0/CoreHarness.dll'
@@ -14,14 +16,14 @@ def invoke(mode,payload):
 def request(op='CreateOrResumeWork', **updates):
     r={'Context':{'CorrelationID':'CORR-T1','IdempotencyKey':'intent-0001','ClientVersion':'1.0.0.17','TenantLabel':'TEST','TestRecord':True},'S1':{'Title':'Synthetic','SourceChannel':'TEST','ProblemStatement':'problem','DesiredOutcome':'outcome','Sponsor':'sponsor@example.invalid','AccountableOwner':'owner@example.invalid'}}
     if op!='CreateOrResumeWork':
-        r.pop('S1'); r['WorkID']='CW-TEST-1'
+        r.pop('S1'); r['WorkID']=P+'-TEST-1'
     r.update(updates)
     return {'Row':{'ID':1,'Title':'intent-0001','ContractVersion':'v0.2.0','Operation':op,'WorkID':r.get('WorkID',''),'RequestJson':json.dumps(r),'TestRecord':True,'AuthorId':7,'Author':{'Id':7,'EMail':'alice@example.invalid'}},'Config':{'TenantLabel':'TEST','RuntimeMode':'UAT','UatSiteUrl':'https://test.invalid','SiteUrl':'https://test.invalid','UatPrincipals':['alice@example.invalid'],'NativeQualified':True,'SecurityQualified':True,'SendEnabled':False},'Now':'2026-09-23T12:00:00Z','Data':{'Cases':[],'Evidence':[],'Decisions':[],'Outbox':[],'Receipts':[],'Events':[],'Authority':[]},'Complete':True}
 
 def test_strict_validation_author_identity_and_context():
     p=request(); r=invoke('Validate',p)
     assert r['Valid'] is True and r['Actor']=='alice@example.invalid'
-    for key,value in [('bad',1),('WorkID',"CW-X' or 1 eq 1")]:
+    for key,value in [('bad',1),('WorkID',P+"-X' or 1 eq 1")]:
         q=copy.deepcopy(p); b=json.loads(q['Row']['RequestJson']); b[key]=value; q['Row']['RequestJson']=json.dumps(b)
         assert invoke('Validate',q)['Valid'] is False
     for mutate in ['spoof','context','boolean','empty_author']:
@@ -110,7 +112,7 @@ def test_business_readiness_requires_human_complete_current_evidence_and_affirma
     facts.update(capability_approved=True,workflow_bounded=True,risk_within_delegation=True,delegated_authority_bound=True)
     data['Authority'] += [grant(wid,'ROUTING_FACTS',Facts=facts),grant(wid,'AUTHORITY_AI_COE_FAST_PATH')]
     c=json.loads(data['Cases'][0]['RecordJson']); ready=business(command('RequestDecisionReadiness',data,wid,ExpectedVersion=c['Version']))
-    ready['Config'].update(PolicySourceHash='51210529f823b1571e737c40f21a97921e498c60f8e132374171634138ccf736',PolicyAcceptanceReceipt='RCPT-POLICY-FIXTURE',PolicyBindingVersion='fixture-1',PolicyAccepted=True)
+    ready['Config'].update(PolicySourceHash=model.POLICY_SOURCE_HASH,PolicyAcceptanceReceipt='RCPT-POLICY-FIXTURE',PolicyBindingVersion='fixture-1',PolicyAccepted=True)
     response=invoke('Plan',ready)
     assert response['Response']['DecisionReadinessState']=='READY',response
     assert response['Response']['Work']['Lane']=='AI_COE_FAST_PATH'
@@ -120,7 +122,7 @@ def test_business_readiness_requires_human_complete_current_evidence_and_affirma
         if defect=='duplicate': bad['Data']['Evidence'].append(copy.deepcopy(bad['Data']['Evidence'][0]))
         if defect in ['wrong_work','stale','provisional','na_unjustified']:
             r=json.loads(bad['Data']['Evidence'][0]['RecordJson'])
-            if defect=='wrong_work': r['WorkID']='CW-OTHER'
+            if defect=='wrong_work': r['WorkID']=P+'-OTHER'
             if defect=='stale': r['CaseContentVersion']=999
             if defect=='provisional': r['ValidationKind']='UAT_PROVISIONAL'
             if defect=='na_unjustified': r['Status']='NOT_APPLICABLE'; r['ValidatorAssertion']=''
@@ -142,7 +144,7 @@ def test_real_digest_readback_comparison_and_failure_receipt():
     assert checked['Valid'] is True and checked['AlreadyApplied'] is True
     wrong=copy.deepcopy(row); wrong['RecordJson']='{}'
     assert invoke('VerifyRecord',{'Write':write,'Rows':[wrong]})['Valid'] is False
-    wrong=copy.deepcopy(row); wrong['WorkID']='CW-WRONG'
+    wrong=copy.deepcopy(row); wrong['WorkID']=P+'-WRONG'
     assert invoke('VerifyRecord',{'Write':write,'Rows':[wrong]})['Valid'] is False
     readbacks=[{'List':w['List'],'Key':w['Key'],'Rows':[next(r for r in data[w['List']] if r['Title']==w['Key'])]} for w in plan['Writes']]
     done=invoke('Finalize',{'Plan':plan,'Readbacks':readbacks})

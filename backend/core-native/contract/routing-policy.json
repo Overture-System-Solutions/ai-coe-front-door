@@ -2,7 +2,7 @@
   "version": "2.0.0",
   "activation_state": "CANDIDATE_REQUIRES_TENANT_BINDING",
   "expression_language": {
-    "id": "CW-POLICY-1",
+    "id": "AICOE-POLICY-1",
     "operators": [
       "eq",
       "in",

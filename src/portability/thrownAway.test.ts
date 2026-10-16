@@ -10,8 +10,8 @@
  */
 import * as fs from 'fs';
 import * as path from 'path';
-import { findTenantWords, readTenantWords } from '../provisioning/tenantWords';
-import type { ITenantWords } from '../provisioning/tenantWords';
+import { findTenantWords, isHashedTenantWord, readTenantWords } from '../provisioning/tenantWords';
+import type { ITenantWords, TenantWordEntry } from '../provisioning/tenantWords';
 import { DECISIONS_LIST_TITLE, INTAKES_LIST_TITLE, OUTCOME_RECORDS_LIST_TITLE, USE_CASES_LIST_TITLE } from '../webparts/aiCoeFrontDoor/services/GovernanceService';
 import { PROGRAM_MEASURES_LIST_TITLE } from '../webparts/aiCoeFrontDoor/services/lists';
 import { INCIDENTS_LIST_TITLE, USAGE_LIST_TITLE } from '../webparts/aiCoeFrontDoor/services/UsageMetricsService';
@@ -104,7 +104,8 @@ describe('what would be thrown away', () => {
       'paletteOverrides',
       'reviewSystemName',
       'roleGroups',
-      'telemetryProvider'
+      'telemetryProvider',
+      'workIdPrefix'
     ]);
     for (const name of properties) {
       const row: string[] | undefined = rows.filter((cells: string[]): boolean => cells[0] === `\`${name}\``)[0];
@@ -135,9 +136,13 @@ describe('what would be thrown away', () => {
     const key: string[] = rows.filter((cells: string[]): boolean => cells[0].indexOf('OVT-AICOE-') >= 0)[0];
     expect(key[1]).toContain('OutcomeId');
     expect(key[1]).toContain(OUTCOME_RECORDS_LIST_TITLE);
-    // The word list itself is the one file that is not tenant-neutral, and the README says so where the exceptions are.
+    // The word list names no client: its client names are stored only as SHA-256 hashes, and the README says so where
+    // the exceptions are, with the limit of a hash (a guessed name can be confirmed against it).
     expect(exceptions()).toContain('src/provisioning/tenantWords.json');
-    expect(exceptions()).toContain('deliberately not tenant-neutral');
+    expect(exceptions()).toContain('names no client');
+    expect(exceptions()).toContain('stored only as SHA-256 hashes');
+    expect(exceptions()).toMatch(/guesses a name can confirm it against the list/);
+    expect(exceptions()).not.toContain('deliberately not tenant-neutral');
     expect(exceptions()).toContain('GOV-113');
   });
 
@@ -151,9 +156,10 @@ describe('what would be thrown away', () => {
 
   it('keeps the README free of tenant words beyond the documented identifiers', () => {
     // The package, draft-key and DOM-scope identifiers carry the vendor word by contract (README "Branding"), so that
-    // one client word is exempt; every other client name, tenant host, roster surname and case id is not.
+    // one client word is exempt; every other client name, tenant host, roster surname and case id is not, the ones the
+    // list stores only as hashes included.
     const readmeWords: ITenantWords = {
-      clientWords: tenantWords.clientWords.filter((word: string): boolean => word !== 'overture'),
+      clientWords: tenantWords.clientWords.filter((word: TenantWordEntry): boolean => word !== 'overture'),
       bundlePhrases: tenantWords.bundlePhrases,
       hosts: tenantWords.hosts,
       people: tenantWords.people,
@@ -161,6 +167,11 @@ describe('what would be thrown away', () => {
       secretPatterns: tenantWords.secretPatterns
     };
     expect(readmeWords.clientWords.length).toBe(tenantWords.clientWords.length - 1);
+    // Only the written-out vendor word is exempt: every hashed client word, surname and case id is still scanned for.
+    expect(readmeWords.clientWords.filter(isHashedTenantWord).length).toBe(tenantWords.clientWords.filter(isHashedTenantWord).length);
+    expect(readmeWords.clientWords.filter(isHashedTenantWord).length).toBeGreaterThan(0);
+    expect(readmeWords.people.filter(isHashedTenantWord).length).toBe(tenantWords.people.length);
+    expect(readmeWords.caseIds.filter(isHashedTenantWord).length).toBe(tenantWords.caseIds.length);
     for (const list of ['clientWords', 'hosts', 'people', 'caseIds'] as const) {
       expect({ list, found: findTenantWords(readme, readmeWords, [list]) }).toEqual({ list, found: [] });
     }

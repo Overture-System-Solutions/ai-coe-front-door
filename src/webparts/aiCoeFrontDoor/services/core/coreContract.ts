@@ -2,10 +2,13 @@
  * The UI ⇄ flow interface contract v0.1.1 (candidate), as this client enforces it at run time: the five operations,
  * their request and response envelopes, and strict validators for each.
  *
- * Source of truth: `CW-AICOE-UI-FLOW-CONTRACT-v0.1.1-2026-09-21/ui-flow-contract.schema.json`, frozen under the
- * review evidence and copied byte-for-byte to `backend/core-compatibility/contract-v0.1.1/`. The validators below
- * mirror it property for property, `additionalProperties: false` included, and are checked against the contract's
- * 23 fixture pairs and the actual generated flow definitions by `coreConformance.test.ts`.
+ * Source of truth: `backend/core-compatibility/contract-v0.1.1/ui-flow-contract.schema.json`. It began as a
+ * byte-for-byte copy of the contract frozen under the review evidence (2026-09-21) and was regenerated tenant-neutral
+ * on 2026-10-15 by that folder's `build_contract.py` (its README, section 7b): Work IDs carry the target's prefix
+ * (`AICOE-` by default), and only Work IDs, the values derived from them and the tenant label changed. The validators
+ * below mirror it property for property, `additionalProperties: false` included, and read the Work ID pattern from
+ * the page's Work ID prefix setting (`workIdentity.ts`); they are checked against the contract's 23 fixture pairs
+ * and the actual generated flow definitions by `coreConformance.test.ts`.
  *
  * Two deliberate departures, both recorded in `backend/core-compatibility/CONTRACT_AMENDMENT_v0.1.2-proposal.md`
  * rather than smuggled into the code: validation is **by operation** (the schema's public root `oneOf` rejects two
@@ -17,7 +20,7 @@
  *
  * Wording note: this file is scanned for Tailwind utility names; keep prose free of utility words.
  */
-import { CANONICAL_ID, CANONICAL_WORK_ID } from '../../content/workIdentity';
+import { CANONICAL_ID, canonicalWorkIdPattern } from '../../content/workIdentity';
 import type { WorkStage } from '../../content/workIdentity';
 import { SHA256_HEX } from '../../content/actionEnvelope';
 
@@ -421,7 +424,7 @@ function legacyRefsField(value: unknown, path: string, issues: IContractIssue[])
 }
 
 function workIdField(value: unknown, path: string, issues: IContractIssue[]): string | undefined {
-  const parsed: string | null | undefined = str(value, path, issues, { min: 1, pattern: CANONICAL_WORK_ID });
+  const parsed: string | null | undefined = str(value, path, issues, { min: 1, pattern: canonicalWorkIdPattern() });
   return typeof parsed === 'string' ? parsed : undefined;
 }
 
@@ -546,7 +549,7 @@ export function parseWorkProjection(value: unknown, path: string, issues: IContr
   const LastValidatedAt: string | null | undefined = str(raw.LastValidatedAt, `${path}.LastValidatedAt`, issues, { pattern: DATE_TIME, nullable: contractVersion === 'v0.2.0' });
   const OpenEvidenceGaps: string[] | undefined = raw.OpenEvidenceGaps === undefined ? undefined : strArray(raw.OpenEvidenceGaps, `${path}.OpenEvidenceGaps`, issues);
   const DuplicateStatus: DuplicateStatus | undefined = raw.DuplicateStatus === undefined ? undefined : enumOf(raw.DuplicateStatus, `${path}.DuplicateStatus`, issues, DUPLICATE_STATUSES);
-  const RelatedWorkIDs: string[] | undefined = raw.RelatedWorkIDs === undefined ? undefined : strArray(raw.RelatedWorkIDs, `${path}.RelatedWorkIDs`, issues, { unique: true, min: 1, pattern: CANONICAL_WORK_ID });
+  const RelatedWorkIDs: string[] | undefined = raw.RelatedWorkIDs === undefined ? undefined : strArray(raw.RelatedWorkIDs, `${path}.RelatedWorkIDs`, issues, { unique: true, min: 1, pattern: canonicalWorkIdPattern() });
   const LegacyRefs: ILegacyRefs | undefined = raw.LegacyRefs === undefined ? undefined : legacyRefsField(raw.LegacyRefs, `${path}.LegacyRefs`, issues);
   if (issues.length !== before || WorkID === undefined || typeof Title !== 'string' || Stage === undefined || State === undefined || EmployeeStatus === undefined || Lane === undefined || NextAction === undefined || NextOwner === undefined || NextDate === undefined || typeof Version !== 'number' || LastValidatedAt === undefined) {
     return undefined;

@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """Offline verification of current source, rebuilt ZIPs and local PAC output.
 Never imports to a tenant; SharePoint/runtime smoke uses explicitly local fixtures.
-Run after compiling, pytest, build.py and the local PAC roundtrip.
+Run after compiling, pytest, build.py and the local PAC roundtrip. Verifies the build against the target recorded
+in out/build-evidence.json (the neutral placeholder target unless build.py was given --target-file).
 """
 from pathlib import Path
 import datetime as dt
@@ -10,7 +11,8 @@ from xml.etree import ElementTree as ET
 
 ROOT=Path(__file__).resolve().parents[1]
 sys.path[:0]=[str(ROOT/'generator'),str(ROOT/'tests')]
-import flows, model, validate, package
+import flows, model, validate, package, build_target
+import upstream_provenance
 from wdl_harness import Engine, Helper, SharePointFixture
 from provisioning_harness import FreshSite
 
@@ -41,15 +43,23 @@ def package_data(path):
 
 def main():
     build=json.loads((ROOT/'out/build-evidence.json').read_text())
+    target=model.configure(build['target'])
+    assert build['policy']=={'id':build_target.policy_id(target),'sourceSha256':model.POLICY_SOURCE_HASH}
     pins=json.loads((ROOT/'evidence/source-pins.json').read_text())
     source=Path(pins['source'])
     pin_results=[]
-    for pin in pins['files']:
+    for pin in upstream_provenance.entries(pins):
+        # upstream/ holds neutral copies; the historical sha256/bytes pin the original bytes, which stay outside the repo
         copied=ROOT/'upstream'/pin['path'];original=source/pin['path']
-        assert copied.stat().st_size==original.stat().st_size==pin['bytes']
-        assert digest(copied)==digest(original)==pin['sha256']
-        pin_results.append({**pin,'copyMatches':True,'originalMatches':True})
-    assert len(pin_results)==7
+        assert copied.stat().st_size==pin['neutral']['bytes'] and digest(copied)==pin['neutral']['sha256'],pin['path']
+        assert (pin['sha256']!=pin['neutral']['sha256'])==bool(pin['edits']),pin['path']
+        assert upstream_provenance.neutralize(upstream_provenance.restore(copied.read_text(encoding='utf-8'),pin['edits'],{}),pin['edits'],{})==copied.read_text(encoding='utf-8')
+        if original.exists():
+            assert original.stat().st_size==pin['bytes'] and digest(original)==pin['sha256'],pin['path']
+            status=True
+        else:status='ORIGINAL_NOT_PRESENT_LOCALLY'
+        pin_results.append({'path':pin['path'],'historicalSha256':pin['sha256'],'historicalBytes':pin['bytes'],'neutralSha256':pin['neutral']['sha256'],'neutralBytes':pin['neutral']['bytes'],'edits':len(pin['edits']),'changes':pin['changes'],'neutralCopyMatches':True,'originalMatchesHistoricalPin':status})
+    assert len(pin_results)==8 and len(pins['files'])==7
     original_zip=source.parent/'AICoECoreAutomation_3_0_0_0.zip'
     original=package_data(original_zip)
     for path,sha in build['sourceHashes'].items():assert digest(ROOT/path)==sha,path
@@ -61,7 +71,8 @@ def main():
             assert set(z.namelist())==set(meta['members'])
             for name,m in meta['members'].items():assert hashlib.sha256(z.read(name)).hexdigest()==m['sha256']
             if filename.startswith('AICoECoreIntegrity_'):
-                assert z.read('Script.cs')==z.read('Script.csx')==(ROOT/'connector/Script.cs').read_bytes()
+                assert z.read('Script.cs')==z.read('Script.csx')==build_target.render_script(target)
+                assert hashlib.sha256(z.read('Script.cs')).hexdigest()==build['binding']['scriptSha256']
         packages[str(p.relative_to(ROOT))]={'sha256':digest(p),'bytes':p.stat().st_size}
     assert len(packages)==3
     pac_results={}
@@ -108,6 +119,9 @@ def main():
     assert tests['tests']>0 and tests['failures']==tests['errors']==tests['skipped']==0
     cases=[c for s in suites for c in s.findall('testcase')]
     assert len(cases)==tests['tests']
+    # The local helper is compiled from the committed Script.cs, so the packaged smoke is only meaningful when the
+    # packaged script is that same rendering (the default target). Fail rather than smoke-test a different script.
+    assert build_target.render_script(target)==(ROOT/'connector/Script.cs').read_bytes(),'packaged Script.cs differs from the compiled one'
     helper=Helper()
     try:
         smoke=SharePointFixture(page_size=7)
@@ -125,12 +139,12 @@ def main():
         smoke_result={'kind':'SIMULATED_EXTERNAL_SHAREPOINT_AND_LOCAL_WDL_ENGINE','packagedFlowCountExecuted':len(names),'names':names,'createDurableBoundariesCoveredByCrashRegression':create_boundaries,'publishedResult':True,'freshProvisionedListCount':len(fresh.existing)}
     finally:helper.p.terminate();helper.p.wait(timeout=10)
     sources={}
-    for folder in ['generator','connector','tests','provisioning','contract']:
+    for folder in ['generator','connector','tests','provisioning','contract','upstream']:
         for p in sorted((ROOT/folder).rglob('*')):
             if p.is_file() and not any(x in {'out','bin','obj','__pycache__','.pytest_cache'} for x in p.relative_to(ROOT/folder).parts):sources[str(p.relative_to(ROOT))]=digest(p)
-    receipt={'verifiedAt':dt.datetime.now(dt.timezone.utc).isoformat(),'scope':'OFFLINE_CANDIDATE_ONLY','solution':'AICoECoreAutomation','version':'3.0.0.1','transport':'v0.2.0','tests':tests,'testCases':[c.attrib['classname']+'.'+c.attrib['name'] for c in cases],'structuralDefinitionsPassed':12,'originalSourcePins':pin_results,'originalPackageSha256':digest(original_zip),'preservedWorkflowIdentities':original['identities'],'packages':packages,'pac':pac_results,'packagedSmoke':smoke_result,'compiledHelper':{'scriptSha256':digest(ROOT/'connector/Script.cs'),'dllSha256':digest(ROOT/'connector/local/bin/Release/net10.0/CoreHarness.dll'),'compiler':'dotnet 10.0.401; C# 7.3; local ScriptBase shim','compileLog':'evidence/final-compile.log'},'binding':build['binding'],'sourceSnapshot':sources,'notClaimed':build['not_claimed']}
+    receipt={'verifiedAt':dt.datetime.now(dt.timezone.utc).isoformat(),'scope':'OFFLINE_CANDIDATE_ONLY','solution':'AICoECoreAutomation','version':'3.0.0.1','transport':'v0.2.0','tests':tests,'testCases':[c.attrib['classname']+'.'+c.attrib['name'] for c in cases],'structuralDefinitionsPassed':12,'target':target,'policy':build['policy'],'upstreamPins':pin_results,'originalPackageSha256':digest(original_zip),'preservedWorkflowIdentities':original['identities'],'packages':packages,'pac':pac_results,'packagedSmoke':smoke_result,'compiledHelper':{'scriptSha256':digest(ROOT/'connector/Script.cs'),'packagedScriptSha256':build['binding']['scriptSha256'],'dllSha256':digest(ROOT/'connector/local/bin/Release/net10.0/CoreHarness.dll'),'compiler':'dotnet 10.0.401; C# 7.3; local ScriptBase shim','compileLog':'evidence/final-compile.log'},'binding':build['binding'],'sourceSnapshot':sources,'notClaimed':build['not_claimed']}
     (ROOT/'evidence/final-verification.json').write_text(json.dumps(receipt,indent=2)+'\n')
-    print(json.dumps({'tests':tests,'pins':len(pin_results),'preservedIdentities':len(original['identities']),'pac':pac_results,'packagedSmoke':smoke_result,'packages':packages},indent=2))
+    print(json.dumps({'target':target,'tests':tests,'pins':len(pin_results),'preservedIdentities':len(original['identities']),'pac':pac_results,'packagedSmoke':smoke_result,'packages':packages},indent=2))
 
 
 if __name__=='__main__':main()

@@ -53,7 +53,7 @@
     {
       "scenario": "manual brief",
       "boundary": 7,
-      "effect": "insert:canonical:2b083edc1a7aa125d0764d51ca0a4c07c338a70f994e0122c0df2e5efc00dbc5",
+      "effect": "insert:canonical:c695cbd2ba662aa3684fd3053fb3052dbaba7139c98708565e0041f1d3a62b0a",
       "providerCalls": 0,
       "projectionCount": 0,
       "pass": true
@@ -189,7 +189,7 @@
     {
       "scenario": "provider brief",
       "boundary": 10,
-      "effect": "insert:canonical:099119d29ed8a485325cffb8c3b7d4eea0bd4fa2272544fc6ee9bb4ff0cf1e29",
+      "effect": "insert:canonical:1b83edc8214e7213b87d7e74af9b0e3585c4cd5a9afca5982d5d323dfc75905a",
       "providerCalls": 1,
       "projectionCount": 0,
       "pass": true

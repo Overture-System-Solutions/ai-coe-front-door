@@ -28,7 +28,7 @@
         "Value": {"type": "object", "additionalProperties": false, "required": ["enabled", "actorId", "roles", "workIds", "audience"], "properties": {
           "enabled": {"const": false}, "actorId": {"$ref": "#/definitions/actor"},
           "roles": {"type": "array", "maxItems": 3, "uniqueItems": true, "items": {"enum": ["employee", "marketingParticipant", "marketingReviewer"]}},
-          "workIds": {"type": "array", "maxItems": 500, "uniqueItems": true, "items": {"type": "string", "pattern": "^CW-[A-Z0-9_-]{2,124}$"}},
+          "workIds": {"type": "array", "maxItems": 500, "uniqueItems": true, "items": {"type": "string", "pattern": "^AICOE-[A-Z0-9_-]{2,124}$"}},
           "audience": {"$ref": "#/definitions/text"}
         }}
       }

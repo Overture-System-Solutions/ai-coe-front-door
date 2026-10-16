@@ -1,11 +1,11 @@
 # Minimal source-pinned correction package (proposal)
 
-**Not applied.** This is a request for the existing CORE/backend lane and controller/single tenant writer. Jordan's 3.0.0.0 delivery is not silently forked. Originals under `evidence/bld-core-front-door-review-2026-09-22/` stay byte-identical.
+**Not applied.** This is a request for the existing CORE/backend lane and controller/single tenant writer. The engineering lane's 3.0.0.0 delivery is not silently forked. Originals under `evidence/bld-core-front-door-review-2026-09-22/` stay byte-identical.
 
 Pinned source (complete package generator):
 `evidence/bld-core-front-door-review-2026-09-22/extracted/AICoECoreAutomation_3_0_0_0_PACKAGE-2026-09-21/AICoECoreAutomation_3_0_0_0/generator/`
 
-Line citations match `deliverables/CloudWave_Front_Door_Completion_2026-09-22/CORE_ANALYSIS.md`.
+Line citations match `CORE_ANALYSIS.md` in the front-door completion deliverable (2026-09-22) under the project home's `deliverables/`.
 
 | Id | Priority | Pin | Proposed correction | Native proof still required |
 |---|---|---|---|---|
